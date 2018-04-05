@@ -6,6 +6,7 @@ public class CaveGame extends Game {
 
 	@Override
 	public void create () {
+		setScreen(new GameScreen());
 	}
 
 }
