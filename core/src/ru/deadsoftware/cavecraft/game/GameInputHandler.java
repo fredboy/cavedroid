@@ -11,9 +11,27 @@ public class GameInputHandler {
         this.gameProc = gameProc;
     }
 
+    public void  keyDown(int keyCode) {
+        if (keyCode == Input.Keys.LEFT) {
+            gameProc.player.moveX.add(-GamePhysics.PL_SPEED,0);
+            gameProc.player.dir = 0;
+        }
+        if (keyCode == Input.Keys.RIGHT) {
+            gameProc.player.moveX.add(GamePhysics.PL_SPEED,0);
+            gameProc.player.dir = 1;
+        }
+        if (keyCode == Input.Keys.UP) gameProc.player.moveY.add(0,-12);
+    }
+
+    public void keyUp(int keyCode) {
+        if (keyCode == Input.Keys.RIGHT || keyCode == Input.Keys.LEFT) {
+            gameProc.player.moveX.x = 0;
+        }
+    }
+
     public void mouseMoved(int screenX, int screenY) {
-        gameProc.cursorX = (int)((screenX+gameProc.renderer.camera.position.x)/32);
-        gameProc.cursorY = (int)((screenY+gameProc.renderer.camera.position.y)/32);
+        gameProc.cursorX = (int)((screenX+gameProc.renderer.camera.position.x)/16);
+        gameProc.cursorY = (int)((screenY+gameProc.renderer.camera.position.y)/16);
         if (gameProc.cursorX < 0)
             gameProc.cursorX = 0;
         if (gameProc.cursorX >= gameProc.world.getWidth())
@@ -26,26 +44,33 @@ public class GameInputHandler {
     }
 
     public void touchDown(int screenX, int screenY, int button) {
-        if (button == Input.Buttons.LEFT) {
-            if (gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY) > 0) {
-                gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY, 0);
-            } else if (gameProc.world.getBackMap(gameProc.cursorX, gameProc.cursorY) > 0) {
-                gameProc.world.placeToBackground(gameProc.cursorX, gameProc.cursorY, 0);
-            }
-        } else {
-            gameProc.touchDownTime = TimeUtils.millis();
-            gameProc.isTouchDown = true;
-        }
+        gameProc.touchDownX = screenX;
+        gameProc.touchDownY = screenY;
+        gameProc.touchDownTime = TimeUtils.millis();
+        gameProc.isTouchDown = true;
     }
 
     public void touchUp(int screenX, int screenY, int button) {
-        if (gameProc.isTouchDown && button == Input.Buttons.RIGHT){
+        if (gameProc.isTouchDown) {
+            if (button == Input.Buttons.RIGHT){
                 gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY, 1);
+            } else if (button == Input.Buttons.LEFT) {
+                if (gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY) > 0) {
+                    gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY, 0);
+                } else if (gameProc.world.getBackMap(gameProc.cursorX, gameProc.cursorY) > 0) {
+                    gameProc.world.placeToBackground(gameProc.cursorX, gameProc.cursorY, 0);
+                }
+            }
         }
         gameProc.isTouchDown = false;
     }
 
     public void touchDragged(int screenX, int screenY) {
+        gameProc.renderer.camera.position.x += (gameProc.touchDownX-screenX);
+        gameProc.renderer.camera.position.y += (gameProc.touchDownY-screenY);
+        gameProc.touchDownX = screenX;
+        gameProc.touchDownY = screenY;
+        gameProc.isTouchDown = false;
     }
 
 }

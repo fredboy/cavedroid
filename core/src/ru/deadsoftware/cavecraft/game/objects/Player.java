@@ -1,0 +1,24 @@
+package ru.deadsoftware.cavecraft.game.objects;
+
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+
+public class Player {
+
+    public Vector2 position;
+    public Vector2 moveX, moveY;
+    public int width, height, dir;
+
+    public Player() {
+        position = new Vector2(0, 0);
+        moveX = new Vector2(0, 0);
+        moveY = new Vector2(0, 0);
+        width = 8;
+        height = 30;
+    }
+
+    public Rectangle getRect() {
+        return new Rectangle(position.x, position.y, width, height);
+    }
+
+}

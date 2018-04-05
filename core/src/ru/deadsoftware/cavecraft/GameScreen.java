@@ -40,7 +40,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        gameProc.resetRenderer();
     }
 
     @Override
@@ -67,11 +67,13 @@ public class GameScreen implements Screen {
 
         @Override
         public boolean keyDown(int keycode) {
+            gameInput.keyDown(keycode);
             return false;
         }
 
         @Override
         public boolean keyUp(int keycode) {
+            gameInput.keyUp(keycode);
             return false;
         }
 
@@ -82,24 +84,32 @@ public class GameScreen implements Screen {
 
         @Override
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+            screenX *= gameProc.renderer.camera.viewportWidth/getWidth();
+            screenY *= gameProc.renderer.camera.viewportHeight/getHeight();
             gameInput.touchDown(screenX, screenY, button);
             return false;
         }
 
         @Override
         public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+            screenX *= gameProc.renderer.camera.viewportWidth/getWidth();
+            screenY *= gameProc.renderer.camera.viewportHeight/getHeight();
             gameInput.touchUp(screenX, screenY, button);
             return false;
         }
 
         @Override
         public boolean touchDragged(int screenX, int screenY, int pointer) {
+            screenX *= gameProc.renderer.camera.viewportWidth/getWidth();
+            screenY *= gameProc.renderer.camera.viewportHeight/getHeight();
             gameInput.touchDragged(screenX, screenY);
             return false;
         }
 
         @Override
         public boolean mouseMoved(int screenX, int screenY) {
+            screenX *= gameProc.renderer.camera.viewportWidth/getWidth();
+            screenY *= gameProc.renderer.camera.viewportHeight/getHeight();
             gameInput.mouseMoved(screenX,screenY);
             return false;
         }
