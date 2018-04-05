@@ -1,5 +1,7 @@
 package ru.deadsoftware.cavecraft.game;
 
+import com.badlogic.gdx.Gdx;
+
 public class GameWorld {
 
     private final int WIDTH, HEIGHT;
@@ -9,8 +11,10 @@ public class GameWorld {
     public GameWorld(int w, int h) {
         WIDTH = w;
         HEIGHT = h;
-        foreMap = new int[WIDTH][HEIGHT];
-        backMap = new int[WIDTH][HEIGHT];
+        WorldGen.genWorld(WIDTH,HEIGHT);
+        foreMap = WorldGen.getForeMap();
+        backMap = WorldGen.getBackMap();
+        WorldGen.clear();
     }
 
     public int getWidth() {
@@ -22,19 +26,47 @@ public class GameWorld {
     }
 
     public int getForeMap(int x, int y) {
-        return foreMap[x][y];
+        int ret = 0;
+        try {
+            ret = foreMap[x][y];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Gdx.app.error("GameWorld",e.toString());
+        }
+        return ret;
     }
 
     public void setForeMap(int x, int y, int value) {
-        foreMap[x][y] = value;
+        try {
+            foreMap[x][y] = value;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Gdx.app.error("GameWorld", e.toString());
+        }
     }
 
     public int getBackMap(int x, int y) {
-        return backMap[x][y];
+        int ret = 0;
+        try {
+            ret = backMap[x][y];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Gdx.app.error("GameWorld",e.toString());
+        }
+        return ret;
     }
 
     public void setBackMap(int x, int y, int value) {
-        backMap[x][y] = value;
+        try {
+            backMap[x][y] = value;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Gdx.app.error("GameWorld", e.toString());
+        }
+    }
+
+    public void placeToForeground(int x, int y, int value) {
+        if (getForeMap(x,y) == 0 || value == 0) setForeMap(x,y,value);
+    }
+
+    public void placeToBackground(int x, int y, int value) {
+        if (getBackMap(x,y) == 0 || value == 0) setBackMap(x,y,value);
     }
 
 }
