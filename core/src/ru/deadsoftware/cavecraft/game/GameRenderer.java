@@ -6,10 +6,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import ru.deadsoftware.cavecraft.Assets;
-import ru.deadsoftware.cavecraft.BlocksLoader;
+import ru.deadsoftware.cavecraft.Items;
 import ru.deadsoftware.cavecraft.GameScreen;
 import ru.deadsoftware.cavecraft.game.objects.Player;
 
@@ -65,11 +64,11 @@ public class GameRenderer {
             for (int x=minX; x<maxX; x++) {
                 if (gameProc.world.getForeMap(x,y)>0) {
                     spriteBatch.draw(
-                            BlocksLoader.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).getTexture(),
+                            Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).getTexture(),
                             x * 16 - camera.position.x,y * 16 - camera.position.y);
                 } else if (gameProc.world.getBackMap(x,y)>0) {
                     spriteBatch.draw(
-                            BlocksLoader.BLOCKS.getValueAt(gameProc.world.getBackMap(x,y)).getTexture(),
+                            Items.BLOCKS.getValueAt(gameProc.world.getBackMap(x,y)).getTexture(),
                             x * 16 - camera.position.x,y * 16 - camera.position.y);
                     Assets.shade.setPosition(x * 16 - camera.position.x,y * 16 - camera.position.y);
                     Assets.shade.draw(spriteBatch);
@@ -89,7 +88,7 @@ public class GameRenderer {
                 camera.viewportHeight - Assets.invBar.getRegionHeight());
         for (int i=0; i<8; i++) {
             if (gameProc.player.inventory[i]>0) {
-                spriteBatch.draw(BlocksLoader.BLOCKS.getValueAt(gameProc.player.inventory[i]).getTexture(),
+                spriteBatch.draw(Items.BLOCKS.getValueAt(gameProc.player.inventory[i]).getTexture(),
                         camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2+3+i*20,
                         camera.viewportHeight-19);
             }

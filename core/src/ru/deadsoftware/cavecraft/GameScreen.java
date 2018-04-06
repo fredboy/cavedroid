@@ -5,7 +5,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import ru.deadsoftware.cavecraft.game.GameInputHandler;
 import ru.deadsoftware.cavecraft.game.GameProc;
-import ru.deadsoftware.cavecraft.game.GameRenderer;
 
 public class GameScreen implements Screen {
 
@@ -14,7 +13,7 @@ public class GameScreen implements Screen {
 
     public GameScreen() {
         Assets.load();
-        BlocksLoader.load();
+        Items.load();
         gameProc = new GameProc();
         gameInput = new GameInputHandler(gameProc);
         Gdx.input.setInputProcessor(new InputHandler());

@@ -3,7 +3,7 @@ package ru.deadsoftware.cavecraft;
 import com.badlogic.gdx.utils.ArrayMap;
 import ru.deadsoftware.cavecraft.game.objects.Block;
 
-public class BlocksLoader {
+public class Items {
 
     public static ArrayMap<String, Block> BLOCKS = new ArrayMap<String, Block>();
 
