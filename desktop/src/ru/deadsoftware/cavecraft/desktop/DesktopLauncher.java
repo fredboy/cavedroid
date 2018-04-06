@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		config.foregroundFPS = 60;
 		config.title = "CaveCraft";
 		config.width = 960;
-		config.height = 720;
+		config.height = 540;
 		new LwjglApplication(new CaveGame(), config);
 	}
 }

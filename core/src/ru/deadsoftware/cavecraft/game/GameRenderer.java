@@ -105,6 +105,7 @@ public class GameRenderer {
         drawPlayer(gameProc.player);
         drawGUI();
         spriteBatch.end();
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.ORANGE);
         drawRect(gameProc.cursorX*16-camera.position.x,
