@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import ru.deadsoftware.cavecraft.Assets;
+import ru.deadsoftware.cavecraft.BlocksLoader;
 import ru.deadsoftware.cavecraft.GameScreen;
 import ru.deadsoftware.cavecraft.game.objects.Player;
 
@@ -63,44 +64,37 @@ public class GameRenderer {
         for (int y=minY; y<maxY; y++) {
             for (int x=minX; x<maxX; x++) {
                 if (gameProc.world.getForeMap(x,y)>0) {
-                    setColor(128,128,128);
-                    fillRect(x*16-camera.position.x,
-                            y*16-camera.position.y,16,16);
-                    setColor(0,0,0);
-                    drawRect(x*16-camera.position.x,
-                            y*16-camera.position.y,16,16);
-                } else {
-                    if (gameProc.world.getBackMap(x,y)>0) {
-                        setColor(64,64,64);
-                        fillRect(x*16-camera.position.x,
-                                y*16-camera.position.y,16,16);
-                        setColor(0,0,0);
-                        drawRect(x*16-camera.position.x,
-                                y*16-camera.position.y,16,16);
-                    }
+                    spriteBatch.draw(
+                            BlocksLoader.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).getTexture(),
+                            x * 16 - camera.position.x,y * 16 - camera.position.y);
+                } else if (gameProc.world.getBackMap(x,y)>0) {
+                    spriteBatch.draw(
+                            BlocksLoader.BLOCKS.getValueAt(gameProc.world.getBackMap(x,y)).getTexture(),
+                            x * 16 - camera.position.x,y * 16 - camera.position.y);
+                    Assets.shade.setPosition(x * 16 - camera.position.x,y * 16 - camera.position.y);
+                    Assets.shade.draw(spriteBatch);
                 }
-
             }
         }
-        shapeRenderer.setColor(Color.ORANGE);
-        drawRect(gameProc.cursorX*16-camera.position.x,
-                gameProc.cursorY*16-camera.position.y,16,16);
     }
 
     private void drawPlayer(Player pl) {
-        spriteBatch.begin();
         Assets.playerSprite[pl.dir].setPosition(pl.position.x - camera.position.x,
                 pl.position.y - camera.position.y);
         Assets.playerSprite[pl.dir].draw(spriteBatch);
-        spriteBatch.end();
     }
 
     public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        shapeRenderer.begin();
+        spriteBatch.begin();
         drawWorld();
-        shapeRenderer.end();
         drawPlayer(gameProc.player);
+        spriteBatch.end();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.ORANGE);
+        drawRect(gameProc.cursorX*16-camera.position.x,
+                gameProc.cursorY*16-camera.position.y,16,16);
+        shapeRenderer.end();
     }
 
 }

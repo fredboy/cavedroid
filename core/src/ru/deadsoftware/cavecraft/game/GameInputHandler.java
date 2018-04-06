@@ -67,11 +67,11 @@ public class GameInputHandler {
     }
 
     public void touchDragged(int screenX, int screenY) {
-        gameProc.renderer.camera.position.x += (gameProc.touchDownX-screenX);
+        /*gameProc.renderer.camera.position.x += (gameProc.touchDownX-screenX);
         gameProc.renderer.camera.position.y += (gameProc.touchDownY-screenY);
         gameProc.touchDownX = screenX;
         gameProc.touchDownY = screenY;
-        gameProc.isTouchDown = false;
+        gameProc.isTouchDown = false;*/
     }
 
 }

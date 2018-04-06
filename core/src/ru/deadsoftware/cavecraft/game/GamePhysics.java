@@ -34,6 +34,18 @@ public class GamePhysics {
     }
 
     private void movePlayer(Player pl) {
+        pl.position.add(pl.moveY);
+        if (checkColl(pl.getRect())) {
+            pl.canJump = true;
+            int d = -1;
+            if (pl.moveY.y<0) d=1; else if (pl.moveY.y>0) d=-1;
+            pl.position.y = MathUtils.round(pl.position.y);
+            while (checkColl(pl.getRect())) pl.position.y+=d;
+            pl.moveY.setZero();
+        } else {
+            pl.canJump = false;
+        }
+        pl.moveY.add(gravity);
         pl.position.add(pl.moveX);
         if (pl.position.x<0 ||
                 pl.position.x+pl.width>gameProc.world.getWidth()*16)
@@ -44,18 +56,6 @@ public class GamePhysics {
             pl.position.x = MathUtils.round(pl.position.x);
             while (checkColl(pl.getRect())) pl.position.x+=d;
         }
-        pl.position.add(pl.moveY);
-        if (checkColl(pl.getRect())) {
-            pl.canJump = true;
-            float d = 0;
-            if (pl.moveY.y<0) d=1; else if (pl.moveY.y>0) d=-1;
-            pl.position.y = MathUtils.round(pl.position.y);
-            while (checkColl(pl.getRect())) pl.position.y+=d;
-            pl.moveY.setZero();
-        } else {
-            pl.canJump = false;
-        }
-        pl.moveY.add(gravity);
         switch (pl.dir) {
             case 0:
                 gameProc.renderer.camTargetPos.x = pl.position.x-gameProc.renderer.camera.viewportWidth+100;
