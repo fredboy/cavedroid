@@ -117,6 +117,7 @@ public class GameScreen implements Screen {
 
         @Override
         public boolean scrolled(int amount) {
+            gameInput.scrolled(amount);
             return false;
         }
     }

@@ -14,6 +14,7 @@ public class GameProc {
     public GamePhysics physics;
 
     public int cursorX, cursorY;
+    public int invSlot;
 
     public boolean isTouchDown = false;
     public int touchDownX, touchDownY;
@@ -36,7 +37,8 @@ public class GameProc {
         physics.update(delta);
 
         if (isTouchDown && TimeUtils.timeSinceMillis(touchDownTime) > 500) {
-            world.placeToBackground(cursorX,cursorY,1);
+            world.placeToBackground(cursorX,cursorY,
+                    player.inventory[invSlot]);
             isTouchDown = false;
         }
     }

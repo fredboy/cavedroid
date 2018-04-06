@@ -54,7 +54,8 @@ public class GameInputHandler {
     public void touchUp(int screenX, int screenY, int button) {
         if (gameProc.isTouchDown) {
             if (button == Input.Buttons.RIGHT){
-                gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY, 1);
+                gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY,
+                        gameProc.player.inventory[gameProc.invSlot]);
             } else if (button == Input.Buttons.LEFT) {
                 if (gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY) > 0) {
                     gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY, 0);
@@ -72,6 +73,12 @@ public class GameInputHandler {
         gameProc.touchDownX = screenX;
         gameProc.touchDownY = screenY;
         gameProc.isTouchDown = false;*/
+    }
+
+    public void scrolled(int amount) {
+        gameProc.invSlot += amount;
+        if (gameProc.invSlot < 0) gameProc.invSlot = 8;
+        if (gameProc.invSlot > 8) gameProc.invSlot = 0;
     }
 
 }

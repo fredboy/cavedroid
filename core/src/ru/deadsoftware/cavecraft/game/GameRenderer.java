@@ -84,11 +84,27 @@ public class GameRenderer {
         Assets.playerSprite[pl.dir].draw(spriteBatch);
     }
 
+    private void drawGUI() {
+        spriteBatch.draw(Assets.invBar, camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2,
+                camera.viewportHeight - Assets.invBar.getRegionHeight());
+        for (int i=0; i<8; i++) {
+            if (gameProc.player.inventory[i]>0) {
+                spriteBatch.draw(BlocksLoader.BLOCKS.getValueAt(gameProc.player.inventory[i]).getTexture(),
+                        camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2+3+i*20,
+                        camera.viewportHeight-19);
+            }
+        }
+        spriteBatch.draw(Assets.invCur,
+                camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2 - 1 + 20*gameProc.invSlot,
+                camera.viewportHeight - Assets.invBar.getRegionHeight() - 2);
+    }
+
     public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         spriteBatch.begin();
         drawWorld();
         drawPlayer(gameProc.player);
+        drawGUI();
         spriteBatch.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.ORANGE);
