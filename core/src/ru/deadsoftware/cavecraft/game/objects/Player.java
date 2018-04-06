@@ -8,6 +8,7 @@ public class Player {
     public Vector2 position;
     public Vector2 moveX, moveY;
     public int width, height, dir;
+    public boolean canJump;
 
     public Player() {
         position = new Vector2(0, 0);

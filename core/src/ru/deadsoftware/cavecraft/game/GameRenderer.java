@@ -3,10 +3,12 @@ package ru.deadsoftware.cavecraft.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import ru.deadsoftware.cavecraft.Assets;
 import ru.deadsoftware.cavecraft.GameScreen;
 import ru.deadsoftware.cavecraft.game.objects.Player;
 
@@ -17,19 +19,22 @@ public class GameRenderer {
     public Vector3 camTargetPos;
     public OrthographicCamera camera;
     ShapeRenderer shapeRenderer;
+    SpriteBatch spriteBatch;
 
     public GameRenderer(GameProc gameProc) {
         Gdx.gl.glClearColor(0f,.6f,.6f,1f);
         this.gameProc = gameProc;
         camera = new OrthographicCamera();
-        camera.setToOrtho(true, 320,
-                320*((float)GameScreen.getHeight()/GameScreen.getWidth()));
+        camera.setToOrtho(true, 360,
+                360*((float)GameScreen.getHeight()/GameScreen.getWidth()));
         camera.position.x=0;
         camera.position.y=0;
         camTargetPos = camera.position.cpy();
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.setAutoShapeType(true);
+        spriteBatch = new SpriteBatch();
+        spriteBatch.setProjectionMatrix(camera.combined);
     }
 
     private void setColor(int r, int g, int b) {
@@ -53,8 +58,8 @@ public class GameRenderer {
         int maxY = (int) ((camera.position.y+camera.viewportHeight)/16)+1;
         if (minX<0) minX=0;
         if (minY<0) minY=0;
-        if (maxX>=gameProc.world.getWidth()) maxX = gameProc.world.getWidth()-1;
-        if (maxY>=gameProc.world.getHeight()) maxY = gameProc.world.getHeight()-1;
+        if (maxX>gameProc.world.getWidth()) maxX = gameProc.world.getWidth();
+        if (maxY>gameProc.world.getHeight()) maxY = gameProc.world.getHeight();
         for (int y=minY; y<maxY; y++) {
             for (int x=minX; x<maxX; x++) {
                 if (gameProc.world.getForeMap(x,y)>0) {
@@ -83,17 +88,19 @@ public class GameRenderer {
     }
 
     private void drawPlayer(Player pl) {
-        setColor(0,128,0);
-        fillRect(pl.position.x - camera.position.x,
-                pl.position.y - camera.position.y, pl.width, pl.height);
+        spriteBatch.begin();
+        Assets.playerSprite[pl.dir].setPosition(pl.position.x - camera.position.x,
+                pl.position.y - camera.position.y);
+        Assets.playerSprite[pl.dir].draw(spriteBatch);
+        spriteBatch.end();
     }
 
     public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         shapeRenderer.begin();
         drawWorld();
-        drawPlayer(gameProc.player);
         shapeRenderer.end();
+        drawPlayer(gameProc.player);
     }
 
 }

@@ -20,7 +20,8 @@ public class GameInputHandler {
             gameProc.player.moveX.add(GamePhysics.PL_SPEED,0);
             gameProc.player.dir = 1;
         }
-        if (keyCode == Input.Keys.UP) gameProc.player.moveY.add(0,-12);
+        if (keyCode == Input.Keys.UP &&
+                gameProc.player.canJump) gameProc.player.moveY.add(0,-8);
     }
 
     public void keyUp(int keyCode) {
