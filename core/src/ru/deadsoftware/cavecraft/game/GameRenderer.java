@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
 import ru.deadsoftware.cavecraft.Assets;
+import ru.deadsoftware.cavecraft.CaveGame;
 import ru.deadsoftware.cavecraft.Items;
 import ru.deadsoftware.cavecraft.GameScreen;
 import ru.deadsoftware.cavecraft.game.objects.Player;
@@ -37,20 +38,6 @@ public class GameRenderer {
         spriteBatch.setProjectionMatrix(camera.combined);
     }
 
-    private void setColor(int r, int g, int b) {
-        shapeRenderer.setColor(r/255f, g/255f, b/255f, 1f);
-    }
-
-    private void fillRect(float x, float y, float w, float h) {
-        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.rect(x,y,w,h);
-    }
-
-    private void drawRect(float x, float y, float w, float h) {
-        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.rect(x,y,w,h);
-    }
-
     private void drawWorld() {
         int minX = (int) (camera.position.x/16);
         int minY = (int) (camera.position.y/16);
@@ -78,39 +65,57 @@ public class GameRenderer {
     }
 
     private void drawPlayer(Player pl) {
-        Assets.playerSprite[pl.dir].setPosition(pl.position.x - camera.position.x,
-                pl.position.y - camera.position.y);
-        Assets.playerSprite[pl.dir].draw(spriteBatch);
+        spriteBatch.draw(Assets.playerSkin[pl.dir],
+                pl.position.x - camera.position.x, pl.position.y - camera.position.y);
     }
 
     private void drawGUI() {
         spriteBatch.draw(Assets.invBar, camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2,
-                camera.viewportHeight - Assets.invBar.getRegionHeight());
+                0);//camera.viewportHeight - Assets.invBar.getRegionHeight());
         for (int i=0; i<8; i++) {
             if (gameProc.player.inventory[i]>0) {
                 spriteBatch.draw(Items.BLOCKS.getValueAt(gameProc.player.inventory[i]).getTexture(),
                         camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2+3+i*20,
-                        camera.viewportHeight-19);
+                        3);
             }
         }
         spriteBatch.draw(Assets.invCur,
                 camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2 - 1 + 20*gameProc.invSlot,
-                camera.viewportHeight - Assets.invBar.getRegionHeight() - 2);
+                -1);
+
+        if (CaveGame.TOUCH) {
+            spriteBatch.draw(Assets.touchArrows[0],26,camera.viewportHeight-52);
+            spriteBatch.draw(Assets.touchArrows[1],0,camera.viewportHeight-26);
+            spriteBatch.draw(Assets.touchArrows[2],26,camera.viewportHeight-26);
+            spriteBatch.draw(Assets.touchArrows[3],52,camera.viewportHeight-26);
+            spriteBatch.draw(Assets.touchSpace, camera.viewportWidth/2-52, camera.viewportHeight-26);
+            spriteBatch.draw(Assets.touchLMB, camera.viewportWidth-52, camera.viewportHeight-26);
+            spriteBatch.draw(Assets.touchRMB, camera.viewportWidth-26, camera.viewportHeight-26);
+            spriteBatch.draw(Assets.touchToggleMode, 78, camera.viewportHeight-26);
+            if (gameProc.ctrlMode==1) {
+                Assets.shade.setPosition(83, camera.viewportHeight-21);
+                Assets.shade.draw(spriteBatch);
+            }
+        }
     }
 
     public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         spriteBatch.begin();
         drawWorld();
         drawPlayer(gameProc.player);
         drawGUI();
         spriteBatch.end();
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.ORANGE);
-        drawRect(gameProc.cursorX*16-camera.position.x,
-                gameProc.cursorY*16-camera.position.y,16,16);
-        shapeRenderer.end();
+        if (gameProc.ctrlMode==1) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(Color.ORANGE);
+            shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.rect(gameProc.cursorX * 16 - camera.position.x,
+                    gameProc.cursorY * 16 - camera.position.y, 16, 16);
+            shapeRenderer.end();
+        }
     }
 
 }

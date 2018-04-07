@@ -12,16 +12,45 @@ public class GameInputHandler {
     }
 
     public void  keyDown(int keyCode) {
-        if (keyCode == Input.Keys.A) {
-            gameProc.player.moveX.add(-GamePhysics.PL_SPEED,0);
-            gameProc.player.dir = 0;
+        if (gameProc.ctrlMode==0) {
+            if (keyCode == Input.Keys.A) {
+                gameProc.player.moveX.add(-GamePhysics.PL_SPEED, 0);
+                gameProc.player.dir = 0;
+            }
+            if (keyCode == Input.Keys.D) {
+                gameProc.player.moveX.add(GamePhysics.PL_SPEED, 0);
+                gameProc.player.dir = 1;
+            }
+        } else {
+            if (keyCode == Input.Keys.A) {
+                gameProc.cursorX--;
+            }
+            if (keyCode == Input.Keys.D) {
+                gameProc.cursorX++;
+            }
+            if (keyCode == Input.Keys.W) {
+                gameProc.cursorY--;
+            }
+            if (keyCode == Input.Keys.S) {
+                gameProc.cursorY++;
+            }
+            if (gameProc.cursorX < 0)
+                gameProc.cursorX = 0;
+            if (gameProc.cursorX >= gameProc.world.getWidth())
+                gameProc.cursorX = gameProc.world.getWidth()-1;
+            if (gameProc.cursorY < 0)
+                gameProc.cursorY = 0;
+            if (gameProc.cursorY >= gameProc.world.getHeight())
+                gameProc.cursorY = gameProc.world.getHeight()-1;
         }
-        if (keyCode == Input.Keys.D) {
-            gameProc.player.moveX.add(GamePhysics.PL_SPEED,0);
-            gameProc.player.dir = 1;
+        if (keyCode == Input.Keys.ALT_LEFT) {
+            gameProc.ctrlMode++;
+            gameProc.cursorX = (int)(gameProc.player.position.x/16);
+            gameProc.cursorY = (int)(gameProc.player.position.y/16);
+            if (gameProc.ctrlMode > 1) gameProc.ctrlMode = 0;
         }
-        if (keyCode == Input.Keys.SPACE &&
-                gameProc.player.canJump) gameProc.player.moveY.add(0,-8);
+         if (keyCode == Input.Keys.SPACE &&
+                 gameProc.player.canJump) gameProc.player.moveY.add(0, -8);
     }
 
     public void keyUp(int keyCode) {
@@ -31,17 +60,6 @@ public class GameInputHandler {
     }
 
     public void mouseMoved(int screenX, int screenY) {
-        gameProc.cursorX = (int)((screenX+gameProc.renderer.camera.position.x)/16);
-        gameProc.cursorY = (int)((screenY+gameProc.renderer.camera.position.y)/16);
-        if (gameProc.cursorX < 0)
-            gameProc.cursorX = 0;
-        if (gameProc.cursorX >= gameProc.world.getWidth())
-            gameProc.cursorX = gameProc.world.getWidth()-1;
-        if (gameProc.cursorY < 0)
-            gameProc.cursorY = 0;
-        if (gameProc.cursorY >= gameProc.world.getHeight())
-            gameProc.cursorY = gameProc.world.getHeight()-1;
-
     }
 
     public void touchDown(int screenX, int screenY, int button) {

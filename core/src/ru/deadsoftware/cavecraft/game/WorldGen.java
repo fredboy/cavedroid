@@ -6,9 +6,9 @@ import com.badlogic.gdx.utils.TimeUtils;
 public class WorldGen {
 
     private static int[][] foreMap, backMap;
-    private static int[] noise;
+    private static int[] hMap;
 
-    static int[] genNoise(int width, int mid, int min, int max) {
+    static int[] genLandscape(int width, int mid, int min, int max) {
         RandomXS128 rand = new RandomXS128(TimeUtils.millis());
         int[] res = new int[width];
         int t;
@@ -25,13 +25,13 @@ public class WorldGen {
     static void genWorld(int width, int height) {
         foreMap = new int[width][height];
         backMap = new int[width][height];
-        noise = genNoise(width, height/2, 1, height);
+        hMap = genLandscape(width, height/2, height/4, height/4*3);
         for (int x=0; x<width; x++) {
-            for (int y=height-noise[x]; y<height; y++) {
-                if (y==height-noise[x]) {
+            for (int y = height- hMap[x]; y<height; y++) {
+                if (y==height- hMap[x]) {
                     foreMap[x][y] = 3;
                     backMap[x][y] = 3;
-                } else if (y<height-noise[x]+4) {
+                } else if (y<height- hMap[x]+4) {
                     foreMap[x][y] = 2;
                     backMap[x][y] = 2;
                 } else {

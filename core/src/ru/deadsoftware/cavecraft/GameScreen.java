@@ -1,6 +1,7 @@
 package ru.deadsoftware.cavecraft;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import ru.deadsoftware.cavecraft.game.GameInputHandler;
@@ -86,7 +87,38 @@ public class GameScreen implements Screen {
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
             screenX *= gameProc.renderer.camera.viewportWidth/getWidth();
             screenY *= gameProc.renderer.camera.viewportHeight/getHeight();
-            gameInput.touchDown(screenX, screenY, button);
+            if (CaveGame.TOUCH) {
+                if (screenX > 26 && screenX < 52 &&
+                        screenY > gameProc.renderer.camera.viewportHeight - 52 &&
+                        screenY < gameProc.renderer.camera.viewportHeight - 26) {
+                    gameInput.keyDown(Input.Keys.W);
+                } else if (screenX > 0 && screenX < 26 &&
+                        screenY > gameProc.renderer.camera.viewportHeight - 26) {
+                    gameInput.keyDown(Input.Keys.A);
+                } else if (screenX > 26 && screenX < 52 &&
+                        screenY > gameProc.renderer.camera.viewportHeight - 26) {
+                    gameInput.keyDown(Input.Keys.S);
+                } else if (screenX > 52 && screenX < 78 &&
+                        screenY > gameProc.renderer.camera.viewportHeight - 26) {
+                    gameInput.keyDown(Input.Keys.D);
+                } else if (screenX > 78 && screenX < 104 &&
+                        screenY > gameProc.renderer.camera.viewportHeight - 26) {
+                    gameInput.keyDown(Input.Keys.ALT_LEFT);
+                } else if (screenX > gameProc.renderer.camera.viewportWidth - 52 &&
+                        screenX < gameProc.renderer.camera.viewportWidth - 26 &&
+                        screenY > gameProc.renderer.camera.viewportHeight - 26) {
+                    gameInput.touchDown(screenX, screenY, Input.Buttons.LEFT);
+                } else if (screenX > gameProc.renderer.camera.viewportWidth - 26 &&
+                        screenY > gameProc.renderer.camera.viewportHeight - 26) {
+                    gameInput.touchDown(screenX, screenY, Input.Buttons.RIGHT);
+                } else if (screenX > gameProc.renderer.camera.viewportWidth / 2 - 52 &&
+                        screenX < gameProc.renderer.camera.viewportWidth / 2 + 52 &&
+                        screenY > gameProc.renderer.camera.viewportHeight - 26) {
+                    gameInput.keyDown(Input.Keys.SPACE);
+                }
+            } else {
+                gameInput.touchDown(screenX, screenY, button);
+            }
             return false;
         }
 
@@ -94,7 +126,38 @@ public class GameScreen implements Screen {
         public boolean touchUp(int screenX, int screenY, int pointer, int button) {
             screenX *= gameProc.renderer.camera.viewportWidth/getWidth();
             screenY *= gameProc.renderer.camera.viewportHeight/getHeight();
-            gameInput.touchUp(screenX, screenY, button);
+            if (CaveGame.TOUCH) {
+                if (screenX>26 && screenX<52 &&
+                        screenY>gameProc.renderer.camera.viewportHeight-52 &&
+                        screenY<gameProc.renderer.camera.viewportHeight-26) {
+                    gameInput.keyUp(Input.Keys.W);
+                } else if (screenX>0 && screenX<26 &&
+                        screenY>gameProc.renderer.camera.viewportHeight-26) {
+                    gameInput.keyUp(Input.Keys.A);
+                } else if (screenX>26 && screenX<52 &&
+                        screenY>gameProc.renderer.camera.viewportHeight-26) {
+                    gameInput.keyUp(Input.Keys.S);
+                } else if (screenX>52 && screenX<78 &&
+                        screenY>gameProc.renderer.camera.viewportHeight-26) {
+                    gameInput.keyUp(Input.Keys.D);
+                } else if (screenX > 78 && screenX < 104 &&
+                        screenY > gameProc.renderer.camera.viewportHeight - 26) {
+                    gameInput.keyUp(Input.Keys.ALT_LEFT);
+                } else if (screenX > gameProc.renderer.camera.viewportWidth - 52 &&
+                        screenX < gameProc.renderer.camera.viewportWidth - 26 &&
+                        screenY > gameProc.renderer.camera.viewportHeight - 26) {
+                    gameInput.touchUp(screenX, screenY, Input.Buttons.LEFT);
+                } else if (screenX > gameProc.renderer.camera.viewportWidth - 26 &&
+                        screenY > gameProc.renderer.camera.viewportHeight - 26) {
+                    gameInput.touchUp(screenX, screenY, Input.Buttons.RIGHT);
+                } else if (screenX > gameProc.renderer.camera.viewportWidth / 2 - 52 &&
+                        screenX < gameProc.renderer.camera.viewportWidth / 2 + 52 &&
+                        screenY > gameProc.renderer.camera.viewportHeight - 26) {
+                    gameInput.keyUp(Input.Keys.SPACE);
+                }
+            } else {
+                gameInput.touchUp(screenX, screenY, button);
+            }
             return false;
         }
 

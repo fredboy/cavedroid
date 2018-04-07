@@ -15,13 +15,14 @@ public class GameProc {
 
     public int cursorX, cursorY;
     public int invSlot;
+    public int ctrlMode;
 
     public boolean isTouchDown = false;
     public int touchDownX, touchDownY;
     public long touchDownTime;
 
     public GameProc() {
-        world = new GameWorld(512,32);
+        world = new GameWorld(512,256);
         renderer = new GameRenderer(this);
         physics = new GamePhysics(this);
         player = new Player();
