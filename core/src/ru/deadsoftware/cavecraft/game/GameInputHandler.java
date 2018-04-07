@@ -12,20 +12,20 @@ public class GameInputHandler {
     }
 
     public void  keyDown(int keyCode) {
-        if (keyCode == Input.Keys.LEFT) {
+        if (keyCode == Input.Keys.A) {
             gameProc.player.moveX.add(-GamePhysics.PL_SPEED,0);
             gameProc.player.dir = 0;
         }
-        if (keyCode == Input.Keys.RIGHT) {
+        if (keyCode == Input.Keys.D) {
             gameProc.player.moveX.add(GamePhysics.PL_SPEED,0);
             gameProc.player.dir = 1;
         }
-        if (keyCode == Input.Keys.UP &&
+        if (keyCode == Input.Keys.SPACE &&
                 gameProc.player.canJump) gameProc.player.moveY.add(0,-8);
     }
 
     public void keyUp(int keyCode) {
-        if (keyCode == Input.Keys.RIGHT || keyCode == Input.Keys.LEFT) {
+        if (keyCode == Input.Keys.A || keyCode == Input.Keys.D) {
             gameProc.player.moveX.x = 0;
         }
     }
@@ -68,11 +68,6 @@ public class GameInputHandler {
     }
 
     public void touchDragged(int screenX, int screenY) {
-        /*gameProc.renderer.camera.position.x += (gameProc.touchDownX-screenX);
-        gameProc.renderer.camera.position.y += (gameProc.touchDownY-screenY);
-        gameProc.touchDownX = screenX;
-        gameProc.touchDownY = screenY;
-        gameProc.isTouchDown = false;*/
     }
 
     public void scrolled(int amount) {
