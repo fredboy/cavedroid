@@ -7,7 +7,7 @@ public class CaveGame extends Game {
 	public static boolean TOUCH;
 
 	public CaveGame() {
-		this(true);
+		this(false);
 	}
 
 	public CaveGame(boolean touch) {
