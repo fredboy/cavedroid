@@ -11,6 +11,7 @@ import ru.deadsoftware.cavecraft.Assets;
 import ru.deadsoftware.cavecraft.CaveGame;
 import ru.deadsoftware.cavecraft.Items;
 import ru.deadsoftware.cavecraft.GameScreen;
+import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.objects.Player;
 
 public class GameRenderer {
@@ -64,6 +65,11 @@ public class GameRenderer {
         }
     }
 
+    private void drawMob(Mob mob) {
+        spriteBatch.draw(Assets.playerSkin[mob.dir],
+                mob.position.x - camera.position.x, mob.position.y - camera.position.y);
+    }
+
     private void drawPlayer(Player pl) {
         spriteBatch.draw(Assets.playerSkin[pl.dir],
                 pl.position.x - camera.position.x, pl.position.y - camera.position.y);
@@ -104,6 +110,9 @@ public class GameRenderer {
 
         spriteBatch.begin();
         drawWorld();
+        for (Mob mob : gameProc.mobs) {
+            drawMob(mob);
+        }
         drawPlayer(gameProc.player);
         drawGUI();
         spriteBatch.end();

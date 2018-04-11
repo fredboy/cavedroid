@@ -1,9 +1,9 @@
 package ru.deadsoftware.cavecraft.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.objects.Player;
 
 public class GamePhysics {
@@ -33,7 +33,7 @@ public class GamePhysics {
         return false;
     }
 
-    private void movePlayer(Player pl) {
+    private void playerPhy(Player pl) {
         pl.position.add(pl.moveY);
         if (checkColl(pl.getRect())) {
             pl.canJump = true;
@@ -70,8 +70,39 @@ public class GamePhysics {
             gameProc.renderer.camTargetPos.x = gameProc.world.getWidth()*16-gameProc.renderer.camera.viewportWidth;
     }
 
+    private void mobPhy(Mob mob) {
+        mob.position.add(mob.moveY);
+        if (checkColl(mob.getRect())) {
+            mob.canJump = true;
+            int d = -1;
+            if (mob.moveY.y<0) d=1; else if (mob.moveY.y>0) d=-1;
+            mob.position.y = MathUtils.round(mob.position.y);
+            while (checkColl(mob.getRect())) mob.position.y+=d;
+            mob.moveY.setZero();
+        } else {
+            mob.canJump = false;
+        }
+        mob.moveY.add(gravity);
+        mob.position.add(mob.moveX);
+        if (mob.position.x<32 ||
+                mob.position.x+mob.width>gameProc.world.getWidth()*16-32)
+            mob.position.sub(mob.moveX);
+        if (checkColl(mob.getRect())) {
+            int d = 0;
+            if (mob.moveX.x<0) d=1; else if (mob.moveX.x>0) d=-1;
+            mob.position.x = MathUtils.round(mob.position.x);
+            while (checkColl(mob.getRect())) mob.position.x+=d;
+        }
+}
+
     public void update(float delta) {
-        movePlayer(gameProc.player);
+
+        for (Mob mob : gameProc.mobs) {
+            mob.ai();
+            mobPhy(mob);
+        }
+        playerPhy(gameProc.player);
+
         if (gameProc.renderer.camera.position.x - gameProc.renderer.camTargetPos.x <= 8 &&
                 gameProc.renderer.camera.position.x - gameProc.renderer.camTargetPos.x >= -8) {
             gameProc.renderer.camera.position.x = gameProc.renderer.camTargetPos.x;
