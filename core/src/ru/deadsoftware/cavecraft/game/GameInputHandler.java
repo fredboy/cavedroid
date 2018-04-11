@@ -49,13 +49,30 @@ public class GameInputHandler {
             gameProc.cursorY = (int)(gameProc.player.position.y/16);
             if (gameProc.ctrlMode > 1) gameProc.ctrlMode = 0;
         }
-         if (keyCode == Input.Keys.SPACE &&
-                 gameProc.player.canJump) gameProc.player.moveY.add(0, -8);
+        if (keyCode == Input.Keys.SPACE) {
+             if (gameProc.player.canJump) {
+                 gameProc.player.moveY.add(0, -8);
+             } else if (!gameProc.player.flyMode) {
+                 gameProc.player.flyMode = true;
+                 gameProc.player.moveY.setZero();
+             } else {
+                 gameProc.player.moveY.y = -GamePhysics.PL_SPEED;
+             }
+        }
+        if (keyCode == Input.Keys.CONTROL_LEFT) {
+            gameProc.player.moveY.y = GamePhysics.PL_SPEED;
+        }
     }
 
     public void keyUp(int keyCode) {
         if (keyCode == Input.Keys.A || keyCode == Input.Keys.D) {
             gameProc.player.moveX.x = 0;
+        }
+        if (keyCode == Input.Keys.SPACE) {
+            if (gameProc.player.flyMode) gameProc.player.moveY.setZero();
+        }
+        if (keyCode == Input.Keys.CONTROL_LEFT) {
+            if (gameProc.player.flyMode) gameProc.player.moveY.setZero();
         }
     }
 

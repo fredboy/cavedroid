@@ -2,6 +2,7 @@ package ru.deadsoftware.cavecraft;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -10,7 +11,7 @@ public class Assets {
     public static final int BLOCK_TEXTURES = 3;
 
     public static Texture charTexture;
-    public static TextureRegion[] playerSkin = new TextureRegion[2];
+    public static Sprite[][] playerSkin = new Sprite[2][4];
 
     public static Sprite shade;
 
@@ -28,11 +29,34 @@ public class Assets {
     public static TextureRegion touchSpace;
 
     public static void load() {
-        charTexture = new Texture(Gdx.files.internal("char.png"));
-        playerSkin[0] = new TextureRegion(charTexture, 0,0,8,30);
-        playerSkin[0].flip(false,true);
-        playerSkin[1] = new TextureRegion(charTexture, 8,0,8,30);
-        playerSkin[1].flip(false,true);
+        charTexture = new Texture(Gdx.files.internal("mobs/char.png"));
+        //LOOK TO LEFT
+        //head
+        playerSkin[0][0] = new Sprite(new TextureRegion(charTexture, 0,0,12,12));
+        playerSkin[0][0].flip(false,true);
+        //body
+        playerSkin[0][1] = new Sprite(new TextureRegion(charTexture, 0,13,12,12));
+        playerSkin[0][1].flip(false,true);
+        //hand
+        playerSkin[0][2] = new Sprite(new TextureRegion(charTexture, 25,5,20,20));
+        playerSkin[0][2].flip(false,true);
+        //leg
+        playerSkin[0][3] = new Sprite(new TextureRegion(charTexture, 25,27,20,20));
+        playerSkin[0][3].flip(false,true);
+        //LOOK TO RIGHT
+        //head
+        playerSkin[1][0] = new Sprite(new TextureRegion(charTexture, 13,0,12,12));
+        playerSkin[1][0].flip(false,true);
+        //body
+        playerSkin[1][1] = new Sprite(new TextureRegion(charTexture, 13,13,12,12));
+        playerSkin[1][1].flip(false,true);
+        //hand
+        playerSkin[1][2] = new Sprite(new TextureRegion(charTexture, 37,5,20,20));
+        playerSkin[1][2].flip(false,true);
+        //leg
+        playerSkin[1][3] = new Sprite(new TextureRegion(charTexture, 37,27,20,20));
+        playerSkin[1][3].flip(false,true);
+
 
         shade = new Sprite(new Texture(Gdx.files.internal("shade.png")));
 

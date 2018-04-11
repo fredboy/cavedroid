@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import ru.deadsoftware.cavecraft.Assets;
 import ru.deadsoftware.cavecraft.CaveGame;
@@ -66,18 +67,50 @@ public class GameRenderer {
     }
 
     private void drawMob(Mob mob) {
-        spriteBatch.draw(Assets.playerSkin[mob.dir],
-                mob.position.x - camera.position.x, mob.position.y - camera.position.y);
+        mob.draw(spriteBatch,
+                mob.position.x-camera.position.x, mob.position.y-camera.position.y);
     }
 
     private void drawPlayer(Player pl) {
-        spriteBatch.draw(Assets.playerSkin[pl.dir],
-                pl.position.x - camera.position.x, pl.position.y - camera.position.y);
+        if (!pl.moveX.equals(Vector2.Zero)) {
+            Assets.playerSkin[0][2].rotate(Mob.ANIM_SPEED);
+            Assets.playerSkin[1][2].rotate(-Mob.ANIM_SPEED);
+            Assets.playerSkin[0][3].rotate(-Mob.ANIM_SPEED);
+            Assets.playerSkin[1][3].rotate(Mob.ANIM_SPEED);
+        } else {
+            Assets.playerSkin[0][2].setRotation(0);
+            Assets.playerSkin[1][2].setRotation(0);
+            Assets.playerSkin[0][3].setRotation(0);
+            Assets.playerSkin[1][3].setRotation(0);
+        }
+        if (Assets.playerSkin[0][2].getRotation()>=60 || Assets.playerSkin[0][2].getRotation()<=-60)
+            Mob.ANIM_SPEED = -Mob.ANIM_SPEED;
+        Assets.playerSkin[1][2].setPosition(
+                pl.position.x - camera.position.x - 6,
+                pl.position.y - camera.position.y);
+        Assets.playerSkin[1][2].draw(spriteBatch);
+        Assets.playerSkin[1][3].setPosition(
+                pl.position.x - camera.position.x - 6,
+                pl.position.y - camera.position.y + 10);
+        Assets.playerSkin[1][3].draw(spriteBatch);
+        Assets.playerSkin[0][3].setPosition(
+                pl.position.x - camera.position.x - 6,
+                pl.position.y - camera.position.y + 10);
+        Assets.playerSkin[0][3].draw(spriteBatch);
+
+        spriteBatch.draw(Assets.playerSkin[pl.dir][0],
+                pl.position.x - camera.position.x - 2, pl.position.y - camera.position.y - 2);
+        spriteBatch.draw(Assets.playerSkin[pl.dir][1],
+                pl.position.x - camera.position.x - 2, pl.position.y - camera.position.y + 8);
+
+        Assets.playerSkin[0][2].setPosition(
+                pl.position.x - camera.position.x - 6,
+                pl.position.y - camera.position.y);
+        Assets.playerSkin[0][2].draw(spriteBatch);
     }
 
     private void drawGUI() {
-        spriteBatch.draw(Assets.invBar, camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2,
-                0);//camera.viewportHeight - Assets.invBar.getRegionHeight());
+        spriteBatch.draw(Assets.invBar, camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2, 0);
         for (int i=0; i<8; i++) {
             if (gameProc.player.inventory[i]>0) {
                 spriteBatch.draw(Items.BLOCKS.getValueAt(gameProc.player.inventory[i]).getTexture(),
@@ -110,9 +143,7 @@ public class GameRenderer {
 
         spriteBatch.begin();
         drawWorld();
-        for (Mob mob : gameProc.mobs) {
-            drawMob(mob);
-        }
+        for (Mob mob : gameProc.mobs) drawMob(mob);
         drawPlayer(gameProc.player);
         drawGUI();
         spriteBatch.end();

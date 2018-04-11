@@ -21,12 +21,12 @@ public class GamePhysics {
 
     private boolean checkColl(Rectangle rect) {
         int[] bl = new int [6];
-        bl[0] = gameProc.world.getForeMap(((int)(rect.x+2)/16), ((int)rect.y/16));
-        bl[1] = gameProc.world.getForeMap(((int)(rect.x+rect.width-2)/16), ((int)rect.y/16));
-        bl[2] = gameProc.world.getForeMap(((int)(rect.x+2)/16), ((int)(rect.y+rect.height/2)/16));
-        bl[3] = gameProc.world.getForeMap(((int)(rect.x+rect.width-2)/16), ((int)(rect.y+rect.height/2)/16));
-        bl[4] = gameProc.world.getForeMap(((int)(rect.x+2)/16), ((int)(rect.y+rect.height-1)/16));
-        bl[5] = gameProc.world.getForeMap(((int)(rect.x+rect.width-2)/16), ((int)(rect.y+(rect.height-1))/16));
+        bl[0] = gameProc.world.getForeMap(((int)(rect.x)/16), ((int)rect.y/16));
+        bl[1] = gameProc.world.getForeMap(((int)(rect.x+rect.width-1)/16), ((int)rect.y/16));
+        bl[2] = gameProc.world.getForeMap(((int)(rect.x)/16), ((int)(rect.y+rect.height/2)/16));
+        bl[3] = gameProc.world.getForeMap(((int)(rect.x+rect.width-1)/16), ((int)(rect.y+rect.height/2)/16));
+        bl[4] = gameProc.world.getForeMap(((int)(rect.x)/16), ((int)(rect.y+rect.height-1)/16));
+        bl[5] = gameProc.world.getForeMap(((int)(rect.x+rect.width-1)/16), ((int)(rect.y+(rect.height-1))/16));
         for (int b: bl) if (b>0) {
             return true;
         }
@@ -36,6 +36,7 @@ public class GamePhysics {
     private void playerPhy(Player pl) {
         pl.position.add(pl.moveY);
         if (checkColl(pl.getRect())) {
+            pl.flyMode = false;
             pl.canJump = true;
             int d = -1;
             if (pl.moveY.y<0) d=1; else if (pl.moveY.y>0) d=-1;
@@ -45,7 +46,7 @@ public class GamePhysics {
         } else {
             pl.canJump = false;
         }
-        pl.moveY.add(gravity);
+        if (!pl.flyMode) pl.moveY.add(gravity);
         pl.position.add(pl.moveX);
         if (pl.position.x<0 ||
                 pl.position.x+pl.width>gameProc.world.getWidth()*16)
