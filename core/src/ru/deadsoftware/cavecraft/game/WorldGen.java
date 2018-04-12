@@ -29,6 +29,26 @@ public class WorldGen {
         return res;
     }
 
+    private static void genOak(int x, int y) {
+        backMap[x][y] = 15;
+        backMap[x][y-1] = 15;
+        backMap[x][y-2] = 15;
+        backMap[x][y-3] = 15;
+        backMap[x][y-4] = 16;
+        backMap[x][y-5] = 16;
+        backMap[x-1][y-3] = 16;
+        backMap[x-1][y-4] = 16;
+        backMap[x+1][y-3] = 16;
+        backMap[x+1][y-4] = 16;
+        foreMap[x][y-3] = 16;
+        foreMap[x][y-4] = 16;
+        foreMap[x][y-5] = 16;
+        foreMap[x-1][y-3] = 16;
+        foreMap[x-1][y-4] = 16;
+        foreMap[x+1][y-3] = 16;
+        foreMap[x+1][y-4] = 16;
+    }
+
     static void genWorld(int width, int height) {
         genWorld(width, height, TimeUtils.millis());
     }
@@ -57,12 +77,13 @@ public class WorldGen {
                     backMap[x][y] = 7;
                 }
             }
-            for (int y = height/2; y<height- hMap[x]; y++) {
+            for (int y = height/4*3; y<height- hMap[x]; y++) {
                 if (foreMap[x][y]==0){
                     foreMap[x][y] = 8;
                     backMap[x][y] = 8;
                 }
             }
+            if (x>2 && x<width-2 && rand.nextInt(100)<5) genOak(x,height-hMap[x]-1);
         }
     }
 

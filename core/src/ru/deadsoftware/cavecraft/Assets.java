@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Assets {
 
-    public static final int BLOCK_TEXTURES = 9;
+    public static final int BLOCK_TEXTURES = 18;
 
     public static BitmapFont minecraftFont;
 
