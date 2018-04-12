@@ -71,7 +71,12 @@ public class GameScreen implements Screen {
 
         @Override
         public boolean keyDown(int keycode) {
-            gameInput.keyDown(keycode);
+            if (keycode == Input.Keys.N) {
+                gameProc = new GameProc();
+                gameInput = new GameInputHandler(gameProc);
+            } else {
+                gameInput.keyDown(keycode);
+            }
             return false;
         }
 

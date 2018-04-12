@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Block {
 
-    private Rectangle rect;
+    private int x,y,w,h;
     private TextureRegion texture;
 
     public boolean collision, foreground;
@@ -15,7 +15,10 @@ public class Block {
     }
 
     public Block(int x, int y, int w, int h, TextureRegion texture, boolean collision, boolean foreground) {
-        rect = new Rectangle(x,y,w,h);
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
         this.texture = texture;
         this.collision = collision;
         this.foreground = foreground;
@@ -25,23 +28,10 @@ public class Block {
         return texture;
     }
 
-    public Rectangle getRect() {
-        return rect;
+    public Rectangle getRect(int x, int y) {
+        x*=16;
+        y*=16;
+        return new Rectangle(x+this.x, y+this.y, w, h);
     }
 
-    public int getX() {
-        return (int)rect.x;
-    }
-
-    public int getY() {
-        return (int)rect.y;
-    }
-
-    public int getWidth() {
-        return (int)rect.width;
-    }
-
-    public int getHeight() {
-        return (int)rect.height;
-    }
 }

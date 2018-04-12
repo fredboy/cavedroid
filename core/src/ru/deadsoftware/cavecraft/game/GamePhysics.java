@@ -1,9 +1,6 @@
 package ru.deadsoftware.cavecraft.game;
 
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.*;
 import ru.deadsoftware.cavecraft.Items;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.objects.Player;
@@ -43,15 +40,25 @@ public class GamePhysics {
     }
 
     private boolean checkColl(Rectangle rect) {
-        int[] bl = new int [6];
-        bl[0] = gameProc.world.getForeMap(((int)(rect.x)/16), ((int)rect.y/16));
-        bl[1] = gameProc.world.getForeMap(((int)(rect.x+rect.width-1)/16), ((int)rect.y/16));
-        bl[2] = gameProc.world.getForeMap(((int)(rect.x)/16), ((int)(rect.y+rect.height/2)/16));
-        bl[3] = gameProc.world.getForeMap(((int)(rect.x+rect.width-1)/16), ((int)(rect.y+rect.height/2)/16));
-        bl[4] = gameProc.world.getForeMap(((int)(rect.x)/16), ((int)(rect.y+rect.height-1)/16));
-        bl[5] = gameProc.world.getForeMap(((int)(rect.x+rect.width-1)/16), ((int)(rect.y+(rect.height-1))/16));
-        for (int b: bl) if (b>0 && Items.BLOCKS.getValueAt(b).collision) {
-            return true;
+        int[] ids = new int[6];
+        ids[0] = gameProc.world.getForeMap(((int)(rect.x)/16), ((int)rect.y/16));
+        ids[1] = gameProc.world.getForeMap(((int)(rect.x+rect.width-1)/16), ((int)rect.y/16));
+        ids[2] = gameProc.world.getForeMap(((int)(rect.x)/16), ((int)(rect.y+rect.height/2)/16));
+        ids[3] = gameProc.world.getForeMap(((int)(rect.x+rect.width-1)/16), ((int)(rect.y+rect.height/2)/16));
+        ids[4] = gameProc.world.getForeMap(((int)(rect.x)/16), ((int)(rect.y+rect.height-1)/16));
+        ids[5] = gameProc.world.getForeMap(((int)(rect.x+rect.width-1)/16), ((int)(rect.y+(rect.height-1))/16));
+        Rectangle[] bl = new Rectangle[6];
+        if (ids[0]>0) bl[0] = Items.BLOCKS.getValueAt(ids[0]).getRect((int)(rect.x)/16,(int)rect.y/16);
+        if (ids[1]>0) bl[1] = Items.BLOCKS.getValueAt(ids[1]).getRect(((int)(rect.x+rect.width-1)/16), ((int)rect.y/16));
+        if (ids[2]>0) bl[2] = Items.BLOCKS.getValueAt(ids[2]).getRect(((int)(rect.x)/16), ((int)(rect.y+rect.height/2)/16));
+        if (ids[3]>0) bl[3] = Items.BLOCKS.getValueAt(ids[3]).getRect(((int)(rect.x+rect.width-1)/16), ((int)(rect.y+rect.height/2)/16));
+        if (ids[4]>0) bl[4] = Items.BLOCKS.getValueAt(ids[4]).getRect(((int)(rect.x)/16), ((int)(rect.y+rect.height-1)/16));
+        if (ids[5]>0) bl[5] = Items.BLOCKS.getValueAt(ids[5]).getRect(((int)(rect.x+rect.width-1)/16), ((int)(rect.y+(rect.height-1))/16));
+        for (int i=0; i<6; i++) {
+            if (ids[i]>0 &&
+                    Items.BLOCKS.getValueAt(ids[i]).collision &&
+                    Intersector.overlaps(rect,bl[i]))
+                return true;
         }
         return false;
     }
@@ -81,10 +88,10 @@ public class GamePhysics {
             while (checkColl(pl.getRect())) pl.position.x+=d;
         }
 
-        if (checkJump(pl.getRect(), pl.dir) && !pl.flyMode && pl.canJump && !pl.moveX.equals(Vector2.Zero)) {
+        /*if (checkJump(pl.getRect(), pl.dir) && !pl.flyMode && pl.canJump && !pl.moveX.equals(Vector2.Zero)) {
             pl.moveY.add(0, -8);
             pl.canJump = false;
-        }
+        }*/
     }
 
     private void mobPhy(Mob mob) {

@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavecraft.game;
 
+import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavecraft.game.mobs.Human;
@@ -27,10 +28,10 @@ public class GameProc {
     public long touchDownTime;
 
     public GameProc() {
-        world = new GameWorld(512,256);
+        world = new GameWorld(4096,256);
         renderer = new GameRenderer(this);
         physics = new GamePhysics(this);
-        player = new Player();
+        player = new Player(world.getWidth()/2*16+4, 0);
         mobs = new Array<Mob>();
 
     }

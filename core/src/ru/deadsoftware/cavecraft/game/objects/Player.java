@@ -1,8 +1,10 @@
 package ru.deadsoftware.cavecraft.game.objects;
 
+import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavecraft.Assets;
+import ru.deadsoftware.cavecraft.game.WorldGen;
 
 public class Player {
 
@@ -13,8 +15,8 @@ public class Player {
     public int[] inventory;
     public boolean flyMode = false;
 
-    public Player() {
-        position = new Vector2(0, 0);
+    public Player(int x, int y) {
+        position = new Vector2(x, y);
         moveX = new Vector2(0, 0);
         moveY = new Vector2(0, 0);
         width = 4;

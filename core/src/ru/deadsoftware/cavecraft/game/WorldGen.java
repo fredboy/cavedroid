@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavecraft.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.utils.TimeUtils;
 
@@ -54,6 +55,12 @@ public class WorldGen {
                 } else {
                     foreMap[x][y] = 7;
                     backMap[x][y] = 7;
+                }
+            }
+            for (int y = height/2; y<height- hMap[x]; y++) {
+                if (foreMap[x][y]==0){
+                    foreMap[x][y] = 8;
+                    backMap[x][y] = 8;
                 }
             }
         }
