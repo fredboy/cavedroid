@@ -25,6 +25,10 @@ public class Assets {
     public static TextureRegion invBar;
     public static TextureRegion invCur;
 
+    public static Texture creativeTexture;
+    public static TextureRegion creativeInv;
+    public static TextureRegion creativeScroll;
+
     public static Texture touchGui;
     public static TextureRegion[] touchArrows = new TextureRegion[4];
     public static TextureRegion touchLMB, touchRMB;
@@ -67,6 +71,12 @@ public class Assets {
         gui = new Texture(Gdx.files.internal("gui.png"));
         invBar = new TextureRegion(gui,0,0,182,22);
         invCur = new TextureRegion(gui,0,22,24,24);
+
+        creativeTexture = new Texture(Gdx.files.internal("allitems.png"));
+        creativeInv = new TextureRegion(creativeTexture, 0, 0, 176, 208);
+        creativeInv.flip(false,true);
+        creativeScroll = new TextureRegion(creativeTexture, 2, 209, 12, 15);
+        creativeScroll.flip(false, true);
 
         touchGui = new Texture(Gdx.files.internal("touch_gui.png"));
         for (int i=0; i<4; i++) {

@@ -1,8 +1,11 @@
 package ru.deadsoftware.cavecraft.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.TimeUtils;
+import ru.deadsoftware.cavecraft.Assets;
 import ru.deadsoftware.cavecraft.GameScreen;
+import ru.deadsoftware.cavecraft.Items;
 
 public class GameInputHandler {
 
@@ -51,17 +54,20 @@ public class GameInputHandler {
             if (gameProc.ctrlMode > 1) gameProc.ctrlMode = 0;
         }
         if (keyCode == Input.Keys.SPACE) {
-             if (gameProc.player.canJump) {
-                 gameProc.player.moveY.add(0, -7);
-             } else if (!gameProc.player.flyMode) {
-                 gameProc.player.flyMode = true;
-                 gameProc.player.moveY.setZero();
-             } else {
-                 gameProc.player.moveY.y = -GamePhysics.PL_SPEED;
-             }
+            if (gameProc.player.canJump) {
+                gameProc.player.moveY.add(0, -7);
+            } else if (!gameProc.player.flyMode) {
+                gameProc.player.flyMode = true;
+                gameProc.player.moveY.setZero();
+            } else {
+                gameProc.player.moveY.y = -GamePhysics.PL_SPEED;
+            }
         }
         if (keyCode == Input.Keys.CONTROL_LEFT) {
             gameProc.player.moveY.y = GamePhysics.PL_SPEED;
+        }
+        if (keyCode == Input.Keys.E) {
+            gameProc.renderer.showCreative = !gameProc.renderer.showCreative;
         }
     }
 
@@ -85,6 +91,19 @@ public class GameInputHandler {
         gameProc.touchDownY = screenY;
         gameProc.touchDownTime = TimeUtils.millis();
         gameProc.isTouchDown = true;
+        if (gameProc.renderer.showCreative) {
+            try {
+                int ix = (int)(screenX-(gameProc.renderer.camera.viewportWidth/2-Assets.creativeInv.getRegionWidth()/2+8))/18;
+                int iy = (int)(screenY-(gameProc.renderer.camera.viewportHeight/2 - Assets.creativeInv.getRegionHeight()/2+18))/18;
+                int item = ix+iy*8;
+                for (int i=8; i>0; i--) {
+                    gameProc.player.inventory[i] = gameProc.player.inventory[i-1];
+                }
+                if (item>=0 && item<Items.BLOCKS.size) gameProc.player.inventory[0] = item;
+            } catch (Exception e) {
+                Gdx.app.error("GameInputHandler", e.toString());
+            }
+        }
     }
 
     public void touchUp(int screenX, int screenY, int button) {

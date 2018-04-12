@@ -19,6 +19,8 @@ public class GameRenderer {
 
     private GameProc gameProc;
 
+    public boolean showCreative = false;
+
     public OrthographicCamera camera, fontCam;
     ShapeRenderer shapeRenderer;
     SpriteBatch spriteBatch, fontBatch;
@@ -27,8 +29,8 @@ public class GameRenderer {
         Gdx.gl.glClearColor(0f,.6f,.6f,1f);
         this.gameProc = gameProc;
         camera = new OrthographicCamera();
-        camera.setToOrtho(true, 360,
-                360*((float)GameScreen.getHeight()/GameScreen.getWidth()));
+        camera.setToOrtho(true, 480,
+                480*((float)GameScreen.getHeight()/GameScreen.getWidth()));
 
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
@@ -141,6 +143,22 @@ public class GameRenderer {
         Assets.playerSkin[0][2].draw(spriteBatch);
     }
 
+    private void drawCreative() {
+        float x = camera.viewportWidth/2-Assets.creativeInv.getRegionWidth()/2;
+        float y = camera.viewportHeight/2 - Assets.creativeInv.getRegionHeight()/2;
+        spriteBatch.draw(Assets.creativeInv, x, y);
+        spriteBatch.draw(Assets.creativeScroll, x+156, y+18);
+        for (int i=1; i<Items.BLOCKS.size; i++) {
+            spriteBatch.draw(Items.BLOCKS.getValueAt(i).getTexture(),x+8+(i%8)*18,
+                    y+18+(i/8)*18);
+        }
+        for (int i=0; i<9; i++) {
+            if (gameProc.player.inventory[i]>0)
+                spriteBatch.draw(Items.BLOCKS.getValueAt(gameProc.player.inventory[i]).getTexture(),
+                        x+8+i*18, y+184);
+        }
+    }
+
     private void drawGUI() {
         spriteBatch.draw(Assets.invBar, camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2, 0);
         for (int i=0; i<9; i++) {
@@ -153,6 +171,8 @@ public class GameRenderer {
         spriteBatch.draw(Assets.invCur,
                 camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2 - 1 + 20*gameProc.invSlot,
                 -1);
+
+        if (showCreative) drawCreative();
 
         if (CaveGame.TOUCH) {
             spriteBatch.draw(Assets.touchArrows[0],26,camera.viewportHeight-52);
