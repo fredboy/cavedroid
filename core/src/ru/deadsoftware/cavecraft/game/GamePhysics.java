@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import ru.deadsoftware.cavecraft.Items;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.objects.Player;
 
@@ -21,22 +22,24 @@ public class GamePhysics {
     }
 
     private boolean checkJump(Rectangle rect, int dir) {
-        int bl;
+        int bl = 0;
         switch (dir) {
             case 0:
-                bl = gameProc.world.getForeMap(
+                if ((int)((rect.x+(rect.width/2))/16) - 1>=0)
+                    bl = gameProc.world.getForeMap(
                         (int)((rect.x+(rect.width/2))/16) - 1,
                         (int)(rect.y/16)+1);
                 break;
             case 1:
-                bl = gameProc.world.getForeMap(
+                if ((int)((rect.x+(rect.width/2))/16) + 1<gameProc.world.getWidth())
+                    bl = gameProc.world.getForeMap(
                         (int)((rect.x+(rect.width/2))/16) + 1,
                         (int)(rect.y/16)+1);
                 break;
             default:
                 bl=0;
         }
-        return (bl!=0);
+        return (bl>0 && Items.BLOCKS.getValueAt(bl).collision);
     }
 
     private boolean checkColl(Rectangle rect) {
@@ -47,7 +50,7 @@ public class GamePhysics {
         bl[3] = gameProc.world.getForeMap(((int)(rect.x+rect.width-1)/16), ((int)(rect.y+rect.height/2)/16));
         bl[4] = gameProc.world.getForeMap(((int)(rect.x)/16), ((int)(rect.y+rect.height-1)/16));
         bl[5] = gameProc.world.getForeMap(((int)(rect.x+rect.width-1)/16), ((int)(rect.y+(rect.height-1))/16));
-        for (int b: bl) if (b>0) {
+        for (int b: bl) if (b>0 && Items.BLOCKS.getValueAt(b).collision) {
             return true;
         }
         return false;

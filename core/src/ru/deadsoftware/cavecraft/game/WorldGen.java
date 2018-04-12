@@ -43,14 +43,17 @@ public class WorldGen {
             dirtH = 4+rand.nextInt(2);
             for (int y = height- hMap[x]; y<height; y++) {
                 if (y==height- hMap[x]) {
-                    foreMap[x][y] = 3;
-                    backMap[x][y] = 3;
-                } else if (y<height-hMap[x]+dirtH) {
                     foreMap[x][y] = 2;
                     backMap[x][y] = 2;
-                } else {
+                } else if (y<height-hMap[x]+dirtH) {
+                    foreMap[x][y] = 3;
+                    backMap[x][y] = 3;
+                } else if (y<height-1){
                     foreMap[x][y] = 1;
                     backMap[x][y] = 1;
+                } else {
+                    foreMap[x][y] = 7;
+                    backMap[x][y] = 7;
                 }
             }
         }

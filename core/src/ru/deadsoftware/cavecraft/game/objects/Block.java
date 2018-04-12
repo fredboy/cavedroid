@@ -8,9 +8,17 @@ public class Block {
     private Rectangle rect;
     private TextureRegion texture;
 
+    public boolean collision, foreground;
+
     public Block(int x, int y, int w, int h, TextureRegion texture) {
+        this(x,y,w,h,texture, true, false);
+    }
+
+    public Block(int x, int y, int w, int h, TextureRegion texture, boolean collision, boolean foreground) {
         rect = new Rectangle(x,y,w,h);
         this.texture = texture;
+        this.collision = collision;
+        this.foreground = foreground;
     }
 
     public TextureRegion getTexture() {

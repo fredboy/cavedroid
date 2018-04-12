@@ -61,7 +61,8 @@ public class GameRenderer {
         if (maxY>gameProc.world.getHeight()) maxY = gameProc.world.getHeight();
         for (int y=minY; y<maxY; y++) {
             for (int x=minX; x<maxX; x++) {
-                if (gameProc.world.getForeMap(x,y)>0) {
+                if (gameProc.world.getForeMap(x,y)>0 &&
+                        !Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).foreground) {
                     spriteBatch.draw(
                             Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).getTexture(),
                             x * 16 - camera.position.x,y * 16 - camera.position.y);
@@ -71,6 +72,27 @@ public class GameRenderer {
                             x * 16 - camera.position.x,y * 16 - camera.position.y);
                     Assets.shade.setPosition(x * 16 - camera.position.x,y * 16 - camera.position.y);
                     Assets.shade.draw(spriteBatch);
+                }
+            }
+        }
+    }
+
+    private void drawWorldForeground(){
+        int minX = (int) (camera.position.x/16);
+        int minY = (int) (camera.position.y/16);
+        int maxX = (int) ((camera.position.x+camera.viewportWidth)/16)+1;
+        int maxY = (int) ((camera.position.y+camera.viewportHeight)/16)+1;
+        if (minX<0) minX=0;
+        if (minY<0) minY=0;
+        if (maxX>gameProc.world.getWidth()) maxX = gameProc.world.getWidth();
+        if (maxY>gameProc.world.getHeight()) maxY = gameProc.world.getHeight();
+        for (int y=minY; y<maxY; y++) {
+            for (int x=minX; x<maxX; x++) {
+                if (gameProc.world.getForeMap(x,y)>0 &&
+                        Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).foreground) {
+                    spriteBatch.draw(
+                            Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).getTexture(),
+                            x * 16 - camera.position.x,y * 16 - camera.position.y);
                 }
             }
         }
@@ -121,7 +143,7 @@ public class GameRenderer {
 
     private void drawGUI() {
         spriteBatch.draw(Assets.invBar, camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2, 0);
-        for (int i=0; i<8; i++) {
+        for (int i=0; i<9; i++) {
             if (gameProc.player.inventory[i]>0) {
                 spriteBatch.draw(Items.BLOCKS.getValueAt(gameProc.player.inventory[i]).getTexture(),
                         camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2+3+i*20,
@@ -155,6 +177,7 @@ public class GameRenderer {
         drawWorld();
         for (Mob mob : gameProc.mobs) drawMob(mob);
         drawPlayer(gameProc.player);
+        drawWorldForeground();
         drawGUI();
         spriteBatch.end();
 
@@ -175,7 +198,7 @@ public class GameRenderer {
         drawString("Y: "+(int)(gameProc.player.position.y/16), 0, 60);
         drawString("Block: "+
                 Items.BLOCKS.keys().toArray().get(gameProc.world.getForeMap(
-                        (int)(gameProc.player.position.x/16),
+                        (int)((gameProc.player.position.x+gameProc.player.texWidth/2)/16),
                         (int)(gameProc.player.position.y/16+2))),
                 0, 80);
         fontBatch.end();
