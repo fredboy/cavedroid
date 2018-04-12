@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavecraft.game.mobs;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Rectangle;
@@ -11,6 +12,7 @@ public class Human extends Mob{
 
     private RandomXS128 rand = new RandomXS128();
     private GameProc gameProc;
+    private Sprite[][] tex;
 
     public Human(int x, int y, GameProc gameProc) {
         this.gameProc = gameProc;
@@ -19,8 +21,11 @@ public class Human extends Mob{
         moveY = new Vector2(0, 0);
         width = 8;
         height = 30;
-        dir = 1;
+        dir = 0;
         canJump = false;
+        tex = Assets.playerSkin.clone();
+        animation = 0;
+        anim_d = 1;
     }
 
     @Override
@@ -36,19 +41,27 @@ public class Human extends Mob{
 
     @Override
     public void draw(SpriteBatch spriteBatch, float x, float y) {
-        spriteBatch.draw(Assets.playerSkin[dir][0], x-2, y-2);
-        if (Assets.playerSkin[0][2].getRotation()>=60 || Assets.playerSkin[0][2].getRotation()<=-60)
+        if (moveX.x!=0) {
+            animation+=Mob.ANIM_SPEED*anim_d;
+            if (animation<=-60 || animation>=60) anim_d=-anim_d;
+        }
+        tex[0][2].setRotation(animation);
+        tex[1][2].setRotation(-animation);
+        tex[0][3].setRotation(-animation);
+        tex[1][3].setRotation(animation);
+        spriteBatch.draw(tex[dir][0], x-2, y-2);
+        if (tex[0][2].getRotation()>=60 || tex[0][2].getRotation()<=-60)
             Mob.ANIM_SPEED = -Mob.ANIM_SPEED;
-        Assets.playerSkin[1][2].setPosition(x-6,y);
-        Assets.playerSkin[1][2].draw(spriteBatch);
-        Assets.playerSkin[1][3].setPosition(x-6, y+10);
-        Assets.playerSkin[1][3].draw(spriteBatch);
-        Assets.playerSkin[0][3].setPosition(x-6, y+10);
-        Assets.playerSkin[0][3].draw(spriteBatch);
-        spriteBatch.draw(Assets.playerSkin[dir][1], x-2, y + 8);
+        tex[1][2].setPosition(x-6,y);
+        tex[1][2].draw(spriteBatch);
+        tex[1][3].setPosition(x-6, y+10);
+        tex[1][3].draw(spriteBatch);
+        tex[0][3].setPosition(x-6, y+10);
+        tex[0][3].draw(spriteBatch);
+        spriteBatch.draw(tex[dir][1], x-2, y + 8);
 
-        Assets.playerSkin[0][2].setPosition(x-6, y);
-        Assets.playerSkin[0][2].draw(spriteBatch);
+        tex[0][2].setPosition(x-6, y);
+        tex[0][2].draw(spriteBatch);
     }
 
     public Rectangle getRect() {

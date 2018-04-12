@@ -3,6 +3,7 @@ package ru.deadsoftware.cavecraft.game;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.objects.Player;
 
@@ -17,6 +18,25 @@ public class GamePhysics {
     public GamePhysics(GameProc gameProc) {
         this.gameProc = gameProc;
         gravity = new Vector2(0,1);
+    }
+
+    private boolean checkJump(Rectangle rect, int dir) {
+        int bl;
+        switch (dir) {
+            case 0:
+                bl = gameProc.world.getForeMap(
+                        (int)((rect.x+(rect.width/2))/16) - 1,
+                        (int)(rect.y/16)+1);
+                break;
+            case 1:
+                bl = gameProc.world.getForeMap(
+                        (int)((rect.x+(rect.width/2))/16) + 1,
+                        (int)(rect.y/16)+1);
+                break;
+            default:
+                bl=0;
+        }
+        return (bl!=0);
     }
 
     private boolean checkColl(Rectangle rect) {
@@ -49,7 +69,7 @@ public class GamePhysics {
         if (!pl.flyMode) pl.moveY.add(gravity);
         pl.position.add(pl.moveX);
         if (pl.position.x<0 ||
-                pl.position.x+pl.width>gameProc.world.getWidth()*16)
+                pl.position.x+pl.texWidth>=gameProc.world.getWidth()*16)
             pl.position.sub(pl.moveX);
         if (checkColl(pl.getRect())) {
             int d = 0;
@@ -57,18 +77,11 @@ public class GamePhysics {
             pl.position.x = MathUtils.round(pl.position.x);
             while (checkColl(pl.getRect())) pl.position.x+=d;
         }
-        switch (pl.dir) {
-            case 0:
-                gameProc.renderer.camTargetPos.x = pl.position.x-gameProc.renderer.camera.viewportWidth+100;
-                break;
-            case 1:
-                gameProc.renderer.camTargetPos.x = pl.position.x-100;
-                break;
+
+        if (checkJump(pl.getRect(), pl.dir) && !pl.flyMode && pl.canJump && !pl.moveX.equals(Vector2.Zero)) {
+            pl.moveY.add(0, -8);
+            pl.canJump = false;
         }
-        if (gameProc.renderer.camTargetPos.x < 0) gameProc.renderer.camTargetPos.x = 0;
-        if (gameProc.renderer.camTargetPos.x + gameProc.renderer.camera.viewportWidth >
-                gameProc.world.getWidth()*16)
-            gameProc.renderer.camTargetPos.x = gameProc.world.getWidth()*16-gameProc.renderer.camera.viewportWidth;
     }
 
     private void mobPhy(Mob mob) {
@@ -104,18 +117,11 @@ public class GamePhysics {
         }
         playerPhy(gameProc.player);
 
-        if (gameProc.renderer.camera.position.x - gameProc.renderer.camTargetPos.x <= 8 &&
-                gameProc.renderer.camera.position.x - gameProc.renderer.camTargetPos.x >= -8) {
-            gameProc.renderer.camera.position.x = gameProc.renderer.camTargetPos.x;
-        }
-        if (gameProc.renderer.camera.position.x > gameProc.renderer.camTargetPos.x) {
-            gameProc.renderer.camera.position.sub(16,0,0);
-        }
-        if (gameProc.renderer.camera.position.x < gameProc.renderer.camTargetPos.x) {
-            gameProc.renderer.camera.position.add(16,0,0);
-        }
-        gameProc.renderer.camera.position.y = gameProc.player.position.y+gameProc.player.height/2
-                -gameProc.renderer.camera.viewportHeight/2;
+        gameProc.renderer.camera.position.set(
+                gameProc.player.position.x+gameProc.player.texWidth/2 - gameProc.renderer.camera.viewportWidth/2,
+                gameProc.player.position.y+gameProc.player.height/2-gameProc.renderer.camera.viewportHeight/2,
+                0
+        );
     }
 
 }

@@ -9,6 +9,8 @@ import ru.deadsoftware.cavecraft.game.GameProc;
 
 public class GameScreen implements Screen {
 
+    public static int FPS;
+
     private GameProc gameProc;
     private GameInputHandler gameInput;
 
@@ -35,6 +37,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        FPS = (int)(1/delta);
         gameProc.update(delta);
         gameProc.renderer.render();
     }

@@ -10,7 +10,7 @@ public abstract class Mob {
 
     public Vector2 position;
     public Vector2 moveX, moveY;
-    public int width, height, dir;
+    public int width, height, dir, animation, anim_d;
     public boolean canJump;
 
     public abstract void ai();

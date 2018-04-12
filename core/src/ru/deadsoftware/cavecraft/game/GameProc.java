@@ -32,9 +32,7 @@ public class GameProc {
         physics = new GamePhysics(this);
         player = new Player();
         mobs = new Array<Mob>();
-        for (int i=0; i<6; i++) {
-            mobs.add(new Human(64*(i+1),0, this));
-        }
+
     }
 
     public void resetRenderer() {

@@ -3,12 +3,15 @@ package ru.deadsoftware.cavecraft;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Assets {
 
     public static final int BLOCK_TEXTURES = 3;
+
+    public static BitmapFont minecraftFont;
 
     public static Texture charTexture;
     public static Sprite[][] playerSkin = new Sprite[2][4];
@@ -29,6 +32,7 @@ public class Assets {
     public static TextureRegion touchSpace;
 
     public static void load() {
+        minecraftFont = new BitmapFont(Gdx.files.internal("font.fnt"), true);
         charTexture = new Texture(Gdx.files.internal("mobs/char.png"));
         //LOOK TO LEFT
         //head

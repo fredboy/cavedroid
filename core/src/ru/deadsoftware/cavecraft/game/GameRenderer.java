@@ -19,10 +19,9 @@ public class GameRenderer {
 
     private GameProc gameProc;
 
-    public Vector3 camTargetPos;
-    public OrthographicCamera camera;
+    public OrthographicCamera camera, fontCam;
     ShapeRenderer shapeRenderer;
-    SpriteBatch spriteBatch;
+    SpriteBatch spriteBatch, fontBatch;
 
     public GameRenderer(GameProc gameProc) {
         Gdx.gl.glClearColor(0f,.6f,.6f,1f);
@@ -30,14 +29,25 @@ public class GameRenderer {
         camera = new OrthographicCamera();
         camera.setToOrtho(true, 360,
                 360*((float)GameScreen.getHeight()/GameScreen.getWidth()));
-        camera.position.x=0;
-        camera.position.y=0;
-        camTargetPos = camera.position.cpy();
+
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.setAutoShapeType(true);
         spriteBatch = new SpriteBatch();
         spriteBatch.setProjectionMatrix(camera.combined);
+
+        fontCam = new OrthographicCamera();
+        fontCam.setToOrtho(true, GameScreen.getWidth(), GameScreen.getHeight());
+        fontBatch = new SpriteBatch();
+        fontBatch.setProjectionMatrix(fontCam.combined);
+    }
+
+    private void setFontColor(int r, int g, int b) {
+        Assets.minecraftFont.setColor(r/255f, g/255f, b/255f, 1f);
+    }
+
+    private void drawString(String str, float x, float y) {
+        Assets.minecraftFont.draw(fontBatch, str, x, y);
     }
 
     private void drawWorld() {
@@ -72,7 +82,7 @@ public class GameRenderer {
     }
 
     private void drawPlayer(Player pl) {
-        if (!pl.moveX.equals(Vector2.Zero)) {
+        if (!pl.moveX.equals(Vector2.Zero) || Assets.playerSkin[0][2].getRotation()!=0) {
             Assets.playerSkin[0][2].rotate(Mob.ANIM_SPEED);
             Assets.playerSkin[1][2].rotate(-Mob.ANIM_SPEED);
             Assets.playerSkin[0][3].rotate(-Mob.ANIM_SPEED);
@@ -156,6 +166,19 @@ public class GameRenderer {
                     gameProc.cursorY * 16 - camera.position.y, 16, 16);
             shapeRenderer.end();
         }
+
+        fontBatch.begin();
+        setFontColor(255,255,255);
+        drawString("CaveCraft "+CaveGame.VERSION, 0, 0);
+        drawString("FPS: "+GameScreen.FPS, 0, 20);
+        drawString("X: "+(int)(gameProc.player.position.x/16), 0, 40);
+        drawString("Y: "+(int)(gameProc.player.position.y/16), 0, 60);
+        drawString("Block: "+
+                Items.BLOCKS.keys().toArray().get(gameProc.world.getForeMap(
+                        (int)(gameProc.player.position.x/16),
+                        (int)(gameProc.player.position.y/16+2))),
+                0, 80);
+        fontBatch.end();
     }
 
 }
