@@ -31,7 +31,7 @@ public class GameProc {
         world = new GameWorld(4096,256);
         renderer = new GameRenderer(this);
         physics = new GamePhysics(this);
-        player = new Player(world.getWidth()/2*16+4, 0);
+        player = new Player(world.getSpawnPoint());
         mobs = new Array<Mob>();
 
     }

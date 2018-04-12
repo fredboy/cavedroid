@@ -1,6 +1,7 @@
 package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavecraft.Items;
 
 public class GameWorld {
@@ -69,6 +70,26 @@ public class GameWorld {
     public void placeToBackground(int x, int y, int value) {
         if (value==0 || (getBackMap(x,y) == 0 && !Items.BLOCKS.getValueAt(value).foreground))
 		setBackMap(x,y,value);
+    }
+
+    public Vector2 getSpawnPoint() {
+        float x=0, y=0;
+        boolean found = false;
+        x = getWidth()/2;
+        while (!found) {
+            for (int i = 0; i < getHeight(); i++) {
+                if (getForeMap((int)x, i)>0 &&
+                        Items.BLOCKS.getValueAt(getForeMap((int)x, i)).collision) {
+                    y = i-3;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) x--;
+        }
+        x = x*16 + 4;
+        y *= 16;
+        return new Vector2(x,y);
     }
 
 }

@@ -91,7 +91,9 @@ public class GamePhysics {
                 while (checkColl(pl.getRect())) pl.position.x += d;
             }
         }
-
+        if (pl.position.y > gameProc.world.getHeight()*16) {
+            pl.position = gameProc.world.getSpawnPoint().cpy();
+        }
         /*if (checkJump(pl.getRect(), pl.dir) && !pl.flyMode && pl.canJump && !pl.moveX.equals(Vector2.Zero)) {
             pl.moveY.add(0, -8);
             pl.canJump = false;

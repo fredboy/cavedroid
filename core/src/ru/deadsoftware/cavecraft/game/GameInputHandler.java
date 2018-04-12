@@ -2,6 +2,7 @@ package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.TimeUtils;
+import ru.deadsoftware.cavecraft.GameScreen;
 
 public class GameInputHandler {
 

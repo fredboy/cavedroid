@@ -15,8 +15,8 @@ public class Player {
     public int[] inventory;
     public boolean flyMode = false;
 
-    public Player(int x, int y) {
-        position = new Vector2(x, y);
+    public Player(Vector2 spawnPoint) {
+        position = spawnPoint.cpy();
         moveX = new Vector2(0, 0);
         moveY = new Vector2(0, 0);
         width = 4;
