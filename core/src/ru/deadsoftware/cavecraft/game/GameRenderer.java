@@ -179,6 +179,7 @@ public class GameRenderer {
         drawPlayer(gameProc.player);
         drawWorldForeground();
         drawGUI();
+
         spriteBatch.end();
 
         if (gameProc.ctrlMode==1) {

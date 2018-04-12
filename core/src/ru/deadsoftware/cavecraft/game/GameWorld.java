@@ -1,6 +1,7 @@
 package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Gdx;
+import ru.deadsoftware.cavecraft.Items;
 
 public class GameWorld {
 
@@ -66,7 +67,8 @@ public class GameWorld {
     }
 
     public void placeToBackground(int x, int y, int value) {
-        if (getBackMap(x,y) == 0 || value == 0) setBackMap(x,y,value);
+        if ((getBackMap(x,y) == 0 || value == 0) &&
+                !Items.BLOCKS.getValueAt(value).foreground) setBackMap(x,y,value);
     }
 
 }

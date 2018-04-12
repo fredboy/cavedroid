@@ -40,25 +40,24 @@ public class GamePhysics {
     }
 
     private boolean checkColl(Rectangle rect) {
-        int[] ids = new int[6];
-        ids[0] = gameProc.world.getForeMap(((int)(rect.x)/16), ((int)rect.y/16));
-        ids[1] = gameProc.world.getForeMap(((int)(rect.x+rect.width-1)/16), ((int)rect.y/16));
-        ids[2] = gameProc.world.getForeMap(((int)(rect.x)/16), ((int)(rect.y+rect.height/2)/16));
-        ids[3] = gameProc.world.getForeMap(((int)(rect.x+rect.width-1)/16), ((int)(rect.y+rect.height/2)/16));
-        ids[4] = gameProc.world.getForeMap(((int)(rect.x)/16), ((int)(rect.y+rect.height-1)/16));
-        ids[5] = gameProc.world.getForeMap(((int)(rect.x+rect.width-1)/16), ((int)(rect.y+(rect.height-1))/16));
-        Rectangle[] bl = new Rectangle[6];
-        if (ids[0]>0) bl[0] = Items.BLOCKS.getValueAt(ids[0]).getRect((int)(rect.x)/16,(int)rect.y/16);
-        if (ids[1]>0) bl[1] = Items.BLOCKS.getValueAt(ids[1]).getRect(((int)(rect.x+rect.width-1)/16), ((int)rect.y/16));
-        if (ids[2]>0) bl[2] = Items.BLOCKS.getValueAt(ids[2]).getRect(((int)(rect.x)/16), ((int)(rect.y+rect.height/2)/16));
-        if (ids[3]>0) bl[3] = Items.BLOCKS.getValueAt(ids[3]).getRect(((int)(rect.x+rect.width-1)/16), ((int)(rect.y+rect.height/2)/16));
-        if (ids[4]>0) bl[4] = Items.BLOCKS.getValueAt(ids[4]).getRect(((int)(rect.x)/16), ((int)(rect.y+rect.height-1)/16));
-        if (ids[5]>0) bl[5] = Items.BLOCKS.getValueAt(ids[5]).getRect(((int)(rect.x+rect.width-1)/16), ((int)(rect.y+(rect.height-1))/16));
-        for (int i=0; i<6; i++) {
-            if (ids[i]>0 &&
-                    Items.BLOCKS.getValueAt(ids[i]).collision &&
-                    Intersector.overlaps(rect,bl[i]))
-                return true;
+        int bl;
+        int minX = (int) ((rect.x+rect.width/2)/16)-4;
+        int minY = (int) ((rect.y+rect.height/2)/16)-4;
+        int maxX = (int) ((rect.x+rect.width/2)/16)+4;
+        int maxY = (int) ((rect.y+rect.height/2)/16)+4;
+        if (minX<0) minX=0;
+        if (minY<0) minY=0;
+        if (maxX>gameProc.world.getWidth()) maxX = gameProc.world.getWidth();
+        if (maxY>gameProc.world.getHeight()) maxY = gameProc.world.getHeight();
+        for (int y=minY; y<maxY; y++) {
+            for (int x=minX; x<maxX; x++) {
+                bl = gameProc.world.getForeMap(x,y);
+                if (bl>0 && Items.BLOCKS.getValueAt(bl).collision){
+                    if (Intersector.overlaps(rect, Items.BLOCKS.getValueAt(bl).getRect(x,y))){
+                        return true;
+                    }
+                }
+            }
         }
         return false;
     }
@@ -82,10 +81,15 @@ public class GamePhysics {
                 pl.position.x+pl.texWidth>=gameProc.world.getWidth()*16)
             pl.position.sub(pl.moveX);
         if (checkColl(pl.getRect())) {
-            int d = 0;
-            if (pl.moveX.x<0) d=1; else if (pl.moveX.x>0) d=-1;
-            pl.position.x = MathUtils.round(pl.position.x);
-            while (checkColl(pl.getRect())) pl.position.x+=d;
+            if (pl.canJump && !pl.flyMode) pl.position.y-=8;
+            if (checkColl(pl.getRect())) {
+                if (pl.canJump && !pl.flyMode) pl.position.y+=8;
+                int d = 0;
+                if (pl.moveX.x < 0) d = 1;
+                else if (pl.moveX.x > 0) d = -1;
+                pl.position.x = MathUtils.round(pl.position.x);
+                while (checkColl(pl.getRect())) pl.position.x += d;
+            }
         }
 
         /*if (checkJump(pl.getRect(), pl.dir) && !pl.flyMode && pl.canJump && !pl.moveX.equals(Vector2.Zero)) {

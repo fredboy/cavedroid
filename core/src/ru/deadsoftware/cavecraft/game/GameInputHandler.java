@@ -51,7 +51,7 @@ public class GameInputHandler {
         }
         if (keyCode == Input.Keys.SPACE) {
              if (gameProc.player.canJump) {
-                 gameProc.player.moveY.add(0, -8);
+                 gameProc.player.moveY.add(0, -7);
              } else if (!gameProc.player.flyMode) {
                  gameProc.player.flyMode = true;
                  gameProc.player.moveY.setZero();
