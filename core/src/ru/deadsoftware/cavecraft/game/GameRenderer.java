@@ -21,9 +21,9 @@ public class GameRenderer {
 
     public boolean showCreative = false;
 
-    public OrthographicCamera camera, fontCam;
+    public OrthographicCamera camera, fontCam, touchCam;
     ShapeRenderer shapeRenderer;
-    SpriteBatch spriteBatch, fontBatch;
+    SpriteBatch spriteBatch, fontBatch, touchBatch;
 
     public GameRenderer(GameProc gameProc) {
         Gdx.gl.glClearColor(0f,.6f,.6f,1f);
@@ -42,6 +42,11 @@ public class GameRenderer {
         fontCam.setToOrtho(true, GameScreen.getWidth(), GameScreen.getHeight());
         fontBatch = new SpriteBatch();
         fontBatch.setProjectionMatrix(fontCam.combined);
+        touchCam = new OrthographicCamera();
+        touchCam.setToOrtho(true, 240,
+                240*((float)GameScreen.getHeight()/GameScreen.getWidth()));
+        touchBatch = new SpriteBatch();
+        touchBatch.setProjectionMatrix(touchCam.combined);
     }
 
     private void setFontColor(int r, int g, int b) {
@@ -145,7 +150,7 @@ public class GameRenderer {
 
     private void drawCreative() {
         float x = camera.viewportWidth/2-Assets.creativeInv.getRegionWidth()/2;
-        float y = camera.viewportHeight/2 - Assets.creativeInv.getRegionHeight()/2;
+        float y = camera.viewportHeight/2-Assets.creativeInv.getRegionHeight()/2;
         spriteBatch.draw(Assets.creativeInv, x, y);
         spriteBatch.draw(Assets.creativeScroll, x+156, y+18);
         for (int i=1; i<Items.BLOCKS.size; i++) {
@@ -173,21 +178,17 @@ public class GameRenderer {
                 -1);
 
         if (showCreative) drawCreative();
+    }
 
-        if (CaveGame.TOUCH) {
-            spriteBatch.draw(Assets.touchArrows[0],26,camera.viewportHeight-52);
-            spriteBatch.draw(Assets.touchArrows[1],0,camera.viewportHeight-26);
-            spriteBatch.draw(Assets.touchArrows[2],26,camera.viewportHeight-26);
-            spriteBatch.draw(Assets.touchArrows[3],52,camera.viewportHeight-26);
-            spriteBatch.draw(Assets.touchSpace, camera.viewportWidth/2-52, camera.viewportHeight-26);
-            spriteBatch.draw(Assets.touchLMB, camera.viewportWidth-52, camera.viewportHeight-26);
-            spriteBatch.draw(Assets.touchRMB, camera.viewportWidth-26, camera.viewportHeight-26);
-            spriteBatch.draw(Assets.touchToggleMode, 78, camera.viewportHeight-26);
-            if (gameProc.ctrlMode==1) {
-                Assets.shade.setPosition(83, camera.viewportHeight-21);
-                Assets.shade.draw(spriteBatch);
-            }
-        }
+    private void drawTouchGui() {
+        touchBatch.draw(Assets.touchArrows[0],26,touchCam.viewportHeight-52);
+        touchBatch.draw(Assets.touchArrows[1],0,touchCam.viewportHeight-26);
+        touchBatch.draw(Assets.touchArrows[2],26,touchCam.viewportHeight-26);
+        touchBatch.draw(Assets.touchArrows[3],52,touchCam.viewportHeight-26);
+        //touchBatch.draw(Assets.touchSpace, touchCam.viewportWidth/2-52, touchCam.viewportHeight-26);
+        touchBatch.draw(Assets.touchLMB, touchCam.viewportWidth-52, touchCam.viewportHeight-26);
+        touchBatch.draw(Assets.touchRMB, touchCam.viewportWidth-26, touchCam.viewportHeight-26);
+        touchBatch.draw(Assets.touchToggleMode, 78, touchCam.viewportHeight-26);
     }
 
     public void render() {
@@ -199,8 +200,13 @@ public class GameRenderer {
         drawPlayer(gameProc.player);
         drawWorldForeground();
         drawGUI();
-
         spriteBatch.end();
+
+        if (CaveGame.TOUCH) {
+            touchBatch.begin();
+            drawTouchGui();
+            touchBatch.end();
+        }
 
         if (gameProc.ctrlMode==1) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);

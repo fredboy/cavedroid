@@ -1,6 +1,7 @@
 package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.math.*;
+import ru.deadsoftware.cavecraft.CaveGame;
 import ru.deadsoftware.cavecraft.Items;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.objects.Player;
@@ -94,10 +95,10 @@ public class GamePhysics {
         if (pl.position.y > gameProc.world.getHeight()*16) {
             pl.position = gameProc.world.getSpawnPoint().cpy();
         }
-        /*if (checkJump(pl.getRect(), pl.dir) && !pl.flyMode && pl.canJump && !pl.moveX.equals(Vector2.Zero)) {
+        if (CaveGame.TOUCH && checkJump(pl.getRect(), pl.dir) && !pl.flyMode && pl.canJump && !pl.moveX.equals(Vector2.Zero)) {
             pl.moveY.add(0, -8);
             pl.canJump = false;
-        }*/
+        }
     }
 
     private void mobPhy(Mob mob) {

@@ -1,8 +1,10 @@
 package ru.deadsoftware.cavecraft.game;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
+import ru.deadsoftware.cavecraft.Assets;
 import ru.deadsoftware.cavecraft.game.mobs.Human;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.objects.Player;
@@ -25,6 +27,7 @@ public class GameProc {
 
     public boolean isTouchDown = false;
     public int touchDownX, touchDownY;
+    public int touchDownButton;
     public long touchDownTime;
 
     public GameProc() {
@@ -46,8 +49,15 @@ public class GameProc {
         physics.update(delta);
 
         if (isTouchDown && TimeUtils.timeSinceMillis(touchDownTime) > 500) {
-            world.placeToBackground(cursorX,cursorY,
-                    player.inventory[invSlot]);
+            if (touchDownButton== Input.Buttons.RIGHT) {
+                world.placeToBackground(cursorX, cursorY,
+                        player.inventory[invSlot]);
+            } else if (touchDownButton==Input.Buttons.LEFT &&
+                    touchDownY< Assets.invBar.getRegionHeight() &&
+                    touchDownX>renderer.camera.viewportWidth/2-Assets.invBar.getRegionWidth()/2 &&
+                    touchDownX<renderer.camera.viewportWidth/2+Assets.invBar.getRegionWidth()/2) {
+                renderer.showCreative = !renderer.showCreative;
+            }
             isTouchDown = false;
         }
     }
