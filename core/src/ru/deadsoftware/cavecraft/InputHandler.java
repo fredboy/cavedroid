@@ -18,8 +18,8 @@ public class InputHandler implements InputProcessor {
     public InputHandler(GameProc gameProc) {
         this.gameProc = gameProc;
         this.gameInput = new GameInputHandler(gameProc);
-        tWidth = gameProc.renderer.touchCam.viewportWidth;
-        tHeight = gameProc.renderer.touchCam.viewportHeight;
+        tWidth = gameProc.renderer.camera.viewportWidth;
+        tHeight = gameProc.renderer.camera.viewportHeight;
     }
 
     @Override

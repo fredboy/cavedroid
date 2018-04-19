@@ -113,10 +113,6 @@ public class GameInputHandler {
             }
         } else if (CaveGame.STATE == GameState.GAME_CREATIVE_INV) {
             CaveGame.STATE = GameState.GAME_PLAY;
-        } else if (button == Input.Buttons.RIGHT &&
-                !gameProc.player.canJump && !gameProc.player.flyMode) {
-            gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY,
-                    gameProc.player.inventory[gameProc.invSlot]);
         } else {
             gameProc.touchDownX = screenX;
             gameProc.touchDownY = screenY;

@@ -18,9 +18,9 @@ public class GameRenderer {
 
     private GameProc gameProc;
 
-    public OrthographicCamera camera, fontCam, touchCam;
+    public OrthographicCamera camera, fontCam;
     ShapeRenderer shapeRenderer;
-    SpriteBatch spriteBatch, fontBatch, touchBatch;
+    SpriteBatch spriteBatch, fontBatch;
 
     public GameRenderer(GameProc gameProc) {
         Gdx.gl.glClearColor(0f,.6f,.6f,1f);
@@ -30,8 +30,8 @@ public class GameRenderer {
             camera.setToOrtho(true, 480,
                     480 * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
         } else {
-            camera.setToOrtho(true, 240,
-                    240 * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
+            camera.setToOrtho(true, 320,
+                    320 * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
         }
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
@@ -43,11 +43,6 @@ public class GameRenderer {
         fontCam.setToOrtho(true, GameScreen.getWidth(), GameScreen.getHeight());
         fontBatch = new SpriteBatch();
         fontBatch.setProjectionMatrix(fontCam.combined);
-        touchCam = new OrthographicCamera();
-        touchCam.setToOrtho(true, 240,
-                240*((float)GameScreen.getHeight()/GameScreen.getWidth()));
-        touchBatch = new SpriteBatch();
-        touchBatch.setProjectionMatrix(touchCam.combined);
     }
 
     private void setFontColor(int r, int g, int b) {
@@ -192,13 +187,13 @@ public class GameRenderer {
     }
 
     private void drawTouchGui() {
-        touchBatch.draw(Assets.touchArrows[0],26,touchCam.viewportHeight-52);
-        touchBatch.draw(Assets.touchArrows[1],0,touchCam.viewportHeight-26);
-        touchBatch.draw(Assets.touchArrows[2],26,touchCam.viewportHeight-26);
-        touchBatch.draw(Assets.touchArrows[3],52,touchCam.viewportHeight-26);
-        touchBatch.draw(Assets.touchLMB, touchCam.viewportWidth-52, touchCam.viewportHeight-26);
-        touchBatch.draw(Assets.touchRMB, touchCam.viewportWidth-26, touchCam.viewportHeight-26);
-        touchBatch.draw(Assets.touchToggleMode, 78, touchCam.viewportHeight-26);
+        spriteBatch.draw(Assets.touchArrows[0],26,camera.viewportHeight-52);
+        spriteBatch.draw(Assets.touchArrows[1],0,camera.viewportHeight-26);
+        spriteBatch.draw(Assets.touchArrows[2],26,camera.viewportHeight-26);
+        spriteBatch.draw(Assets.touchArrows[3],52,camera.viewportHeight-26);
+        spriteBatch.draw(Assets.touchLMB, camera.viewportWidth-52, camera.viewportHeight-26);
+        spriteBatch.draw(Assets.touchRMB, camera.viewportWidth-26, camera.viewportHeight-26);
+        spriteBatch.draw(Assets.touchToggleMode, 78, camera.viewportHeight-26);
     }
 
     private void drawGamePlay() {
@@ -225,9 +220,9 @@ public class GameRenderer {
         spriteBatch.end();
 
         if (CaveGame.TOUCH) {
-            touchBatch.begin();
+            spriteBatch.begin();
             drawTouchGui();
-            touchBatch.end();
+            spriteBatch.end();
         }
 
         fontBatch.begin();
