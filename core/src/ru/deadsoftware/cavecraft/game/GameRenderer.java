@@ -162,7 +162,7 @@ public class GameRenderer {
         for (int i=0; i<9; i++) {
             if (gameProc.player.inventory[i]>0)
                 spriteBatch.draw(Items.BLOCKS.getValueAt(gameProc.player.inventory[i]).getTexture(),
-                        x+8+i*18, y+184);
+                        x+8+i*18, y+Assets.creativeInv.getRegionHeight()-24);
         }
     }
 

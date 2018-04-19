@@ -74,9 +74,9 @@ public class Assets {
         invBarCur = new TextureRegion(gui,0,38,24,24);
 
         creativeTexture = new Texture(Gdx.files.internal("allitems.png"));
-        creativeInv = new TextureRegion(creativeTexture, 0, 0, 176, 208);
+        creativeInv = new TextureRegion(creativeTexture, 0, 0, 176, 136);
         creativeInv.flip(false,true);
-        creativeScroll = new TextureRegion(creativeTexture, 2, 209, 12, 15);
+        creativeScroll = new TextureRegion(creativeTexture, 3, 137, 12, 15);
         creativeScroll.flip(false, true);
 
         touchGui = new Texture(Gdx.files.internal("touch_gui.png"));
