@@ -2,7 +2,6 @@ package ru.deadsoftware.cavecraft;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -23,7 +22,8 @@ public class Assets {
 
     public static Texture gui;
     public static TextureRegion invBar;
-    public static TextureRegion invCur;
+    public static TextureRegion invBarCur;
+    public static TextureRegion guiCur;
 
     public static Texture creativeTexture;
     public static TextureRegion creativeInv;
@@ -69,8 +69,9 @@ public class Assets {
         shade = new Sprite(new Texture(Gdx.files.internal("shade.png")));
 
         gui = new Texture(Gdx.files.internal("gui.png"));
-        invBar = new TextureRegion(gui,0,0,182,22);
-        invCur = new TextureRegion(gui,0,22,24,24);
+        guiCur = new TextureRegion(gui,0,0,16,16);
+        invBar = new TextureRegion(gui,0,16,182,22);
+        invBarCur = new TextureRegion(gui,0,38,24,24);
 
         creativeTexture = new Texture(Gdx.files.internal("allitems.png"));
         creativeInv = new TextureRegion(creativeTexture, 0, 0, 176, 208);

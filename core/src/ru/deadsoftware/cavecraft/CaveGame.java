@@ -6,6 +6,8 @@ public class CaveGame extends Game {
 
 	public static final String VERSION = "alpha 0.0";
 
+	public static GameState STATE;
+
 	public static boolean TOUCH;
 
 	public CaveGame() {
@@ -14,6 +16,7 @@ public class CaveGame extends Game {
 
 	public CaveGame(boolean touch) {
 		TOUCH = touch;
+		STATE = GameState.GAME_PLAY;
 	}
 
 	@Override

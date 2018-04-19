@@ -2,11 +2,13 @@ package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.ArrayMap;
 import ru.deadsoftware.cavecraft.Items;
 
 public class GameWorld {
 
     private final int WIDTH, HEIGHT;
+
     private int[][] foreMap;
     private int[][] backMap;
 
@@ -64,12 +66,15 @@ public class GameWorld {
     }
 
     public void placeToForeground(int x, int y, int value) {
-        if (getForeMap(x,y) == 0 || value == 0) setForeMap(x,y,value);
+        if (getForeMap(x,y) == 0 || value == 0) {
+            setForeMap(x,y,value);
+        }
     }
 
     public void placeToBackground(int x, int y, int value) {
-        if (value==0 || (getBackMap(x,y) == 0 && !Items.BLOCKS.getValueAt(value).foreground))
-		setBackMap(x,y,value);
+        if (value==0 || (getBackMap(x,y) == 0 && !Items.BLOCKS.getValueAt(value).foreground)) {
+            setBackMap(x,y,value);
+        }
     }
 
     public Vector2 getSpawnPoint() {

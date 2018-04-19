@@ -1,7 +1,7 @@
 package ru.deadsoftware.cavecraft.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.RandomXS128;
+import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class WorldGen {
@@ -61,6 +61,8 @@ public class WorldGen {
         backMap = new int[width][height];
         hMap = genLandscape(width, height/2, height/4, height/4*3);
         for (int x=0; x<width; x++) {
+            for (int y=0; y<height; y++) {
+            }
             dirtH = 4+rand.nextInt(2);
             for (int y = height- hMap[x]; y<height; y++) {
                 if (y==height- hMap[x]) {
@@ -83,7 +85,9 @@ public class WorldGen {
                     backMap[x][y] = 8;
                 }
             }
-            if (x>2 && x<width-2 && rand.nextInt(100)<5) genOak(x,height-hMap[x]-1);
+            if (x>2 && x<width-2 && rand.nextInt(100)<5){
+                genOak(x,height-hMap[x]-1);
+            }
         }
     }
 

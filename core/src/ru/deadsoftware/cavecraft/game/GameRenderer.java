@@ -5,9 +5,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import ru.deadsoftware.cavecraft.Assets;
 import ru.deadsoftware.cavecraft.CaveGame;
 import ru.deadsoftware.cavecraft.Items;
@@ -19,8 +18,6 @@ public class GameRenderer {
 
     private GameProc gameProc;
 
-    public boolean showCreative = false;
-
     public OrthographicCamera camera, fontCam, touchCam;
     ShapeRenderer shapeRenderer;
     SpriteBatch spriteBatch, fontBatch, touchBatch;
@@ -29,9 +26,13 @@ public class GameRenderer {
         Gdx.gl.glClearColor(0f,.6f,.6f,1f);
         this.gameProc = gameProc;
         camera = new OrthographicCamera();
-        camera.setToOrtho(true, 480,
-                480*((float)GameScreen.getHeight()/GameScreen.getWidth()));
-
+        if (!CaveGame.TOUCH) {
+            camera.setToOrtho(true, 480,
+                    480 * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
+        } else {
+            camera.setToOrtho(true, 240,
+                    240 * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
+        }
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.setAutoShapeType(true);
@@ -68,11 +69,11 @@ public class GameRenderer {
         if (maxY>gameProc.world.getHeight()) maxY = gameProc.world.getHeight();
         for (int y=minY; y<maxY; y++) {
             for (int x=minX; x<maxX; x++) {
-                if (gameProc.world.getForeMap(x,y)>0 &&
+                if (gameProc.world.getForeMap(x,y)>0){/* &&
                         !Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).foreground) {
                     spriteBatch.draw(
                             Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).getTexture(),
-                            x * 16 - camera.position.x,y * 16 - camera.position.y);
+                            x * 16 - camera.position.x,y * 16 - camera.position.y);*/
                 } else if (gameProc.world.getBackMap(x,y)>0) {
                     spriteBatch.draw(
                             Items.BLOCKS.getValueAt(gameProc.world.getBackMap(x,y)).getTexture(),
@@ -95,8 +96,8 @@ public class GameRenderer {
         if (maxY>gameProc.world.getHeight()) maxY = gameProc.world.getHeight();
         for (int y=minY; y<maxY; y++) {
             for (int x=minX; x<maxX; x++) {
-                if (gameProc.world.getForeMap(x,y)>0 &&
-                        Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).foreground) {
+                if (gameProc.world.getForeMap(x,y)>0) { /*&&
+                        Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).foreground) {*/
                     spriteBatch.draw(
                             Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).getTexture(),
                             x * 16 - camera.position.x,y * 16 - camera.position.y);
@@ -124,24 +125,30 @@ public class GameRenderer {
         }
         if (Assets.playerSkin[0][2].getRotation()>=60 || Assets.playerSkin[0][2].getRotation()<=-60)
             Mob.ANIM_SPEED = -Mob.ANIM_SPEED;
+
+        //back hand
         Assets.playerSkin[1][2].setPosition(
                 pl.position.x - camera.position.x - 6,
                 pl.position.y - camera.position.y);
         Assets.playerSkin[1][2].draw(spriteBatch);
+        //back leg
         Assets.playerSkin[1][3].setPosition(
                 pl.position.x - camera.position.x - 6,
                 pl.position.y - camera.position.y + 10);
         Assets.playerSkin[1][3].draw(spriteBatch);
+        //front leg
         Assets.playerSkin[0][3].setPosition(
                 pl.position.x - camera.position.x - 6,
                 pl.position.y - camera.position.y + 10);
         Assets.playerSkin[0][3].draw(spriteBatch);
-
+        //head
         spriteBatch.draw(Assets.playerSkin[pl.dir][0],
-                pl.position.x - camera.position.x - 2, pl.position.y - camera.position.y - 2);
+                pl.position.x - camera.position.x - 2,
+                pl.position.y - camera.position.y - 2);
+        //body
         spriteBatch.draw(Assets.playerSkin[pl.dir][1],
                 pl.position.x - camera.position.x - 2, pl.position.y - camera.position.y + 8);
-
+        //front hand
         Assets.playerSkin[0][2].setPosition(
                 pl.position.x - camera.position.x - 6,
                 pl.position.y - camera.position.y);
@@ -165,6 +172,12 @@ public class GameRenderer {
     }
 
     private void drawGUI() {
+        if (gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY)>0 ||
+                gameProc.world.getBackMap(gameProc.cursorX, gameProc.cursorY)>0 ||
+                gameProc.ctrlMode==1)
+            spriteBatch.draw(Assets.guiCur,
+                    gameProc.cursorX*16-camera.position.x,
+                    gameProc.cursorY*16-camera.position.y);
         spriteBatch.draw(Assets.invBar, camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2, 0);
         for (int i=0; i<9; i++) {
             if (gameProc.player.inventory[i]>0) {
@@ -173,11 +186,9 @@ public class GameRenderer {
                         3);
             }
         }
-        spriteBatch.draw(Assets.invCur,
+        spriteBatch.draw(Assets.invBarCur,
                 camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2 - 1 + 20*gameProc.invSlot,
                 -1);
-
-        if (showCreative) drawCreative();
     }
 
     private void drawTouchGui() {
@@ -185,21 +196,32 @@ public class GameRenderer {
         touchBatch.draw(Assets.touchArrows[1],0,touchCam.viewportHeight-26);
         touchBatch.draw(Assets.touchArrows[2],26,touchCam.viewportHeight-26);
         touchBatch.draw(Assets.touchArrows[3],52,touchCam.viewportHeight-26);
-        //touchBatch.draw(Assets.touchSpace, touchCam.viewportWidth/2-52, touchCam.viewportHeight-26);
         touchBatch.draw(Assets.touchLMB, touchCam.viewportWidth-52, touchCam.viewportHeight-26);
         touchBatch.draw(Assets.touchRMB, touchCam.viewportWidth-26, touchCam.viewportHeight-26);
         touchBatch.draw(Assets.touchToggleMode, 78, touchCam.viewportHeight-26);
+    }
+
+    private void drawGamePlay() {
+        drawWorld();
+        for (Mob mob : gameProc.mobs) drawMob(mob);
+        drawPlayer(gameProc.player);
+        drawWorldForeground();
+        drawGUI();
     }
 
     public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         spriteBatch.begin();
-        drawWorld();
-        for (Mob mob : gameProc.mobs) drawMob(mob);
-        drawPlayer(gameProc.player);
-        drawWorldForeground();
-        drawGUI();
+        switch (CaveGame.STATE) {
+            case GAME_PLAY:
+                drawGamePlay();
+                break;
+            case GAME_CREATIVE_INV:
+                drawGamePlay();
+                drawCreative();
+                break;
+        }
         spriteBatch.end();
 
         if (CaveGame.TOUCH) {
@@ -208,26 +230,12 @@ public class GameRenderer {
             touchBatch.end();
         }
 
-        if (gameProc.ctrlMode==1) {
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.setColor(Color.ORANGE);
-            shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.rect(gameProc.cursorX * 16 - camera.position.x,
-                    gameProc.cursorY * 16 - camera.position.y, 16, 16);
-            shapeRenderer.end();
-        }
-
         fontBatch.begin();
         setFontColor(255,255,255);
         drawString("CaveCraft "+CaveGame.VERSION, 0, 0);
         drawString("FPS: "+GameScreen.FPS, 0, 20);
         drawString("X: "+(int)(gameProc.player.position.x/16), 0, 40);
         drawString("Y: "+(int)(gameProc.player.position.y/16), 0, 60);
-        drawString("Block: "+
-                Items.BLOCKS.keys().toArray().get(gameProc.world.getForeMap(
-                        (int)((gameProc.player.position.x+gameProc.player.texWidth/2)/16),
-                        (int)(gameProc.player.position.y/16+2))),
-                0, 80);
         fontBatch.end();
     }
 

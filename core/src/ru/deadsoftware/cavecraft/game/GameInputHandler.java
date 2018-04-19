@@ -3,9 +3,7 @@ package ru.deadsoftware.cavecraft.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.TimeUtils;
-import ru.deadsoftware.cavecraft.Assets;
-import ru.deadsoftware.cavecraft.GameScreen;
-import ru.deadsoftware.cavecraft.Items;
+import ru.deadsoftware.cavecraft.*;
 
 public class GameInputHandler {
 
@@ -19,11 +17,11 @@ public class GameInputHandler {
         if (gameProc.ctrlMode==0) {
             switch (keyCode) {
                 case Input.Keys.A:
-                    gameProc.player.moveX.add(-GamePhysics.PL_SPEED, 0);
+                    gameProc.player.moveX.x = -GamePhysics.PL_SPEED;
                     gameProc.player.dir = 0;
                     break;
                 case Input.Keys.D:
-                    gameProc.player.moveX.add(GamePhysics.PL_SPEED, 0);
+                    gameProc.player.moveX.x = GamePhysics.PL_SPEED;
                     gameProc.player.dir = 1;
                     break;
             }
@@ -42,14 +40,10 @@ public class GameInputHandler {
                     gameProc.cursorY++;
                     break;
             }
-            if (gameProc.cursorX < 0)
-                gameProc.cursorX = 0;
-            if (gameProc.cursorX >= gameProc.world.getWidth())
-                gameProc.cursorX = gameProc.world.getWidth()-1;
-            if (gameProc.cursorY < 0)
-                gameProc.cursorY = 0;
-            if (gameProc.cursorY >= gameProc.world.getHeight())
-                gameProc.cursorY = gameProc.world.getHeight()-1;
+            if (gameProc.cursorX<(gameProc.player.position.x+gameProc.player.texWidth/2)/16)
+                gameProc.player.dir=0;
+            if (gameProc.cursorX>(gameProc.player.position.x+gameProc.player.texWidth/2)/16)
+                gameProc.player.dir=1;
         }
     }
 
@@ -60,8 +54,6 @@ public class GameInputHandler {
         } else switch (keyCode) {
             case Input.Keys.ALT_LEFT:
                 gameProc.ctrlMode++;
-                gameProc.cursorX = (int)(gameProc.player.position.x/16);
-                gameProc.cursorY = (int)(gameProc.player.position.y/16);
                 if (gameProc.ctrlMode > 1) gameProc.ctrlMode = 0;
                 break;
 
@@ -81,7 +73,8 @@ public class GameInputHandler {
                 break;
 
             case Input.Keys.E:
-                gameProc.renderer.showCreative = !gameProc.renderer.showCreative;
+                if (CaveGame.STATE == GameState.GAME_PLAY) CaveGame.STATE = GameState.GAME_CREATIVE_INV;
+                    else CaveGame.STATE = GameState.GAME_PLAY;
                 break;
         }
     }
@@ -102,7 +95,7 @@ public class GameInputHandler {
     }
 
     public void touchDown(int screenX, int screenY, int button) {
-        if (gameProc.renderer.showCreative &&
+        if (CaveGame.STATE == GameState.GAME_CREATIVE_INV &&
                 screenX>gameProc.renderer.camera.viewportWidth/2-Assets.creativeInv.getRegionWidth()/2 &&
                 screenX<gameProc.renderer.camera.viewportWidth/2+Assets.creativeInv.getRegionWidth()/2 &&
                 screenY>gameProc.renderer.camera.viewportHeight/2-Assets.creativeInv.getRegionHeight()/2 &&
@@ -118,8 +111,12 @@ public class GameInputHandler {
             } catch (Exception e) {
                 Gdx.app.error("GameInputHandler", e.toString());
             }
-        } else if (gameProc.renderer.showCreative) {
-            gameProc.renderer.showCreative = !gameProc.renderer.showCreative;
+        } else if (CaveGame.STATE == GameState.GAME_CREATIVE_INV) {
+            CaveGame.STATE = GameState.GAME_PLAY;
+        } else if (button == Input.Buttons.RIGHT &&
+                !gameProc.player.canJump && !gameProc.player.flyMode) {
+            gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY,
+                    gameProc.player.inventory[gameProc.invSlot]);
         } else {
             gameProc.touchDownX = screenX;
             gameProc.touchDownY = screenY;
@@ -132,24 +129,19 @@ public class GameInputHandler {
     public void touchUp(int screenX, int screenY, int button) {
         if (gameProc.isTouchDown) {
             if (button == Input.Buttons.RIGHT){
-                if (gameProc.ctrlMode==1) {
-                    gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY,
+                gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY,
                             gameProc.player.inventory[gameProc.invSlot]);
-                }
             } else if (button == Input.Buttons.LEFT) {
-                if (gameProc.ctrlMode==1) {
-                    if (gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY) > 0) {
-                        gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY, 0);
-                    } else if (gameProc.world.getBackMap(gameProc.cursorX, gameProc.cursorY) > 0) {
-                        gameProc.world.placeToBackground(gameProc.cursorX, gameProc.cursorY, 0);
-                    }
-                } else {
-                    if (screenY<Assets.invBar.getRegionHeight() &&
-                            screenX>gameProc.renderer.camera.viewportWidth/2-Assets.invBar.getRegionWidth()/2 &&
-                            screenX<gameProc.renderer.camera.viewportWidth/2+Assets.invBar.getRegionWidth()/2) {
-                        gameProc.invSlot = (int)((screenX-(gameProc.renderer.camera.viewportWidth/2-Assets.invBar.getRegionWidth()/2))/20);
-                    }
+                if (screenY<Assets.invBar.getRegionHeight() &&
+                        screenX>gameProc.renderer.camera.viewportWidth/2-Assets.invBar.getRegionWidth()/2 &&
+                        screenX<gameProc.renderer.camera.viewportWidth/2+Assets.invBar.getRegionWidth()/2) {
+                    gameProc.invSlot = (int)((screenX-(gameProc.renderer.camera.viewportWidth/2-Assets.invBar.getRegionWidth()/2))/20);
+                } else if (gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY) > 0) {
+                    gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY, 0);
+                } else if (gameProc.world.getBackMap(gameProc.cursorX, gameProc.cursorY) > 0) {
+                    gameProc.world.placeToBackground(gameProc.cursorX, gameProc.cursorY, 0);
                 }
+
             }
         }
         gameProc.isTouchDown = false;
