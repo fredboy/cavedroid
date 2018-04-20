@@ -1,5 +1,6 @@
-[![Build Status](https://travis-ci.org/fredboy/cavecraft.svg?branch=master)](https://travis-ci.org/fredboy/cavecraft) <br>
 # CaveCraft
+[![Build Status](https://travis-ci.org/fredboy/cavecraft.svg?branch=master)](https://travis-ci.org/fredboy/cavecraft)
+[![Releases](https://img.shields.io/github/release/fredboy/cavecraft.svg)](https://github.com/fredboy/cavecraft/releases/latest) <br>
 2D Minecraft clone for Android and Desktop. <br>
 Written in Java using libGDX framework. <br>
 ## Build instructions
