@@ -7,7 +7,7 @@ Written in Java using libGDX framework. <br>
 ### Android
 `./gradlew android:assemble` <br>
 ### Desktop
-`./gradlew desktop:assemble` <br>
+`./gradlew desktop:dist` <br>
 ***
 On Windows, use `gradlew.bat` instead of `./gradlew`
 
