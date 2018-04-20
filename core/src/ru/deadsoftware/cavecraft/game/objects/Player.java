@@ -8,6 +8,8 @@ import ru.deadsoftware.cavecraft.game.WorldGen;
 
 public class Player {
 
+    public static int ANIM_SPEED = 6;
+
     public Vector2 position;
     public Vector2 moveX, moveY;
     public int width, height, dir, texWidth;

@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavecraft.Assets;
 import ru.deadsoftware.cavecraft.CaveGame;
@@ -108,47 +107,47 @@ public class GameRenderer {
     }
 
     private void drawPlayer(Player pl) {
-        if (!pl.moveX.equals(Vector2.Zero) || Assets.playerSkin[0][2].getRotation()!=0) {
-            Assets.playerSkin[0][2].rotate(Mob.ANIM_SPEED);
-            Assets.playerSkin[1][2].rotate(-Mob.ANIM_SPEED);
-            Assets.playerSkin[0][3].rotate(-Mob.ANIM_SPEED);
-            Assets.playerSkin[1][3].rotate(Mob.ANIM_SPEED);
+        if (!pl.moveX.equals(Vector2.Zero) || Assets.playerSprite[0][2].getRotation()!=0) {
+            Assets.playerSprite[0][2].rotate(Player.ANIM_SPEED);
+            Assets.playerSprite[1][2].rotate(-Player.ANIM_SPEED);
+            Assets.playerSprite[0][3].rotate(-Player.ANIM_SPEED);
+            Assets.playerSprite[1][3].rotate(Player.ANIM_SPEED);
         } else {
-            Assets.playerSkin[0][2].setRotation(0);
-            Assets.playerSkin[1][2].setRotation(0);
-            Assets.playerSkin[0][3].setRotation(0);
-            Assets.playerSkin[1][3].setRotation(0);
+            Assets.playerSprite[0][2].setRotation(0);
+            Assets.playerSprite[1][2].setRotation(0);
+            Assets.playerSprite[0][3].setRotation(0);
+            Assets.playerSprite[1][3].setRotation(0);
         }
-        if (Assets.playerSkin[0][2].getRotation()>=60 || Assets.playerSkin[0][2].getRotation()<=-60)
-            Mob.ANIM_SPEED = -Mob.ANIM_SPEED;
+        if (Assets.playerSprite[0][2].getRotation()>=60 || Assets.playerSprite[0][2].getRotation()<=-60)
+            Player.ANIM_SPEED = -Player.ANIM_SPEED;
 
         //back hand
-        Assets.playerSkin[1][2].setPosition(
+        Assets.playerSprite[1][2].setPosition(
                 pl.position.x - camera.position.x - 6,
                 pl.position.y - camera.position.y);
-        Assets.playerSkin[1][2].draw(spriteBatch);
+        Assets.playerSprite[1][2].draw(spriteBatch);
         //back leg
-        Assets.playerSkin[1][3].setPosition(
+        Assets.playerSprite[1][3].setPosition(
                 pl.position.x - camera.position.x - 6,
                 pl.position.y - camera.position.y + 10);
-        Assets.playerSkin[1][3].draw(spriteBatch);
+        Assets.playerSprite[1][3].draw(spriteBatch);
         //front leg
-        Assets.playerSkin[0][3].setPosition(
+        Assets.playerSprite[0][3].setPosition(
                 pl.position.x - camera.position.x - 6,
                 pl.position.y - camera.position.y + 10);
-        Assets.playerSkin[0][3].draw(spriteBatch);
+        Assets.playerSprite[0][3].draw(spriteBatch);
         //head
-        spriteBatch.draw(Assets.playerSkin[pl.dir][0],
+        spriteBatch.draw(Assets.playerSprite[pl.dir][0],
                 pl.position.x - camera.position.x - 2,
                 pl.position.y - camera.position.y - 2);
         //body
-        spriteBatch.draw(Assets.playerSkin[pl.dir][1],
+        spriteBatch.draw(Assets.playerSprite[pl.dir][1],
                 pl.position.x - camera.position.x - 2, pl.position.y - camera.position.y + 8);
         //front hand
-        Assets.playerSkin[0][2].setPosition(
+        Assets.playerSprite[0][2].setPosition(
                 pl.position.x - camera.position.x - 6,
                 pl.position.y - camera.position.y);
-        Assets.playerSkin[0][2].draw(spriteBatch);
+        Assets.playerSprite[0][2].draw(spriteBatch);
     }
 
     private void drawCreative() {
@@ -199,6 +198,7 @@ public class GameRenderer {
 
     private void drawGamePlay() {
         drawWorld();
+        Mob.animateMobs();
         for (Mob mob : gameProc.mobs) drawMob(mob);
         drawPlayer(gameProc.player);
         drawWorldForeground();
@@ -239,6 +239,7 @@ public class GameRenderer {
         drawString("X: "+(int)(gameProc.player.position.x/16), 0, 40);
         drawString("Y: "+(int)(gameProc.player.position.y/16), 0, 60);
         drawString("Seed: "+WorldGen.getSeed(), 0, 80);
+        drawString("Mobs: "+gameProc.mobs.size, 0, 100);
         fontBatch.end();
     }
 

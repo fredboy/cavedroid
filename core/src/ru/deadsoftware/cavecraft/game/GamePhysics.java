@@ -131,7 +131,6 @@ public class GamePhysics {
 }
 
     public void update(float delta) {
-
         for (Mob mob : gameProc.mobs) {
             mob.ai();
             mobPhy(mob);

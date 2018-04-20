@@ -6,8 +6,8 @@ import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavecraft.*;
-import ru.deadsoftware.cavecraft.game.mobs.Human;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
+import ru.deadsoftware.cavecraft.game.mobs.Pig;
 import ru.deadsoftware.cavecraft.game.objects.Player;
 
 public class GameProc {
@@ -37,6 +37,9 @@ public class GameProc {
         physics = new GamePhysics(this);
         player = new Player(world.getSpawnPoint());
         mobs = new Array<Mob>();
+        for (int i=0; i<1024/64; i++) {
+            mobs.add(new Pig(i*16*64, 0, world));
+        }
         if (!CaveGame.TOUCH) ctrlMode = 1;
     }
 

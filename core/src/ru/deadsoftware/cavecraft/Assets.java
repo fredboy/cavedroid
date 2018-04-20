@@ -13,7 +13,10 @@ public class Assets {
     public static BitmapFont minecraftFont;
 
     public static Texture charTexture;
-    public static Sprite[][] playerSkin = new Sprite[2][4];
+    public static Sprite[][] playerSprite = new Sprite[2][4];
+
+    public static Texture pigTexture;
+    public static Sprite[][] pigSprite = new Sprite[2][2];
 
     public static Sprite shade;
 
@@ -35,36 +38,53 @@ public class Assets {
     public static TextureRegion touchToggleMode;
     public static TextureRegion touchSpace;
 
-    public static void load() {
-        minecraftFont = new BitmapFont(Gdx.files.internal("font.fnt"), true);
+    private static void loadPlayer() {
         charTexture = new Texture(Gdx.files.internal("mobs/char.png"));
         //LOOK TO LEFT
         //head
-        playerSkin[0][0] = new Sprite(new TextureRegion(charTexture, 0,0,12,12));
-        playerSkin[0][0].flip(false,true);
+        playerSprite[0][0] = new Sprite(new TextureRegion(charTexture, 0,0,12,12));
+        playerSprite[0][0].flip(false,true);
         //body
-        playerSkin[0][1] = new Sprite(new TextureRegion(charTexture, 0,13,12,12));
-        playerSkin[0][1].flip(false,true);
+        playerSprite[0][1] = new Sprite(new TextureRegion(charTexture, 0,13,12,12));
+        playerSprite[0][1].flip(false,true);
         //hand
-        playerSkin[0][2] = new Sprite(new TextureRegion(charTexture, 25,5,20,20));
-        playerSkin[0][2].flip(false,true);
+        playerSprite[0][2] = new Sprite(new TextureRegion(charTexture, 25,5,20,20));
+        playerSprite[0][2].flip(false,true);
         //leg
-        playerSkin[0][3] = new Sprite(new TextureRegion(charTexture, 25,27,20,20));
-        playerSkin[0][3].flip(false,true);
+        playerSprite[0][3] = new Sprite(new TextureRegion(charTexture, 25,27,20,20));
+        playerSprite[0][3].flip(false,true);
         //LOOK TO RIGHT
         //head
-        playerSkin[1][0] = new Sprite(new TextureRegion(charTexture, 13,0,12,12));
-        playerSkin[1][0].flip(false,true);
+        playerSprite[1][0] = new Sprite(new TextureRegion(charTexture, 13,0,12,12));
+        playerSprite[1][0].flip(false,true);
         //body
-        playerSkin[1][1] = new Sprite(new TextureRegion(charTexture, 13,13,12,12));
-        playerSkin[1][1].flip(false,true);
+        playerSprite[1][1] = new Sprite(new TextureRegion(charTexture, 13,13,12,12));
+        playerSprite[1][1].flip(false,true);
         //hand
-        playerSkin[1][2] = new Sprite(new TextureRegion(charTexture, 37,5,20,20));
-        playerSkin[1][2].flip(false,true);
+        playerSprite[1][2] = new Sprite(new TextureRegion(charTexture, 37,5,20,20));
+        playerSprite[1][2].flip(false,true);
         //leg
-        playerSkin[1][3] = new Sprite(new TextureRegion(charTexture, 37,27,20,20));
-        playerSkin[1][3].flip(false,true);
+        playerSprite[1][3] = new Sprite(new TextureRegion(charTexture, 37,27,20,20));
+        playerSprite[1][3].flip(false,true);
+    }
 
+    private static void loadPig() {
+        pigTexture = new Texture(Gdx.files.internal("mobs/pig.png"));
+        pigSprite[0][0] = new Sprite(new TextureRegion(pigTexture, 0, 0, 25, 12));
+        pigSprite[0][0].flip(false,true);
+        pigSprite[1][0] = new Sprite(new TextureRegion(pigTexture, 0, 12, 25, 12));
+        pigSprite[1][0].flip(false,true);
+        pigSprite[0][1] = new Sprite(new TextureRegion(pigTexture, 4, 26, 12, 12));
+        pigSprite[0][1].flip(false,true);
+        pigSprite[1][1] = new Sprite(new TextureRegion(pigTexture, 16, 26, 12, 12));
+        pigSprite[1][1].flip(false,true);
+    }
+
+    public static void load() {
+        minecraftFont = new BitmapFont(Gdx.files.internal("font.fnt"), true);
+
+        loadPlayer();
+        loadPig();
 
         shade = new Sprite(new Texture(Gdx.files.internal("shade.png")));
 
