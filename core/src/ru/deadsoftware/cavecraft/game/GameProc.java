@@ -1,13 +1,11 @@
 package ru.deadsoftware.cavecraft.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
-import ru.deadsoftware.cavecraft.Assets;
-import ru.deadsoftware.cavecraft.CaveGame;
-import ru.deadsoftware.cavecraft.GameState;
-import ru.deadsoftware.cavecraft.Items;
+import ru.deadsoftware.cavecraft.*;
 import ru.deadsoftware.cavecraft.game.mobs.Human;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.objects.Player;
@@ -39,7 +37,7 @@ public class GameProc {
         physics = new GamePhysics(this);
         player = new Player(world.getSpawnPoint());
         mobs = new Array<Mob>();
-
+        if (!CaveGame.TOUCH) ctrlMode = 1;
     }
 
     public void resetRenderer() {
@@ -52,24 +50,31 @@ public class GameProc {
     }
 
     private void moveCursor() {
-        if (player.canJump) {
-            cursorX = (int) (player.position.x + player.texWidth / 2) / 16;
-            if (player.dir == 0) cursorX--;
-            else cursorX++;
-            cursorY = (int) (player.position.y + player.texWidth) / 16;
-            if (!isAutoselectable(cursorX, cursorY)) {
-                cursorY++;
+        if (ctrlMode==0) {
+            if (player.canJump) {
+                cursorX = (int) (player.position.x + player.texWidth / 2) / 16;
+                if (player.dir == 0) cursorX--;
+                else cursorX++;
+                cursorY = (int) (player.position.y + player.texWidth) / 16;
+                if (!isAutoselectable(cursorX, cursorY)) {
+                    cursorY++;
+                }
+                if (!isAutoselectable(cursorX, cursorY)) {
+                    cursorY++;
+                }
+                if (!isAutoselectable(cursorX, cursorY)) {
+                    if (player.dir == 0) cursorX++;
+                    else cursorX--;
+                }
+            } else {
+                cursorX = (int) (player.position.x + player.texWidth / 2) / 16;
+                cursorY = (int) (player.position.y + player.height+8)/16;
             }
-            if (!isAutoselectable(cursorX, cursorY)) {
-                cursorY++;
-            }
-            if (!isAutoselectable(cursorX, cursorY)) {
-                if (player.dir == 0) cursorX++;
-                else cursorX--;
-            }
-        } else {
-            cursorX = (int) (player.position.x + player.texWidth / 2) / 16;
-            cursorY = (int) (player.position.y + player.height+8)/16;
+        } else if (!CaveGame.TOUCH){
+            cursorX = (int)(Gdx.input.getX()*
+                    (renderer.camera.viewportWidth/GameScreen.getWidth())+renderer.camera.position.x)/16;
+            cursorY = (int)(Gdx.input.getY()*
+                    (renderer.camera.viewportHeight/GameScreen.getHeight())+renderer.camera.position.y)/16;
         }
     }
 
@@ -78,13 +83,17 @@ public class GameProc {
         if (cursorX >= world.getWidth()) cursorX = world.getWidth()-1;
         if (cursorY < 0) cursorY = 0;
         if (cursorY >= world.getHeight()) cursorY = world.getHeight()-1;
+        if (cursorX<(player.position.x+player.texWidth/2)/16)
+            player.dir=0;
+        if (cursorX>(player.position.x+player.texWidth/2)/16)
+            player.dir=1;
     }
 
     public void update(float delta) {
         RUN_TIME += delta;
 
         physics.update(delta);
-        if (ctrlMode==0) moveCursor();
+        moveCursor();
         checkCursorBounds();
 
         if (isTouchDown && TimeUtils.timeSinceMillis(touchDownTime) > 500) {

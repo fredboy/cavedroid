@@ -14,7 +14,7 @@ public class GameInputHandler {
     }
 
     private void wasdPressed(int keyCode) {
-        if (gameProc.ctrlMode==0) {
+        if (gameProc.ctrlMode==0 || !CaveGame.TOUCH) {
             switch (keyCode) {
                 case Input.Keys.A:
                     gameProc.player.moveX.x = -GamePhysics.PL_SPEED;
@@ -25,7 +25,7 @@ public class GameInputHandler {
                     gameProc.player.dir = 1;
                     break;
             }
-        } else {
+        } else if (CaveGame.TOUCH){
             switch (keyCode) {
                 case Input.Keys.A:
                     gameProc.cursorX--;
@@ -40,10 +40,6 @@ public class GameInputHandler {
                     gameProc.cursorY++;
                     break;
             }
-            if (gameProc.cursorX<(gameProc.player.position.x+gameProc.player.texWidth/2)/16)
-                gameProc.player.dir=0;
-            if (gameProc.cursorX>(gameProc.player.position.x+gameProc.player.texWidth/2)/16)
-                gameProc.player.dir=1;
         }
     }
 
@@ -53,8 +49,10 @@ public class GameInputHandler {
             wasdPressed(keyCode);
         } else switch (keyCode) {
             case Input.Keys.ALT_LEFT:
-                gameProc.ctrlMode++;
-                if (gameProc.ctrlMode > 1) gameProc.ctrlMode = 0;
+                if (CaveGame.TOUCH) {
+                    gameProc.ctrlMode++;
+                    if (gameProc.ctrlMode > 1) gameProc.ctrlMode = 0;
+                }
                 break;
 
             case Input.Keys.SPACE:

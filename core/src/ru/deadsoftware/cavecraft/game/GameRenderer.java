@@ -1,6 +1,7 @@
 package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -219,6 +220,12 @@ public class GameRenderer {
         }
         spriteBatch.end();
 
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.ORANGE);
+        shapeRenderer.line(0-camera.position.x, 128*16-camera.position.y,
+                gameProc.world.getWidth()*16-camera.position.x, 128*16-camera.position.y);
+        shapeRenderer.end();
+
         if (CaveGame.TOUCH) {
             spriteBatch.begin();
             drawTouchGui();
@@ -231,6 +238,7 @@ public class GameRenderer {
         drawString("FPS: "+GameScreen.FPS, 0, 20);
         drawString("X: "+(int)(gameProc.player.position.x/16), 0, 40);
         drawString("Y: "+(int)(gameProc.player.position.y/16), 0, 60);
+        drawString("Seed: "+WorldGen.getSeed(), 0, 80);
         fontBatch.end();
     }
 

@@ -16,7 +16,7 @@ public class GamePhysics {
 
     public GamePhysics(GameProc gameProc) {
         this.gameProc = gameProc;
-        gravity = new Vector2(0,1);
+        gravity = new Vector2(0,.9f);
     }
 
     private boolean checkJump(Rectangle rect, int dir) {
@@ -27,12 +27,14 @@ public class GamePhysics {
                     bl = gameProc.world.getForeMap(
                         (int)((rect.x+(rect.width/2))/16) - 1,
                         (int)(rect.y/16)+1);
+                if (gameProc.world.getForeMap((int)((rect.x+(rect.width/2))/16)-1,(int)(rect.y/16))>0) bl=0;
                 break;
             case 1:
                 if ((int)((rect.x+(rect.width/2))/16) + 1<gameProc.world.getWidth())
                     bl = gameProc.world.getForeMap(
                         (int)((rect.x+(rect.width/2))/16) + 1,
                         (int)(rect.y/16)+1);
+                if (gameProc.world.getForeMap((int)((rect.x+(rect.width/2))/16)+1,(int)(rect.y/16))>0) bl=0;
                 break;
             default:
                 bl=0;
@@ -66,17 +68,19 @@ public class GamePhysics {
     private void playerPhy(Player pl) {
         pl.position.add(pl.moveY);
         if (checkColl(pl.getRect())) {
-            pl.flyMode = false;
-            pl.canJump = true;
             int d = -1;
             if (pl.moveY.y<0) d=1; else if (pl.moveY.y>0) d=-1;
+            if (d==-1) {
+                pl.flyMode = false;
+                pl.canJump = true;
+            }
             pl.position.y = MathUtils.round(pl.position.y);
             while (checkColl(pl.getRect())) pl.position.y+=d;
             pl.moveY.setZero();
         } else {
             pl.canJump = false;
         }
-        if (!pl.flyMode) pl.moveY.add(gravity);
+        if (!pl.flyMode && pl.moveY.y<18) pl.moveY.add(gravity);
         pl.position.add(pl.moveX);
         if (pl.position.x<0 ||
                 pl.position.x+pl.texWidth>=gameProc.world.getWidth()*16)
