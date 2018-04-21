@@ -3,6 +3,8 @@ package ru.deadsoftware.cavecraft.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ArrayMap;
+import ru.deadsoftware.cavecraft.CaveGame;
+import ru.deadsoftware.cavecraft.GameState;
 import ru.deadsoftware.cavecraft.Items;
 
 public class GameWorld {
@@ -84,13 +86,22 @@ public class GameWorld {
         while (!found) {
             for (int i = 0; i < getHeight(); i++) {
                 if (getForeMap((int)x, i)>0 &&
-                        Items.BLOCKS.getValueAt(getForeMap((int)x, i)).collision) {
-                    y = i-3;
+                        Items.BLOCKS.getValueAt(getForeMap((int)x, i)).collision &&
+                        getForeMap((int)x, i-1)==0 && getForeMap((int)x, i-1)==0) {
+                    y = i-2;
                     found = true;
                     break;
                 }
             }
-            if (!found) x--;
+            if (!found) {
+                x--;
+                if (x<0) x=getWidth()-1;
+                if ((int)x == getWidth()/2+1) {
+                    x--;
+                    y=0;
+                    break;
+                }
+            }
         }
         x = x*16 + 4;
         y *= 16;

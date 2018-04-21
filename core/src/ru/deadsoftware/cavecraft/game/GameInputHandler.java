@@ -13,9 +13,9 @@ public class GameInputHandler {
         this.gameProc = gameProc;
     }
 
-    private void wasdPressed(int keyCode) {
+    private void wasdPressed(int keycode) {
         if (gameProc.ctrlMode==0 || !CaveGame.TOUCH) {
-            switch (keyCode) {
+            switch (keycode) {
                 case Input.Keys.A:
                     gameProc.player.moveX.x = -GamePhysics.PL_SPEED;
                     gameProc.player.dir = 0;
@@ -26,7 +26,7 @@ public class GameInputHandler {
                     break;
             }
         } else if (CaveGame.TOUCH){
-            switch (keyCode) {
+            switch (keycode) {
                 case Input.Keys.A:
                     gameProc.cursorX--;
                     break;
@@ -43,11 +43,13 @@ public class GameInputHandler {
         }
     }
 
-    public void  keyDown(int keyCode) {
-        if (keyCode == Input.Keys.W || keyCode == Input.Keys.A ||
-                keyCode == Input.Keys.S || keyCode == Input.Keys.D) {
-            wasdPressed(keyCode);
-        } else switch (keyCode) {
+    public void  keyDown(int keycode) {
+        gameProc.isKeyDown = true;
+        gameProc.keyDownCode = keycode;
+        if (keycode == Input.Keys.W || keycode == Input.Keys.A ||
+                keycode == Input.Keys.S || keycode == Input.Keys.D) {
+            wasdPressed(keycode);
+        } else switch (keycode) {
             case Input.Keys.ALT_LEFT:
                 if (CaveGame.TOUCH) {
                     gameProc.ctrlMode++;
@@ -74,11 +76,14 @@ public class GameInputHandler {
                 if (CaveGame.STATE == GameState.GAME_PLAY) CaveGame.STATE = GameState.GAME_CREATIVE_INV;
                     else CaveGame.STATE = GameState.GAME_PLAY;
                 break;
+
+            case Input.Keys.N:
+                CaveGame.STATE = GameState.RESTART;
         }
     }
 
-    public void keyUp(int keyCode) {
-        switch (keyCode) {
+    public void keyUp(int keycode) {
+        switch (keycode) {
             case Input.Keys.A: case Input.Keys.D:
                 gameProc.player.moveX.x = 0;
                 break;
@@ -98,16 +103,14 @@ public class GameInputHandler {
                 screenX<gameProc.renderer.camera.viewportWidth/2+Assets.creativeInv.getRegionWidth()/2 &&
                 screenY>gameProc.renderer.camera.viewportHeight/2-Assets.creativeInv.getRegionHeight()/2 &&
                 screenY<gameProc.renderer.camera.viewportHeight/2+Assets.creativeInv.getRegionHeight()/2) {
-            try {
-                int ix = (int) (screenX - (gameProc.renderer.camera.viewportWidth / 2 - Assets.creativeInv.getRegionWidth() / 2 + 8)) / 18;
-                int iy = (int) (screenY - (gameProc.renderer.camera.viewportHeight / 2 - Assets.creativeInv.getRegionHeight() / 2 + 18)) / 18;
-                int item = ix + iy * 8;
+            int ix = (int) (screenX - (gameProc.renderer.camera.viewportWidth / 2 - Assets.creativeInv.getRegionWidth() / 2 + 8)) / 18;
+            int iy = (int) (screenY - (gameProc.renderer.camera.viewportHeight / 2 - Assets.creativeInv.getRegionHeight() / 2 + 18)) / 18;
+            int item = ix + iy * 8;
+            if (item >= 0 && item < Items.BLOCKS.size) {
                 for (int i = 8; i > 0; i--) {
                     gameProc.player.inventory[i] = gameProc.player.inventory[i - 1];
                 }
-                if (item >= 0 && item < Items.BLOCKS.size) gameProc.player.inventory[0] = item;
-            } catch (Exception e) {
-                Gdx.app.error("GameInputHandler", e.toString());
+                gameProc.player.inventory[0] = item;
             }
         } else if (CaveGame.STATE == GameState.GAME_CREATIVE_INV) {
             CaveGame.STATE = GameState.GAME_PLAY;
@@ -121,6 +124,10 @@ public class GameInputHandler {
     }
 
     public void touchUp(int screenX, int screenY, int button) {
+        if (gameProc.isKeyDown) {
+            keyUp(gameProc.keyDownCode);
+            gameProc.isKeyDown = false;
+        }
         if (gameProc.isTouchDown) {
             if (button == Input.Buttons.RIGHT){
                 gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY,

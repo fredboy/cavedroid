@@ -26,8 +26,8 @@ public class GameProc {
     public int invSlot;
     public int ctrlMode;
 
-    public boolean isTouchDown = false;
-    public int touchDownX, touchDownY;
+    public boolean isTouchDown, isKeyDown;
+    public int touchDownX, touchDownY, keyDownCode;
     public int touchDownButton;
     public long touchDownTime;
 

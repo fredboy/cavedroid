@@ -54,16 +54,14 @@ public class WorldGen {
         genWorld(width, height, TimeUtils.millis());
     }
 
-    static void genWorld(int width, int height, long s) {
+    static void genWorld(int width, int height, long worldseed) {
         int dirtH;
-        seed = s;
+        seed = worldseed;
         rand = new RandomXS128(seed);
         foreMap = new int[width][height];
         backMap = new int[width][height];
         hMap = genLandscape(width, height/4, height/8, height/2);
         for (int x=0; x<width; x++) {
-            for (int y=0; y<height; y++) {
-            }
             dirtH = 4+rand.nextInt(2);
             for (int y = height- hMap[x]; y<height; y++) {
                 if (y==height- hMap[x]) {
@@ -84,10 +82,13 @@ public class WorldGen {
                 if (foreMap[x][y]==0){
                     foreMap[x][y] = 8;
                     backMap[x][y] = 8;
+                    if (y==height-hMap[x]-1) {
+                        foreMap[x][y+1] = 3;
+                    }
                 }
             }
             if (x>2 && x<width-2 && rand.nextInt(100)<5){
-                genOak(x,height-hMap[x]-1);
+                if (foreMap[x][height-hMap[x]]-1==0) genOak(x,height-hMap[x]-1);
             }
         }
     }

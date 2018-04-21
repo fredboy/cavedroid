@@ -35,6 +35,11 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        if (CaveGame.STATE == GameState.RESTART) {
+            gameProc = new GameProc();
+            Gdx.input.setInputProcessor(new InputHandler(gameProc));
+            CaveGame.STATE = GameState.GAME_PLAY;
+        }
         FPS = (int)(1/delta);
         gameProc.update(delta);
         gameProc.renderer.render();

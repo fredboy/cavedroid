@@ -231,7 +231,7 @@ public class GameRenderer {
         drawString("CaveCraft "+CaveGame.VERSION, 0, 0);
         drawString("FPS: "+GameScreen.FPS, 0, 20);
         drawString("X: "+(int)(gameProc.player.position.x/16), 0, 40);
-        drawString("Y: "+(int)(gameProc.player.position.y/16), 0, 60);
+        drawString("Y: "+(gameProc.world.getHeight()-(int)(gameProc.player.position.y/16)), 0, 60);
         drawString("Seed: "+WorldGen.getSeed(), 0, 80);
         drawString("Mobs: "+gameProc.mobs.size, 0, 100);
         fontBatch.end();
