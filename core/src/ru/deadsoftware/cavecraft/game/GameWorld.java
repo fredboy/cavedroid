@@ -32,10 +32,10 @@ public class GameWorld {
         int map = 0;
         try {
             if (x<0) {
-                x = x % (getWidth()-1)-1;
+                x = x % (getWidth());
                 x = getWidth()- Math.abs(x);
             } else if (x>0) {
-                x = x % (getWidth()-1)+1;
+                x = x % (getWidth());
             }
             map = foreMap[x][y];
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -47,10 +47,10 @@ public class GameWorld {
     public void setForeMap(int x, int y, int value) {
         try {
             if (x<0) {
-                x = x % (getWidth()-1)-1;
+                x = x % (getWidth());
                 x = getWidth()- Math.abs(x);
             } else if (x>0) {
-                x = x % (getWidth()-1)+1;
+                x = x % (getWidth());
             }
             foreMap[x][y] = value;
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -62,10 +62,10 @@ public class GameWorld {
         int map = 0;
         try {
             if (x<0) {
-                x = x % (getWidth()-1)-1;
+                x = x % (getWidth());
                 x = getWidth()- Math.abs(x);
             } else if (x>0) {
-                x = x % (getWidth()-1)+1;
+                x = x % (getWidth());
             }
             map = backMap[x][y];
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -77,10 +77,10 @@ public class GameWorld {
     public void setBackMap(int x, int y, int value) {
         try {
             if (x<0) {
-                x = x % (getWidth()-1)-1;
+                x = x % (getWidth());
                 x = getWidth()- Math.abs(x);
             } else if (x>0) {
-                x = x % (getWidth()-1)+1;
+                x = x % (getWidth());
             }
             backMap[x][y] = value;
         } catch (ArrayIndexOutOfBoundsException e) {

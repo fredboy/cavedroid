@@ -67,7 +67,6 @@ public class GameProc {
                 if (player.dir == 0) cursorX++;
                 else cursorX--;
             }
-            if (player.position.x<0) cursorX--;
         } else if (!CaveGame.TOUCH){
             cursorX = (int)(Gdx.input.getX()*
                     (renderer.camera.viewportWidth/GameScreen.getWidth())+renderer.camera.position.x)/16;

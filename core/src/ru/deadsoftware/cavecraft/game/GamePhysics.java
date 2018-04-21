@@ -24,7 +24,6 @@ public class GamePhysics {
 
     private boolean checkJump(Rectangle rect, int dir) {
         int bl = 0;
-        if (rect.x<0) rect.x-=16;
         switch (dir) {
             case 0:
                 bl = gameProc.world.getForeMap(
@@ -95,6 +94,8 @@ public class GamePhysics {
                 while (checkColl(pl.getRect())) pl.position.x += d;
             }
         }
+        if (pl.position.x+pl.texWidth/2<0) pl.position.x+=gameProc.world.getWidth()*16;
+        if (pl.position.x+pl.texWidth/2>gameProc.world.getWidth()*16) pl.position.x-=gameProc.world.getWidth()*16;
         if (pl.position.y > gameProc.world.getHeight()*16) {
             pl.position = gameProc.world.getSpawnPoint().cpy();
         }
@@ -118,6 +119,8 @@ public class GamePhysics {
         }
         mob.moveY.add(gravity);
         mob.position.add(mob.moveX);
+        if (mob.position.x+mob.width/2<0) mob.position.x+=gameProc.world.getWidth()*16;
+        if (mob.position.x+mob.width/2>gameProc.world.getWidth()*16) mob.position.x-=gameProc.world.getWidth()*16;
         if (checkColl(mob.getRect())) {
             int d = 0;
             if (mob.moveX.x<0) d=1; else if (mob.moveX.x>0) d=-1;

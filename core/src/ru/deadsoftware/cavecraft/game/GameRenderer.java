@@ -93,7 +93,11 @@ public class GameRenderer {
 
     private void drawMob(Mob mob) {
         mob.draw(spriteBatch,
+                mob.position.x-camera.position.x-gameProc.world.getWidth()*16, mob.position.y-camera.position.y);
+        mob.draw(spriteBatch,
                 mob.position.x-camera.position.x, mob.position.y-camera.position.y);
+        mob.draw(spriteBatch,
+                mob.position.x-camera.position.x+gameProc.world.getWidth()*16, mob.position.y-camera.position.y);
     }
 
     private void drawPlayer(Player pl) {
