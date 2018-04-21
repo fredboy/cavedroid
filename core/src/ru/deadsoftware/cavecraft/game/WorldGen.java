@@ -81,9 +81,9 @@ public class WorldGen {
                 }
             }
             for (int y = height-64; y<height-1; y++) {
-                if (foreMap[x][height-y]==0){
-                    foreMap[x][height-y] = 8;
-                    backMap[x][height-y] = 8;
+                if (foreMap[x][y]==0){
+                    foreMap[x][y] = 8;
+                    backMap[x][y] = 8;
                 }
             }
             if (x>2 && x<width-2 && rand.nextInt(100)<5){

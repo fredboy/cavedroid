@@ -220,12 +220,6 @@ public class GameRenderer {
         }
         spriteBatch.end();
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.ORANGE);
-        shapeRenderer.line(0-camera.position.x, 128*16-camera.position.y,
-                gameProc.world.getWidth()*16-camera.position.x, 128*16-camera.position.y);
-        shapeRenderer.end();
-
         if (CaveGame.TOUCH) {
             spriteBatch.begin();
             drawTouchGui();
