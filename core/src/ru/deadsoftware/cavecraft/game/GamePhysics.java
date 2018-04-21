@@ -1,6 +1,9 @@
 package ru.deadsoftware.cavecraft.game;
 
-import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavecraft.CaveGame;
 import ru.deadsoftware.cavecraft.Items;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
@@ -23,18 +26,18 @@ public class GamePhysics {
         int bl = 0;
         switch (dir) {
             case 0:
-                if ((int)((rect.x+(rect.width/2))/16) - 1>=0)
-                    bl = gameProc.world.getForeMap(
-                        (int)((rect.x+(rect.width/2))/16) - 1,
-                        (int)(rect.y/16)+1);
+                bl = gameProc.world.getForeMap(
+                    (int)((rect.x+(rect.width/2))/16) - 1,
+                    (int)(rect.y/16)+1);
                 if (gameProc.world.getForeMap((int)((rect.x+(rect.width/2))/16)-1,(int)(rect.y/16))>0) bl=0;
+                if (gameProc.world.getForeMap((int)((rect.x+(rect.width/2))/16)-1,(int)(rect.y/16)-1)>0) bl=0;
                 break;
             case 1:
-                if ((int)((rect.x+(rect.width/2))/16) + 1<gameProc.world.getWidth())
-                    bl = gameProc.world.getForeMap(
-                        (int)((rect.x+(rect.width/2))/16) + 1,
-                        (int)(rect.y/16)+1);
+                bl = gameProc.world.getForeMap(
+                    (int)((rect.x+(rect.width/2))/16) + 1,
+                    (int)(rect.y/16)+1);
                 if (gameProc.world.getForeMap((int)((rect.x+(rect.width/2))/16)+1,(int)(rect.y/16))>0) bl=0;
+                if (gameProc.world.getForeMap((int)((rect.x+(rect.width/2))/16)+1,(int)(rect.y/16)-1)>0) bl=0;
                 break;
             default:
                 bl=0;
@@ -48,9 +51,7 @@ public class GamePhysics {
         int minY = (int) ((rect.y+rect.height/2)/16)-4;
         int maxX = (int) ((rect.x+rect.width/2)/16)+4;
         int maxY = (int) ((rect.y+rect.height/2)/16)+4;
-        if (minX<0) minX=0;
         if (minY<0) minY=0;
-        if (maxX>gameProc.world.getWidth()) maxX = gameProc.world.getWidth();
         if (maxY>gameProc.world.getHeight()) maxY = gameProc.world.getHeight();
         for (int y=minY; y<maxY; y++) {
             for (int x=minX; x<maxX; x++) {
@@ -82,9 +83,6 @@ public class GamePhysics {
         }
         if (!pl.flyMode && pl.moveY.y<18) pl.moveY.add(gravity);
         pl.position.add(pl.moveX);
-        if (pl.position.x<0 ||
-                pl.position.x+pl.texWidth>=gameProc.world.getWidth()*16)
-            pl.position.sub(pl.moveX);
         if (checkColl(pl.getRect())) {
             if (pl.canJump && !pl.flyMode) pl.position.y-=8;
             if (checkColl(pl.getRect())) {
@@ -119,9 +117,6 @@ public class GamePhysics {
         }
         mob.moveY.add(gravity);
         mob.position.add(mob.moveX);
-        if (mob.position.x<32 ||
-                mob.position.x+mob.width>gameProc.world.getWidth()*16-32)
-            mob.position.sub(mob.moveX);
         if (checkColl(mob.getRect())) {
             int d = 0;
             if (mob.moveX.x<0) d=1; else if (mob.moveX.x>0) d=-1;

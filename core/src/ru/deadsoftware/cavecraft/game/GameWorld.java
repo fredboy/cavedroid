@@ -2,9 +2,6 @@ package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.ArrayMap;
-import ru.deadsoftware.cavecraft.CaveGame;
-import ru.deadsoftware.cavecraft.GameState;
 import ru.deadsoftware.cavecraft.Items;
 
 public class GameWorld {
@@ -32,17 +29,29 @@ public class GameWorld {
     }
 
     public int getForeMap(int x, int y) {
-        int ret = 0;
+        int map = 0;
         try {
-            ret = foreMap[x][y];
+            if (x<0) {
+                x = x % (getWidth()-1)-1;
+                x = getWidth()- Math.abs(x);
+            } else if (x>0) {
+                x = x % (getWidth()-1)+1;
+            }
+            map = foreMap[x][y];
         } catch (ArrayIndexOutOfBoundsException e) {
             Gdx.app.error("GameWorld",e.toString());
         }
-        return ret;
+        return map;
     }
 
     public void setForeMap(int x, int y, int value) {
         try {
+            if (x<0) {
+                x = x % (getWidth()-1)-1;
+                x = getWidth()- Math.abs(x);
+            } else if (x>0) {
+                x = x % (getWidth()-1)+1;
+            }
             foreMap[x][y] = value;
         } catch (ArrayIndexOutOfBoundsException e) {
             Gdx.app.error("GameWorld", e.toString());
@@ -50,17 +59,29 @@ public class GameWorld {
     }
 
     public int getBackMap(int x, int y) {
-        int ret = 0;
+        int map = 0;
         try {
-            ret = backMap[x][y];
+            if (x<0) {
+                x = x % (getWidth()-1)-1;
+                x = getWidth()- Math.abs(x);
+            } else if (x>0) {
+                x = x % (getWidth()-1)+1;
+            }
+            map = backMap[x][y];
         } catch (ArrayIndexOutOfBoundsException e) {
             Gdx.app.error("GameWorld",e.toString());
         }
-        return ret;
+        return map;
     }
 
     public void setBackMap(int x, int y, int value) {
         try {
+            if (x<0) {
+                x = x % (getWidth()-1)-1;
+                x = getWidth()- Math.abs(x);
+            } else if (x>0) {
+                x = x % (getWidth()-1)+1;
+            }
             backMap[x][y] = value;
         } catch (ArrayIndexOutOfBoundsException e) {
             Gdx.app.error("GameWorld", e.toString());
@@ -81,28 +102,6 @@ public class GameWorld {
 
     public Vector2 getSpawnPoint() {
         float x=0, y=0;
-        boolean found = false;
-        x = getWidth()/2;
-        while (!found) {
-            for (int i = 0; i < getHeight(); i++) {
-                if (getForeMap((int)x, i)>0 &&
-                        Items.BLOCKS.getValueAt(getForeMap((int)x, i)).collision &&
-                        getForeMap((int)x, i-1)==0 && getForeMap((int)x, i-1)==0) {
-                    y = i-2;
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                x--;
-                if (x<0) x=getWidth()-1;
-                if ((int)x == getWidth()/2+1) {
-                    x--;
-                    y=0;
-                    break;
-                }
-            }
-        }
         x = x*16 + 4;
         y *= 16;
         return new Vector2(x,y);

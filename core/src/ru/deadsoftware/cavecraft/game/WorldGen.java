@@ -1,8 +1,6 @@
 package ru.deadsoftware.cavecraft.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.RandomXS128;
-import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class WorldGen {
@@ -23,6 +21,10 @@ public class WorldGen {
         res[0] = mid;
         for (int i=1; i<width; i++) {
             t = rand.nextInt(3)-1;
+            if (i>width-(max-min)) {
+                if (res[i-1]+t<res[0]) t=Math.abs(t);
+                    else if (res[i-1]+t>res[0]) t=-Math.abs(t);
+            }
             res[i] = res[i-1] + t;
             if (res[i]<min) res[i] = min;
             if (res[i]>max) res[i] = max;
@@ -60,7 +62,7 @@ public class WorldGen {
         rand = new RandomXS128(seed);
         foreMap = new int[width][height];
         backMap = new int[width][height];
-        hMap = genLandscape(width, height/4, height/8, height/2);
+        hMap = genLandscape(width, height/8*3, height/8, height/2);
         for (int x=0; x<width; x++) {
             dirtH = 4+rand.nextInt(2);
             for (int y = height- hMap[x]; y<height; y++) {

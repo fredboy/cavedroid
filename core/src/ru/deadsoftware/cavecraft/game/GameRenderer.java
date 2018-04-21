@@ -1,7 +1,6 @@
 package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,8 +8,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavecraft.Assets;
 import ru.deadsoftware.cavecraft.CaveGame;
-import ru.deadsoftware.cavecraft.Items;
 import ru.deadsoftware.cavecraft.GameScreen;
+import ru.deadsoftware.cavecraft.Items;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.objects.Player;
 
@@ -53,22 +52,16 @@ public class GameRenderer {
         Assets.minecraftFont.draw(fontBatch, str, x, y);
     }
 
-    private void drawWorld() {
-        int minX = (int) (camera.position.x/16);
-        int minY = (int) (camera.position.y/16);
+    private void drawWorldBackground() {
+        int minX = (int) (camera.position.x/16)-1;
+        int minY = (int) (camera.position.y/16)-1;
         int maxX = (int) ((camera.position.x+camera.viewportWidth)/16)+1;
         int maxY = (int) ((camera.position.y+camera.viewportHeight)/16)+1;
-        if (minX<0) minX=0;
         if (minY<0) minY=0;
-        if (maxX>gameProc.world.getWidth()) maxX = gameProc.world.getWidth();
         if (maxY>gameProc.world.getHeight()) maxY = gameProc.world.getHeight();
         for (int y=minY; y<maxY; y++) {
             for (int x=minX; x<maxX; x++) {
-                if (gameProc.world.getForeMap(x,y)>0){/* &&
-                        !Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).foreground) {
-                    spriteBatch.draw(
-                            Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).getTexture(),
-                            x * 16 - camera.position.x,y * 16 - camera.position.y);*/
+                if (gameProc.world.getForeMap(x,y)>0){
                 } else if (gameProc.world.getBackMap(x,y)>0) {
                     spriteBatch.draw(
                             Items.BLOCKS.getValueAt(gameProc.world.getBackMap(x,y)).getTexture(),
@@ -81,18 +74,15 @@ public class GameRenderer {
     }
 
     private void drawWorldForeground(){
-        int minX = (int) (camera.position.x/16);
-        int minY = (int) (camera.position.y/16);
+        int minX = (int) (camera.position.x/16)-1;
+        int minY = (int) (camera.position.y/16)-1;
         int maxX = (int) ((camera.position.x+camera.viewportWidth)/16)+1;
         int maxY = (int) ((camera.position.y+camera.viewportHeight)/16)+1;
-        if (minX<0) minX=0;
         if (minY<0) minY=0;
-        if (maxX>gameProc.world.getWidth()) maxX = gameProc.world.getWidth();
         if (maxY>gameProc.world.getHeight()) maxY = gameProc.world.getHeight();
         for (int y=minY; y<maxY; y++) {
             for (int x=minX; x<maxX; x++) {
-                if (gameProc.world.getForeMap(x,y)>0) { /*&&
-                        Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).foreground) {*/
+                if (gameProc.world.getForeMap(x,y)>0) {
                     spriteBatch.draw(
                             Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).getTexture(),
                             x * 16 - camera.position.x,y * 16 - camera.position.y);
@@ -197,7 +187,7 @@ public class GameRenderer {
     }
 
     private void drawGamePlay() {
-        drawWorld();
+        drawWorldBackground();
         Mob.animateMobs();
         for (Mob mob : gameProc.mobs) drawMob(mob);
         drawPlayer(gameProc.player);

@@ -2,7 +2,6 @@ package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavecraft.*;
@@ -37,8 +36,8 @@ public class GameProc {
         physics = new GamePhysics(this);
         player = new Player(world.getSpawnPoint());
         mobs = new Array<Mob>();
-        for (int i=0; i<1024/64; i++) {
-            mobs.add(new Pig(i*16*64, 0, world));
+        for (int i=0; i<world.getWidth(); i+=64) {
+            mobs.add(new Pig(i*16, 0, world));
         }
         if (!CaveGame.TOUCH) ctrlMode = 1;
     }
@@ -53,7 +52,7 @@ public class GameProc {
     }
 
     private void moveCursor() {
-        if (ctrlMode==0) {
+        if (ctrlMode==0 && CaveGame.TOUCH) {
             if (player.canJump) {
                 cursorX = (int) (player.position.x + player.texWidth / 2) / 16;
                 if (player.dir == 0) cursorX--;
@@ -78,12 +77,13 @@ public class GameProc {
                     (renderer.camera.viewportWidth/GameScreen.getWidth())+renderer.camera.position.x)/16;
             cursorY = (int)(Gdx.input.getY()*
                     (renderer.camera.viewportHeight/GameScreen.getHeight())+renderer.camera.position.y)/16;
+            if ((Gdx.input.getX()*
+                    (renderer.camera.viewportWidth/GameScreen.getWidth())+renderer.camera.position.x)<0)
+                cursorX--;
         }
     }
 
     private void checkCursorBounds() {
-        if (cursorX < 0) cursorX = 0;
-        if (cursorX >= world.getWidth()) cursorX = world.getWidth()-1;
         if (cursorY < 0) cursorY = 0;
         if (cursorY >= world.getHeight()) cursorY = world.getHeight()-1;
         if (cursorX<(player.position.x+player.texWidth/2)/16)
