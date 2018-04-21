@@ -24,6 +24,7 @@ public class GamePhysics {
 
     private boolean checkJump(Rectangle rect, int dir) {
         int bl = 0;
+        if (rect.x<0) rect.x-=16;
         switch (dir) {
             case 0:
                 bl = gameProc.world.getForeMap(

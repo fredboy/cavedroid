@@ -52,26 +52,22 @@ public class GameProc {
     }
 
     private void moveCursor() {
-        if (ctrlMode==0 && CaveGame.TOUCH) {
-            if (player.canJump) {
-                cursorX = (int) (player.position.x + player.texWidth / 2) / 16;
-                if (player.dir == 0) cursorX--;
+        if (ctrlMode == 0 && CaveGame.TOUCH) {
+            cursorX = (int) (player.position.x + player.texWidth / 2) / 16;
+            if (player.dir == 0) cursorX--;
                 else cursorX++;
-                cursorY = (int) (player.position.y + player.texWidth) / 16;
-                if (!isAutoselectable(cursorX, cursorY)) {
-                    cursorY++;
-                }
-                if (!isAutoselectable(cursorX, cursorY)) {
-                    cursorY++;
-                }
-                if (!isAutoselectable(cursorX, cursorY)) {
-                    if (player.dir == 0) cursorX++;
-                    else cursorX--;
-                }
-            } else {
-                cursorX = (int) (player.position.x + player.texWidth / 2) / 16;
-                cursorY = (int) (player.position.y + player.height+8)/16;
+            cursorY = (int) (player.position.y + player.texWidth) / 16;
+            if (!isAutoselectable(cursorX, cursorY)) {
+                cursorY++;
             }
+            if (!isAutoselectable(cursorX, cursorY)) {
+                cursorY++;
+            }
+            if (!isAutoselectable(cursorX, cursorY)) {
+                if (player.dir == 0) cursorX++;
+                else cursorX--;
+            }
+            if (player.position.x<0) cursorX--;
         } else if (!CaveGame.TOUCH){
             cursorX = (int)(Gdx.input.getX()*
                     (renderer.camera.viewportWidth/GameScreen.getWidth())+renderer.camera.position.x)/16;
@@ -86,10 +82,12 @@ public class GameProc {
     private void checkCursorBounds() {
         if (cursorY < 0) cursorY = 0;
         if (cursorY >= world.getHeight()) cursorY = world.getHeight()-1;
-        if (cursorX<(player.position.x+player.texWidth/2)/16)
-            player.dir=0;
-        if (cursorX>(player.position.x+player.texWidth/2)/16)
-            player.dir=1;
+        if (ctrlMode==1) {
+            if (cursorX*16+8<player.position.x+player.texWidth/2)
+                player.dir=0;
+            if (cursorX*16+8>player.position.x+player.texWidth/2)
+                player.dir=1;
+        }
     }
 
     public void update(float delta) {
