@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game;
 
 public class CaveGame extends Game {
 
-	public static final String VERSION = "alpha 0.1";
+	public static final String VERSION = "alpha 0.2";
 
 	public static GameState STATE;
 
