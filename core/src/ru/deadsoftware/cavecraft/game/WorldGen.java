@@ -90,7 +90,9 @@ public class WorldGen {
                 }
             }
             if (x>2 && x<width-2 && rand.nextInt(100)<5){
-                if (foreMap[x][height-hMap[x]]-1==0) genOak(x,height-hMap[x]-1);
+                if (foreMap[x][height-hMap[x]-1]==0) {
+                    genOak(x,height-hMap[x]-1);
+                }
             }
         }
     }
