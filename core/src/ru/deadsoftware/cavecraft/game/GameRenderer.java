@@ -6,20 +6,16 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import ru.deadsoftware.cavecraft.Assets;
-import ru.deadsoftware.cavecraft.CaveGame;
-import ru.deadsoftware.cavecraft.GameScreen;
-import ru.deadsoftware.cavecraft.Items;
+import ru.deadsoftware.cavecraft.*;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.objects.Player;
 
-public class GameRenderer {
+public class GameRenderer extends Renderer{
 
     private GameProc gameProc;
 
-    public OrthographicCamera camera, fontCam;
-    ShapeRenderer shapeRenderer;
-    SpriteBatch spriteBatch, fontBatch;
+    public OrthographicCamera fontCam;
+    SpriteBatch fontBatch;
 
     public GameRenderer(GameProc gameProc) {
         Gdx.gl.glClearColor(0f,.6f,.6f,1f);
@@ -199,6 +195,7 @@ public class GameRenderer {
         drawGUI();
     }
 
+    @Override
     public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 

@@ -12,6 +12,8 @@ public class Assets {
 
     public static BitmapFont minecraftFont;
 
+    public static Sprite gameLogo;
+
     public static Texture charTexture;
     public static Sprite[][] playerSprite = new Sprite[2][4];
 
@@ -82,6 +84,8 @@ public class Assets {
 
     public static void load() {
         minecraftFont = new BitmapFont(Gdx.files.internal("font.fnt"), true);
+        gameLogo = new Sprite(new Texture(Gdx.files.internal("gamelogo.png")));
+        gameLogo.flip(false, true);
 
         loadPlayer();
         loadPig();

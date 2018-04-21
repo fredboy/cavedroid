@@ -16,7 +16,7 @@ public class CaveGame extends Game {
 
 	public CaveGame(boolean touch) {
 		TOUCH = touch;
-		STATE = GameState.GAME_PLAY;
+		STATE = GameState.MENU_MAIN;
 	}
 
 	@Override

@@ -5,11 +5,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavecraft.*;
 
-public class GameInputHandler {
+public class GameInput {
 
     private GameProc gameProc;
 
-    public GameInputHandler(GameProc gameProc) {
+    public GameInput(GameProc gameProc) {
         this.gameProc = gameProc;
     }
 

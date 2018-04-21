@@ -2,22 +2,22 @@ package ru.deadsoftware.cavecraft;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import ru.deadsoftware.cavecraft.game.GameInputHandler;
+import ru.deadsoftware.cavecraft.game.GameInput;
 import ru.deadsoftware.cavecraft.game.GameProc;
 
 import static ru.deadsoftware.cavecraft.GameScreen.getHeight;
 import static ru.deadsoftware.cavecraft.GameScreen.getWidth;
 
-public class InputHandler implements InputProcessor {
+public class InputHandlerGame implements InputProcessor {
 
     private GameProc gameProc;
-    private GameInputHandler gameInput;
+    private GameInput gameInput;
 
     private float tWidth, tHeight;
 
-    public InputHandler(GameProc gameProc) {
+    public InputHandlerGame(GameProc gameProc) {
         this.gameProc = gameProc;
-        this.gameInput = new GameInputHandler(gameProc);
+        this.gameInput = new GameInput(gameProc);
         tWidth = gameProc.renderer.camera.viewportWidth;
         tHeight = gameProc.renderer.camera.viewportHeight;
     }
