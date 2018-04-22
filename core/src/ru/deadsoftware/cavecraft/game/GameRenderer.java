@@ -14,38 +14,10 @@ public class GameRenderer extends Renderer{
 
     private GameProc gameProc;
 
-    public OrthographicCamera fontCam;
-    SpriteBatch fontBatch;
-
-    public GameRenderer(GameProc gameProc) {
+    public GameRenderer(GameProc gameProc,float width, float heigth) {
+        super(width,heigth);
         Gdx.gl.glClearColor(0f,.6f,.6f,1f);
         this.gameProc = gameProc;
-        camera = new OrthographicCamera();
-        if (!CaveGame.TOUCH) {
-            camera.setToOrtho(true, 480,
-                    480 * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
-        } else {
-            camera.setToOrtho(true, 320,
-                    320 * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
-        }
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.setAutoShapeType(true);
-        spriteBatch = new SpriteBatch();
-        spriteBatch.setProjectionMatrix(camera.combined);
-
-        fontCam = new OrthographicCamera();
-        fontCam.setToOrtho(true, GameScreen.getWidth(), GameScreen.getHeight());
-        fontBatch = new SpriteBatch();
-        fontBatch.setProjectionMatrix(fontCam.combined);
-    }
-
-    private void setFontColor(int r, int g, int b) {
-        Assets.minecraftFont.setColor(r/255f, g/255f, b/255f, 1f);
-    }
-
-    private void drawString(String str, float x, float y) {
-        Assets.minecraftFont.draw(fontBatch, str, x, y);
     }
 
     private void drawWorldBackground() {
@@ -209,23 +181,18 @@ public class GameRenderer extends Renderer{
                 drawCreative();
                 break;
         }
-        spriteBatch.end();
 
-        if (CaveGame.TOUCH) {
-            spriteBatch.begin();
-            drawTouchGui();
-            spriteBatch.end();
-        }
+        if (CaveGame.TOUCH) drawTouchGui();
 
-        fontBatch.begin();
         setFontColor(255,255,255);
         drawString("CaveCraft "+CaveGame.VERSION, 0, 0);
-        drawString("FPS: "+GameScreen.FPS, 0, 20);
-        drawString("X: "+(int)(gameProc.player.position.x/16), 0, 40);
-        drawString("Y: "+(gameProc.world.getHeight()-(int)(gameProc.player.position.y/16)), 0, 60);
-        drawString("Seed: "+WorldGen.getSeed(), 0, 80);
-        drawString("Mobs: "+gameProc.mobs.size, 0, 100);
-        fontBatch.end();
+        drawString("FPS: "+GameScreen.FPS, 0, 12);
+        drawString("X: "+(int)(gameProc.player.position.x/16), 0, 24);
+        drawString("Y: "+(gameProc.world.getHeight()-(int)(gameProc.player.position.y/16)), 0, 36);
+        drawString("Seed: "+WorldGen.getSeed(), 0, 48);
+        drawString("Mobs: "+gameProc.mobs.size, 0, 60);
+
+        spriteBatch.end();
     }
 
 }

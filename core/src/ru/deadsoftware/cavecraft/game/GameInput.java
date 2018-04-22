@@ -79,6 +79,11 @@ public class GameInput {
 
             case Input.Keys.N:
                 CaveGame.STATE = GameState.RESTART;
+                break;
+
+            case Input.Keys.ESCAPE: case Input.Keys.BACK:
+                CaveGame.STATE = GameState.GOTO_MENU;
+                break;
         }
     }
 

@@ -11,13 +11,15 @@ public class GameScreen implements Screen {
 
     private GameProc gameProc;
     private Renderer renderer;
+    private MenuRenderer menuRenderer;
 
     public GameScreen() {
         Assets.load();
         Items.load();
         gameProc = new GameProc();
-        renderer = new MenuRenderer();
-        Gdx.input.setInputProcessor(new InputHandlerMenu());
+        menuRenderer = new MenuRenderer(CaveGame.TOUCH?320:480);
+        renderer = menuRenderer;
+        Gdx.input.setInputProcessor(new InputHandlerMenu(menuRenderer));
     }
 
     public static int getWidth() {
@@ -54,8 +56,15 @@ public class GameScreen implements Screen {
 
             case RESTART:
                 gameProc = new GameProc();
+                renderer = gameProc.renderer;
                 Gdx.input.setInputProcessor(new InputHandlerGame(gameProc));
                 CaveGame.STATE = GameState.GAME_PLAY;
+                break;
+
+            case GOTO_MENU:
+                renderer = menuRenderer;
+                Gdx.input.setInputProcessor(new InputHandlerMenu(menuRenderer));
+                CaveGame.STATE = GameState.MENU_MAIN;
                 break;
         }
         renderer.render();
@@ -65,10 +74,12 @@ public class GameScreen implements Screen {
     public void resize(int width, int height) {
         switch (CaveGame.STATE) {
             case MENU_MAIN:
-                renderer = new MenuRenderer();
+                menuRenderer = new MenuRenderer(CaveGame.TOUCH?320:480);
+                renderer = menuRenderer;
                 break;
             case GAME_PLAY: case GAME_CREATIVE_INV:
                 gameProc.resetRenderer();
+                renderer = gameProc.renderer;
                 break;
         }
     }

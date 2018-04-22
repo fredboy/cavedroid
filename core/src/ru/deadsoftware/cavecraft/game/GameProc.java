@@ -32,7 +32,13 @@ public class GameProc {
 
     public GameProc() {
         world = new GameWorld(1024,256);
-        renderer = new GameRenderer(this);
+        if (CaveGame.TOUCH) {
+            renderer = new GameRenderer(this,320,
+                    320*((float)GameScreen.getHeight()/GameScreen.getWidth()));
+        } else {
+            renderer = new GameRenderer(this,480,
+                    480*((float)GameScreen.getHeight()/GameScreen.getWidth()));
+        }
         physics = new GamePhysics(this);
         player = new Player(world.getSpawnPoint());
         mobs = new Array<Mob>();
@@ -43,7 +49,13 @@ public class GameProc {
     }
 
     public void resetRenderer() {
-        renderer = new GameRenderer(this);
+        if (CaveGame.TOUCH) {
+            renderer = new GameRenderer(this,320,
+                    320*((float)GameScreen.getHeight()/GameScreen.getWidth()));
+        } else {
+            renderer = new GameRenderer(this,480,
+                    480*((float)GameScreen.getHeight()/GameScreen.getWidth()));
+        }
     }
 
     private boolean isAutoselectable(int x, int y) {

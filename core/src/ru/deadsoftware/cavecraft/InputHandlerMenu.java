@@ -1,8 +1,16 @@
 package ru.deadsoftware.cavecraft;
 
 import com.badlogic.gdx.InputProcessor;
+import ru.deadsoftware.cavecraft.menu.MenuRenderer;
+import ru.deadsoftware.cavecraft.menu.objects.Button;
 
 public class InputHandlerMenu implements InputProcessor{
+
+    private MenuRenderer renderer;
+
+    public InputHandlerMenu(MenuRenderer renderer) {
+        this.renderer = renderer;
+    }
 
     @Override
     public boolean keyDown(int keycode) {
@@ -20,12 +28,17 @@ public class InputHandlerMenu implements InputProcessor{
     }
 
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+    public boolean touchDown(int screenX, int screenY, int pointer, int mb) {
         return false;
     }
 
     @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+    public boolean touchUp(int screenX, int screenY, int pointer, int mb) {
+        screenX *= renderer.getWidth()/GameScreen.getWidth();
+        screenY *= renderer.getHeight()/GameScreen.getHeight();
+        for (Button button : renderer.buttons) {
+            if (button.getRect().contains(screenX, screenY)) renderer.buttonClicked(button);
+        }
         return false;
     }
 
