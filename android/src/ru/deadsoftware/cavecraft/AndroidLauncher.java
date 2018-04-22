@@ -15,4 +15,8 @@ public class AndroidLauncher extends AndroidApplication {
 		config.useImmersiveMode = true;
 		initialize(new CaveGame(true), config);
 	}
+
+	@Override
+	public void onBackPressed() {
+	}
 }
