@@ -16,7 +16,6 @@ public class GameScreen implements Screen {
     public GameScreen() {
         Assets.load();
         Items.load();
-        gameProc = new GameProc();
         menuRenderer = new MenuRenderer(CaveGame.TOUCH?320:480);
         renderer = menuRenderer;
         Gdx.input.setInputProcessor(new InputHandlerMenu(menuRenderer));

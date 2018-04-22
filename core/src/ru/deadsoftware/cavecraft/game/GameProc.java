@@ -40,10 +40,10 @@ public class GameProc {
                     480*((float)GameScreen.getHeight()/GameScreen.getWidth()));
         }
         physics = new GamePhysics(this);
-        player = new Player(world.getSpawnPoint());
+        player = new Player(world.getSpawnPoint(0));
         mobs = new Array<Mob>();
         for (int i=0; i<world.getWidth(); i+=64) {
-            mobs.add(new Pig(i*16, 0, world));
+            mobs.add(new Pig(i*16, (int)world.getSpawnPoint(i).y, world));
         }
         if (!CaveGame.TOUCH) ctrlMode = 1;
     }

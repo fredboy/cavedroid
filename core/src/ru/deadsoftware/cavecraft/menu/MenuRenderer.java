@@ -37,8 +37,7 @@ public class MenuRenderer extends Renderer {
         spriteBatch.begin();
         for (int x=0; x<=getWidth()/16; x++)
             for (int y=0; y<=getHeight()/16; y++) {
-                if (y == 0) spriteBatch.draw(Items.BLOCKS.get("grass").getTexture(), x * 16, y * 16);
-                    else spriteBatch.draw(Items.BLOCKS.get("dirt").getTexture(), x * 16, y * 16);
+                spriteBatch.draw(Items.BLOCKS.get("dirt").getTexture(), x * 16, y * 16);
                 spriteBatch.draw(Assets.shade,x*16,y*16);
             }
         spriteBatch.draw(Assets.gameLogo, getWidth()/2-Assets.gameLogo.getWidth()/2, 0);

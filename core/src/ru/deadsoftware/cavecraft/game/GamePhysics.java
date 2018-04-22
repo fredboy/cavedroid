@@ -97,7 +97,7 @@ public class GamePhysics {
         if (pl.position.x+pl.texWidth/2<0) pl.position.x+=gameProc.world.getWidth()*16;
         if (pl.position.x+pl.texWidth/2>gameProc.world.getWidth()*16) pl.position.x-=gameProc.world.getWidth()*16;
         if (pl.position.y > gameProc.world.getHeight()*16) {
-            pl.position = gameProc.world.getSpawnPoint().cpy();
+            pl.position = gameProc.world.getSpawnPoint(0).cpy();
         }
         if (CaveGame.TOUCH && checkJump(pl.getRect(), pl.dir) && !pl.flyMode && pl.canJump && !pl.moveX.equals(Vector2.Zero)) {
             pl.moveY.add(0, -8);

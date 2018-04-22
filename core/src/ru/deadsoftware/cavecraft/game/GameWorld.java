@@ -100,10 +100,14 @@ public class GameWorld {
         }
     }
 
-    public Vector2 getSpawnPoint() {
-        float x=0, y=0;
+    public Vector2 getSpawnPoint(int x) {
+        int y=0;
+        while (true) {
+            y++;
+            if (getForeMap(x,y)>0 && Items.BLOCKS.getValueAt(getForeMap(x,y)).collision) break;
+        }
         x = x*16 + 4;
-        y *= 16;
+        y = y*16 - 32;
         return new Vector2(x,y);
     }
 
