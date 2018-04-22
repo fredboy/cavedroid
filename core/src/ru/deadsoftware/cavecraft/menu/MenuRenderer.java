@@ -35,9 +35,12 @@ public class MenuRenderer extends Renderer {
     @Override
     public void render() {
         spriteBatch.begin();
-        for (int x=0; x<=getWidth(); x++)
-            for (int y=0; y<=getHeight(); y++)
-                spriteBatch.draw(Items.BLOCKS.get("dirt").getTexture(),x*16,y*16);
+        for (int x=0; x<=getWidth()/16; x++)
+            for (int y=0; y<=getHeight()/16; y++) {
+                if (y == 0) spriteBatch.draw(Items.BLOCKS.get("grass").getTexture(), x * 16, y * 16);
+                    else spriteBatch.draw(Items.BLOCKS.get("dirt").getTexture(), x * 16, y * 16);
+                spriteBatch.draw(Assets.shade,x*16,y*16);
+            }
         spriteBatch.draw(Assets.gameLogo, getWidth()/2-Assets.gameLogo.getWidth()/2, 0);
         for (Button button : buttons) {
             if (button.getRect().contains(Gdx.input.getX()*getWidth()/GameScreen.getWidth(),
@@ -49,7 +52,7 @@ public class MenuRenderer extends Renderer {
             drawButton(button);
         }
         drawString("CaveCraft "+CaveGame.VERSION,0,
-                getHeight()-Assets.getStringHeight("CaveCraft "+CaveGame.VERSION)*2);
+                getHeight()-Assets.getStringHeight("CaveCraft "+CaveGame.VERSION)*1.5f);
         spriteBatch.end();
     }
 }
