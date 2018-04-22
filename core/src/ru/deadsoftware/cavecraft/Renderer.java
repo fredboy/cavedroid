@@ -29,6 +29,10 @@ public abstract class Renderer {
 
     public float getHeight() {return camera.viewportHeight;}
 
+    public void setFontScale(float scale) {
+        Assets.minecraftFont.getData().setScale(scale);
+    }
+
     public void setFontColor(int r, int g, int b) {
         Assets.minecraftFont.setColor(r/255f, g/255f, b/255f, 1f);
     }

@@ -184,14 +184,6 @@ public class GameRenderer extends Renderer{
 
         if (CaveGame.TOUCH) drawTouchGui();
 
-        setFontColor(255,255,255);
-        drawString("CaveCraft "+CaveGame.VERSION, 0, 0);
-        drawString("FPS: "+GameScreen.FPS, 0, 12);
-        drawString("X: "+(int)(gameProc.player.position.x/16), 0, 24);
-        drawString("Y: "+(gameProc.world.getHeight()-(int)(gameProc.player.position.y/16)), 0, 36);
-        drawString("Seed: "+WorldGen.getSeed(), 0, 48);
-        drawString("Mobs: "+gameProc.mobs.size, 0, 60);
-
         spriteBatch.end();
     }
 

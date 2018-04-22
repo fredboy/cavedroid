@@ -26,6 +26,7 @@ public class MenuRenderer extends Renderer {
 
     private void drawButton(Button button) {
         spriteBatch.draw(Assets.menuButton[button.getType()], button.getX(), button.getY());
+        setFontColor(255,255,255);
         drawString(button.getLabel(),
                 (button.getX()+button.getWidth()/2)-Assets.getStringWidth(button.getLabel())/2,
                 (button.getY()+button.getHeight()/2)-Assets.getStringHeight(button.getLabel())/2);
