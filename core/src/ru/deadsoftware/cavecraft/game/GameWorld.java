@@ -103,10 +103,9 @@ public class GameWorld {
         WorldGen.clear();
     }
 
-    public void load() {
-        GameSaver.loadWorld();
-        foreMap = GameSaver.getLoadedForeMap();
-        backMap = GameSaver.getLoadedBackMap();
+    public void setMaps(int[][] foreMap, int[][] backMap) {
+        this.foreMap = foreMap.clone();
+        this.backMap = backMap.clone();
         WIDTH = foreMap.length;
         HEIGHT = foreMap[0].length;
     }

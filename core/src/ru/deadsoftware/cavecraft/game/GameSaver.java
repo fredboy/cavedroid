@@ -4,25 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import ru.deadsoftware.cavecraft.CaveGame;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 
 public class GameSaver {
 
     private static final int VERSION = 0;
-
-    private static int[][] fMap, bMap;
-    private static int readIndex;
-
-    private static int bytesToInt(byte[] bytes) {
-        ByteBuffer wrapped = ByteBuffer.wrap(bytes);
-        int res = wrapped.getInt(readIndex);
-        readIndex+=4;
-        return res;
-    }
 
     private static byte[] intToBytes(int i) {
         return ByteBuffer.allocate(4).putInt(i).array();
@@ -56,42 +43,25 @@ public class GameSaver {
     }
 
     private static int[][] loadMap(FileHandle file) throws Exception {
-        int[][] map = null;
+        int[][] map;
         int ver, width, height;
         int rl,bl;
-        byte[] data = file.readBytes();
-        readIndex = 0;
-        ver = bytesToInt(data);
+        DataInputStream in = new DataInputStream(file.read());
+        ver = in.readInt();
         if (VERSION == ver) {
-            width = bytesToInt(data);
-            height = bytesToInt(data);
+            width = in.readInt();
+            height = in.readInt();
             map = new int[width][height];
             for (int y=0; y<height; y++) {
                 for (int x=0; x<width; x+=rl) {
-                    rl = bytesToInt(data);
-                    bl = bytesToInt(data);
+                    rl = in.readInt();
+                    bl = in.readInt();
                     for (int i=x; i<x+rl; i++) map[i][y] = bl;
                 }
             }
+            in.close();
         } else throw new Exception("version mismatch");
         return map;
-    }
-
-    public static int[][] getLoadedForeMap() {
-        return fMap;
-    }
-
-    public static int[][] getLoadedBackMap() {
-        return bMap;
-    }
-
-    public static void loadWorld() {
-        try {
-            fMap = loadMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/foremap.sav"));
-            bMap = loadMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/backmap.sav"));
-        } catch (Exception e) {
-            Gdx.app.error("GameSaver",e.getMessage(),e);
-        }
     }
 
     public static GameProc load() {
@@ -103,15 +73,17 @@ public class GameSaver {
             if (VERSION == ver) gameProc = (GameProc)in.readObject();
                 else throw new Exception("version mismatch");
             in.close();
+            gameProc.world = new GameWorld();
+            gameProc.world.setMaps(
+                    loadMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/foremap.sav")),
+                    loadMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/backmap.sav"))
+            );
+            gameProc.physics = new GamePhysics(gameProc);
+            gameProc.resetRenderer();
         } catch (Exception e) {
             Gdx.app.error("GameSaver",e.getMessage(),e);
+            Gdx.app.exit();
         }
-        gameProc.world = new GameWorld();
-        gameProc.world.load();
-        gameProc.physics = new GamePhysics(gameProc);
-        gameProc.resetRenderer();
-        fMap = null;
-        bMap = null;
         return gameProc;
     }
 
