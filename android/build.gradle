@@ -11,7 +11,9 @@ android {
             assets.srcDirs = ['assets']
             jniLibs.srcDirs = ['libs']
         }
-
+        debug {
+            res.srcDirs = ['debug/res']
+        }
         instrumentTest.setRoot('tests')
     }
     packagingOptions {
@@ -28,6 +30,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            applicationIdSuffix ".debug"
         }
     }
 }
