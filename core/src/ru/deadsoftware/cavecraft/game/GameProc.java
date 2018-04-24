@@ -33,7 +33,7 @@ public class GameProc implements Serializable{
 
     public GameProc() {
         world = new GameWorld();
-        world.generate(8,256);
+        world.generate(1024,256);
         player = new Player(world.getSpawnPoint());
         mobs = new ArrayList<Mob>();
         physics = new GamePhysics(this);
