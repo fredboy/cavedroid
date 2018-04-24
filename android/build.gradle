@@ -21,8 +21,8 @@ android {
         applicationId "ru.deadsoftware.cavecraft"
         minSdkVersion 9
         targetSdkVersion 20
-        versionCode 3
-        versionName "alpha0.2.1"
+        versionCode 4
+        versionName "alpha0.3-dev"
     }
     buildTypes {
         release {

@@ -31,7 +31,12 @@ public class GameProc {
     public long touchDownTime;
 
     public GameProc() {
-        world = new GameWorld(1024,256);
+        world = new GameWorld();
+        if (WorldSaver.exists()) {
+            world.load();
+        } else {
+            world.generate(1024, 256);
+        }
         if (CaveGame.TOUCH) {
             renderer = new GameRenderer(this,320,
                     320*((float)GameScreen.getHeight()/GameScreen.getWidth()));

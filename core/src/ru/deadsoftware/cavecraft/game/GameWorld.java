@@ -6,19 +6,10 @@ import ru.deadsoftware.cavecraft.Items;
 
 public class GameWorld {
 
-    private final int WIDTH, HEIGHT;
+    private int WIDTH, HEIGHT;
 
     private int[][] foreMap;
     private int[][] backMap;
-
-    public GameWorld(int w, int h) {
-        WIDTH = w;
-        HEIGHT = h;
-        WorldGen.genWorld(WIDTH,HEIGHT);
-        foreMap = WorldGen.getForeMap();
-        backMap = WorldGen.getBackMap();
-        WorldGen.clear();
-    }
 
     public int getWidth() {
         return WIDTH;
@@ -109,6 +100,28 @@ public class GameWorld {
         x = x*16 + 4;
         y = y*16 - 32;
         return new Vector2(x,y);
+    }
+
+    public void generate(int w, int h) {
+        WIDTH = w;
+        HEIGHT = h;
+        WorldGen.genWorld(WIDTH,HEIGHT);
+        foreMap = WorldGen.getForeMap();
+        backMap = WorldGen.getBackMap();
+        WorldGen.clear();
+        save();
+    }
+
+    public void save() {
+        WorldSaver.save(foreMap, backMap);
+    }
+
+    public void load() {
+        WorldSaver.load();
+        foreMap = WorldSaver.getLoadedForeMap();
+        backMap = WorldSaver.getLoadedBackMap();
+        WIDTH = foreMap.length;
+        HEIGHT = foreMap[0].length;
     }
 
 }
