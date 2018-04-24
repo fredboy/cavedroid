@@ -24,7 +24,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 20
         versionCode 4
-        versionName "alpha0.3-dev"
+        versionName "alpha0.3"
     }
     buildTypes {
         release {

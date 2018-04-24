@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 
 public class CaveGame extends Game {
 
-	public static final String VERSION = "alpha 0.3-dev";
+	public static final String VERSION = "alpha 0.3";
 	public static String GAME_FOLDER;
 
 	public static AppState STATE;
