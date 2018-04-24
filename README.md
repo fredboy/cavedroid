@@ -4,9 +4,15 @@
 2D Minecraft clone for Android and Desktop. <br>
 Written in Java using libGDX framework. <br>
 ## Build instructions
+### Requierments
+android-sdk 20
+build-tools 25.0.0
+jdk 1.8.0_161
 ### Android
+To build for Android use <br>
 `./gradlew android:assemble` <br>
 ### Desktop
+To build for Desktop use <br>
 `./gradlew desktop:dist` <br>
 ***
 On Windows, use `gradlew.bat` instead of `./gradlew`
