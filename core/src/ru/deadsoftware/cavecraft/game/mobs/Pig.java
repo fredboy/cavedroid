@@ -5,14 +5,14 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavecraft.Assets;
-import ru.deadsoftware.cavecraft.game.GameWorld;
+import ru.deadsoftware.cavecraft.game.GameProc;
 
 public class Pig extends Mob{
 
-    private GameWorld world;
+    private GameProc gameProc;
 
-    public Pig(int x, int y, GameWorld world) {
-        this.world = world;
+    public Pig(int x, int y, GameProc gameProc) {
+        this.gameProc = gameProc;
         position = new Vector2(x, y);
         moveX = new Vector2(0, 0);
         moveY = new Vector2(0, 0);
@@ -24,9 +24,9 @@ public class Pig extends Mob{
 
     @Override
     public void ai() {
-        if (canJump && position.x>16 && position.x<(world.getWidth()-1)*16 &&
-                world.getForeMap((int)(position.x/16)+(dir*2-1), (int)((position.y+height)/16))>0 &&
-                world.getForeMap((int)(position.x/16)+(dir*2-1), (int)((position.y)/16))==0)
+        if (canJump && position.x>16 && position.x<(gameProc.world.getWidth()-1)*16 &&
+                gameProc.world.getForeMap((int)(position.x/16)+(dir*2-1), (int)((position.y+height)/16))>0 &&
+                gameProc.world.getForeMap((int)(position.x/16)+(dir*2-1), (int)((position.y)/16))==0)
             moveY.add(0, -8);
         if (MathUtils.randomBoolean(.0001f)) dir++;
         if (dir>1) dir = 0;

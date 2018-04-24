@@ -6,7 +6,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import ru.deadsoftware.cavecraft.Assets;
 
-public abstract class Mob {
+import java.io.Serializable;
+
+public abstract class Mob implements Serializable{
 
     public static int ANIM_SPEED = 6;
     public static int ANIMATION = 0;

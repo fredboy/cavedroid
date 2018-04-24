@@ -2,9 +2,11 @@ package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavecraft.*;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
+import ru.deadsoftware.cavecraft.game.mobs.Pig;
 import ru.deadsoftware.cavecraft.game.objects.Player;
 
 import java.io.Serializable;
@@ -36,6 +38,9 @@ public class GameProc implements Serializable{
         world.generate(1024,256);
         player = new Player(world.getSpawnPoint());
         mobs = new ArrayList<Mob>();
+        for (int i=0; i<16; i++) {
+            mobs.add(new Pig(i*256, 128&16, this));
+        }
         physics = new GamePhysics(this);
         if (!CaveGame.TOUCH) ctrlMode = 1;
         if (CaveGame.TOUCH) {
