@@ -36,8 +36,8 @@ public class InputHandlerMenu implements InputProcessor{
     public boolean touchUp(int screenX, int screenY, int pointer, int mb) {
         screenX *= renderer.getWidth()/GameScreen.getWidth();
         screenY *= renderer.getHeight()/GameScreen.getHeight();
-        for (Button button : renderer.buttons) {
-            if (button.getRect().contains(screenX, screenY)) renderer.buttonClicked(button);
+        for (Button button : renderer.menuMainButtons) {
+            if (button.getRect().contains(screenX, screenY) && button.getType()>0) renderer.buttonClicked(button);
         }
         return false;
     }

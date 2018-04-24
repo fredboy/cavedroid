@@ -2,25 +2,25 @@ package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavecraft.*;
-import ru.deadsoftware.cavecraft.AppState;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
-import ru.deadsoftware.cavecraft.game.mobs.Pig;
 import ru.deadsoftware.cavecraft.game.objects.Player;
 
-public class GameProc {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class GameProc implements Serializable{
 
     public static double RUN_TIME = 0;
 
     public Player player;
 
-    public Array<Mob> mobs;
+    public ArrayList<Mob> mobs;
 
-    public GameWorld world;
-    public GameRenderer renderer;
-    public GamePhysics physics;
+    public transient GameWorld world;
+    public transient GameRenderer renderer;
+    public transient GamePhysics physics;
 
     public int cursorX, cursorY;
     public int invSlot;
@@ -33,11 +33,11 @@ public class GameProc {
 
     public GameProc() {
         world = new GameWorld();
-        if (WorldSaver.exists()) {
-            world.load();
-        } else {
-            world.generate(1024, 256);
-        }
+        world.generate(8,256);
+        player = new Player(world.getSpawnPoint());
+        mobs = new ArrayList<Mob>();
+        physics = new GamePhysics(this);
+        if (!CaveGame.TOUCH) ctrlMode = 1;
         if (CaveGame.TOUCH) {
             renderer = new GameRenderer(this,320,
                     320*((float)GameScreen.getHeight()/GameScreen.getWidth()));
@@ -45,13 +45,7 @@ public class GameProc {
             renderer = new GameRenderer(this,480,
                     480*((float)GameScreen.getHeight()/GameScreen.getWidth()));
         }
-        physics = new GamePhysics(this);
-        player = new Player(world.getSpawnPoint(0));
-        mobs = new Array<Mob>();
-        for (int i=0; i<world.getWidth(); i+=64) {
-            mobs.add(new Pig(i*16, (int)world.getSpawnPoint(i).y, world));
-        }
-        if (!CaveGame.TOUCH) ctrlMode = 1;
+        GameSaver.save(this);
     }
 
     public void resetRenderer() {

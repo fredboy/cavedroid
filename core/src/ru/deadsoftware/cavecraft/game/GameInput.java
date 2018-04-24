@@ -2,8 +2,10 @@ package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.TimeUtils;
-import ru.deadsoftware.cavecraft.*;
 import ru.deadsoftware.cavecraft.AppState;
+import ru.deadsoftware.cavecraft.Assets;
+import ru.deadsoftware.cavecraft.CaveGame;
+import ru.deadsoftware.cavecraft.Items;
 
 public class GameInput {
 
@@ -78,10 +80,11 @@ public class GameInput {
                 break;
 
             case Input.Keys.N:
-                CaveGame.STATE = AppState.GOTO_GAME;
+                CaveGame.STATE = AppState.GOTO_NEW_GAME;
                 break;
 
             case Input.Keys.ESCAPE: case Input.Keys.BACK:
+                GameSaver.save(gameProc);
                 CaveGame.STATE = AppState.GOTO_MENU;
                 break;
         }

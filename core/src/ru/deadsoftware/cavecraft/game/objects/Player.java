@@ -1,12 +1,11 @@
 package ru.deadsoftware.cavecraft.game.objects;
 
-import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import ru.deadsoftware.cavecraft.Assets;
-import ru.deadsoftware.cavecraft.game.WorldGen;
 
-public class Player {
+import java.io.Serializable;
+
+public class Player implements Serializable {
 
     public static int ANIM_SPEED = 6;
 

@@ -3,6 +3,7 @@ package ru.deadsoftware.cavecraft;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import ru.deadsoftware.cavecraft.game.GameProc;
+import ru.deadsoftware.cavecraft.game.GameSaver;
 import ru.deadsoftware.cavecraft.menu.MenuRenderer;
 
 public class GameScreen implements Screen {
@@ -38,7 +39,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-
     }
 
     @Override
@@ -53,8 +53,15 @@ public class GameScreen implements Screen {
                 menu();
                 break;
 
-            case GOTO_GAME:
+            case GOTO_NEW_GAME:
                 gameProc = new GameProc();
+                renderer = gameProc.renderer;
+                Gdx.input.setInputProcessor(new InputHandlerGame(gameProc));
+                CaveGame.STATE = AppState.GAME_PLAY;
+                break;
+
+            case GOTO_LOAD_GAME:_GAME:
+                gameProc = GameSaver.load();
                 renderer = gameProc.renderer;
                 Gdx.input.setInputProcessor(new InputHandlerGame(gameProc));
                 CaveGame.STATE = AppState.GAME_PLAY;

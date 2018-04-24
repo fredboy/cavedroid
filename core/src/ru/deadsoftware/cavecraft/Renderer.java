@@ -41,6 +41,12 @@ public abstract class Renderer {
         Assets.minecraftFont.draw(spriteBatch, str, x, y);
     }
 
+    public void drawString(String str) {
+        Assets.minecraftFont.draw(spriteBatch, str,
+                getWidth()/2 - Assets.getStringWidth(str)/2,
+                getHeight()/2 - Assets.getStringHeight(str)/2);
+    }
+
     public abstract void render();
 
 }

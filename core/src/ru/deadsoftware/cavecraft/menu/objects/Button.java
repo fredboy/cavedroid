@@ -18,6 +18,10 @@ public class Button {
         this(label, x, y, width, heigth, 1);
     }
 
+    public Button(String label, float x, float y, int type) {
+        this(label, x, y, 200, 20, type);
+    }
+
     public Button(String label, float x, float y) {
         this(label, x, y, 200, 20, 1);
     }
