@@ -3,8 +3,9 @@ package ru.deadsoftware.cavecraft.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import ru.deadsoftware.cavecraft.CaveGame;
-import ru.deadsoftware.cavecraft.Items;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
@@ -16,39 +17,42 @@ public class GameSaver {
     private static int[][] fMap, bMap;
     private static int readIndex;
 
-    private static int bytesInt(byte[] bytes) {
+    private static int bytesToInt(byte[] bytes) {
         ByteBuffer wrapped = ByteBuffer.wrap(bytes);
         int res = wrapped.getInt(readIndex);
         readIndex+=4;
         return res;
     }
 
-    private static void writeInt(FileHandle file, int i, boolean append) {
-        byte[] bytes = ByteBuffer.allocate(4).putInt(i).array();
-        file.writeBytes(bytes, append);
+    private static byte[] intToBytes(int i) {
+        return ByteBuffer.allocate(4).putInt(i).array();
     }
 
-    private static void saveMap(FileHandle file, int[][] map) {
+    private static void saveMap(FileHandle file, int[][] map) throws IOException{
         int rl,bl;
         int width = map.length;
         int height = map[0].length;
-        writeInt(file, VERSION, false);
-        writeInt(file, width, true);
-        writeInt(file, height, true);
+        BufferedOutputStream out = new BufferedOutputStream(file.write(false));
+        out.write(intToBytes(VERSION));
+        out.write(intToBytes(width));
+        out.write(intToBytes(height));
         for (int y=0; y<map[0].length; y++) {
             bl = map[0][y];
             rl=0;
             for (int x=0; x<map.length; x++) {
-                if (map[x][y]!=bl || x==map.length-1) {
-                    if (x==map.length-1) rl++;
-                    writeInt(file, rl, true);
-                    writeInt(file, bl, true);
+                if (map[x][y]!=bl) {
+                    out.write(intToBytes(rl));
+                    out.write(intToBytes(bl));
                     rl=0;
                     bl=map[x][y];
                 }
                 rl++;
             }
+            out.write(intToBytes(rl));
+            out.write(intToBytes(bl));
         }
+        out.flush();
+        out.close();
     }
 
     private static int[][] loadMap(FileHandle file) throws Exception {
@@ -57,15 +61,15 @@ public class GameSaver {
         int rl,bl;
         byte[] data = file.readBytes();
         readIndex = 0;
-        ver = bytesInt(data);
+        ver = bytesToInt(data);
         if (VERSION == ver) {
-            width = bytesInt(data);
-            height = bytesInt(data);
+            width = bytesToInt(data);
+            height = bytesToInt(data);
             map = new int[width][height];
             for (int y=0; y<height; y++) {
                 for (int x=0; x<width; x+=rl) {
-                    rl = bytesInt(data);
-                    bl = bytesInt(data);
+                    rl = bytesToInt(data);
+                    bl = bytesToInt(data);
                     for (int i=x; i<x+rl; i++) map[i][y] = bl;
                 }
             }
@@ -81,7 +85,7 @@ public class GameSaver {
         return bMap;
     }
 
-    public static void loadMap() {
+    public static void loadWorld() {
         try {
             fMap = loadMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/foremap.sav"));
             bMap = loadMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/backmap.sav"));
@@ -120,11 +124,11 @@ public class GameSaver {
             out.writeInt(VERSION);
             out.writeObject(gameProc);
             out.close();
+            saveMap(Gdx.files.absolute(CaveGame.GAME_FOLDER+"/saves/foremap.sav"), gameProc.world.getFullForeMap());
+            saveMap(Gdx.files.absolute(CaveGame.GAME_FOLDER+"/saves/backmap.sav"), gameProc.world.getFullBackMap());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        saveMap(Gdx.files.absolute(CaveGame.GAME_FOLDER+"/saves/foremap.sav"), gameProc.world.getFullForeMap());
-        saveMap(Gdx.files.absolute(CaveGame.GAME_FOLDER+"/saves/backmap.sav"), gameProc.world.getFullBackMap());
     }
 
     public static boolean exists() {

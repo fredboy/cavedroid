@@ -104,7 +104,7 @@ public class GameWorld {
     }
 
     public void load() {
-        GameSaver.loadMap();
+        GameSaver.loadWorld();
         foreMap = GameSaver.getLoadedForeMap();
         backMap = GameSaver.getLoadedBackMap();
         WIDTH = foreMap.length;
