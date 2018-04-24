@@ -73,6 +73,7 @@ public class GameScreen implements Screen {
                 break;
 
             case GOTO_MENU:
+                menuRenderer = new MenuRenderer(CaveGame.TOUCH?320:480);
                 renderer = menuRenderer;
                 Gdx.input.setInputProcessor(new InputHandlerMenu(menuRenderer));
                 break;
