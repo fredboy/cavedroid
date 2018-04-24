@@ -20,14 +20,8 @@ public class MenuRenderer extends Renderer {
 
     public void buttonClicked(Button button) {
         if (button.getLabel().toLowerCase().equals("new game")) {
-            spriteBatch.begin();
-            drawGenWorld();
-            spriteBatch.end();
             CaveGame.STATE = AppState.GOTO_NEW_GAME;
         } else if (button.getLabel().toLowerCase().equals("load game")) {
-            spriteBatch.begin();
-            drawGenWorld();
-            spriteBatch.end();
             CaveGame.STATE = AppState.GOTO_LOAD_GAME;
         } else if (button.getLabel().toLowerCase().equals("quit")) {
             Gdx.app.exit();
@@ -41,7 +35,7 @@ public class MenuRenderer extends Renderer {
                 (button.getX()+button.getWidth()/2)-Assets.getStringWidth(button.getLabel())/2,
                 (button.getY()+button.getHeight()/2)-Assets.getStringHeight(button.getLabel())/2);
     }
-    
+
     private void drawMenuMain() {
         for (Button button : menuMainButtons) {
             if (button.getType()>0) {
@@ -54,15 +48,8 @@ public class MenuRenderer extends Renderer {
         }
     }
 
-    private void drawGenWorld() {
-        for (int x=0; x<=getWidth()/16; x++)
-            for (int y=0; y<=getHeight()/16; y++) {
-                spriteBatch.draw(Items.BLOCKS.get("dirt").getTexture(), x * 16, y * 16);
-                spriteBatch.draw(Assets.shade,x*16,y*16);
-            }
-        spriteBatch.draw(Assets.gameLogo, getWidth()/2-Assets.gameLogo.getWidth()/2, 0);
-        drawString("Generating World...");
-        spriteBatch.flush();
+    public void drawLabel(String str) {
+        drawString(str);
     }
 
     @Override
@@ -77,10 +64,19 @@ public class MenuRenderer extends Renderer {
 
         switch (CaveGame.STATE) {
             case MENU_MAIN: drawMenuMain(); break;
+            case GOTO_NEW_GAME: case GOTO_LOAD_GAME: drawLabel("Generating World..."); break;
+            case GOTO_MENU: drawLabel("Saving Game..."); break;
         }
 
         drawString("CaveCraft "+CaveGame.VERSION,0,
                 getHeight()-Assets.getStringHeight("CaveCraft "+CaveGame.VERSION)*1.5f);
         spriteBatch.end();
+
+        switch (CaveGame.STATE) {
+            case GOTO_NEW_GAME: CaveGame.STATE = AppState.NEW_GAME; break;
+            case GOTO_LOAD_GAME: CaveGame.STATE = AppState.LOAD_GAME; break;
+            case GOTO_MENU: CaveGame.STATE = AppState.SAVE_GAME; break;
+        }
+
     }
 }

@@ -53,24 +53,28 @@ public class GameScreen implements Screen {
                 menu();
                 break;
 
-            case GOTO_NEW_GAME:
+            case NEW_GAME:
                 gameProc = new GameProc();
                 renderer = gameProc.renderer;
                 Gdx.input.setInputProcessor(new InputHandlerGame(gameProc));
                 CaveGame.STATE = AppState.GAME_PLAY;
                 break;
 
-            case GOTO_LOAD_GAME:_GAME:
+            case LOAD_GAME:
                 gameProc = GameSaver.load();
                 renderer = gameProc.renderer;
                 Gdx.input.setInputProcessor(new InputHandlerGame(gameProc));
                 CaveGame.STATE = AppState.GAME_PLAY;
                 break;
 
+            case SAVE_GAME:
+                GameSaver.save(gameProc);
+                CaveGame.STATE = AppState.MENU_MAIN;
+                break;
+
             case GOTO_MENU:
                 renderer = menuRenderer;
                 Gdx.input.setInputProcessor(new InputHandlerMenu(menuRenderer));
-                CaveGame.STATE = AppState.MENU_MAIN;
                 break;
         }
         renderer.render();

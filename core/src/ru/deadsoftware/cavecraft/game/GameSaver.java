@@ -27,7 +27,7 @@ public class GameSaver {
         byte[] bytes = ByteBuffer.allocate(4).putInt(i).array();
         file.writeBytes(bytes, append);
     }
-    
+
     private static void saveMap(FileHandle file, int[][] map) {
         int rl,bl;
         int width = map.length;
@@ -43,7 +43,6 @@ public class GameSaver {
                     if (x==map.length-1) rl++;
                     writeInt(file, rl, true);
                     writeInt(file, bl, true);
-                    System.out.printf("%d. Run:%d; Block:%s\n",y, rl, Items.BLOCKS.getKeyAt(bl));
                     rl=0;
                     bl=map[x][y];
                 }
@@ -67,7 +66,6 @@ public class GameSaver {
                 for (int x=0; x<width; x+=rl) {
                     rl = bytesInt(data);
                     bl = bytesInt(data);
-                    System.out.printf("%d. Run:%d; Block:%s\n",y, rl, Items.BLOCKS.getKeyAt(bl));
                     for (int i=x; i<x+rl; i++) map[i][y] = bl;
                 }
             }

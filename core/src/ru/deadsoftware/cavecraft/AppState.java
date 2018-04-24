@@ -5,6 +5,10 @@ public enum AppState {
     GOTO_LOAD_GAME,
     GOTO_MENU,
 
+    NEW_GAME,
+    LOAD_GAME,
+    SAVE_GAME,
+
     MENU_MAIN,
 
     GAME_PLAY,

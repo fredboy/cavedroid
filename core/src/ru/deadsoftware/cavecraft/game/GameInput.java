@@ -79,12 +79,7 @@ public class GameInput {
                     else CaveGame.STATE = AppState.GAME_PLAY;
                 break;
 
-            case Input.Keys.N:
-                CaveGame.STATE = AppState.GOTO_NEW_GAME;
-                break;
-
             case Input.Keys.ESCAPE: case Input.Keys.BACK:
-                GameSaver.save(gameProc);
                 CaveGame.STATE = AppState.GOTO_MENU;
                 break;
         }
