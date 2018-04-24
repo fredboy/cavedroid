@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavecraft.*;
+import ru.deadsoftware.cavecraft.AppState;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.mobs.Pig;
 import ru.deadsoftware.cavecraft.game.objects.Player;
@@ -121,7 +122,7 @@ public class GameProc {
                     touchDownY< Assets.invBar.getRegionHeight() &&
                     touchDownX>renderer.camera.viewportWidth/2-Assets.invBar.getRegionWidth()/2 &&
                     touchDownX<renderer.camera.viewportWidth/2+Assets.invBar.getRegionWidth()/2) {
-                CaveGame.STATE = GameState.GAME_CREATIVE_INV;
+                CaveGame.STATE = AppState.GAME_CREATIVE_INV;
             }
             isTouchDown = false;
         }

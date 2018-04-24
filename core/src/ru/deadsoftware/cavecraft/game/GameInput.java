@@ -1,9 +1,9 @@
 package ru.deadsoftware.cavecraft.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavecraft.*;
+import ru.deadsoftware.cavecraft.AppState;
 
 public class GameInput {
 
@@ -73,16 +73,16 @@ public class GameInput {
                 break;
 
             case Input.Keys.E:
-                if (CaveGame.STATE == GameState.GAME_PLAY) CaveGame.STATE = GameState.GAME_CREATIVE_INV;
-                    else CaveGame.STATE = GameState.GAME_PLAY;
+                if (CaveGame.STATE == AppState.GAME_PLAY) CaveGame.STATE = AppState.GAME_CREATIVE_INV;
+                    else CaveGame.STATE = AppState.GAME_PLAY;
                 break;
 
             case Input.Keys.N:
-                CaveGame.STATE = GameState.RESTART;
+                CaveGame.STATE = AppState.GOTO_GAME;
                 break;
 
             case Input.Keys.ESCAPE: case Input.Keys.BACK:
-                CaveGame.STATE = GameState.GOTO_MENU;
+                CaveGame.STATE = AppState.GOTO_MENU;
                 break;
         }
     }
@@ -103,7 +103,7 @@ public class GameInput {
     }
 
     public void touchDown(int screenX, int screenY, int button) {
-        if (CaveGame.STATE == GameState.GAME_CREATIVE_INV &&
+        if (CaveGame.STATE == AppState.GAME_CREATIVE_INV &&
                 screenX>gameProc.renderer.camera.viewportWidth/2-Assets.creativeInv.getRegionWidth()/2 &&
                 screenX<gameProc.renderer.camera.viewportWidth/2+Assets.creativeInv.getRegionWidth()/2 &&
                 screenY>gameProc.renderer.camera.viewportHeight/2-Assets.creativeInv.getRegionHeight()/2 &&
@@ -117,8 +117,8 @@ public class GameInput {
                 }
                 gameProc.player.inventory[0] = item;
             }
-        } else if (CaveGame.STATE == GameState.GAME_CREATIVE_INV) {
-            CaveGame.STATE = GameState.GAME_PLAY;
+        } else if (CaveGame.STATE == AppState.GAME_CREATIVE_INV) {
+            CaveGame.STATE = AppState.GAME_PLAY;
         } else {
             gameProc.touchDownX = screenX;
             gameProc.touchDownY = screenY;

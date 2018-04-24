@@ -3,6 +3,7 @@ package ru.deadsoftware.cavecraft.menu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import ru.deadsoftware.cavecraft.*;
+import ru.deadsoftware.cavecraft.AppState;
 import ru.deadsoftware.cavecraft.menu.objects.Button;
 
 public class MenuRenderer extends Renderer {
@@ -18,7 +19,7 @@ public class MenuRenderer extends Renderer {
 
     public void buttonClicked(Button button) {
         if (button.getLabel().toLowerCase().equals("play")) {
-            CaveGame.STATE = GameState.RESTART;
+            CaveGame.STATE = AppState.GOTO_GAME;
         } else if (button.getLabel().toLowerCase().equals("quit")) {
             Gdx.app.exit();
         }

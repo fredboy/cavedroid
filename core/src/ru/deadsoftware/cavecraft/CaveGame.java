@@ -8,7 +8,7 @@ public class CaveGame extends Game {
 	public static final String VERSION = "alpha 0.3-dev";
 	public static String GAME_FOLDER;
 
-	public static GameState STATE;
+	public static AppState STATE;
 
 	public static boolean TOUCH;
 
@@ -18,7 +18,7 @@ public class CaveGame extends Game {
 
 	public CaveGame(boolean touch) {
 		TOUCH = touch;
-		STATE = GameState.MENU_MAIN;
+		STATE = AppState.MENU_MAIN;
 	}
 
 	@Override
