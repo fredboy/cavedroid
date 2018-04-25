@@ -1,7 +1,8 @@
-package ru.deadsoftware.cavecraft;
+package ru.deadsoftware.cavecraft.misc;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import ru.deadsoftware.cavecraft.CaveGame;
 import ru.deadsoftware.cavecraft.game.GameInput;
 import ru.deadsoftware.cavecraft.game.GameProc;
 

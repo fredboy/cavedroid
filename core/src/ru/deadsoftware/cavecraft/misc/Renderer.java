@@ -1,8 +1,10 @@
-package ru.deadsoftware.cavecraft;
+package ru.deadsoftware.cavecraft.misc;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import ru.deadsoftware.cavecraft.GameScreen;
+import ru.deadsoftware.cavecraft.misc.Assets;
 
 public abstract class Renderer {
 

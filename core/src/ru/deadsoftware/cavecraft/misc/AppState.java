@@ -1,4 +1,4 @@
-package ru.deadsoftware.cavecraft;
+package ru.deadsoftware.cavecraft.misc;
 
 public enum AppState {
     GOTO_NEW_GAME,

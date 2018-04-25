@@ -1,7 +1,8 @@
-package ru.deadsoftware.cavecraft;
+package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.utils.ArrayMap;
 import ru.deadsoftware.cavecraft.game.objects.Block;
+import ru.deadsoftware.cavecraft.misc.Assets;
 
 public class Items {
 
@@ -9,7 +10,7 @@ public class Items {
 
     public static void loadBlocks() {
         BLOCKS.put("none", null);
-        BLOCKS.put("stone", new Block(0,0,16,16,Assets.blockTextures[0]));
+        BLOCKS.put("stone", new Block(0,0,16,16, Assets.blockTextures[0]));
         BLOCKS.put("grass", new Block(0,0,16,16,Assets.blockTextures[1]));
         BLOCKS.put("dirt", new Block(0,0,16,16,Assets.blockTextures[2]));
         BLOCKS.put("cobblestone", new Block(0,0,16,16,Assets.blockTextures[3]));

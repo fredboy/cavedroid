@@ -2,10 +2,9 @@ package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.TimeUtils;
-import ru.deadsoftware.cavecraft.AppState;
-import ru.deadsoftware.cavecraft.Assets;
+import ru.deadsoftware.cavecraft.misc.AppState;
+import ru.deadsoftware.cavecraft.misc.Assets;
 import ru.deadsoftware.cavecraft.CaveGame;
-import ru.deadsoftware.cavecraft.Items;
 
 public class GameInput {
 

@@ -1,4 +1,4 @@
-package ru.deadsoftware.cavecraft;
+package ru.deadsoftware.cavecraft.misc;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import ru.deadsoftware.cavecraft.CaveGame;
 
 public class Assets {
 

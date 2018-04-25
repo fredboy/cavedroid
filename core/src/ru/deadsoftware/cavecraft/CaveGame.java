@@ -2,6 +2,7 @@ package ru.deadsoftware.cavecraft;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import ru.deadsoftware.cavecraft.misc.AppState;
 
 public class CaveGame extends Game {
 

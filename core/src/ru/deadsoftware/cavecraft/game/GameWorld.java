@@ -2,7 +2,6 @@ package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import ru.deadsoftware.cavecraft.Items;
 
 public class GameWorld {
 

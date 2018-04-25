@@ -3,8 +3,7 @@ package ru.deadsoftware.cavecraft.game.mobs;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
-import ru.deadsoftware.cavecraft.Assets;
+import ru.deadsoftware.cavecraft.misc.Assets;
 
 import java.io.Serializable;
 

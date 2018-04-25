@@ -3,10 +3,9 @@ package ru.deadsoftware.cavecraft.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
-import ru.deadsoftware.cavecraft.Assets;
+import ru.deadsoftware.cavecraft.misc.Assets;
 import ru.deadsoftware.cavecraft.CaveGame;
-import ru.deadsoftware.cavecraft.Items;
-import ru.deadsoftware.cavecraft.Renderer;
+import ru.deadsoftware.cavecraft.misc.Renderer;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.objects.Player;
 

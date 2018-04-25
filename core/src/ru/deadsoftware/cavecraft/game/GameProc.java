@@ -2,12 +2,13 @@ package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavecraft.*;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.mobs.Pig;
 import ru.deadsoftware.cavecraft.game.objects.Player;
+import ru.deadsoftware.cavecraft.misc.AppState;
+import ru.deadsoftware.cavecraft.misc.Assets;
 
 import java.io.Serializable;
 import java.util.ArrayList;

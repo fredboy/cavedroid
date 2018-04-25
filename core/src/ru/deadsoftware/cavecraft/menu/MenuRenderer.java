@@ -4,7 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import ru.deadsoftware.cavecraft.*;
 import ru.deadsoftware.cavecraft.game.GameSaver;
+import ru.deadsoftware.cavecraft.game.Items;
 import ru.deadsoftware.cavecraft.menu.objects.Button;
+import ru.deadsoftware.cavecraft.misc.AppState;
+import ru.deadsoftware.cavecraft.misc.Assets;
+import ru.deadsoftware.cavecraft.misc.Renderer;
 
 public class MenuRenderer extends Renderer {
 
