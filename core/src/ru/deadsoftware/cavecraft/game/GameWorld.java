@@ -2,11 +2,13 @@ package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.ArrayMap;
 
 public class GameWorld {
 
     private int WIDTH, HEIGHT;
 
+    private ArrayMap<String, Integer> metaMap;
     private int[][] foreMap;
     private int[][] backMap;
 
@@ -70,6 +72,16 @@ public class GameWorld {
         }
     }
 
+    public int getMeta(int x, int y) {
+        if (metaMap.containsKey(x+"_"+y)) return metaMap.get(x+"_"+y);
+            else return 0;
+    }
+
+    public void setMeta(int x, int y, int value) {
+        if (metaMap.containsKey(x+"_"+y)) metaMap.removeKey(x+"_"+y);
+        metaMap.put(x+"_"+y, value);
+    }
+
     public void placeToForeground(int x, int y, int value) {
         if (getForeMap(x,y) == 0 || value == 0) {
             setForeMap(x,y,value);
@@ -99,6 +111,7 @@ public class GameWorld {
         WorldGen.genWorld(WIDTH,HEIGHT);
         foreMap = WorldGen.getForeMap();
         backMap = WorldGen.getBackMap();
+        metaMap = new ArrayMap<String, Integer>();
         WorldGen.clear();
     }
 
