@@ -121,12 +121,13 @@ public class GameInput {
             }
         } else if (CaveGame.STATE == AppState.GAME_CREATIVE_INV) {
             CaveGame.STATE = AppState.GAME_PLAY;
+        } else {
+            gameProc.touchDownTime = TimeUtils.millis();
+            gameProc.isTouchDown = true;
+            gameProc.touchDownButton = button;
         }
         gameProc.touchDownX = screenX;
         gameProc.touchDownY = screenY;
-        gameProc.touchDownTime = TimeUtils.millis();
-        gameProc.isTouchDown = true;
-        gameProc.touchDownButton = button;
     }
 
     public void touchUp(int screenX, int screenY, int button) {

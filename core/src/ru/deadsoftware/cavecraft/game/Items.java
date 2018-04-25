@@ -2,7 +2,6 @@ package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.utils.ArrayMap;
 import ru.deadsoftware.cavecraft.game.objects.Block;
-import ru.deadsoftware.cavecraft.misc.Assets;
 
 public class Items {
 
@@ -32,7 +31,8 @@ public class Items {
         BLOCKS.put("lapis_block", new Block(19));
         BLOCKS.put("sandstone", new Block(20));
         BLOCKS.put("noteblock", new Block(21));
-        BLOCKS.put("bed", new Block(0,8,16,8,22,false,true,true));
+        BLOCKS.put("bed_l", new Block(22,false,true,true));
+        BLOCKS.put("bed_r", new Block(23, false,true, true));
         BLOCKS.put("cobweb", new Block(24,false,false,true));
         BLOCKS.put("tallgrass", new Block(25,false,false,true));
         BLOCKS.put("deadbush", new Block(26,false,false,true));
@@ -41,7 +41,22 @@ public class Items {
         BLOCKS.put("rose", new Block(29,false,false,true));
         BLOCKS.put("brown_mushroom", new Block(30,false,false,true));
         BLOCKS.put("red_mushroom", new Block(31,false,false,true));
-        BLOCKS.put("wool", new Block(32,false,true,false));
+        BLOCKS.put("wool_while", new Block(32,true,false,false));
+        BLOCKS.put("wool_orange", new Block(33,true,false,false));
+        BLOCKS.put("wool_magenta", new Block(34,true,false,false));
+        BLOCKS.put("wool_lightblue", new Block(35,true,false,false));
+        BLOCKS.put("wool_yellow", new Block(36,true,false,false));
+        BLOCKS.put("wool_lime", new Block(37,true,false,false));
+        BLOCKS.put("wool_pink", new Block(38,true,false,false));
+        BLOCKS.put("wool_gray", new Block(39,true,false,false));
+        BLOCKS.put("wool_lightgray", new Block(40,true,false,false));
+        BLOCKS.put("wool_cyan", new Block(41,true,false,false));
+        BLOCKS.put("wool_purple", new Block(42,true,false,false));
+        BLOCKS.put("wool_blue", new Block(43,true,false,false));
+        BLOCKS.put("wool_brown", new Block(44,true,false,false));
+        BLOCKS.put("wool_green", new Block(45,true,false,false));
+        BLOCKS.put("wool_red", new Block(46,true,false,false));
+        BLOCKS.put("wool_black", new Block(47,true,false,false));
     }
 
     public static void load() {

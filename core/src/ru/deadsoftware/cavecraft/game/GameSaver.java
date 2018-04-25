@@ -2,7 +2,6 @@ package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.ArrayMap;
 import ru.deadsoftware.cavecraft.CaveGame;
 
 import java.io.*;
@@ -79,7 +78,6 @@ public class GameSaver {
                     loadMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/foremap.sav")),
                     loadMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/backmap.sav"))
             );
-            gameProc.world.metaMap = new ArrayMap<String, Integer>();
             gameProc.physics = new GamePhysics(gameProc);
             gameProc.resetRenderer();
         } catch (Exception e) {

@@ -2,13 +2,10 @@ package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.ArrayMap;
 
 public class GameWorld {
 
     private int WIDTH, HEIGHT;
-
-    public ArrayMap<String, Integer> metaMap;
     private int[][] foreMap;
     private int[][] backMap;
 
@@ -28,11 +25,16 @@ public class GameWorld {
         return backMap;
     }
 
+    private int transformX(int x) {
+        x = x%getWidth();
+        if (x<0) x=getWidth()-Math.abs(x);
+        return x;
+    }
+
     public int getForeMap(int x, int y) {
         int map = 0;
         try {
-            x = x%getWidth();
-            if (x<0) x=getWidth()-Math.abs(x);
+            x = transformX(x);
             map = foreMap[x][y];
         } catch (ArrayIndexOutOfBoundsException e) {
             Gdx.app.error("GameWorld",e.toString());
@@ -42,8 +44,7 @@ public class GameWorld {
 
     public void setForeMap(int x, int y, int value) {
         try {
-            x = x%getWidth();
-            if (x<0) x=getWidth()-Math.abs(x);
+            x = transformX(x);
             foreMap[x][y] = value;
         } catch (ArrayIndexOutOfBoundsException e) {
             Gdx.app.error("GameWorld", e.toString());
@@ -53,8 +54,7 @@ public class GameWorld {
     public int getBackMap(int x, int y) {
         int map = 0;
         try {
-            x = x%getWidth();
-            if (x<0) x=getWidth()-Math.abs(x);
+            x = transformX(x);
             map = backMap[x][y];
         } catch (ArrayIndexOutOfBoundsException e) {
             Gdx.app.error("GameWorld",e.toString());
@@ -64,32 +64,21 @@ public class GameWorld {
 
     public void setBackMap(int x, int y, int value) {
         try {
-            x = x%getWidth();
-            if (x<0) x=getWidth()-Math.abs(x);
+            x = transformX(x);
             backMap[x][y] = value;
         } catch (ArrayIndexOutOfBoundsException e) {
             Gdx.app.error("GameWorld", e.toString());
         }
     }
 
-    public int getMeta(int x, int y) {
-        if (metaMap.containsKey(x+"_"+y)) return metaMap.get(x+"_"+y);
-            else return 0;
-    }
-
-    public void setMeta(int x, int y, int value) {
-        if (metaMap.containsKey(x+"_"+y)) metaMap.removeKey(x+"_"+y);
-        metaMap.put(x+"_"+y, value);
-    }
-
     public void placeToForeground(int x, int y, int value) {
         if (getForeMap(x,y) == 0 || value == 0) {
-            setForeMap(x,y,value);
+            setForeMap(x, y, value);
         }
     }
 
     public void placeToBackground(int x, int y, int value) {
-        if (value==0 || (getBackMap(x,y) == 0 && !Items.BLOCKS.getValueAt(value).background)) {
+        if (value==0 || (getBackMap(x,y) == 0 && Items.BLOCKS.getValueAt(value).collision)) {
             setBackMap(x,y,value);
         }
     }
@@ -111,7 +100,6 @@ public class GameWorld {
         WorldGen.genWorld(WIDTH,HEIGHT);
         foreMap = WorldGen.getForeMap();
         backMap = WorldGen.getBackMap();
-        metaMap = new ArrayMap<String, Integer>();
         WorldGen.clear();
     }
 
