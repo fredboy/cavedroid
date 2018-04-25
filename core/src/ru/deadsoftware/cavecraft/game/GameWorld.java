@@ -8,7 +8,7 @@ public class GameWorld {
 
     private int WIDTH, HEIGHT;
 
-    private ArrayMap<String, Integer> metaMap;
+    public ArrayMap<String, Integer> metaMap;
     private int[][] foreMap;
     private int[][] backMap;
 

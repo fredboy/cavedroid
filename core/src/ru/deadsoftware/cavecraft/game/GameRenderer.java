@@ -54,7 +54,7 @@ public class GameRenderer extends Renderer {
         if (maxY>gameProc.world.getHeight()) maxY = gameProc.world.getHeight();
         for (int y=minY; y<maxY; y++) {
             for (int x=minX; x<maxX; x++) {
-                if (gameProc.world.getForeMap(x,y)>0) {
+                if (gameProc.world.getForeMap(x,y)>0 && !Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).background) {
                     spriteBatch.draw(
                             Assets.blockTextures[Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).getTexture()],
                             x * 16 - camera.position.x,y * 16 - camera.position.y);
