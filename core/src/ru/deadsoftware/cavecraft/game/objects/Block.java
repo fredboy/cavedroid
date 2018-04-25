@@ -6,25 +6,30 @@ import com.badlogic.gdx.math.Rectangle;
 public class Block {
 
     private int x,y,w,h;
-    private TextureRegion texture;
+    private int texture;
 
-    public boolean collision, foreground;
+    public boolean collision, background, transparent;
 
-    public Block(int x, int y, int w, int h, TextureRegion texture) {
-        this(x,y,w,h,texture, true, false);
+    public Block(int texture) {
+        this(0,0,16,16,texture, true, false, false);
     }
 
-    public Block(int x, int y, int w, int h, TextureRegion texture, boolean collision, boolean foreground) {
+    public Block(int texture, boolean collision, boolean background, boolean transparent) {
+        this(0,0,16,16,texture, collision, background, transparent);
+    }
+
+    public Block(int x, int y, int w, int h, int texture, boolean collision, boolean background, boolean transparent) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
         this.texture = texture;
         this.collision = collision;
-        this.foreground = foreground;
+        this.background = background;
+        this.transparent = transparent;
     }
 
-    public TextureRegion getTexture() {
+    public int getTexture() {
         return texture;
     }
 

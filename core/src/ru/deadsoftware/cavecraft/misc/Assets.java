@@ -10,7 +10,7 @@ import ru.deadsoftware.cavecraft.CaveGame;
 
 public class Assets {
 
-    public static final int BLOCK_TEXTURES = 18;
+    public static final int BLOCK_TEXTURES = 47;
 
     private static GlyphLayout layout;
 

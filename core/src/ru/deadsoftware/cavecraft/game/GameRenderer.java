@@ -28,13 +28,18 @@ public class GameRenderer extends Renderer {
         if (maxY>gameProc.world.getHeight()) maxY = gameProc.world.getHeight();
         for (int y=minY; y<maxY; y++) {
             for (int x=minX; x<maxX; x++) {
-                if (gameProc.world.getForeMap(x,y)>0){
-                } else if (gameProc.world.getBackMap(x,y)>0) {
+                if ((gameProc.world.getForeMap(x,y)==0 || Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).transparent)
+                        && gameProc.world.getBackMap(x,y)>0) {
                     spriteBatch.draw(
-                            Items.BLOCKS.getValueAt(gameProc.world.getBackMap(x,y)).getTexture(),
+                            Assets.blockTextures[Items.BLOCKS.getValueAt(gameProc.world.getBackMap(x,y)).getTexture()],
                             x * 16 - camera.position.x,y * 16 - camera.position.y);
                     Assets.shade.setPosition(x * 16 - camera.position.x,y * 16 - camera.position.y);
                     Assets.shade.draw(spriteBatch);
+                }
+                if (gameProc.world.getForeMap(x,y)>0 && Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).background) {
+                    spriteBatch.draw(
+                            Assets.blockTextures[Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).getTexture()],
+                            x * 16 - camera.position.x,y * 16 - camera.position.y);
                 }
             }
         }
@@ -51,7 +56,7 @@ public class GameRenderer extends Renderer {
             for (int x=minX; x<maxX; x++) {
                 if (gameProc.world.getForeMap(x,y)>0) {
                     spriteBatch.draw(
-                            Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).getTexture(),
+                            Assets.blockTextures[Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).getTexture()],
                             x * 16 - camera.position.x,y * 16 - camera.position.y);
                 }
             }
@@ -119,13 +124,13 @@ public class GameRenderer extends Renderer {
                 y+18+(gameProc.creativeScroll*(72/(gameProc.maxCreativeScroll+1))));
         for (int i=gameProc.creativeScroll*40; i<(gameProc.creativeScroll+1)*40; i++) {
             if (i>0 && i<Items.BLOCKS.size)
-                spriteBatch.draw(Items.BLOCKS.getValueAt(i).getTexture(),
+                spriteBatch.draw(Assets.blockTextures[Items.BLOCKS.getValueAt(i).getTexture()],
                         x+8+((i-gameProc.creativeScroll*40)%8)*18,
                         y+18+((i-gameProc.creativeScroll*40)/8)*18);
         }
         for (int i=0; i<9; i++) {
             if (gameProc.player.inventory[i]>0)
-                spriteBatch.draw(Items.BLOCKS.getValueAt(gameProc.player.inventory[i]).getTexture(),
+                spriteBatch.draw(Assets.blockTextures[Items.BLOCKS.getValueAt(gameProc.player.inventory[i]).getTexture()],
                         x+8+i*18, y+Assets.creativeInv.getRegionHeight()-24);
         }
     }
@@ -140,7 +145,7 @@ public class GameRenderer extends Renderer {
         spriteBatch.draw(Assets.invBar, camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2, 0);
         for (int i=0; i<9; i++) {
             if (gameProc.player.inventory[i]>0) {
-                spriteBatch.draw(Items.BLOCKS.getValueAt(gameProc.player.inventory[i]).getTexture(),
+                spriteBatch.draw(Assets.blockTextures[Items.BLOCKS.getValueAt(gameProc.player.inventory[i]).getTexture()],
                         camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2+3+i*20,
                         3);
             }
