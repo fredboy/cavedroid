@@ -3,11 +3,11 @@ package ru.deadsoftware.cavecraft.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
-import ru.deadsoftware.cavecraft.misc.Assets;
 import ru.deadsoftware.cavecraft.CaveGame;
-import ru.deadsoftware.cavecraft.misc.Renderer;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.objects.Player;
+import ru.deadsoftware.cavecraft.misc.Assets;
+import ru.deadsoftware.cavecraft.misc.Renderer;
 
 public class GameRenderer extends Renderer {
 
@@ -115,10 +115,13 @@ public class GameRenderer extends Renderer {
         float x = camera.viewportWidth/2-Assets.creativeInv.getRegionWidth()/2;
         float y = camera.viewportHeight/2-Assets.creativeInv.getRegionHeight()/2;
         spriteBatch.draw(Assets.creativeInv, x, y);
-        spriteBatch.draw(Assets.creativeScroll, x+156, y+18);
-        for (int i=1; i<Items.BLOCKS.size; i++) {
-            spriteBatch.draw(Items.BLOCKS.getValueAt(i).getTexture(),x+8+(i%8)*18,
-                    y+18+(i/8)*18);
+        spriteBatch.draw(Assets.creativeScroll, x+156,
+                y+18+(gameProc.creativeScroll*(72/(gameProc.maxCreativeScroll+1))));
+        for (int i=gameProc.creativeScroll*40; i<(gameProc.creativeScroll+1)*40; i++) {
+            if (i>0 && i<Items.BLOCKS.size)
+                spriteBatch.draw(Items.BLOCKS.getValueAt(i).getTexture(),
+                        x+8+((i-gameProc.creativeScroll*40)%8)*18,
+                        y+18+((i-gameProc.creativeScroll*40)/8)*18);
         }
         for (int i=0; i<9; i++) {
             if (gameProc.player.inventory[i]>0)

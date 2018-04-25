@@ -2,10 +2,10 @@ package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.TimeUtils;
+import ru.deadsoftware.cavecraft.CaveGame;
 import ru.deadsoftware.cavecraft.game.mobs.Pig;
 import ru.deadsoftware.cavecraft.misc.AppState;
 import ru.deadsoftware.cavecraft.misc.Assets;
-import ru.deadsoftware.cavecraft.CaveGame;
 
 public class GameInput {
 
@@ -112,7 +112,7 @@ public class GameInput {
                 screenY<gameProc.renderer.camera.viewportHeight/2+Assets.creativeInv.getRegionHeight()/2) {
             int ix = (int) (screenX - (gameProc.renderer.camera.viewportWidth / 2 - Assets.creativeInv.getRegionWidth() / 2 + 8)) / 18;
             int iy = (int) (screenY - (gameProc.renderer.camera.viewportHeight / 2 - Assets.creativeInv.getRegionHeight() / 2 + 18)) / 18;
-            int item = ix + iy * 8;
+            int item = gameProc.creativeScroll*40+(ix + iy * 8);
             if (item >= 0 && item < Items.BLOCKS.size) {
                 for (int i = 8; i > 0; i--) {
                     gameProc.player.inventory[i] = gameProc.player.inventory[i - 1];
@@ -121,13 +121,12 @@ public class GameInput {
             }
         } else if (CaveGame.STATE == AppState.GAME_CREATIVE_INV) {
             CaveGame.STATE = AppState.GAME_PLAY;
-        } else {
-            gameProc.touchDownX = screenX;
-            gameProc.touchDownY = screenY;
-            gameProc.touchDownTime = TimeUtils.millis();
-            gameProc.isTouchDown = true;
-            gameProc.touchDownButton = button;
         }
+        gameProc.touchDownX = screenX;
+        gameProc.touchDownY = screenY;
+        gameProc.touchDownTime = TimeUtils.millis();
+        gameProc.isTouchDown = true;
+        gameProc.touchDownButton = button;
     }
 
     public void touchUp(int screenX, int screenY, int button) {
@@ -156,12 +155,30 @@ public class GameInput {
     }
 
     public void touchDragged(int screenX, int screenY) {
+        if (CaveGame.STATE == AppState.GAME_CREATIVE_INV && Math.abs(screenY-gameProc.touchDownY)>16) {
+                gameProc.creativeScroll+=(screenY-gameProc.touchDownY)/16;
+                gameProc.touchDownX = screenX;
+                gameProc.touchDownY = screenY;
+                if (gameProc.creativeScroll<0) gameProc.creativeScroll=0;
+                if (gameProc.creativeScroll>gameProc.maxCreativeScroll)
+                    gameProc.creativeScroll=gameProc.maxCreativeScroll;
+        }
     }
 
     public void scrolled(int amount) {
-        gameProc.invSlot += amount;
-        if (gameProc.invSlot < 0) gameProc.invSlot = 8;
-        if (gameProc.invSlot > 8) gameProc.invSlot = 0;
+        switch (CaveGame.STATE) {
+            case GAME_PLAY:
+                gameProc.invSlot += amount;
+                if (gameProc.invSlot < 0) gameProc.invSlot = 8;
+                if (gameProc.invSlot > 8) gameProc.invSlot = 0;
+                break;
+            case GAME_CREATIVE_INV:
+                gameProc.creativeScroll+=amount;
+                if (gameProc.creativeScroll<0) gameProc.creativeScroll=0;
+                if (gameProc.creativeScroll>gameProc.maxCreativeScroll)
+                    gameProc.creativeScroll=gameProc.maxCreativeScroll;
+                break;
+        }
     }
 
 }

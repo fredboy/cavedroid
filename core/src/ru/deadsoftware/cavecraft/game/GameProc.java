@@ -3,7 +3,8 @@ package ru.deadsoftware.cavecraft.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.TimeUtils;
-import ru.deadsoftware.cavecraft.*;
+import ru.deadsoftware.cavecraft.CaveGame;
+import ru.deadsoftware.cavecraft.GameScreen;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.mobs.Pig;
 import ru.deadsoftware.cavecraft.game.objects.Player;
@@ -28,6 +29,7 @@ public class GameProc implements Serializable{
     public int cursorX, cursorY;
     public int invSlot;
     public int ctrlMode;
+    public int creativeScroll, maxCreativeScroll;
 
     public boolean isTouchDown, isKeyDown;
     public int touchDownX, touchDownY, keyDownCode;
@@ -43,14 +45,15 @@ public class GameProc implements Serializable{
             mobs.add(new Pig(i*256, 196*16));
         }
         physics = new GamePhysics(this);
-        if (!CaveGame.TOUCH) ctrlMode = 1;
         if (CaveGame.TOUCH) {
             renderer = new GameRenderer(this,320,
                     320*((float)GameScreen.getHeight()/GameScreen.getWidth()));
         } else {
+            ctrlMode = 1;
             renderer = new GameRenderer(this,480,
                     480*((float)GameScreen.getHeight()/GameScreen.getWidth()));
         }
+        maxCreativeScroll = Items.BLOCKS.size/40;
         GameSaver.save(this);
     }
 

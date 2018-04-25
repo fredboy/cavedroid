@@ -34,7 +34,7 @@ public class CaveGame extends Game {
 			default:
 				Gdx.app.exit();
 		}
-		Gdx.app.log("CaveGame", "Folder: "+GAME_FOLDER);
+		Gdx.app.log("CaveGame", GAME_FOLDER);
 		Gdx.files.absolute(GAME_FOLDER).mkdirs();
 		setScreen(new GameScreen());
 	}
