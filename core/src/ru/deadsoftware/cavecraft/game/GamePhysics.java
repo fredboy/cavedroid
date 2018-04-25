@@ -22,21 +22,13 @@ public class GamePhysics {
     }
 
     private boolean checkJump(Rectangle rect, int dir) {
-        int bl = 0;
+        int bl;
         switch (dir) {
             case 0:
-                bl = gameProc.world.getForeMap(
-                    (int)((rect.x+(rect.width/2))/16) - 1,
-                    (int)(rect.y/16)+1);
-                if (gameProc.world.getForeMap((int)((rect.x+(rect.width/2))/16)-1,(int)(rect.y/16))>0) bl=0;
-                if (gameProc.world.getForeMap((int)((rect.x+(rect.width/2))/16)-1,(int)(rect.y/16)-1)>0) bl=0;
+                bl = gameProc.world.getForeMap((int)((rect.x-8)/16),(int)((rect.y+rect.height-8)/16));
                 break;
             case 1:
-                bl = gameProc.world.getForeMap(
-                    (int)((rect.x+(rect.width/2))/16) + 1,
-                    (int)(rect.y/16)+1);
-                if (gameProc.world.getForeMap((int)((rect.x+(rect.width/2))/16)+1,(int)(rect.y/16))>0) bl=0;
-                if (gameProc.world.getForeMap((int)((rect.x+(rect.width/2))/16)+1,(int)(rect.y/16)-1)>0) bl=0;
+                bl = gameProc.world.getForeMap((int)((rect.x+rect.width+8)/16),(int)((rect.y+rect.height-8)/16));
                 break;
             default:
                 bl=0;
@@ -69,7 +61,7 @@ public class GamePhysics {
         pl.position.add(pl.moveY);
         if (checkColl(pl.getRect())) {
             int d = -1;
-            if (pl.moveY.y<0) d=1; else if (pl.moveY.y>0) d=-1;
+            if (pl.moveY.y<0) d=1;
             if (d==-1) {
                 pl.flyMode = false;
                 pl.canJump = true;
@@ -107,24 +99,38 @@ public class GamePhysics {
     private void mobPhy(Mob mob) {
         mob.position.add(mob.moveY);
         if (checkColl(mob.getRect())) {
-            mob.canJump = true;
             int d = -1;
-            if (mob.moveY.y<0) d=1; else if (mob.moveY.y>0) d=-1;
+            if (mob.moveY.y<0) d=1;
+            if (d==-1) mob.canJump = true;
             mob.position.y = MathUtils.round(mob.position.y);
             while (checkColl(mob.getRect())) mob.position.y+=d;
             mob.moveY.setZero();
         } else {
             mob.canJump = false;
         }
-        mob.moveY.add(gravity);
+        if (mob.moveY.y<18) mob.moveY.add(gravity);
         mob.position.add(mob.moveX);
+        if (checkColl(mob.getRect())) {
+            if (mob.canJump) {
+                mob.position.y-=8;
+            }
+            if (checkColl(mob.getRect())) {
+                if (mob.canJump) mob.position.y+=8;
+                int d = 0;
+                if (mob.moveX.x < 0) d = 1;
+                else if (mob.moveX.x > 0) d = -1;
+                mob.position.x = MathUtils.round(mob.position.x);
+                while (checkColl(mob.getRect())) mob.position.x += d;
+            }
+        }
         if (mob.position.x+mob.width/2<0) mob.position.x+=gameProc.world.getWidth()*16;
         if (mob.position.x+mob.width/2>gameProc.world.getWidth()*16) mob.position.x-=gameProc.world.getWidth()*16;
-        if (checkColl(mob.getRect())) {
-            int d = 0;
-            if (mob.moveX.x<0) d=1; else if (mob.moveX.x>0) d=-1;
-            mob.position.x = MathUtils.round(mob.position.x);
-            while (checkColl(mob.getRect())) mob.position.x+=d;
+        if (mob.position.y > gameProc.world.getHeight()*16) {
+            mob.position.y = 0;
+        }
+        if (checkJump(mob.getRect(), mob.dir) && mob.canJump && !mob.moveX.equals(Vector2.Zero)) {
+            mob.moveY.add(0, -8);
+            mob.canJump = false;
         }
 }
 

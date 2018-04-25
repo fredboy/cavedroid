@@ -15,6 +15,7 @@ public abstract class Mob implements Serializable{
     public Vector2 moveX, moveY;
     public int width, height, dir;
     public boolean canJump;
+    public boolean agressive;
 
     public static void animateMobs() {
         Assets.pigSprite[0][1].setRotation(ANIMATION);

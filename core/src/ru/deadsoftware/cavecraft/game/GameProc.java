@@ -40,7 +40,7 @@ public class GameProc implements Serializable{
         player = new Player(world.getSpawnPoint());
         mobs = new ArrayList<Mob>();
         for (int i=0; i<16; i++) {
-            mobs.add(new Pig(i*256, 128&16, this));
+            mobs.add(new Pig(i*256, 196*16));
         }
         physics = new GamePhysics(this);
         if (!CaveGame.TOUCH) ctrlMode = 1;

@@ -2,6 +2,7 @@ package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.TimeUtils;
+import ru.deadsoftware.cavecraft.game.mobs.Pig;
 import ru.deadsoftware.cavecraft.misc.AppState;
 import ru.deadsoftware.cavecraft.misc.Assets;
 import ru.deadsoftware.cavecraft.CaveGame;
@@ -76,6 +77,10 @@ public class GameInput {
             case Input.Keys.E:
                 if (CaveGame.STATE == AppState.GAME_PLAY) CaveGame.STATE = AppState.GAME_CREATIVE_INV;
                     else CaveGame.STATE = AppState.GAME_PLAY;
+                break;
+
+            case Input.Keys.G:
+                gameProc.mobs.add(new Pig(gameProc.cursorX*16, gameProc.cursorY*16));
                 break;
 
             case Input.Keys.ESCAPE: case Input.Keys.BACK:
