@@ -20,7 +20,8 @@ public class WorldGen {
         int t;
         res[0] = mid;
         for (int i=1; i<width; i++) {
-            t = rand.nextInt(3)-1;
+            t = rand.nextInt(7)-3;
+            if (t>-3 && t<3) t=0; else t/=Math.abs(t);
             if (i>width-(max-min)) {
                 if (res[i-1]+t<res[0]) t=Math.abs(t);
                     else if (res[i-1]+t>res[0]) t=-Math.abs(t);
