@@ -125,7 +125,7 @@ public class GameInput {
                     screenY<gameProc.renderer.camera.viewportHeight/2+Assets.creativeInv.getRegionHeight()/2) {
                 int ix = (int) (screenX - (gameProc.renderer.camera.viewportWidth / 2 - Assets.creativeInv.getRegionWidth() / 2 + 8)) / 18;
                 int iy = (int) (screenY - (gameProc.renderer.camera.viewportHeight / 2 - Assets.creativeInv.getRegionHeight() / 2 + 18)) / 18;
-                int item = gameProc.creativeScroll*40+(ix + iy * 8);
+                int item = gameProc.creativeScroll*8+(ix + iy * 8);
                 if (ix>=8 || ix<0 || iy<0 || iy>=5) item=-1;
                 if (item >= 0 && item < Items.BLOCKS.size) {
                     for (int i = 8; i > 0; i--) {
@@ -160,9 +160,7 @@ public class GameInput {
                     screenX<gameProc.renderer.camera.viewportWidth/2+Assets.creativeInv.getRegionWidth()/2 &&
                     screenY>gameProc.renderer.camera.viewportHeight/2-Assets.creativeInv.getRegionHeight()/2 &&
                     screenY<gameProc.renderer.camera.viewportHeight/2+Assets.creativeInv.getRegionHeight()/2) {
-                if (screenX<gameProc.renderer.camera.viewportWidth/2+Assets.creativeInv.getRegionWidth()/2-24)
-                    gameProc.creativeScroll -= (screenY - gameProc.touchDownY) / 16;
-                else gameProc.creativeScroll += (screenY - gameProc.touchDownY) / 16;
+                gameProc.creativeScroll -= (screenY - gameProc.touchDownY) / 16;
                 gameProc.touchDownX = screenX;
                 gameProc.touchDownY = screenY;
                 if (gameProc.creativeScroll < 0) gameProc.creativeScroll = 0;

@@ -53,7 +53,7 @@ public class GameProc implements Serializable{
             renderer = new GameRenderer(this,480,
                     480*((float)GameScreen.getHeight()/GameScreen.getWidth()));
         }
-        maxCreativeScroll = Items.BLOCKS.size/40;
+        maxCreativeScroll = Items.BLOCKS.size/8;
         GameSaver.save(this);
     }
 
