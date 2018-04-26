@@ -163,6 +163,10 @@ public class GameRenderer extends Renderer {
         spriteBatch.draw(Assets.touchLMB, camera.viewportWidth-52, camera.viewportHeight-26);
         spriteBatch.draw(Assets.touchRMB, camera.viewportWidth-26, camera.viewportHeight-26);
         spriteBatch.draw(Assets.touchToggleMode, 78, camera.viewportHeight-26);
+        if (gameProc.ctrlMode==1) {
+            Assets.shade.setPosition(83, camera.viewportHeight-21);
+            Assets.shade.draw(spriteBatch);
+        }
     }
 
     private void drawGamePlay() {

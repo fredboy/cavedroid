@@ -105,27 +105,9 @@ public class GameInput {
     }
 
     public void touchDown(int screenX, int screenY, int button) {
-        if (CaveGame.STATE == AppState.GAME_CREATIVE_INV &&
-                screenX>gameProc.renderer.camera.viewportWidth/2-Assets.creativeInv.getRegionWidth()/2 &&
-                screenX<gameProc.renderer.camera.viewportWidth/2+Assets.creativeInv.getRegionWidth()/2 &&
-                screenY>gameProc.renderer.camera.viewportHeight/2-Assets.creativeInv.getRegionHeight()/2 &&
-                screenY<gameProc.renderer.camera.viewportHeight/2+Assets.creativeInv.getRegionHeight()/2) {
-            int ix = (int) (screenX - (gameProc.renderer.camera.viewportWidth / 2 - Assets.creativeInv.getRegionWidth() / 2 + 8)) / 18;
-            int iy = (int) (screenY - (gameProc.renderer.camera.viewportHeight / 2 - Assets.creativeInv.getRegionHeight() / 2 + 18)) / 18;
-            int item = gameProc.creativeScroll*40+(ix + iy * 8);
-            if (item >= 0 && item < Items.BLOCKS.size) {
-                for (int i = 8; i > 0; i--) {
-                    gameProc.player.inventory[i] = gameProc.player.inventory[i - 1];
-                }
-                gameProc.player.inventory[0] = item;
-            }
-        } else if (CaveGame.STATE == AppState.GAME_CREATIVE_INV) {
-            CaveGame.STATE = AppState.GAME_PLAY;
-        } else {
-            gameProc.touchDownTime = TimeUtils.millis();
-            gameProc.isTouchDown = true;
-            gameProc.touchDownButton = button;
-        }
+        gameProc.touchDownTime = TimeUtils.millis();
+        gameProc.isTouchDown = true;
+        gameProc.touchDownButton = button;
         gameProc.touchDownX = screenX;
         gameProc.touchDownY = screenY;
     }
@@ -136,15 +118,32 @@ public class GameInput {
             gameProc.isKeyDown = false;
         }
         if (gameProc.isTouchDown) {
-            if (button == Input.Buttons.RIGHT){
+            if (CaveGame.STATE == AppState.GAME_CREATIVE_INV &&
+                    screenX>gameProc.renderer.camera.viewportWidth/2-Assets.creativeInv.getRegionWidth()/2 &&
+                    screenX<gameProc.renderer.camera.viewportWidth/2+Assets.creativeInv.getRegionWidth()/2 &&
+                    screenY>gameProc.renderer.camera.viewportHeight/2-Assets.creativeInv.getRegionHeight()/2 &&
+                    screenY<gameProc.renderer.camera.viewportHeight/2+Assets.creativeInv.getRegionHeight()/2) {
+                int ix = (int) (screenX - (gameProc.renderer.camera.viewportWidth / 2 - Assets.creativeInv.getRegionWidth() / 2 + 8)) / 18;
+                int iy = (int) (screenY - (gameProc.renderer.camera.viewportHeight / 2 - Assets.creativeInv.getRegionHeight() / 2 + 18)) / 18;
+                int item = gameProc.creativeScroll*40+(ix + iy * 8);
+                if (ix>=8 || ix<0 || iy<0 || iy>=5) item=-1;
+                if (item >= 0 && item < Items.BLOCKS.size) {
+                    for (int i = 8; i > 0; i--) {
+                        gameProc.player.inventory[i] = gameProc.player.inventory[i - 1];
+                    }
+                    gameProc.player.inventory[0] = item;
+                }
+            } else if (CaveGame.STATE == AppState.GAME_CREATIVE_INV) {
+                CaveGame.STATE = AppState.GAME_PLAY;
+            } else if (screenY<Assets.invBar.getRegionHeight() &&
+                    screenX>gameProc.renderer.camera.viewportWidth/2-Assets.invBar.getRegionWidth()/2 &&
+                    screenX<gameProc.renderer.camera.viewportWidth/2+Assets.invBar.getRegionWidth()/2) {
+                gameProc.invSlot = (int)((screenX-(gameProc.renderer.camera.viewportWidth/2-Assets.invBar.getRegionWidth()/2))/20);
+            } else if (button == Input.Buttons.RIGHT){
                 gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY,
                             gameProc.player.inventory[gameProc.invSlot]);
             } else if (button == Input.Buttons.LEFT) {
-                if (screenY<Assets.invBar.getRegionHeight() &&
-                        screenX>gameProc.renderer.camera.viewportWidth/2-Assets.invBar.getRegionWidth()/2 &&
-                        screenX<gameProc.renderer.camera.viewportWidth/2+Assets.invBar.getRegionWidth()/2) {
-                    gameProc.invSlot = (int)((screenX-(gameProc.renderer.camera.viewportWidth/2-Assets.invBar.getRegionWidth()/2))/20);
-                } else if (gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY) > 0) {
+                if (gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY) > 0) {
                     gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY, 0);
                 } else if (gameProc.world.getBackMap(gameProc.cursorX, gameProc.cursorY) > 0) {
                     gameProc.world.placeToBackground(gameProc.cursorX, gameProc.cursorY, 0);
@@ -157,12 +156,19 @@ public class GameInput {
 
     public void touchDragged(int screenX, int screenY) {
         if (CaveGame.STATE == AppState.GAME_CREATIVE_INV && Math.abs(screenY-gameProc.touchDownY)>16) {
-                gameProc.creativeScroll+=(screenY-gameProc.touchDownY)/16;
+            if (screenX>gameProc.renderer.camera.viewportWidth/2-Assets.creativeInv.getRegionWidth()/2 &&
+                    screenX<gameProc.renderer.camera.viewportWidth/2+Assets.creativeInv.getRegionWidth()/2 &&
+                    screenY>gameProc.renderer.camera.viewportHeight/2-Assets.creativeInv.getRegionHeight()/2 &&
+                    screenY<gameProc.renderer.camera.viewportHeight/2+Assets.creativeInv.getRegionHeight()/2) {
+                if (screenX<gameProc.renderer.camera.viewportWidth/2+Assets.creativeInv.getRegionWidth()/2-24)
+                    gameProc.creativeScroll -= (screenY - gameProc.touchDownY) / 16;
+                else gameProc.creativeScroll += (screenY - gameProc.touchDownY) / 16;
                 gameProc.touchDownX = screenX;
                 gameProc.touchDownY = screenY;
-                if (gameProc.creativeScroll<0) gameProc.creativeScroll=0;
-                if (gameProc.creativeScroll>gameProc.maxCreativeScroll)
-                    gameProc.creativeScroll=gameProc.maxCreativeScroll;
+                if (gameProc.creativeScroll < 0) gameProc.creativeScroll = 0;
+                if (gameProc.creativeScroll > gameProc.maxCreativeScroll)
+                    gameProc.creativeScroll = gameProc.maxCreativeScroll;
+            }
         }
     }
 

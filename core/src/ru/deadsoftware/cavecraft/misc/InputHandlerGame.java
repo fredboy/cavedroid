@@ -65,7 +65,7 @@ public class InputHandlerGame implements InputProcessor {
             } else if (tx > tWidth - 26 && screenY > ty - 26) {
                 gameInput.touchDown(screenX, screenY, Input.Buttons.RIGHT);
             } else {
-                gameInput.touchDown(screenX, screenY, Input.Buttons.LEFT);
+                gameInput.touchDown(screenX, screenY, -1);
             }
         } else {
             gameInput.touchDown(screenX, screenY, button);
@@ -97,7 +97,7 @@ public class InputHandlerGame implements InputProcessor {
             } else if (tx > tWidth - 26 && screenY > ty - 26) {
                 gameInput.touchUp(screenX, screenY, Input.Buttons.RIGHT);
             } else {
-                gameInput.touchUp(screenX, screenY, Input.Buttons.LEFT);
+                gameInput.touchUp(screenX, screenY, -1);
             }
         } else {
             gameInput.touchUp(screenX, screenY, button);
@@ -109,7 +109,11 @@ public class InputHandlerGame implements InputProcessor {
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         screenX *= gameProc.renderer.camera.viewportWidth/getWidth();
         screenY *= gameProc.renderer.camera.viewportHeight/getHeight();
-        gameInput.touchDragged(screenX, screenY);
+        if (gameProc.isKeyDown && (screenX>78 || screenY<gameProc.renderer.getHeight()-52)) {
+            gameInput.keyUp(gameProc.keyDownCode);
+        } else {
+            gameInput.touchDragged(screenX, screenY);
+        }
         return false;
     }
 

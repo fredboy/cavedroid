@@ -121,8 +121,7 @@ public class GameProc implements Serializable{
             if (touchDownButton== Input.Buttons.RIGHT) {
                 world.placeToBackground(cursorX, cursorY,
                         player.inventory[invSlot]);
-            } else if (touchDownButton==Input.Buttons.LEFT &&
-                    touchDownY< Assets.invBar.getRegionHeight() &&
+            } else if (touchDownY< Assets.invBar.getRegionHeight() &&
                     touchDownX>renderer.camera.viewportWidth/2-Assets.invBar.getRegionWidth()/2 &&
                     touchDownX<renderer.camera.viewportWidth/2+Assets.invBar.getRegionWidth()/2) {
                 CaveGame.STATE = AppState.GAME_CREATIVE_INV;
