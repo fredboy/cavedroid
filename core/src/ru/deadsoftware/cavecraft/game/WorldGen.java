@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavecraft.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.utils.TimeUtils;
 
@@ -10,6 +11,7 @@ public class WorldGen {
 
     private static int[][] foreMap, backMap;
     private static int[] hMap;
+    private static int[] bMap; //biomes, 0-plains, 1-desert
 
     public static long getSeed() {
         return seed;
@@ -17,9 +19,11 @@ public class WorldGen {
 
     static int[] genLandscape(int width, int mid, int min, int max) {
         int[] res = new int[width];
+        bMap = new int[width];
         int t;
         res[0] = mid;
         for (int i=1; i<width; i++) {
+            bMap[i] = i/(width/2);
             t = rand.nextInt(7)-3;
             if (t>-3 && t<3) t=0; else t/=Math.abs(t);
             if (i>width-(max-min)) {
@@ -31,6 +35,12 @@ public class WorldGen {
             if (res[i]>max) res[i] = max;
         }
         return res;
+    }
+
+    private static void genCactus(int x, int y) {
+        foreMap[x][y] = 59;
+        foreMap[x][y-1] = 59;
+        foreMap[x][y-2] = 59;
     }
 
     private static void genOak(int x, int y) {
@@ -68,21 +78,42 @@ public class WorldGen {
             dirtH = 4+rand.nextInt(2);
             for (int y = height- hMap[x]; y<height; y++) {
                 if (y==height- hMap[x]) {
-                    foreMap[x][y] = 2;
-                    backMap[x][y] = 2;
+                    switch (bMap[x]) {
+                        case 0:
+                            foreMap[x][y] = 2;
+                            backMap[x][y] = 2;
+                            break;
+                        case 1:
+                            foreMap[x][y] = 10;
+                            backMap[x][y] = 10;
+                            break;
+                    }
                 } else if (y<height-hMap[x]+dirtH) {
-                    foreMap[x][y] = 3;
-                    backMap[x][y] = 3;
+                    switch (bMap[x]) {
+                        case 0:
+                            foreMap[x][y] = 3;
+                            backMap[x][y] = 3;
+                            break;
+                        case 1:
+                            foreMap[x][y] = 10;
+                            backMap[x][y] = 10;
+                            break;
+                    }
+                } else if (bMap[x]==1 && y<height-hMap[x]+dirtH+3) {
+                    foreMap[x][y] = 21;
+                    backMap[x][y] = 21;
                 } else if (y<height-1){
                     foreMap[x][y] = 1;
                     backMap[x][y] = 1;
                 } else {
-                    foreMap[x][y] = 7;
-                    backMap[x][y] = 7;
+                    if (bMap[x]==0) {
+                        foreMap[x][y] = 7;
+                        backMap[x][y] = 7;
+                    }
                 }
             }
-            for (int y = height-64; y<height-1; y++) {
-                if (foreMap[x][y]==0){
+            for (int y = height-60; y<height-1; y++) {
+                if (foreMap[x][y]==0 && bMap[x]!=1){
                     foreMap[x][y] = 8;
                     backMap[x][y] = 8;
                     if (y==height-hMap[x]-1) {
@@ -91,8 +122,11 @@ public class WorldGen {
                 }
             }
             if (x>2 && x<width-2 && rand.nextInt(100)<5){
-                if (foreMap[x][height-hMap[x]-1]==0) {
+                if (foreMap[x][height-hMap[x]-1]==0 && foreMap[x][height-hMap[x]]==2) {
                     genOak(x,height-hMap[x]-1);
+                }
+                if (foreMap[x][height-hMap[x]-1]==0 && foreMap[x][height-hMap[x]]==10) {
+                    genCactus(x,height-hMap[x]-1);
                 }
             }
         }

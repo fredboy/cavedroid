@@ -78,7 +78,8 @@ public class GameWorld {
     }
 
     public void placeToBackground(int x, int y, int value) {
-        if (value==0 || (getBackMap(x,y) == 0 && Items.BLOCKS.getValueAt(value).collision)) {
+        if (value==0 || (getBackMap(x,y) == 0 && Items.BLOCKS.getValueAt(value).collision) &&
+                (!Items.BLOCKS.getValueAt(value).transparent || value == 18)) {
             setBackMap(x,y,value);
         }
     }

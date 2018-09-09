@@ -123,7 +123,7 @@ public class GameRenderer extends Renderer {
         spriteBatch.draw(Assets.creativeInv, x, y);
         spriteBatch.draw(Assets.creativeScroll, x+156,
                 y+18+(gameProc.creativeScroll*(72/gameProc.maxCreativeScroll)));
-        for (int i=gameProc.creativeScroll*8; i<(gameProc.creativeScroll+1)*40; i++) {
+        for (int i=gameProc.creativeScroll*8; i<gameProc.creativeScroll*8+40; i++) {
             if (i>0 && i<Items.BLOCKS.size)
                 spriteBatch.draw(Assets.blockTextures[Items.BLOCKS.getValueAt(i).getTexture()],
                         x+8+((i-gameProc.creativeScroll*8)%8)*18,
