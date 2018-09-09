@@ -57,6 +57,17 @@ public class Items {
         BLOCKS.put("wool_green", new Block(45,true,false,false));
         BLOCKS.put("wool_red", new Block(46,true,false,false));
         BLOCKS.put("wool_black", new Block(47,true,false,false));
+        BLOCKS.put("gold_block", new Block(48));
+        BLOCKS.put("iron_block", new Block(49));
+        BLOCKS.put("stone_slab", new Block(0, 8, 16,8, 50, true, false, true));
+        BLOCKS.put("double_stone_slab", new Block(51));
+        BLOCKS.put("sandstone_slab", new Block(0, 8, 16,8, 52, true, false, true));
+        BLOCKS.put("wooden_slab", new Block(0, 8, 16,8, 53, true, false, true));
+        BLOCKS.put("cobblestone_slab", new Block(0, 8, 16,8, 54, true, false, true));
+        BLOCKS.put("brick_slab", new Block(0, 8, 16,8, 55, true, false, true));
+        BLOCKS.put("stonebrick", new Block(56));
+        BLOCKS.put("stone_brick_slab", new Block(0, 8, 16,8, 57, true, false, true));
+        BLOCKS.put("cactus", new Block(1, 0, 14, 16, 58, true, false, true));
     }
 
     public static void load() {
