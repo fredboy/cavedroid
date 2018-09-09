@@ -3,6 +3,7 @@ package ru.deadsoftware.cavecraft.game;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavecraft.CaveGame;
+import ru.deadsoftware.cavecraft.GameScreen;
 import ru.deadsoftware.cavecraft.game.mobs.Pig;
 import ru.deadsoftware.cavecraft.misc.AppState;
 import ru.deadsoftware.cavecraft.misc.Assets;
@@ -85,6 +86,10 @@ public class GameInput {
 
             case Input.Keys.ESCAPE: case Input.Keys.BACK:
                 CaveGame.STATE = AppState.GOTO_MENU;
+                break;
+
+            case Input.Keys.F1:
+                GameScreen.SHOW_DEBUG = !GameScreen.SHOW_DEBUG;
                 break;
         }
     }

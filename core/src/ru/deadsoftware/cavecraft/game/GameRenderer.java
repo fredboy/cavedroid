@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavecraft.CaveGame;
+import ru.deadsoftware.cavecraft.GameScreen;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.objects.Player;
 import ru.deadsoftware.cavecraft.misc.Assets;
@@ -171,7 +172,7 @@ public class GameRenderer extends Renderer {
 
     private void drawGamePlay() {
         drawWorldBackground();
-        Mob.animateMobs();
+        //Mob.animateMobs();
         for (Mob mob : gameProc.mobs) drawMob(mob);
         drawPlayer(gameProc.player);
         drawWorldForeground();
@@ -194,6 +195,13 @@ public class GameRenderer extends Renderer {
         }
 
         if (CaveGame.TOUCH) drawTouchGui();
+
+        if (GameScreen.SHOW_DEBUG) {
+            drawString("FPS: "+GameScreen.FPS,0, 0);
+            drawString("X: "+(int)(gameProc.player.position.x/16),0, 10);
+            drawString("Y: "+(int)(gameProc.player.position.y/16),0, 20);
+            drawString("Mobs: "+gameProc.mobs.size(), 0, 30);
+        }
 
         spriteBatch.end();
     }

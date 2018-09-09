@@ -26,9 +26,11 @@ public class GamePhysics {
         switch (dir) {
             case 0:
                 bl = gameProc.world.getForeMap((int)((rect.x-8)/16),(int)((rect.y+rect.height-8)/16));
+                if (checkColl(new Rectangle(rect.x-16, rect.y-18, rect.width, rect.height))) bl=0;
                 break;
             case 1:
                 bl = gameProc.world.getForeMap((int)((rect.x+rect.width+8)/16),(int)((rect.y+rect.height-8)/16));
+                if (checkColl(new Rectangle(rect.x+16, rect.y-18, rect.width, rect.height))) bl=0;
                 break;
             default:
                 bl=0;
@@ -121,6 +123,7 @@ public class GamePhysics {
                 else if (mob.moveX.x > 0) d = -1;
                 mob.position.x = MathUtils.round(mob.position.x);
                 while (checkColl(mob.getRect())) mob.position.x += d;
+                if (mob.canJump) mob.changeDir();
             }
         }
         if (mob.position.x+mob.width/2<0) mob.position.x+=gameProc.world.getWidth()*16;

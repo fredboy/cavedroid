@@ -11,6 +11,7 @@ import ru.deadsoftware.cavecraft.misc.*;
 public class GameScreen implements Screen {
 
     public static int FPS;
+    public static boolean SHOW_DEBUG = false;
 
     private GameProc gameProc;
     private Renderer renderer;
