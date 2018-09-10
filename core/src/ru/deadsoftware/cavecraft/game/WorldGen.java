@@ -39,6 +39,7 @@ public class WorldGen {
                 bMap[i] = 0;
             }
         }
+        if (res[0]<res[width-1]) res[width-1] = res[0];
         return res;
     }
 

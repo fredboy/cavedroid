@@ -29,11 +29,11 @@ public class GamePhysics {
         switch (dir) {
             case 0:
                 bl = gameProc.world.getForeMap((int)((rect.x-8)/16),(int)((rect.y+rect.height-8)/16));
-                if (checkColl(new Rectangle(rect.x+rect.width/2, rect.y-18, rect.width, rect.height))) bl=0;
+                if (checkColl(new Rectangle(rect.x-8, rect.y-18, rect.width, rect.height))) bl=0;
                 break;
             case 1:
                 bl = gameProc.world.getForeMap((int)((rect.x+rect.width+8)/16),(int)((rect.y+rect.height-8)/16));
-                if (checkColl(new Rectangle(rect.x+rect.width/2, rect.y-18, rect.width, rect.height))) bl=0;
+                if (checkColl(new Rectangle(rect.x+rect.width+8, rect.y-18, rect.width, rect.height))) bl=0;
                 break;
             default:
                 bl=0;
