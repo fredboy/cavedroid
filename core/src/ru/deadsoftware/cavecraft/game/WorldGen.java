@@ -132,12 +132,38 @@ public class WorldGen {
                     }
                 }
             }
-            if (x>2 && x<width-2 && rand.nextInt(100)<5){
+            if (x>2 && x<width-2){
                 if (foreMap[x][height-hMap[x]-1]==0 && foreMap[x][height-hMap[x]]==2) {
-                    genOak(x,height-hMap[x]-1);
+                    switch (rand.nextInt(50)) {
+                        case 0:
+                            genOak(x, height - hMap[x] - 1);
+                            break;
+                        case 1:
+                            foreMap[x][height-hMap[x]-1] = 26;
+                            break;
+                        case 2:
+                            foreMap[x][height-hMap[x]-1] = 29;
+                            break;
+                        case 3:
+                            foreMap[x][height-hMap[x]-1] = 30;
+                            break;
+                        case 4:
+                            foreMap[x][height-hMap[x]-1] = 31;
+                            break;
+                        case 5:
+                            foreMap[x][height-hMap[x]-1] = 32;
+                            break;
+                    }
                 }
                 if (foreMap[x][height-hMap[x]-1]==0 && foreMap[x][height-hMap[x]]==10) {
-                    genCactus(x,height-hMap[x]-1);
+                    switch(rand.nextInt(20)) {
+                        case 0:
+                            genCactus(x,height-hMap[x]-1);
+                            break;
+                        case 1:
+                            foreMap[x][height-hMap[x]-1] = 27;
+                            break;
+                    }
                 }
             }
         }

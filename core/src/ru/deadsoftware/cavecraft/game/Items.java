@@ -8,15 +8,19 @@ public class Items {
     public static ArrayMap<String, Block> BLOCKS = new ArrayMap<String, Block>();
 
     public static boolean isFluid(int bl) {
-        return (bl == 8 || bl == 9 || bl == 60 || bl == 61 || bl == 62 || bl == 63 || bl == 64 || bl == 65);
+        return (bl == 8 || bl == 9 || bl == 60 || bl == 61 || bl == 62 || bl == 63 || bl == 64 || bl == 65 || bl == 66 || bl == 67);
     }
 
     public static boolean isWater(int bl) {
-        return (bl == 8 || bl == 60 || bl == 61 || bl == 62);
+        return (bl == 8 || bl == 60 || bl == 61 || bl == 62 || bl == 63);
     }
 
     public static boolean isLava(int bl) {
-        return (bl == 9 || bl == 63 || bl == 64 || bl == 65);
+        return (bl == 9 || bl == 64 || bl == 65 || bl == 66 || bl == 67);
+    }
+
+    public static boolean isSlab(int bl) {
+        return (bl == 51 || bl == 53 || bl == 54 || bl == 55 || bl == 56 || bl == 58);
     }
 
     public static void loadBlocks() {
@@ -141,18 +145,22 @@ public class Items {
         //59
         BLOCKS.put("cactus", new Block(1, 0, 14, 16, 57, true, false, true));
         //60
-        BLOCKS.put("water_12", new Block(58,false,false,true));
+        BLOCKS.put("water_16", new Block(7,false,false,true));
         //61
-        BLOCKS.put("water_8", new Block(59,false,false,true));
+        BLOCKS.put("water_12", new Block(58,false,false,true));
         //62
-        BLOCKS.put("water_4", new Block(60,false,false,true));
+        BLOCKS.put("water_8", new Block(59,false,false,true));
         //63
-        BLOCKS.put("lava_12", new Block(61,false,false,true));
+        BLOCKS.put("water_4", new Block(60,false,false,true));
         //64
-        BLOCKS.put("lava_8", new Block(62,false,false,true));
+        BLOCKS.put("lava_16", new Block(8,false,false,true));
         //65
-        BLOCKS.put("lava_4", new Block(63,false,false,true));
+        BLOCKS.put("lava_12", new Block(61,false,false,true));
         //66
+        BLOCKS.put("lava_8", new Block(62,false,false,true));
+        //67
+        BLOCKS.put("lava_4", new Block(63,false,false,true));
+        //68
         BLOCKS.put("obsidian", new Block(65));
     }
 

@@ -141,7 +141,8 @@ public class GameRenderer extends Renderer {
     private void drawGUI() {
         if (gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY)>0 ||
                 gameProc.world.getBackMap(gameProc.cursorX, gameProc.cursorY)>0 ||
-                gameProc.ctrlMode==1)
+                gameProc.ctrlMode==1 ||
+                !CaveGame.TOUCH)
             spriteBatch.draw(Assets.guiCur,
                     gameProc.cursorX*16-camera.position.x,
                     gameProc.cursorY*16-camera.position.y);
@@ -202,6 +203,7 @@ public class GameRenderer extends Renderer {
             drawString("X: "+(int)(gameProc.player.position.x/16),0, 10);
             drawString("Y: "+(int)(gameProc.player.position.y/16),0, 20);
             drawString("Mobs: "+gameProc.mobs.size(), 0, 30);
+            drawString("Block: "+Items.BLOCKS.getKeyAt(gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY)), 0, 40);
         }
 
         spriteBatch.end();

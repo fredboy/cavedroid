@@ -118,194 +118,146 @@ public class GameProc implements Serializable{
 
     private void updateFluids(int x, int y) {
         if (Items.isWater(world.getForeMap(x, y)) && world.getForeMap(x, y)!=8) {
-            if ((!Items.isWater(world.getForeMap(x-1,y)) ||
+            if (world.getForeMap(x, y)==60) {
+                if (!Items.isWater(world.getForeMap(x, y - 1)))
+                    world.setForeMap(x, y, world.getForeMap(x, y) + 1);
+            } else if ((!Items.isWater(world.getForeMap(x-1,y)) ||
                     (Items.isWater(world.getForeMap(x,y)) && world.getForeMap(x-1, y)>=world.getForeMap(x, y))) &&
                     (!Items.isWater(world.getForeMap(x+1,y)) ||
                             (Items.isWater(world.getForeMap(x,y)) && world.getForeMap(x+1, y)>=world.getForeMap(x, y)))){
                 world.setForeMap(x, y, world.getForeMap(x, y)+1);
-                if (world.getForeMap(x, y)>62) world.setForeMap(x, y, 0);
             }
+            if (world.getForeMap(x, y)>63) world.setForeMap(x, y, 0);
         }
 
-        if (world.getForeMap(x, y) == 8) {
-            if (world.getForeMap(x, y+1)==0 || (world.getForeMap(x, y+1)>=60 && world.getForeMap(x, y+1)<=62) ||
+        if (world.getForeMap(x, y) == 8 || world.getForeMap(x, y) == 60) {
+            if (world.getForeMap(x, y+1)==0 || (world.getForeMap(x, y+1)>=61 && world.getForeMap(x, y+1)<=63) ||
                     (!Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision && !Items.isFluid(world.getForeMap(x, y+1)))) {
-                world.setForeMap(x,y+1,8);
+                world.setForeMap(x,y+1,60);
                 updateBlock(x, y+2);
             } else if (Items.isLava(world.getForeMap(x, y+1))) {
                 if (world.getForeMap(x, y+1)>9) world.setForeMap(x, y+1, 4);
-                else world.setForeMap(x, y+1, 66);
+                else world.setForeMap(x, y+1, 68);
             } else if (Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision) {
                 if (world.getForeMap(x+1, y)==0 ||
                         (!Items.BLOCKS.getValueAt(world.getForeMap(x+1, y)).collision && !Items.isFluid(world.getForeMap(x+1, y))) ||
-                        (Items.isWater(world.getForeMap(x+1, y)) && world.getForeMap(x+1, y)>60)) {
-                    world.setForeMap(x+1,y,60);
-                    updateBlock(x+1, y+1);
-                } else if (Items.isLava(world.getForeMap(x+1, y))) {
-                    if (world.getForeMap(x+1, y)>9) world.setForeMap(x+1, y, 4);
-                    else world.setForeMap(x+1, y, 66);
-                } else if (world.getForeMap(x+1, y)==60 && world.getForeMap(x+2, y)==8) world.setForeMap(x+1, y, 8);
-
-                if (world.getForeMap(x-1, y)==0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x-1, y)).collision && !Items.isFluid(world.getForeMap(x-1, y))) ||
-                        (Items.isWater(world.getForeMap(x-1, y)) && world.getForeMap(x-1, y)>60)) {
-                    world.setForeMap(x-1,y,60);
-                    updateBlock(x-1, y+1);
-                } else if (Items.isLava(world.getForeMap(x-1, y))) {
-                    if (world.getForeMap(x-1, y)>9) world.setForeMap(x-1, y, 4);
-                    else world.setForeMap(x-1, y, 66);
-                } else if (world.getForeMap(x-1, y)==60 && world.getForeMap(x-2, y)==8) world.setForeMap(x-1, y, 8);
-            }
-            return;
-        }
-        if (world.getForeMap(x, y) == 60) {
-            if (world.getForeMap(x, y+1)==0 || (world.getForeMap(x, y+1)>=60 && world.getForeMap(x, y+1)<=62) ||
-                    (!Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision && !Items.isFluid(world.getForeMap(x, y+1)))) {
-                world.setForeMap(x,y+1,8);
-                updateBlock(x, y+2);
-            } else if (Items.isLava(world.getForeMap(x, y+1))) {
-                if (world.getForeMap(x, y+1)>9) world.setForeMap(x, y+1, 4);
-                else world.setForeMap(x, y+1, 66);
-            } else if (Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision) {
-                if (world.getForeMap(x+1, y)==0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x+1, y)).collision && !Items.isFluid(world.getForeMap(x+1, y))) ||
-                        (Items.isWater(world.getForeMap(x+1, y)) && world.getForeMap(x+1, y)>61)){
+                        (Items.isWater(world.getForeMap(x+1, y)) && world.getForeMap(x+1, y)>61)) {
                     world.setForeMap(x+1,y,61);
                     updateBlock(x+1, y+1);
                 } else if (Items.isLava(world.getForeMap(x+1, y))) {
                     if (world.getForeMap(x+1, y)>9) world.setForeMap(x+1, y, 4);
-                    else world.setForeMap(x+1, y, 66);
-                }
+                    else world.setForeMap(x+1, y, 68);
+                } else if (world.getForeMap(x+1, y)==61 && (world.getForeMap(x+2, y)==8 || world.getForeMap(x+2, y)==60)) world.setForeMap(x+1, y, 8);
 
                 if (world.getForeMap(x-1, y)==0 ||
                         (!Items.BLOCKS.getValueAt(world.getForeMap(x-1, y)).collision && !Items.isFluid(world.getForeMap(x-1, y))) ||
-                        (Items.isWater(world.getForeMap(x-1, y)) && world.getForeMap(x-1, y)>61)){
+                        (Items.isWater(world.getForeMap(x-1, y)) && world.getForeMap(x-1, y)>61)) {
                     world.setForeMap(x-1,y,61);
                     updateBlock(x-1, y+1);
                 } else if (Items.isLava(world.getForeMap(x-1, y))) {
                     if (world.getForeMap(x-1, y)>9) world.setForeMap(x-1, y, 4);
-                    else world.setForeMap(x-1, y, 66);
-                }
+                    else world.setForeMap(x-1, y, 68);
+                } else if (world.getForeMap(x-1, y)==61 && (world.getForeMap(x-2, y)==8 || world.getForeMap(x-2, y)==60)) world.setForeMap(x-1, y, 8);
             }
             return;
         }
         if (world.getForeMap(x, y) == 61) {
-            if (world.getForeMap(x, y+1)==0 || (world.getForeMap(x, y+1)>=60 && world.getForeMap(x, y+1)<=62) ||
+            if (world.getForeMap(x, y+1)==0 || (world.getForeMap(x, y+1)>=61 && world.getForeMap(x, y+1)<=63) ||
                     (!Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision && !Items.isFluid(world.getForeMap(x, y+1)))) {
-                world.setForeMap(x,y+1,8);
+                world.setForeMap(x,y+1,60);
                 updateBlock(x, y+2);
             } else if (Items.isLava(world.getForeMap(x, y+1))) {
                 if (world.getForeMap(x, y+1)>9) world.setForeMap(x, y+1, 4);
-                else world.setForeMap(x, y+1, 66);
+                else world.setForeMap(x, y+1, 68);
             } else if (Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision) {
                 if (world.getForeMap(x+1, y)==0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x+1, y)).collision && !Items.isFluid(world.getForeMap(x+1, y))) ){
+                        (!Items.BLOCKS.getValueAt(world.getForeMap(x+1, y)).collision && !Items.isFluid(world.getForeMap(x+1, y))) ||
+                        (Items.isWater(world.getForeMap(x+1, y)) && world.getForeMap(x+1, y)>62)){
                     world.setForeMap(x+1,y,62);
                     updateBlock(x+1, y+1);
                 } else if (Items.isLava(world.getForeMap(x+1, y))) {
                     if (world.getForeMap(x+1, y)>9) world.setForeMap(x+1, y, 4);
-                    else world.setForeMap(x+1, y, 66);
+                    else world.setForeMap(x+1, y, 68);
                 }
 
                 if (world.getForeMap(x-1, y)==0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x-1, y)).collision && !Items.isFluid(world.getForeMap(x-1, y))) ){
+                        (!Items.BLOCKS.getValueAt(world.getForeMap(x-1, y)).collision && !Items.isFluid(world.getForeMap(x-1, y))) ||
+                        (Items.isWater(world.getForeMap(x-1, y)) && world.getForeMap(x-1, y)>62)){
                     world.setForeMap(x-1,y,62);
                     updateBlock(x-1, y+1);
                 } else if (Items.isLava(world.getForeMap(x-1, y))) {
                     if (world.getForeMap(x-1, y)>9) world.setForeMap(x-1, y, 4);
-                    else world.setForeMap(x-1, y, 66);
+                    else world.setForeMap(x-1, y, 68);
                 }
             }
             return;
         }
         if (world.getForeMap(x, y) == 62) {
-            if (world.getForeMap(x, y+1)==0 || (world.getForeMap(x, y+1)>=60 && world.getForeMap(x, y+1)<=62) ||
+            if (world.getForeMap(x, y+1)==0 || (world.getForeMap(x, y+1)>=61 && world.getForeMap(x, y+1)<=63) ||
                     (!Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision && !Items.isFluid(world.getForeMap(x, y+1)))) {
-                world.setForeMap(x,y+1,8);
+                world.setForeMap(x,y+1,60);
                 updateBlock(x, y+2);
             } else if (Items.isLava(world.getForeMap(x, y+1))) {
                 if (world.getForeMap(x, y+1)>9) world.setForeMap(x, y+1, 4);
-                else world.setForeMap(x, y+1, 66);
-            }
-            return;
-        }
-
-        if (Items.isLava(world.getForeMap(x, y)) && world.getForeMap(x, y)!=9) {
-            if ((!Items.isLava(world.getForeMap(x-1,y)) ||
-                    (Items.isLava(world.getForeMap(x,y)) && world.getForeMap(x-1, y)>=world.getForeMap(x, y))) &&
-                    (!Items.isLava(world.getForeMap(x+1,y)) ||
-                            (Items.isLava(world.getForeMap(x,y)) && world.getForeMap(x+1, y)>=world.getForeMap(x, y)))){
-                world.setForeMap(x, y, world.getForeMap(x, y)+1);
-                if (world.getForeMap(x, y)>65) world.setForeMap(x, y, 0);
-            }
-        }
-
-        if (world.getForeMap(x, y) == 9) {
-            if (world.getForeMap(x, y+1)==0 || (world.getForeMap(x, y+1)>=63 && world.getForeMap(x, y+1)<=65) ||
-                    (!Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision && !Items.isFluid(world.getForeMap(x, y+1)))) {
-                world.setForeMap(x,y+1,9);
-                updateBlock(x, y+2);
-            } else if (Items.isWater(world.getForeMap(x, y+1))) {
-                world.setForeMap(x, y+1, 1);
+                else world.setForeMap(x, y+1, 68);
             } else if (Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision) {
                 if (world.getForeMap(x+1, y)==0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x+1, y)).collision && !Items.isFluid(world.getForeMap(x+1, y))) ||
-                        (Items.isLava(world.getForeMap(x+1, y)) && world.getForeMap(x+1, y)>63)) {
+                        (!Items.BLOCKS.getValueAt(world.getForeMap(x+1, y)).collision && !Items.isFluid(world.getForeMap(x+1, y))) ){
                     world.setForeMap(x+1,y,63);
                     updateBlock(x+1, y+1);
-                } else if (Items.isWater(world.getForeMap(x+1, y))) {
-                    world.setForeMap(x+1, y, 1);
+                } else if (Items.isLava(world.getForeMap(x+1, y))) {
+                    if (world.getForeMap(x+1, y)>9) world.setForeMap(x+1, y, 4);
+                    else world.setForeMap(x+1, y, 68);
                 }
 
                 if (world.getForeMap(x-1, y)==0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x-1, y)).collision && !Items.isFluid(world.getForeMap(x-1, y))) ||
-                        (Items.isLava(world.getForeMap(x-1, y)) && world.getForeMap(x-1, y)>63)) {
+                        (!Items.BLOCKS.getValueAt(world.getForeMap(x-1, y)).collision && !Items.isFluid(world.getForeMap(x-1, y))) ){
                     world.setForeMap(x-1,y,63);
                     updateBlock(x-1, y+1);
-                } else if (Items.isWater(world.getForeMap(x-1, y))) {
-                    world.setForeMap(x-1, y, 1);
+                } else if (Items.isLava(world.getForeMap(x-1, y))) {
+                    if (world.getForeMap(x-1, y)>9) world.setForeMap(x-1, y, 4);
+                    else world.setForeMap(x-1, y, 68);
                 }
             }
             return;
         }
         if (world.getForeMap(x, y) == 63) {
-            if (world.getForeMap(x, y+1)==0 || (world.getForeMap(x, y+1)>=63 && world.getForeMap(x, y+1)<=65) ||
+            if (world.getForeMap(x, y+1)==0 || (world.getForeMap(x, y+1)>=61 && world.getForeMap(x, y+1)<=63) ||
                     (!Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision && !Items.isFluid(world.getForeMap(x, y+1)))) {
-                world.setForeMap(x,y+1,9);
+                world.setForeMap(x,y+1,60);
+                updateBlock(x, y+2);
+            } else if (Items.isLava(world.getForeMap(x, y+1))) {
+                if (world.getForeMap(x, y+1)>9) world.setForeMap(x, y+1, 4);
+                else world.setForeMap(x, y+1, 68);
+            }
+            return;
+        }
+
+        if (Items.isLava(world.getForeMap(x, y)) && world.getForeMap(x, y)!=9) {
+            if (world.getForeMap(x, y)==64) {
+                if (!Items.isLava(world.getForeMap(x, y - 1)))
+                    world.setForeMap(x, y, world.getForeMap(x, y) + 1);
+            } else if ((!Items.isLava(world.getForeMap(x,y-1))) &&
+                    (!Items.isLava(world.getForeMap(x-1,y)) ||
+                    (Items.isLava(world.getForeMap(x,y)) && world.getForeMap(x-1, y)>=world.getForeMap(x, y))) &&
+                    (!Items.isLava(world.getForeMap(x+1,y)) ||
+                            (Items.isLava(world.getForeMap(x,y)) && world.getForeMap(x+1, y)>=world.getForeMap(x, y)))){
+                world.setForeMap(x, y, world.getForeMap(x, y)+1);
+            }
+            if (world.getForeMap(x, y)>67) world.setForeMap(x, y, 0);
+        }
+
+        if (world.getForeMap(x, y) == 9 || world.getForeMap(x, y) == 64) {
+            if (world.getForeMap(x, y+1)==0 || (world.getForeMap(x, y+1)>=65 && world.getForeMap(x, y+1)<=67) ||
+                    (!Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision && !Items.isFluid(world.getForeMap(x, y+1)))) {
+                world.setForeMap(x,y+1,64);
                 updateBlock(x, y+2);
             } else if (Items.isWater(world.getForeMap(x, y+1))) {
                 world.setForeMap(x, y+1, 1);
             } else if (Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision) {
                 if (world.getForeMap(x+1, y)==0 ||
                         (!Items.BLOCKS.getValueAt(world.getForeMap(x+1, y)).collision && !Items.isFluid(world.getForeMap(x+1, y))) ||
-                        (Items.isLava(world.getForeMap(x+1, y)) && world.getForeMap(x+1, y)>64)){
-                    world.setForeMap(x+1,y,64);
-                    updateBlock(x+1, y+1);
-                } else if (Items.isWater(world.getForeMap(x+1, y))) {
-                    world.setForeMap(x+1, y, 1);
-                }
-
-                if (world.getForeMap(x-1, y)==0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x-1, y)).collision && !Items.isFluid(world.getForeMap(x-1, y))) ||
-                        (Items.isLava(world.getForeMap(x-1, y)) && world.getForeMap(x-1, y)>64)){
-                    world.setForeMap(x-1,y,64);
-                    updateBlock(x-1, y+1);
-                } else if (Items.isWater(world.getForeMap(x-1, y))) {
-                    world.setForeMap(x-1, y, 1);
-                }
-            }
-            return;
-        }
-        if (world.getForeMap(x, y) == 64) {
-            if (world.getForeMap(x, y+1)==0 || (world.getForeMap(x, y+1)>=63 && world.getForeMap(x, y+1)<=65) ||
-                    (!Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision && !Items.isFluid(world.getForeMap(x, y+1)))) {
-                world.setForeMap(x,y+1,9);
-                updateBlock(x, y+2);
-            } else if (Items.isWater(world.getForeMap(x, y+1))) {
-                world.setForeMap(x, y+1, 1);
-            } else if (Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision) {
-                if (world.getForeMap(x+1, y)==0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x+1, y)).collision && !Items.isFluid(world.getForeMap(x+1, y))) ){
+                        (Items.isLava(world.getForeMap(x+1, y)) && world.getForeMap(x+1, y)>65)) {
                     world.setForeMap(x+1,y,65);
                     updateBlock(x+1, y+1);
                 } else if (Items.isWater(world.getForeMap(x+1, y))) {
@@ -313,7 +265,8 @@ public class GameProc implements Serializable{
                 }
 
                 if (world.getForeMap(x-1, y)==0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x-1, y)).collision && !Items.isFluid(world.getForeMap(x-1, y))) ){
+                        (!Items.BLOCKS.getValueAt(world.getForeMap(x-1, y)).collision && !Items.isFluid(world.getForeMap(x-1, y))) ||
+                        (Items.isLava(world.getForeMap(x-1, y)) && world.getForeMap(x-1, y)>65)) {
                     world.setForeMap(x-1,y,65);
                     updateBlock(x-1, y+1);
                 } else if (Items.isWater(world.getForeMap(x-1, y))) {
@@ -323,9 +276,63 @@ public class GameProc implements Serializable{
             return;
         }
         if (world.getForeMap(x, y) == 65) {
-            if (world.getForeMap(x, y+1)==0 || (world.getForeMap(x, y+1)>=63 && world.getForeMap(x, y+1)<=65) ||
+            if (world.getForeMap(x, y+1)==0 || (world.getForeMap(x, y+1)>=65 && world.getForeMap(x, y+1)<=67) ||
                     (!Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision && !Items.isFluid(world.getForeMap(x, y+1)))) {
-                world.setForeMap(x,y+1,9);
+                world.setForeMap(x,y+1,64);
+                updateBlock(x, y+2);
+            } else if (Items.isWater(world.getForeMap(x, y+1))) {
+                world.setForeMap(x, y+1, 1);
+            } else if (Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision) {
+                if (world.getForeMap(x+1, y)==0 ||
+                        (!Items.BLOCKS.getValueAt(world.getForeMap(x+1, y)).collision && !Items.isFluid(world.getForeMap(x+1, y))) ||
+                        (Items.isLava(world.getForeMap(x+1, y)) && world.getForeMap(x+1, y)>66)){
+                    world.setForeMap(x+1,y,66);
+                    updateBlock(x+1, y+1);
+                } else if (Items.isWater(world.getForeMap(x+1, y))) {
+                    world.setForeMap(x+1, y, 1);
+                }
+
+                if (world.getForeMap(x-1, y)==0 ||
+                        (!Items.BLOCKS.getValueAt(world.getForeMap(x-1, y)).collision && !Items.isFluid(world.getForeMap(x-1, y))) ||
+                        (Items.isLava(world.getForeMap(x-1, y)) && world.getForeMap(x-1, y)>66)){
+                    world.setForeMap(x-1,y,66);
+                    updateBlock(x-1, y+1);
+                } else if (Items.isWater(world.getForeMap(x-1, y))) {
+                    world.setForeMap(x-1, y, 1);
+                }
+            }
+            return;
+        }
+        if (world.getForeMap(x, y) == 66) {
+            if (world.getForeMap(x, y+1)==0 || (world.getForeMap(x, y+1)>=65 && world.getForeMap(x, y+1)<=67) ||
+                    (!Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision && !Items.isFluid(world.getForeMap(x, y+1)))) {
+                world.setForeMap(x,y+1,64);
+                updateBlock(x, y+2);
+            } else if (Items.isWater(world.getForeMap(x, y+1))) {
+                world.setForeMap(x, y+1, 1);
+            } else if (Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision) {
+                if (world.getForeMap(x+1, y)==0 ||
+                        (!Items.BLOCKS.getValueAt(world.getForeMap(x+1, y)).collision && !Items.isFluid(world.getForeMap(x+1, y))) ){
+                    world.setForeMap(x+1,y,67);
+                    updateBlock(x+1, y+1);
+                } else if (Items.isWater(world.getForeMap(x+1, y))) {
+                    world.setForeMap(x+1, y, 1);
+                }
+
+                if (world.getForeMap(x-1, y)==0 ||
+                        (!Items.BLOCKS.getValueAt(world.getForeMap(x-1, y)).collision && !Items.isFluid(world.getForeMap(x-1, y))) ){
+                    world.setForeMap(x-1,y,67);
+                    updateBlock(x-1, y+1);
+                } else if (Items.isWater(world.getForeMap(x-1, y))) {
+                    world.setForeMap(x-1, y, 1);
+                }
+            }
+            return;
+        }
+        if (world.getForeMap(x, y) == 67) {
+            if (world.getForeMap(x, y+1)==0 || (world.getForeMap(x, y+1)>=65 && world.getForeMap(x, y+1)<=67) ||
+                    (!Items.BLOCKS.getValueAt(world.getForeMap(x, y+1)).collision && !Items.isFluid(world.getForeMap(x, y+1)))) {
+                world.setForeMap(x,y+1,64);
                 updateBlock(x, y+2);
             } else if (Items.isWater(world.getForeMap(x, y+1))) {
                 world.setForeMap(x, y+1, 1);
@@ -377,7 +384,7 @@ public class GameProc implements Serializable{
             DO_UPD = false;
         }
 
-        for (int y=(int)renderer.camera.position.y/16-1; y<(int)(renderer.camera.position.y+renderer.camera.viewportHeight)/16+1; y++) {
+        for (int y=0; y<world.getHeight(); y++) {
             for (int x=(int)renderer.camera.position.x/16-1; x<(int)(renderer.camera.position.x+renderer.camera.viewportWidth)/16+1; x++) {
                 updateFluids(x, y);
             }

@@ -71,13 +71,38 @@ public class GameWorld {
         }
     }
 
+    private void placeSlab(int x, int y, int value) {
+        switch (value) {
+            case 51:
+                setForeMap(x, y, 52);
+                break;
+            case 53:
+                setForeMap(x, y, 21);
+                break;
+            case 54:
+                setForeMap(x, y, 5);
+                break;
+            case 55:
+                setForeMap(x, y, 4);
+                break;
+            case 56:
+                setForeMap(x, y, 28);
+                break;
+            case 58:
+                setForeMap(x, y, 57);
+                break;
+        }
+    }
+
     public void placeToForeground(int x, int y, int value) {
         if (getForeMap(x,y) == 0 || value == 0 || !Items.BLOCKS.getValueAt(getForeMap(x, y)).collision) {
             setForeMap(x, y, value);
-            GameProc.UPD_X = x-8;
-            GameProc.UPD_Y = y-8;
-            GameProc.DO_UPD = true;
+        } else if (Items.isSlab(value) && getForeMap(x, y) == value) {
+            placeSlab(x, y, value);
         }
+        GameProc.UPD_X = x-8;
+        GameProc.UPD_Y = y-8;
+        GameProc.DO_UPD = true;
     }
 
     public void placeToBackground(int x, int y, int value) {
