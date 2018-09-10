@@ -37,7 +37,7 @@ public class GameWorld {
             x = transformX(x);
             map = foreMap[x][y];
         } catch (ArrayIndexOutOfBoundsException e) {
-            Gdx.app.error("GameWorld",e.toString());
+            //Gdx.app.error("GameWorld",e.toString());
         }
         return map;
     }
@@ -47,7 +47,7 @@ public class GameWorld {
             x = transformX(x);
             foreMap[x][y] = value;
         } catch (ArrayIndexOutOfBoundsException e) {
-            Gdx.app.error("GameWorld", e.toString());
+            //Gdx.app.error("GameWorld", e.toString());
         }
     }
 
@@ -57,7 +57,7 @@ public class GameWorld {
             x = transformX(x);
             map = backMap[x][y];
         } catch (ArrayIndexOutOfBoundsException e) {
-            Gdx.app.error("GameWorld",e.toString());
+            //Gdx.app.error("GameWorld",e.toString());
         }
         return map;
     }
@@ -67,13 +67,16 @@ public class GameWorld {
             x = transformX(x);
             backMap[x][y] = value;
         } catch (ArrayIndexOutOfBoundsException e) {
-            Gdx.app.error("GameWorld", e.toString());
+            //Gdx.app.error("GameWorld", e.toString());
         }
     }
 
     public void placeToForeground(int x, int y, int value) {
-        if (getForeMap(x,y) == 0 || value == 0) {
+        if (getForeMap(x,y) == 0 || value == 0 || !Items.BLOCKS.getValueAt(getForeMap(x, y)).collision) {
             setForeMap(x, y, value);
+            GameProc.UPD_X = x-8;
+            GameProc.UPD_Y = y-8;
+            GameProc.DO_UPD = true;
         }
     }
 

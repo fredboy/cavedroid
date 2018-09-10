@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavecraft.CaveGame;
 import ru.deadsoftware.cavecraft.GameScreen;
+import ru.deadsoftware.cavecraft.game.mobs.FallingSand;
 import ru.deadsoftware.cavecraft.game.mobs.Pig;
 import ru.deadsoftware.cavecraft.misc.AppState;
 import ru.deadsoftware.cavecraft.misc.Assets;
@@ -61,7 +62,10 @@ public class GameInput {
                 break;
 
             case Input.Keys.SPACE:
-                if (gameProc.player.canJump) {
+                if (Items.isFluid(gameProc.world.getForeMap((int)(gameProc.player.position.x+gameProc.player.width/2)/16,
+                        (int)(gameProc.player.position.y+gameProc.player.height/4*3)/16))) {
+                    gameProc.swim = true;
+                } else if (gameProc.player.canJump) {
                     gameProc.player.moveY.add(0, -7);
                 } else if (!gameProc.player.flyMode) {
                     gameProc.player.flyMode = true;
@@ -102,6 +106,7 @@ public class GameInput {
 
             case Input.Keys.SPACE: case Input.Keys.CONTROL_LEFT:
                 if (gameProc.player.flyMode) gameProc.player.moveY.setZero();
+                gameProc.swim = false;
                 break;
         }
     }
@@ -118,7 +123,7 @@ public class GameInput {
     }
 
     public void touchUp(int screenX, int screenY, int button) {
-        if (gameProc.isKeyDown) {
+        if (CaveGame.TOUCH && gameProc.isKeyDown) {
             keyUp(gameProc.keyDownCode);
             gameProc.isKeyDown = false;
         }

@@ -39,4 +39,8 @@ public class Block {
         return new Rectangle(x+this.x, y+this.y, w, h);
     }
 
+    public boolean toJump() {
+        return (y<8 && collision);
+    }
+
 }

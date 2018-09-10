@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavecraft.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -7,6 +8,8 @@ import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavecraft.CaveGame;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.objects.Player;
+
+import java.util.Iterator;
 
 public class GamePhysics {
 
@@ -26,16 +29,17 @@ public class GamePhysics {
         switch (dir) {
             case 0:
                 bl = gameProc.world.getForeMap((int)((rect.x-8)/16),(int)((rect.y+rect.height-8)/16));
-                if (checkColl(new Rectangle(rect.x-16, rect.y-18, rect.width, rect.height))) bl=0;
+                if (checkColl(new Rectangle(rect.x+rect.width/2, rect.y-18, rect.width, rect.height))) bl=0;
                 break;
             case 1:
                 bl = gameProc.world.getForeMap((int)((rect.x+rect.width+8)/16),(int)((rect.y+rect.height-8)/16));
-                if (checkColl(new Rectangle(rect.x+16, rect.y-18, rect.width, rect.height))) bl=0;
+                if (checkColl(new Rectangle(rect.x+rect.width/2, rect.y-18, rect.width, rect.height))) bl=0;
                 break;
             default:
                 bl=0;
         }
-        return (bl>0 && Items.BLOCKS.getValueAt(bl).collision);
+        return (bl>0 && Items.BLOCKS.getValueAt(bl).toJump() &&
+                (rect.y+rect.height)-Items.BLOCKS.getValueAt(bl).getRect((int)((rect.x-8)/16),(int)((rect.y+rect.height-8)/16)).y>8);
     }
 
     private boolean checkColl(Rectangle rect) {
@@ -59,6 +63,10 @@ public class GamePhysics {
         return false;
     }
 
+    private int getBlock(Rectangle rect) {
+        return gameProc.world.getForeMap((int)(rect.x+rect.width/2)/16, (int)(rect.y+rect.height/8*7)/16);
+    }
+
     private void playerPhy(Player pl) {
         pl.position.add(pl.moveY);
         if (checkColl(pl.getRect())) {
@@ -74,7 +82,17 @@ public class GamePhysics {
         } else {
             pl.canJump = false;
         }
-        if (!pl.flyMode && pl.moveY.y<18) pl.moveY.add(gravity);
+
+        if (Items.isFluid(getBlock(pl.getRect()))) {
+            if (!gameProc.swim) {
+                if (!pl.flyMode && pl.moveY.y < 9) pl.moveY.add(gravity.x / 2, gravity.y / 2);
+                if (!pl.flyMode && pl.moveY.y > 9) pl.moveY.add(0, -.9f);
+            } else {
+                pl.moveY.add(0, -.5f);
+                if (pl.moveY.y<-3) pl.moveY.y = -3;
+            }
+        } else if (!pl.flyMode && pl.moveY.y<18) pl.moveY.add(gravity);
+
         pl.position.add(pl.moveX);
         if (checkColl(pl.getRect())) {
             if (pl.canJump && !pl.flyMode) pl.position.y-=8;
@@ -107,10 +125,21 @@ public class GamePhysics {
             mob.position.y = MathUtils.round(mob.position.y);
             while (checkColl(mob.getRect())) mob.position.y+=d;
             mob.moveY.setZero();
+            if (mob.getType() > 0) {
+                gameProc.world.setForeMap((int)mob.position.x/16, (int)mob.position.y/16, mob.getType());
+                mob.position.y = -1;
+                mob.dead = true;
+            }
         } else {
             mob.canJump = false;
         }
-        if (mob.moveY.y<18) mob.moveY.add(gravity);
+
+        if (mob.getType()==0 && Items.isFluid(getBlock(mob.getRect()))) {
+            if (mob.moveY.y > 9) mob.moveY.add(0, -.9f);
+            mob.moveY.add(0, -.5f);
+            if (mob.moveY.y<-3) mob.moveY.y = -3;
+        } else if (mob.moveY.y<18) mob.moveY.add(gravity);
+
         mob.position.add(mob.moveX);
         if (checkColl(mob.getRect())) {
             if (mob.canJump) {
@@ -141,6 +170,11 @@ public class GamePhysics {
         for (Mob mob : gameProc.mobs) {
             mob.ai();
             mobPhy(mob);
+        }
+        for (Iterator<Mob> it = gameProc.mobs.iterator(); it.hasNext();) {
+            Mob m = it.next();
+            if (m.dead)
+                it.remove();
         }
         playerPhy(gameProc.player);
 

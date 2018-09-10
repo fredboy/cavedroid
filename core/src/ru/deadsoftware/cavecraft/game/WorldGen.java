@@ -23,7 +23,6 @@ public class WorldGen {
         int t;
         res[0] = mid;
         for (int i=1; i<width; i++) {
-            bMap[i] = i/(width/2);
             t = rand.nextInt(7)-3;
             if (t>-3 && t<3) t=0; else t/=Math.abs(t);
             if (i>width-(max-min)) {
@@ -33,6 +32,12 @@ public class WorldGen {
             res[i] = res[i-1] + t;
             if (res[i]<min) res[i] = min;
             if (res[i]>max) res[i] = max;
+            if (i>=width/2) {
+                bMap [i] = 1;
+                if (res[i] < 60) res[i] = 60;
+            } else {
+                bMap[i] = 0;
+            }
         }
         return res;
     }
@@ -73,7 +78,7 @@ public class WorldGen {
         rand = new RandomXS128(seed);
         foreMap = new int[width][height];
         backMap = new int[width][height];
-        hMap = genLandscape(width, height/8*3, height/8, height/2);
+        hMap = genLandscape(width, height/4, height/8, height/2);
         for (int x=0; x<width; x++) {
             dirtH = 4+rand.nextInt(2);
             for (int y = height- hMap[x]; y<height; y++) {
@@ -106,18 +111,23 @@ public class WorldGen {
                     foreMap[x][y] = 1;
                     backMap[x][y] = 1;
                 } else {
-                    if (bMap[x]==0) {
-                        foreMap[x][y] = 7;
-                        backMap[x][y] = 7;
-                    }
+                    foreMap[x][y] = 7;
+                    backMap[x][y] = 7;
                 }
             }
             for (int y = height-60; y<height-1; y++) {
                 if (foreMap[x][y]==0 && bMap[x]!=1){
                     foreMap[x][y] = 8;
-                    backMap[x][y] = 8;
+                    if (bMap[x] == 0) {
+                        if (y==height-60) {
+                            backMap[x][y] = 2;
+                        } else {
+                            backMap[x][y] = 3;
+                        }
+                    }
                     if (y==height-hMap[x]-1) {
                         foreMap[x][y+1] = 3;
+                        backMap[x][y+1] = 3;
                     }
                 }
             }
@@ -143,5 +153,7 @@ public class WorldGen {
     static void clear() {
         foreMap = null;
         backMap = null;
+        hMap = null;
+        bMap = null;
     }
 }

@@ -18,7 +18,7 @@ public class Pig extends Mob{
         width = 25;
         height = 18;
         canJump = false;
-        agressive = false;
+        dead = false;
     }
 
     @Override
@@ -61,4 +61,10 @@ public class Pig extends Mob{
     public Rectangle getRect() {
         return new Rectangle(position.x, position.y, width, height);
     }
+
+    @Override
+    public int getType() {
+        return 0;
+    }
+
 }
