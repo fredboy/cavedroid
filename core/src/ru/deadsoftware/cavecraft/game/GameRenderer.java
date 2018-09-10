@@ -126,15 +126,17 @@ public class GameRenderer extends Renderer {
         spriteBatch.draw(Assets.creativeScroll, x+156,
                 y+18+(gameProc.creativeScroll*(72/gameProc.maxCreativeScroll)));
         for (int i=gameProc.creativeScroll*8; i<gameProc.creativeScroll*8+40; i++) {
-            if (i>0 && i<Items.BLOCKS.size)
-                spriteBatch.draw(Assets.blockTextures[Items.BLOCKS.getValueAt(i).getTexture()],
-                        x+8+((i-gameProc.creativeScroll*8)%8)*18,
-                        y+18+((i-gameProc.creativeScroll*8)/8)*18);
+            if (i>0 && i<Items.ITEMS.size())
+                if (Items.ITEMS.get(i).getType() == 0)
+                    spriteBatch.draw(Assets.blockTextures[Items.ITEMS.get(i).getTexture()],
+                            x+8+((i-gameProc.creativeScroll*8)%8)*18,
+                            y+18+((i-gameProc.creativeScroll*8)/8)*18);
         }
         for (int i=0; i<9; i++) {
             if (gameProc.player.inventory[i]>0)
-                spriteBatch.draw(Assets.blockTextures[Items.BLOCKS.getValueAt(gameProc.player.inventory[i]).getTexture()],
-                        x+8+i*18, y+Assets.creativeInv.getRegionHeight()-24);
+                if (Items.ITEMS.get(i).getType() == 0)
+                    spriteBatch.draw(Assets.blockTextures[Items.ITEMS.get(i).getTexture()],
+                            x+8+i*18, y+Assets.creativeInv.getRegionHeight()-24);
         }
     }
 
@@ -149,9 +151,10 @@ public class GameRenderer extends Renderer {
         spriteBatch.draw(Assets.invBar, camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2, 0);
         for (int i=0; i<9; i++) {
             if (gameProc.player.inventory[i]>0) {
-                spriteBatch.draw(Assets.blockTextures[Items.BLOCKS.getValueAt(gameProc.player.inventory[i]).getTexture()],
-                        camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2+3+i*20,
-                        3);
+                if (Items.ITEMS.get(gameProc.player.inventory[i]).getType()==0)
+                    spriteBatch.draw(Assets.blockTextures[Items.ITEMS.get(gameProc.player.inventory[i]).getTexture()],
+                            camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2+3+i*20,
+                            3);
             }
         }
         spriteBatch.draw(Assets.invBarCur,

@@ -144,7 +144,7 @@ public class GameInput {
                 int iy = (int) (screenY - (gameProc.renderer.camera.viewportHeight / 2 - Assets.creativeInv.getRegionHeight() / 2 + 18)) / 18;
                 int item = gameProc.creativeScroll*8+(ix + iy * 8);
                 if (ix>=8 || ix<0 || iy<0 || iy>=5) item=-1;
-                if (item >= 0 && item < Items.BLOCKS.size) {
+                if (item >= 0 && item < Items.ITEMS.size()) {
                     for (int i = 8; i > 0; i--) {
                         gameProc.player.inventory[i] = gameProc.player.inventory[i - 1];
                     }
@@ -157,8 +157,8 @@ public class GameInput {
                     screenX<gameProc.renderer.camera.viewportWidth/2+Assets.invBar.getRegionWidth()/2) {
                 gameProc.invSlot = (int)((screenX-(gameProc.renderer.camera.viewportWidth/2-Assets.invBar.getRegionWidth()/2))/20);
             } else if (button == Input.Buttons.RIGHT){
-                gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY,
-                            gameProc.player.inventory[gameProc.invSlot]);
+                gameProc.useItem(gameProc.cursorX, gameProc.cursorY,
+                            gameProc.player.inventory[gameProc.invSlot], false);
             } else if (button == Input.Buttons.LEFT) {
                 if (gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY) > 0) {
                     gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY, 0);

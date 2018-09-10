@@ -59,7 +59,7 @@ public class GameProc implements Serializable{
             renderer = new GameRenderer(this,480,
                     480*((float)GameScreen.getHeight()/GameScreen.getWidth()));
         }
-        maxCreativeScroll = Items.BLOCKS.size/8;
+        maxCreativeScroll = Items.ITEMS.size()/8;
         GameSaver.save(this);
     }
 
@@ -373,6 +373,13 @@ public class GameProc implements Serializable{
         }
     }
 
+    public void useItem(int x, int y, int id, boolean bg) {
+        if (Items.ITEMS.get(id).getType()==0) {
+            if (!bg) world.placeToForeground(x, y, Items.ITEMS.get(id).getBlock());
+            else world.placeToBackground(x, y,  Items.ITEMS.get(id).getBlock());
+        }
+    }
+
     public void update(float delta) {
         RUN_TIME += delta;
 
@@ -406,8 +413,7 @@ public class GameProc implements Serializable{
 
         if (isTouchDown && TimeUtils.timeSinceMillis(touchDownTime) > 500) {
             if (touchDownButton== Input.Buttons.RIGHT) {
-                world.placeToBackground(cursorX, cursorY,
-                        player.inventory[invSlot]);
+                useItem(cursorX, cursorY, player.inventory[invSlot], true);
             } else if (touchDownY< Assets.invBar.getRegionHeight() &&
                     touchDownX>renderer.camera.viewportWidth/2-Assets.invBar.getRegionWidth()/2 &&
                     touchDownX<renderer.camera.viewportWidth/2+Assets.invBar.getRegionWidth()/2) {
