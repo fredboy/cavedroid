@@ -84,6 +84,7 @@ public class GamePhysics {
         }
 
         if (Items.isFluid(getBlock(pl.getRect()))) {
+            if (CaveGame.TOUCH && pl.moveX.x!=0 && !gameProc.swim && !pl.flyMode) gameProc.swim = true;
             if (!gameProc.swim) {
                 if (!pl.flyMode && pl.moveY.y < 9) pl.moveY.add(gravity.x / 2, gravity.y / 2);
                 if (!pl.flyMode && pl.moveY.y > 9) pl.moveY.add(0, -.9f);
@@ -91,7 +92,10 @@ public class GamePhysics {
                 pl.moveY.add(0, -.5f);
                 if (pl.moveY.y<-3) pl.moveY.y = -3;
             }
-        } else if (!pl.flyMode && pl.moveY.y<18) pl.moveY.add(gravity);
+        } else {
+            if (!pl.flyMode && pl.moveY.y<18) pl.moveY.add(gravity);
+            if (CaveGame.TOUCH && gameProc.swim) gameProc.swim = false;
+        }
 
         pl.position.add(pl.moveX);
         if (checkColl(pl.getRect())) {

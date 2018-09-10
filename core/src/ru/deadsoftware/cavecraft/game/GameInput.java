@@ -17,6 +17,11 @@ public class GameInput {
         this.gameProc = gameProc;
     }
 
+    private boolean checkSwim() {
+        return (CaveGame.TOUCH && Items.isFluid(gameProc.world.getForeMap((int)(gameProc.player.position.x+gameProc.player.width/2)/16,
+                (int)(gameProc.player.position.y+gameProc.player.height/4*3)/16)));
+    }
+
     private void wasdPressed(int keycode) {
         if (gameProc.ctrlMode==0 || !CaveGame.TOUCH) {
             switch (keycode) {
@@ -62,8 +67,7 @@ public class GameInput {
                 break;
 
             case Input.Keys.SPACE:
-                if (Items.isFluid(gameProc.world.getForeMap((int)(gameProc.player.position.x+gameProc.player.width/2)/16,
-                        (int)(gameProc.player.position.y+gameProc.player.height/4*3)/16))) {
+                if (checkSwim()) {
                     gameProc.swim = true;
                 } else if (gameProc.player.canJump) {
                     gameProc.player.moveY.add(0, -7);
@@ -102,11 +106,12 @@ public class GameInput {
         switch (keycode) {
             case Input.Keys.A: case Input.Keys.D:
                 gameProc.player.moveX.x = 0;
+                if (gameProc.swim) gameProc.swim = false;
                 break;
 
             case Input.Keys.SPACE: case Input.Keys.CONTROL_LEFT:
                 if (gameProc.player.flyMode) gameProc.player.moveY.setZero();
-                gameProc.swim = false;
+                if (gameProc.swim) gameProc.swim = false;
                 break;
         }
     }
