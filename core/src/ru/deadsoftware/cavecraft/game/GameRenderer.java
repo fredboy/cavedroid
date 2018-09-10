@@ -174,9 +174,8 @@ public class GameRenderer extends Renderer {
 
     private void drawGamePlay() {
         drawWorldBackground();
-        //Mob.animateMobs();
-        for (Mob mob : gameProc.mobs) drawMob(mob);
         drawPlayer(gameProc.player);
+        for (Mob mob : gameProc.mobs) drawMob(mob);
         drawWorldForeground();
         drawGUI();
     }

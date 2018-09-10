@@ -25,14 +25,15 @@ public class Pig extends Mob{
     public void changeDir() {
         dir=-dir+1;
         moveX.set(-1+2*dir,0);
-        if (MathUtils.randomBoolean(.0025f)) {
-            moveX.set(0, 0);
-        }
     }
 
     @Override
     public void ai() {
         if (MathUtils.randomBoolean(.0025f)) changeDir();
+        else if (MathUtils.randomBoolean(.0025f)) {
+            if (moveX.x != 0f) moveX.setZero();
+            else moveX.set(-1+2*dir, 0);
+        }
         if (moveX.x != 0f) animation+=ANIM_SPEED; else animation=0;
         if (animation>=60 || animation<=-60) {
             ANIM_SPEED = -ANIM_SPEED;
