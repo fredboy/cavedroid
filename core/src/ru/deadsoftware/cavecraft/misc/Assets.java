@@ -11,6 +11,7 @@ import ru.deadsoftware.cavecraft.CaveGame;
 public class Assets {
 
     public static final int BLOCK_TEXTURES = 66;
+    public static final int ITEM_TEXTURES = 5;
 
     private static GlyphLayout layout;
 
@@ -30,7 +31,10 @@ public class Assets {
     public static Sprite shade;
 
     public static Texture terrain;
-    public static TextureRegion[] blockTextures = new TextureRegion[BLOCK_TEXTURES];
+    public static Sprite[] blockTextures = new Sprite[BLOCK_TEXTURES];
+
+    public static Texture items;
+    public static Sprite[] itemTextures = new Sprite[ITEM_TEXTURES];
 
     public static Texture gui;
     public static TextureRegion invBar;
@@ -138,10 +142,21 @@ public class Assets {
 
         terrain = new Texture(Gdx.files.internal("terrain.png"));
         for (int i=0; i<BLOCK_TEXTURES; i++) {
-            blockTextures[i] = new TextureRegion(terrain,
+            blockTextures[i] = new Sprite(terrain,
                     (i%16)*16, (i/16)*16, 16,16);
             blockTextures[i].flip(false,true);
+            blockTextures[i].setSize(8,8);
         }
+        terrain = null;
+
+        items = new Texture(Gdx.files.internal("items.png"));
+        for (int i=0; i<ITEM_TEXTURES; i++) {
+            itemTextures[i] = new Sprite(items,
+                    (i%16)*16, (i/16)*16, 16, 16);
+            itemTextures[i].flip(false, true);
+            //itemTextures[i].setSize(8,8);
+        }
+        items = null;
     }
 
     public static int getStringWidth(String s){

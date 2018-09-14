@@ -24,15 +24,6 @@ public class Player implements Serializable {
         height = 30;
         texWidth = 8;
         inventory = new int[9];
-        inventory[0] = 1;
-        inventory[1] = 2;
-        inventory[2] = 3;
-        inventory[3] = 4;
-        inventory[4] = 5;
-        inventory[5] = 6;
-        inventory[6] = 7;
-        inventory[7] = 8;
-        inventory[8] = 9;
     }
 
     public Rectangle getRect() {

@@ -374,7 +374,7 @@ public class GameProc implements Serializable{
     }
 
     public void useItem(int x, int y, int id, boolean bg) {
-        if (Items.ITEMS.get(id).getType()==0) {
+        if (id>0 && Items.ITEMS.get(id).getType()==0) {
             if (!bg) world.placeToForeground(x, y, Items.ITEMS.get(id).getBlock());
             else world.placeToBackground(x, y,  Items.ITEMS.get(id).getBlock());
         }

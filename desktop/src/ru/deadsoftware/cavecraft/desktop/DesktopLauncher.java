@@ -14,6 +14,11 @@ public class DesktopLauncher {
 		config.title = "CaveCraft";
 		config.width = 960;
 		config.height = 540;
-		new LwjglApplication(new CaveGame(), config);
+
+                boolean touch = false;
+                for (int i=0; i<arg.length; i++) {
+                    if (arg[i].equals("--touch")) touch = true;
+                }
+		new LwjglApplication(new CaveGame(touch), config);
 	}
 }

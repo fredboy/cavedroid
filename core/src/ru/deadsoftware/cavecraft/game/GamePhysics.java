@@ -94,7 +94,6 @@ public class GamePhysics {
             }
         } else {
             if (!pl.flyMode && pl.moveY.y<18) pl.moveY.add(gravity);
-            //if (CaveGame.TOUCH && gameProc.swim) gameProc.swim = false;
         }
 
         pl.position.add(pl.moveX);

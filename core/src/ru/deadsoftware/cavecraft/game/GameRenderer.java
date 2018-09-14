@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavecraft.CaveGame;
 import ru.deadsoftware.cavecraft.GameScreen;
@@ -112,6 +113,26 @@ public class GameRenderer extends Renderer {
         //body
         spriteBatch.draw(Assets.playerSprite[pl.dir][1],
                 pl.position.x - camera.position.x - 2, pl.position.y - camera.position.y + 8);
+        //item in hand
+        if (pl.inventory[gameProc.invSlot]>0)
+            switch (Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getType()) {
+                case 0:
+                    Assets.blockTextures[Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getTexture()].setPosition(
+                            pl.position.x - camera.position.x - 8*MathUtils.sin(MathUtils.degRad*Assets.playerSprite[0][2].getRotation()),
+                            pl.position.y - camera.position.y + 6 + 8*MathUtils.cos(MathUtils.degRad*Assets.playerSprite[0][2].getRotation()));
+                    Assets.blockTextures[Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getTexture()].draw(spriteBatch);
+                    break;
+                default:
+                    Assets.itemTextures[Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getTexture()].flip((pl.dir==0), false);
+                    Assets.itemTextures[Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getTexture()].setRotation(
+                            -45+pl.dir*90+Assets.playerSprite[0][2].getRotation());
+                    Assets.itemTextures[Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getTexture()].setPosition(
+                            pl.position.x - camera.position.x -10+(12*pl.dir) - 8*MathUtils.sin(MathUtils.degRad*Assets.playerSprite[0][2].getRotation()),
+                            pl.position.y - camera.position.y + 2 + 8*MathUtils.cos(MathUtils.degRad*Assets.playerSprite[0][2].getRotation()));
+                    Assets.itemTextures[Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getTexture()].draw(spriteBatch);
+                    Assets.itemTextures[Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getTexture()].flip((pl.dir==0), false);
+                    break;
+            }
         //front hand
         Assets.playerSprite[0][2].setPosition(
                 pl.position.x - camera.position.x - 6,
@@ -127,16 +148,31 @@ public class GameRenderer extends Renderer {
                 y+18+(gameProc.creativeScroll*(72/gameProc.maxCreativeScroll)));
         for (int i=gameProc.creativeScroll*8; i<gameProc.creativeScroll*8+40; i++) {
             if (i>0 && i<Items.ITEMS.size())
-                if (Items.ITEMS.get(i).getType() == 0)
-                    spriteBatch.draw(Assets.blockTextures[Items.ITEMS.get(i).getTexture()],
-                            x+8+((i-gameProc.creativeScroll*8)%8)*18,
-                            y+18+((i-gameProc.creativeScroll*8)/8)*18);
+                switch (Items.ITEMS.get(i).getType()) {
+                    case 0:
+                        spriteBatch.draw(Assets.blockTextures[Items.ITEMS.get(i).getTexture()],
+                            x + 8 + ((i - gameProc.creativeScroll * 8) % 8) * 18,
+                            y + 18 + ((i - gameProc.creativeScroll * 8) / 8) * 18);
+                        break;
+                    case 1:
+                        spriteBatch.draw(Assets.itemTextures[Items.ITEMS.get(i).getTexture()],
+                                x + 8 + ((i - gameProc.creativeScroll * 8) % 8) * 18,
+                                y + 18 + ((i - gameProc.creativeScroll * 8) / 8) * 18);
+                        break;
+                }
         }
         for (int i=0; i<9; i++) {
             if (gameProc.player.inventory[i]>0)
-                if (Items.ITEMS.get(i).getType() == 0)
-                    spriteBatch.draw(Assets.blockTextures[Items.ITEMS.get(i).getTexture()],
-                            x+8+i*18, y+Assets.creativeInv.getRegionHeight()-24);
+                switch (Items.ITEMS.get(gameProc.player.inventory[i]).getType()) {
+                    case 0:
+                        spriteBatch.draw(Assets.blockTextures[Items.ITEMS.get(gameProc.player.inventory[i]).getTexture()],
+                            x + 8 + i * 18, y + Assets.creativeInv.getRegionHeight() - 24);
+                        break;
+                    case 1:
+                        spriteBatch.draw(Assets.itemTextures[Items.ITEMS.get(gameProc.player.inventory[i]).getTexture()],
+                                x + 8 + i * 18, y + Assets.creativeInv.getRegionHeight() - 24);
+                        break;
+                }
         }
     }
 
@@ -151,10 +187,18 @@ public class GameRenderer extends Renderer {
         spriteBatch.draw(Assets.invBar, camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2, 0);
         for (int i=0; i<9; i++) {
             if (gameProc.player.inventory[i]>0) {
-                if (Items.ITEMS.get(gameProc.player.inventory[i]).getType()==0)
-                    spriteBatch.draw(Assets.blockTextures[Items.ITEMS.get(gameProc.player.inventory[i]).getTexture()],
-                            camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2+3+i*20,
+                switch (Items.ITEMS.get(gameProc.player.inventory[i]).getType()) {
+                    case 0:
+                        spriteBatch.draw(Assets.blockTextures[Items.ITEMS.get(gameProc.player.inventory[i]).getTexture()],
+                            camera.viewportWidth / 2 - Assets.invBar.getRegionWidth() / 2 + 3 + i * 20,
                             3);
+                        break;
+                    case 1:
+                        spriteBatch.draw(Assets.itemTextures[Items.ITEMS.get(gameProc.player.inventory[i]).getTexture()],
+                                camera.viewportWidth / 2 - Assets.invBar.getRegionWidth() / 2 + 3 + i * 20,
+                                3);
+                        break;
+                }
             }
         }
         spriteBatch.draw(Assets.invBarCur,
