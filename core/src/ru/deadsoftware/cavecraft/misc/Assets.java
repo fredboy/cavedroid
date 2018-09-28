@@ -11,7 +11,7 @@ import ru.deadsoftware.cavecraft.CaveGame;
 public class Assets {
 
     public static final int BLOCK_TEXTURES = 66;
-    public static final int ITEM_TEXTURES = 5;
+    public static final int ITEM_TEXTURES = 10;
 
     private static GlyphLayout layout;
 
@@ -40,6 +40,9 @@ public class Assets {
     public static TextureRegion invBar;
     public static TextureRegion invBarCur;
     public static TextureRegion guiCur;
+
+    public static Texture wreckTexture;
+    public static TextureRegion[] wreck = new TextureRegion[10];
 
     public static Texture creativeTexture;
     public static TextureRegion creativeInv;
@@ -123,6 +126,11 @@ public class Assets {
         creativeInv.flip(false,true);
         creativeScroll = new TextureRegion(creativeTexture, 3, 137, 12, 15);
         creativeScroll.flip(false, true);
+
+        wreckTexture = new Texture(Gdx.files.internal("break.png"));
+        for (int i=0; i<10; i++) {
+            wreck[i] = new TextureRegion(wreckTexture, 16*i, 0, 16, 16);
+        }
 
         if (CaveGame.TOUCH) {
             touchGui = new Texture(Gdx.files.internal("touch_gui.png"));

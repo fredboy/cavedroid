@@ -51,6 +51,7 @@ public class GameInput {
                     gameProc.cursorY++;
                     break;
             }
+            gameProc.blockDmg = 0;
         }
     }
 
@@ -160,12 +161,7 @@ public class GameInput {
                 gameProc.useItem(gameProc.cursorX, gameProc.cursorY,
                             gameProc.player.inventory[gameProc.invSlot], false);
             } else if (button == Input.Buttons.LEFT) {
-                if (gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY) > 0) {
-                    gameProc.world.placeToForeground(gameProc.cursorX, gameProc.cursorY, 0);
-                } else if (gameProc.world.getBackMap(gameProc.cursorX, gameProc.cursorY) > 0) {
-                    gameProc.world.placeToBackground(gameProc.cursorX, gameProc.cursorY, 0);
-                }
-
+                gameProc.blockDmg = 0;
             }
         }
         gameProc.isTouchDown = false;

@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavecraft.CaveGame;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
+import ru.deadsoftware.cavecraft.game.objects.Drop;
 import ru.deadsoftware.cavecraft.game.objects.Player;
 
 import java.util.Iterator;
@@ -65,6 +66,16 @@ public class GamePhysics {
 
     private int getBlock(Rectangle rect) {
         return gameProc.world.getForeMap((int)(rect.x+rect.width/2)/16, (int)(rect.y+rect.height/8*7)/16);
+    }
+
+    private void dropPhy(Drop drop) {
+        if (drop.move.y < 9) drop.move.y += gravity.y/4;
+        drop.position.add(drop.move);
+        drop.position.y = MathUtils.round(drop.position.y);
+        while (checkColl(drop.getRect())) {
+            drop.position.y--;
+            drop.move.y = 0;
+        }
     }
 
     private void playerPhy(Player pl) {
@@ -170,6 +181,7 @@ public class GamePhysics {
 }
 
     public void update(float delta) {
+        for (Drop drop : gameProc.drops) dropPhy(drop);
         for (Mob mob : gameProc.mobs) {
             mob.ai();
             mobPhy(mob);

@@ -9,6 +9,7 @@ import ru.deadsoftware.cavecraft.game.mobs.FallingGravel;
 import ru.deadsoftware.cavecraft.game.mobs.FallingSand;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.game.mobs.Pig;
+import ru.deadsoftware.cavecraft.game.objects.Drop;
 import ru.deadsoftware.cavecraft.game.objects.Player;
 import ru.deadsoftware.cavecraft.misc.AppState;
 import ru.deadsoftware.cavecraft.misc.Assets;
@@ -22,11 +23,11 @@ public class GameProc implements Serializable{
 
     public static boolean DO_UPD = false;
     public static int UPD_X = -1, UPD_Y = -1;
-    public static int FUPD_X, FUPD_Y;
 
     public Player player;
 
     public ArrayList<Mob> mobs;
+    public ArrayList<Drop> drops;
 
     public transient GameWorld world;
     public transient GameRenderer renderer;
@@ -36,6 +37,7 @@ public class GameProc implements Serializable{
     public int invSlot;
     public int ctrlMode;
     public int creativeScroll, maxCreativeScroll;
+    public int blockDmg = 0;
 
     public boolean isTouchDown, isKeyDown, swim;
     public int touchDownX, touchDownY, keyDownCode;
@@ -46,6 +48,7 @@ public class GameProc implements Serializable{
         world = new GameWorld();
         world.generate(1024,256);
         player = new Player(world.getSpawnPoint());
+        drops = new ArrayList<Drop>();
         mobs = new ArrayList<Mob>();
         for (int i=0; i<16; i++) {
             mobs.add(new Pig(i*256, 196*16));
@@ -79,6 +82,7 @@ public class GameProc implements Serializable{
     }
 
     private void moveCursor() {
+        int pastX = cursorX, pastY = cursorY;
         if (ctrlMode == 0 && CaveGame.TOUCH) {
             cursorX = (int) (player.position.x + player.texWidth / 2) / 16;
             if (player.dir == 0) cursorX--;
@@ -103,6 +107,7 @@ public class GameProc implements Serializable{
                     (renderer.camera.viewportWidth/GameScreen.getWidth())+renderer.camera.position.x)<0)
                 cursorX--;
         }
+        if (pastX!=cursorX || pastY!=cursorY) blockDmg = 0;
     }
 
     private void checkCursorBounds() {
@@ -397,29 +402,33 @@ public class GameProc implements Serializable{
             }
         }
 
-        updateFluids(FUPD_X, FUPD_Y);
-        FUPD_X++;
-        if (FUPD_X>=(int)(renderer.camera.position.x+renderer.camera.viewportWidth)/16+1) {
-            FUPD_X = (int) renderer.camera.position.x / 16 - 1;
-            FUPD_Y++;
-            if (FUPD_Y>=(int)(renderer.camera.position.y+renderer.camera.viewportHeight)/16+1) {
-                FUPD_Y = (int) renderer.camera.position.y / 16 - 1;
-            }
-        }
-
         physics.update(delta);
         moveCursor();
         checkCursorBounds();
 
+        if (isTouchDown && touchDownButton==Input.Buttons.LEFT) {
+            if (world.getForeMap(cursorX, cursorY) > 0 &&
+                    Items.BLOCKS.getValueAt(world.getForeMap(cursorX, cursorY)).getHp()>=0){// || world.getBackMap(cursorX, cursorY) > 0) {
+                blockDmg++;
+                if (blockDmg>=Items.BLOCKS.getValueAt(world.getForeMap(cursorX, cursorY)).getHp()) {
+                    if (Items.BLOCKS.getValueAt(world.getForeMap(cursorX, cursorY)).getDrop()>0)
+                        drops.add(new Drop(cursorX*16+4, cursorY*16+4, Items.BLOCKS.getValueAt(world.getForeMap(cursorX, cursorY)).getDrop()));
+                    world.placeToForeground(cursorX, cursorY, 0);
+                    blockDmg=0;
+                }
+            }
+        }
+
         if (isTouchDown && TimeUtils.timeSinceMillis(touchDownTime) > 500) {
             if (touchDownButton== Input.Buttons.RIGHT) {
                 useItem(cursorX, cursorY, player.inventory[invSlot], true);
+                isTouchDown = false;
             } else if (touchDownY< Assets.invBar.getRegionHeight() &&
                     touchDownX>renderer.camera.viewportWidth/2-Assets.invBar.getRegionWidth()/2 &&
                     touchDownX<renderer.camera.viewportWidth/2+Assets.invBar.getRegionWidth()/2) {
                 CaveGame.STATE = AppState.GAME_CREATIVE_INV;
+                isTouchDown = false;
             }
-            isTouchDown = false;
         }
     }
 

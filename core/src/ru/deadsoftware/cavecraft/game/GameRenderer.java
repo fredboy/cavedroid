@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavecraft.CaveGame;
 import ru.deadsoftware.cavecraft.GameScreen;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
+import ru.deadsoftware.cavecraft.game.objects.Drop;
 import ru.deadsoftware.cavecraft.game.objects.Player;
 import ru.deadsoftware.cavecraft.misc.Assets;
 import ru.deadsoftware.cavecraft.misc.Renderer;
@@ -74,6 +75,18 @@ public class GameRenderer extends Renderer {
                 mob.position.x-camera.position.x, mob.position.y-camera.position.y);
         mob.draw(spriteBatch,
                 mob.position.x-camera.position.x+gameProc.world.getWidth()*16, mob.position.y-camera.position.y);
+    }
+
+    private void drawDrop(Drop drop) {
+        switch (Items.ITEMS.get(drop.getId()).getType()) {
+            case 0:
+                Assets.blockTextures[Items.ITEMS.get(drop.getId()).getTexture()].setPosition(drop.position.x-camera.position.x-gameProc.world.getWidth()*16, drop.position.y-camera.position.y);
+                Assets.blockTextures[Items.ITEMS.get(drop.getId()).getTexture()].draw(spriteBatch);
+                Assets.blockTextures[Items.ITEMS.get(drop.getId()).getTexture()].setPosition(drop.position.x-camera.position.x, drop.position.y-camera.position.y);
+                Assets.blockTextures[Items.ITEMS.get(drop.getId()).getTexture()].draw(spriteBatch);
+                Assets.blockTextures[Items.ITEMS.get(drop.getId()).getTexture()].setPosition(drop.position.x-camera.position.x+gameProc.world.getWidth()*16, drop.position.y-camera.position.y);
+                Assets.blockTextures[Items.ITEMS.get(drop.getId()).getTexture()].draw(spriteBatch);
+        }
     }
 
     private void drawPlayer(Player pl) {
@@ -177,6 +190,13 @@ public class GameRenderer extends Renderer {
     }
 
     private void drawGUI() {
+        if (gameProc.blockDmg > 0) {
+            spriteBatch.draw(Assets.wreck[
+                            10*gameProc.blockDmg/
+                                    Items.BLOCKS.getValueAt(gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY)).getHp()],
+                    gameProc.cursorX*16-camera.position.x,
+                    gameProc.cursorY*16-camera.position.y);
+        }
         if (gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY)>0 ||
                 gameProc.world.getBackMap(gameProc.cursorX, gameProc.cursorY)>0 ||
                 gameProc.ctrlMode==1 ||
@@ -224,6 +244,7 @@ public class GameRenderer extends Renderer {
         drawWorldBackground();
         drawPlayer(gameProc.player);
         for (Mob mob : gameProc.mobs) drawMob(mob);
+        for (Drop drop : gameProc.drops) drawDrop(drop);
         drawWorldForeground();
         drawGUI();
     }
@@ -250,7 +271,8 @@ public class GameRenderer extends Renderer {
             drawString("X: "+(int)(gameProc.player.position.x/16),0, 10);
             drawString("Y: "+(int)(gameProc.player.position.y/16),0, 20);
             drawString("Mobs: "+gameProc.mobs.size(), 0, 30);
-            drawString("Block: "+Items.BLOCKS.getKeyAt(gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY)), 0, 40);
+            drawString("Drops: "+gameProc.drops.size(), 0, 40);
+            drawString("Block: "+Items.BLOCKS.getKeyAt(gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY)), 0, 50);
         }
 
         spriteBatch.end();
