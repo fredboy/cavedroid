@@ -1,6 +1,5 @@
 package ru.deadsoftware.cavecraft.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -181,16 +180,22 @@ public class GamePhysics {
 }
 
     public void update(float delta) {
-        for (Drop drop : gameProc.drops) dropPhy(drop);
-        for (Mob mob : gameProc.mobs) {
+        for (Iterator<Drop> it = gameProc.drops.iterator(); it.hasNext(); ) {
+            Drop drop = it.next();
+            dropPhy(drop);
+            if (Intersector.overlaps(drop.getRect(), gameProc.player.getRect()))
+                drop.pickUpDrop(gameProc.player);
+            if (drop.pickedUp) it.remove();
+        }
+
+        for (Iterator<Mob> it = gameProc.mobs.iterator(); it.hasNext();) {
+            Mob mob = it.next();
             mob.ai();
             mobPhy(mob);
-        }
-        for (Iterator<Mob> it = gameProc.mobs.iterator(); it.hasNext();) {
-            Mob m = it.next();
-            if (m.dead)
+            if (mob.dead)
                 it.remove();
         }
+
         playerPhy(gameProc.player);
 
         gameProc.renderer.camera.position.set(

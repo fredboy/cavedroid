@@ -7,21 +7,23 @@ import java.io.Serializable;
 
 public class Drop implements Serializable {
     private int id;
+    public boolean pickedUp = false;
     public Vector2 move, position;
-
-    public static void pickUpDrop(Player pl, int id) {
-        for (int i = 0; i < pl.inventory.length; i++) {
-            if (pl.inventory[i] == 0) {
-                pl.inventory[i] = id;
-                break;
-            }
-        }
-    }
 
     public Drop(float x, float y, int id) {
         this.id = id;
         position = new Vector2(x, y);
         move = new Vector2(0, -1);
+    }
+
+    public void pickUpDrop(Player pl) {
+        for (int i = 0; i < pl.inventory.length; i++) {
+            if (pl.inventory[i] == 0 || pl.inventory[i] == id) {
+                pl.inventory[i] = id;
+                pickedUp = true;
+                break;
+            }
+        }
     }
 
     public int getId() {
