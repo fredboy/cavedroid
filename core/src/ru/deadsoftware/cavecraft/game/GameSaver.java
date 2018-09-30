@@ -87,17 +87,17 @@ public class GameSaver {
         return gameProc;
     }
 
-    public static void save(GameProc gameProc) {
+    public static void save(GameProc gp) {
         FileHandle file = Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/");
         file.mkdirs();
         file = Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/game.sav");
         try {
             ObjectOutputStream out = new ObjectOutputStream(file.write(false));
             out.writeInt(VERSION);
-            out.writeObject(gameProc);
+            out.writeObject(gp);
             out.close();
-            saveMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/foremap.sav"), gameProc.world.getFullForeMap());
-            saveMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/backmap.sav"), gameProc.world.getFullBackMap());
+            saveMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/foremap.sav"), gp.world.getFullForeMap());
+            saveMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/backmap.sav"), gp.world.getFullBackMap());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -13,14 +13,14 @@ import ru.deadsoftware.cavecraft.misc.Renderer;
 
 public class MenuRenderer extends Renderer {
 
-    public Array<Button> menuMainButtons;
+    public Array<Button> menuMainBtns;
 
     public MenuRenderer(int width) {
         super(width, width * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
-        menuMainButtons = new Array<Button>();
-        menuMainButtons.add(new Button("New game", getWidth() / 2 - 100, getHeight() / 4));
-        menuMainButtons.add(new Button("Load game", getWidth() / 2 - 100, getHeight() / 4 + 30, GameSaver.exists() ? 1 : 0));
-        menuMainButtons.add(new Button("Quit", getWidth() / 2 - 100, getHeight() / 4 + 60));
+        menuMainBtns = new Array<Button>();
+        menuMainBtns.add(new Button("New game", getWidth() / 2 - 100, getHeight() / 4));
+        menuMainBtns.add(new Button("Load game", getWidth() / 2 - 100, getHeight() / 4 + 30, GameSaver.exists() ? 1 : 0));
+        menuMainBtns.add(new Button("Quit", getWidth() / 2 - 100, getHeight() / 4 + 60));
     }
 
     public void buttonClicked(Button button) {
@@ -34,7 +34,7 @@ public class MenuRenderer extends Renderer {
     }
 
     private void drawButton(Button button) {
-        spriteBatch.draw(Assets.menuButton[button.getType()], button.getX(), button.getY());
+        spriter.draw(Assets.menuBtn[button.getType()], button.getX(), button.getY());
         setFontColor(255, 255, 255);
         drawString(button.getLabel(),
                 (button.getX() + button.getWidth() / 2) - Assets.getStringWidth(button.getLabel()) / 2,
@@ -42,7 +42,7 @@ public class MenuRenderer extends Renderer {
     }
 
     private void drawMenuMain() {
-        for (Button button : menuMainButtons) {
+        for (Button button : menuMainBtns) {
             if (button.getType() > 0) {
                 if (button.getRect().contains(Gdx.input.getX() * getWidth() / GameScreen.getWidth(),
                         Gdx.input.getY() * getHeight() / GameScreen.getHeight()))
@@ -59,13 +59,13 @@ public class MenuRenderer extends Renderer {
 
     @Override
     public void render() {
-        spriteBatch.begin();
+        spriter.begin();
         for (int x = 0; x <= getWidth() / 16; x++)
             for (int y = 0; y <= getHeight() / 16; y++) {
-                spriteBatch.draw(Assets.blockTextures[Items.BLOCKS.get("dirt").getTexture()], x * 16, y * 16);
-                spriteBatch.draw(Assets.shade, x * 16, y * 16);
+                spriter.draw(Assets.blockTex[Items.blocks.get("dirt").getTex()], x * 16, y * 16);
+                spriter.draw(Assets.shade, x * 16, y * 16);
             }
-        spriteBatch.draw(Assets.gameLogo, getWidth() / 2 - Assets.gameLogo.getWidth() / 2, 0);
+        spriter.draw(Assets.gameLogo, getWidth() / 2 - Assets.gameLogo.getWidth() / 2, 0);
 
         switch (CaveGame.STATE) {
             case MENU_MAIN:
@@ -82,7 +82,7 @@ public class MenuRenderer extends Renderer {
 
         drawString("CaveCraft " + CaveGame.VERSION, 0,
                 getHeight() - Assets.getStringHeight("CaveCraft " + CaveGame.VERSION) * 1.5f);
-        spriteBatch.end();
+        spriter.end();
 
         switch (CaveGame.STATE) {
             case GOTO_NEW_GAME:

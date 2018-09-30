@@ -33,7 +33,7 @@ public class GameProc implements Serializable {
     public transient GameRenderer renderer;
     public transient GamePhysics physics;
 
-    public int cursorX, cursorY;
+    public int curX, curY;
     public int invSlot;
     public int ctrlMode;
     public int creativeScroll, maxCreativeScroll;
@@ -41,7 +41,7 @@ public class GameProc implements Serializable {
 
     public boolean isTouchDown, isKeyDown, swim;
     public int touchDownX, touchDownY, keyDownCode;
-    public int touchDownButton;
+    public int touchDownBtn;
     public long touchDownTime;
 
     public GameProc() {
@@ -62,7 +62,7 @@ public class GameProc implements Serializable {
             renderer = new GameRenderer(this, 480,
                     480 * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
         }
-        maxCreativeScroll = Items.ITEMS.size() / 8;
+        maxCreativeScroll = Items.items.size() / 8;
         GameSaver.save(this);
     }
 
@@ -78,45 +78,45 @@ public class GameProc implements Serializable {
 
     private boolean isAutoselectable(int x, int y) {
         return (world.getForeMap(x, y) > 0 &&
-                Items.BLOCKS.getValueAt(world.getForeMap(x, y)).collision);
+                Items.blocks.getValueAt(world.getForeMap(x, y)).coll);
     }
 
     private void moveCursor() {
-        int pastX = cursorX, pastY = cursorY;
+        int pastX = curX, pastY = curY;
         if (ctrlMode == 0 && CaveGame.TOUCH) {
-            cursorX = (int) (player.position.x + player.texWidth / 2) / 16;
-            if (player.dir == 0) cursorX--;
-            else cursorX++;
-            cursorY = (int) (player.position.y + player.texWidth) / 16;
-            if (!isAutoselectable(cursorX, cursorY)) {
-                cursorY++;
+            curX = (int) (player.position.x + player.texWidth / 2) / 16;
+            if (player.dir == 0) curX--;
+            else curX++;
+            curY = (int) (player.position.y + player.texWidth) / 16;
+            if (!isAutoselectable(curX, curY)) {
+                curY++;
             }
-            if (!isAutoselectable(cursorX, cursorY)) {
-                cursorY++;
+            if (!isAutoselectable(curX, curY)) {
+                curY++;
             }
-            if (!isAutoselectable(cursorX, cursorY)) {
-                if (player.dir == 0) cursorX++;
-                else cursorX--;
+            if (!isAutoselectable(curX, curY)) {
+                if (player.dir == 0) curX++;
+                else curX--;
             }
         } else if (!CaveGame.TOUCH) {
-            cursorX = (int) (Gdx.input.getX() *
-                    (renderer.camera.viewportWidth / GameScreen.getWidth()) + renderer.camera.position.x) / 16;
-            cursorY = (int) (Gdx.input.getY() *
-                    (renderer.camera.viewportHeight / GameScreen.getHeight()) + renderer.camera.position.y) / 16;
+            curX = (int) (Gdx.input.getX() *
+                    (renderer.getWidth() / GameScreen.getWidth()) + renderer.getCamX()) / 16;
+            curY = (int) (Gdx.input.getY() *
+                    (renderer.getHeight() / GameScreen.getHeight()) + renderer.getCamY()) / 16;
             if ((Gdx.input.getX() *
-                    (renderer.camera.viewportWidth / GameScreen.getWidth()) + renderer.camera.position.x) < 0)
-                cursorX--;
+                    (renderer.getWidth() / GameScreen.getWidth()) + renderer.getCamX()) < 0)
+                curX--;
         }
-        if (pastX != cursorX || pastY != cursorY) blockDmg = 0;
+        if (pastX != curX || pastY != curY) blockDmg = 0;
     }
 
     private void checkCursorBounds() {
-        if (cursorY < 0) cursorY = 0;
-        if (cursorY >= world.getHeight()) cursorY = world.getHeight() - 1;
+        if (curY < 0) curY = 0;
+        if (curY >= world.getHeight()) curY = world.getHeight() - 1;
         if (ctrlMode == 1) {
-            if (cursorX * 16 + 8 < player.position.x + player.texWidth / 2)
+            if (curX * 16 + 8 < player.position.x + player.texWidth / 2)
                 player.dir = 0;
-            if (cursorX * 16 + 8 > player.position.x + player.texWidth / 2)
+            if (curX * 16 + 8 > player.position.x + player.texWidth / 2)
                 player.dir = 1;
         }
     }
@@ -137,15 +137,15 @@ public class GameProc implements Serializable {
 
         if (world.getForeMap(x, y) == 8 || world.getForeMap(x, y) == 60) {
             if (world.getForeMap(x, y + 1) == 0 || (world.getForeMap(x, y + 1) >= 61 && world.getForeMap(x, y + 1) <= 63) ||
-                    (!Items.BLOCKS.getValueAt(world.getForeMap(x, y + 1)).collision && !Items.isFluid(world.getForeMap(x, y + 1)))) {
+                    (!Items.blocks.getValueAt(world.getForeMap(x, y + 1)).coll && !Items.isFluid(world.getForeMap(x, y + 1)))) {
                 world.setForeMap(x, y + 1, 60);
                 updateBlock(x, y + 2);
             } else if (Items.isLava(world.getForeMap(x, y + 1))) {
                 if (world.getForeMap(x, y + 1) > 9) world.setForeMap(x, y + 1, 4);
                 else world.setForeMap(x, y + 1, 68);
-            } else if (Items.BLOCKS.getValueAt(world.getForeMap(x, y + 1)).collision) {
+            } else if (Items.blocks.getValueAt(world.getForeMap(x, y + 1)).coll) {
                 if (world.getForeMap(x + 1, y) == 0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x + 1, y)).collision && !Items.isFluid(world.getForeMap(x + 1, y))) ||
+                        (!Items.blocks.getValueAt(world.getForeMap(x + 1, y)).coll && !Items.isFluid(world.getForeMap(x + 1, y))) ||
                         (Items.isWater(world.getForeMap(x + 1, y)) && world.getForeMap(x + 1, y) > 61)) {
                     world.setForeMap(x + 1, y, 61);
                     updateBlock(x + 1, y + 1);
@@ -156,7 +156,7 @@ public class GameProc implements Serializable {
                     world.setForeMap(x + 1, y, 8);
 
                 if (world.getForeMap(x - 1, y) == 0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x - 1, y)).collision && !Items.isFluid(world.getForeMap(x - 1, y))) ||
+                        (!Items.blocks.getValueAt(world.getForeMap(x - 1, y)).coll && !Items.isFluid(world.getForeMap(x - 1, y))) ||
                         (Items.isWater(world.getForeMap(x - 1, y)) && world.getForeMap(x - 1, y) > 61)) {
                     world.setForeMap(x - 1, y, 61);
                     updateBlock(x - 1, y + 1);
@@ -170,15 +170,15 @@ public class GameProc implements Serializable {
         }
         if (world.getForeMap(x, y) == 61) {
             if (world.getForeMap(x, y + 1) == 0 || (world.getForeMap(x, y + 1) >= 61 && world.getForeMap(x, y + 1) <= 63) ||
-                    (!Items.BLOCKS.getValueAt(world.getForeMap(x, y + 1)).collision && !Items.isFluid(world.getForeMap(x, y + 1)))) {
+                    (!Items.blocks.getValueAt(world.getForeMap(x, y + 1)).coll && !Items.isFluid(world.getForeMap(x, y + 1)))) {
                 world.setForeMap(x, y + 1, 60);
                 updateBlock(x, y + 2);
             } else if (Items.isLava(world.getForeMap(x, y + 1))) {
                 if (world.getForeMap(x, y + 1) > 9) world.setForeMap(x, y + 1, 4);
                 else world.setForeMap(x, y + 1, 68);
-            } else if (Items.BLOCKS.getValueAt(world.getForeMap(x, y + 1)).collision) {
+            } else if (Items.blocks.getValueAt(world.getForeMap(x, y + 1)).coll) {
                 if (world.getForeMap(x + 1, y) == 0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x + 1, y)).collision && !Items.isFluid(world.getForeMap(x + 1, y))) ||
+                        (!Items.blocks.getValueAt(world.getForeMap(x + 1, y)).coll && !Items.isFluid(world.getForeMap(x + 1, y))) ||
                         (Items.isWater(world.getForeMap(x + 1, y)) && world.getForeMap(x + 1, y) > 62)) {
                     world.setForeMap(x + 1, y, 62);
                     updateBlock(x + 1, y + 1);
@@ -188,7 +188,7 @@ public class GameProc implements Serializable {
                 }
 
                 if (world.getForeMap(x - 1, y) == 0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x - 1, y)).collision && !Items.isFluid(world.getForeMap(x - 1, y))) ||
+                        (!Items.blocks.getValueAt(world.getForeMap(x - 1, y)).coll && !Items.isFluid(world.getForeMap(x - 1, y))) ||
                         (Items.isWater(world.getForeMap(x - 1, y)) && world.getForeMap(x - 1, y) > 62)) {
                     world.setForeMap(x - 1, y, 62);
                     updateBlock(x - 1, y + 1);
@@ -201,15 +201,15 @@ public class GameProc implements Serializable {
         }
         if (world.getForeMap(x, y) == 62) {
             if (world.getForeMap(x, y + 1) == 0 || (world.getForeMap(x, y + 1) >= 61 && world.getForeMap(x, y + 1) <= 63) ||
-                    (!Items.BLOCKS.getValueAt(world.getForeMap(x, y + 1)).collision && !Items.isFluid(world.getForeMap(x, y + 1)))) {
+                    (!Items.blocks.getValueAt(world.getForeMap(x, y + 1)).coll && !Items.isFluid(world.getForeMap(x, y + 1)))) {
                 world.setForeMap(x, y + 1, 60);
                 updateBlock(x, y + 2);
             } else if (Items.isLava(world.getForeMap(x, y + 1))) {
                 if (world.getForeMap(x, y + 1) > 9) world.setForeMap(x, y + 1, 4);
                 else world.setForeMap(x, y + 1, 68);
-            } else if (Items.BLOCKS.getValueAt(world.getForeMap(x, y + 1)).collision) {
+            } else if (Items.blocks.getValueAt(world.getForeMap(x, y + 1)).coll) {
                 if (world.getForeMap(x + 1, y) == 0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x + 1, y)).collision && !Items.isFluid(world.getForeMap(x + 1, y)))) {
+                        (!Items.blocks.getValueAt(world.getForeMap(x + 1, y)).coll && !Items.isFluid(world.getForeMap(x + 1, y)))) {
                     world.setForeMap(x + 1, y, 63);
                     updateBlock(x + 1, y + 1);
                 } else if (Items.isLava(world.getForeMap(x + 1, y))) {
@@ -218,7 +218,7 @@ public class GameProc implements Serializable {
                 }
 
                 if (world.getForeMap(x - 1, y) == 0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x - 1, y)).collision && !Items.isFluid(world.getForeMap(x - 1, y)))) {
+                        (!Items.blocks.getValueAt(world.getForeMap(x - 1, y)).coll && !Items.isFluid(world.getForeMap(x - 1, y)))) {
                     world.setForeMap(x - 1, y, 63);
                     updateBlock(x - 1, y + 1);
                 } else if (Items.isLava(world.getForeMap(x - 1, y))) {
@@ -230,7 +230,7 @@ public class GameProc implements Serializable {
         }
         if (world.getForeMap(x, y) == 63) {
             if (world.getForeMap(x, y + 1) == 0 || (world.getForeMap(x, y + 1) >= 61 && world.getForeMap(x, y + 1) <= 63) ||
-                    (!Items.BLOCKS.getValueAt(world.getForeMap(x, y + 1)).collision && !Items.isFluid(world.getForeMap(x, y + 1)))) {
+                    (!Items.blocks.getValueAt(world.getForeMap(x, y + 1)).coll && !Items.isFluid(world.getForeMap(x, y + 1)))) {
                 world.setForeMap(x, y + 1, 60);
                 updateBlock(x, y + 2);
             } else if (Items.isLava(world.getForeMap(x, y + 1))) {
@@ -256,14 +256,14 @@ public class GameProc implements Serializable {
 
         if (world.getForeMap(x, y) == 9 || world.getForeMap(x, y) == 64) {
             if (world.getForeMap(x, y + 1) == 0 || (world.getForeMap(x, y + 1) >= 65 && world.getForeMap(x, y + 1) <= 67) ||
-                    (!Items.BLOCKS.getValueAt(world.getForeMap(x, y + 1)).collision && !Items.isFluid(world.getForeMap(x, y + 1)))) {
+                    (!Items.blocks.getValueAt(world.getForeMap(x, y + 1)).coll && !Items.isFluid(world.getForeMap(x, y + 1)))) {
                 world.setForeMap(x, y + 1, 64);
                 updateBlock(x, y + 2);
             } else if (Items.isWater(world.getForeMap(x, y + 1))) {
                 world.setForeMap(x, y + 1, 1);
-            } else if (Items.BLOCKS.getValueAt(world.getForeMap(x, y + 1)).collision) {
+            } else if (Items.blocks.getValueAt(world.getForeMap(x, y + 1)).coll) {
                 if (world.getForeMap(x + 1, y) == 0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x + 1, y)).collision && !Items.isFluid(world.getForeMap(x + 1, y))) ||
+                        (!Items.blocks.getValueAt(world.getForeMap(x + 1, y)).coll && !Items.isFluid(world.getForeMap(x + 1, y))) ||
                         (Items.isLava(world.getForeMap(x + 1, y)) && world.getForeMap(x + 1, y) > 65)) {
                     world.setForeMap(x + 1, y, 65);
                     updateBlock(x + 1, y + 1);
@@ -272,7 +272,7 @@ public class GameProc implements Serializable {
                 }
 
                 if (world.getForeMap(x - 1, y) == 0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x - 1, y)).collision && !Items.isFluid(world.getForeMap(x - 1, y))) ||
+                        (!Items.blocks.getValueAt(world.getForeMap(x - 1, y)).coll && !Items.isFluid(world.getForeMap(x - 1, y))) ||
                         (Items.isLava(world.getForeMap(x - 1, y)) && world.getForeMap(x - 1, y) > 65)) {
                     world.setForeMap(x - 1, y, 65);
                     updateBlock(x - 1, y + 1);
@@ -284,14 +284,14 @@ public class GameProc implements Serializable {
         }
         if (world.getForeMap(x, y) == 65) {
             if (world.getForeMap(x, y + 1) == 0 || (world.getForeMap(x, y + 1) >= 65 && world.getForeMap(x, y + 1) <= 67) ||
-                    (!Items.BLOCKS.getValueAt(world.getForeMap(x, y + 1)).collision && !Items.isFluid(world.getForeMap(x, y + 1)))) {
+                    (!Items.blocks.getValueAt(world.getForeMap(x, y + 1)).coll && !Items.isFluid(world.getForeMap(x, y + 1)))) {
                 world.setForeMap(x, y + 1, 64);
                 updateBlock(x, y + 2);
             } else if (Items.isWater(world.getForeMap(x, y + 1))) {
                 world.setForeMap(x, y + 1, 1);
-            } else if (Items.BLOCKS.getValueAt(world.getForeMap(x, y + 1)).collision) {
+            } else if (Items.blocks.getValueAt(world.getForeMap(x, y + 1)).coll) {
                 if (world.getForeMap(x + 1, y) == 0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x + 1, y)).collision && !Items.isFluid(world.getForeMap(x + 1, y))) ||
+                        (!Items.blocks.getValueAt(world.getForeMap(x + 1, y)).coll && !Items.isFluid(world.getForeMap(x + 1, y))) ||
                         (Items.isLava(world.getForeMap(x + 1, y)) && world.getForeMap(x + 1, y) > 66)) {
                     world.setForeMap(x + 1, y, 66);
                     updateBlock(x + 1, y + 1);
@@ -300,7 +300,7 @@ public class GameProc implements Serializable {
                 }
 
                 if (world.getForeMap(x - 1, y) == 0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x - 1, y)).collision && !Items.isFluid(world.getForeMap(x - 1, y))) ||
+                        (!Items.blocks.getValueAt(world.getForeMap(x - 1, y)).coll && !Items.isFluid(world.getForeMap(x - 1, y))) ||
                         (Items.isLava(world.getForeMap(x - 1, y)) && world.getForeMap(x - 1, y) > 66)) {
                     world.setForeMap(x - 1, y, 66);
                     updateBlock(x - 1, y + 1);
@@ -312,14 +312,14 @@ public class GameProc implements Serializable {
         }
         if (world.getForeMap(x, y) == 66) {
             if (world.getForeMap(x, y + 1) == 0 || (world.getForeMap(x, y + 1) >= 65 && world.getForeMap(x, y + 1) <= 67) ||
-                    (!Items.BLOCKS.getValueAt(world.getForeMap(x, y + 1)).collision && !Items.isFluid(world.getForeMap(x, y + 1)))) {
+                    (!Items.blocks.getValueAt(world.getForeMap(x, y + 1)).coll && !Items.isFluid(world.getForeMap(x, y + 1)))) {
                 world.setForeMap(x, y + 1, 64);
                 updateBlock(x, y + 2);
             } else if (Items.isWater(world.getForeMap(x, y + 1))) {
                 world.setForeMap(x, y + 1, 1);
-            } else if (Items.BLOCKS.getValueAt(world.getForeMap(x, y + 1)).collision) {
+            } else if (Items.blocks.getValueAt(world.getForeMap(x, y + 1)).coll) {
                 if (world.getForeMap(x + 1, y) == 0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x + 1, y)).collision && !Items.isFluid(world.getForeMap(x + 1, y)))) {
+                        (!Items.blocks.getValueAt(world.getForeMap(x + 1, y)).coll && !Items.isFluid(world.getForeMap(x + 1, y)))) {
                     world.setForeMap(x + 1, y, 67);
                     updateBlock(x + 1, y + 1);
                 } else if (Items.isWater(world.getForeMap(x + 1, y))) {
@@ -327,7 +327,7 @@ public class GameProc implements Serializable {
                 }
 
                 if (world.getForeMap(x - 1, y) == 0 ||
-                        (!Items.BLOCKS.getValueAt(world.getForeMap(x - 1, y)).collision && !Items.isFluid(world.getForeMap(x - 1, y)))) {
+                        (!Items.blocks.getValueAt(world.getForeMap(x - 1, y)).coll && !Items.isFluid(world.getForeMap(x - 1, y)))) {
                     world.setForeMap(x - 1, y, 67);
                     updateBlock(x - 1, y + 1);
                 } else if (Items.isWater(world.getForeMap(x - 1, y))) {
@@ -338,7 +338,7 @@ public class GameProc implements Serializable {
         }
         if (world.getForeMap(x, y) == 67) {
             if (world.getForeMap(x, y + 1) == 0 || (world.getForeMap(x, y + 1) >= 65 && world.getForeMap(x, y + 1) <= 67) ||
-                    (!Items.BLOCKS.getValueAt(world.getForeMap(x, y + 1)).collision && !Items.isFluid(world.getForeMap(x, y + 1)))) {
+                    (!Items.blocks.getValueAt(world.getForeMap(x, y + 1)).coll && !Items.isFluid(world.getForeMap(x, y + 1)))) {
                 world.setForeMap(x, y + 1, 64);
                 updateBlock(x, y + 2);
             } else if (Items.isWater(world.getForeMap(x, y + 1))) {
@@ -350,7 +350,7 @@ public class GameProc implements Serializable {
 
     private void updateBlock(int x, int y) {
         if (world.getForeMap(x, y) == 10) {
-            if (world.getForeMap(x, y + 1) == 0 || !Items.BLOCKS.getValueAt(world.getForeMap(x, y + 1)).collision) {
+            if (world.getForeMap(x, y + 1) == 0 || !Items.blocks.getValueAt(world.getForeMap(x, y + 1)).coll) {
                 world.setForeMap(x, y, 0);
                 mobs.add(new FallingSand(x * 16, y * 16));
                 updateBlock(x, y - 1);
@@ -358,7 +358,7 @@ public class GameProc implements Serializable {
         }
 
         if (world.getForeMap(x, y) == 11) {
-            if (world.getForeMap(x, y + 1) == 0 || !Items.BLOCKS.getValueAt(world.getForeMap(x, y + 1)).collision) {
+            if (world.getForeMap(x, y + 1) == 0 || !Items.blocks.getValueAt(world.getForeMap(x, y + 1)).coll) {
                 world.setForeMap(x, y, 0);
                 mobs.add(new FallingGravel(x * 16, y * 16));
                 updateBlock(x, y - 1);
@@ -366,14 +366,14 @@ public class GameProc implements Serializable {
         }
 
         if (world.getForeMap(x, y) == 59) {
-            if (world.getForeMap(x, y + 1) == 0 || !Items.BLOCKS.getValueAt(world.getForeMap(x, y + 1)).collision) {
+            if (world.getForeMap(x, y + 1) == 0 || !Items.blocks.getValueAt(world.getForeMap(x, y + 1)).coll) {
                 world.setForeMap(x, y, 0);
                 updateBlock(x, y - 1);
             }
         }
 
         if (world.getForeMap(x, y) == 2) {
-            if (world.getForeMap(x, y - 1) > 0 && (Items.BLOCKS.getValueAt(world.getForeMap(x, y - 1)).collision ||
+            if (world.getForeMap(x, y - 1) > 0 && (Items.blocks.getValueAt(world.getForeMap(x, y - 1)).coll ||
                     Items.isFluid(world.getForeMap(x, y - 1)))) {
                 world.setForeMap(x, y, 3);
             }
@@ -381,9 +381,9 @@ public class GameProc implements Serializable {
     }
 
     public void useItem(int x, int y, int id, boolean bg) {
-        if (id > 0 && Items.ITEMS.get(id).getType() == 0) {
-            if (!bg) world.placeToForeground(x, y, Items.ITEMS.get(id).getBlock());
-            else world.placeToBackground(x, y, Items.ITEMS.get(id).getBlock());
+        if (id > 0 && Items.items.get(id).getType() == 0) {
+            if (!bg) world.placeToForeground(x, y, Items.items.get(id).getBlock());
+            else world.placeToBackground(x, y, Items.items.get(id).getBlock());
         }
     }
 
@@ -399,7 +399,7 @@ public class GameProc implements Serializable {
         }
 
         for (int y = 0; y < world.getHeight(); y++) {
-            for (int x = (int) renderer.camera.position.x / 16 - 1; x < (int) (renderer.camera.position.x + renderer.camera.viewportWidth) / 16 + 1; x++) {
+            for (int x = (int) renderer.getCamX() / 16 - 1; x < (int) (renderer.getCamX() + renderer.getWidth()) / 16 + 1; x++) {
                 updateFluids(x, y);
             }
         }
@@ -408,26 +408,26 @@ public class GameProc implements Serializable {
         moveCursor();
         checkCursorBounds();
 
-        if (isTouchDown && touchDownButton == Input.Buttons.LEFT) {
-            if (world.getForeMap(cursorX, cursorY) > 0 &&
-                    Items.BLOCKS.getValueAt(world.getForeMap(cursorX, cursorY)).getHp() >= 0) {// || world.getBackMap(cursorX, cursorY) > 0) {
+        if (isTouchDown && touchDownBtn == Input.Buttons.LEFT) {
+            if (world.getForeMap(curX, curY) > 0 &&
+                    Items.blocks.getValueAt(world.getForeMap(curX, curY)).getHp() >= 0) {// || world.getBackMap(curX, curY) > 0) {
                 blockDmg++;
-                if (blockDmg >= Items.BLOCKS.getValueAt(world.getForeMap(cursorX, cursorY)).getHp()) {
-                    if (Items.BLOCKS.getValueAt(world.getForeMap(cursorX, cursorY)).getDrop() > 0)
-                        drops.add(new Drop(cursorX * 16 + 4, cursorY * 16 + 4, Items.BLOCKS.getValueAt(world.getForeMap(cursorX, cursorY)).getDrop()));
-                    world.placeToForeground(cursorX, cursorY, 0);
+                if (blockDmg >= Items.blocks.getValueAt(world.getForeMap(curX, curY)).getHp()) {
+                    if (Items.blocks.getValueAt(world.getForeMap(curX, curY)).getDrop() > 0)
+                        drops.add(new Drop(curX * 16 + 4, curY * 16 + 4, Items.blocks.getValueAt(world.getForeMap(curX, curY)).getDrop()));
+                    world.placeToForeground(curX, curY, 0);
                     blockDmg = 0;
                 }
             }
         }
 
         if (isTouchDown && TimeUtils.timeSinceMillis(touchDownTime) > 500) {
-            if (touchDownButton == Input.Buttons.RIGHT) {
-                useItem(cursorX, cursorY, player.inventory[invSlot], true);
+            if (touchDownBtn == Input.Buttons.RIGHT) {
+                useItem(curX, curY, player.inventory[invSlot], true);
                 isTouchDown = false;
             } else if (touchDownY < Assets.invBar.getRegionHeight() &&
-                    touchDownX > renderer.camera.viewportWidth / 2 - Assets.invBar.getRegionWidth() / 2 &&
-                    touchDownX < renderer.camera.viewportWidth / 2 + Assets.invBar.getRegionWidth() / 2) {
+                    touchDownX > renderer.getWidth() / 2 - Assets.invBar.getRegionWidth() / 2 &&
+                    touchDownX < renderer.getWidth() / 2 + Assets.invBar.getRegionWidth() / 2) {
                 CaveGame.STATE = AppState.GAME_CREATIVE_INV;
                 isTouchDown = false;
             }

@@ -5,34 +5,34 @@ import com.badlogic.gdx.math.Rectangle;
 public class Block {
 
     private int x, y, w, h;
-    private int texture;
+    private int tex;
     private int hp, drop;
 
-    public boolean collision, background, transparent;
+    public boolean coll, bg, tp;
 
-    public Block(int texture, int hp, int drop) {
-        this(0, 0, 16, 16, texture, hp, drop, true, false, false);
+    public Block(int tex, int hp, int drop) {
+        this(0, 0, 16, 16, tex, hp, drop, true, false, false);
     }
 
-    public Block(int texture, int hp, int drop, boolean collision, boolean background, boolean transparent) {
-        this(0, 0, 16, 16, texture, hp, drop, collision, background, transparent);
+    public Block(int tex, int hp, int drop, boolean coll, boolean bg, boolean tp) {
+        this(0, 0, 16, 16, tex, hp, drop, coll, bg, tp);
     }
 
-    public Block(int x, int y, int w, int h, int texture, int hp, int drop, boolean collision, boolean background, boolean transparent) {
+    public Block(int x, int y, int w, int h, int tex, int hp, int drop, boolean coll, boolean bg, boolean tp) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
-        this.texture = texture;
+        this.tex = tex;
         this.hp = hp;
         this.drop = drop;
-        this.collision = collision;
-        this.background = background;
-        this.transparent = transparent;
+        this.coll = coll;
+        this.bg = bg;
+        this.tp = tp;
     }
 
-    public int getTexture() {
-        return texture;
+    public int getTex() {
+        return tex;
     }
 
     public int getHp() {
@@ -50,7 +50,7 @@ public class Block {
     }
 
     public boolean toJump() {
-        return (y < 8 && collision);
+        return (y < 8 && coll);
     }
 
 }

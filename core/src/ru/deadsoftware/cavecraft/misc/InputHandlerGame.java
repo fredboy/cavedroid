@@ -11,16 +11,16 @@ import static ru.deadsoftware.cavecraft.GameScreen.getWidth;
 
 public class InputHandlerGame implements InputProcessor {
 
-    private GameProc gameProc;
+    private GameProc gp;
     private GameInput gameInput;
 
     private float tWidth, tHeight;
 
-    public InputHandlerGame(GameProc gameProc) {
-        this.gameProc = gameProc;
-        this.gameInput = new GameInput(gameProc);
-        tWidth = gameProc.renderer.camera.viewportWidth;
-        tHeight = gameProc.renderer.camera.viewportHeight;
+    public InputHandlerGame(GameProc gp) {
+        this.gp = gp;
+        this.gameInput = new GameInput(gp);
+        tWidth = gp.renderer.getWidth();
+        tHeight = gp.renderer.getHeight();
     }
 
     @Override
@@ -44,17 +44,17 @@ public class InputHandlerGame implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         int tx = (int) (screenX * tWidth / getWidth());
         int ty = (int) (screenY * tHeight / getHeight());
-        screenX *= gameProc.renderer.camera.viewportWidth / getWidth();
-        screenY *= gameProc.renderer.camera.viewportHeight / getHeight();
+        screenX *= gp.renderer.getWidth() / getWidth();
+        screenY *= gp.renderer.getHeight() / getHeight();
 
         if (CaveGame.TOUCH) {
             if (tx > 26 && tx < 52 && ty > tHeight - 52 && ty < tHeight - 26) {
-                if (gameProc.ctrlMode == 1) gameInput.keyDown(Input.Keys.W);
+                if (gp.ctrlMode == 1) gameInput.keyDown(Input.Keys.W);
                 else gameInput.keyDown(Input.Keys.SPACE);
             } else if (tx > 0 && tx < 26 && ty > tHeight - 26) {
                 gameInput.keyDown(Input.Keys.A);
             } else if (tx > 26 && tx < 52 && ty > tHeight - 26) {
-                if (gameProc.ctrlMode == 1) gameInput.keyDown(Input.Keys.S);
+                if (gp.ctrlMode == 1) gameInput.keyDown(Input.Keys.S);
                 else gameInput.keyDown(Input.Keys.CONTROL_LEFT);
             } else if (tx > 52 && tx < 78 && ty > tHeight - 26) {
                 gameInput.keyDown(Input.Keys.D);
@@ -77,16 +77,16 @@ public class InputHandlerGame implements InputProcessor {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         int tx = (int) (screenX * tWidth / getWidth());
         int ty = (int) (screenY * tHeight / getHeight());
-        screenX *= gameProc.renderer.camera.viewportWidth / getWidth();
-        screenY *= gameProc.renderer.camera.viewportHeight / getHeight();
+        screenX *= gp.renderer.getWidth() / getWidth();
+        screenY *= gp.renderer.getHeight() / getHeight();
         if (CaveGame.TOUCH) {
             if (tx > 26 && tx < 52 && ty > tHeight - 52 && ty < tHeight - 26) {
-                if (gameProc.ctrlMode == 1) gameInput.keyUp(Input.Keys.W);
+                if (gp.ctrlMode == 1) gameInput.keyUp(Input.Keys.W);
                 else gameInput.keyUp(Input.Keys.SPACE);
             } else if (tx > 0 && tx < 26 && ty > tHeight - 26) {
                 gameInput.keyUp(Input.Keys.A);
             } else if (tx > 26 && tx < 52 && ty > tHeight - 26) {
-                if (gameProc.ctrlMode == 1) gameInput.keyUp(Input.Keys.S);
+                if (gp.ctrlMode == 1) gameInput.keyUp(Input.Keys.S);
                 else gameInput.keyUp(Input.Keys.CONTROL_LEFT);
             } else if (tx > 52 && tx < 78 && ty > tHeight - 26) {
                 gameInput.keyUp(Input.Keys.D);
@@ -107,10 +107,10 @@ public class InputHandlerGame implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        screenX *= gameProc.renderer.camera.viewportWidth / getWidth();
-        screenY *= gameProc.renderer.camera.viewportHeight / getHeight();
-        if (gameProc.isKeyDown && (screenX > 78 || screenY < gameProc.renderer.getHeight() - 52)) {
-            gameInput.keyUp(gameProc.keyDownCode);
+        screenX *= gp.renderer.getWidth() / getWidth();
+        screenY *= gp.renderer.getHeight() / getHeight();
+        if (gp.isKeyDown && (screenX > 78 || screenY < gp.renderer.getHeight() - 52)) {
+            gameInput.keyUp(gp.keyDownCode);
         } else {
             gameInput.touchDragged(screenX, screenY);
         }
@@ -119,8 +119,8 @@ public class InputHandlerGame implements InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        screenX *= gameProc.renderer.camera.viewportWidth / getWidth();
-        screenY *= gameProc.renderer.camera.viewportHeight / getHeight();
+        screenX *= gp.renderer.getWidth() / getWidth();
+        screenY *= gp.renderer.getHeight() / getHeight();
         gameInput.mouseMoved(screenX, screenY);
         return false;
     }

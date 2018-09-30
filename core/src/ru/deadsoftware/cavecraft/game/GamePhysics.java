@@ -15,12 +15,12 @@ public class GamePhysics {
 
     public static final int PL_SPEED = 2;
 
-    private GameProc gameProc;
+    private GameProc gp;
 
     private Vector2 gravity;
 
-    public GamePhysics(GameProc gameProc) {
-        this.gameProc = gameProc;
+    public GamePhysics(GameProc gp) {
+        this.gp = gp;
         gravity = new Vector2(0, .9f);
     }
 
@@ -28,18 +28,18 @@ public class GamePhysics {
         int bl;
         switch (dir) {
             case 0:
-                bl = gameProc.world.getForeMap((int) ((rect.x - 8) / 16), (int) ((rect.y + rect.height - 8) / 16));
+                bl = gp.world.getForeMap((int) ((rect.x - 8) / 16), (int) ((rect.y + rect.height - 8) / 16));
                 if (checkColl(new Rectangle(rect.x - 8, rect.y - 18, rect.width, rect.height))) bl = 0;
                 break;
             case 1:
-                bl = gameProc.world.getForeMap((int) ((rect.x + rect.width + 8) / 16), (int) ((rect.y + rect.height - 8) / 16));
+                bl = gp.world.getForeMap((int) ((rect.x + rect.width + 8) / 16), (int) ((rect.y + rect.height - 8) / 16));
                 if (checkColl(new Rectangle(rect.x + rect.width + 8, rect.y - 18, rect.width, rect.height))) bl = 0;
                 break;
             default:
                 bl = 0;
         }
-        return (bl > 0 && Items.BLOCKS.getValueAt(bl).toJump() &&
-                (rect.y + rect.height) - Items.BLOCKS.getValueAt(bl).getRect((int) ((rect.x - 8) / 16), (int) ((rect.y + rect.height - 8) / 16)).y > 8);
+        return (bl > 0 && Items.blocks.getValueAt(bl).toJump() &&
+                (rect.y + rect.height) - Items.blocks.getValueAt(bl).getRect((int) ((rect.x - 8) / 16), (int) ((rect.y + rect.height - 8) / 16)).y > 8);
     }
 
     private boolean checkColl(Rectangle rect) {
@@ -49,12 +49,12 @@ public class GamePhysics {
         int maxX = (int) ((rect.x + rect.width / 2) / 16) + 4;
         int maxY = (int) ((rect.y + rect.height / 2) / 16) + 4;
         if (minY < 0) minY = 0;
-        if (maxY > gameProc.world.getHeight()) maxY = gameProc.world.getHeight();
+        if (maxY > gp.world.getHeight()) maxY = gp.world.getHeight();
         for (int y = minY; y < maxY; y++) {
             for (int x = minX; x < maxX; x++) {
-                bl = gameProc.world.getForeMap(x, y);
-                if (bl > 0 && Items.BLOCKS.getValueAt(bl).collision) {
-                    if (Intersector.overlaps(rect, Items.BLOCKS.getValueAt(bl).getRect(x, y))) {
+                bl = gp.world.getForeMap(x, y);
+                if (bl > 0 && Items.blocks.getValueAt(bl).coll) {
+                    if (Intersector.overlaps(rect, Items.blocks.getValueAt(bl).getRect(x, y))) {
                         return true;
                     }
                 }
@@ -64,7 +64,7 @@ public class GamePhysics {
     }
 
     private int getBlock(Rectangle rect) {
-        return gameProc.world.getForeMap((int) (rect.x + rect.width / 2) / 16, (int) (rect.y + rect.height / 8 * 7) / 16);
+        return gp.world.getForeMap((int) (rect.x + rect.width / 2) / 16, (int) (rect.y + rect.height / 8 * 7) / 16);
     }
 
     private void dropPhy(Drop drop) {
@@ -94,8 +94,8 @@ public class GamePhysics {
         }
 
         if (Items.isFluid(getBlock(pl.getRect()))) {
-            if (CaveGame.TOUCH && pl.move.x != 0 && !gameProc.swim && !pl.flyMode) gameProc.swim = true;
-            if (!gameProc.swim) {
+            if (CaveGame.TOUCH && pl.move.x != 0 && !gp.swim && !pl.flyMode) gp.swim = true;
+            if (!gp.swim) {
                 if (!pl.flyMode && pl.move.y < 4.5f) pl.move.add(gravity.x / 4, gravity.y / 4);
                 if (!pl.flyMode && pl.move.y > 4.5f) pl.move.add(0, -1f);
             } else {
@@ -118,11 +118,11 @@ public class GamePhysics {
                 while (checkColl(pl.getRect())) pl.position.x += d;
             }
         }
-        if (pl.position.x + pl.texWidth / 2 < 0) pl.position.x += gameProc.world.getWidth() * 16;
-        if (pl.position.x + pl.texWidth / 2 > gameProc.world.getWidth() * 16)
-            pl.position.x -= gameProc.world.getWidth() * 16;
-        if (pl.position.y > gameProc.world.getHeight() * 16) {
-            pl.position = gameProc.world.getSpawnPoint().cpy();
+        if (pl.position.x + pl.texWidth / 2 < 0) pl.position.x += gp.world.getWidth() * 16;
+        if (pl.position.x + pl.texWidth / 2 > gp.world.getWidth() * 16)
+            pl.position.x -= gp.world.getWidth() * 16;
+        if (pl.position.y > gp.world.getHeight() * 16) {
+            pl.position = gp.world.getSpawnPoint().cpy();
         }
         if (CaveGame.TOUCH && checkJump(pl.getRect(), pl.dir) && !pl.flyMode && pl.canJump && pl.move.x != 0) {
             pl.move.add(0, -8);
@@ -140,7 +140,7 @@ public class GamePhysics {
             while (checkColl(mob.getRect())) mob.position.y += d;
             mob.move.y = 0;
             if (mob.getType() > 0) {
-                gameProc.world.setForeMap((int) mob.position.x / 16, (int) mob.position.y / 16, mob.getType());
+                gp.world.setForeMap((int) mob.position.x / 16, (int) mob.position.y / 16, mob.getType());
                 mob.position.y = -1;
                 mob.dead = true;
             }
@@ -169,10 +169,10 @@ public class GamePhysics {
                 if (mob.canJump) mob.changeDir();
             }
         }
-        if (mob.position.x + mob.width / 2 < 0) mob.position.x += gameProc.world.getWidth() * 16;
-        if (mob.position.x + mob.width / 2 > gameProc.world.getWidth() * 16)
-            mob.position.x -= gameProc.world.getWidth() * 16;
-        if (mob.position.y > gameProc.world.getHeight() * 16) {
+        if (mob.position.x + mob.width / 2 < 0) mob.position.x += gp.world.getWidth() * 16;
+        if (mob.position.x + mob.width / 2 > gp.world.getWidth() * 16)
+            mob.position.x -= gp.world.getWidth() * 16;
+        if (mob.position.y > gp.world.getHeight() * 16) {
             mob.position.y = 0;
         }
         if (checkJump(mob.getRect(), mob.dir) && mob.canJump && mob.move.x != 0) {
@@ -182,15 +182,15 @@ public class GamePhysics {
     }
 
     public void update(float delta) {
-        for (Iterator<Drop> it = gameProc.drops.iterator(); it.hasNext(); ) {
+        for (Iterator<Drop> it = gp.drops.iterator(); it.hasNext(); ) {
             Drop drop = it.next();
             dropPhy(drop);
-            if (Intersector.overlaps(drop.getRect(), gameProc.player.getRect()))
-                drop.pickUpDrop(gameProc.player);
+            if (Intersector.overlaps(drop.getRect(), gp.player.getRect()))
+                drop.pickUpDrop(gp.player);
             if (drop.pickedUp) it.remove();
         }
 
-        for (Iterator<Mob> it = gameProc.mobs.iterator(); it.hasNext(); ) {
+        for (Iterator<Mob> it = gp.mobs.iterator(); it.hasNext(); ) {
             Mob mob = it.next();
             mob.ai();
             mobPhy(mob);
@@ -198,13 +198,11 @@ public class GamePhysics {
                 it.remove();
         }
 
-        playerPhy(gameProc.player);
+        playerPhy(gp.player);
 
-        gameProc.renderer.camera.position.set(
-                gameProc.player.position.x + gameProc.player.texWidth / 2 - gameProc.renderer.camera.viewportWidth / 2,
-                gameProc.player.position.y + gameProc.player.height / 2 - gameProc.renderer.camera.viewportHeight / 2,
-                0
-        );
+        gp.renderer.setCamPos(
+                gp.player.position.x + gp.player.texWidth / 2 - gp.renderer.getWidth() / 2,
+                gp.player.position.y + gp.player.height / 2 - gp.renderer.getHeight() / 2);
     }
 
 }

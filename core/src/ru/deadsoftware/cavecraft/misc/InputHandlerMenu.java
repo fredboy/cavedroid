@@ -7,10 +7,10 @@ import ru.deadsoftware.cavecraft.menu.objects.Button;
 
 public class InputHandlerMenu implements InputProcessor {
 
-    private MenuRenderer renderer;
+    private MenuRenderer menuRenderer;
 
-    public InputHandlerMenu(MenuRenderer renderer) {
-        this.renderer = renderer;
+    public InputHandlerMenu(MenuRenderer menuRenderer) {
+        this.menuRenderer = menuRenderer;
     }
 
     @Override
@@ -35,10 +35,10 @@ public class InputHandlerMenu implements InputProcessor {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int mb) {
-        screenX *= renderer.getWidth() / GameScreen.getWidth();
-        screenY *= renderer.getHeight() / GameScreen.getHeight();
-        for (Button button : renderer.menuMainButtons) {
-            if (button.getRect().contains(screenX, screenY) && button.getType() > 0) renderer.buttonClicked(button);
+        screenX *= menuRenderer.getWidth() / GameScreen.getWidth();
+        screenY *= menuRenderer.getHeight() / GameScreen.getHeight();
+        for (Button button : menuRenderer.menuMainBtns) {
+            if (button.getRect().contains(screenX, screenY) && button.getType() > 0) menuRenderer.buttonClicked(button);
         }
         return false;
     }

@@ -10,79 +10,79 @@ import ru.deadsoftware.cavecraft.misc.Assets;
 
 public class GameInput {
 
-    private GameProc gameProc;
+    private GameProc gp;
 
-    public GameInput(GameProc gameProc) {
-        this.gameProc = gameProc;
+    public GameInput(GameProc gp) {
+        this.gp = gp;
     }
 
     private boolean checkSwim() {
-        return (Items.isFluid(gameProc.world.getForeMap((int) (gameProc.player.position.x + gameProc.player.width / 2) / 16,
-                (int) (gameProc.player.position.y + gameProc.player.height / 4 * 3) / 16)));
+        return (Items.isFluid(gp.world.getForeMap((int) (gp.player.position.x + gp.player.width / 2) / 16,
+                (int) (gp.player.position.y + gp.player.height / 4 * 3) / 16)));
     }
 
     private void wasdPressed(int keycode) {
-        if (gameProc.ctrlMode == 0 || !CaveGame.TOUCH) {
+        if (gp.ctrlMode == 0 || !CaveGame.TOUCH) {
             switch (keycode) {
                 case Input.Keys.A:
-                    gameProc.player.move.x = -GamePhysics.PL_SPEED;
-                    gameProc.player.dir = 0;
-                    if (CaveGame.TOUCH && checkSwim()) gameProc.swim = true;
+                    gp.player.move.x = -GamePhysics.PL_SPEED;
+                    gp.player.dir = 0;
+                    if (CaveGame.TOUCH && checkSwim()) gp.swim = true;
                     break;
                 case Input.Keys.D:
-                    gameProc.player.move.x = GamePhysics.PL_SPEED;
-                    gameProc.player.dir = 1;
-                    if (CaveGame.TOUCH && checkSwim()) gameProc.swim = true;
+                    gp.player.move.x = GamePhysics.PL_SPEED;
+                    gp.player.dir = 1;
+                    if (CaveGame.TOUCH && checkSwim()) gp.swim = true;
                     break;
             }
         } else if (CaveGame.TOUCH) {
             switch (keycode) {
                 case Input.Keys.A:
-                    gameProc.cursorX--;
+                    gp.curX--;
                     break;
                 case Input.Keys.D:
-                    gameProc.cursorX++;
+                    gp.curX++;
                     break;
                 case Input.Keys.W:
-                    gameProc.cursorY--;
+                    gp.curY--;
                     break;
                 case Input.Keys.S:
-                    gameProc.cursorY++;
+                    gp.curY++;
                     break;
             }
-            gameProc.blockDmg = 0;
+            gp.blockDmg = 0;
         }
     }
 
     public void keyDown(int keycode) {
-        gameProc.isKeyDown = true;
-        gameProc.keyDownCode = keycode;
+        gp.isKeyDown = true;
+        gp.keyDownCode = keycode;
         if (keycode == Input.Keys.W || keycode == Input.Keys.A ||
                 keycode == Input.Keys.S || keycode == Input.Keys.D) {
             wasdPressed(keycode);
         } else switch (keycode) {
             case Input.Keys.ALT_LEFT:
                 if (CaveGame.TOUCH) {
-                    gameProc.ctrlMode++;
-                    if (gameProc.ctrlMode > 1) gameProc.ctrlMode = 0;
+                    gp.ctrlMode++;
+                    if (gp.ctrlMode > 1) gp.ctrlMode = 0;
                 }
                 break;
 
             case Input.Keys.SPACE:
                 if (checkSwim()) {
-                    gameProc.swim = true;
-                } else if (gameProc.player.canJump) {
-                    gameProc.player.move.add(0, -7);
-                } else if (!gameProc.player.flyMode) {
-                    gameProc.player.flyMode = true;
-                    gameProc.player.move.y = 0;
+                    gp.swim = true;
+                } else if (gp.player.canJump) {
+                    gp.player.move.add(0, -7);
+                } else if (!gp.player.flyMode) {
+                    gp.player.flyMode = true;
+                    gp.player.move.y = 0;
                 } else {
-                    gameProc.player.move.y = -GamePhysics.PL_SPEED;
+                    gp.player.move.y = -GamePhysics.PL_SPEED;
                 }
                 break;
 
             case Input.Keys.CONTROL_LEFT:
-                gameProc.player.move.y = GamePhysics.PL_SPEED;
+                gp.player.move.y = GamePhysics.PL_SPEED;
                 break;
 
             case Input.Keys.E:
@@ -91,7 +91,7 @@ public class GameInput {
                 break;
 
             case Input.Keys.G:
-                gameProc.mobs.add(new Pig(gameProc.cursorX * 16, gameProc.cursorY * 16));
+                gp.mobs.add(new Pig(gp.curX * 16, gp.curY * 16));
                 break;
 
             case Input.Keys.ESCAPE:
@@ -109,14 +109,14 @@ public class GameInput {
         switch (keycode) {
             case Input.Keys.A:
             case Input.Keys.D:
-                gameProc.player.move.x = 0;
-                if (CaveGame.TOUCH && gameProc.swim) gameProc.swim = false;
+                gp.player.move.x = 0;
+                if (CaveGame.TOUCH && gp.swim) gp.swim = false;
                 break;
 
             case Input.Keys.SPACE:
             case Input.Keys.CONTROL_LEFT:
-                if (gameProc.player.flyMode) gameProc.player.move.y = 0;
-                if (gameProc.swim) gameProc.swim = false;
+                if (gp.player.flyMode) gp.player.move.y = 0;
+                if (gp.swim) gp.swim = false;
                 break;
         }
     }
@@ -125,62 +125,62 @@ public class GameInput {
     }
 
     public void touchDown(int screenX, int screenY, int button) {
-        gameProc.touchDownTime = TimeUtils.millis();
-        gameProc.isTouchDown = true;
-        gameProc.touchDownButton = button;
-        gameProc.touchDownX = screenX;
-        gameProc.touchDownY = screenY;
+        gp.touchDownTime = TimeUtils.millis();
+        gp.isTouchDown = true;
+        gp.touchDownBtn = button;
+        gp.touchDownX = screenX;
+        gp.touchDownY = screenY;
     }
 
     public void touchUp(int screenX, int screenY, int button) {
-        if (CaveGame.TOUCH && gameProc.isKeyDown) {
-            keyUp(gameProc.keyDownCode);
-            gameProc.isKeyDown = false;
+        if (CaveGame.TOUCH && gp.isKeyDown) {
+            keyUp(gp.keyDownCode);
+            gp.isKeyDown = false;
         }
-        if (gameProc.isTouchDown) {
+        if (gp.isTouchDown) {
             if (CaveGame.STATE == AppState.GAME_CREATIVE_INV &&
-                    screenX > gameProc.renderer.camera.viewportWidth / 2 - Assets.creativeInv.getRegionWidth() / 2 &&
-                    screenX < gameProc.renderer.camera.viewportWidth / 2 + Assets.creativeInv.getRegionWidth() / 2 &&
-                    screenY > gameProc.renderer.camera.viewportHeight / 2 - Assets.creativeInv.getRegionHeight() / 2 &&
-                    screenY < gameProc.renderer.camera.viewportHeight / 2 + Assets.creativeInv.getRegionHeight() / 2) {
-                int ix = (int) (screenX - (gameProc.renderer.camera.viewportWidth / 2 - Assets.creativeInv.getRegionWidth() / 2 + 8)) / 18;
-                int iy = (int) (screenY - (gameProc.renderer.camera.viewportHeight / 2 - Assets.creativeInv.getRegionHeight() / 2 + 18)) / 18;
-                int item = gameProc.creativeScroll * 8 + (ix + iy * 8);
+                    screenX > gp.renderer.getWidth() / 2 - Assets.creativeInv.getRegionWidth() / 2 &&
+                    screenX < gp.renderer.getWidth() / 2 + Assets.creativeInv.getRegionWidth() / 2 &&
+                    screenY > gp.renderer.getHeight() / 2 - Assets.creativeInv.getRegionHeight() / 2 &&
+                    screenY < gp.renderer.getHeight() / 2 + Assets.creativeInv.getRegionHeight() / 2) {
+                int ix = (int) (screenX - (gp.renderer.getWidth() / 2 - Assets.creativeInv.getRegionWidth() / 2 + 8)) / 18;
+                int iy = (int) (screenY - (gp.renderer.getHeight() / 2 - Assets.creativeInv.getRegionHeight() / 2 + 18)) / 18;
+                int item = gp.creativeScroll * 8 + (ix + iy * 8);
                 if (ix >= 8 || ix < 0 || iy < 0 || iy >= 5) item = -1;
-                if (item >= 0 && item < Items.ITEMS.size()) {
+                if (item >= 0 && item < Items.items.size()) {
                     for (int i = 8; i > 0; i--) {
-                        gameProc.player.inventory[i] = gameProc.player.inventory[i - 1];
+                        gp.player.inventory[i] = gp.player.inventory[i - 1];
                     }
-                    gameProc.player.inventory[0] = item;
+                    gp.player.inventory[0] = item;
                 }
             } else if (CaveGame.STATE == AppState.GAME_CREATIVE_INV) {
                 CaveGame.STATE = AppState.GAME_PLAY;
             } else if (screenY < Assets.invBar.getRegionHeight() &&
-                    screenX > gameProc.renderer.camera.viewportWidth / 2 - Assets.invBar.getRegionWidth() / 2 &&
-                    screenX < gameProc.renderer.camera.viewportWidth / 2 + Assets.invBar.getRegionWidth() / 2) {
-                gameProc.invSlot = (int) ((screenX - (gameProc.renderer.camera.viewportWidth / 2 - Assets.invBar.getRegionWidth() / 2)) / 20);
+                    screenX > gp.renderer.getWidth() / 2 - Assets.invBar.getRegionWidth() / 2 &&
+                    screenX < gp.renderer.getWidth() / 2 + Assets.invBar.getRegionWidth() / 2) {
+                gp.invSlot = (int) ((screenX - (gp.renderer.getWidth() / 2 - Assets.invBar.getRegionWidth() / 2)) / 20);
             } else if (button == Input.Buttons.RIGHT) {
-                gameProc.useItem(gameProc.cursorX, gameProc.cursorY,
-                        gameProc.player.inventory[gameProc.invSlot], false);
+                gp.useItem(gp.curX, gp.curY,
+                        gp.player.inventory[gp.invSlot], false);
             } else if (button == Input.Buttons.LEFT) {
-                gameProc.blockDmg = 0;
+                gp.blockDmg = 0;
             }
         }
-        gameProc.isTouchDown = false;
+        gp.isTouchDown = false;
     }
 
     public void touchDragged(int screenX, int screenY) {
-        if (CaveGame.STATE == AppState.GAME_CREATIVE_INV && Math.abs(screenY - gameProc.touchDownY) > 16) {
-            if (screenX > gameProc.renderer.camera.viewportWidth / 2 - Assets.creativeInv.getRegionWidth() / 2 &&
-                    screenX < gameProc.renderer.camera.viewportWidth / 2 + Assets.creativeInv.getRegionWidth() / 2 &&
-                    screenY > gameProc.renderer.camera.viewportHeight / 2 - Assets.creativeInv.getRegionHeight() / 2 &&
-                    screenY < gameProc.renderer.camera.viewportHeight / 2 + Assets.creativeInv.getRegionHeight() / 2) {
-                gameProc.creativeScroll -= (screenY - gameProc.touchDownY) / 16;
-                gameProc.touchDownX = screenX;
-                gameProc.touchDownY = screenY;
-                if (gameProc.creativeScroll < 0) gameProc.creativeScroll = 0;
-                if (gameProc.creativeScroll > gameProc.maxCreativeScroll)
-                    gameProc.creativeScroll = gameProc.maxCreativeScroll;
+        if (CaveGame.STATE == AppState.GAME_CREATIVE_INV && Math.abs(screenY - gp.touchDownY) > 16) {
+            if (screenX > gp.renderer.getWidth() / 2 - Assets.creativeInv.getRegionWidth() / 2 &&
+                    screenX < gp.renderer.getWidth() / 2 + Assets.creativeInv.getRegionWidth() / 2 &&
+                    screenY > gp.renderer.getHeight() / 2 - Assets.creativeInv.getRegionHeight() / 2 &&
+                    screenY < gp.renderer.getHeight() / 2 + Assets.creativeInv.getRegionHeight() / 2) {
+                gp.creativeScroll -= (screenY - gp.touchDownY) / 16;
+                gp.touchDownX = screenX;
+                gp.touchDownY = screenY;
+                if (gp.creativeScroll < 0) gp.creativeScroll = 0;
+                if (gp.creativeScroll > gp.maxCreativeScroll)
+                    gp.creativeScroll = gp.maxCreativeScroll;
             }
         }
     }
@@ -188,15 +188,15 @@ public class GameInput {
     public void scrolled(int amount) {
         switch (CaveGame.STATE) {
             case GAME_PLAY:
-                gameProc.invSlot += amount;
-                if (gameProc.invSlot < 0) gameProc.invSlot = 8;
-                if (gameProc.invSlot > 8) gameProc.invSlot = 0;
+                gp.invSlot += amount;
+                if (gp.invSlot < 0) gp.invSlot = 8;
+                if (gp.invSlot > 8) gp.invSlot = 0;
                 break;
             case GAME_CREATIVE_INV:
-                gameProc.creativeScroll += amount;
-                if (gameProc.creativeScroll < 0) gameProc.creativeScroll = 0;
-                if (gameProc.creativeScroll > gameProc.maxCreativeScroll)
-                    gameProc.creativeScroll = gameProc.maxCreativeScroll;
+                gp.creativeScroll += amount;
+                if (gp.creativeScroll < 0) gp.creativeScroll = 0;
+                if (gp.creativeScroll > gp.maxCreativeScroll)
+                    gp.creativeScroll = gp.maxCreativeScroll;
                 break;
         }
     }

@@ -15,100 +15,100 @@ public class Assets {
 
     private static GlyphLayout layout;
 
-    public static BitmapFont minecraftFont;
+    public static BitmapFont mcFont;
 
     public static Sprite gameLogo;
 
-    public static Texture menuButtonTexture;
-    public static TextureRegion[] menuButton = new TextureRegion[3];
+    public static Texture menuBtnTex;
+    public static TextureRegion[] menuBtn = new TextureRegion[3];
 
-    public static Texture playerTexture;
-    public static Sprite[][] playerSprite = new Sprite[2][4];
+    public static Texture plTex;
+    public static Sprite[][] plSprite = new Sprite[2][4];
 
-    public static Texture pigTexture;
+    public static Texture pigTex;
     public static Sprite[][] pigSprite = new Sprite[2][2];
 
     public static Sprite shade;
 
     public static Texture terrain;
-    public static Sprite[] blockTextures = new Sprite[BLOCK_TEXTURES];
+    public static Sprite[] blockTex = new Sprite[BLOCK_TEXTURES];
 
     public static Texture items;
-    public static Sprite[] itemTextures = new Sprite[ITEM_TEXTURES];
+    public static Sprite[] itemTex = new Sprite[ITEM_TEXTURES];
 
     public static Texture gui;
     public static TextureRegion invBar;
     public static TextureRegion invBarCur;
     public static TextureRegion guiCur;
 
-    public static Texture wreckTexture;
+    public static Texture wreckTex;
     public static TextureRegion[] wreck = new TextureRegion[10];
 
-    public static Texture creativeTexture;
+    public static Texture creativeTex;
     public static TextureRegion creativeInv;
-    public static TextureRegion creativeScroll;
+    public static TextureRegion creativeScr;
 
     public static Texture touchGui;
     public static TextureRegion[] touchArrows = new TextureRegion[4];
     public static TextureRegion touchLMB, touchRMB;
-    public static TextureRegion touchToggleMode;
+    public static TextureRegion touchMode;
     public static TextureRegion touchSpace;
 
     private static void loadPlayer() {
-        playerTexture = new Texture(Gdx.files.internal("mobs/char.png"));
+        plTex = new Texture(Gdx.files.internal("mobs/char.png"));
         //LOOK TO LEFT
         //head
-        playerSprite[0][0] = new Sprite(new TextureRegion(playerTexture, 0, 0, 12, 12));
-        playerSprite[0][0].flip(false, true);
+        plSprite[0][0] = new Sprite(new TextureRegion(plTex, 0, 0, 12, 12));
+        plSprite[0][0].flip(false, true);
         //body
-        playerSprite[0][1] = new Sprite(new TextureRegion(playerTexture, 0, 13, 12, 12));
-        playerSprite[0][1].flip(false, true);
+        plSprite[0][1] = new Sprite(new TextureRegion(plTex, 0, 13, 12, 12));
+        plSprite[0][1].flip(false, true);
         //hand
-        playerSprite[0][2] = new Sprite(new TextureRegion(playerTexture, 25, 5, 20, 20));
-        playerSprite[0][2].flip(false, true);
+        plSprite[0][2] = new Sprite(new TextureRegion(plTex, 25, 5, 20, 20));
+        plSprite[0][2].flip(false, true);
         //leg
-        playerSprite[0][3] = new Sprite(new TextureRegion(playerTexture, 25, 27, 20, 20));
-        playerSprite[0][3].flip(false, true);
+        plSprite[0][3] = new Sprite(new TextureRegion(plTex, 25, 27, 20, 20));
+        plSprite[0][3].flip(false, true);
         //LOOK TO RIGHT
         //head
-        playerSprite[1][0] = new Sprite(new TextureRegion(playerTexture, 13, 0, 12, 12));
-        playerSprite[1][0].flip(false, true);
+        plSprite[1][0] = new Sprite(new TextureRegion(plTex, 13, 0, 12, 12));
+        plSprite[1][0].flip(false, true);
         //body
-        playerSprite[1][1] = new Sprite(new TextureRegion(playerTexture, 13, 13, 12, 12));
-        playerSprite[1][1].flip(false, true);
+        plSprite[1][1] = new Sprite(new TextureRegion(plTex, 13, 13, 12, 12));
+        plSprite[1][1].flip(false, true);
         //hand
-        playerSprite[1][2] = new Sprite(new TextureRegion(playerTexture, 37, 5, 20, 20));
-        playerSprite[1][2].flip(false, true);
+        plSprite[1][2] = new Sprite(new TextureRegion(plTex, 37, 5, 20, 20));
+        plSprite[1][2].flip(false, true);
         //leg
-        playerSprite[1][3] = new Sprite(new TextureRegion(playerTexture, 37, 27, 20, 20));
-        playerSprite[1][3].flip(false, true);
+        plSprite[1][3] = new Sprite(new TextureRegion(plTex, 37, 27, 20, 20));
+        plSprite[1][3].flip(false, true);
     }
 
     private static void loadPig() {
-        pigTexture = new Texture(Gdx.files.internal("mobs/pig.png"));
-        pigSprite[0][0] = new Sprite(new TextureRegion(pigTexture, 0, 0, 25, 12));
+        pigTex = new Texture(Gdx.files.internal("mobs/pig.png"));
+        pigSprite[0][0] = new Sprite(new TextureRegion(pigTex, 0, 0, 25, 12));
         pigSprite[0][0].flip(false, true);
-        pigSprite[1][0] = new Sprite(new TextureRegion(pigTexture, 0, 12, 25, 12));
+        pigSprite[1][0] = new Sprite(new TextureRegion(pigTex, 0, 12, 25, 12));
         pigSprite[1][0].flip(false, true);
-        pigSprite[0][1] = new Sprite(new TextureRegion(pigTexture, 4, 26, 12, 12));
+        pigSprite[0][1] = new Sprite(new TextureRegion(pigTex, 4, 26, 12, 12));
         pigSprite[0][1].flip(false, true);
-        pigSprite[1][1] = new Sprite(new TextureRegion(pigTexture, 16, 26, 12, 12));
+        pigSprite[1][1] = new Sprite(new TextureRegion(pigTex, 16, 26, 12, 12));
         pigSprite[1][1].flip(false, true);
     }
 
     public static void load() {
-        minecraftFont = new BitmapFont(Gdx.files.internal("font.fnt"), true);
-        minecraftFont.getData().setScale(.375f);
+        mcFont = new BitmapFont(Gdx.files.internal("font.fnt"), true);
+        mcFont.getData().setScale(.375f);
 
         layout = new GlyphLayout();
 
         gameLogo = new Sprite(new Texture(Gdx.files.internal("gamelogo.png")));
         gameLogo.flip(false, true);
 
-        menuButtonTexture = new Texture(Gdx.files.internal("buttons.png"));
+        menuBtnTex = new Texture(Gdx.files.internal("buttons.png"));
         for (int i = 0; i < 3; i++) {
-            menuButton[i] = new TextureRegion(menuButtonTexture, 0, 20 * i, 200, 20);
-            menuButton[i].flip(false, true);
+            menuBtn[i] = new TextureRegion(menuBtnTex, 0, 20 * i, 200, 20);
+            menuBtn[i].flip(false, true);
         }
 
         loadPlayer();
@@ -121,15 +121,15 @@ public class Assets {
         invBar = new TextureRegion(gui, 0, 16, 182, 22);
         invBarCur = new TextureRegion(gui, 0, 38, 24, 24);
 
-        creativeTexture = new Texture(Gdx.files.internal("allitems.png"));
-        creativeInv = new TextureRegion(creativeTexture, 0, 0, 176, 136);
+        creativeTex = new Texture(Gdx.files.internal("allitems.png"));
+        creativeInv = new TextureRegion(creativeTex, 0, 0, 176, 136);
         creativeInv.flip(false, true);
-        creativeScroll = new TextureRegion(creativeTexture, 3, 137, 12, 15);
-        creativeScroll.flip(false, true);
+        creativeScr = new TextureRegion(creativeTex, 3, 137, 12, 15);
+        creativeScr.flip(false, true);
 
-        wreckTexture = new Texture(Gdx.files.internal("break.png"));
+        wreckTex = new Texture(Gdx.files.internal("break.png"));
         for (int i = 0; i < 10; i++) {
-            wreck[i] = new TextureRegion(wreckTexture, 16 * i, 0, 16, 16);
+            wreck[i] = new TextureRegion(wreckTex, 16 * i, 0, 16, 16);
         }
 
         if (CaveGame.TOUCH) {
@@ -142,38 +142,37 @@ public class Assets {
             touchLMB.flip(false, true);
             touchRMB = new TextureRegion(touchGui, 52, 26, 26, 26);
             touchRMB.flip(false, true);
-            touchToggleMode = new TextureRegion(touchGui, 26, 26, 26, 26);
-            touchToggleMode.flip(false, true);
+            touchMode = new TextureRegion(touchGui, 26, 26, 26, 26);
+            touchMode.flip(false, true);
             touchSpace = new TextureRegion(touchGui, 0, 52, 104, 26);
             touchSpace.flip(false, true);
         }
 
         terrain = new Texture(Gdx.files.internal("terrain.png"));
         for (int i = 0; i < BLOCK_TEXTURES; i++) {
-            blockTextures[i] = new Sprite(terrain,
+            blockTex[i] = new Sprite(terrain,
                     (i % 16) * 16, (i / 16) * 16, 16, 16);
-            blockTextures[i].flip(false, true);
-            blockTextures[i].setSize(8, 8);
+            blockTex[i].flip(false, true);
+            blockTex[i].setSize(8, 8);
         }
         terrain = null;
 
         items = new Texture(Gdx.files.internal("items.png"));
         for (int i = 0; i < ITEM_TEXTURES; i++) {
-            itemTextures[i] = new Sprite(items,
+            itemTex[i] = new Sprite(items,
                     (i % 16) * 16, (i / 16) * 16, 16, 16);
-            itemTextures[i].flip(false, true);
-            //itemTextures[i].setSize(8,8);
+            itemTex[i].flip(false, true);
         }
         items = null;
     }
 
     public static int getStringWidth(String s) {
-        layout.setText(minecraftFont, s);
+        layout.setText(mcFont, s);
         return (int) layout.width;
     }
 
     public static int getStringHeight(String s) {
-        layout.setText(minecraftFont, s);
+        layout.setText(mcFont, s);
         return (int) layout.height;
     }
 

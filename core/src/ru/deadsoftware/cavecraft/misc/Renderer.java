@@ -7,9 +7,10 @@ import ru.deadsoftware.cavecraft.GameScreen;
 
 public abstract class Renderer {
 
-    public OrthographicCamera camera;
-    public ShapeRenderer shapeRenderer;
-    public SpriteBatch spriteBatch;
+    private OrthographicCamera camera;
+
+    public ShapeRenderer shaper;
+    public SpriteBatch spriter;
 
     public Renderer() {
         this(GameScreen.getWidth(), GameScreen.getHeight());
@@ -18,10 +19,10 @@ public abstract class Renderer {
     public Renderer(float width, float height) {
         camera = new OrthographicCamera();
         camera.setToOrtho(true, width, height);
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        spriteBatch = new SpriteBatch();
-        spriteBatch.setProjectionMatrix(camera.combined);
+        shaper = new ShapeRenderer();
+        shaper.setProjectionMatrix(camera.combined);
+        spriter = new SpriteBatch();
+        spriter.setProjectionMatrix(camera.combined);
     }
 
     public float getWidth() {
@@ -32,20 +33,32 @@ public abstract class Renderer {
         return camera.viewportHeight;
     }
 
+    public float getCamX() {
+        return camera.position.x;
+    }
+
+    public float getCamY() {
+        return camera.position.y;
+    }
+
+    public void setCamPos(float x, float y) {
+        camera.position.set(x, y, 0);
+    }
+
     public void setFontScale(float scale) {
-        Assets.minecraftFont.getData().setScale(scale);
+        Assets.mcFont.getData().setScale(scale);
     }
 
     public void setFontColor(int r, int g, int b) {
-        Assets.minecraftFont.setColor(r / 255f, g / 255f, b / 255f, 1f);
+        Assets.mcFont.setColor(r / 255f, g / 255f, b / 255f, 1f);
     }
 
     public void drawString(String str, float x, float y) {
-        Assets.minecraftFont.draw(spriteBatch, str, x, y);
+        Assets.mcFont.draw(spriter, str, x, y);
     }
 
     public void drawString(String str) {
-        Assets.minecraftFont.draw(spriteBatch, str,
+        Assets.mcFont.draw(spriter, str,
                 getWidth() / 2 - Assets.getStringWidth(str) / 2,
                 getHeight() / 2 - Assets.getStringHeight(str) / 2);
     }

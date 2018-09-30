@@ -13,7 +13,7 @@ public class GameScreen implements Screen {
     public static int FPS;
     public static boolean SHOW_DEBUG = false;
 
-    private GameProc gameProc;
+    private GameProc gp;
     private Renderer renderer;
     private MenuRenderer menuRenderer;
 
@@ -34,7 +34,7 @@ public class GameScreen implements Screen {
     }
 
     private void game(float delta) {
-        gameProc.update(delta);
+        gp.update(delta);
     }
 
     private void menu() {
@@ -58,21 +58,21 @@ public class GameScreen implements Screen {
                 break;
 
             case NEW_GAME:
-                gameProc = new GameProc();
-                renderer = gameProc.renderer;
-                Gdx.input.setInputProcessor(new InputHandlerGame(gameProc));
+                gp = new GameProc();
+                renderer = gp.renderer;
+                Gdx.input.setInputProcessor(new InputHandlerGame(gp));
                 CaveGame.STATE = AppState.GAME_PLAY;
                 break;
 
             case LOAD_GAME:
-                gameProc = GameSaver.load();
-                renderer = gameProc.renderer;
-                Gdx.input.setInputProcessor(new InputHandlerGame(gameProc));
+                gp = GameSaver.load();
+                renderer = gp.renderer;
+                Gdx.input.setInputProcessor(new InputHandlerGame(gp));
                 CaveGame.STATE = AppState.GAME_PLAY;
                 break;
 
             case SAVE_GAME:
-                GameSaver.save(gameProc);
+                GameSaver.save(gp);
                 CaveGame.STATE = AppState.MENU_MAIN;
                 break;
 
@@ -94,8 +94,8 @@ public class GameScreen implements Screen {
                 break;
             case GAME_PLAY:
             case GAME_CREATIVE_INV:
-                gameProc.resetRenderer();
-                renderer = gameProc.renderer;
+                gp.resetRenderer();
+                renderer = gp.renderer;
                 break;
         }
     }
