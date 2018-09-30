@@ -9,9 +9,9 @@ import java.io.Serializable;
 public abstract class Mob implements Serializable {
 
     public int ANIM_SPEED = 6;
-    public Vector2 position;
+    public Vector2 pos;
     public Vector2 move;
-    public int width, height, dir, animation;
+    public int width, height, dir, anim;
     public boolean canJump;
     public boolean dead;
 

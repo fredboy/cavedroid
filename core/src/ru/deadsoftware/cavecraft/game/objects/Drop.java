@@ -8,11 +8,11 @@ import java.io.Serializable;
 public class Drop implements Serializable {
     private int id;
     public boolean pickedUp = false;
-    public Vector2 move, position;
+    public Vector2 move, pos;
 
     public Drop(float x, float y, int id) {
         this.id = id;
-        position = new Vector2(x, y);
+        pos = new Vector2(x, y);
         move = new Vector2(0, -1);
     }
 
@@ -31,7 +31,7 @@ public class Drop implements Serializable {
     }
 
     public Rectangle getRect() {
-        return new Rectangle(position.x, position.y, 8, 8);
+        return new Rectangle(pos.x, pos.y, 8, 8);
     }
 
 }

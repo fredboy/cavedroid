@@ -10,7 +10,7 @@ public class FallingGravel extends Mob {
 
     public FallingGravel(int x, int y) {
         dir = 0;
-        position = new Vector2(x, y);
+        pos = new Vector2(x, y);
         move = new Vector2(0, 1);
         width = 16;
         height = 16;
@@ -33,7 +33,7 @@ public class FallingGravel extends Mob {
 
     @Override
     public Rectangle getRect() {
-        return new Rectangle(position.x, position.y, width, height);
+        return new Rectangle(pos.x, pos.y, width, height);
     }
 
     @Override

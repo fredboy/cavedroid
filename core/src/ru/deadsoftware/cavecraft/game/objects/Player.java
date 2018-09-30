@@ -9,7 +9,7 @@ public class Player implements Serializable {
 
     public static int ANIM_SPEED = 6;
 
-    public Vector2 position;
+    public Vector2 pos;
     public Vector2 move;
     public int width, height, dir, texWidth;
     public boolean canJump;
@@ -17,7 +17,7 @@ public class Player implements Serializable {
     public boolean flyMode = false;
 
     public Player(Vector2 spawnPoint) {
-        position = spawnPoint.cpy();
+        pos = spawnPoint.cpy();
         move = new Vector2(0, 0);
         width = 4;
         height = 30;
@@ -26,7 +26,7 @@ public class Player implements Serializable {
     }
 
     public Rectangle getRect() {
-        return new Rectangle(position.x + 2, position.y, width, height);
+        return new Rectangle(pos.x + 2, pos.y, width, height);
     }
 
 }

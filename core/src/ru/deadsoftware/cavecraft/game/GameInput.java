@@ -17,8 +17,8 @@ public class GameInput {
     }
 
     private boolean checkSwim() {
-        return (GameItems.isFluid(gp.world.getForeMap((int) (gp.player.position.x + gp.player.width / 2) / 16,
-                (int) (gp.player.position.y + gp.player.height / 4 * 3) / 16)));
+        return (GameItems.isFluid(gp.world.getForeMap((int) (gp.player.pos.x + gp.player.width / 2) / 16,
+                (int) (gp.player.pos.y + gp.player.height / 4 * 3) / 16)));
     }
 
     private void wasdPressed(int keycode) {

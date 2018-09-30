@@ -84,10 +84,10 @@ public class GameProc implements Serializable {
     private void moveCursor() {
         int pastX = curX, pastY = curY;
         if (ctrlMode == 0 && CaveGame.TOUCH) {
-            curX = (int) (player.position.x + player.texWidth / 2) / 16;
+            curX = (int) (player.pos.x + player.texWidth / 2) / 16;
             if (player.dir == 0) curX--;
             else curX++;
-            curY = (int) (player.position.y + player.texWidth) / 16;
+            curY = (int) (player.pos.y + player.texWidth) / 16;
             if (!isAutoselectable(curX, curY)) {
                 curY++;
             }
@@ -114,9 +114,9 @@ public class GameProc implements Serializable {
         if (curY < 0) curY = 0;
         if (curY >= world.getHeight()) curY = world.getHeight() - 1;
         if (ctrlMode == 1) {
-            if (curX * 16 + 8 < player.position.x + player.texWidth / 2)
+            if (curX * 16 + 8 < player.pos.x + player.texWidth / 2)
                 player.dir = 0;
-            if (curX * 16 + 8 > player.position.x + player.texWidth / 2)
+            if (curX * 16 + 8 > player.pos.x + player.texWidth / 2)
                 player.dir = 1;
         }
     }

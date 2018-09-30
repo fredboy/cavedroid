@@ -10,7 +10,7 @@ public class Pig extends Mob {
 
     public Pig(int x, int y) {
         dir = MathUtils.random(1);
-        position = new Vector2(x, y);
+        pos = new Vector2(x, y);
         move = new Vector2(-1 + dir * 2, 0);
         width = 25;
         height = 18;
@@ -31,17 +31,17 @@ public class Pig extends Mob {
             if (move.x != 0f) move.x = 0;
             else move.x = -1 + 2 * dir;
         }
-        if (move.x != 0f) animation += ANIM_SPEED;
-        else animation = 0;
-        if (animation >= 60 || animation <= -60) {
+        if (move.x != 0f) anim += ANIM_SPEED;
+        else anim = 0;
+        if (anim >= 60 || anim <= -60) {
             ANIM_SPEED = -ANIM_SPEED;
         }
     }
 
     @Override
     public void draw(SpriteBatch spriteBatch, float x, float y) {
-        Assets.pigSprite[0][1].setRotation(animation);
-        Assets.pigSprite[1][1].setRotation(-animation);
+        Assets.pigSprite[0][1].setRotation(anim);
+        Assets.pigSprite[1][1].setRotation(-anim);
         //back legs
         Assets.pigSprite[1][1].setPosition(x - 4 + (9 - dir * 9), y + 6);
         Assets.pigSprite[1][1].draw(spriteBatch);
@@ -58,7 +58,7 @@ public class Pig extends Mob {
 
     @Override
     public Rectangle getRect() {
-        return new Rectangle(position.x, position.y, width, height);
+        return new Rectangle(pos.x, pos.y, width, height);
     }
 
     @Override
