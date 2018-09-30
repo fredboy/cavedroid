@@ -10,7 +10,7 @@ public class Player implements Serializable {
     public static int ANIM_SPEED = 6;
 
     public Vector2 position;
-    public Vector2 moveX, moveY;
+    public Vector2 move;
     public int width, height, dir, texWidth;
     public boolean canJump;
     public int[] inventory;
@@ -18,8 +18,7 @@ public class Player implements Serializable {
 
     public Player(Vector2 spawnPoint) {
         position = spawnPoint.cpy();
-        moveX = new Vector2(0, 0);
-        moveY = new Vector2(0, 0);
+        move = new Vector2(0, 0);
         width = 4;
         height = 30;
         texWidth = 8;

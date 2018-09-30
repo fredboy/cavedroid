@@ -88,7 +88,7 @@ public class GameRenderer extends Renderer {
     }
 
     private void drawPlayer(Player pl) {
-        if (!pl.moveX.equals(Vector2.Zero) || Assets.playerSprite[0][2].getRotation() != 0) {
+        if (pl.move.x != 0 || Assets.playerSprite[0][2].getRotation() != 0) {
             Assets.playerSprite[0][2].rotate(Player.ANIM_SPEED);
             Assets.playerSprite[1][2].rotate(-Player.ANIM_SPEED);
             Assets.playerSprite[0][3].rotate(-Player.ANIM_SPEED);

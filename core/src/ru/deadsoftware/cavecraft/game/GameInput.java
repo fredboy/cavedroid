@@ -25,12 +25,12 @@ public class GameInput {
         if (gameProc.ctrlMode == 0 || !CaveGame.TOUCH) {
             switch (keycode) {
                 case Input.Keys.A:
-                    gameProc.player.moveX.x = -GamePhysics.PL_SPEED;
+                    gameProc.player.move.x = -GamePhysics.PL_SPEED;
                     gameProc.player.dir = 0;
                     if (CaveGame.TOUCH && checkSwim()) gameProc.swim = true;
                     break;
                 case Input.Keys.D:
-                    gameProc.player.moveX.x = GamePhysics.PL_SPEED;
+                    gameProc.player.move.x = GamePhysics.PL_SPEED;
                     gameProc.player.dir = 1;
                     if (CaveGame.TOUCH && checkSwim()) gameProc.swim = true;
                     break;
@@ -72,17 +72,17 @@ public class GameInput {
                 if (checkSwim()) {
                     gameProc.swim = true;
                 } else if (gameProc.player.canJump) {
-                    gameProc.player.moveY.add(0, -7);
+                    gameProc.player.move.add(0, -7);
                 } else if (!gameProc.player.flyMode) {
                     gameProc.player.flyMode = true;
-                    gameProc.player.moveY.setZero();
+                    gameProc.player.move.y = 0;
                 } else {
-                    gameProc.player.moveY.y = -GamePhysics.PL_SPEED;
+                    gameProc.player.move.y = -GamePhysics.PL_SPEED;
                 }
                 break;
 
             case Input.Keys.CONTROL_LEFT:
-                gameProc.player.moveY.y = GamePhysics.PL_SPEED;
+                gameProc.player.move.y = GamePhysics.PL_SPEED;
                 break;
 
             case Input.Keys.E:
@@ -109,13 +109,13 @@ public class GameInput {
         switch (keycode) {
             case Input.Keys.A:
             case Input.Keys.D:
-                gameProc.player.moveX.x = 0;
+                gameProc.player.move.x = 0;
                 if (CaveGame.TOUCH && gameProc.swim) gameProc.swim = false;
                 break;
 
             case Input.Keys.SPACE:
             case Input.Keys.CONTROL_LEFT:
-                if (gameProc.player.flyMode) gameProc.player.moveY.setZero();
+                if (gameProc.player.flyMode) gameProc.player.move.y = 0;
                 if (gameProc.swim) gameProc.swim = false;
                 break;
         }

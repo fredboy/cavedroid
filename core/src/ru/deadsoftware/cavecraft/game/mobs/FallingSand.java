@@ -11,8 +11,7 @@ public class FallingSand extends Mob {
     public FallingSand(int x, int y) {
         dir = 0;
         position = new Vector2(x, y);
-        moveX = new Vector2(0, 0);
-        moveY = new Vector2(0, 1);
+        move = new Vector2(0, 1);
         width = 16;
         height = 16;
         canJump = false;

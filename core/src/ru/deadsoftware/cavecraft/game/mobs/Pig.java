@@ -11,8 +11,7 @@ public class Pig extends Mob {
     public Pig(int x, int y) {
         dir = MathUtils.random(1);
         position = new Vector2(x, y);
-        moveX = new Vector2(-1 + dir * 2, 0);
-        moveY = new Vector2(0, 0);
+        move = new Vector2(-1 + dir * 2, 0);
         width = 25;
         height = 18;
         canJump = false;
@@ -22,17 +21,17 @@ public class Pig extends Mob {
     @Override
     public void changeDir() {
         dir = -dir + 1;
-        moveX.set(-1 + 2 * dir, 0);
+        move.x = -1 + 2 * dir;
     }
 
     @Override
     public void ai() {
         if (MathUtils.randomBoolean(.0025f)) changeDir();
         else if (MathUtils.randomBoolean(.0025f)) {
-            if (moveX.x != 0f) moveX.setZero();
-            else moveX.set(-1 + 2 * dir, 0);
+            if (move.x != 0f) move.x = 0;
+            else move.x = -1 + 2 * dir;
         }
-        if (moveX.x != 0f) animation += ANIM_SPEED;
+        if (move.x != 0f) animation += ANIM_SPEED;
         else animation = 0;
         if (animation >= 60 || animation <= -60) {
             ANIM_SPEED = -ANIM_SPEED;
