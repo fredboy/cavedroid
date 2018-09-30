@@ -365,9 +365,9 @@ public class GameProc implements Serializable {
             }
         }
 
-        if (world.getForeMap(x, y) == 59) {
+        if (world.getForeMap(x, y) > 0 && GameItems.getBlock(world.getForeMap(x, y)).rb) {
             if (world.getForeMap(x, y + 1) == 0 || !GameItems.getBlock(world.getForeMap(x, y + 1)).coll) {
-                world.setForeMap(x, y, 0);
+                world.destroyForeMap(x, y, this);
                 updateBlock(x, y - 1);
             }
         }
@@ -409,14 +409,19 @@ public class GameProc implements Serializable {
         checkCursorBounds();
 
         if (isTouchDown && touchDownBtn == Input.Buttons.LEFT) {
-            if (world.getForeMap(curX, curY) > 0 &&
-                    GameItems.getBlock(world.getForeMap(curX, curY)).getHp() >= 0) {// || world.getBackMap(curX, curY) > 0) {
+            if ((world.getForeMap(curX, curY) > 0 && GameItems.getBlock(world.getForeMap(curX, curY)).getHp() >= 0) ||
+                    world.getBackMap(curX, curY) > 0 && GameItems.getBlock(world.getBackMap(curX, curY)).getHp() >= 0) {
                 blockDmg++;
-                if (blockDmg >= GameItems.getBlock(world.getForeMap(curX, curY)).getHp()) {
-                    if (GameItems.getBlock(world.getForeMap(curX, curY)).getDrop() > 0)
-                        drops.add(new Drop(curX * 16 + 4, curY * 16 + 4, GameItems.getBlock(world.getForeMap(curX, curY)).getDrop()));
-                    world.placeToForeground(curX, curY, 0);
-                    blockDmg = 0;
+                if (world.getForeMap(curX, curY) > 0) {
+                    if (blockDmg >= GameItems.getBlock(world.getForeMap(curX, curY)).getHp()) {
+                        world.destroyForeMap(curX, curY, this);
+                        blockDmg = 0;
+                    }
+                } else if (world.getBackMap(curX, curY) > 0) {
+                    if (blockDmg >= GameItems.getBlock(world.getBackMap(curX, curY)).getHp()) {
+                        world.destroyBackMap(curX, curY, this);
+                        blockDmg = 0;
+                    }
                 }
             }
         }

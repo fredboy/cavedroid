@@ -29,11 +29,11 @@ public class GameRenderer extends Renderer {
         return y * 16 - getCamY();
     }
 
-    private void drawWreck() {
+    private void drawWreck(int bl) {
         if (gp.blockDmg > 0) {
             spriter.draw(Assets.wreck[
                             10 * gp.blockDmg /
-                                    GameItems.getBlock(gp.world.getForeMap(gp.curX, gp.curY)).getHp()],
+                                    GameItems.getBlock(bl).getHp()],
                     gp.curX * 16 - getCamX(),
                     gp.curY * 16 - getCamY());
         }
@@ -53,7 +53,8 @@ public class GameRenderer extends Renderer {
                     spriter.draw(
                             Assets.blockTex[GameItems.getBlock(gp.world.getBackMap(x, y)).getTex()],
                             drawX(x), drawY(y));
-                    if (gp.world.getForeMap(x, y) == 0) drawWreck();
+                    if (gp.world.getForeMap(x, y) == 0 && x == gp.curX && y == gp.curY)
+                        drawWreck(gp.world.getBackMap(gp.curX, gp.curY));
                     Assets.shade.setPosition(drawX(x), drawY(y));
                     Assets.shade.draw(spriter);
                 }
@@ -61,7 +62,8 @@ public class GameRenderer extends Renderer {
                     spriter.draw(
                             Assets.blockTex[GameItems.getBlock(gp.world.getForeMap(x, y)).getTex()],
                             drawX(x), drawY(y));
-                    drawWreck();
+                    if (x == gp.curX && y == gp.curY)
+                        drawWreck(gp.world.getForeMap(gp.curX, gp.curY));
                 }
             }
         }
@@ -80,7 +82,8 @@ public class GameRenderer extends Renderer {
                     spriter.draw(
                             Assets.blockTex[GameItems.getBlock(gp.world.getForeMap(x, y)).getTex()],
                             drawX(x), drawY(y));
-                    drawWreck();
+                    if (x == gp.curX && y == gp.curY)
+                        drawWreck(gp.world.getForeMap(gp.curX, gp.curY));
                 }
             }
         }
@@ -98,11 +101,17 @@ public class GameRenderer extends Renderer {
     private void drawDrop(Drop drop) {
         switch (GameItems.getItem(drop.getId()).getType()) {
             case 0:
-                Assets.blockTex[GameItems.getItem(drop.getId()).getTex()].setPosition(drop.pos.x - getCamX() - gp.world.getWidth() * 16, drop.pos.y - getCamY());
+                Assets.blockTex[GameItems.getItem(drop.getId()).getTex()].setPosition(
+                        drop.pos.x - getCamX() - gp.world.getWidth() * 16,
+                        drop.pos.y - getCamY());
                 Assets.blockTex[GameItems.getItem(drop.getId()).getTex()].draw(spriter);
-                Assets.blockTex[GameItems.getItem(drop.getId()).getTex()].setPosition(drop.pos.x - getCamX(), drop.pos.y - getCamY());
+                Assets.blockTex[GameItems.getItem(drop.getId()).getTex()].setPosition(
+                        drop.pos.x - getCamX(),
+                        drop.pos.y - getCamY());
                 Assets.blockTex[GameItems.getItem(drop.getId()).getTex()].draw(spriter);
-                Assets.blockTex[GameItems.getItem(drop.getId()).getTex()].setPosition(drop.pos.x - getCamX() + gp.world.getWidth() * 16, drop.pos.y - getCamY());
+                Assets.blockTex[GameItems.getItem(drop.getId()).getTex()].setPosition(
+                        drop.pos.x - getCamX() + gp.world.getWidth() * 16,
+                        drop.pos.y - getCamY());
                 Assets.blockTex[GameItems.getItem(drop.getId()).getTex()].draw(spriter);
         }
     }
@@ -145,12 +154,13 @@ public class GameRenderer extends Renderer {
         spriter.draw(Assets.plSprite[pl.dir][1],
                 pl.pos.x - getCamX() - 2, pl.pos.y - getCamY() + 8);
         //item in hand
-        if (pl.inv[gp.slot] > 0)
+        if (pl.inv[gp.slot] > 0) {
+            float handRotation = MathUtils.degRad * Assets.plSprite[0][2].getRotation();
             switch (GameItems.getItem(pl.inv[gp.slot]).getType()) {
                 case 0:
                     Assets.blockTex[GameItems.getItem(pl.inv[gp.slot]).getTex()].setPosition(
-                            pl.pos.x - getCamX() - 8 * MathUtils.sin(MathUtils.degRad * Assets.plSprite[0][2].getRotation()),
-                            pl.pos.y - getCamY() + 6 + 8 * MathUtils.cos(MathUtils.degRad * Assets.plSprite[0][2].getRotation()));
+                            pl.pos.x - getCamX() - 8 * MathUtils.sin(handRotation),
+                            pl.pos.y - getCamY() + 6 + 8 * MathUtils.cos(handRotation));
                     Assets.blockTex[GameItems.getItem(pl.inv[gp.slot]).getTex()].draw(spriter);
                     break;
                 default:
@@ -158,12 +168,13 @@ public class GameRenderer extends Renderer {
                     Assets.itemTex[GameItems.getItem(pl.inv[gp.slot]).getTex()].setRotation(
                             -45 + pl.dir * 90 + Assets.plSprite[0][2].getRotation());
                     Assets.itemTex[GameItems.getItem(pl.inv[gp.slot]).getTex()].setPosition(
-                            pl.pos.x - getCamX() - 10 + (12 * pl.dir) - 8 * MathUtils.sin(MathUtils.degRad * Assets.plSprite[0][2].getRotation()),
-                            pl.pos.y - getCamY() + 2 + 8 * MathUtils.cos(MathUtils.degRad * Assets.plSprite[0][2].getRotation()));
+                            pl.pos.x - getCamX() - 10 + (12 * pl.dir) - 8 * MathUtils.sin(handRotation),
+                            pl.pos.y - getCamY() + 2 + 8 * MathUtils.cos(handRotation));
                     Assets.itemTex[GameItems.getItem(pl.inv[gp.slot]).getTex()].draw(spriter);
                     Assets.itemTex[GameItems.getItem(pl.inv[gp.slot]).getTex()].flip((pl.dir == 0), false);
                     break;
             }
+        }
         //front hand
         Assets.plSprite[0][2].setPosition(
                 pl.pos.x - getCamX() - 6,
@@ -215,25 +226,25 @@ public class GameRenderer extends Renderer {
             spriter.draw(Assets.guiCur,
                     gp.curX * 16 - getCamX(),
                     gp.curY * 16 - getCamY());
-        spriter.draw(Assets.invBar, getWidth() / 2 - Assets.invBar.getRegionWidth() / 2, 0);
+        spriter.draw(Assets.invBar, getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2, 0);
         for (int i = 0; i < 9; i++) {
             if (gp.player.inv[i] > 0) {
                 switch (GameItems.getItem(gp.player.inv[i]).getType()) {
                     case 0:
                         spriter.draw(Assets.blockTex[GameItems.getItem(gp.player.inv[i]).getTex()],
-                                getWidth() / 2 - Assets.invBar.getRegionWidth() / 2 + 3 + i * 20,
+                                getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 + 3 + i * 20,
                                 3);
                         break;
                     case 1:
                         spriter.draw(Assets.itemTex[GameItems.getItem(gp.player.inv[i]).getTex()],
-                                getWidth() / 2 - Assets.invBar.getRegionWidth() / 2 + 3 + i * 20,
+                                getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 + 3 + i * 20,
                                 3);
                         break;
                 }
             }
         }
         spriter.draw(Assets.invBarCur,
-                getWidth() / 2 - Assets.invBar.getRegionWidth() / 2 - 1 + 20 * gp.slot,
+                getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 - 1 + 20 * gp.slot,
                 -1);
     }
 
@@ -285,7 +296,6 @@ public class GameRenderer extends Renderer {
             drawString("Drops: " + gp.drops.size(), 0, 40);
             drawString("Block: " + GameItems.getBlockKey(gp.world.getForeMap(gp.curX, gp.curY)), 0, 50);
         }
-
         spriter.end();
     }
 

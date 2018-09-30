@@ -8,17 +8,25 @@ public class Block {
     private int tex;
     private int hp, drop;
 
-    public boolean coll, bg, tp;
+    public boolean coll, bg, tp, rb;
 
     public Block(int tex, int hp, int drop) {
-        this(0, 0, 16, 16, tex, hp, drop, true, false, false);
+        this(0, 0, 16, 16, tex, hp, drop, true, false, false, false);
     }
 
     public Block(int tex, int hp, int drop, boolean coll, boolean bg, boolean tp) {
-        this(0, 0, 16, 16, tex, hp, drop, coll, bg, tp);
+        this(0, 0, 16, 16, tex, hp, drop, coll, bg, tp, false);
+    }
+
+    public Block(int tex, int hp, int drop, boolean coll, boolean bg, boolean tp, boolean rb) {
+        this(0, 0, 16, 16, tex, hp, drop, coll, bg, tp, rb);
     }
 
     public Block(int x, int y, int w, int h, int tex, int hp, int drop, boolean coll, boolean bg, boolean tp) {
+        this(x, y, w, h, tex, hp, drop, coll, bg, tp, false);
+    }
+
+    public Block(int x, int y, int w, int h, int tex, int hp, int drop, boolean coll, boolean bg, boolean tp, boolean rb) {
         this.x = x;
         this.y = y;
         this.w = w;
@@ -29,6 +37,7 @@ public class Block {
         this.coll = coll;
         this.bg = bg;
         this.tp = tp;
+        this.rb = rb;
     }
 
     public int getTex() {

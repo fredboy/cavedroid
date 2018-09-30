@@ -68,8 +68,14 @@ public class GamePhysics {
     }
 
     private void dropPhy(Drop drop) {
-        if (drop.move.y < 9) drop.move.y += gravity.y / 4;
+        if (drop.closeToPlayer(gp) > 0) {
+            drop.moveToPlayer(gp);
+        } else {
+            if (drop.move.y < 9) drop.move.y += gravity.y / 4;
+        }
         drop.pos.add(drop.move);
+        if (drop.pos.x + 8 > gp.world.getWidth() * 16) drop.pos.x -= gp.world.getWidth() * 16;
+        else if (drop.pos.x < 0) drop.pos.x += gp.world.getWidth() * 16;
         drop.pos.y = MathUtils.round(drop.pos.y);
         while (checkColl(drop.getRect())) {
             drop.pos.y--;
@@ -185,8 +191,7 @@ public class GamePhysics {
         for (Iterator<Drop> it = gp.drops.iterator(); it.hasNext(); ) {
             Drop drop = it.next();
             dropPhy(drop);
-            if (Intersector.overlaps(drop.getRect(), gp.player.getRect()))
-                drop.pickUpDrop(gp.player);
+            if (Intersector.overlaps(drop.getRect(), gp.player.getRect())) drop.pickUpDrop(gp.player);
             if (drop.pickedUp) it.remove();
         }
 

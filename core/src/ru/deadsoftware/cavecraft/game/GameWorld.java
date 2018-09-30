@@ -1,6 +1,7 @@
 package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.math.Vector2;
+import ru.deadsoftware.cavecraft.game.objects.Drop;
 
 public class GameWorld {
 
@@ -109,6 +110,18 @@ public class GameWorld {
                 (!GameItems.getBlock(value).tp || value == 18)) {
             setBackMap(x, y, value);
         }
+    }
+
+    public void destroyForeMap(int x, int y, GameProc gp) {
+        if (GameItems.getBlock(getForeMap(x, y)).getDrop() > 0)
+            gp.drops.add(new Drop(transformX(x) * 16 + 4, y * 16 + 4, GameItems.getBlock(getForeMap(x, y)).getDrop()));
+        placeToForeground(x, y, 0);
+    }
+
+    public void destroyBackMap(int x, int y, GameProc gp) {
+        if (GameItems.getBlock(getBackMap(x, y)).getDrop() > 0)
+            gp.drops.add(new Drop(transformX(x) * 16 + 4, y * 16 + 4, GameItems.getBlock(getBackMap(x, y)).getDrop()));
+        placeToBackground(x, y, 0);
     }
 
     public Vector2 getSpawnPoint() {

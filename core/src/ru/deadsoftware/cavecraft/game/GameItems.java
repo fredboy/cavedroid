@@ -193,7 +193,7 @@ public class GameItems {
         //5
         blocks.put("planks", new Block(4, 180, 5));
         //6
-        blocks.put("sapling", new Block(5, 0, 6, false, false, true));
+        blocks.put("sapling", new Block(5, 0, 6, false, false, true, true));
         //7
         blocks.put("bedrock", new Block(6, -1, 7));
         //8
@@ -233,19 +233,19 @@ public class GameItems {
         //25
         blocks.put("cobweb", new Block(24, 1200, 0, false, false, true));
         //26
-        blocks.put("tallgrass", new Block(25, 0, 0, false, false, true));
+        blocks.put("tallgrass", new Block(25, 0, 0, false, false, true, true));
         //27
-        blocks.put("deadbush", new Block(26, 0, 0, false, false, true));
+        blocks.put("deadbush", new Block(26, 0, 0, false, false, true, true));
         //28
         blocks.put("brick_block", new Block(27, 600, 22));
         //29
-        blocks.put("dandelion", new Block(28, 0, 23, false, false, true));
+        blocks.put("dandelion", new Block(28, 0, 23, false, false, true, true));
         //30
-        blocks.put("rose", new Block(29, 0, 24, false, false, true));
+        blocks.put("rose", new Block(29, 0, 24, false, false, true, true));
         //31
-        blocks.put("brown_mushroom", new Block(30, 0, 25, false, false, true));
+        blocks.put("brown_mushroom", new Block(30, 0, 25, false, false, true, true));
         //32
-        blocks.put("red_mushroom", new Block(31, 0, 26, false, false, true));
+        blocks.put("red_mushroom", new Block(31, 0, 26, false, false, true, true));
         //33
         blocks.put("wool_while", new Block(32, 75, 27, true, false, false));
         //34
@@ -299,7 +299,7 @@ public class GameItems {
         //58
         blocks.put("stone_brick_slab", new Block(0, 8, 16, 8, 56, 450, 51, true, false, true));
         //59
-        blocks.put("cactus", new Block(1, 0, 14, 16, 57, 39, 52, true, false, true));
+        blocks.put("cactus", new Block(1, 0, 14, 16, 57, 39, 52, true, false, true, true));
         //60
         blocks.put("water_16", new Block(7, -1, 0, false, false, true));
         //61
