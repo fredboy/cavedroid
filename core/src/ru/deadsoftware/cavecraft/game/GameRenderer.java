@@ -295,6 +295,7 @@ public class GameRenderer extends Renderer {
             drawString("Mobs: " + gp.mobs.size(), 0, 30);
             drawString("Drops: " + gp.drops.size(), 0, 40);
             drawString("Block: " + GameItems.getBlockKey(gp.world.getForeMap(gp.curX, gp.curY)), 0, 50);
+            drawString("Game mode: " + gp.player.gameMode, 0, 60);
         }
         spriter.end();
     }

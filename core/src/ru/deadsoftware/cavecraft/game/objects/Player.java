@@ -15,8 +15,10 @@ public class Player implements Serializable {
     public boolean canJump;
     public int[] inv;
     public boolean flyMode = false;
+    public int gameMode;
 
-    public Player(Vector2 spawnPoint) {
+    public Player(Vector2 spawnPoint, int gameMode) {
+        this.gameMode = gameMode;
         pos = spawnPoint.cpy();
         move = new Vector2(0, 0);
         width = 4;

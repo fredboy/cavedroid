@@ -14,22 +14,38 @@ import ru.deadsoftware.cavecraft.misc.Renderer;
 public class MenuRenderer extends Renderer {
 
     public Array<Button> menuMainBtns;
+    public Array<Button> menuNGBtns;
 
     public MenuRenderer(int width) {
         super(width, width * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
+        //main menu
         menuMainBtns = new Array<Button>();
         menuMainBtns.add(new Button("New game", getWidth() / 2 - 100, getHeight() / 4));
         menuMainBtns.add(new Button("Load game", getWidth() / 2 - 100, getHeight() / 4 + 30, GameSaver.exists() ? 1 : 0));
         menuMainBtns.add(new Button("Quit", getWidth() / 2 - 100, getHeight() / 4 + 60));
+        //new game menu
+        menuNGBtns = new Array<Button>();
+        menuNGBtns.add(new Button("Survival", getWidth() / 2 - 100, getHeight() / 4, 1));
+        menuNGBtns.add(new Button("Creative", getWidth() / 2 - 100, getHeight() / 4 + 30));
+        menuNGBtns.add(new Button("Back", getWidth() / 2 - 100, getHeight() / 4 + 60));
+
     }
 
     public void buttonClicked(Button button) {
         if (button.getLabel().toLowerCase().equals("new game")) {
-            CaveGame.STATE = AppState.GOTO_NEW_GAME;
+            CaveGame.STATE = AppState.MENU_NEW_GAME;
         } else if (button.getLabel().toLowerCase().equals("load game")) {
             CaveGame.STATE = AppState.GOTO_LOAD_GAME;
         } else if (button.getLabel().toLowerCase().equals("quit")) {
             Gdx.app.exit();
+        } else if (button.getLabel().toLowerCase().equals("survival")) {
+            GameScreen.NEW_GAME_MODE = 0;
+            CaveGame.STATE = AppState.GOTO_NEW_GAME;
+        } else if (button.getLabel().toLowerCase().equals("creative")) {
+            GameScreen.NEW_GAME_MODE = 1;
+            CaveGame.STATE = AppState.GOTO_NEW_GAME;
+        } else if (button.getLabel().toLowerCase().equals("back")) {
+            CaveGame.STATE = AppState.MENU_MAIN;
         }
     }
 
@@ -43,6 +59,18 @@ public class MenuRenderer extends Renderer {
 
     private void drawMenuMain() {
         for (Button button : menuMainBtns) {
+            if (button.getType() > 0) {
+                if (button.getRect().contains(Gdx.input.getX() * getWidth() / GameScreen.getWidth(),
+                        Gdx.input.getY() * getHeight() / GameScreen.getHeight()))
+                    button.setType(2);
+                else button.setType(1);
+            }
+            drawButton(button);
+        }
+    }
+
+    private void drawMenuNewGame() {
+        for (Button button : menuNGBtns) {
             if (button.getType() > 0) {
                 if (button.getRect().contains(Gdx.input.getX() * getWidth() / GameScreen.getWidth(),
                         Gdx.input.getY() * getHeight() / GameScreen.getHeight()))
@@ -70,6 +98,9 @@ public class MenuRenderer extends Renderer {
         switch (CaveGame.STATE) {
             case MENU_MAIN:
                 drawMenuMain();
+                break;
+            case MENU_NEW_GAME:
+                drawMenuNewGame();
                 break;
             case GOTO_NEW_GAME:
             case GOTO_LOAD_GAME:

@@ -1,6 +1,7 @@
 package ru.deadsoftware.cavecraft.misc;
 
 import com.badlogic.gdx.InputProcessor;
+import ru.deadsoftware.cavecraft.CaveGame;
 import ru.deadsoftware.cavecraft.GameScreen;
 import ru.deadsoftware.cavecraft.menu.MenuRenderer;
 import ru.deadsoftware.cavecraft.menu.objects.Button;
@@ -37,8 +38,19 @@ public class InputHandlerMenu implements InputProcessor {
     public boolean touchUp(int screenX, int screenY, int pointer, int mb) {
         screenX *= menuRenderer.getWidth() / GameScreen.getWidth();
         screenY *= menuRenderer.getHeight() / GameScreen.getHeight();
-        for (Button button : menuRenderer.menuMainBtns) {
-            if (button.getRect().contains(screenX, screenY) && button.getType() > 0) menuRenderer.buttonClicked(button);
+        switch (CaveGame.STATE) {
+            case MENU_MAIN:
+                for (Button button : menuRenderer.menuMainBtns) {
+                    if (button.getRect().contains(screenX, screenY) && button.getType() > 0)
+                        menuRenderer.buttonClicked(button);
+                }
+                break;
+            case MENU_NEW_GAME:
+                for (Button button : menuRenderer.menuNGBtns) {
+                    if (button.getRect().contains(screenX, screenY) && button.getType() > 0)
+                        menuRenderer.buttonClicked(button);
+                }
+                break;
         }
         return false;
     }

@@ -44,10 +44,10 @@ public class GameProc implements Serializable {
     public int touchDownBtn;
     public long touchDownTime;
 
-    public GameProc() {
+    public GameProc(int gameMode) {
         world = new GameWorld();
         world.generate(1024, 256);
-        player = new Player(world.getSpawnPoint());
+        player = new Player(world.getSpawnPoint(), gameMode);
         drops = new ArrayList<Drop>();
         mobs = new ArrayList<Mob>();
         for (int i = 0; i < 16; i++) {
@@ -411,17 +411,23 @@ public class GameProc implements Serializable {
         if (isTouchDown && touchDownBtn == Input.Buttons.LEFT) {
             if ((world.getForeMap(curX, curY) > 0 && GameItems.getBlock(world.getForeMap(curX, curY)).getHp() >= 0) ||
                     world.getBackMap(curX, curY) > 0 && GameItems.getBlock(world.getBackMap(curX, curY)).getHp() >= 0) {
-                blockDmg++;
-                if (world.getForeMap(curX, curY) > 0) {
-                    if (blockDmg >= GameItems.getBlock(world.getForeMap(curX, curY)).getHp()) {
-                        world.destroyForeMap(curX, curY, this);
-                        blockDmg = 0;
+                if (player.gameMode == 0) {
+                    blockDmg++;
+                    if (world.getForeMap(curX, curY) > 0) {
+                        if (blockDmg >= GameItems.getBlock(world.getForeMap(curX, curY)).getHp()) {
+                            world.destroyForeMap(curX, curY, this);
+                            blockDmg = 0;
+                        }
+                    } else if (world.getBackMap(curX, curY) > 0) {
+                        if (blockDmg >= GameItems.getBlock(world.getBackMap(curX, curY)).getHp()) {
+                            world.destroyBackMap(curX, curY, this);
+                            blockDmg = 0;
+                        }
                     }
-                } else if (world.getBackMap(curX, curY) > 0) {
-                    if (blockDmg >= GameItems.getBlock(world.getBackMap(curX, curY)).getHp()) {
-                        world.destroyBackMap(curX, curY, this);
-                        blockDmg = 0;
-                    }
+                } else {
+                    if (world.getForeMap(curX, curY) > 0) world.setForeMap(curX, curY, 0);
+                    else if (world.getBackMap(curX, curY) > 0) world.setBackMap(curX, curY, 0);
+                    isTouchDown = false;
                 }
             }
         }

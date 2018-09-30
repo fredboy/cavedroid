@@ -10,6 +10,7 @@ public enum AppState {
     SAVE_GAME,
 
     MENU_MAIN,
+    MENU_NEW_GAME,
 
     GAME_PLAY,
     GAME_CREATIVE_INV

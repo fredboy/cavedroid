@@ -12,6 +12,7 @@ public class GameScreen implements Screen {
 
     public static int FPS;
     public static boolean SHOW_DEBUG = false;
+    public static int NEW_GAME_MODE = 0;
 
     private GameProc gp;
     private Renderer renderer;
@@ -58,7 +59,7 @@ public class GameScreen implements Screen {
                 break;
 
             case NEW_GAME:
-                gp = new GameProc();
+                gp = new GameProc(NEW_GAME_MODE);
                 renderer = gp.renderer;
                 Gdx.input.setInputProcessor(new InputHandlerGame(gp));
                 CaveGame.STATE = AppState.GAME_PLAY;
@@ -89,6 +90,7 @@ public class GameScreen implements Screen {
     public void resize(int width, int height) {
         switch (CaveGame.STATE) {
             case MENU_MAIN:
+
                 menuRenderer = new MenuRenderer(CaveGame.TOUCH ? 320 : 480);
                 renderer = menuRenderer;
                 break;

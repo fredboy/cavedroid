@@ -73,10 +73,10 @@ public class GameInput {
                     gp.swim = true;
                 } else if (gp.player.canJump) {
                     gp.player.move.add(0, -7);
-                } else if (!gp.player.flyMode) {
+                } else if (!gp.player.flyMode && gp.player.gameMode == 1) {
                     gp.player.flyMode = true;
                     gp.player.move.y = 0;
-                } else {
+                } else if (gp.player.flyMode) {
                     gp.player.move.y = -GamePhysics.PL_SPEED;
                 }
                 break;
@@ -86,7 +86,14 @@ public class GameInput {
                 break;
 
             case Input.Keys.E:
-                if (CaveGame.STATE == AppState.GAME_PLAY) CaveGame.STATE = AppState.GAME_CREATIVE_INV;
+                if (CaveGame.STATE == AppState.GAME_PLAY) switch (gp.player.gameMode) {
+                    case 0:
+                        //TODO survival inv
+                        break;
+                    case 1:
+                        CaveGame.STATE = AppState.GAME_CREATIVE_INV;
+                        break;
+                }
                 else CaveGame.STATE = AppState.GAME_PLAY;
                 break;
 
