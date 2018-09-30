@@ -2,9 +2,9 @@ package ru.deadsoftware.cavecraft;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import ru.deadsoftware.cavecraft.game.GameItems;
 import ru.deadsoftware.cavecraft.game.GameProc;
 import ru.deadsoftware.cavecraft.game.GameSaver;
-import ru.deadsoftware.cavecraft.game.Items;
 import ru.deadsoftware.cavecraft.menu.MenuRenderer;
 import ru.deadsoftware.cavecraft.misc.*;
 
@@ -19,7 +19,7 @@ public class GameScreen implements Screen {
 
     public GameScreen() {
         Assets.load();
-        Items.load();
+        GameItems.load();
         menuRenderer = new MenuRenderer(CaveGame.TOUCH ? 320 : 480);
         renderer = menuRenderer;
         Gdx.input.setInputProcessor(new InputHandlerMenu(menuRenderer));

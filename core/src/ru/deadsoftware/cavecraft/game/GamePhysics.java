@@ -38,8 +38,8 @@ public class GamePhysics {
             default:
                 bl = 0;
         }
-        return (bl > 0 && Items.blocks.getValueAt(bl).toJump() &&
-                (rect.y + rect.height) - Items.blocks.getValueAt(bl).getRect((int) ((rect.x - 8) / 16), (int) ((rect.y + rect.height - 8) / 16)).y > 8);
+        return (bl > 0 && GameItems.getBlock(bl).toJump() &&
+                (rect.y + rect.height) - GameItems.getBlock(bl).getRect((int) ((rect.x - 8) / 16), (int) ((rect.y + rect.height - 8) / 16)).y > 8);
     }
 
     private boolean checkColl(Rectangle rect) {
@@ -53,8 +53,8 @@ public class GamePhysics {
         for (int y = minY; y < maxY; y++) {
             for (int x = minX; x < maxX; x++) {
                 bl = gp.world.getForeMap(x, y);
-                if (bl > 0 && Items.blocks.getValueAt(bl).coll) {
-                    if (Intersector.overlaps(rect, Items.blocks.getValueAt(bl).getRect(x, y))) {
+                if (bl > 0 && GameItems.getBlock(bl).coll) {
+                    if (Intersector.overlaps(rect, GameItems.getBlock(bl).getRect(x, y))) {
                         return true;
                     }
                 }
@@ -93,7 +93,7 @@ public class GamePhysics {
             pl.canJump = false;
         }
 
-        if (Items.isFluid(getBlock(pl.getRect()))) {
+        if (GameItems.isFluid(getBlock(pl.getRect()))) {
             if (CaveGame.TOUCH && pl.move.x != 0 && !gp.swim && !pl.flyMode) gp.swim = true;
             if (!gp.swim) {
                 if (!pl.flyMode && pl.move.y < 4.5f) pl.move.add(gravity.x / 4, gravity.y / 4);
@@ -148,7 +148,7 @@ public class GamePhysics {
             mob.canJump = false;
         }
 
-        if (mob.getType() == 0 && Items.isFluid(getBlock(mob.getRect()))) {
+        if (mob.getType() == 0 && GameItems.isFluid(getBlock(mob.getRect()))) {
             if (mob.move.y > 9) mob.move.add(0, -.9f);
             mob.move.add(0, -.5f);
             if (mob.move.y < -3) mob.move.y = -3;

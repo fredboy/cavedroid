@@ -6,10 +6,10 @@ import ru.deadsoftware.cavecraft.game.objects.Item;
 
 import java.util.ArrayList;
 
-public class Items {
+public class GameItems {
 
-    public static ArrayMap<String, Block> blocks = new ArrayMap<String, Block>();
-    public static ArrayList<Item> items = new ArrayList<Item>();
+    private static ArrayMap<String, Block> blocks = new ArrayMap<String, Block>();
+    private static ArrayList<Item> items = new ArrayList<Item>();
 
     public static boolean isFluid(int bl) {
         return (bl == 8 || bl == 9 || bl == 60 || bl == 61 || bl == 62 || bl == 63 || bl == 64 || bl == 65 || bl == 66 || bl == 67);
@@ -25,6 +25,26 @@ public class Items {
 
     public static boolean isSlab(int bl) {
         return (bl == 51 || bl == 53 || bl == 54 || bl == 55 || bl == 56 || bl == 58);
+    }
+
+    public static String getBlockKey(int id) {
+        return blocks.getKeyAt(id);
+    }
+
+    public static Block getBlock(int id) {
+        return blocks.getValueAt(id);
+    }
+
+    public static Item getItem(int id) {
+        return items.get(id);
+    }
+
+    public static int getBlocksSize() {
+        return blocks.size;
+    }
+
+    public static int getItemsSize() {
+        return items.size();
     }
 
     public static void loadItems() {

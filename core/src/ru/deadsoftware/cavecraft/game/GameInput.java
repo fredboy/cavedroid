@@ -17,7 +17,7 @@ public class GameInput {
     }
 
     private boolean checkSwim() {
-        return (Items.isFluid(gp.world.getForeMap((int) (gp.player.position.x + gp.player.width / 2) / 16,
+        return (GameItems.isFluid(gp.world.getForeMap((int) (gp.player.position.x + gp.player.width / 2) / 16,
                 (int) (gp.player.position.y + gp.player.height / 4 * 3) / 16)));
     }
 
@@ -147,7 +147,7 @@ public class GameInput {
                 int iy = (int) (screenY - (gp.renderer.getHeight() / 2 - Assets.creativeInv.getRegionHeight() / 2 + 18)) / 18;
                 int item = gp.creativeScroll * 8 + (ix + iy * 8);
                 if (ix >= 8 || ix < 0 || iy < 0 || iy >= 5) item = -1;
-                if (item >= 0 && item < Items.items.size()) {
+                if (item >= 0 && item < GameItems.getItemsSize()) {
                     for (int i = 8; i > 0; i--) {
                         gp.player.inventory[i] = gp.player.inventory[i - 1];
                     }

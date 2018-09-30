@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import ru.deadsoftware.cavecraft.CaveGame;
 import ru.deadsoftware.cavecraft.GameScreen;
+import ru.deadsoftware.cavecraft.game.GameItems;
 import ru.deadsoftware.cavecraft.game.GameSaver;
-import ru.deadsoftware.cavecraft.game.Items;
 import ru.deadsoftware.cavecraft.menu.objects.Button;
 import ru.deadsoftware.cavecraft.misc.AppState;
 import ru.deadsoftware.cavecraft.misc.Assets;
@@ -62,7 +62,7 @@ public class MenuRenderer extends Renderer {
         spriter.begin();
         for (int x = 0; x <= getWidth() / 16; x++)
             for (int y = 0; y <= getHeight() / 16; y++) {
-                spriter.draw(Assets.blockTex[Items.blocks.get("dirt").getTex()], x * 16, y * 16);
+                spriter.draw(Assets.blockTex[GameItems.getBlock(3).getTex()], x * 16, y * 16);
                 spriter.draw(Assets.shade, x * 16, y * 16);
             }
         spriter.draw(Assets.gameLogo, getWidth() / 2 - Assets.gameLogo.getWidth() / 2, 0);

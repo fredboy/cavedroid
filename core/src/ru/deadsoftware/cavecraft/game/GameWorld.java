@@ -94,9 +94,9 @@ public class GameWorld {
     }
 
     public void placeToForeground(int x, int y, int value) {
-        if (getForeMap(x, y) == 0 || value == 0 || !Items.blocks.getValueAt(getForeMap(x, y)).coll) {
+        if (getForeMap(x, y) == 0 || value == 0 || !GameItems.getBlock(getForeMap(x, y)).coll) {
             setForeMap(x, y, value);
-        } else if (Items.isSlab(value) && getForeMap(x, y) == value) {
+        } else if (GameItems.isSlab(value) && getForeMap(x, y) == value) {
             placeSlab(x, y, value);
         }
         GameProc.UPD_X = x - 8;
@@ -105,8 +105,8 @@ public class GameWorld {
     }
 
     public void placeToBackground(int x, int y, int value) {
-        if (value == 0 || (getBackMap(x, y) == 0 && Items.blocks.getValueAt(value).coll) &&
-                (!Items.blocks.getValueAt(value).tp || value == 18)) {
+        if (value == 0 || (getBackMap(x, y) == 0 && GameItems.getBlock(value).coll) &&
+                (!GameItems.getBlock(value).tp || value == 18)) {
             setBackMap(x, y, value);
         }
     }
@@ -115,7 +115,7 @@ public class GameWorld {
         int x = 0, y = 0;
         while (true) {
             y++;
-            if (getForeMap(x, y) > 0 && Items.blocks.getValueAt(getForeMap(x, y)).coll) break;
+            if (getForeMap(x, y) > 0 && GameItems.getBlock(getForeMap(x, y)).coll) break;
         }
         x = x * 16 + 4;
         y = y * 16 - 32;

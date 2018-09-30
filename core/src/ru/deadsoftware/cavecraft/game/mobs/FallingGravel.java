@@ -3,7 +3,7 @@ package ru.deadsoftware.cavecraft.game.mobs;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import ru.deadsoftware.cavecraft.game.Items;
+import ru.deadsoftware.cavecraft.game.GameItems;
 import ru.deadsoftware.cavecraft.misc.Assets;
 
 public class FallingGravel extends Mob {
@@ -28,7 +28,7 @@ public class FallingGravel extends Mob {
 
     @Override
     public void draw(SpriteBatch spriteBatch, float x, float y) {
-        spriteBatch.draw(Assets.blockTex[Items.blocks.get("gravel").getTex()], x, y);
+        spriteBatch.draw(Assets.blockTex[GameItems.getBlock(11).getTex()], x, y);
     }
 
     @Override
