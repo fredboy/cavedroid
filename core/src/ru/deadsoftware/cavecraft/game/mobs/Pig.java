@@ -4,16 +4,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import ru.deadsoftware.cavecraft.game.GameWorld;
 import ru.deadsoftware.cavecraft.misc.Assets;
-import ru.deadsoftware.cavecraft.game.GameProc;
 
-public class Pig extends Mob{
+public class Pig extends Mob {
 
     public Pig(int x, int y) {
         dir = MathUtils.random(1);
         position = new Vector2(x, y);
-        moveX = new Vector2(-1+dir*2, 0);
+        moveX = new Vector2(-1 + dir * 2, 0);
         moveY = new Vector2(0, 0);
         width = 25;
         height = 18;
@@ -23,8 +21,8 @@ public class Pig extends Mob{
 
     @Override
     public void changeDir() {
-        dir=-dir+1;
-        moveX.set(-1+2*dir,0);
+        dir = -dir + 1;
+        moveX.set(-1 + 2 * dir, 0);
     }
 
     @Override
@@ -32,10 +30,11 @@ public class Pig extends Mob{
         if (MathUtils.randomBoolean(.0025f)) changeDir();
         else if (MathUtils.randomBoolean(.0025f)) {
             if (moveX.x != 0f) moveX.setZero();
-            else moveX.set(-1+2*dir, 0);
+            else moveX.set(-1 + 2 * dir, 0);
         }
-        if (moveX.x != 0f) animation+=ANIM_SPEED; else animation=0;
-        if (animation>=60 || animation<=-60) {
+        if (moveX.x != 0f) animation += ANIM_SPEED;
+        else animation = 0;
+        if (animation >= 60 || animation <= -60) {
             ANIM_SPEED = -ANIM_SPEED;
         }
     }
@@ -45,14 +44,14 @@ public class Pig extends Mob{
         Assets.pigSprite[0][1].setRotation(animation);
         Assets.pigSprite[1][1].setRotation(-animation);
         //back legs
-        Assets.pigSprite[1][1].setPosition(x-4+(9-dir*9),y+6);
+        Assets.pigSprite[1][1].setPosition(x - 4 + (9 - dir * 9), y + 6);
         Assets.pigSprite[1][1].draw(spriteBatch);
-        Assets.pigSprite[1][1].setPosition(x+17-(9*dir),y+6);
+        Assets.pigSprite[1][1].setPosition(x + 17 - (9 * dir), y + 6);
         Assets.pigSprite[1][1].draw(spriteBatch);
         //front legs
-        Assets.pigSprite[0][1].setPosition(x-4+(9-dir*9),y+6);
+        Assets.pigSprite[0][1].setPosition(x - 4 + (9 - dir * 9), y + 6);
         Assets.pigSprite[0][1].draw(spriteBatch);
-        Assets.pigSprite[0][1].setPosition(x+17-(9*dir),y+6);
+        Assets.pigSprite[0][1].setPosition(x + 17 - (9 * dir), y + 6);
         Assets.pigSprite[0][1].draw(spriteBatch);
         //head & body
         spriteBatch.draw(Assets.pigSprite[dir][0], x, y);

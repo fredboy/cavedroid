@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavecraft.game.Items;
 import ru.deadsoftware.cavecraft.misc.Assets;
 
-public class FallingGravel extends Mob{
+public class FallingGravel extends Mob {
 
     public FallingGravel(int x, int y) {
         dir = 0;
@@ -29,7 +29,7 @@ public class FallingGravel extends Mob{
 
     @Override
     public void draw(SpriteBatch spriteBatch, float x, float y) {
-        spriteBatch.draw(Assets.blockTextures[Items.BLOCKS.get("gravel").getTexture()],x, y);
+        spriteBatch.draw(Assets.blockTextures[Items.BLOCKS.get("gravel").getTexture()], x, y);
     }
 
     @Override

@@ -20,7 +20,7 @@ public class GameScreen implements Screen {
     public GameScreen() {
         Assets.load();
         Items.load();
-        menuRenderer = new MenuRenderer(CaveGame.TOUCH?320:480);
+        menuRenderer = new MenuRenderer(CaveGame.TOUCH ? 320 : 480);
         renderer = menuRenderer;
         Gdx.input.setInputProcessor(new InputHandlerMenu(menuRenderer));
     }
@@ -46,9 +46,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        FPS = (int)(1/delta);
+        FPS = (int) (1 / delta);
         switch (CaveGame.STATE) {
-            case GAME_PLAY: case GAME_CREATIVE_INV:
+            case GAME_PLAY:
+            case GAME_CREATIVE_INV:
                 game(delta);
                 break;
 
@@ -76,7 +77,7 @@ public class GameScreen implements Screen {
                 break;
 
             case GOTO_MENU:
-                menuRenderer = new MenuRenderer(CaveGame.TOUCH?320:480);
+                menuRenderer = new MenuRenderer(CaveGame.TOUCH ? 320 : 480);
                 renderer = menuRenderer;
                 Gdx.input.setInputProcessor(new InputHandlerMenu(menuRenderer));
                 break;
@@ -88,10 +89,11 @@ public class GameScreen implements Screen {
     public void resize(int width, int height) {
         switch (CaveGame.STATE) {
             case MENU_MAIN:
-                menuRenderer = new MenuRenderer(CaveGame.TOUCH?320:480);
+                menuRenderer = new MenuRenderer(CaveGame.TOUCH ? 320 : 480);
                 renderer = menuRenderer;
                 break;
-            case GAME_PLAY: case GAME_CREATIVE_INV:
+            case GAME_PLAY:
+            case GAME_CREATIVE_INV:
                 gameProc.resetRenderer();
                 renderer = gameProc.renderer;
                 break;

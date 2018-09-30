@@ -58,42 +58,42 @@ public class Assets {
         playerTexture = new Texture(Gdx.files.internal("mobs/char.png"));
         //LOOK TO LEFT
         //head
-        playerSprite[0][0] = new Sprite(new TextureRegion(playerTexture, 0,0,12,12));
-        playerSprite[0][0].flip(false,true);
+        playerSprite[0][0] = new Sprite(new TextureRegion(playerTexture, 0, 0, 12, 12));
+        playerSprite[0][0].flip(false, true);
         //body
-        playerSprite[0][1] = new Sprite(new TextureRegion(playerTexture, 0,13,12,12));
-        playerSprite[0][1].flip(false,true);
+        playerSprite[0][1] = new Sprite(new TextureRegion(playerTexture, 0, 13, 12, 12));
+        playerSprite[0][1].flip(false, true);
         //hand
-        playerSprite[0][2] = new Sprite(new TextureRegion(playerTexture, 25,5,20,20));
-        playerSprite[0][2].flip(false,true);
+        playerSprite[0][2] = new Sprite(new TextureRegion(playerTexture, 25, 5, 20, 20));
+        playerSprite[0][2].flip(false, true);
         //leg
-        playerSprite[0][3] = new Sprite(new TextureRegion(playerTexture, 25,27,20,20));
-        playerSprite[0][3].flip(false,true);
+        playerSprite[0][3] = new Sprite(new TextureRegion(playerTexture, 25, 27, 20, 20));
+        playerSprite[0][3].flip(false, true);
         //LOOK TO RIGHT
         //head
-        playerSprite[1][0] = new Sprite(new TextureRegion(playerTexture, 13,0,12,12));
-        playerSprite[1][0].flip(false,true);
+        playerSprite[1][0] = new Sprite(new TextureRegion(playerTexture, 13, 0, 12, 12));
+        playerSprite[1][0].flip(false, true);
         //body
-        playerSprite[1][1] = new Sprite(new TextureRegion(playerTexture, 13,13,12,12));
-        playerSprite[1][1].flip(false,true);
+        playerSprite[1][1] = new Sprite(new TextureRegion(playerTexture, 13, 13, 12, 12));
+        playerSprite[1][1].flip(false, true);
         //hand
-        playerSprite[1][2] = new Sprite(new TextureRegion(playerTexture, 37,5,20,20));
-        playerSprite[1][2].flip(false,true);
+        playerSprite[1][2] = new Sprite(new TextureRegion(playerTexture, 37, 5, 20, 20));
+        playerSprite[1][2].flip(false, true);
         //leg
-        playerSprite[1][3] = new Sprite(new TextureRegion(playerTexture, 37,27,20,20));
-        playerSprite[1][3].flip(false,true);
+        playerSprite[1][3] = new Sprite(new TextureRegion(playerTexture, 37, 27, 20, 20));
+        playerSprite[1][3].flip(false, true);
     }
 
     private static void loadPig() {
         pigTexture = new Texture(Gdx.files.internal("mobs/pig.png"));
         pigSprite[0][0] = new Sprite(new TextureRegion(pigTexture, 0, 0, 25, 12));
-        pigSprite[0][0].flip(false,true);
+        pigSprite[0][0].flip(false, true);
         pigSprite[1][0] = new Sprite(new TextureRegion(pigTexture, 0, 12, 25, 12));
-        pigSprite[1][0].flip(false,true);
+        pigSprite[1][0].flip(false, true);
         pigSprite[0][1] = new Sprite(new TextureRegion(pigTexture, 4, 26, 12, 12));
-        pigSprite[0][1].flip(false,true);
+        pigSprite[0][1].flip(false, true);
         pigSprite[1][1] = new Sprite(new TextureRegion(pigTexture, 16, 26, 12, 12));
-        pigSprite[1][1].flip(false,true);
+        pigSprite[1][1].flip(false, true);
     }
 
     public static void load() {
@@ -106,8 +106,8 @@ public class Assets {
         gameLogo.flip(false, true);
 
         menuButtonTexture = new Texture(Gdx.files.internal("buttons.png"));
-        for (int i=0; i<3; i++) {
-            menuButton[i] = new TextureRegion(menuButtonTexture, 0, 20*i, 200, 20);
+        for (int i = 0; i < 3; i++) {
+            menuButton[i] = new TextureRegion(menuButtonTexture, 0, 20 * i, 200, 20);
             menuButton[i].flip(false, true);
         }
 
@@ -117,19 +117,19 @@ public class Assets {
         shade = new Sprite(new Texture(Gdx.files.internal("shade.png")));
 
         gui = new Texture(Gdx.files.internal("gui.png"));
-        guiCur = new TextureRegion(gui,0,0,16,16);
-        invBar = new TextureRegion(gui,0,16,182,22);
-        invBarCur = new TextureRegion(gui,0,38,24,24);
+        guiCur = new TextureRegion(gui, 0, 0, 16, 16);
+        invBar = new TextureRegion(gui, 0, 16, 182, 22);
+        invBarCur = new TextureRegion(gui, 0, 38, 24, 24);
 
         creativeTexture = new Texture(Gdx.files.internal("allitems.png"));
         creativeInv = new TextureRegion(creativeTexture, 0, 0, 176, 136);
-        creativeInv.flip(false,true);
+        creativeInv.flip(false, true);
         creativeScroll = new TextureRegion(creativeTexture, 3, 137, 12, 15);
         creativeScroll.flip(false, true);
 
         wreckTexture = new Texture(Gdx.files.internal("break.png"));
-        for (int i=0; i<10; i++) {
-            wreck[i] = new TextureRegion(wreckTexture, 16*i, 0, 16, 16);
+        for (int i = 0; i < 10; i++) {
+            wreck[i] = new TextureRegion(wreckTexture, 16 * i, 0, 16, 16);
         }
 
         if (CaveGame.TOUCH) {
@@ -149,32 +149,32 @@ public class Assets {
         }
 
         terrain = new Texture(Gdx.files.internal("terrain.png"));
-        for (int i=0; i<BLOCK_TEXTURES; i++) {
+        for (int i = 0; i < BLOCK_TEXTURES; i++) {
             blockTextures[i] = new Sprite(terrain,
-                    (i%16)*16, (i/16)*16, 16,16);
-            blockTextures[i].flip(false,true);
-            blockTextures[i].setSize(8,8);
+                    (i % 16) * 16, (i / 16) * 16, 16, 16);
+            blockTextures[i].flip(false, true);
+            blockTextures[i].setSize(8, 8);
         }
         terrain = null;
 
         items = new Texture(Gdx.files.internal("items.png"));
-        for (int i=0; i<ITEM_TEXTURES; i++) {
+        for (int i = 0; i < ITEM_TEXTURES; i++) {
             itemTextures[i] = new Sprite(items,
-                    (i%16)*16, (i/16)*16, 16, 16);
+                    (i % 16) * 16, (i / 16) * 16, 16, 16);
             itemTextures[i].flip(false, true);
             //itemTextures[i].setSize(8,8);
         }
         items = null;
     }
 
-    public static int getStringWidth(String s){
-        layout.setText(minecraftFont,s);
-        return (int)layout.width;
+    public static int getStringWidth(String s) {
+        layout.setText(minecraftFont, s);
+        return (int) layout.width;
     }
 
-    public static int getStringHeight(String s){
-        layout.setText(minecraftFont,s);
-        return (int)layout.height;
+    public static int getStringHeight(String s) {
+        layout.setText(minecraftFont, s);
+        return (int) layout.height;
     }
 
 }

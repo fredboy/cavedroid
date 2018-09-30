@@ -21,12 +21,15 @@ public class Item {
     public int getTexture() {
         return texture;
     }
+
     public int getType() {
         return type;
     }
+
     public int getBlock() {
         return block;
     }
+
     public String getName() {
         return name;
     }

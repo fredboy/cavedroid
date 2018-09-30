@@ -1,6 +1,5 @@
 package ru.deadsoftware.cavecraft.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class GameWorld {
@@ -26,8 +25,8 @@ public class GameWorld {
     }
 
     private int transformX(int x) {
-        x = x%getWidth();
-        if (x<0) x=getWidth()-Math.abs(x);
+        x = x % getWidth();
+        if (x < 0) x = getWidth() - Math.abs(x);
         return x;
     }
 
@@ -95,38 +94,38 @@ public class GameWorld {
     }
 
     public void placeToForeground(int x, int y, int value) {
-        if (getForeMap(x,y) == 0 || value == 0 || !Items.BLOCKS.getValueAt(getForeMap(x, y)).collision) {
+        if (getForeMap(x, y) == 0 || value == 0 || !Items.BLOCKS.getValueAt(getForeMap(x, y)).collision) {
             setForeMap(x, y, value);
         } else if (Items.isSlab(value) && getForeMap(x, y) == value) {
             placeSlab(x, y, value);
         }
-        GameProc.UPD_X = x-8;
-        GameProc.UPD_Y = y-8;
+        GameProc.UPD_X = x - 8;
+        GameProc.UPD_Y = y - 8;
         GameProc.DO_UPD = true;
     }
 
     public void placeToBackground(int x, int y, int value) {
-        if (value==0 || (getBackMap(x,y) == 0 && Items.BLOCKS.getValueAt(value).collision) &&
+        if (value == 0 || (getBackMap(x, y) == 0 && Items.BLOCKS.getValueAt(value).collision) &&
                 (!Items.BLOCKS.getValueAt(value).transparent || value == 18)) {
-            setBackMap(x,y,value);
+            setBackMap(x, y, value);
         }
     }
 
     public Vector2 getSpawnPoint() {
-        int x=0,y=0;
+        int x = 0, y = 0;
         while (true) {
             y++;
-            if (getForeMap(x,y)>0 && Items.BLOCKS.getValueAt(getForeMap(x,y)).collision) break;
+            if (getForeMap(x, y) > 0 && Items.BLOCKS.getValueAt(getForeMap(x, y)).collision) break;
         }
-        x = x*16 + 4;
-        y = y*16 - 32;
-        return new Vector2(x,y);
+        x = x * 16 + 4;
+        y = y * 16 - 32;
+        return new Vector2(x, y);
     }
 
     public void generate(int w, int h) {
         WIDTH = w;
         HEIGHT = h;
-        WorldGen.genWorld(WIDTH,HEIGHT);
+        WorldGen.genWorld(WIDTH, HEIGHT);
         foreMap = WorldGen.getForeMap();
         backMap = WorldGen.getBackMap();
         WorldGen.clear();

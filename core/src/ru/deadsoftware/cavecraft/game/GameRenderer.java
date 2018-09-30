@@ -1,9 +1,7 @@
 package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavecraft.CaveGame;
@@ -18,51 +16,51 @@ public class GameRenderer extends Renderer {
 
     private GameProc gameProc;
 
-    public GameRenderer(GameProc gameProc,float width, float heigth) {
-        super(width,heigth);
-        Gdx.gl.glClearColor(0f,.6f,.6f,1f);
+    public GameRenderer(GameProc gameProc, float width, float heigth) {
+        super(width, heigth);
+        Gdx.gl.glClearColor(0f, .6f, .6f, 1f);
         this.gameProc = gameProc;
     }
 
     private void drawWorldBackground() {
-        int minX = (int) (camera.position.x/16)-1;
-        int minY = (int) (camera.position.y/16)-1;
-        int maxX = (int) ((camera.position.x+camera.viewportWidth)/16)+1;
-        int maxY = (int) ((camera.position.y+camera.viewportHeight)/16)+1;
-        if (minY<0) minY=0;
-        if (maxY>gameProc.world.getHeight()) maxY = gameProc.world.getHeight();
-        for (int y=minY; y<maxY; y++) {
-            for (int x=minX; x<maxX; x++) {
-                if ((gameProc.world.getForeMap(x,y)==0 || Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).transparent)
-                        && gameProc.world.getBackMap(x,y)>0) {
+        int minX = (int) (camera.position.x / 16) - 1;
+        int minY = (int) (camera.position.y / 16) - 1;
+        int maxX = (int) ((camera.position.x + camera.viewportWidth) / 16) + 1;
+        int maxY = (int) ((camera.position.y + camera.viewportHeight) / 16) + 1;
+        if (minY < 0) minY = 0;
+        if (maxY > gameProc.world.getHeight()) maxY = gameProc.world.getHeight();
+        for (int y = minY; y < maxY; y++) {
+            for (int x = minX; x < maxX; x++) {
+                if ((gameProc.world.getForeMap(x, y) == 0 || Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x, y)).transparent)
+                        && gameProc.world.getBackMap(x, y) > 0) {
                     spriteBatch.draw(
-                            Assets.blockTextures[Items.BLOCKS.getValueAt(gameProc.world.getBackMap(x,y)).getTexture()],
-                            x * 16 - camera.position.x,y * 16 - camera.position.y);
-                    Assets.shade.setPosition(x * 16 - camera.position.x,y * 16 - camera.position.y);
+                            Assets.blockTextures[Items.BLOCKS.getValueAt(gameProc.world.getBackMap(x, y)).getTexture()],
+                            x * 16 - camera.position.x, y * 16 - camera.position.y);
+                    Assets.shade.setPosition(x * 16 - camera.position.x, y * 16 - camera.position.y);
                     Assets.shade.draw(spriteBatch);
                 }
-                if (gameProc.world.getForeMap(x,y)>0 && Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).background) {
+                if (gameProc.world.getForeMap(x, y) > 0 && Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x, y)).background) {
                     spriteBatch.draw(
-                            Assets.blockTextures[Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).getTexture()],
-                            x * 16 - camera.position.x,y * 16 - camera.position.y);
+                            Assets.blockTextures[Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x, y)).getTexture()],
+                            x * 16 - camera.position.x, y * 16 - camera.position.y);
                 }
             }
         }
     }
 
-    private void drawWorldForeground(){
-        int minX = (int) (camera.position.x/16)-1;
-        int minY = (int) (camera.position.y/16)-1;
-        int maxX = (int) ((camera.position.x+camera.viewportWidth)/16)+1;
-        int maxY = (int) ((camera.position.y+camera.viewportHeight)/16)+1;
-        if (minY<0) minY=0;
-        if (maxY>gameProc.world.getHeight()) maxY = gameProc.world.getHeight();
-        for (int y=minY; y<maxY; y++) {
-            for (int x=minX; x<maxX; x++) {
-                if (gameProc.world.getForeMap(x,y)>0 && !Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).background) {
+    private void drawWorldForeground() {
+        int minX = (int) (camera.position.x / 16) - 1;
+        int minY = (int) (camera.position.y / 16) - 1;
+        int maxX = (int) ((camera.position.x + camera.viewportWidth) / 16) + 1;
+        int maxY = (int) ((camera.position.y + camera.viewportHeight) / 16) + 1;
+        if (minY < 0) minY = 0;
+        if (maxY > gameProc.world.getHeight()) maxY = gameProc.world.getHeight();
+        for (int y = minY; y < maxY; y++) {
+            for (int x = minX; x < maxX; x++) {
+                if (gameProc.world.getForeMap(x, y) > 0 && !Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x, y)).background) {
                     spriteBatch.draw(
-                            Assets.blockTextures[Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x,y)).getTexture()],
-                            x * 16 - camera.position.x,y * 16 - camera.position.y);
+                            Assets.blockTextures[Items.BLOCKS.getValueAt(gameProc.world.getForeMap(x, y)).getTexture()],
+                            x * 16 - camera.position.x, y * 16 - camera.position.y);
                 }
             }
         }
@@ -70,27 +68,27 @@ public class GameRenderer extends Renderer {
 
     private void drawMob(Mob mob) {
         mob.draw(spriteBatch,
-                mob.position.x-camera.position.x-gameProc.world.getWidth()*16, mob.position.y-camera.position.y);
+                mob.position.x - camera.position.x - gameProc.world.getWidth() * 16, mob.position.y - camera.position.y);
         mob.draw(spriteBatch,
-                mob.position.x-camera.position.x, mob.position.y-camera.position.y);
+                mob.position.x - camera.position.x, mob.position.y - camera.position.y);
         mob.draw(spriteBatch,
-                mob.position.x-camera.position.x+gameProc.world.getWidth()*16, mob.position.y-camera.position.y);
+                mob.position.x - camera.position.x + gameProc.world.getWidth() * 16, mob.position.y - camera.position.y);
     }
 
     private void drawDrop(Drop drop) {
         switch (Items.ITEMS.get(drop.getId()).getType()) {
             case 0:
-                Assets.blockTextures[Items.ITEMS.get(drop.getId()).getTexture()].setPosition(drop.position.x-camera.position.x-gameProc.world.getWidth()*16, drop.position.y-camera.position.y);
+                Assets.blockTextures[Items.ITEMS.get(drop.getId()).getTexture()].setPosition(drop.position.x - camera.position.x - gameProc.world.getWidth() * 16, drop.position.y - camera.position.y);
                 Assets.blockTextures[Items.ITEMS.get(drop.getId()).getTexture()].draw(spriteBatch);
-                Assets.blockTextures[Items.ITEMS.get(drop.getId()).getTexture()].setPosition(drop.position.x-camera.position.x, drop.position.y-camera.position.y);
+                Assets.blockTextures[Items.ITEMS.get(drop.getId()).getTexture()].setPosition(drop.position.x - camera.position.x, drop.position.y - camera.position.y);
                 Assets.blockTextures[Items.ITEMS.get(drop.getId()).getTexture()].draw(spriteBatch);
-                Assets.blockTextures[Items.ITEMS.get(drop.getId()).getTexture()].setPosition(drop.position.x-camera.position.x+gameProc.world.getWidth()*16, drop.position.y-camera.position.y);
+                Assets.blockTextures[Items.ITEMS.get(drop.getId()).getTexture()].setPosition(drop.position.x - camera.position.x + gameProc.world.getWidth() * 16, drop.position.y - camera.position.y);
                 Assets.blockTextures[Items.ITEMS.get(drop.getId()).getTexture()].draw(spriteBatch);
         }
     }
 
     private void drawPlayer(Player pl) {
-        if (!pl.moveX.equals(Vector2.Zero) || Assets.playerSprite[0][2].getRotation()!=0) {
+        if (!pl.moveX.equals(Vector2.Zero) || Assets.playerSprite[0][2].getRotation() != 0) {
             Assets.playerSprite[0][2].rotate(Player.ANIM_SPEED);
             Assets.playerSprite[1][2].rotate(-Player.ANIM_SPEED);
             Assets.playerSprite[0][3].rotate(-Player.ANIM_SPEED);
@@ -101,7 +99,7 @@ public class GameRenderer extends Renderer {
             Assets.playerSprite[0][3].setRotation(0);
             Assets.playerSprite[1][3].setRotation(0);
         }
-        if (Assets.playerSprite[0][2].getRotation()>=60 || Assets.playerSprite[0][2].getRotation()<=-60)
+        if (Assets.playerSprite[0][2].getRotation() >= 60 || Assets.playerSprite[0][2].getRotation() <= -60)
             Player.ANIM_SPEED = -Player.ANIM_SPEED;
 
         //back hand
@@ -127,23 +125,23 @@ public class GameRenderer extends Renderer {
         spriteBatch.draw(Assets.playerSprite[pl.dir][1],
                 pl.position.x - camera.position.x - 2, pl.position.y - camera.position.y + 8);
         //item in hand
-        if (pl.inventory[gameProc.invSlot]>0)
+        if (pl.inventory[gameProc.invSlot] > 0)
             switch (Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getType()) {
                 case 0:
                     Assets.blockTextures[Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getTexture()].setPosition(
-                            pl.position.x - camera.position.x - 8*MathUtils.sin(MathUtils.degRad*Assets.playerSprite[0][2].getRotation()),
-                            pl.position.y - camera.position.y + 6 + 8*MathUtils.cos(MathUtils.degRad*Assets.playerSprite[0][2].getRotation()));
+                            pl.position.x - camera.position.x - 8 * MathUtils.sin(MathUtils.degRad * Assets.playerSprite[0][2].getRotation()),
+                            pl.position.y - camera.position.y + 6 + 8 * MathUtils.cos(MathUtils.degRad * Assets.playerSprite[0][2].getRotation()));
                     Assets.blockTextures[Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getTexture()].draw(spriteBatch);
                     break;
                 default:
-                    Assets.itemTextures[Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getTexture()].flip((pl.dir==0), false);
+                    Assets.itemTextures[Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getTexture()].flip((pl.dir == 0), false);
                     Assets.itemTextures[Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getTexture()].setRotation(
-                            -45+pl.dir*90+Assets.playerSprite[0][2].getRotation());
+                            -45 + pl.dir * 90 + Assets.playerSprite[0][2].getRotation());
                     Assets.itemTextures[Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getTexture()].setPosition(
-                            pl.position.x - camera.position.x -10+(12*pl.dir) - 8*MathUtils.sin(MathUtils.degRad*Assets.playerSprite[0][2].getRotation()),
-                            pl.position.y - camera.position.y + 2 + 8*MathUtils.cos(MathUtils.degRad*Assets.playerSprite[0][2].getRotation()));
+                            pl.position.x - camera.position.x - 10 + (12 * pl.dir) - 8 * MathUtils.sin(MathUtils.degRad * Assets.playerSprite[0][2].getRotation()),
+                            pl.position.y - camera.position.y + 2 + 8 * MathUtils.cos(MathUtils.degRad * Assets.playerSprite[0][2].getRotation()));
                     Assets.itemTextures[Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getTexture()].draw(spriteBatch);
-                    Assets.itemTextures[Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getTexture()].flip((pl.dir==0), false);
+                    Assets.itemTextures[Items.ITEMS.get(pl.inventory[gameProc.invSlot]).getTexture()].flip((pl.dir == 0), false);
                     break;
             }
         //front hand
@@ -154,18 +152,18 @@ public class GameRenderer extends Renderer {
     }
 
     private void drawCreative() {
-        float x = camera.viewportWidth/2-Assets.creativeInv.getRegionWidth()/2;
-        float y = camera.viewportHeight/2-Assets.creativeInv.getRegionHeight()/2;
+        float x = camera.viewportWidth / 2 - Assets.creativeInv.getRegionWidth() / 2;
+        float y = camera.viewportHeight / 2 - Assets.creativeInv.getRegionHeight() / 2;
         spriteBatch.draw(Assets.creativeInv, x, y);
-        spriteBatch.draw(Assets.creativeScroll, x+156,
-                y+18+(gameProc.creativeScroll*(72/gameProc.maxCreativeScroll)));
-        for (int i=gameProc.creativeScroll*8; i<gameProc.creativeScroll*8+40; i++) {
-            if (i>0 && i<Items.ITEMS.size())
+        spriteBatch.draw(Assets.creativeScroll, x + 156,
+                y + 18 + (gameProc.creativeScroll * (72 / gameProc.maxCreativeScroll)));
+        for (int i = gameProc.creativeScroll * 8; i < gameProc.creativeScroll * 8 + 40; i++) {
+            if (i > 0 && i < Items.ITEMS.size())
                 switch (Items.ITEMS.get(i).getType()) {
                     case 0:
                         spriteBatch.draw(Assets.blockTextures[Items.ITEMS.get(i).getTexture()],
-                            x + 8 + ((i - gameProc.creativeScroll * 8) % 8) * 18,
-                            y + 18 + ((i - gameProc.creativeScroll * 8) / 8) * 18);
+                                x + 8 + ((i - gameProc.creativeScroll * 8) % 8) * 18,
+                                y + 18 + ((i - gameProc.creativeScroll * 8) / 8) * 18);
                         break;
                     case 1:
                         spriteBatch.draw(Assets.itemTextures[Items.ITEMS.get(i).getTexture()],
@@ -174,12 +172,12 @@ public class GameRenderer extends Renderer {
                         break;
                 }
         }
-        for (int i=0; i<9; i++) {
-            if (gameProc.player.inventory[i]>0)
+        for (int i = 0; i < 9; i++) {
+            if (gameProc.player.inventory[i] > 0)
                 switch (Items.ITEMS.get(gameProc.player.inventory[i]).getType()) {
                     case 0:
                         spriteBatch.draw(Assets.blockTextures[Items.ITEMS.get(gameProc.player.inventory[i]).getTexture()],
-                            x + 8 + i * 18, y + Assets.creativeInv.getRegionHeight() - 24);
+                                x + 8 + i * 18, y + Assets.creativeInv.getRegionHeight() - 24);
                         break;
                     case 1:
                         spriteBatch.draw(Assets.itemTextures[Items.ITEMS.get(gameProc.player.inventory[i]).getTexture()],
@@ -192,26 +190,26 @@ public class GameRenderer extends Renderer {
     private void drawGUI() {
         if (gameProc.blockDmg > 0) {
             spriteBatch.draw(Assets.wreck[
-                            10*gameProc.blockDmg/
+                            10 * gameProc.blockDmg /
                                     Items.BLOCKS.getValueAt(gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY)).getHp()],
-                    gameProc.cursorX*16-camera.position.x,
-                    gameProc.cursorY*16-camera.position.y);
+                    gameProc.cursorX * 16 - camera.position.x,
+                    gameProc.cursorY * 16 - camera.position.y);
         }
-        if (gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY)>0 ||
-                gameProc.world.getBackMap(gameProc.cursorX, gameProc.cursorY)>0 ||
-                gameProc.ctrlMode==1 ||
+        if (gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY) > 0 ||
+                gameProc.world.getBackMap(gameProc.cursorX, gameProc.cursorY) > 0 ||
+                gameProc.ctrlMode == 1 ||
                 !CaveGame.TOUCH)
             spriteBatch.draw(Assets.guiCur,
-                    gameProc.cursorX*16-camera.position.x,
-                    gameProc.cursorY*16-camera.position.y);
-        spriteBatch.draw(Assets.invBar, camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2, 0);
-        for (int i=0; i<9; i++) {
-            if (gameProc.player.inventory[i]>0) {
+                    gameProc.cursorX * 16 - camera.position.x,
+                    gameProc.cursorY * 16 - camera.position.y);
+        spriteBatch.draw(Assets.invBar, camera.viewportWidth / 2 - Assets.invBar.getRegionWidth() / 2, 0);
+        for (int i = 0; i < 9; i++) {
+            if (gameProc.player.inventory[i] > 0) {
                 switch (Items.ITEMS.get(gameProc.player.inventory[i]).getType()) {
                     case 0:
                         spriteBatch.draw(Assets.blockTextures[Items.ITEMS.get(gameProc.player.inventory[i]).getTexture()],
-                            camera.viewportWidth / 2 - Assets.invBar.getRegionWidth() / 2 + 3 + i * 20,
-                            3);
+                                camera.viewportWidth / 2 - Assets.invBar.getRegionWidth() / 2 + 3 + i * 20,
+                                3);
                         break;
                     case 1:
                         spriteBatch.draw(Assets.itemTextures[Items.ITEMS.get(gameProc.player.inventory[i]).getTexture()],
@@ -222,20 +220,20 @@ public class GameRenderer extends Renderer {
             }
         }
         spriteBatch.draw(Assets.invBarCur,
-                camera.viewportWidth/2 - Assets.invBar.getRegionWidth()/2 - 1 + 20*gameProc.invSlot,
+                camera.viewportWidth / 2 - Assets.invBar.getRegionWidth() / 2 - 1 + 20 * gameProc.invSlot,
                 -1);
     }
 
     private void drawTouchGui() {
-        spriteBatch.draw(Assets.touchArrows[0],26,camera.viewportHeight-52);
-        spriteBatch.draw(Assets.touchArrows[1],0,camera.viewportHeight-26);
-        spriteBatch.draw(Assets.touchArrows[2],26,camera.viewportHeight-26);
-        spriteBatch.draw(Assets.touchArrows[3],52,camera.viewportHeight-26);
-        spriteBatch.draw(Assets.touchLMB, camera.viewportWidth-52, camera.viewportHeight-26);
-        spriteBatch.draw(Assets.touchRMB, camera.viewportWidth-26, camera.viewportHeight-26);
-        spriteBatch.draw(Assets.touchToggleMode, 78, camera.viewportHeight-26);
-        if (gameProc.ctrlMode==1) {
-            Assets.shade.setPosition(83, camera.viewportHeight-21);
+        spriteBatch.draw(Assets.touchArrows[0], 26, camera.viewportHeight - 52);
+        spriteBatch.draw(Assets.touchArrows[1], 0, camera.viewportHeight - 26);
+        spriteBatch.draw(Assets.touchArrows[2], 26, camera.viewportHeight - 26);
+        spriteBatch.draw(Assets.touchArrows[3], 52, camera.viewportHeight - 26);
+        spriteBatch.draw(Assets.touchLMB, camera.viewportWidth - 52, camera.viewportHeight - 26);
+        spriteBatch.draw(Assets.touchRMB, camera.viewportWidth - 26, camera.viewportHeight - 26);
+        spriteBatch.draw(Assets.touchToggleMode, 78, camera.viewportHeight - 26);
+        if (gameProc.ctrlMode == 1) {
+            Assets.shade.setPosition(83, camera.viewportHeight - 21);
             Assets.shade.draw(spriteBatch);
         }
     }
@@ -267,12 +265,12 @@ public class GameRenderer extends Renderer {
         if (CaveGame.TOUCH) drawTouchGui();
 
         if (GameScreen.SHOW_DEBUG) {
-            drawString("FPS: "+GameScreen.FPS,0, 0);
-            drawString("X: "+(int)(gameProc.player.position.x/16),0, 10);
-            drawString("Y: "+(int)(gameProc.player.position.y/16),0, 20);
-            drawString("Mobs: "+gameProc.mobs.size(), 0, 30);
-            drawString("Drops: "+gameProc.drops.size(), 0, 40);
-            drawString("Block: "+Items.BLOCKS.getKeyAt(gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY)), 0, 50);
+            drawString("FPS: " + GameScreen.FPS, 0, 0);
+            drawString("X: " + (int) (gameProc.player.position.x / 16), 0, 10);
+            drawString("Y: " + (int) (gameProc.player.position.y / 16), 0, 20);
+            drawString("Mobs: " + gameProc.mobs.size(), 0, 30);
+            drawString("Drops: " + gameProc.drops.size(), 0, 40);
+            drawString("Block: " + Items.BLOCKS.getKeyAt(gameProc.world.getForeMap(gameProc.cursorX, gameProc.cursorY)), 0, 50);
         }
 
         spriteBatch.end();

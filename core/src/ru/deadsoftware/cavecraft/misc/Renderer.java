@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import ru.deadsoftware.cavecraft.GameScreen;
-import ru.deadsoftware.cavecraft.misc.Assets;
 
 public abstract class Renderer {
 
@@ -29,14 +28,16 @@ public abstract class Renderer {
         return camera.viewportWidth;
     }
 
-    public float getHeight() {return camera.viewportHeight;}
+    public float getHeight() {
+        return camera.viewportHeight;
+    }
 
     public void setFontScale(float scale) {
         Assets.minecraftFont.getData().setScale(scale);
     }
 
     public void setFontColor(int r, int g, int b) {
-        Assets.minecraftFont.setColor(r/255f, g/255f, b/255f, 1f);
+        Assets.minecraftFont.setColor(r / 255f, g / 255f, b / 255f, 1f);
     }
 
     public void drawString(String str, float x, float y) {
@@ -45,8 +46,8 @@ public abstract class Renderer {
 
     public void drawString(String str) {
         Assets.minecraftFont.draw(spriteBatch, str,
-                getWidth()/2 - Assets.getStringWidth(str)/2,
-                getHeight()/2 - Assets.getStringHeight(str)/2);
+                getWidth() / 2 - Assets.getStringWidth(str) / 2,
+                getHeight() / 2 - Assets.getStringHeight(str) / 2);
     }
 
     public abstract void render();

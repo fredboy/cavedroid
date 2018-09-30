@@ -18,7 +18,7 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
 
-    version = 'alpha0.4-dev'
+    version = 'alpha0.4'
     ext {
         appName = "CaveCraft"
         gdxVersion = '1.9.7'

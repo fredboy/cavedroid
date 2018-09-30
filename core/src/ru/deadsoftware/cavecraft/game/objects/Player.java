@@ -27,7 +27,7 @@ public class Player implements Serializable {
     }
 
     public Rectangle getRect() {
-        return new Rectangle(position.x+2, position.y, width, height);
+        return new Rectangle(position.x + 2, position.y, width, height);
     }
 
 }
