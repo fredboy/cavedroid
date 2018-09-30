@@ -13,7 +13,7 @@ public class Player implements Serializable {
     public Vector2 move;
     public int width, height, dir, texWidth;
     public boolean canJump;
-    public int[] inventory;
+    public int[] inv;
     public boolean flyMode = false;
 
     public Player(Vector2 spawnPoint) {
@@ -22,7 +22,7 @@ public class Player implements Serializable {
         width = 4;
         height = 30;
         texWidth = 8;
-        inventory = new int[9];
+        inv = new int[9];
     }
 
     public Rectangle getRect() {

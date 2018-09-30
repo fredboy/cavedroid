@@ -34,7 +34,7 @@ public class GameProc implements Serializable {
     public transient GamePhysics physics;
 
     public int curX, curY;
-    public int invSlot;
+    public int slot;
     public int ctrlMode;
     public int creativeScroll, maxCreativeScroll;
     public int blockDmg = 0;
@@ -423,7 +423,7 @@ public class GameProc implements Serializable {
 
         if (isTouchDown && TimeUtils.timeSinceMillis(touchDownTime) > 500) {
             if (touchDownBtn == Input.Buttons.RIGHT) {
-                useItem(curX, curY, player.inventory[invSlot], true);
+                useItem(curX, curY, player.inv[slot], true);
                 isTouchDown = false;
             } else if (touchDownY < Assets.invBar.getRegionHeight() &&
                     touchDownX > renderer.getWidth() / 2 - Assets.invBar.getRegionWidth() / 2 &&

@@ -149,19 +149,19 @@ public class GameInput {
                 if (ix >= 8 || ix < 0 || iy < 0 || iy >= 5) item = -1;
                 if (item >= 0 && item < GameItems.getItemsSize()) {
                     for (int i = 8; i > 0; i--) {
-                        gp.player.inventory[i] = gp.player.inventory[i - 1];
+                        gp.player.inv[i] = gp.player.inv[i - 1];
                     }
-                    gp.player.inventory[0] = item;
+                    gp.player.inv[0] = item;
                 }
             } else if (CaveGame.STATE == AppState.GAME_CREATIVE_INV) {
                 CaveGame.STATE = AppState.GAME_PLAY;
             } else if (screenY < Assets.invBar.getRegionHeight() &&
                     screenX > gp.renderer.getWidth() / 2 - Assets.invBar.getRegionWidth() / 2 &&
                     screenX < gp.renderer.getWidth() / 2 + Assets.invBar.getRegionWidth() / 2) {
-                gp.invSlot = (int) ((screenX - (gp.renderer.getWidth() / 2 - Assets.invBar.getRegionWidth() / 2)) / 20);
+                gp.slot = (int) ((screenX - (gp.renderer.getWidth() / 2 - Assets.invBar.getRegionWidth() / 2)) / 20);
             } else if (button == Input.Buttons.RIGHT) {
                 gp.useItem(gp.curX, gp.curY,
-                        gp.player.inventory[gp.invSlot], false);
+                        gp.player.inv[gp.slot], false);
             } else if (button == Input.Buttons.LEFT) {
                 gp.blockDmg = 0;
             }
@@ -188,9 +188,9 @@ public class GameInput {
     public void scrolled(int amount) {
         switch (CaveGame.STATE) {
             case GAME_PLAY:
-                gp.invSlot += amount;
-                if (gp.invSlot < 0) gp.invSlot = 8;
-                if (gp.invSlot > 8) gp.invSlot = 0;
+                gp.slot += amount;
+                if (gp.slot < 0) gp.slot = 8;
+                if (gp.slot > 8) gp.slot = 0;
                 break;
             case GAME_CREATIVE_INV:
                 gp.creativeScroll += amount;
