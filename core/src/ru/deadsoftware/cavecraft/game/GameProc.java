@@ -47,7 +47,7 @@ public class GameProc implements Serializable {
     public GameProc(int gameMode) {
         world = new GameWorld();
         world.generate(1024, 256);
-        player = new Player(world.getSpawnPoint(), gameMode);
+        player = new Player(world, gameMode);
         drops = new ArrayList<Drop>();
         mobs = new ArrayList<Mob>();
         for (int i = 0; i < 16; i++) {
@@ -410,7 +410,9 @@ public class GameProc implements Serializable {
 
         if (isTouchDown && touchDownBtn == Input.Buttons.LEFT) {
             if ((world.getForeMap(curX, curY) > 0 && GameItems.getBlock(world.getForeMap(curX, curY)).getHp() >= 0) ||
-                    world.getBackMap(curX, curY) > 0 && GameItems.getBlock(world.getBackMap(curX, curY)).getHp() >= 0) {
+                    (world.getForeMap(curX, curY) == 0 &&
+                            world.getBackMap(curX, curY) > 0 &&
+                            GameItems.getBlock(world.getBackMap(curX, curY)).getHp() >= 0)) {
                 if (player.gameMode == 0) {
                     blockDmg++;
                     if (world.getForeMap(curX, curY) > 0) {
@@ -425,8 +427,8 @@ public class GameProc implements Serializable {
                         }
                     }
                 } else {
-                    if (world.getForeMap(curX, curY) > 0) world.setForeMap(curX, curY, 0);
-                    else if (world.getBackMap(curX, curY) > 0) world.setBackMap(curX, curY, 0);
+                    if (world.getForeMap(curX, curY) > 0) world.placeToForeground(curX, curY, 0);
+                    else if (world.getBackMap(curX, curY) > 0) world.placeToBackground(curX, curY, 0);
                     isTouchDown = false;
                 }
             }

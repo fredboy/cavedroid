@@ -1,6 +1,5 @@
 package ru.deadsoftware.cavecraft.game;
 
-import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavecraft.game.objects.Drop;
 
 public class GameWorld {
@@ -122,17 +121,6 @@ public class GameWorld {
         if (GameItems.getBlock(getBackMap(x, y)).getDrop() > 0)
             gp.drops.add(new Drop(transformX(x) * 16 + 4, y * 16 + 4, GameItems.getBlock(getBackMap(x, y)).getDrop()));
         placeToBackground(x, y, 0);
-    }
-
-    public Vector2 getSpawnPoint() {
-        int x = 0, y = 0;
-        while (true) {
-            y++;
-            if (getForeMap(x, y) > 0 && GameItems.getBlock(getForeMap(x, y)).coll) break;
-        }
-        x = x * 16 + 4;
-        y = y * 16 - 32;
-        return new Vector2(x, y);
     }
 
     public void generate(int w, int h) {

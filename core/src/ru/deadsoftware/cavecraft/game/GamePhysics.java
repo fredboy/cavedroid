@@ -71,6 +71,9 @@ public class GamePhysics {
         if (drop.closeToPlayer(gp) > 0) {
             drop.moveToPlayer(gp);
         } else {
+            if (drop.move.x >= .5f) drop.move.x -= .5f;
+            else if (drop.move.x <= -.5f) drop.move.x += .5f;
+            else drop.move.x = 0;
             if (drop.move.y < 9) drop.move.y += gravity.y / 4;
         }
         drop.pos.add(drop.move);
@@ -128,7 +131,7 @@ public class GamePhysics {
         if (pl.pos.x + pl.texWidth / 2 > gp.world.getWidth() * 16)
             pl.pos.x -= gp.world.getWidth() * 16;
         if (pl.pos.y > gp.world.getHeight() * 16) {
-            pl.pos = gp.world.getSpawnPoint().cpy();
+            pl.respawn(gp.world);
         }
         if (CaveGame.TOUCH && checkJump(pl.getRect(), pl.dir) && !pl.flyMode && pl.canJump && pl.move.x != 0) {
             pl.move.add(0, -8);

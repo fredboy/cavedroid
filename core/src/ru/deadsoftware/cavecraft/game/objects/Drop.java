@@ -31,8 +31,8 @@ public class Drop implements Serializable {
     public void moveToPlayer(GameProc gp) {
         int ctp = closeToPlayer(gp);
         if (ctp > 0) {
-            float px = gp.player.pos.x + (gp.player.texWidth / 2);
-            float py = gp.player.pos.y + (gp.player.height / 2);
+            float px = gp.player.pos.x;
+            float py = gp.player.pos.y;
             switch (ctp) {
                 case 2:
                     px += gp.world.getWidth() * 16;
@@ -42,15 +42,15 @@ public class Drop implements Serializable {
                     break;
             }
             float dx = 0, dy = 0;
-            if (px < pos.x + 4) dx = -.5f;
+            if (px + gp.player.texWidth < pos.x + 4) dx = -.5f;
             else if (px > pos.x + 4) dx = .5f;
-            if (py < pos.y + 4) dy = -.5f;
+            if (py + gp.player.height < pos.y + 4) dy = -.5f;
             else if (py > pos.y + 4) dy = .5f;
             move.add(dx, dy);
-//            if (move.x > 2) move.x = 2;
-//            if (move.x < -2) move.x = -2;
-//            if (move.y > 2) move.y = 2;
-//            if (move.y < -2) move.y = -2;
+            if (move.x > 2) move.x = 1;
+            if (move.x < -2) move.x = -1;
+            if (move.y > 2) move.y = 1;
+            if (move.y < -2) move.y = -1;
         }
     }
 
