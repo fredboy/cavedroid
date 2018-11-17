@@ -17,25 +17,24 @@ public class GameInput {
     }
 
     private boolean checkSwim() {
-        return (GameItems.isFluid(gp.world.getForeMap((int) (gp.player.pos.x + gp.player.width / 2) / 16,
-                (int) (gp.player.pos.y + gp.player.height / 4 * 3) / 16)));
+        return GameItems.isFluid(gp.world.getForeMap(gp.player.getMapX(), gp.player.getMapY()));
     }
 
     private void wasdPressed(int keycode) {
         if (gp.ctrlMode == 0 || !CaveGame.TOUCH) {
             switch (keycode) {
                 case Input.Keys.A:
-                    gp.player.move.x = -GamePhysics.PL_SPEED;
-                    gp.player.dir = 0;
+                    gp.player.mov.x = -GamePhysics.PL_SPEED;
+                    gp.player.setDir(0);
                     if (CaveGame.TOUCH && checkSwim()) gp.swim = true;
                     break;
                 case Input.Keys.D:
-                    gp.player.move.x = GamePhysics.PL_SPEED;
-                    gp.player.dir = 1;
+                    gp.player.mov.x = GamePhysics.PL_SPEED;
+                    gp.player.setDir(1);
                     if (CaveGame.TOUCH && checkSwim()) gp.swim = true;
                     break;
             }
-        } else if (CaveGame.TOUCH) {
+        } else {
             switch (keycode) {
                 case Input.Keys.A:
                     gp.curX--;
@@ -72,17 +71,17 @@ public class GameInput {
                 if (checkSwim()) {
                     gp.swim = true;
                 } else if (gp.player.canJump) {
-                    gp.player.move.add(0, -7);
+                    gp.player.mov.add(0, -7);
                 } else if (!gp.player.flyMode && gp.player.gameMode == 1) {
                     gp.player.flyMode = true;
-                    gp.player.move.y = 0;
+                    gp.player.mov.y = 0;
                 } else if (gp.player.flyMode) {
-                    gp.player.move.y = -GamePhysics.PL_SPEED;
+                    gp.player.mov.y = -GamePhysics.PL_SPEED;
                 }
                 break;
 
             case Input.Keys.CONTROL_LEFT:
-                gp.player.move.y = GamePhysics.PL_SPEED;
+                gp.player.mov.y = GamePhysics.PL_SPEED;
                 break;
 
             case Input.Keys.E:
@@ -116,13 +115,13 @@ public class GameInput {
         switch (keycode) {
             case Input.Keys.A:
             case Input.Keys.D:
-                gp.player.move.x = 0;
+                gp.player.mov.x = 0;
                 if (CaveGame.TOUCH && gp.swim) gp.swim = false;
                 break;
 
             case Input.Keys.SPACE:
             case Input.Keys.CONTROL_LEFT:
-                if (gp.player.flyMode) gp.player.move.y = 0;
+                if (gp.player.flyMode) gp.player.mov.y = 0;
                 if (gp.swim) gp.swim = false;
                 break;
         }

@@ -16,6 +16,14 @@ public class GameWorld {
         return HEIGHT;
     }
 
+    public float getWidthPx() {
+        return WIDTH * 16f;
+    }
+
+    public float getHeightPx() {
+        return HEIGHT * 16f;
+    }
+
     public int[][] getFullForeMap() {
         return foreMap;
     }
@@ -94,7 +102,7 @@ public class GameWorld {
     }
 
     public void placeToForeground(int x, int y, int value) {
-        if (getForeMap(x, y) == 0 || value == 0 || !GameItems.getBlock(getForeMap(x, y)).coll) {
+        if (getForeMap(x, y) == 0 || value == 0 || !GameItems.getBlock(getForeMap(x, y)).hasCollision()) {
             setForeMap(x, y, value);
         } else if (GameItems.isSlab(value) && getForeMap(x, y) == value) {
             placeSlab(x, y, value);
@@ -105,8 +113,8 @@ public class GameWorld {
     }
 
     public void placeToBackground(int x, int y, int value) {
-        if (value == 0 || (getBackMap(x, y) == 0 && GameItems.getBlock(value).coll) &&
-                (!GameItems.getBlock(value).tp || value == 18)) {
+        if (value == 0 || (getBackMap(x, y) == 0 && GameItems.getBlock(value).hasCollision()) &&
+                (!GameItems.getBlock(value).isTransparent() || value == 18)) {
             setBackMap(x, y, value);
         }
     }

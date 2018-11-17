@@ -8,7 +8,8 @@ public class Block {
     private int tex;
     private int hp, drop;
 
-    public boolean coll, bg, tp, rb;
+    //coll - collision, bg - background, tp - transparent, rb - requires block under it
+    private boolean coll, bg, tp, rb;
 
     public Block(int tex, int hp, int drop) {
         this(0, 0, 16, 16, tex, hp, drop, true, false, false, false);
@@ -38,6 +39,22 @@ public class Block {
         this.bg = bg;
         this.tp = tp;
         this.rb = rb;
+    }
+
+    public boolean hasCollision() {
+        return coll;
+    }
+
+    public boolean isBackground() {
+        return bg;
+    }
+
+    public boolean isTransparent() {
+        return tp;
+    }
+
+    public boolean requiresBlock() {
+        return rb;
     }
 
     public int getTex() {

@@ -9,8 +9,8 @@ public abstract class Renderer {
 
     private OrthographicCamera camera;
 
-    public ShapeRenderer shaper;
-    public SpriteBatch spriter;
+    protected ShapeRenderer shaper;
+    protected SpriteBatch spriter;
 
     public Renderer() {
         this(GameScreen.getWidth(), GameScreen.getHeight());
@@ -49,18 +49,18 @@ public abstract class Renderer {
         Assets.mcFont.getData().setScale(scale);
     }
 
-    public void setFontColor(int r, int g, int b) {
+    protected void setFontColor(int r, int g, int b) {
         Assets.mcFont.setColor(r / 255f, g / 255f, b / 255f, 1f);
     }
 
-    public void drawString(String str, float x, float y) {
+    protected void drawString(String str, float x, float y) {
         Assets.mcFont.draw(spriter, str, x, y);
     }
 
-    public void drawString(String str) {
+    protected void drawString(String str) {
         Assets.mcFont.draw(spriter, str,
-                getWidth() / 2 - Assets.getStringWidth(str) / 2,
-                getHeight() / 2 - Assets.getStringHeight(str) / 2);
+                getWidth() / 2 - (float) Assets.getStringWidth(str) / 2,
+                getHeight() / 2 - (float) Assets.getStringHeight(str) / 2);
     }
 
     public abstract void render();

@@ -41,14 +41,18 @@ public class InputHandlerMenu implements InputProcessor {
         switch (CaveGame.STATE) {
             case MENU_MAIN:
                 for (Button button : menuRenderer.menuMainBtns) {
-                    if (button.getRect().contains(screenX, screenY) && button.getType() > 0)
+                    if (button.getRect().contains(screenX, screenY) && button.getType() > 0) {
                         menuRenderer.buttonClicked(button);
+                        break;
+                    }
                 }
                 break;
             case MENU_NEW_GAME:
                 for (Button button : menuRenderer.menuNGBtns) {
-                    if (button.getRect().contains(screenX, screenY) && button.getType() > 0)
+                    if (button.getRect().contains(screenX, screenY) && button.getType() > 0) {
                         menuRenderer.buttonClicked(button);
+                        break;
+                    }
                 }
                 break;
         }

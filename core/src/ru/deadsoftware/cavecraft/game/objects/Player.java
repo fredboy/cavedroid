@@ -12,8 +12,8 @@ public class Player implements Serializable {
     public static int ANIM_SPEED = 6;
 
     public Vector2 pos;
-    public Vector2 move;
-    public int width, height, dir, texWidth, hp;
+    public Vector2 mov;
+    private int width, height, dir, hp;
     public boolean canJump;
     public int[] inv;
     public boolean flyMode = false;
@@ -21,18 +21,17 @@ public class Player implements Serializable {
 
     public Player(GameWorld world, int gameMode) {
         this.gameMode = gameMode;
-        pos = getSpawnPoint(world).cpy();
-        move = new Vector2(0, 0);
+        mov = new Vector2(0, 0);
         width = 4;
         height = 30;
-        texWidth = 8;
         inv = new int[9];
         hp = 20;
+        pos = getSpawnPoint(world).cpy();
     }
 
     public void respawn(GameWorld world) {
         pos.set(getSpawnPoint(world));
-        move.setZero();
+        mov.setZero();
         hp = 20;
     }
 
@@ -44,15 +43,45 @@ public class Player implements Serializable {
                 world.setForeMap(x, y, 1);
                 break;
             }
-            if (world.getForeMap(x, y) > 0 && GameItems.getBlock(world.getForeMap(x, y)).coll) break;
+            if (world.getForeMap(x, y) > 0 && GameItems.getBlock(world.getForeMap(x, y)).hasCollision()) break;
         }
-        x = x * 16 + texWidth / 2;
-        y = y * 16 - height;
-        return new Vector2(x, y);
+        return new Vector2(x * 16 + 8 - (float) getWidth() / 2, (float) y * 16 - getHeight());
+    }
+
+    public int getMapX() {
+        return (int) (pos.x + (getWidth() / 2)) / 16;
+    }
+
+    public int getMapY() {
+        return (int) (pos.y + (getHeight() / 2)) / 16;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public int getDir() {
+        return dir;
+    }
+
+    public void setDir(int dir) {
+        this.dir = dir;
     }
 
     public Rectangle getRect() {
-        return new Rectangle(pos.x + 2, pos.y, width, height);
+        return new Rectangle(pos.x, pos.y, getWidth(), getHeight());
     }
 
 }

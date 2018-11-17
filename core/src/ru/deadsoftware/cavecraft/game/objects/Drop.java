@@ -8,6 +8,7 @@ import ru.deadsoftware.cavecraft.game.GameProc;
 import java.io.Serializable;
 
 public class Drop implements Serializable {
+
     private int id;
     public boolean pickedUp = false;
     public Vector2 move, pos;
@@ -19,9 +20,9 @@ public class Drop implements Serializable {
     }
 
     public int closeToPlayer(GameProc gp) {
-        boolean c1 = Intersector.overlaps(new Rectangle(gp.player.pos.x - 16, gp.player.pos.y - 16, gp.player.texWidth + 32, gp.player.height + 32), getRect());
-        boolean c2 = Intersector.overlaps(new Rectangle((gp.player.pos.x + gp.world.getWidth() * 16) - 16, gp.player.pos.y - 16, gp.player.texWidth + 32, gp.player.height + 32), getRect());
-        boolean c3 = Intersector.overlaps(new Rectangle((gp.player.pos.x - gp.world.getWidth() * 16) - 16, gp.player.pos.y - 16, gp.player.texWidth + 32, gp.player.height + 32), getRect());
+        boolean c1 = Intersector.overlaps(new Rectangle(gp.player.pos.x - 16, gp.player.pos.y - 16, gp.player.getWidth() + 32, gp.player.getHeight() + 32), getRect());
+        boolean c2 = Intersector.overlaps(new Rectangle((gp.player.pos.x + gp.world.getWidthPx()) - 16, gp.player.pos.y - 16, gp.player.getWidth() + 32, gp.player.getHeight() + 32), getRect());
+        boolean c3 = Intersector.overlaps(new Rectangle((gp.player.pos.x - gp.world.getWidthPx()) - 16, gp.player.pos.y - 16, gp.player.getWidth() + 32, gp.player.getHeight() + 32), getRect());
         if (c1) return 1;
         if (c2) return 2;
         if (c3) return 3;
@@ -35,16 +36,16 @@ public class Drop implements Serializable {
             float py = gp.player.pos.y;
             switch (ctp) {
                 case 2:
-                    px += gp.world.getWidth() * 16;
+                    px += gp.world.getWidthPx();
                     break;
                 case 3:
-                    px -= gp.world.getWidth() * 16;
+                    px -= gp.world.getWidthPx();
                     break;
             }
             float dx = 0, dy = 0;
-            if (px + gp.player.texWidth < pos.x + 4) dx = -.5f;
+            if (px + gp.player.getWidth() < pos.x + 4) dx = -.5f;
             else if (px > pos.x + 4) dx = .5f;
-            if (py + gp.player.height < pos.y + 4) dy = -.5f;
+            if (py + gp.player.getHeight() < pos.y + 4) dy = -.5f;
             else if (py > pos.y + 4) dy = .5f;
             move.add(dx, dy);
             if (move.x > 2) move.x = 1;

@@ -13,27 +13,18 @@ public class CaveGame extends Game {
 
     public static boolean TOUCH;
 
-    public CaveGame() {
-        this(false);
+    public CaveGame(String gameFolder) {
+        this(gameFolder, false);
     }
 
-    public CaveGame(boolean touch) {
+    public CaveGame(String gameFolder, boolean touch) {
+        GAME_FOLDER = gameFolder;
         TOUCH = touch;
         STATE = AppState.MENU_MAIN;
     }
 
     @Override
     public void create() {
-        switch (Gdx.app.getType()) {
-            case Desktop:
-                GAME_FOLDER = System.getProperty("user.home") + "/.cavecraft";
-                break;
-            case Android:
-                GAME_FOLDER = "/sdcard/cavecraft";
-                break;
-            default:
-                Gdx.app.exit();
-        }
         Gdx.app.log("CaveGame", GAME_FOLDER);
         Gdx.files.absolute(GAME_FOLDER).mkdirs();
         setScreen(new GameScreen());
