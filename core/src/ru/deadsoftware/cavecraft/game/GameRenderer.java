@@ -301,11 +301,6 @@ public class GameRenderer extends Renderer {
             drawString("Game mode: " + gp.player.gameMode, 0, 80);
         }
         spriter.end();
-
-        shaper.begin(ShapeRenderer.ShapeType.Line);
-        shaper.setColor(Color.BLACK);
-        shaper.rect(gp.player.pos.x - getCamX(), gp.player.pos.y - getCamY(), gp.player.getWidth(), gp.player.getHeight());
-        shaper.end();
     }
 
 }
