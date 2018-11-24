@@ -8,23 +8,31 @@ import java.io.Serializable;
 
 public abstract class Mob implements Serializable {
 
-    protected int anim, animSpeed = 6;
+    public boolean flyMode;
     private float width, height;
     private int dir;
 
     public Vector2 pos;
     public Vector2 mov;
+
     private boolean dead;
 
     public boolean canJump;
+    protected int anim, animDelta = 6;
 
-    protected Mob(float x, float y, float width, float height, int dir) {
+    protected Mob(float x, float y, float width, float height, int dir, boolean player) {
         pos = new Vector2(x, y);
+        mov = new Vector2(0, 0);
         this.width = width;
         this.height = height;
         canJump = false;
+        flyMode = false;
         dead = false;
         this.dir = dir;
+    }
+
+    protected Mob(float x, float y, float width, float height, int dir) {
+        this(x, y, width, height, dir, false);
     }
 
     public int getMapX() {

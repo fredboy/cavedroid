@@ -119,9 +119,6 @@ public class InputHandlerGame implements InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        screenX *= gp.renderer.getWidth() / getWidth();
-        screenY *= gp.renderer.getHeight() / getHeight();
-        gameInput.mouseMoved(screenX, screenY);
         return false;
     }
 

@@ -86,25 +86,55 @@ class GamePhysics {
         }
     }
 
+    private void mobXColl(Mob mob) {
+        if (checkColl(mob.getRect())) {
+            if (mob.canJump && !mob.flyMode) {
+                mob.pos.y -= 8;
+            }
+            if (checkColl(mob.getRect())) {
+                if (mob.canJump && !mob.flyMode) mob.pos.y += 8;
+                int d = 0;
+                if (mob.mov.x < 0) d = 1;
+                else if (mob.mov.x > 0) d = -1;
+                mob.pos.x = MathUtils.round(mob.pos.x);
+                while (checkColl(mob.getRect())) mob.pos.x += d;
+                if (mob.canJump) mob.changeDir();
+            }
+        }
+        if (mob.pos.x + mob.getWidth() / 2 < 0) mob.pos.x += gp.world.getWidthPx();
+        if (mob.pos.x + mob.getWidth() / 2 > gp.world.getWidthPx()) mob.pos.x -= gp.world.getWidthPx();
+    }
+
+    private void mobYColl(Mob mob) {
+        if (checkColl(mob.getRect())) {
+            int d = -1;
+            if (mob.mov.y < 0) d = 1;
+            if (d == -1) {
+                mob.canJump = true;
+                mob.flyMode = false;
+            }
+            mob.pos.y = MathUtils.round(mob.pos.y);
+            while (checkColl(mob.getRect())) mob.pos.y += d;
+            mob.mov.y = 0;
+            if (mob.getType() > 0) {
+                gp.world.setForeMap(mob.getMapX(), mob.getMapY(), mob.getType());
+                mob.kill();
+            }
+        } else {
+            mob.canJump = false;
+        }
+        if (mob.pos.y > gp.world.getHeightPx()) {
+            mob.kill();
+        }
+    }
+
     private void playerPhy(Player pl) {
         pl.pos.y += pl.mov.y;
-        if (checkColl(pl.getRect())) {
-            int d = -1;
-            if (pl.mov.y < 0) d = 1;
-            if (d == -1) {
-                pl.flyMode = false;
-                pl.canJump = true;
-            }
-            pl.pos.y = MathUtils.round(pl.pos.y);
-            while (checkColl(pl.getRect())) pl.pos.y += d;
-            pl.mov.y = 0;
-        } else {
-            pl.canJump = false;
-        }
+        mobYColl(pl);
 
         if (GameItems.isFluid(getBlock(pl.getRect()))) {
-            if (CaveGame.TOUCH && pl.mov.x != 0 && !gp.swim && !pl.flyMode) gp.swim = true;
-            if (!gp.swim) {
+            if (CaveGame.TOUCH && pl.mov.x != 0 && !pl.swim && !pl.flyMode) pl.swim = true;
+            if (!pl.swim) {
                 if (!pl.flyMode && pl.mov.y < 4.5f) pl.mov.add(gravity.x / 4, gravity.y / 4);
                 if (!pl.flyMode && pl.mov.y > 4.5f) pl.mov.add(0, -1f);
             } else {
@@ -116,22 +146,8 @@ class GamePhysics {
         }
 
         pl.pos.x += pl.mov.x;
-        if (checkColl(pl.getRect())) {
-            if (pl.canJump && !pl.flyMode) pl.pos.y -= 8;
-            if (checkColl(pl.getRect())) {
-                if (pl.canJump && !pl.flyMode) pl.pos.y += 8;
-                int d = 0;
-                if (pl.mov.x < 0) d = 1;
-                else if (pl.mov.x > 0) d = -1;
-                pl.pos.x = MathUtils.round(pl.pos.x);
-                while (checkColl(pl.getRect())) pl.pos.x += d;
-            }
-        }
-        if (pl.pos.x + pl.getWidth() / 2 < 0) pl.pos.x += gp.world.getWidthPx();
-        if (pl.pos.x + pl.getWidth() / 2 > gp.world.getWidthPx()) pl.pos.x -= gp.world.getWidthPx();
-        if (pl.pos.y > gp.world.getHeightPx()) {
-            pl.respawn(gp.world);
-        }
+        mobXColl(pl);
+
         if (CaveGame.TOUCH && checkJump(pl.getRect(), pl.getDir()) && !pl.flyMode && pl.canJump && pl.mov.x != 0) {
             pl.mov.add(0, -8);
             pl.canJump = false;
@@ -140,47 +156,17 @@ class GamePhysics {
 
     private void mobPhy(Mob mob) {
         mob.pos.y += mob.mov.y;
-        if (checkColl(mob.getRect())) {
-            int d = -1;
-            if (mob.mov.y < 0) d = 1;
-            if (d == -1) mob.canJump = true;
-            mob.pos.y = MathUtils.round(mob.pos.y);
-            while (checkColl(mob.getRect())) mob.pos.y += d;
-            mob.mov.y = 0;
-            if (mob.getType() > 0) {
-                gp.world.setForeMap(mob.getMapX(), mob.getMapY(), mob.getType());
-                mob.kill();
-            }
-        } else {
-            mob.canJump = false;
-        }
+        mobYColl(mob);
 
         if (mob.getType() == 0 && GameItems.isFluid(getBlock(mob.getRect()))) {
             if (mob.mov.y > 9) mob.mov.add(0, -.9f);
             mob.mov.add(0, -.5f);
             if (mob.mov.y < -3) mob.mov.y = -3;
-        } else if (mob.mov.y < 18) mob.mov.add(gravity);
+        } else if (!mob.flyMode && mob.mov.y < 18) mob.mov.add(gravity);
 
         mob.pos.x += mob.mov.x;
-        if (checkColl(mob.getRect())) {
-            if (mob.canJump) {
-                mob.pos.y -= 8;
-            }
-            if (checkColl(mob.getRect())) {
-                if (mob.canJump) mob.pos.y += 8;
-                int d = 0;
-                if (mob.mov.x < 0) d = 1;
-                else if (mob.mov.x > 0) d = -1;
-                mob.pos.x = MathUtils.round(mob.pos.x);
-                while (checkColl(mob.getRect())) mob.pos.x += d;
-                if (mob.canJump) mob.changeDir();
-            }
-        }
-        if (mob.pos.x + mob.getWidth() / 2 < 0) mob.pos.x += gp.world.getWidthPx();
-        if (mob.pos.x + mob.getWidth() / 2 > gp.world.getWidthPx()) mob.pos.x -= gp.world.getWidthPx();
-        if (mob.pos.y > gp.world.getHeightPx()) {
-            mob.pos.y = 0;
-        }
+        mobXColl(mob);
+
         if (checkJump(mob.getRect(), mob.getDir()) && mob.canJump && mob.mov.x != 0) {
             mob.mov.add(0, -8);
             mob.canJump = false;
@@ -188,6 +174,7 @@ class GamePhysics {
     }
 
     void update(float delta) {
+        //TODO use delta time
         for (Iterator<Drop> it = gp.drops.iterator(); it.hasNext(); ) {
             Drop drop = it.next();
             dropPhy(drop);
@@ -203,10 +190,11 @@ class GamePhysics {
         }
 
         playerPhy(gp.player);
+        if (gp.player.isDead()) gp.player.respawn(gp.world);
 
         gp.renderer.setCamPos(
-                gp.player.pos.x + (float) gp.player.getWidth() / 2 - gp.renderer.getWidth() / 2,
-                gp.player.pos.y + (float) gp.player.getHeight() / 2 - gp.renderer.getHeight() / 2);
+                gp.player.pos.x + gp.player.getWidth() / 2 - gp.renderer.getWidth() / 2,
+                gp.player.pos.y + gp.player.getHeight() / 2 - gp.renderer.getHeight() / 2);
     }
 
 }

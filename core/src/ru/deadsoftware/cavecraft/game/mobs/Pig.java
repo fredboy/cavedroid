@@ -25,10 +25,10 @@ public class Pig extends Mob {
             if (mov.x != 0f) mov.x = 0;
             else mov.x = -1 + 2 * getDir();
         }
-        if (mov.x != 0f) anim += animSpeed;
+        if (mov.x != 0f) anim += animDelta;
         else anim = 0;
         if (anim >= 60 || anim <= -60) {
-            animSpeed = -animSpeed;
+            animDelta = -animDelta;
         }
     }
 

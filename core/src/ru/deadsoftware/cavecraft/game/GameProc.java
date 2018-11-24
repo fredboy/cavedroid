@@ -19,30 +19,26 @@ import java.util.ArrayList;
 
 public class GameProc implements Serializable {
 
-    public static double RUN_TIME = 0;
-
-    public static boolean DO_UPD = false;
-    public static int UPD_X = -1, UPD_Y = -1;
-
-    public Player player;
-
-    public ArrayList<Mob> mobs;
-    public ArrayList<Drop> drops;
+    static boolean DO_UPD = false;
+    static int UPD_X = -1, UPD_Y = -1;
 
     public transient GameWorld world;
     public transient GameRenderer renderer;
     public transient GamePhysics physics;
 
-    public int curX, curY;
-    public int slot;
-    public int ctrlMode;
-    public int creativeScroll, maxCreativeScroll;
-    public int blockDmg = 0;
+    public Player player;
+    public ArrayList<Mob> mobs;
+    public ArrayList<Drop> drops;
 
-    public boolean isTouchDown, isKeyDown, swim;
-    public int touchDownX, touchDownY, keyDownCode;
-    public int touchDownBtn;
+
+    public boolean isTouchDown, isKeyDown;
+    public int ctrlMode, touchDownX, touchDownY, touchDownBtn, keyDownCode;
     public long touchDownTime;
+
+    int curX, curY;
+    int creativeScroll, maxCreativeScroll;
+    int blockDmg = 0;
+
 
     public GameProc(int gameMode) {
         world = new GameWorld();
@@ -380,7 +376,7 @@ public class GameProc implements Serializable {
         }
     }
 
-    public void useItem(int x, int y, int id, boolean bg) {
+    void useItem(int x, int y, int id, boolean bg) {
         if (id > 0 && GameItems.getItem(id).getType() == 0) {
             if (!bg) world.placeToForeground(x, y, GameItems.getItem(id).getBlock());
             else world.placeToBackground(x, y, GameItems.getItem(id).getBlock());
@@ -388,8 +384,6 @@ public class GameProc implements Serializable {
     }
 
     public void update(float delta) {
-        RUN_TIME += delta;
-
         if (DO_UPD) {
             for (int y = UPD_Y; y < UPD_Y + 16; y++)
                 for (int x = UPD_X; x < UPD_X + 16; x++) {
@@ -436,7 +430,7 @@ public class GameProc implements Serializable {
 
         if (isTouchDown && TimeUtils.timeSinceMillis(touchDownTime) > 500) {
             if (touchDownBtn == Input.Buttons.RIGHT) {
-                useItem(curX, curY, player.inv[slot], true);
+                useItem(curX, curY, player.inv[player.invSlot], true);
                 isTouchDown = false;
             } else if (touchDownY < Assets.invBar.getRegionHeight() &&
                     touchDownX > renderer.getWidth() / 2 - Assets.invBar.getRegionWidth() / 2 &&
