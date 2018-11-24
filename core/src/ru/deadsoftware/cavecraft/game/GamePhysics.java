@@ -131,6 +131,7 @@ class GamePhysics {
     private void playerPhy(Player pl) {
         pl.pos.y += pl.mov.y;
         mobYColl(pl);
+        if (pl.isDead()) return;
 
         if (GameItems.isFluid(getBlock(pl.getRect()))) {
             if (CaveGame.TOUCH && pl.mov.x != 0 && !pl.swim && !pl.flyMode) pl.swim = true;
@@ -157,6 +158,7 @@ class GamePhysics {
     private void mobPhy(Mob mob) {
         mob.pos.y += mob.mov.y;
         mobYColl(mob);
+        if (mob.isDead()) return;
 
         if (mob.getType() == 0 && GameItems.isFluid(getBlock(mob.getRect()))) {
             if (mob.mov.y > 9) mob.mov.add(0, -.9f);
