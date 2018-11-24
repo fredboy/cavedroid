@@ -45,7 +45,7 @@ public class Player extends Mob implements Serializable {
     }
 
     public void setDir(int dir) {
-        if (dir != getDir()) changeDir();
+        if (dir != getDir()) switchDir();
     }
 
     @Override
@@ -54,7 +54,6 @@ public class Player extends Mob implements Serializable {
 
     @Override
     public void changeDir() {
-        switchDir();
     }
 
     @Override

@@ -53,8 +53,8 @@ public class MenuRenderer extends Renderer {
         spriter.draw(Assets.menuBtn[button.getType()], button.getX(), button.getY());
         setFontColor(255, 255, 255);
         drawString(button.getLabel(),
-                (button.getX() + button.getWidth() / 2) - Assets.getStringWidth(button.getLabel()) / 2,
-                (button.getY() + button.getHeight() / 2) - Assets.getStringHeight(button.getLabel()) / 2);
+                (button.getX() + button.getWidth() / 2) - (float) Assets.getStringWidth(button.getLabel()) / 2,
+                (button.getY() + button.getHeight() / 2) - (float) Assets.getStringHeight(button.getLabel()) / 2);
     }
 
     private void drawButtons(Array<Button> buttons) {

@@ -2,6 +2,7 @@ package ru.deadsoftware.cavecraft.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import ru.deadsoftware.cavecraft.CaveGame;
 import ru.deadsoftware.cavecraft.GameScreen;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
@@ -46,8 +47,6 @@ public class GameRenderer extends Renderer {
                         drawX(x), drawY(y));
                 if (gp.world.getForeMap(x, y) == 0 && x == gp.curX && y == gp.curY)
                     drawWreck(gp.world.getBackMap(gp.curX, gp.curY));
-                Assets.shade.setPosition(drawX(x), drawY(y));
-                Assets.shade.draw(spriter);
             }
         }
         if (gp.world.getForeMap(x, y) > 0 && GameItems.getBlock(gp.world.getForeMap(x, y)).isBackground() == drawBG) {
@@ -70,6 +69,22 @@ public class GameRenderer extends Renderer {
             for (int x = minX; x < maxX; x++) {
                 drawBlock(x, y, bg);
             }
+        }
+        if (bg) {
+            spriter.end();
+            Gdx.gl.glEnable(GL20.GL_BLEND);
+            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+            shaper.begin(ShapeRenderer.ShapeType.Filled);
+            shaper.setColor(0f, 0f, 0f, .5f);
+            for (int y = minY; y < maxY; y++) {
+                for (int x = minX; x < maxX; x++) {
+                    if ((gp.world.getForeMap(x, y) == 0 || GameItems.getBlock(gp.world.getForeMap(x, y)).isTransparent())
+                            && gp.world.getBackMap(x, y) > 0) shaper.rect(drawX(x), drawY(y), 16, 16);
+                }
+            }
+            shaper.end();
+            Gdx.gl.glDisable(GL20.GL_BLEND);
+            spriter.begin();
         }
     }
 

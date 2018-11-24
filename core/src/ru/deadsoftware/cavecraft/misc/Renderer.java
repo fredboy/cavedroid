@@ -2,6 +2,7 @@ package ru.deadsoftware.cavecraft.misc;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteCache;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import ru.deadsoftware.cavecraft.GameScreen;
 
@@ -11,6 +12,7 @@ public abstract class Renderer {
 
     protected ShapeRenderer shaper;
     protected SpriteBatch spriter;
+    protected SpriteCache spriteCache;
 
     public Renderer() {
         this(GameScreen.getWidth(), GameScreen.getHeight());
@@ -23,6 +25,8 @@ public abstract class Renderer {
         shaper.setProjectionMatrix(camera.combined);
         spriter = new SpriteBatch();
         spriter.setProjectionMatrix(camera.combined);
+        spriteCache = new SpriteCache();
+        spriteCache.setProjectionMatrix(camera.combined);
     }
 
     public float getWidth() {

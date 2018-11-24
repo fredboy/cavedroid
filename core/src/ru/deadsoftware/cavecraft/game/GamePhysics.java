@@ -26,20 +26,14 @@ class GamePhysics {
 
     private boolean checkJump(Rectangle rect, int dir) {
         int bl;
-        switch (dir) {
-            case 0:
-                bl = gp.world.getForeMap((int) ((rect.x - 8) / 16), (int) ((rect.y + rect.height - 8) / 16));
-                if (checkColl(new Rectangle(rect.x - 8, rect.y - 18, rect.width, rect.height))) bl = 0;
-                break;
-            case 1:
-                bl = gp.world.getForeMap((int) ((rect.x + rect.width + 8) / 16), (int) ((rect.y + rect.height - 8) / 16));
-                if (checkColl(new Rectangle(rect.x + rect.width + 8, rect.y - 18, rect.width, rect.height))) bl = 0;
-                break;
-            default:
-                bl = 0;
-        }
+        int blX = (int) (rect.x + rect.width * dir - 8 + 16 * dir);
+        int blY = (int) (rect.y + rect.height - 8);
+
+        bl = gp.world.getForeMap(blX / 16, blY / 16);
+        if (checkColl(new Rectangle(blX, rect.y - 18, rect.width, rect.height))) bl = 0;
+
         return (bl > 0 && GameItems.getBlock(bl).toJump() &&
-                (rect.y + rect.height) - GameItems.getBlock(bl).getRect((int) ((rect.x - 8) / 16), (int) ((rect.y + rect.height - 8) / 16)).y > 8);
+                (rect.y + rect.height) - GameItems.getBlock(bl).getRect(blX / 16, blY / 16).y > 8);
     }
 
     private boolean checkColl(Rectangle rect) {

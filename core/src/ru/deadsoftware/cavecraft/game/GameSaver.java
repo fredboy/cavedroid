@@ -23,10 +23,10 @@ public class GameSaver {
         out.write(intToBytes(VERSION));
         out.write(intToBytes(width));
         out.write(intToBytes(height));
-        for (int y = 0; y < map[0].length; y++) {
+        for (int y = 0; y < height; y++) {
             bl = map[0][y];
             rl = 0;
-            for (int x = 0; x < map.length; x++) {
+            for (int x = 0; x < width; x++) {
                 if (map[x][y] != bl) {
                     out.write(intToBytes(rl));
                     out.write(intToBytes(bl));

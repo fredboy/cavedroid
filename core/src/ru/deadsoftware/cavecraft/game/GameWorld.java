@@ -38,44 +38,39 @@ public class GameWorld {
         return x;
     }
 
-    public int getForeMap(int x, int y) {
+    private int getMap(int x, int y, int layer) {
         int map = 0;
         try {
             x = transformX(x);
-            map = foreMap[x][y];
+            map = (layer == 0) ? foreMap[x][y] : backMap[x][y];
         } catch (ArrayIndexOutOfBoundsException e) {
-            //Gdx.app.error("GameWorld",e.toString());
         }
         return map;
+    }
+
+    private void setMap(int x, int y, int layer, int value) {
+        try {
+            x = transformX(x);
+            if (layer == 0) foreMap[x][y] = value;
+            else backMap[x][y] = value;
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+    }
+
+    public int getForeMap(int x, int y) {
+        return getMap(x, y, 0);
     }
 
     public void setForeMap(int x, int y, int value) {
-        try {
-            x = transformX(x);
-            foreMap[x][y] = value;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            //Gdx.app.error("GameWorld", e.toString());
-        }
+        setMap(x, y, 0, value);
     }
 
     public int getBackMap(int x, int y) {
-        int map = 0;
-        try {
-            x = transformX(x);
-            map = backMap[x][y];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            //Gdx.app.error("GameWorld",e.toString());
-        }
-        return map;
+        return getMap(x, y, 1);
     }
 
     public void setBackMap(int x, int y, int value) {
-        try {
-            x = transformX(x);
-            backMap[x][y] = value;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            //Gdx.app.error("GameWorld", e.toString());
-        }
+        setMap(x, y, 1, value);
     }
 
     private void placeSlab(int x, int y, int value) {
