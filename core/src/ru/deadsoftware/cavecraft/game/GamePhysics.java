@@ -11,25 +11,20 @@ import ru.deadsoftware.cavecraft.game.objects.Player;
 
 import java.util.Iterator;
 
+import static ru.deadsoftware.cavecraft.GameScreen.GP;
+
 class GamePhysics {
 
     static final int PL_SPEED = 2;
 
-    private GameProc gp;
-
-    private Vector2 gravity;
-
-    GamePhysics(GameProc gp) {
-        this.gp = gp;
-        gravity = new Vector2(0, .9f);
-    }
+    private Vector2 gravity  = new Vector2(0, .9f);;
 
     private boolean checkJump(Rectangle rect, int dir) {
         int bl;
         int blX = (int) (rect.x + rect.width * dir - 8 + 16 * dir);
         int blY = (int) (rect.y + rect.height - 8);
 
-        bl = gp.world.getForeMap(blX / 16, blY / 16);
+        bl = GP.world.getForeMap(blX / 16, blY / 16);
         if (checkColl(new Rectangle(blX, rect.y - 18, rect.width, rect.height))) bl = 0;
 
         return (bl > 0 && GameItems.getBlock(bl).toJump() &&
@@ -43,10 +38,10 @@ class GamePhysics {
         int maxX = (int) ((rect.x + rect.width / 2) / 16) + 4;
         int maxY = (int) ((rect.y + rect.height / 2) / 16) + 4;
         if (minY < 0) minY = 0;
-        if (maxY > gp.world.getHeight()) maxY = gp.world.getHeight();
+        if (maxY > GP.world.getHeight()) maxY = GP.world.getHeight();
         for (int y = minY; y < maxY; y++) {
             for (int x = minX; x < maxX; x++) {
-                bl = gp.world.getForeMap(x, y);
+                bl = GP.world.getForeMap(x, y);
                 if (bl > 0 && GameItems.getBlock(bl).hasCollision()) {
                     if (Intersector.overlaps(rect, GameItems.getBlock(bl).getRect(x, y))) {
                         return true;
@@ -58,12 +53,12 @@ class GamePhysics {
     }
 
     private int getBlock(Rectangle rect) {
-        return gp.world.getForeMap((int) (rect.x + rect.width / 2) / 16, (int) (rect.y + rect.height / 8 * 7) / 16);
+        return GP.world.getForeMap((int) (rect.x + rect.width / 2) / 16, (int) (rect.y + rect.height / 8 * 7) / 16);
     }
 
     private void dropPhy(Drop drop) {
-        if (drop.closeToPlayer(gp) > 0) {
-            drop.moveToPlayer(gp);
+        if (drop.closeToPlayer() > 0) {
+            drop.moveToPlayer();
         } else {
             if (drop.move.x >= .5f) drop.move.x -= .5f;
             else if (drop.move.x <= -.5f) drop.move.x += .5f;
@@ -71,8 +66,8 @@ class GamePhysics {
             if (drop.move.y < 9) drop.move.y += gravity.y / 4;
         }
         drop.pos.add(drop.move);
-        if (drop.pos.x + 8 > gp.world.getWidthPx()) drop.pos.x -= gp.world.getWidthPx();
-        else if (drop.pos.x < 0) drop.pos.x += gp.world.getWidthPx();
+        if (drop.pos.x + 8 > GP.world.getWidthPx()) drop.pos.x -= GP.world.getWidthPx();
+        else if (drop.pos.x < 0) drop.pos.x += GP.world.getWidthPx();
         drop.pos.y = MathUtils.round(drop.pos.y);
         while (checkColl(drop.getRect())) {
             drop.pos.y--;
@@ -95,8 +90,8 @@ class GamePhysics {
                 if (mob.canJump) mob.changeDir();
             }
         }
-        if (mob.pos.x + mob.getWidth() / 2 < 0) mob.pos.x += gp.world.getWidthPx();
-        if (mob.pos.x + mob.getWidth() / 2 > gp.world.getWidthPx()) mob.pos.x -= gp.world.getWidthPx();
+        if (mob.pos.x + mob.getWidth() / 2 < 0) mob.pos.x += GP.world.getWidthPx();
+        if (mob.pos.x + mob.getWidth() / 2 > GP.world.getWidthPx()) mob.pos.x -= GP.world.getWidthPx();
     }
 
     private void mobYColl(Mob mob) {
@@ -111,13 +106,13 @@ class GamePhysics {
             while (checkColl(mob.getRect())) mob.pos.y += d;
             mob.mov.y = 0;
             if (mob.getType() > 0) {
-                gp.world.setForeMap(mob.getMapX(), mob.getMapY(), mob.getType());
+                GP.world.setForeMap(mob.getMapX(), mob.getMapY(), mob.getType());
                 mob.kill();
             }
         } else {
             mob.canJump = false;
         }
-        if (mob.pos.y > gp.world.getHeightPx()) {
+        if (mob.pos.y > GP.world.getHeightPx()) {
             mob.kill();
         }
     }
@@ -171,26 +166,26 @@ class GamePhysics {
 
     void update(float delta) {
         //TODO use delta time
-        for (Iterator<Drop> it = gp.drops.iterator(); it.hasNext(); ) {
+        for (Iterator<Drop> it = GP.drops.iterator(); it.hasNext(); ) {
             Drop drop = it.next();
             dropPhy(drop);
-            if (Intersector.overlaps(drop.getRect(), gp.player.getRect())) drop.pickUpDrop(gp.player);
+            if (Intersector.overlaps(drop.getRect(), GP.player.getRect())) drop.pickUpDrop(GP.player);
             if (drop.pickedUp) it.remove();
         }
 
-        for (Iterator<Mob> it = gp.mobs.iterator(); it.hasNext(); ) {
+        for (Iterator<Mob> it = GP.mobs.iterator(); it.hasNext(); ) {
             Mob mob = it.next();
             mob.ai();
             mobPhy(mob);
             if (mob.isDead()) it.remove();
         }
 
-        playerPhy(gp.player);
-        if (gp.player.isDead()) gp.player.respawn(gp.world);
+        playerPhy(GP.player);
+        if (GP.player.isDead()) GP.player.respawn();
 
-        gp.renderer.setCamPos(
-                gp.player.pos.x + gp.player.getWidth() / 2 - gp.renderer.getWidth() / 2,
-                gp.player.pos.y + gp.player.getHeight() / 2 - gp.renderer.getHeight() / 2);
+        GP.renderer.setCamPos(
+                GP.player.pos.x + GP.player.getWidth() / 2 - GP.renderer.getWidth() / 2,
+                GP.player.pos.y + GP.player.getHeight() / 2 - GP.renderer.getHeight() / 2);
     }
 
 }

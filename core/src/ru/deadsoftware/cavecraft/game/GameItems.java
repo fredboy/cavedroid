@@ -12,7 +12,7 @@ public class GameItems {
     private static ArrayList<Item> items = new ArrayList<Item>();
 
     public static boolean isFluid(int bl) {
-        return (bl == 8 || bl == 9 || bl == 60 || bl == 61 || bl == 62 || bl == 63 || bl == 64 || bl == 65 || bl == 66 || bl == 67);
+        return isWater(bl) || isLava(bl);
     }
 
     public static boolean isWater(int bl) {

@@ -39,23 +39,22 @@ public class GameProc implements Serializable {
     int creativeScroll, maxCreativeScroll;
     int blockDmg = 0;
 
-
-    public GameProc(int gameMode) {
+    public void initGame(int gameMode) {
         world = new GameWorld();
         world.generate(1024, 256);
-        player = new Player(world, gameMode);
+        player = new Player(gameMode);
         drops = new ArrayList<Drop>();
         mobs = new ArrayList<Mob>();
         for (int i = 0; i < 16; i++) {
             mobs.add(new Pig(i * 256, 196 * 16));
         }
-        physics = new GamePhysics(this);
+        physics = new GamePhysics();
         if (CaveGame.TOUCH) {
-            renderer = new GameRenderer(this, 320,
+            renderer = new GameRenderer(320,
                     320 * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
         } else {
             ctrlMode = 1;
-            renderer = new GameRenderer(this, 480,
+            renderer = new GameRenderer(480,
                     480 * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
         }
         maxCreativeScroll = GameItems.getItemsSize() / 8;
@@ -64,10 +63,10 @@ public class GameProc implements Serializable {
 
     public void resetRenderer() {
         if (CaveGame.TOUCH) {
-            renderer = new GameRenderer(this, 320,
+            renderer = new GameRenderer(320,
                     320 * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
         } else {
-            renderer = new GameRenderer(this, 480,
+            renderer = new GameRenderer(480,
                     480 * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
         }
     }

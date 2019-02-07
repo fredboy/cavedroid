@@ -78,7 +78,7 @@ public class GameSaver {
                     loadMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/foremap.sav")),
                     loadMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/backmap.sav"))
             );
-            gameProc.physics = new GamePhysics(gameProc);
+            gameProc.physics = new GamePhysics();
             gameProc.resetRenderer();
         } catch (Exception e) {
             Gdx.app.error("GameSaver", e.getMessage(), e);

@@ -5,11 +5,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavecraft.game.GameItems;
-import ru.deadsoftware.cavecraft.game.GameWorld;
 import ru.deadsoftware.cavecraft.game.mobs.Mob;
 import ru.deadsoftware.cavecraft.misc.Assets;
 
 import java.io.Serializable;
+
+import static ru.deadsoftware.cavecraft.GameScreen.GP;
 
 public class Player extends Mob implements Serializable {
 
@@ -18,28 +19,28 @@ public class Player extends Mob implements Serializable {
     public int gameMode;
     public boolean swim;
 
-    public Player(GameWorld world, int gameMode) {
+    public Player(int gameMode) {
         super(0, 0, 4, 30, 1, true);
         this.gameMode = gameMode;
         inv = new int[9];
-        pos = getSpawnPoint(world).cpy();
+        pos = getSpawnPoint().cpy();
         swim = false;
     }
 
-    public void respawn(GameWorld world) {
-        pos.set(getSpawnPoint(world));
+    public void respawn() {
+        pos.set(getSpawnPoint());
         mov.setZero();
     }
 
-    private Vector2 getSpawnPoint(GameWorld world) {
+    private Vector2 getSpawnPoint() {
         int x = 0, y;
-        for (y = 0; y < world.getHeight(); y++) {
-            if (y == world.getHeight() - 1) {
+        for (y = 0; y < GP.world.getHeight(); y++) {
+            if (y == GP.world.getHeight() - 1) {
                 y = 60;
-                world.setForeMap(x, y, 1);
+                GP.world.setForeMap(x, y, 1);
                 break;
             }
-            if (world.getForeMap(x, y) > 0 && GameItems.getBlock(world.getForeMap(x, y)).hasCollision()) break;
+            if (GP.world.getForeMap(x, y) > 0 && GameItems.getBlock(GP.world.getForeMap(x, y)).hasCollision()) break;
         }
         return new Vector2(x * 16 + 8 - (float) getWidth() / 2, (float) y * 16 - getHeight());
     }
