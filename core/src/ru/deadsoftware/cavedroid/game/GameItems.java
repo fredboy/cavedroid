@@ -176,6 +176,12 @@ public class GameItems {
         items.add(new Item("Diamond Shovel", 8, 1));
         //63
         items.add(new Item("Golden Shovel", 9, 1));
+        //64
+        items.add(new Item("Empty Bucket", 10, 2));
+        //65
+        items.add(new Item("Water Bucket", 11, 2));
+        //66
+        items.add(new Item("Lava Bucket", 12, 2));
 
     }
 

@@ -11,7 +11,7 @@ import ru.deadsoftware.cavedroid.CaveGame;
 public class Assets {
 
     public static final int BLOCK_TEXTURES = 66;
-    public static final int ITEM_TEXTURES = 10;
+    public static final int ITEM_TEXTURES = 13;
 
     private static GlyphLayout layout;
 

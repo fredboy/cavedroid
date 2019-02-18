@@ -135,6 +135,7 @@ public class GameRenderer extends Renderer {
                                 y + 18 + ((i - GP.creativeScroll * 8) / 8) * 18);
                         break;
                     case 1:
+                    case 2:
                         spriter.draw(Assets.itemTex[GameItems.getItem(i).getTex()],
                                 x + 8 + ((i - GP.creativeScroll * 8) % 8) * 18,
                                 y + 18 + ((i - GP.creativeScroll * 8) / 8) * 18);
@@ -149,6 +150,7 @@ public class GameRenderer extends Renderer {
                                 x + 8 + i * 18, y + Assets.creativeInv.getRegionHeight() - 24);
                         break;
                     case 1:
+                    case 2:
                         spriter.draw(Assets.itemTex[GameItems.getItem(GP.player.inv[i]).getTex()],
                                 x + 8 + i * 18, y + Assets.creativeInv.getRegionHeight() - 24);
                         break;
@@ -174,6 +176,7 @@ public class GameRenderer extends Renderer {
                                 3);
                         break;
                     case 1:
+                    case 2:
                         spriter.draw(Assets.itemTex[GameItems.getItem(GP.player.inv[i]).getTex()],
                                 getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 + 3 + i * 20,
                                 3);
