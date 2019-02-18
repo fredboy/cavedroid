@@ -20,7 +20,7 @@ allprojects {
 
     version = 'alpha0.4'
     ext {
-        appName = "CaveCraft"
+        appName = "CaveDroid"
         gdxVersion = '1.9.7'
         roboVMVersion = '2.3.1'
         box2DLightsVersion = '1.4'
