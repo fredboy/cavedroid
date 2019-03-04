@@ -11,7 +11,7 @@ import ru.deadsoftware.cavedroid.misc.*;
 public class GameScreen implements Screen {
 
     public static int FPS;
-    public static boolean SHOW_DEBUG = false;
+    public static boolean SHOW_DEBUG = true;
     public static int NEW_GAME_MODE = 0;
 
     public static GameProc GP;
@@ -92,8 +92,8 @@ public class GameScreen implements Screen {
     public void resize(int width, int height) {
         switch (CaveGame.STATE) {
             case MENU_MAIN:
-
                 menuRenderer = new MenuRenderer(CaveGame.TOUCH ? 320 : 480);
+                Gdx.input.setInputProcessor(new InputHandlerMenu(menuRenderer));
                 renderer = menuRenderer;
                 break;
             case GAME_PLAY:

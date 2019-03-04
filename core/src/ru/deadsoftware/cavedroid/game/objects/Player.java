@@ -86,28 +86,6 @@ public class Player extends Mob implements Serializable {
         spriteBatch.draw(Assets.plSprite[getDir()][0], x - 2, y - 2);
         //body
         spriteBatch.draw(Assets.plSprite[getDir()][1], x - 2, y + 8);
-        //item in hand
-        if (inv[invSlot] > 0) {
-            float handRotation = MathUtils.degRad * Assets.plSprite[0][2].getRotation();
-            switch (GameItems.getItem(inv[invSlot]).getType()) {
-                case 0:
-                    Assets.blockTex[GameItems.getItem(inv[invSlot]).getTex()].setPosition(
-                            x - 8 * MathUtils.sin(handRotation),
-                            y + 6 + 8 * MathUtils.cos(handRotation));
-                    Assets.blockTex[GameItems.getItem(inv[invSlot]).getTex()].draw(spriteBatch);
-                    break;
-                default:
-                    Assets.itemTex[GameItems.getItem(inv[invSlot]).getTex()].flip((getDir() == 0), false);
-                    Assets.itemTex[GameItems.getItem(inv[invSlot]).getTex()].setRotation(
-                            -45 + getDir() * 90 + Assets.plSprite[0][2].getRotation());
-                    Assets.itemTex[GameItems.getItem(inv[invSlot]).getTex()].setPosition(
-                            x - 10 + (12 * getDir()) - 8 * MathUtils.sin(handRotation),
-                            y + 2 + 8 * MathUtils.cos(handRotation));
-                    Assets.itemTex[GameItems.getItem(inv[invSlot]).getTex()].draw(spriteBatch);
-                    Assets.itemTex[GameItems.getItem(inv[invSlot]).getTex()].flip((getDir() == 0), false);
-                    break;
-            }
-        }
         //front hand
         Assets.plSprite[0][2].setPosition(x - 6, y);
         Assets.plSprite[0][2].draw(spriteBatch);

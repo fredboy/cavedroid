@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.addIcon("icons/icon256.png", Files.FileType.Internal);
 		config.addIcon("icons/icon128.png", Files.FileType.Internal);
-		config.foregroundFPS = 60;
+		config.foregroundFPS = 144;
         config.title = "CaveDroid";
 		config.width = 960;
 		config.height = 540;

@@ -41,17 +41,13 @@ public class GameRenderer extends Renderer {
         if (drawBG) {
             if ((GP.world.getForeMap(x, y) == 0 || GameItems.getBlock(GP.world.getForeMap(x, y)).isTransparent())
                     && GP.world.getBackMap(x, y) > 0) {
-                spriter.draw(
-                        Assets.blockTex[GameItems.getBlock(GP.world.getBackMap(x, y)).getTex()],
-                        drawX(x), drawY(y));
+                spriter.draw(GameItems.getBlock(GP.world.getBackMap(x, y)).getTex(), drawX(x), drawY(y));
                 if (GP.world.getForeMap(x, y) == 0 && x == GP.curX && y == GP.curY)
                     drawWreck(GP.world.getBackMap(GP.curX, GP.curY));
             }
         }
         if (GP.world.getForeMap(x, y) > 0 && GameItems.getBlock(GP.world.getForeMap(x, y)).isBackground() == drawBG) {
-            spriter.draw(
-                    Assets.blockTex[GameItems.getBlock(GP.world.getForeMap(x, y)).getTex()],
-                    drawX(x), drawY(y));
+            spriter.draw(GameItems.getBlock(GP.world.getForeMap(x, y)).getTex(), drawX(x), drawY(y));
             if (x == GP.curX && y == GP.curY)
                 drawWreck(GP.world.getForeMap(GP.curX, GP.curY));
         }
@@ -102,21 +98,6 @@ public class GameRenderer extends Renderer {
     }
 
     private void drawDrop(Drop drop) {
-        switch (GameItems.getItem(drop.getId()).getType()) {
-            case 0:
-                Assets.blockTex[GameItems.getItem(drop.getId()).getTex()].setPosition(
-                        drop.pos.x - getCamX() - GP.world.getWidthPx(),
-                        drop.pos.y - getCamY());
-                Assets.blockTex[GameItems.getItem(drop.getId()).getTex()].draw(spriter);
-                Assets.blockTex[GameItems.getItem(drop.getId()).getTex()].setPosition(
-                        drop.pos.x - getCamX(),
-                        drop.pos.y - getCamY());
-                Assets.blockTex[GameItems.getItem(drop.getId()).getTex()].draw(spriter);
-                Assets.blockTex[GameItems.getItem(drop.getId()).getTex()].setPosition(
-                        drop.pos.x - getCamX() + GP.world.getWidthPx(),
-                        drop.pos.y - getCamY());
-                Assets.blockTex[GameItems.getItem(drop.getId()).getTex()].draw(spriter);
-        }
     }
 
     @SuppressWarnings("IntegerDivisionInFloatingPointContext")
@@ -128,34 +109,27 @@ public class GameRenderer extends Renderer {
                 y + 18 + (GP.creativeScroll * (72f / GP.maxCreativeScroll)));
         for (int i = GP.creativeScroll * 8; i < GP.creativeScroll * 8 + 40; i++) {
             if (i > 0 && i < GameItems.getItemsSize())
-                switch (GameItems.getItem(i).getType()) {
-                    case 0:
-                        spriter.draw(Assets.blockTex[GameItems.getItem(i).getTex()],
-                                x + 8 + ((i - GP.creativeScroll * 8) % 8) * 18,
-                                y + 18 + ((i - GP.creativeScroll * 8) / 8) * 18);
-                        break;
-                    case 1:
-                    case 2:
-                        spriter.draw(Assets.itemTex[GameItems.getItem(i).getTex()],
-                                x + 8 + ((i - GP.creativeScroll * 8) % 8) * 18,
-                                y + 18 + ((i - GP.creativeScroll * 8) / 8) * 18);
-                        break;
+                if (GameItems.getItem(i).isBlock()) {
+                    spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(i)).getTex(),
+                            x + 8 + ((i - GP.creativeScroll * 8) % 8) * 18,
+                            y + 18 + ((i - GP.creativeScroll * 8) / 8) * 18);
+                } else {
+                    spriter.draw(GameItems.getItem(i).getTex(),
+                            x + 8 + ((i - GP.creativeScroll * 8) % 8) * 18,
+                            y + 18 + ((i - GP.creativeScroll * 8) / 8) * 18);
                 }
         }
         for (int i = 0; i < 9; i++) {
             if (GP.player.inv[i] > 0)
-                switch (GameItems.getItem(GP.player.inv[i]).getType()) {
-                    case 0:
-                        spriter.draw(Assets.blockTex[GameItems.getItem(GP.player.inv[i]).getTex()],
-                                x + 8 + i * 18, y + Assets.creativeInv.getRegionHeight() - 24);
-                        break;
-                    case 1:
-                    case 2:
-                        spriter.draw(Assets.itemTex[GameItems.getItem(GP.player.inv[i]).getTex()],
-                                x + 8 + i * 18, y + Assets.creativeInv.getRegionHeight() - 24);
-                        break;
+                if (GameItems.getItem(GP.player.inv[i]).isBlock()) {
+                    spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(GP.player.inv[i])).getTex(),
+                            x + 8 + i * 18, y + Assets.creativeInv.getRegionHeight() - 24);
+                } else {
+                    spriter.draw(GameItems.getItem(GP.player.inv[i]).getTex(),
+                            x + 8 + i * 18, y + Assets.creativeInv.getRegionHeight() - 24);
                 }
         }
+
     }
 
     private void drawGUI() {
@@ -169,18 +143,14 @@ public class GameRenderer extends Renderer {
         spriter.draw(Assets.invBar, getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2, 0);
         for (int i = 0; i < 9; i++) {
             if (GP.player.inv[i] > 0) {
-                switch (GameItems.getItem(GP.player.inv[i]).getType()) {
-                    case 0:
-                        spriter.draw(Assets.blockTex[GameItems.getItem(GP.player.inv[i]).getTex()],
-                                getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 + 3 + i * 20,
-                                3);
-                        break;
-                    case 1:
-                    case 2:
-                        spriter.draw(Assets.itemTex[GameItems.getItem(GP.player.inv[i]).getTex()],
-                                getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 + 3 + i * 20,
-                                3);
-                        break;
+                if (GameItems.getItem(GP.player.inv[i]).isBlock()) {
+                    spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(GP.player.inv[i])).getTex(),
+                            getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 + 3 + i * 20,
+                            3);
+                } else {
+                    spriter.draw(GameItems.getItem(GP.player.inv[i]).getTex(),
+                            getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 + 3 + i * 20,
+                            3);
                 }
             }
         }
@@ -198,8 +168,7 @@ public class GameRenderer extends Renderer {
         spriter.draw(Assets.touchRMB, getWidth() - 26, getHeight() - 26);
         spriter.draw(Assets.touchMode, 78, getHeight() - 26);
         if (GP.ctrlMode == 1) {
-            Assets.shade.setPosition(83, getHeight() - 21);
-            Assets.shade.draw(spriter);
+            spriter.draw(Assets.shade, 83, getHeight() - 21);
         }
     }
 

@@ -79,11 +79,11 @@ public class MenuRenderer extends Renderer {
         spriter.begin();
         for (int x = 0; x <= getWidth() / 16; x++) {
             for (int y = 0; y <= getHeight() / 16; y++) {
-                spriter.draw(Assets.blockTex[GameItems.getBlock(3).getTex()], x * 16, y * 16);
+                spriter.draw(GameItems.getBlock(3).getTex(), x * 16, y * 16);
                 spriter.draw(Assets.shade, x * 16, y * 16);
             }
         }
-        spriter.draw(Assets.gameLogo, getWidth() / 2 - Assets.gameLogo.getWidth() / 2, 8);
+        spriter.draw(Assets.gameLogo, getWidth() / 2 - (float) Assets.gameLogo.getWidth() / 2, 8);
 
         switch (CaveGame.STATE) {
             case MENU_MAIN:

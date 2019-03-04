@@ -135,7 +135,7 @@ class GamePhysics {
             if (!pl.flyMode && pl.mov.y < 18) pl.mov.add(gravity);
         }
 
-        pl.pos.x += pl.mov.x;
+        pl.pos.x += pl.mov.x * (pl.flyMode ? 1.5f : 1) * (GameItems.isFluid(getBlock(pl.getRect())) && !pl.flyMode ? .8f : 1);
         mobXColl(pl);
 
         if (CaveGame.TOUCH && checkJump(pl.getRect(), pl.getDir()) && !pl.flyMode && pl.canJump && pl.mov.x != 0) {

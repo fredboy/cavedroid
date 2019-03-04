@@ -1,6 +1,9 @@
 package ru.deadsoftware.cavedroid.game;
 
+import ru.deadsoftware.cavedroid.game.objects.Block;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
+
+import static ru.deadsoftware.cavedroid.GameScreen.GP;
 
 public class GameWorld {
 
@@ -43,7 +46,7 @@ public class GameWorld {
         try {
             x = transformX(x);
             map = (layer == 0) ? foreMap[x][y] : backMap[x][y];
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException ignored) {
         }
         return map;
     }
@@ -53,24 +56,36 @@ public class GameWorld {
             x = transformX(x);
             if (layer == 0) foreMap[x][y] = value;
             else backMap[x][y] = value;
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException ignored) {
         }
+    }
+
+    public boolean hasBlockAt(int x, int y) {
+        return getMap(x, y, 0) != 0;
     }
 
     public int getForeMap(int x, int y) {
         return getMap(x, y, 0);
     }
 
-    public void setForeMap(int x, int y, int value) {
-        setMap(x, y, 0, value);
+    public Block getForeMapBlock(int x, int y) {
+        return GameItems.getBlock(getMap(x, y, 0));
+    }
+
+    public void setForeMap(int x, int y, int id) {
+        setMap(x, y, 0, id);
     }
 
     public int getBackMap(int x, int y) {
         return getMap(x, y, 1);
     }
 
-    public void setBackMap(int x, int y, int value) {
-        setMap(x, y, 1, value);
+    public Block getBackMapBlock(int x, int y) {
+        return GameItems.getBlock(getMap(x, y, 1));
+    }
+
+    public void setBackMap(int x, int y, int id) {
+        setMap(x, y, 1, id);
     }
 
     private void placeSlab(int x, int y, int value) {
@@ -97,7 +112,7 @@ public class GameWorld {
     }
 
     public void placeToForeground(int x, int y, int value) {
-        if (getForeMap(x, y) == 0 || value == 0 || !GameItems.getBlock(getForeMap(x, y)).hasCollision()) {
+        if (!hasBlockAt(x, y) || value == 0 || !GameItems.getBlock(getForeMap(x, y)).hasCollision()) {
             setForeMap(x, y, value);
         } else if (GameItems.isSlab(value) && getForeMap(x, y) == value) {
             placeSlab(x, y, value);
@@ -114,15 +129,17 @@ public class GameWorld {
         }
     }
 
-    public void destroyForeMap(int x, int y, GameProc gp) {
-        if (GameItems.getBlock(getForeMap(x, y)).getDrop() > 0)
-            gp.drops.add(new Drop(transformX(x) * 16 + 4, y * 16 + 4, GameItems.getBlock(getForeMap(x, y)).getDrop()));
+    public void destroyForeMap(int x, int y) {
+        if (GameItems.getBlock(getForeMap(x, y)).hasDrop())
+            GP.drops.add(new Drop(transformX(x) * 16 + 4, y * 16 + 4,
+                    GameItems.getItemId(GameItems.getBlock(getForeMap(x, y)).getDrop())));
         placeToForeground(x, y, 0);
     }
 
-    public void destroyBackMap(int x, int y, GameProc gp) {
-        if (GameItems.getBlock(getBackMap(x, y)).getDrop() > 0)
-            gp.drops.add(new Drop(transformX(x) * 16 + 4, y * 16 + 4, GameItems.getBlock(getBackMap(x, y)).getDrop()));
+    public void destroyBackMap(int x, int y) {
+        if (GameItems.getBlock(getBackMap(x, y)).hasDrop())
+            GP.drops.add(new Drop(transformX(x) * 16 + 4, y * 16 + 4,
+                    GameItems.getItemId(GameItems.getBlock(getBackMap(x, y)).getDrop())));
         placeToBackground(x, y, 0);
     }
 
@@ -135,7 +152,7 @@ public class GameWorld {
         WorldGen.clear();
     }
 
-    public void setMaps(int[][] foreMap, int[][] backMap) {
+    void setMaps(int[][] foreMap, int[][] backMap) {
         this.foreMap = foreMap.clone();
         this.backMap = backMap.clone();
         WIDTH = foreMap.length;

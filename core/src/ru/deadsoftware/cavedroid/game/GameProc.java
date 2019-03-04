@@ -58,6 +58,14 @@ public class GameProc implements Serializable {
                     480 * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
         }
         maxCreativeScroll = GameItems.getItemsSize() / 8;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) fluidUpdater();
+            }
+        }).start();
+
         GameSaver.save(this);
     }
 
@@ -362,7 +370,7 @@ public class GameProc implements Serializable {
 
         if (world.getForeMap(x, y) > 0 && GameItems.getBlock(world.getForeMap(x, y)).requiresBlock()) {
             if (world.getForeMap(x, y + 1) == 0 || !GameItems.getBlock(world.getForeMap(x, y + 1)).hasCollision()) {
-                world.destroyForeMap(x, y, this);
+                world.destroyForeMap(x, y);
                 updateBlock(x, y - 1);
             }
         }
@@ -375,14 +383,20 @@ public class GameProc implements Serializable {
         }
     }
 
+    private void fluidUpdater() {
+        for (int y = 0; y < world.getHeight(); y++) {
+            for (int x = (int) renderer.getCamX() / 16 - 1; x < (int) (renderer.getCamX() + renderer.getWidth()) / 16 + 1; x++) {
+                updateFluids(x, y);
+            }
+        }
+    }
+
     void useItem(int x, int y, int id, boolean bg) {
         if (id > 0) {
-            switch (GameItems.getItem(id).getType()) {
-                case 0:
-                    if (!bg) world.placeToForeground(x, y, GameItems.getItem(id).getBlock());
-                    else world.placeToBackground(x, y, GameItems.getItem(id).getBlock());
-                    break;
-                case 2:
+            if (GameItems.getItem(id).isBlock()) {
+                if (!bg) world.placeToForeground(x, y, GameItems.getBlockIdByItemId(id));
+                else world.placeToBackground(x, y, GameItems.getBlockIdByItemId(id));
+            } else {
                     switch (id) {
                         case 65:
                             world.placeToForeground(x, y, 8);
@@ -393,7 +407,6 @@ public class GameProc implements Serializable {
                             player.inv[player.invSlot] = 64;
                             break;
                     }
-                    break;
             }
         }
     }
@@ -405,12 +418,6 @@ public class GameProc implements Serializable {
                     updateBlock(x, y);
                 }
             DO_UPD = false;
-        }
-
-        for (int y = 0; y < world.getHeight(); y++) {
-            for (int x = (int) renderer.getCamX() / 16 - 1; x < (int) (renderer.getCamX() + renderer.getWidth()) / 16 + 1; x++) {
-                updateFluids(x, y);
-            }
         }
 
         physics.update(delta);
@@ -426,12 +433,12 @@ public class GameProc implements Serializable {
                     blockDmg++;
                     if (world.getForeMap(curX, curY) > 0) {
                         if (blockDmg >= GameItems.getBlock(world.getForeMap(curX, curY)).getHp()) {
-                            world.destroyForeMap(curX, curY, this);
+                            world.destroyForeMap(curX, curY);
                             blockDmg = 0;
                         }
                     } else if (world.getBackMap(curX, curY) > 0) {
                         if (blockDmg >= GameItems.getBlock(world.getBackMap(curX, curY)).getHp()) {
-                            world.destroyBackMap(curX, curY, this);
+                            world.destroyBackMap(curX, curY);
                             blockDmg = 0;
                         }
                     }

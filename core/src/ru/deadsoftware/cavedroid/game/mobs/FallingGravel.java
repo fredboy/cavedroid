@@ -22,7 +22,7 @@ public class FallingGravel extends Mob {
 
     @Override
     public void draw(SpriteBatch spriteBatch, float x, float y) {
-        spriteBatch.draw(Assets.blockTex[GameItems.getBlock(11).getTex()], x, y);
+        spriteBatch.draw(GameItems.getBlock("gravel").getTex(), x, y);
     }
 
     @Override

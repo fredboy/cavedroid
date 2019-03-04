@@ -1,33 +1,29 @@
 package ru.deadsoftware.cavedroid.game.objects;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
 public class Item {
 
-    private int tex;
-    private int type; // 0 - block, 1 - tool, 2 - other
-    private int block;
-    private String name;
+    private String name, type;
+    private Sprite tex;
 
-    public Item(String name, int tex, int type) {
-        this(name, tex, type, -1);
-    }
-
-    public Item(String name, int tex, int type, int block) {
+    public Item(String name, String type, Sprite tex) {
         this.name = name;
-        this.tex = tex;
         this.type = type;
-        this.block = block;
+        this.tex = tex;
+        if (this.tex != null) this.tex.flip(false, true);
     }
 
-    public int getTex() {
+    public Sprite getTex() {
         return tex;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public int getBlock() {
-        return block;
+    public boolean isBlock() {
+        return type.equals("block");
     }
 
     public String getName() {

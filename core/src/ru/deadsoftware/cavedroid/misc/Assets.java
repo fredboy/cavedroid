@@ -10,14 +10,11 @@ import ru.deadsoftware.cavedroid.CaveGame;
 
 public class Assets {
 
-    public static final int BLOCK_TEXTURES = 66;
-    public static final int ITEM_TEXTURES = 13;
-
     private static GlyphLayout layout;
 
     public static BitmapFont mcFont;
 
-    public static Sprite gameLogo;
+    public static Texture gameLogo;
 
     public static Texture menuBtnTex;
     public static TextureRegion[] menuBtn = new TextureRegion[3];
@@ -28,13 +25,7 @@ public class Assets {
     public static Texture pigTex;
     public static Sprite[][] pigSprite = new Sprite[2][2];
 
-    public static Sprite shade;
-
-    public static Texture terrain;
-    public static Sprite[] blockTex = new Sprite[BLOCK_TEXTURES];
-
-    public static Texture items;
-    public static Sprite[] itemTex = new Sprite[ITEM_TEXTURES];
+    public static Texture shade;
 
     public static Texture gui;
     public static TextureRegion invBar;
@@ -102,8 +93,7 @@ public class Assets {
 
         layout = new GlyphLayout();
 
-        gameLogo = new Sprite(new Texture(Gdx.files.internal("gamelogo.png")));
-        gameLogo.flip(false, true);
+        gameLogo = new Texture(Gdx.files.internal("gamelogo.png"));
 
         menuBtnTex = new Texture(Gdx.files.internal("buttons.png"));
         for (int i = 0; i < 3; i++) {
@@ -114,7 +104,7 @@ public class Assets {
         loadPlayer();
         loadPig();
 
-        shade = new Sprite(new Texture(Gdx.files.internal("shade.png")));
+        shade = new Texture(Gdx.files.internal("shade.png"));
 
         gui = new Texture(Gdx.files.internal("gui.png"));
         guiCur = new TextureRegion(gui, 0, 0, 16, 16);
@@ -148,22 +138,6 @@ public class Assets {
             touchSpace.flip(false, true);
         }
 
-        terrain = new Texture(Gdx.files.internal("terrain.png"));
-        for (int i = 0; i < BLOCK_TEXTURES; i++) {
-            blockTex[i] = new Sprite(terrain,
-                    (i % 16) * 16, (i / 16) * 16, 16, 16);
-            blockTex[i].flip(false, true);
-            blockTex[i].setSize(8, 8);
-        }
-        terrain = null;
-
-        items = new Texture(Gdx.files.internal("items.png"));
-        for (int i = 0; i < ITEM_TEXTURES; i++) {
-            itemTex[i] = new Sprite(items,
-                    (i % 16) * 16, (i / 16) * 16, 16, 16);
-            itemTex[i].flip(false, true);
-        }
-        items = null;
     }
 
     public static int getStringWidth(String s) {
