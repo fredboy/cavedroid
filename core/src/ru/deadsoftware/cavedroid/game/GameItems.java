@@ -13,11 +13,11 @@ import java.util.HashMap;
 
 public class GameItems {
 
-    private static HashMap<String, Integer> blocksIds = new HashMap<String, Integer>();
-    private static HashMap<String, Integer> itemsIds = new HashMap<String, Integer>();
+    private static HashMap<String, Integer> blocksIds = new HashMap<>();
+    private static HashMap<String, Integer> itemsIds = new HashMap<>();
 
-    private static ArrayMap<String, Block> blocks = new ArrayMap<String, Block>();
-    private static ArrayMap<String, Item> items = new ArrayMap<String, Item>();
+    private static ArrayMap<String, Block> blocks = new ArrayMap<>();
+    private static ArrayMap<String, Item> items = new ArrayMap<>();
 
     public static boolean isFluid(int id) {
         return getBlock(id).isFluid();
