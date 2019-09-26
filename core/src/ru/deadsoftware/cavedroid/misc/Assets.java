@@ -14,7 +14,7 @@ public class Assets {
 
     public static BitmapFont mcFont;
 
-    public static Texture gameLogo;
+    public static Sprite gameLogo;
 
     public static Texture menuBtnTex;
     public static TextureRegion[] menuBtn = new TextureRegion[3];
@@ -93,7 +93,8 @@ public class Assets {
 
         layout = new GlyphLayout();
 
-        gameLogo = new Texture(Gdx.files.internal("gamelogo.png"));
+        gameLogo = new Sprite(new Texture(Gdx.files.internal("gamelogo.png")));
+        gameLogo.flip(false, true);
 
         menuBtnTex = new Texture(Gdx.files.internal("buttons.png"));
         for (int i = 0; i < 3; i++) {
