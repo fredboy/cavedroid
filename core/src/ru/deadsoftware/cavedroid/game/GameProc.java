@@ -17,9 +17,10 @@ import ru.deadsoftware.cavedroid.misc.Assets;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class GameProc implements Serializable, Disposable {
+
+    private static final int FLUID_UPDATE_INTERVAL_MS = 100;
 
     static boolean DO_UPD = false;
     static int UPD_X = -1, UPD_Y = -1;
@@ -34,6 +35,7 @@ public class GameProc implements Serializable, Disposable {
     public ArrayList<Mob> mobs;
     public ArrayList<Drop> drops;
 
+    private long fluidLastUpdateTimestamp = 0;
 
     public boolean isTouchDown, isKeyDown;
     public int ctrlMode, touchDownX, touchDownY, touchDownBtn, keyDownCode;
@@ -63,15 +65,22 @@ public class GameProc implements Serializable, Disposable {
         }
         maxCreativeScroll = GameItems.getItemsSize() / 8;
 
-        fluidThread = new Thread(() -> {
-            while (!fluidThread.isInterrupted()) {
-                fluidUpdater();
-            }
-        });
+        createFluidThread();
 
         fluidThread.start();
 
         GameSaver.save(this);
+    }
+
+    private void createFluidThread() {
+        fluidThread = new Thread(() -> {
+            while (!fluidThread.isInterrupted()) {
+                if (System.currentTimeMillis() - fluidLastUpdateTimestamp > FLUID_UPDATE_INTERVAL_MS) {
+                    fluidUpdater();
+                    fluidLastUpdateTimestamp = System.currentTimeMillis();
+                }
+            }
+        });
     }
 
     public void resetRenderer() {
@@ -388,10 +397,11 @@ public class GameProc implements Serializable, Disposable {
     }
 
     private void fluidUpdater() {
+        int midScreen = (int) (renderer.getCamX() + renderer.getWidth() / 2) / 16;
         for (int y = 0; y < world.getHeight(); y++) {
-            for (int x = (int) renderer.getCamX() / 16 - 1;
-                 x < (int) (renderer.getCamX() + renderer.getWidth()) / 16 + 1; x++) {
-                updateFluids(x, y);
+            for (int x = 0; x < (int) (renderer.getWidth() / 2) / 16 + 1; x++) {
+                updateFluids(midScreen + x, y);
+                updateFluids(midScreen - x, y);
             }
         }
     }
@@ -465,6 +475,11 @@ public class GameProc implements Serializable, Disposable {
                 CaveGame.STATE = AppState.GAME_CREATIVE_INV;
                 isTouchDown = false;
             }
+        }
+
+        if (fluidThread == null || !fluidThread.isAlive()) {
+            createFluidThread();
+            fluidThread.start();
         }
     }
 
