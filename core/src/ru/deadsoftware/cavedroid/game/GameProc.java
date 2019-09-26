@@ -2,6 +2,7 @@ package ru.deadsoftware.cavedroid.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavedroid.CaveGame;
 import ru.deadsoftware.cavedroid.GameScreen;
@@ -16,11 +17,14 @@ import ru.deadsoftware.cavedroid.misc.Assets;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Random;
 
-public class GameProc implements Serializable {
+public class GameProc implements Serializable, Disposable {
 
     static boolean DO_UPD = false;
     static int UPD_X = -1, UPD_Y = -1;
+
+    private transient Thread fluidThread;
 
     public transient GameWorld world;
     public transient GameRenderer renderer;
@@ -43,8 +47,8 @@ public class GameProc implements Serializable {
         world = new GameWorld();
         world.generate(1024, 256);
         player = new Player(gameMode);
-        drops = new ArrayList<Drop>();
-        mobs = new ArrayList<Mob>();
+        drops = new ArrayList<>();
+        mobs = new ArrayList<>();
         for (int i = 0; i < 16; i++) {
             mobs.add(new Pig(i * 256, 196 * 16));
         }
@@ -59,12 +63,13 @@ public class GameProc implements Serializable {
         }
         maxCreativeScroll = GameItems.getItemsSize() / 8;
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) fluidUpdater();
+        fluidThread = new Thread(() -> {
+            while (!fluidThread.isInterrupted()) {
+                fluidUpdater();
             }
-        }).start();
+        });
+
+        fluidThread.start();
 
         GameSaver.save(this);
     }
@@ -347,7 +352,6 @@ public class GameProc implements Serializable {
             } else if (GameItems.isWater(world.getForeMap(x, y + 1))) {
                 world.setForeMap(x, y + 1, 1);
             }
-            return;
         }
     }
 
@@ -385,7 +389,8 @@ public class GameProc implements Serializable {
 
     private void fluidUpdater() {
         for (int y = 0; y < world.getHeight(); y++) {
-            for (int x = (int) renderer.getCamX() / 16 - 1; x < (int) (renderer.getCamX() + renderer.getWidth()) / 16 + 1; x++) {
+            for (int x = (int) renderer.getCamX() / 16 - 1;
+                 x < (int) (renderer.getCamX() + renderer.getWidth()) / 16 + 1; x++) {
                 updateFluids(x, y);
             }
         }
@@ -397,16 +402,16 @@ public class GameProc implements Serializable {
                 if (!bg) world.placeToForeground(x, y, GameItems.getBlockIdByItemId(id));
                 else world.placeToBackground(x, y, GameItems.getBlockIdByItemId(id));
             } else {
-                    switch (id) {
-                        case 65:
-                            world.placeToForeground(x, y, 8);
-                            player.inv[player.invSlot] = 64;
-                            break;
-                        case 66:
-                            world.placeToForeground(x, y, 9);
-                            player.inv[player.invSlot] = 64;
-                            break;
-                    }
+                switch (id) {
+                    case 65:
+                        world.placeToForeground(x, y, 8);
+                        player.inv[player.invSlot] = 64;
+                        break;
+                    case 66:
+                        world.placeToForeground(x, y, 9);
+                        player.inv[player.invSlot] = 64;
+                        break;
+                }
             }
         }
     }
@@ -455,12 +460,16 @@ public class GameProc implements Serializable {
                 useItem(curX, curY, player.inv[player.invSlot], true);
                 isTouchDown = false;
             } else if (touchDownY < Assets.invBar.getRegionHeight() &&
-                    touchDownX > renderer.getWidth() / 2 - Assets.invBar.getRegionWidth() / 2 &&
-                    touchDownX < renderer.getWidth() / 2 + Assets.invBar.getRegionWidth() / 2) {
+                    touchDownX > renderer.getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 &&
+                    touchDownX < renderer.getWidth() / 2 + (float) Assets.invBar.getRegionWidth() / 2) {
                 CaveGame.STATE = AppState.GAME_CREATIVE_INV;
                 isTouchDown = false;
             }
         }
     }
 
+    @Override
+    public void dispose() {
+        fluidThread.interrupt();
+    }
 }
