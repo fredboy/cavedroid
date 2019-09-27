@@ -4,7 +4,8 @@
 2D Minecraft clone for Android and Desktop. <br>
 Written in Java using libGDX framework. <br>
 ## Binary releases
-You can download apk and jar from ftp: [ftp://fredboy.ru/pub/cavedroid/](ftp://fredboy.ru/pub/cavedroid/)
+You can download apk and jar from ftp: <br>
+[ftp://fredboy.ru/pub/cavedroid/](https://fredboy.ru/ftp/pub/cavedroid/)
 ## Build instructions
 ### Android
 To build for Android use <br>
