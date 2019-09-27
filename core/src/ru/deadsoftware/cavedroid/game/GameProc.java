@@ -50,14 +50,11 @@ public class GameProc implements Serializable, Disposable {
             mobs.add(new Pig(i * 256, 196 * 16));
         }
         physics = new GamePhysics();
-        if (CaveGame.TOUCH) {
-            renderer = new GameRenderer(320,
-                    320 * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
-        } else {
-            ctrlMode = 1;
-            renderer = new GameRenderer(480,
-                    480 * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
-        }
+
+        int scale = CaveGame.TOUCH ? 320 : 480;
+        if (CaveGame.TOUCH) ctrlMode = 1;
+        renderer = new GameRenderer(scale, scale * GameScreen.getHeight() / GameScreen.getWidth());
+
         maxCreativeScroll = GameItems.getItemsSize() / 8;
 
         createFluidThread();
