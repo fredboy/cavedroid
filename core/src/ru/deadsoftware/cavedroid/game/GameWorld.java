@@ -60,8 +60,12 @@ public class GameWorld {
         }
     }
 
-    public boolean hasBlockAt(int x, int y) {
+    public boolean hasForeAt(int x, int y) {
         return getMap(x, y, 0) != 0;
+    }
+
+    public boolean hasBackAt(int x, int y) {
+        return getMap(x, y, 1) != 0;
     }
 
     public int getForeMap(int x, int y) {
@@ -112,7 +116,7 @@ public class GameWorld {
     }
 
     public void placeToForeground(int x, int y, int value) {
-        if (!hasBlockAt(x, y) || value == 0 || !GameItems.getBlock(getForeMap(x, y)).hasCollision()) {
+        if (!hasForeAt(x, y) || value == 0 || !GameItems.getBlock(getForeMap(x, y)).hasCollision()) {
             setForeMap(x, y, value);
         } else if (GameItems.isSlab(value) && getForeMap(x, y) == value) {
             placeSlab(x, y, value);
