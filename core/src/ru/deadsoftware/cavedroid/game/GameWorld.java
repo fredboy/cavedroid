@@ -27,11 +27,11 @@ public class GameWorld {
         return HEIGHT * 16f;
     }
 
-    public int[][] getFullForeMap() {
+    int[][] getFullForeMap() {
         return foreMap;
     }
 
-    public int[][] getFullBackMap() {
+    int[][] getFullBackMap() {
         return backMap;
     }
 
