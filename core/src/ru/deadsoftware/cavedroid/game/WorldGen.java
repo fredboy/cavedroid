@@ -32,12 +32,13 @@ public class WorldGen {
             res[i] = res[i - 1] + t;
             if (res[i] < min) res[i] = min;
             if (res[i] > max) res[i] = max;
-            if (i >= width / 2) {
-                bMap[i] = 1;
-                if (res[i] < 60) res[i] = 60;
-            } else {
-                bMap[i] = 0;
-            }
+            bMap[i] = 0;
+//            if (i >= width / 2) {
+//                bMap[i] = 1;
+//                if (res[i] < 60) res[i] = 60;
+//            } else {
+//                bMap[i] = 0;
+//            }
         }
         if (res[0] < res[width - 1]) res[width - 1] = res[0];
         return res;
