@@ -35,6 +35,12 @@ public class GameItems {
         return getBlock(id).getMeta().equals("slab");
     }
 
+    public static boolean fluidCanFlowThere(int thisId, int thatId) {
+        return thatId == 0 || (!getBlock(thatId).hasCollision() && !isFluid(thatId)) ||
+                (isWater(thisId) && isWater(thatId) && thatId >= thisId) ||
+                (isLava(thisId) && isLava(thatId) && thatId >= thisId);
+    }
+
     public static Block getBlock(int id) {
         return blocks.getValueAt(id);
     }
