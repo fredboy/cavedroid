@@ -113,11 +113,26 @@ public class GameItems {
             boolean fluid = (block.has("fluid") && block.getBoolean("fluid"));
             String meta = (block.has("meta") ? block.getString("meta") : "");
             String texture = (block.has("texture") ? block.getString("texture") : key);
+            Sprite sprite = key.equals("none") ? null :
+                    new Sprite(new Texture(Gdx.files.internal("textures/blocks/" + texture + ".png")));
+            Block newBlock = new Block(
+                    left,
+                    top,
+                    right,
+                    bottom,
+                    hp,
+                    drop,
+                    collision,
+                    background,
+                    transparent,
+                    blockRequired,
+                    fluid,
+                    meta,
+                    sprite
+            );
+
             blocksIds.put(key, blocks.size);
-            blocks.put(key, new Block(left, top, right, bottom, hp, drop, collision,
-                    background, transparent, blockRequired, fluid, meta,
-                    key.equals("none") ? null :
-                            new Sprite(new Texture(Gdx.files.internal("textures/" + texture + ".png")))));
+            blocks.put(key, newBlock);
             block = block.next();
         }
         while (item != null) {
@@ -125,9 +140,10 @@ public class GameItems {
             String name = (item.has("name") ? item.getString("name") : key);
             String type = (item.has("type") ? item.getString("type") : "item");
             String texture = (item.has("texture") ? item.getString("texture") : key);
+            Sprite sprite = type.equals("block") ? null :
+                    new Sprite(new Texture(Gdx.files.internal("textures/items/" + texture + ".png")));
             itemsIds.put(key, items.size);
-            items.put(key, new Item(name, type, type.equals("block") ? null :
-                    new Sprite(new Texture(Gdx.files.internal("textures/" + texture + ".png")))));
+            items.put(key, new Item(name, type, sprite));
             item = item.next();
         }
     }

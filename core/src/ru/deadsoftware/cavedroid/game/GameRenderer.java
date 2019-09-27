@@ -241,7 +241,8 @@ public class GameRenderer extends Renderer {
             drawString("Mobs: " + GP.mobs.size(), 0, 50);
             drawString("Drops: " + GP.drops.size(), 0, 60);
             drawString("Block: " + GameItems.getBlockKey(GP.world.getForeMap(GP.curX, GP.curY)), 0, 70);
-            drawString("Game mode: " + GP.player.gameMode, 0, 80);
+            drawString("Hand: " + GameItems.getItemKey(GP.player.inv[GP.player.invSlot]), 0, 80);
+            drawString("Game mode: " + GP.player.gameMode, 0, 90);
         }
         spriter.end();
 
