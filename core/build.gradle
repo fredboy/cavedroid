@@ -1,6 +1,11 @@
 apply plugin: "java"
 
 sourceCompatibility = 1.8
+
+dependencies {
+    implementation 'org.jetbrains:annotations:15.0'
+}
+
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 sourceSets.main.java.srcDirs = [ "src/" ]
