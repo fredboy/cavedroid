@@ -9,6 +9,7 @@ import ru.deadsoftware.cavedroid.GameScreen;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
 import ru.deadsoftware.cavedroid.misc.Assets;
+import ru.deadsoftware.cavedroid.misc.ControlMode;
 import ru.deadsoftware.cavedroid.misc.Renderer;
 
 import static ru.deadsoftware.cavedroid.GameScreen.GP;
@@ -40,15 +41,15 @@ public class GameRenderer extends Renderer {
 
     private void drawBlock(int x, int y, boolean drawBG) {
         if (drawBG) {
-            if ((GP.world.getForeMap(x, y) == 0 || GameItems.getBlock(GP.world.getForeMap(x, y)).isTransparent())
-                    && GP.world.getBackMap(x, y) > 0) {
-                spriter.draw(GameItems.getBlock(GP.world.getBackMap(x, y)).getTex(), drawX(x), drawY(y));
-                if (GP.world.getForeMap(x, y) == 0 && x == GP.curX && y == GP.curY)
+            if ((!GP.world.hasForeAt(x, y) || GP.world.getForeMapBlock(x, y).isTransparent())
+                    && GP.world.hasBackAt(x, y)) {
+                spriter.draw(GP.world.getBackMapBlock(x, y).getTex(), drawX(x), drawY(y));
+                if (!GP.world.hasForeAt(x, y) && x == GP.curX && y == GP.curY)
                     drawWreck(GP.world.getBackMap(GP.curX, GP.curY));
             }
         }
-        if (GP.world.getForeMap(x, y) > 0 && GameItems.getBlock(GP.world.getForeMap(x, y)).isBackground() == drawBG) {
-            spriter.draw(GameItems.getBlock(GP.world.getForeMap(x, y)).getTex(), drawX(x), drawY(y));
+        if (GP.world.hasForeAt(x, y) && GP.world.getForeMapBlock(x, y).isBackground() == drawBG) {
+            spriter.draw(GP.world.getForeMapBlock(x, y).getTex(), drawX(x), drawY(y));
             if (x == GP.curX && y == GP.curY)
                 drawWreck(GP.world.getForeMap(GP.curX, GP.curY));
         }
@@ -74,8 +75,8 @@ public class GameRenderer extends Renderer {
             shaper.setColor(0f, 0f, 0f, .5f);
             for (int y = minY; y < maxY; y++) {
                 for (int x = minX; x < maxX; x++) {
-                    if ((GP.world.getForeMap(x, y) == 0 || GameItems.getBlock(GP.world.getForeMap(x, y)).isTransparent())
-                            && GP.world.getBackMap(x, y) > 0)
+                    if ((!GP.world.hasForeAt(x, y) || GP.world.getForeMapBlock(x, y).isTransparent())
+                            && GP.world.hasBackAt(x, y))
                         shaper.rect(drawX(x), drawY(y), 16, 16);
                 }
             }
@@ -108,7 +109,7 @@ public class GameRenderer extends Renderer {
         float y = getHeight() / 2 - (float) Assets.creativeInv.getRegionHeight() / 2;
         spriter.draw(Assets.creativeInv, x, y);
         spriter.draw(Assets.creativeScr, x + 156,
-                y + 18 + (GP.creativeScroll * (72f / GP.maxCreativeScroll)));
+                y + 18 + (GP.creativeScroll * (72f / GameProc.MAX_CREATIVE_SCROLL)));
         for (int i = GP.creativeScroll * 8; i < GP.creativeScroll * 8 + 40; i++) {
             if (i > 0 && i < GameItems.getItemsSize())
                 if (GameItems.getItem(i).isBlock()) {
@@ -122,12 +123,12 @@ public class GameRenderer extends Renderer {
                 }
         }
         for (int i = 0; i < 9; i++) {
-            if (GP.player.inv[i] > 0)
-                if (GameItems.getItem(GP.player.inv[i]).isBlock()) {
-                    spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(GP.player.inv[i])).getTex(),
+            if (GP.player.inventory[i] > 0)
+                if (GameItems.getItem(GP.player.inventory[i]).isBlock()) {
+                    spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(GP.player.inventory[i])).getTex(),
                             x + 8 + i * 18, y + Assets.creativeInv.getRegionHeight() - 24);
                 } else {
-                    spriter.draw(GameItems.getItem(GP.player.inv[i]).getTex(),
+                    spriter.draw(GameItems.getItem(GP.player.inventory[i]).getTex(),
                             x + 8 + i * 18, y + Assets.creativeInv.getRegionHeight() - 24);
                 }
         }
@@ -135,29 +136,29 @@ public class GameRenderer extends Renderer {
     }
 
     private void drawGUI() {
-        if (GP.world.getForeMap(GP.curX, GP.curY) > 0 ||
-                GP.world.getBackMap(GP.curX, GP.curY) > 0 ||
-                GP.ctrlMode == 1 ||
+        if (GP.world.hasForeAt(GP.curX, GP.curY) ||
+                GP.world.hasBackAt(GP.curX, GP.curY) ||
+                GP.controlMode == ControlMode.CURSOR ||
                 !CaveGame.TOUCH)
             spriter.draw(Assets.guiCur,
                     GP.curX * 16 - getCamX(),
                     GP.curY * 16 - getCamY());
         spriter.draw(Assets.invBar, getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2, 0);
         for (int i = 0; i < 9; i++) {
-            if (GP.player.inv[i] > 0) {
-                if (GameItems.getItem(GP.player.inv[i]).isBlock()) {
-                    spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(GP.player.inv[i])).getTex(),
+            if (GP.player.inventory[i] > 0) {
+                if (GameItems.getItem(GP.player.inventory[i]).isBlock()) {
+                    spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(GP.player.inventory[i])).getTex(),
                             getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 + 3 + i * 20,
                             3);
                 } else {
-                    spriter.draw(GameItems.getItem(GP.player.inv[i]).getTex(),
+                    spriter.draw(GameItems.getItem(GP.player.inventory[i]).getTex(),
                             getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 + 3 + i * 20,
                             3);
                 }
             }
         }
         spriter.draw(Assets.invBarCur,
-                getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 - 1 + 20 * GP.player.invSlot,
+                getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 - 1 + 20 * GP.player.slot,
                 -1);
     }
 
@@ -169,7 +170,7 @@ public class GameRenderer extends Renderer {
         spriter.draw(Assets.touchLMB, getWidth() - 52, getHeight() - 26);
         spriter.draw(Assets.touchRMB, getWidth() - 26, getHeight() - 26);
         spriter.draw(Assets.touchMode, 78, getHeight() - 26);
-        if (GP.ctrlMode == 1) {
+        if (GP.controlMode == ControlMode.CURSOR) {
             spriter.draw(Assets.shade, 83, getHeight() - 21);
         }
     }
@@ -188,11 +189,11 @@ public class GameRenderer extends Renderer {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         spriter.begin();
-        switch (CaveGame.STATE) {
-            case GAME_PLAY:
+        switch (CaveGame.GAME_STATE) {
+            case PLAY:
                 drawGamePlay();
                 break;
-            case GAME_CREATIVE_INV:
+            case CREATIVE_INV:
                 drawGamePlay();
                 drawCreative();
                 break;
@@ -202,20 +203,20 @@ public class GameRenderer extends Renderer {
 
         spriter.end();
 
-        if(GameScreen.SHOW_MAP) {
+        if (GameScreen.SHOW_MAP) {
             //DRAW MAP
             shaper.begin(ShapeRenderer.ShapeType.Filled);
             shaper.setColor(Color.LIGHT_GRAY);
             shaper.rect(0, 0, GP.world.getWidth(), 128);
             for (int y = 128; y < 256; y++) {
                 for (int x = 0; x < getWidth(); x++) {
-                    if (GP.world.getForeMap(x, y) > 0 || GP.world.getBackMap(x, y) > 0) {
+                    if (GP.world.hasForeAt(x, y) || GP.world.hasBackAt(x, y)) {
                         if (GameItems.isWater(GP.world.getForeMap(x, y))) {
                             shaper.setColor(Color.BLUE);
                         } else if (GameItems.isLava(GP.world.getForeMap(x, y))) {
                             shaper.setColor(Color.RED);
                         } else {
-                            if (GP.world.getForeMap(x, y) > 0) {
+                            if (GP.world.hasForeAt(x, y)) {
                                 shaper.setColor(Color.BLACK);
                             } else {
                                 shaper.setColor(Color.DARK_GRAY);
@@ -241,7 +242,7 @@ public class GameRenderer extends Renderer {
             drawString("Mobs: " + GP.mobs.size(), 0, 50);
             drawString("Drops: " + GP.drops.size(), 0, 60);
             drawString("Block: " + GameItems.getBlockKey(GP.world.getForeMap(GP.curX, GP.curY)), 0, 70);
-            drawString("Hand: " + GameItems.getItemKey(GP.player.inv[GP.player.invSlot]), 0, 80);
+            drawString("Hand: " + GameItems.getItemKey(GP.player.inventory[GP.player.slot]), 0, 80);
             drawString("Game mode: " + GP.player.gameMode, 0, 90);
         }
         spriter.end();

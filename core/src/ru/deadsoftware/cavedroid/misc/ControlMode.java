@@ -1,4 +1,6 @@
-package ru.deadsoftware.cavedroid.game;
+package ru.deadsoftware.cavedroid.misc;
 
-public class ControlMode {
+public enum ControlMode {
+    WALK,
+    CURSOR
 }

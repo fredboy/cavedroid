@@ -1,15 +1,33 @@
 package ru.deadsoftware.cavedroid.game;
 
+import org.jetbrains.annotations.NotNull;
 import ru.deadsoftware.cavedroid.game.objects.Block;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
 
 import static ru.deadsoftware.cavedroid.GameScreen.GP;
 
+@SuppressWarnings("WeakerAccess")
 public class GameWorld {
 
     private int WIDTH, HEIGHT;
     private int[][] foreMap;
     private int[][] backMap;
+
+    GameWorld(int width, int height) {
+        WIDTH = width;
+        HEIGHT = height;
+        WorldGen.genWorld(WIDTH, HEIGHT);
+        foreMap = WorldGen.getForeMap();
+        backMap = WorldGen.getBackMap();
+        WorldGen.clear();
+    }
+
+    GameWorld(@NotNull int[][] foreMap, @NotNull int[][] backMap) {
+        this.foreMap = foreMap.clone();
+        this.backMap = backMap.clone();
+        WIDTH = foreMap.length;
+        HEIGHT = foreMap[0].length;
+    }
 
     public int getWidth() {
         return WIDTH;
@@ -145,22 +163,6 @@ public class GameWorld {
             GP.drops.add(new Drop(transformX(x) * 16 + 4, y * 16 + 4,
                     GameItems.getItemId(GameItems.getBlock(getBackMap(x, y)).getDrop())));
         placeToBackground(x, y, 0);
-    }
-
-    public void generate(int w, int h) {
-        WIDTH = w;
-        HEIGHT = h;
-        WorldGen.genWorld(WIDTH, HEIGHT);
-        foreMap = WorldGen.getForeMap();
-        backMap = WorldGen.getBackMap();
-        WorldGen.clear();
-    }
-
-    void setMaps(int[][] foreMap, int[][] backMap) {
-        this.foreMap = foreMap.clone();
-        this.backMap = backMap.clone();
-        WIDTH = foreMap.length;
-        HEIGHT = foreMap[0].length;
     }
 
 }

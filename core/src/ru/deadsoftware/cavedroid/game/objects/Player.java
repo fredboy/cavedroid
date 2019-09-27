@@ -1,10 +1,10 @@
 package ru.deadsoftware.cavedroid.game.objects;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavedroid.game.GameItems;
+import ru.deadsoftware.cavedroid.game.GameWorld;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.misc.Assets;
 
@@ -14,16 +14,15 @@ import static ru.deadsoftware.cavedroid.GameScreen.GP;
 
 public class Player extends Mob implements Serializable {
 
-    public int[] inv;
-    public int invSlot;
+    public int[] inventory;
+    public int slot;
     public int gameMode;
     public boolean swim;
 
     public Player(int gameMode) {
-        super(0, 0, 4, 30, 1, true);
+        super(0, 0, 4, 30, 1);
         this.gameMode = gameMode;
-        inv = new int[9];
-        pos = getSpawnPoint().cpy();
+        inventory = new int[9];
         swim = false;
     }
 
@@ -40,13 +39,13 @@ public class Player extends Mob implements Serializable {
                 GP.world.setForeMap(x, y, 1);
                 break;
             }
-            if (GP.world.getForeMap(x, y) > 0 && GameItems.getBlock(GP.world.getForeMap(x, y)).hasCollision()) break;
+            if (GP.world.hasForeAt(x, y) && GP.world.getForeMapBlock(x, y).hasCollision()) break;
         }
-        return new Vector2(x * 16 + 8 - (float) getWidth() / 2, (float) y * 16 - getHeight());
+        return new Vector2(x * 16 + 8 -  getWidth() / 2, (float) y * 16 - getHeight());
     }
 
     public void setDir(int dir) {
-        if (dir != getDir()) switchDir();
+        if (dir != getDirection()) switchDir();
     }
 
     @Override
@@ -83,9 +82,9 @@ public class Player extends Mob implements Serializable {
         Assets.plSprite[0][3].setPosition(x - 6, y + 10);
         Assets.plSprite[0][3].draw(spriteBatch);
         //head
-        spriteBatch.draw(Assets.plSprite[getDir()][0], x - 2, y - 2);
+        spriteBatch.draw(Assets.plSprite[getDirection()][0], x - 2, y - 2);
         //body
-        spriteBatch.draw(Assets.plSprite[getDir()][1], x - 2, y + 8);
+        spriteBatch.draw(Assets.plSprite[getDirection()][1], x - 2, y + 8);
         //front hand
         Assets.plSprite[0][2].setPosition(x - 6, y);
         Assets.plSprite[0][2].draw(spriteBatch);

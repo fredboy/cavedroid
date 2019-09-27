@@ -17,7 +17,7 @@ class GamePhysics {
 
     static final int PL_SPEED = 2;
 
-    private Vector2 gravity  = new Vector2(0, .9f);;
+    private Vector2 gravity  = new Vector2(0, .9f);
 
     private boolean checkJump(Rectangle rect, int dir) {
         int bl;
@@ -106,7 +106,7 @@ class GamePhysics {
             while (checkColl(mob.getRect())) mob.pos.y += d;
             mob.mov.y = 0;
             if (mob.getType() > 0) {
-                GP.world.setForeMap(mob.getMapX(), mob.getMapY(), mob.getType());
+                GP.world.setForeMap(mob.getMapX(), mob.getMiddleMapY(), mob.getType());
                 mob.kill();
             }
         } else {
@@ -138,7 +138,7 @@ class GamePhysics {
         pl.pos.x += pl.mov.x * (pl.flyMode ? 1.5f : 1) * (GameItems.isFluid(getBlock(pl.getRect())) && !pl.flyMode ? .8f : 1);
         mobXColl(pl);
 
-        if (CaveGame.TOUCH && checkJump(pl.getRect(), pl.getDir()) && !pl.flyMode && pl.canJump && pl.mov.x != 0) {
+        if (CaveGame.TOUCH && checkJump(pl.getRect(), pl.getDirection()) && !pl.flyMode && pl.canJump && pl.mov.x != 0) {
             pl.mov.add(0, -8);
             pl.canJump = false;
         }
@@ -158,14 +158,13 @@ class GamePhysics {
         mob.pos.x += mob.mov.x;
         mobXColl(mob);
 
-        if (checkJump(mob.getRect(), mob.getDir()) && mob.canJump && mob.mov.x != 0) {
+        if (checkJump(mob.getRect(), mob.getDirection()) && mob.canJump && mob.mov.x != 0) {
             mob.mov.add(0, -8);
             mob.canJump = false;
         }
     }
 
-    void update(float delta) {
-        //TODO use delta time
+    void update() {
         for (Iterator<Drop> it = GP.drops.iterator(); it.hasNext(); ) {
             Drop drop = it.next();
             dropPhy(drop);

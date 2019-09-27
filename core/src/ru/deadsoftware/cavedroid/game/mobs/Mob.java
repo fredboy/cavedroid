@@ -6,21 +6,37 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.io.Serializable;
 
+/**
+ * Mob class.
+ */
 public abstract class Mob implements Serializable {
 
-    public boolean flyMode;
+    public static final int LEFT = 0;
+    public static final int RIGHT = 1;
+
     private float width, height;
     private int dir;
 
+    public boolean flyMode;
     public Vector2 pos;
     public Vector2 mov;
 
     private boolean dead;
 
+    protected int animDelta = 6;
     public boolean canJump;
-    protected int anim, animDelta = 6;
+    int anim;
 
-    protected Mob(float x, float y, float width, float height, int dir, boolean player) {
+    /**
+     *
+     * @param x in pixels
+     * @param y in pixels
+     * @param width in pixels
+     * @param height in pixels
+     * @param dir integer representing a direction where 0 is left and 1 is right.
+     *            You should use {@link #LEFT} and {@link #RIGHT} constants
+     */
+    public Mob(float x, float y, float width, float height, int dir) {
         pos = new Vector2(x, y);
         mov = new Vector2(0, 0);
         this.width = width;
@@ -31,16 +47,36 @@ public abstract class Mob implements Serializable {
         this.dir = dir;
     }
 
-    protected Mob(float x, float y, float width, float height, int dir) {
-        this(x, y, width, height, dir, false);
-    }
-
+    /**
+     *
+     * @return The X coordinate of a mob in blocks
+     */
     public int getMapX() {
         return (int) (pos.x + (getWidth() / 2)) / 16;
     }
 
-    public int getMapY() {
+    /**
+     *
+     * @return The Y coordinate of mob's upper edge in blocks
+     */
+    public int getUpperMapY() {
+        return (int) (pos.y / 16);
+    }
+
+    /**
+     *
+     * @return The Y coordinate if mob's vertical center in blocks
+     */
+    public int getMiddleMapY() {
         return (int) (pos.y + (getHeight() / 2)) / 16;
+    }
+
+    /**
+     *
+     * @return The Y coordinate of mob's legs in blocks
+     */
+    public int getLowerMapY() {
+        return (int) (pos.y + getHeight()) / 16;
     }
 
     public float getWidth() {
@@ -51,22 +87,44 @@ public abstract class Mob implements Serializable {
         return height;
     }
 
-    public int getDir() {
+    /**
+     *
+     * @return Integer representing a direction in which mob is looking, where 0 is left and 1 is right
+     */
+    public int getDirection() {
         return dir;
     }
 
+    public boolean looksLeft() {
+        return getDirection() == LEFT;
+    }
+
+    public boolean looksRight() {
+        return getDirection() == RIGHT;
+    }
+
+    /**
+     * Switches direction in which mob is looking
+     */
     protected void switchDir() {
-        dir = -dir + 1;
+        dir = looksLeft() ? RIGHT : LEFT;
     }
 
     public boolean isDead() {
         return dead;
     }
 
+    /**
+     * Set's mob's dead variable to true and nothing else. It doesn't delete the mob.
+     */
     public void kill() {
         dead = true;
     }
 
+    /**
+     *
+     * @return A {@link Rectangle} with mob's coordinates and size
+     */
     public Rectangle getRect() {
         return new Rectangle(pos.x, pos.y, getWidth(), getHeight());
     }
@@ -77,5 +135,10 @@ public abstract class Mob implements Serializable {
 
     public abstract void draw(SpriteBatch spriteBatch, float x, float y);
 
+    /**
+     *
+     * @return 0 - if regular mob. <br>
+     *     10 - if instance of {@link FallingSand} <br> 11 - if instance of {@link FallingGravel}
+     */
     public abstract int getType(); //0 - mob, 10 - sand, 11 - gravel
 }

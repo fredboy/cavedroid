@@ -2,6 +2,7 @@ package ru.deadsoftware.cavedroid.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import org.jetbrains.annotations.NotNull;
 import ru.deadsoftware.cavedroid.CaveGame;
 
 import java.io.*;
@@ -11,11 +12,12 @@ public class GameSaver {
 
     private static final int VERSION = 0;
 
+    @NotNull
     private static byte[] intToBytes(int i) {
         return ByteBuffer.allocate(4).putInt(i).array();
     }
 
-    private static void saveMap(FileHandle file, int[][] map) throws IOException {
+    private static void saveMap(@NotNull FileHandle file, @NotNull int[][] map) throws IOException {
         int rl, bl;
         int width = map.length;
         int height = map[0].length;
@@ -26,12 +28,12 @@ public class GameSaver {
         for (int y = 0; y < height; y++) {
             bl = map[0][y];
             rl = 0;
-            for (int x = 0; x < width; x++) {
-                if (map[x][y] != bl) {
+            for (int[] ints : map) {
+                if (ints[y] != bl) {
                     out.write(intToBytes(rl));
                     out.write(intToBytes(bl));
                     rl = 0;
-                    bl = map[x][y];
+                    bl = ints[y];
                 }
                 rl++;
             }
@@ -42,7 +44,8 @@ public class GameSaver {
         out.close();
     }
 
-    private static int[][] loadMap(FileHandle file) throws Exception {
+    @NotNull
+    private static int[][] loadMap(@NotNull FileHandle file) throws Exception {
         int[][] map;
         int ver, width, height;
         int rl, bl;
@@ -73,8 +76,7 @@ public class GameSaver {
             if (VERSION == ver) gameProc = (GameProc) in.readObject();
             else throw new Exception("version mismatch");
             in.close();
-            gameProc.world = new GameWorld();
-            gameProc.world.setMaps(
+            gameProc.world = new GameWorld(
                     loadMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/foremap.sav")),
                     loadMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/backmap.sav"))
             );

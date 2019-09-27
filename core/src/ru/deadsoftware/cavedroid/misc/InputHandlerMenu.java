@@ -38,8 +38,8 @@ public class InputHandlerMenu implements InputProcessor {
     public boolean touchUp(int screenX, int screenY, int pointer, int mb) {
         screenX *= menuRenderer.getWidth() / GameScreen.getWidth();
         screenY *= menuRenderer.getHeight() / GameScreen.getHeight();
-        switch (CaveGame.STATE) {
-            case MENU_MAIN:
+        switch (CaveGame.MENU_STATE) {
+            case MAIN:
                 for (Button button : menuRenderer.menuMainBtns) {
                     if (button.getRect().contains(screenX, screenY) && button.getType() > 0) {
                         menuRenderer.buttonClicked(button);
@@ -47,7 +47,7 @@ public class InputHandlerMenu implements InputProcessor {
                     }
                 }
                 break;
-            case MENU_NEW_GAME:
+            case NEW_GAME:
                 for (Button button : menuRenderer.menuNGBtns) {
                     if (button.getRect().contains(screenX, screenY) && button.getType() > 0) {
                         menuRenderer.buttonClicked(button);

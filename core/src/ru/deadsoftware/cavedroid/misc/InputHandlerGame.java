@@ -40,12 +40,15 @@ public class InputHandlerGame implements InputProcessor {
         if (CaveGame.TOUCH) {
             if (screenX > 26 && screenX < 52 && screenY > GP.renderer.getHeight() - 52 &&
                     screenY < GP.renderer.getHeight() - 26) {
-                if (GP.ctrlMode == 1) gameInput.keyDown(Input.Keys.W);
-                else gameInput.keyDown(Input.Keys.SPACE);
+                if (GP.controlMode == ControlMode.WALK) {
+                    gameInput.keyDown(Input.Keys.W);
+                } else {
+                    gameInput.keyDown(Input.Keys.SPACE);
+                }
             } else if (screenX > 0 && screenX < 26 && screenY > GP.renderer.getHeight() - 26) {
                 gameInput.keyDown(Input.Keys.A);
             } else if (screenX > 26 && screenX < 52 && screenY > GP.renderer.getHeight() - 26) {
-                if (GP.ctrlMode == 1) gameInput.keyDown(Input.Keys.S);
+                if (GP.controlMode == ControlMode.CURSOR) gameInput.keyDown(Input.Keys.S);
                 else gameInput.keyDown(Input.Keys.CONTROL_LEFT);
             } else if (screenX > 52 && screenX < 78 && screenY > GP.renderer.getHeight() - 26) {
                 gameInput.keyDown(Input.Keys.D);
@@ -72,12 +75,12 @@ public class InputHandlerGame implements InputProcessor {
         if (CaveGame.TOUCH) {
             if (screenX > 26 && screenX < 52 && screenY > GP.renderer.getHeight() - 52 &&
                     screenY < GP.renderer.getHeight() - 26) {
-                if (GP.ctrlMode == 1) gameInput.keyUp(Input.Keys.W);
+                if (GP.controlMode == ControlMode.CURSOR) gameInput.keyUp(Input.Keys.W);
                 else gameInput.keyUp(Input.Keys.SPACE);
             } else if (screenX > 0 && screenX < 26 && screenY > GP.renderer.getHeight() - 26) {
                 gameInput.keyUp(Input.Keys.A);
             } else if (screenX > 26 && screenX < 52 && screenY > GP.renderer.getHeight() - 26) {
-                if (GP.ctrlMode == 1) gameInput.keyUp(Input.Keys.S);
+                if (GP.controlMode == ControlMode.CURSOR) gameInput.keyUp(Input.Keys.S);
                 else gameInput.keyUp(Input.Keys.CONTROL_LEFT);
             } else if (screenX > 52 && screenX < 78 && screenY > GP.renderer.getHeight() - 26) {
                 gameInput.keyUp(Input.Keys.D);

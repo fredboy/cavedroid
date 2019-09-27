@@ -5,15 +5,17 @@ import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavedroid.CaveGame;
 import ru.deadsoftware.cavedroid.GameScreen;
 import ru.deadsoftware.cavedroid.game.mobs.Pig;
-import ru.deadsoftware.cavedroid.misc.AppState;
+import ru.deadsoftware.cavedroid.misc.ControlMode;
+import ru.deadsoftware.cavedroid.misc.states.AppState;
 import ru.deadsoftware.cavedroid.misc.Assets;
+import ru.deadsoftware.cavedroid.misc.states.GameState;
 
 import static ru.deadsoftware.cavedroid.GameScreen.GP;
 
 public class GameInput {
 
     private boolean checkSwim() {
-        return GameItems.isFluid(GP.world.getForeMap(GP.player.getMapX(), GP.player.getMapY()));
+        return GameItems.isFluid(GP.world.getForeMap(GP.player.getMapX(), GP.player.getLowerMapY()));
     }
 
     private boolean insideCreativeInv(int screenX, int screenY) {
@@ -24,7 +26,7 @@ public class GameInput {
     }
 
     private void wasdPressed(int keycode) {
-        if (GP.ctrlMode == 0 || !CaveGame.TOUCH) {
+        if (GP.controlMode == ControlMode.WALK || !CaveGame.TOUCH) {
             switch (keycode) {
                 case Input.Keys.A:
                     GP.player.mov.x = -GamePhysics.PL_SPEED;
@@ -65,8 +67,7 @@ public class GameInput {
         } else switch (keycode) {
             case Input.Keys.ALT_LEFT:
                 if (CaveGame.TOUCH) {
-                    GP.ctrlMode++;
-                    if (GP.ctrlMode > 1) GP.ctrlMode = 0;
+                    GP.controlMode = GP.controlMode == ControlMode.WALK ? ControlMode.CURSOR : ControlMode.WALK;
                 }
                 break;
 
@@ -88,15 +89,18 @@ public class GameInput {
                 break;
 
             case Input.Keys.E:
-                if (CaveGame.STATE == AppState.GAME_PLAY) switch (GP.player.gameMode) {
-                    case 0:
-                        //TODO survival inv
-                        break;
-                    case 1:
-                        CaveGame.STATE = AppState.GAME_CREATIVE_INV;
-                        break;
+                if (CaveGame.GAME_STATE == GameState.PLAY){
+                    switch (GP.player.gameMode) {
+                        case 0:
+                            //TODO survival inv
+                            break;
+                        case 1:
+                            CaveGame.GAME_STATE = GameState.CREATIVE_INV;
+                            break;
+                    }
+                } else {
+                    CaveGame.GAME_STATE = GameState.PLAY;
                 }
-                else CaveGame.STATE = AppState.GAME_PLAY;
                 break;
 
             case Input.Keys.G:
@@ -109,7 +113,8 @@ public class GameInput {
 
             case Input.Keys.ESCAPE:
             case Input.Keys.BACK:
-                CaveGame.STATE = AppState.GOTO_MENU;
+                CaveGame.APP_STATE = AppState.SAVE;
+                CaveGame.GAME_STATE = GameState.PAUSE;
                 break;
 
             case Input.Keys.F1:
@@ -152,26 +157,24 @@ public class GameInput {
             GP.isKeyDown = false;
         }
         if (GP.isTouchDown) {
-            if (CaveGame.STATE == AppState.GAME_CREATIVE_INV && insideCreativeInv(screenX, screenY)) {
+            if (CaveGame.GAME_STATE == GameState.CREATIVE_INV && insideCreativeInv(screenX, screenY)) {
                 int ix = (int) (screenX - (GP.renderer.getWidth() / 2 - Assets.creativeInv.getRegionWidth() / 2 + 8)) / 18;
                 int iy = (int) (screenY - (GP.renderer.getHeight() / 2 - Assets.creativeInv.getRegionHeight() / 2 + 18)) / 18;
                 int item = GP.creativeScroll * 8 + (ix + iy * 8);
                 if (ix >= 8 || ix < 0 || iy < 0 || iy >= 5) item = -1;
                 if (item >= 0 && item < GameItems.getItemsSize()) {
-                    for (int i = 8; i > 0; i--) {
-                        GP.player.inv[i] = GP.player.inv[i - 1];
-                    }
-                    GP.player.inv[0] = item;
+                    System.arraycopy(GP.player.inventory, 0, GP.player.inventory, 1, 8);
+                    GP.player.inventory[0] = item;
                 }
-            } else if (CaveGame.STATE == AppState.GAME_CREATIVE_INV) {
-                CaveGame.STATE = AppState.GAME_PLAY;
+            } else if (CaveGame.GAME_STATE == GameState.CREATIVE_INV) {
+                CaveGame.GAME_STATE = GameState.PLAY;
             } else if (screenY < Assets.invBar.getRegionHeight() &&
-                    screenX > GP.renderer.getWidth() / 2 - Assets.invBar.getRegionWidth() / 2 &&
-                    screenX < GP.renderer.getWidth() / 2 + Assets.invBar.getRegionWidth() / 2) {
-                GP.player.invSlot = (int) ((screenX - (GP.renderer.getWidth() / 2 - Assets.invBar.getRegionWidth() / 2)) / 20);
+                    screenX > GP.renderer.getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 &&
+                    screenX < GP.renderer.getWidth() / 2 + (float) Assets.invBar.getRegionWidth() / 2) {
+                GP.player.slot = (int) ((screenX - (GP.renderer.getWidth() / 2 - Assets.invBar.getRegionWidth() / 2)) / 20);
             } else if (button == Input.Buttons.RIGHT) {
                 GP.useItem(GP.curX, GP.curY,
-                        GP.player.inv[GP.player.invSlot], false);
+                        GP.player.inventory[GP.player.slot], false);
             } else if (button == Input.Buttons.LEFT) {
                 GP.blockDmg = 0;
             }
@@ -180,30 +183,30 @@ public class GameInput {
     }
 
     public void touchDragged(int screenX, int screenY) {
-        if (CaveGame.STATE == AppState.GAME_CREATIVE_INV && Math.abs(screenY - GP.touchDownY) > 16) {
+        if (CaveGame.GAME_STATE == GameState.CREATIVE_INV && Math.abs(screenY - GP.touchDownY) > 16) {
             if (insideCreativeInv(screenX, screenY)) {
                 GP.creativeScroll -= (screenY - GP.touchDownY) / 16;
                 GP.touchDownX = screenX;
                 GP.touchDownY = screenY;
                 if (GP.creativeScroll < 0) GP.creativeScroll = 0;
-                if (GP.creativeScroll > GP.maxCreativeScroll)
-                    GP.creativeScroll = GP.maxCreativeScroll;
+                if (GP.creativeScroll > GameProc.MAX_CREATIVE_SCROLL)
+                    GP.creativeScroll = GameProc.MAX_CREATIVE_SCROLL;
             }
         }
     }
 
     public void scrolled(int amount) {
-        switch (CaveGame.STATE) {
-            case GAME_PLAY:
-                GP.player.invSlot += amount;
-                if (GP.player.invSlot < 0) GP.player.invSlot = 8;
-                if (GP.player.invSlot > 8) GP.player.invSlot = 0;
+        switch (CaveGame.GAME_STATE) {
+            case PLAY:
+                GP.player.slot += amount;
+                if (GP.player.slot < 0) GP.player.slot = 8;
+                if (GP.player.slot > 8) GP.player.slot = 0;
                 break;
-            case GAME_CREATIVE_INV:
+            case CREATIVE_INV:
                 GP.creativeScroll += amount;
                 if (GP.creativeScroll < 0) GP.creativeScroll = 0;
-                if (GP.creativeScroll > GP.maxCreativeScroll)
-                    GP.creativeScroll = GP.maxCreativeScroll;
+                if (GP.creativeScroll > GameProc.MAX_CREATIVE_SCROLL)
+                    GP.creativeScroll = GameProc.MAX_CREATIVE_SCROLL;
                 break;
         }
     }

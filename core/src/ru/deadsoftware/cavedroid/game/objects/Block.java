@@ -10,9 +10,24 @@ public class Block {
     private String drop, meta;
     private Sprite tex;
 
-    //coll - collision, bg - background, tp - transparent, rb - requires block under it
     private boolean coll, bg, tp, rb, fluid;
 
+    /**
+     *
+     * @param left margin from left edge
+     * @param top margin from top edge
+     * @param right margin from right edge
+     * @param bottom margin from bottom edge
+     * @param hp hit points
+     * @param drop id of an item the block will drop when destroyed
+     * @param coll true if block has collision
+     * @param bg true if block should be drawn behind player
+     * @param tp true if block is transparent and renderer should draw a block behind it
+     * @param rb true if block should break when there is no block with collision under it
+     * @param fluid true if fluid
+     * @param meta extra info for storing
+     * @param tex block's texture
+     */
     public Block(int left, int top, int right, int bottom, int hp,
                  String drop, boolean coll, boolean bg, boolean tp, boolean rb, boolean fluid, String meta, Sprite tex) {
         this.x = left;

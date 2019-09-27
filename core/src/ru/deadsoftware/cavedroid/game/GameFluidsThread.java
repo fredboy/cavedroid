@@ -1,5 +1,7 @@
 package ru.deadsoftware.cavedroid.game;
 
+import com.badlogic.gdx.utils.TimeUtils;
+
 import java.util.Arrays;
 
 import static ru.deadsoftware.cavedroid.GameScreen.GP;
@@ -114,8 +116,8 @@ public class GameFluidsThread extends Thread {
     }
 
     private boolean timeToUpdate() {
-        if (System.currentTimeMillis() - fluidLastUpdateTimestamp >= FLUID_UPDATE_INTERVAL_MS) {
-            fluidLastUpdateTimestamp = System.currentTimeMillis();
+        if (TimeUtils.timeSinceMillis(fluidLastUpdateTimestamp) >= FLUID_UPDATE_INTERVAL_MS) {
+            fluidLastUpdateTimestamp = TimeUtils.millis();
             return true;
         }
         return false;

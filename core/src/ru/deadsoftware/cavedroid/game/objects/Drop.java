@@ -57,9 +57,9 @@ public class Drop implements Serializable {
     }
 
     public void pickUpDrop(Player pl) {
-        for (int i = 0; i < pl.inv.length; i++) {
-            if (pl.inv[i] == 0 || pl.inv[i] == id) {
-                pl.inv[i] = id;
+        for (int i = 0; i < pl.inventory.length; i++) {
+            if (pl.inventory[i] == 0 || pl.inventory[i] == id) {
+                pl.inventory[i] = id;
                 pickedUp = true;
                 break;
             }
