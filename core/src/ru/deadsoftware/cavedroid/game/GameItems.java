@@ -100,19 +100,19 @@ public class GameItems {
         JsonValue item = json.child.next.child;
         while (block != null) {
             String key = block.name;
-            int left = (block.has("left") ? block.getInt("left") : 0);
-            int right = (block.has("right") ? block.getInt("right") : 0);
-            int top = (block.has("top") ? block.getInt("top") : 0);
-            int bottom = (block.has("bottom") ? block.getInt("bottom") : 0);
-            int hp = (block.has("hp") ? block.getInt("hp") : -1);
-            String drop = (block.has("drop") ? block.getString("drop") : key);
-            boolean collision = (!block.has("collision") || block.getBoolean("collision"));
-            boolean background = (block.has("background") && block.getBoolean("background"));
-            boolean transparent = !(!block.has("collision") || block.getBoolean("collision"));
-            boolean blockRequired = (block.has("block_required") && block.getBoolean("block_required"));
-            boolean fluid = (block.has("fluid") && block.getBoolean("fluid"));
-            String meta = (block.has("meta") ? block.getString("meta") : "");
-            String texture = (block.has("texture") ? block.getString("texture") : key);
+            int left = block.has("left") ? block.getInt("left") : 0;
+            int right = block.has("right") ? block.getInt("right") : 0;
+            int top = block.has("top") ? block.getInt("top") : 0;
+            int bottom = block.has("bottom") ? block.getInt("bottom") : 0;
+            int hp = block.has("hp") ? block.getInt("hp") : -1;
+            String drop = block.has("drop") ? block.getString("drop") : key;
+            boolean collision = !block.has("collision") || block.getBoolean("collision");
+            boolean background = block.has("background") && block.getBoolean("background");
+            boolean transparent = block.has("transparent") && block.getBoolean("transparent");
+            boolean blockRequired = block.has("block_required") && block.getBoolean("block_required");
+            boolean fluid = block.has("fluid") && block.getBoolean("fluid");
+            String meta = block.has("meta") ? block.getString("meta") : "";
+            String texture = block.has("texture") ? block.getString("texture") : key;
             Sprite sprite = key.equals("none") ? null :
                     new Sprite(new Texture(Gdx.files.internal("textures/blocks/" + texture + ".png")));
             Block newBlock = new Block(
@@ -137,9 +137,9 @@ public class GameItems {
         }
         while (item != null) {
             String key = item.name;
-            String name = (item.has("name") ? item.getString("name") : key);
-            String type = (item.has("type") ? item.getString("type") : "item");
-            String texture = (item.has("texture") ? item.getString("texture") : key);
+            String name = item.has("name") ? item.getString("name") : key;
+            String type = item.has("type") ? item.getString("type") : "item";
+            String texture = item.has("texture") ? item.getString("texture") : key;
             Sprite sprite = type.equals("block") ? null :
                     new Sprite(new Texture(Gdx.files.internal("textures/items/" + texture + ".png")));
             itemsIds.put(key, items.size);

@@ -7,6 +7,7 @@ import ru.deadsoftware.cavedroid.misc.Assets;
 
 public class FallingGravel extends Mob {
 
+    ^
     public FallingGravel(float x, float y) {
         super(x, y, 16, 16, 0);
         mov = new Vector2(0, 1);
