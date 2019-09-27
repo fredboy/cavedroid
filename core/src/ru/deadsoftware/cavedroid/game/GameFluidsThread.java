@@ -11,7 +11,7 @@ public class GameFluidsThread extends Thread {
     private static final int FLUID_STATES = 5;
 
     private static final int[] WATER_IDS = {8, 60, 61, 62, 63};
-    private static final int[] LAVA_IDS = {9, 64, 65, 65, 67};
+    private static final int[] LAVA_IDS = {9, 64, 65, 66, 67};
 
     private long fluidLastUpdateTimestamp = 0;
 

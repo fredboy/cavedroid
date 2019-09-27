@@ -37,8 +37,8 @@ public class GameItems {
 
     public static boolean fluidCanFlowThere(int thisId, int thatId) {
         return thatId == 0 || (!getBlock(thatId).hasCollision() && !isFluid(thatId)) ||
-                (isWater(thisId) && isWater(thatId) && thatId >= thisId) ||
-                (isLava(thisId) && isLava(thatId) && thatId >= thisId);
+                (isWater(thisId) && isWater(thatId) && thisId < thatId) ||
+                (isLava(thisId) && isLava(thatId) && thisId < thatId);
     }
 
     public static Block getBlock(int id) {
