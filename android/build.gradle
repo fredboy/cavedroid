@@ -25,6 +25,11 @@ android {
         versionCode 10
         versionName "alpha0.4"
     }
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "android-${versionName}.apk"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
