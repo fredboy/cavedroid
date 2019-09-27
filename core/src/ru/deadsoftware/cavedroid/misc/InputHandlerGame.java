@@ -40,7 +40,7 @@ public class InputHandlerGame implements InputProcessor {
         if (CaveGame.TOUCH) {
             if (screenX > 26 && screenX < 52 && screenY > GP.renderer.getHeight() - 52 &&
                     screenY < GP.renderer.getHeight() - 26) {
-                if (GP.controlMode == ControlMode.WALK) {
+                if (GP.controlMode == ControlMode.CURSOR) {
                     gameInput.keyDown(Input.Keys.W);
                 } else {
                     gameInput.keyDown(Input.Keys.SPACE);

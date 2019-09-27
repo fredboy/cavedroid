@@ -95,12 +95,12 @@ public class GameProc implements Serializable, Disposable {
         int pastY = curY;
 
         if (controlMode == ControlMode.WALK && CaveGame.TOUCH) {
-            curX = player.getMapX();
-            curY = (int) (player.pos.y + player.getWidth() / 16);
-            while (curY - pastY < 2 && isNotAutoselectable(curX, curY)) {
+            curX = player.getMapX() + (player.looksLeft() ? -1 : 1);
+            curY = player.getUpperMapY();
+            for (int i = 0; i < 2 && isNotAutoselectable(curX, curY); i++) {
                 curY++;
             }
-            if (!isNotAutoselectable(curX, curY)) {
+            if (isNotAutoselectable(curX, curY)) {
                 curX += player.looksLeft() ? 1 : -1;
             }
         } else if (!CaveGame.TOUCH) {
@@ -212,16 +212,20 @@ public class GameProc implements Serializable, Disposable {
     }
 
     private void holdMB() {
-        if (touchDownBtn == Input.Buttons.RIGHT) {
-            useItem(curX, curY, player.inventory[player.slot], true);
-            isTouchDown = false;
-        } else if (touchDownBtn == Input.Buttons.LEFT) {
-            if (touchDownY < Assets.invBar.getRegionHeight() &&
-                    touchDownX > renderer.getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 &&
-                    touchDownX < renderer.getWidth() / 2 + (float) Assets.invBar.getRegionWidth() / 2) {
-                CaveGame.GAME_STATE= GameState.CREATIVE_INV;
+        switch (touchDownBtn) {
+            case Input.Buttons.RIGHT:
+                useItem(curX, curY, player.inventory[player.slot], true);
                 isTouchDown = false;
-            }
+                break;
+            case Input.Buttons.LEFT:
+                break;
+            default:
+                if (touchDownY < Assets.invBar.getRegionHeight() &&
+                        touchDownX > renderer.getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 &&
+                        touchDownX < renderer.getWidth() / 2 + (float) Assets.invBar.getRegionWidth() / 2) {
+                    CaveGame.GAME_STATE= GameState.CREATIVE_INV;
+                    isTouchDown = false;
+                }
         }
     }
 
