@@ -12,6 +12,7 @@ public class GameScreen implements Screen {
 
     public static int FPS;
     public static boolean SHOW_DEBUG = true;
+    public static boolean SHOW_MAP = false;
     public static int NEW_GAME_MODE = 0;
 
     public static GameProc GP;
@@ -27,11 +28,11 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(new InputHandlerMenu(menuRenderer));
     }
 
-    public static int getWidth() {
+    public static float getWidth() {
         return Gdx.graphics.getWidth();
     }
 
-    public static int getHeight() {
+    public static float getHeight() {
         return Gdx.graphics.getHeight();
     }
 

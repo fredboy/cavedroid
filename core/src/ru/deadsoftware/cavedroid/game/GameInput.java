@@ -115,6 +115,10 @@ public class GameInput {
             case Input.Keys.F1:
                 GameScreen.SHOW_DEBUG = !GameScreen.SHOW_DEBUG;
                 break;
+
+            case Input.Keys.M:
+                GameScreen.SHOW_MAP = !GameScreen.SHOW_MAP;
+                break;
         }
     }
 

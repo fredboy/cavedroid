@@ -1,6 +1,7 @@
 package ru.deadsoftware.cavedroid.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import ru.deadsoftware.cavedroid.CaveGame;
@@ -74,7 +75,8 @@ public class GameRenderer extends Renderer {
             for (int y = minY; y < maxY; y++) {
                 for (int x = minX; x < maxX; x++) {
                     if ((GP.world.getForeMap(x, y) == 0 || GameItems.getBlock(GP.world.getForeMap(x, y)).isTransparent())
-                            && GP.world.getBackMap(x, y) > 0) shaper.rect(drawX(x), drawY(y), 16, 16);
+                            && GP.world.getBackMap(x, y) > 0)
+                        shaper.rect(drawX(x), drawY(y), 16, 16);
                 }
             }
             shaper.end();
@@ -198,6 +200,38 @@ public class GameRenderer extends Renderer {
 
         if (CaveGame.TOUCH) drawTouchGui();
 
+        spriter.end();
+
+        if(GameScreen.SHOW_MAP) {
+            //DRAW MAP
+            shaper.begin(ShapeRenderer.ShapeType.Filled);
+            shaper.setColor(Color.LIGHT_GRAY);
+            shaper.rect(0, 0, GP.world.getWidth(), 128);
+            for (int y = 128; y < 256; y++) {
+                for (int x = 0; x < getWidth(); x++) {
+                    if (GP.world.getForeMap(x, y) > 0 || GP.world.getBackMap(x, y) > 0) {
+                        if (GameItems.isWater(GP.world.getForeMap(x, y))) {
+                            shaper.setColor(Color.BLUE);
+                        } else if (GameItems.isLava(GP.world.getForeMap(x, y))) {
+                            shaper.setColor(Color.RED);
+                        } else {
+                            if (GP.world.getForeMap(x, y) > 0) {
+                                shaper.setColor(Color.BLACK);
+                            } else {
+                                shaper.setColor(Color.DARK_GRAY);
+                            }
+                        }
+                        shaper.rect(x, y - 128, 1, 1);
+                    }
+                }
+            }
+            shaper.setColor(Color.OLIVE);
+            shaper.rect(GP.player.pos.x / 16, GP.player.pos.y / 16 - 128, 1, 2);
+            shaper.end();
+            //=================
+        }
+        spriter.begin();
+
         if (GameScreen.SHOW_DEBUG) {
             drawString("FPS: " + GameScreen.FPS, 0, 0);
             drawString("X: " + (int) (GP.player.pos.x / 16), 0, 10);
@@ -210,6 +244,8 @@ public class GameRenderer extends Renderer {
             drawString("Game mode: " + GP.player.gameMode, 0, 80);
         }
         spriter.end();
+
+
     }
 
 }
