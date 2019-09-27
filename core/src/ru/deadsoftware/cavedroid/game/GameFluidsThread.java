@@ -7,7 +7,7 @@ import static ru.deadsoftware.cavedroid.game.GameItems.*;
 
 public class GameFluidsThread extends Thread {
 
-    private static final int FLUID_UPDATE_INTERVAL_MS = 150;
+    private static final int FLUID_UPDATE_INTERVAL_MS = 100;
     private static final int FLUID_STATES = 5;
 
     private static final int[] WATER_IDS = {8, 60, 61, 62, 63};
@@ -105,20 +105,27 @@ public class GameFluidsThread extends Thread {
 
     private void fluidUpdater() {
         int midScreen = (int) (GP.renderer.getCamX() + GP.renderer.getWidth() / 2) / 16;
-        for (int y = 0; y < GP.world.getHeight(); y++) {
-            for (int x = 0; x < (int) (GP.renderer.getWidth() / 2) / 16 + 1; x++) {
+        for (int y = GP.world.getHeight() - 1; y >= 0; y--) {
+            for (int x = 0; x <= GP.world.getWidth() / 2; x++) {
                 updateFluids(midScreen + x, y);
                 updateFluids(midScreen - x, y);
             }
         }
     }
 
+    private boolean timeToUpdate() {
+        if (System.currentTimeMillis() - fluidLastUpdateTimestamp >= FLUID_UPDATE_INTERVAL_MS) {
+            fluidLastUpdateTimestamp = System.currentTimeMillis();
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void run() {
         while (!this.isInterrupted()) {
-            if (System.currentTimeMillis() - fluidLastUpdateTimestamp > FLUID_UPDATE_INTERVAL_MS) {
+            if (timeToUpdate()) {
                 fluidUpdater();
-                fluidLastUpdateTimestamp = System.currentTimeMillis();
             }
         }
     }
