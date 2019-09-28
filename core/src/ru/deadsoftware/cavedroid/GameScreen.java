@@ -5,10 +5,9 @@ import com.badlogic.gdx.Screen;
 import ru.deadsoftware.cavedroid.game.GameItems;
 import ru.deadsoftware.cavedroid.game.GameProc;
 import ru.deadsoftware.cavedroid.game.GameSaver;
-import ru.deadsoftware.cavedroid.menu.MenuRenderer;
+import ru.deadsoftware.cavedroid.menu.MenuProc;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.InputHandlerGame;
-import ru.deadsoftware.cavedroid.misc.InputHandlerMenu;
 import ru.deadsoftware.cavedroid.misc.Renderer;
 import ru.deadsoftware.cavedroid.misc.states.AppState;
 import ru.deadsoftware.cavedroid.misc.states.GameState;
@@ -23,18 +22,16 @@ public class GameScreen implements Screen {
     public static boolean SHOW_MAP = false;
 
     private Renderer renderer;
-    private MenuRenderer menuRenderer;
+    private MenuProc menuProc;
 
     private InputHandlerGame inputHandlerGame;
-    private final InputHandlerMenu inputHandlerMenu;
 
     public GameScreen() {
         Assets.load();
         GameItems.load();
-        menuRenderer = new MenuRenderer(CaveGame.TOUCH ? 320 : 480);
-        inputHandlerMenu = new InputHandlerMenu(menuRenderer);
-        renderer = menuRenderer;
-        Gdx.input.setInputProcessor(inputHandlerMenu);
+        menuProc = new MenuProc(CaveGame.TOUCH ? 320 : 480);
+        renderer = menuProc;
+        Gdx.input.setInputProcessor(menuProc);
     }
 
     public static float getWidth() {
@@ -84,8 +81,8 @@ public class GameScreen implements Screen {
                 CaveGame.APP_STATE = AppState.MENU;
                 CaveGame.MENU_STATE = MenuState.MAIN;
                 GP.dispose();
-                renderer = menuRenderer;
-                Gdx.input.setInputProcessor(inputHandlerMenu);
+                renderer = menuProc;
+                Gdx.input.setInputProcessor(menuProc);
                 break;
         }
         renderer.render();
@@ -95,9 +92,9 @@ public class GameScreen implements Screen {
     public void resize(int width, int height) {
         switch (CaveGame.APP_STATE) {
             case MENU:
-                menuRenderer = new MenuRenderer(CaveGame.TOUCH ? 320 : 480);
-                Gdx.input.setInputProcessor(inputHandlerMenu);
-                renderer = menuRenderer;
+                menuProc = new MenuProc(CaveGame.TOUCH ? 320 : 480);
+                Gdx.input.setInputProcessor(menuProc);
+                renderer = menuProc;
                 break;
             case GAME:
                 GP.resetRenderer();

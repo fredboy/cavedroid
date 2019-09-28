@@ -4,26 +4,31 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Button {
 
+    public static final int WIDTH = 200;
+    public static final int HEIGHT = 20;
+
+    public static final int
+            DISABLED = 0,
+            NORMAL = 1,
+            SELECTED = 2;
+
+    private ButtonEventListener listener;
+
     private final Rectangle rect;
     private final String label;
     private int type;
 
-    public Button(String label, float x, float y, float width, float height, int type) {
+    /**
+     * @param label Label to be shown on button
+     * @param type  Type of button where 0 - disabled,  1 - normal, 2 - selected.
+     *              You should use these constants
+     *              {@link #DISABLED} {@link #NORMAL} {@link #SELECTED}
+     */
+    public Button(String label, int x, int y, int type, ButtonEventListener listener) {
         this.label = label;
-        rect = new Rectangle(x, y, width, height);
+        rect = new Rectangle(x, y, WIDTH, HEIGHT);
         this.type = type;
-    }
-
-    public Button(String label, float x, float y, float width, float height) {
-        this(label, x, y, width, height, 1);
-    }
-
-    public Button(String label, float x, float y, int type) {
-        this(label, x, y, 200, 20, type);
-    }
-
-    public Button(String label, float x, float y) {
-        this(label, x, y, 200, 20, 1);
+        this.listener = listener;
     }
 
     public Rectangle getRect() {
@@ -56,6 +61,14 @@ public class Button {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public void draw(ButtonDrawer drawer) {
+        drawer.draw(this);
+    }
+
+    public void clicked() {
+        listener.buttonClicked();
     }
 
 }

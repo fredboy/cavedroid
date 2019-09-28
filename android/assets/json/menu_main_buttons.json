@@ -1,0 +1,12 @@
+{
+  "new_game": {
+    "label": "New Game"
+  },
+  "load_game": {
+    "label": "Load Game",
+    "type": 0
+  },
+  "quit": {
+    "label": "Quit"
+  }
+}

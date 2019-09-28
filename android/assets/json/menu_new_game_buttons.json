@@ -1,0 +1,12 @@
+{
+  "creative": {
+    "label": "Creative"
+  },
+  "survival": {
+    "label": "Survival",
+    "type": 0
+  },
+  "back": {
+    "label": "Back"
+  }
+}

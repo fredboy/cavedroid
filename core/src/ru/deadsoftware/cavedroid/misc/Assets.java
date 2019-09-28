@@ -18,7 +18,7 @@ public class Assets {
     public static final JsonReader jsonReader = new JsonReader();
 
     private static final GlyphLayout glyphLayout = new GlyphLayout();
-    static final BitmapFont minecraftFont = new BitmapFont(Gdx.files.internal("font.fnt"), true);;
+    static final BitmapFont minecraftFont = new BitmapFont(Gdx.files.internal("font.fnt"), true);
 
     public static final Sprite[][] playerSprite = new Sprite[2][4];
     public static final Sprite[][] pigSprite = new Sprite[2][2];
