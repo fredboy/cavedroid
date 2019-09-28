@@ -91,10 +91,10 @@ public class Assets {
                 textureRegions.put(file.name(), flippedRegion(texture, 0, 0, texture.getWidth(), texture.getHeight()));
             } else {
                 for (JsonValue key = file.child(); key != null; key = key.next()) {
-                    int x = key.has("x") ? key.getInt("x") : 0;
-                    int y = key.has("y") ? key.getInt("y") : 0;
-                    int w = key.has("w") ? key.getInt("w") : texture.getWidth();
-                    int h = key.has("h") ? key.getInt("h") : texture.getHeight();
+                    int x = getIntFromJson(key, "x", 0);
+                    int y = getIntFromJson(key, "y", 0);
+                    int w = getIntFromJson(key, "w", texture.getWidth());
+                    int h = getIntFromJson(key, "h", texture.getHeight());
                     textureRegions.put(key.name(), flippedRegion(texture, x, y, w, h));
                 }
             }
@@ -126,6 +126,18 @@ public class Assets {
     public static int getStringHeight(String s) {
         glyphLayout.setText(minecraftFont, s);
         return (int) glyphLayout.height;
+    }
+
+    public static int getIntFromJson(JsonValue json, String name, int defaultValue) {
+        return json.has(name) ? json.getInt(name) : defaultValue;
+    }
+
+    public static String getStringFromJson(JsonValue json, String name, String defaultValue) {
+        return json.has(name) ? json.getString(name) : defaultValue;
+    }
+
+    public static boolean getBooleanFromJson(JsonValue json, String name, boolean defaultValue) {
+        return json.has(name) ? json.getBoolean(name) : defaultValue;
     }
 
 }
