@@ -6,7 +6,10 @@ import ru.deadsoftware.cavedroid.game.GameItems;
 import ru.deadsoftware.cavedroid.game.GameProc;
 import ru.deadsoftware.cavedroid.game.GameSaver;
 import ru.deadsoftware.cavedroid.menu.MenuRenderer;
-import ru.deadsoftware.cavedroid.misc.*;
+import ru.deadsoftware.cavedroid.misc.Assets;
+import ru.deadsoftware.cavedroid.misc.InputHandlerGame;
+import ru.deadsoftware.cavedroid.misc.InputHandlerMenu;
+import ru.deadsoftware.cavedroid.misc.Renderer;
 import ru.deadsoftware.cavedroid.misc.states.AppState;
 import ru.deadsoftware.cavedroid.misc.states.GameState;
 import ru.deadsoftware.cavedroid.misc.states.MenuState;
@@ -14,21 +17,24 @@ import ru.deadsoftware.cavedroid.misc.states.MenuState;
 public class GameScreen implements Screen {
 
     public static GameProc GP;
-    public static Renderer RENDERER;
 
     public static int FPS;
-    public static boolean SHOW_DEBUG = true;
+    public static boolean SHOW_DEBUG = false;
     public static boolean SHOW_MAP = false;
-    public static int NEW_GAME_MODE = 0;
 
+    private Renderer renderer;
     private MenuRenderer menuRenderer;
+
+    private InputHandlerGame inputHandlerGame;
+    private InputHandlerMenu inputHandlerMenu;
 
     public GameScreen() {
         Assets.load();
         GameItems.load();
         menuRenderer = new MenuRenderer(CaveGame.TOUCH ? 320 : 480);
-        RENDERER = menuRenderer;
-        Gdx.input.setInputProcessor(new InputHandlerMenu(menuRenderer));
+        inputHandlerMenu = new InputHandlerMenu(menuRenderer);
+        renderer = menuRenderer;
+        Gdx.input.setInputProcessor(inputHandlerMenu);
     }
 
     public static float getWidth() {
@@ -63,10 +69,12 @@ public class GameScreen implements Screen {
                 break;
 
             case LOAD:
-                GP = GameSaver.load();
                 GP.resetRenderer();
-                RENDERER = GP.renderer;
-                Gdx.input.setInputProcessor(new InputHandlerGame());
+                renderer = GP.renderer;
+                if (inputHandlerGame == null) {
+                    inputHandlerGame = new InputHandlerGame();
+                }
+                Gdx.input.setInputProcessor(inputHandlerGame);
                 CaveGame.APP_STATE = AppState.GAME;
                 CaveGame.GAME_STATE = GameState.PLAY;
                 break;
@@ -76,12 +84,11 @@ public class GameScreen implements Screen {
                 CaveGame.APP_STATE = AppState.MENU;
                 CaveGame.MENU_STATE = MenuState.MAIN;
                 GP.dispose();
-                menuRenderer = new MenuRenderer(CaveGame.TOUCH ? 320 : 480);
-                RENDERER = menuRenderer;
-                Gdx.input.setInputProcessor(new InputHandlerMenu(menuRenderer));
+                renderer = menuRenderer;
+                Gdx.input.setInputProcessor(inputHandlerMenu);
                 break;
         }
-        RENDERER.render();
+        renderer.render();
     }
 
     @Override
@@ -89,12 +96,12 @@ public class GameScreen implements Screen {
         switch (CaveGame.APP_STATE) {
             case MENU:
                 menuRenderer = new MenuRenderer(CaveGame.TOUCH ? 320 : 480);
-                Gdx.input.setInputProcessor(new InputHandlerMenu(menuRenderer));
-                RENDERER = menuRenderer;
+                Gdx.input.setInputProcessor(inputHandlerMenu);
+                renderer = menuRenderer;
                 break;
             case GAME:
                 GP.resetRenderer();
-                RENDERER = GP.renderer;
+                renderer = GP.renderer;
                 break;
         }
     }

@@ -1,13 +1,14 @@
 package ru.deadsoftware.cavedroid.game;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavedroid.CaveGame;
 import ru.deadsoftware.cavedroid.GameScreen;
 import ru.deadsoftware.cavedroid.game.mobs.Pig;
+import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
 import ru.deadsoftware.cavedroid.misc.states.AppState;
-import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.states.GameState;
 
 import static ru.deadsoftware.cavedroid.GameScreen.GP;
@@ -18,11 +19,13 @@ public class GameInput {
         return GameItems.isFluid(GP.world.getForeMap(GP.player.getMapX(), GP.player.getLowerMapY()));
     }
 
-    private boolean insideCreativeInv(int screenX, int screenY) {
-        return (screenX > GP.renderer.getWidth() / 2 - Assets.creativeInv.getRegionWidth() / 2 &&
-                screenX < GP.renderer.getWidth() / 2 + Assets.creativeInv.getRegionWidth() / 2 &&
-                screenY > GP.renderer.getHeight() / 2 - Assets.creativeInv.getRegionHeight() / 2 &&
-                screenY < GP.renderer.getHeight() / 2 + Assets.creativeInv.getRegionHeight() / 2);
+    @SuppressWarnings("IntegerDivisionInFloatingPointContext")
+    private boolean insideCreativeInv(float screenX, float screenY) {
+        TextureRegion creative = Assets.textureRegions.get("creative");
+        return (screenX > GP.renderer.getWidth() / 2 - creative.getRegionWidth() / 2 &&
+                screenX < GP.renderer.getWidth() / 2 + creative.getRegionWidth() / 2 &&
+                screenY > GP.renderer.getHeight() / 2 - creative.getRegionHeight() / 2 &&
+                screenY < GP.renderer.getHeight() / 2 + creative.getRegionHeight() / 2);
     }
 
     private void wasdPressed(int keycode) {
@@ -143,23 +146,25 @@ public class GameInput {
         }
     }
 
-    public void touchDown(int screenX, int screenY, int button) {
+    public void touchDown(float touchX, float touchY, int button) {
         GP.touchDownTime = TimeUtils.millis();
         GP.isTouchDown = true;
         GP.touchDownBtn = button;
-        GP.touchDownX = screenX;
-        GP.touchDownY = screenY;
+        GP.touchDownX = touchX;
+        GP.touchDownY = touchY;
     }
 
-    public void touchUp(int screenX, int screenY, int button) {
+    public void touchUp(float screenX, float screenY, int button) {
         if (CaveGame.TOUCH && GP.isKeyDown) {
             keyUp(GP.keyDownCode);
             GP.isKeyDown = false;
         }
+        TextureRegion hotbar = Assets.textureRegions.get("hotbar");
+        TextureRegion creative = Assets.textureRegions.get("creative");
         if (GP.isTouchDown) {
             if (CaveGame.GAME_STATE == GameState.CREATIVE_INV && insideCreativeInv(screenX, screenY)) {
-                int ix = (int) (screenX - (GP.renderer.getWidth() / 2 - Assets.creativeInv.getRegionWidth() / 2 + 8)) / 18;
-                int iy = (int) (screenY - (GP.renderer.getHeight() / 2 - Assets.creativeInv.getRegionHeight() / 2 + 18)) / 18;
+                int ix = (int) (screenX - (GP.renderer.getWidth() / 2 - creative.getRegionWidth() / 2 + 8)) / 18;
+                int iy = (int) (screenY - (GP.renderer.getHeight() / 2 - creative.getRegionHeight() / 2 + 18)) / 18;
                 int item = GP.creativeScroll * 8 + (ix + iy * 8);
                 if (ix >= 8 || ix < 0 || iy < 0 || iy >= 5) item = -1;
                 if (item >= 0 && item < GameItems.getItemsSize()) {
@@ -168,10 +173,10 @@ public class GameInput {
                 }
             } else if (CaveGame.GAME_STATE == GameState.CREATIVE_INV) {
                 CaveGame.GAME_STATE = GameState.PLAY;
-            } else if (screenY < Assets.invBar.getRegionHeight() &&
-                    screenX > GP.renderer.getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 &&
-                    screenX < GP.renderer.getWidth() / 2 + (float) Assets.invBar.getRegionWidth() / 2) {
-                GP.player.slot = (int) ((screenX - (GP.renderer.getWidth() / 2 - Assets.invBar.getRegionWidth() / 2)) / 20);
+            } else if (screenY < hotbar.getRegionHeight() &&
+                    screenX > GP.renderer.getWidth() / 2 - (float) hotbar.getRegionWidth() / 2 &&
+                    screenX < GP.renderer.getWidth() / 2 + (float) hotbar.getRegionWidth() / 2) {
+                GP.player.slot = (int) ((screenX - (GP.renderer.getWidth() / 2 - hotbar.getRegionWidth() / 2)) / 20);
             } else if (button == Input.Buttons.RIGHT) {
                 GP.useItem(GP.curX, GP.curY,
                         GP.player.inventory[GP.player.slot], false);
@@ -182,7 +187,7 @@ public class GameInput {
         GP.isTouchDown = false;
     }
 
-    public void touchDragged(int screenX, int screenY) {
+    public void touchDragged(float screenX, float screenY) {
         if (CaveGame.GAME_STATE == GameState.CREATIVE_INV && Math.abs(screenY - GP.touchDownY) > 16) {
             if (insideCreativeInv(screenX, screenY)) {
                 GP.creativeScroll -= (screenY - GP.touchDownY) / 16;

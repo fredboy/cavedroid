@@ -3,16 +3,19 @@ package ru.deadsoftware.cavedroid.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import ru.deadsoftware.cavedroid.CaveGame;
 import ru.deadsoftware.cavedroid.GameScreen;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
-import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
 import ru.deadsoftware.cavedroid.misc.Renderer;
 
 import static ru.deadsoftware.cavedroid.GameScreen.GP;
+import static ru.deadsoftware.cavedroid.misc.Assets.guiMap;
+import static ru.deadsoftware.cavedroid.misc.Assets.textureRegions;
 
 public class GameRenderer extends Renderer {
 
@@ -31,11 +34,9 @@ public class GameRenderer extends Renderer {
 
     private void drawWreck(int bl) {
         if (GP.blockDmg > 0) {
-            spriter.draw(Assets.wreck[
-                            10 * GP.blockDmg /
-                                    GameItems.getBlock(bl).getHp()],
-                    GP.curX * 16 - getCamX(),
-                    GP.curY * 16 - getCamY());
+            int index = 10 * GP.blockDmg / GameItems.getBlock(bl).getHp();
+            String key = "break_" + index;
+            spriter.draw(textureRegions.get(key), GP.curX * 16 - getCamX(), GP.curY * 16 - getCamY());
         }
     }
 
@@ -105,10 +106,11 @@ public class GameRenderer extends Renderer {
 
     @SuppressWarnings("IntegerDivisionInFloatingPointContext")
     private void drawCreative() {
-        float x = getWidth() / 2 - (float) Assets.creativeInv.getRegionWidth() / 2;
-        float y = getHeight() / 2 - (float) Assets.creativeInv.getRegionHeight() / 2;
-        spriter.draw(Assets.creativeInv, x, y);
-        spriter.draw(Assets.creativeScr, x + 156,
+        TextureRegion creative = textureRegions.get("creative");
+        float x = getWidth() / 2 - (float) creative.getRegionWidth() / 2;
+        float y = getHeight() / 2 - (float) creative.getRegionHeight() / 2;
+        spriter.draw(creative, x, y);
+        spriter.draw(textureRegions.get("handle"), x + 156,
                 y + 18 + (GP.creativeScroll * (72f / GameProc.MAX_CREATIVE_SCROLL)));
         for (int i = GP.creativeScroll * 8; i < GP.creativeScroll * 8 + 40; i++) {
             if (i > 0 && i < GameItems.getItemsSize())
@@ -126,52 +128,54 @@ public class GameRenderer extends Renderer {
             if (GP.player.inventory[i] > 0)
                 if (GameItems.getItem(GP.player.inventory[i]).isBlock()) {
                     spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(GP.player.inventory[i])).getTex(),
-                            x + 8 + i * 18, y + Assets.creativeInv.getRegionHeight() - 24);
+                            x + 8 + i * 18, y + creative.getRegionHeight() - 24);
                 } else {
                     spriter.draw(GameItems.getItem(GP.player.inventory[i]).getTex(),
-                            x + 8 + i * 18, y + Assets.creativeInv.getRegionHeight() - 24);
+                            x + 8 + i * 18, y + creative.getRegionHeight() - 24);
                 }
         }
 
     }
 
     private void drawGUI() {
+        TextureRegion cursor = textureRegions.get("cursor");
+        TextureRegion hotbar = textureRegions.get("hotbar");
+        TextureRegion hotbarSelector = textureRegions.get("hotbar_selector");
+
         if (GP.world.hasForeAt(GP.curX, GP.curY) ||
                 GP.world.hasBackAt(GP.curX, GP.curY) ||
                 GP.controlMode == ControlMode.CURSOR ||
                 !CaveGame.TOUCH)
-            spriter.draw(Assets.guiCur,
+            spriter.draw(cursor,
                     GP.curX * 16 - getCamX(),
                     GP.curY * 16 - getCamY());
-        spriter.draw(Assets.invBar, getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2, 0);
+        spriter.draw(hotbar, getWidth() / 2 - (float) hotbar.getRegionWidth() / 2, 0);
         for (int i = 0; i < 9; i++) {
             if (GP.player.inventory[i] > 0) {
                 if (GameItems.getItem(GP.player.inventory[i]).isBlock()) {
                     spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(GP.player.inventory[i])).getTex(),
-                            getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 + 3 + i * 20,
+                            getWidth() / 2 - (float) hotbar.getRegionWidth() / 2 + 3 + i * 20,
                             3);
                 } else {
                     spriter.draw(GameItems.getItem(GP.player.inventory[i]).getTex(),
-                            getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 + 3 + i * 20,
+                            getWidth() / 2 - (float) hotbar.getRegionWidth() / 2 + 3 + i * 20,
                             3);
                 }
             }
         }
-        spriter.draw(Assets.invBarCur,
-                getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 - 1 + 20 * GP.player.slot,
+        spriter.draw(hotbarSelector,
+                getWidth() / 2 - (float) hotbar.getRegionWidth() / 2 - 1 + 20 * GP.player.slot,
                 -1);
     }
 
     private void drawTouchGui() {
-        spriter.draw(Assets.touchArrows[0], 26, getHeight() - 52);
-        spriter.draw(Assets.touchArrows[1], 0, getHeight() - 26);
-        spriter.draw(Assets.touchArrows[2], 26, getHeight() - 26);
-        spriter.draw(Assets.touchArrows[3], 52, getHeight() - 26);
-        spriter.draw(Assets.touchLMB, getWidth() - 52, getHeight() - 26);
-        spriter.draw(Assets.touchRMB, getWidth() - 26, getHeight() - 26);
-        spriter.draw(Assets.touchMode, 78, getHeight() - 26);
+        for (int i = 0; i < guiMap.size; i++) {
+            Rectangle touchKey = guiMap.getValueAt(i);
+            spriter.draw(textureRegions.get(guiMap.getKeyAt(i)),
+                    touchKey.x, touchKey.y, touchKey.width, touchKey.height);
+        }
         if (GP.controlMode == ControlMode.CURSOR) {
-            spriter.draw(Assets.shade, 83, getHeight() - 21);
+            spriter.draw(textureRegions.get("shade"), 83, getHeight() - 21);
         }
     }
 
@@ -231,9 +235,9 @@ public class GameRenderer extends Renderer {
             shaper.end();
             //=================
         }
-        spriter.begin();
 
         if (GameScreen.SHOW_DEBUG) {
+            spriter.begin();
             drawString("FPS: " + GameScreen.FPS, 0, 0);
             drawString("X: " + (int) (GP.player.pos.x / 16), 0, 10);
             drawString("Y: " + (int) (GP.player.pos.y / 16), 0, 20);
@@ -244,8 +248,8 @@ public class GameRenderer extends Renderer {
             drawString("Block: " + GameItems.getBlockKey(GP.world.getForeMap(GP.curX, GP.curY)), 0, 70);
             drawString("Hand: " + GameItems.getItemKey(GP.player.inventory[GP.player.slot]), 0, 80);
             drawString("Game mode: " + GP.player.gameMode, 0, 90);
+            spriter.end();
         }
-        spriter.end();
 
 
     }

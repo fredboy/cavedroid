@@ -2,7 +2,6 @@ package ru.deadsoftware.cavedroid.misc;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.SpriteCache;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import ru.deadsoftware.cavedroid.GameScreen;
 
@@ -12,7 +11,6 @@ public abstract class Renderer {
 
     protected ShapeRenderer shaper;
     protected SpriteBatch spriter;
-    protected SpriteCache spriteCache;
 
     public Renderer() {
         this(GameScreen.getWidth(), GameScreen.getHeight());
@@ -25,8 +23,6 @@ public abstract class Renderer {
         shaper.setProjectionMatrix(camera.combined);
         spriter = new SpriteBatch();
         spriter.setProjectionMatrix(camera.combined);
-        spriteCache = new SpriteCache();
-        spriteCache.setProjectionMatrix(camera.combined);
     }
 
     public float getWidth() {
@@ -50,19 +46,19 @@ public abstract class Renderer {
     }
 
     public void setFontScale(float scale) {
-        Assets.mcFont.getData().setScale(scale);
+        Assets.minecraftFont.getData().setScale(scale);
     }
 
     protected void setFontColor(int r, int g, int b) {
-        Assets.mcFont.setColor(r / 255f, g / 255f, b / 255f, 1f);
+        Assets.minecraftFont.setColor(r / 255f, g / 255f, b / 255f, 1f);
     }
 
     protected void drawString(String str, float x, float y) {
-        Assets.mcFont.draw(spriter, str, x, y);
+        Assets.minecraftFont.draw(spriter, str, x, y);
     }
 
     protected void drawString(String str) {
-        Assets.mcFont.draw(spriter, str,
+        Assets.minecraftFont.draw(spriter, str,
                 getWidth() / 2 - (float) Assets.getStringWidth(str) / 2,
                 getHeight() / 2 - (float) Assets.getStringHeight(str) / 2);
     }

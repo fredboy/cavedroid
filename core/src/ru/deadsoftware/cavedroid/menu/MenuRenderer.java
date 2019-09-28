@@ -1,23 +1,21 @@
 package ru.deadsoftware.cavedroid.menu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import org.jetbrains.annotations.NotNull;
 import ru.deadsoftware.cavedroid.CaveGame;
 import ru.deadsoftware.cavedroid.GameScreen;
-import ru.deadsoftware.cavedroid.game.GameItems;
 import ru.deadsoftware.cavedroid.game.GameProc;
 import ru.deadsoftware.cavedroid.game.GameSaver;
 import ru.deadsoftware.cavedroid.menu.objects.Button;
-import ru.deadsoftware.cavedroid.misc.InputHandlerGame;
-import ru.deadsoftware.cavedroid.misc.states.AppState;
-import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.Renderer;
+import ru.deadsoftware.cavedroid.misc.states.AppState;
 import ru.deadsoftware.cavedroid.misc.states.GameState;
 import ru.deadsoftware.cavedroid.misc.states.MenuState;
 
 import static ru.deadsoftware.cavedroid.GameScreen.GP;
-import static ru.deadsoftware.cavedroid.GameScreen.RENDERER;
+import static ru.deadsoftware.cavedroid.misc.Assets.*;
 
 public class MenuRenderer extends Renderer {
 
@@ -25,14 +23,14 @@ public class MenuRenderer extends Renderer {
     public Array<Button> menuNGBtns;
 
     public MenuRenderer(int width) {
-        super(width, width * ((float) GameScreen.getHeight() / GameScreen.getWidth()));
+        super(width, width * GameScreen.getHeight() / GameScreen.getWidth());
         //main menu
-        menuMainBtns = new Array<Button>();
+        menuMainBtns = new Array<>();
         menuMainBtns.add(new Button("New game", getWidth() / 2 - 100, getHeight() / 4));
         menuMainBtns.add(new Button("Load game", getWidth() / 2 - 100, getHeight() / 4 + 30, GameSaver.exists() ? 1 : 0));
         menuMainBtns.add(new Button("Quit", getWidth() / 2 - 100, getHeight() / 4 + 60));
         //new game menu
-        menuNGBtns = new Array<Button>();
+        menuNGBtns = new Array<>();
         menuNGBtns.add(new Button("Survival", getWidth() / 2 - 100, getHeight() / 4, 0));
         menuNGBtns.add(new Button("Creative", getWidth() / 2 - 100, getHeight() / 4 + 30));
         menuNGBtns.add(new Button("Back", getWidth() / 2 - 100, getHeight() / 4 + 60));
@@ -43,10 +41,7 @@ public class MenuRenderer extends Renderer {
         GP = new GameProc(gameMode);
         GP.player.respawn();
         GameSaver.save(GP);
-        RENDERER = GP.renderer;
-        Gdx.input.setInputProcessor(new InputHandlerGame());
-        CaveGame.APP_STATE = AppState.GAME;
-        CaveGame.GAME_STATE = GameState.PLAY;
+        CaveGame.APP_STATE = AppState.LOAD;
     }
 
     public void buttonClicked(@NotNull Button button) {
@@ -56,6 +51,7 @@ public class MenuRenderer extends Renderer {
                 break;
             case "load game":
                 CaveGame.APP_STATE = AppState.LOAD;
+                GP = GameSaver.load();
                 break;
             case "quit":
                 Gdx.app.exit();
@@ -73,11 +69,11 @@ public class MenuRenderer extends Renderer {
     }
 
     private void drawButton(Button button) {
-        spriter.draw(Assets.menuBtn[button.getType()], button.getX(), button.getY());
+        spriter.draw(textureRegions.get("button_" + button.getType()), button.getX(), button.getY());
         setFontColor(255, 255, 255);
         drawString(button.getLabel(),
-                (button.getX() + button.getWidth() / 2) - (float) Assets.getStringWidth(button.getLabel()) / 2,
-                (button.getY() + button.getHeight() / 2) - (float) Assets.getStringHeight(button.getLabel()) / 2);
+                (button.getX() + button.getWidth() / 2) - (float) getStringWidth(button.getLabel()) / 2,
+                (button.getY() + button.getHeight() / 2) - (float) getStringHeight(button.getLabel()) / 2);
     }
 
     private void drawButtons(Array<Button> buttons) {
@@ -99,14 +95,17 @@ public class MenuRenderer extends Renderer {
 
     @Override
     public void render() {
+        TextureRegion shade = textureRegions.get("shade");
+        TextureRegion gamelogo = textureRegions.get("gamelogo");
+
         spriter.begin();
         for (int x = 0; x <= getWidth() / 16; x++) {
             for (int y = 0; y <= getHeight() / 16; y++) {
-                spriter.draw(GameItems.getBlock(3).getTex(), x * 16, y * 16);
-                spriter.draw(Assets.shade, x * 16, y * 16);
+//                spriter.draw(GameItems.getBlock(3).getTex(), x * 16, y * 16);
+                spriter.draw(shade, x * 16, y * 16);
             }
         }
-        spriter.draw(Assets.gameLogo, getWidth() / 2 - (float) Assets.gameLogo.getWidth() / 2, 8);
+        spriter.draw(gamelogo, getWidth() / 2 - (float) gamelogo.getRegionWidth() / 2, 8);
 
         switch (CaveGame.MENU_STATE) {
             case MAIN:
@@ -128,7 +127,7 @@ public class MenuRenderer extends Renderer {
         }
 
         drawString("CaveDroid " + CaveGame.VERSION, 0,
-                getHeight() - Assets.getStringHeight("CaveDroid " + CaveGame.VERSION) * 1.5f);
+                getHeight() - getStringHeight("CaveDroid " + CaveGame.VERSION) * 1.5f);
         spriter.end();
     }
 }

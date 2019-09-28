@@ -2,8 +2,10 @@ package ru.deadsoftware.cavedroid.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.google.common.collect.Range;
 import ru.deadsoftware.cavedroid.CaveGame;
 import ru.deadsoftware.cavedroid.GameScreen;
 import ru.deadsoftware.cavedroid.game.mobs.FallingGravel;
@@ -11,8 +13,8 @@ import ru.deadsoftware.cavedroid.game.mobs.FallingSand;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
 import ru.deadsoftware.cavedroid.game.objects.Player;
-import ru.deadsoftware.cavedroid.misc.ControlMode;
 import ru.deadsoftware.cavedroid.misc.Assets;
+import ru.deadsoftware.cavedroid.misc.ControlMode;
 import ru.deadsoftware.cavedroid.misc.states.GameState;
 
 import java.io.Serializable;
@@ -41,8 +43,11 @@ public class GameProc implements Serializable, Disposable {
     public ArrayList<Mob> mobs;
     ArrayList<Drop> drops;
 
-    public boolean isTouchDown, isKeyDown;
-    public int touchDownX, touchDownY, touchDownBtn, keyDownCode;
+    public boolean isKeyDown;
+    public int keyDownCode;
+    boolean isTouchDown;
+    float touchDownX, touchDownY;
+    int touchDownBtn;
     long touchDownTime;
 
     int curX, curY;
@@ -211,21 +216,22 @@ public class GameProc implements Serializable, Disposable {
         }
     }
 
+    private boolean insideHotbar(float x, float y) {
+        TextureRegion hotbar = Assets.textureRegions.get("hotbar");
+        return y < hotbar.getRegionHeight() &&
+                Range.open(renderer.getWidth() / 2 - (float) hotbar.getRegionWidth() / 2,
+                        renderer.getWidth() / 2 + (float) hotbar.getRegionWidth() / 2).contains(x);
+    }
+
     private void holdMB() {
-        switch (touchDownBtn) {
-            case Input.Buttons.RIGHT:
-                useItem(curX, curY, player.inventory[player.slot], true);
+        if (touchDownBtn == Input.Buttons.RIGHT) {
+            useItem(curX, curY, player.inventory[player.slot], true);
+            isTouchDown = false;
+        } else {
+            if (insideHotbar(touchDownX, touchDownY)) {
+                CaveGame.GAME_STATE = GameState.CREATIVE_INV;
                 isTouchDown = false;
-                break;
-            case Input.Buttons.LEFT:
-                break;
-            default:
-                if (touchDownY < Assets.invBar.getRegionHeight() &&
-                        touchDownX > renderer.getWidth() / 2 - (float) Assets.invBar.getRegionWidth() / 2 &&
-                        touchDownX < renderer.getWidth() / 2 + (float) Assets.invBar.getRegionWidth() / 2) {
-                    CaveGame.GAME_STATE= GameState.CREATIVE_INV;
-                    isTouchDown = false;
-                }
+            }
         }
     }
 

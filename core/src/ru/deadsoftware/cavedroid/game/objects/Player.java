@@ -3,8 +3,6 @@ package ru.deadsoftware.cavedroid.game.objects;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import ru.deadsoftware.cavedroid.game.GameItems;
-import ru.deadsoftware.cavedroid.game.GameWorld;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.misc.Assets;
 
@@ -58,36 +56,36 @@ public class Player extends Mob implements Serializable {
 
     @Override
     public void draw(SpriteBatch spriteBatch, float x, float y) {
-        if (mov.x != 0 || Assets.plSprite[0][2].getRotation() != 0) {
-            Assets.plSprite[0][2].rotate(animDelta);
-            Assets.plSprite[1][2].rotate(-animDelta);
-            Assets.plSprite[0][3].rotate(-animDelta);
-            Assets.plSprite[1][3].rotate(animDelta);
+        if (mov.x != 0 || Assets.playerSprite[0][2].getRotation() != 0) {
+            Assets.playerSprite[0][2].rotate(animDelta);
+            Assets.playerSprite[1][2].rotate(-animDelta);
+            Assets.playerSprite[0][3].rotate(-animDelta);
+            Assets.playerSprite[1][3].rotate(animDelta);
         } else {
-            Assets.plSprite[0][2].setRotation(0);
-            Assets.plSprite[1][2].setRotation(0);
-            Assets.plSprite[0][3].setRotation(0);
-            Assets.plSprite[1][3].setRotation(0);
+            Assets.playerSprite[0][2].setRotation(0);
+            Assets.playerSprite[1][2].setRotation(0);
+            Assets.playerSprite[0][3].setRotation(0);
+            Assets.playerSprite[1][3].setRotation(0);
         }
-        if (Assets.plSprite[0][2].getRotation() >= 60 || Assets.plSprite[0][2].getRotation() <= -60)
+        if (Assets.playerSprite[0][2].getRotation() >= 60 || Assets.playerSprite[0][2].getRotation() <= -60)
             animDelta = -animDelta;
 
         //back hand
-        Assets.plSprite[1][2].setPosition(x - 6, y);
-        Assets.plSprite[1][2].draw(spriteBatch);
+        Assets.playerSprite[1][2].setPosition(x - 6, y);
+        Assets.playerSprite[1][2].draw(spriteBatch);
         //back leg
-        Assets.plSprite[1][3].setPosition(x - 6, y + 10);
-        Assets.plSprite[1][3].draw(spriteBatch);
+        Assets.playerSprite[1][3].setPosition(x - 6, y + 10);
+        Assets.playerSprite[1][3].draw(spriteBatch);
         //front leg
-        Assets.plSprite[0][3].setPosition(x - 6, y + 10);
-        Assets.plSprite[0][3].draw(spriteBatch);
+        Assets.playerSprite[0][3].setPosition(x - 6, y + 10);
+        Assets.playerSprite[0][3].draw(spriteBatch);
         //head
-        spriteBatch.draw(Assets.plSprite[getDirection()][0], x - 2, y - 2);
+        spriteBatch.draw(Assets.playerSprite[getDirection()][0], x - 2, y - 2);
         //body
-        spriteBatch.draw(Assets.plSprite[getDirection()][1], x - 2, y + 8);
+        spriteBatch.draw(Assets.playerSprite[getDirection()][1], x - 2, y + 8);
         //front hand
-        Assets.plSprite[0][2].setPosition(x - 6, y);
-        Assets.plSprite[0][2].draw(spriteBatch);
+        Assets.playerSprite[0][2].setPosition(x - 6, y);
+        Assets.playerSprite[0][2].draw(spriteBatch);
     }
 
     @Override
