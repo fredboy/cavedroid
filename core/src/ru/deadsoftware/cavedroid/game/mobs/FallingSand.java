@@ -31,7 +31,7 @@ public class FallingSand extends Mob {
 
     @Override
     public void draw(SpriteBatch spriteBatch, float x, float y) {
-        spriteBatch.draw(GameItems.getBlock("sand").getTex(), x, y);
+        spriteBatch.draw(Assets.fallingSandSprite, x, y);
     }
 
     @Override

@@ -237,8 +237,8 @@ public class GameProc implements Serializable, Disposable {
 
     public void update() {
         physics.update();
+        blockUpdater();
         moveCursor();
-
         if (isTouchDown && touchDownBtn == Input.Buttons.LEFT) pressLMB();
         if (isTouchDown && TimeUtils.timeSinceMillis(touchDownTime) > 500) holdMB();
         if (fluidThread == null || !fluidThread.isAlive()) startFluidThread();

@@ -16,57 +16,67 @@ import java.util.HashMap;
 public class Assets {
 
     public static JsonReader jsonReader = new JsonReader();
+
+    private static GlyphLayout glyphLayout = new GlyphLayout();
+
+    static BitmapFont minecraftFont;
+
     public static Sprite[][] playerSprite = new Sprite[2][4];
+    public static Sprite[][] pigSprite = new Sprite[2][2];
+    public static Sprite fallingSandSprite;
+    public static Sprite fallingGravelSprite;
     public static HashMap<String, TextureRegion> textureRegions = new HashMap<>();
     public static ArrayMap<String, Rectangle> guiMap = new ArrayMap<>();
-    public static Sprite[][] pigSprite = new Sprite[2][2];
-    static BitmapFont minecraftFont;
-    private static GlyphLayout glyphLayout = new GlyphLayout();
 
     private static TextureRegion flippedRegion(Texture texture, int x, int y, int width, int height) {
         return new TextureRegion(texture, x, y + height, width, -height);
+    }
+
+    private static Sprite flippedSprite(Texture texture) {
+        Sprite sprite = new Sprite(texture);
+        sprite.flip(false, true);
+        return sprite;
+    }
+
+    private static Sprite flippedSprite(TextureRegion texture) {
+        Sprite sprite = new Sprite(texture);
+        sprite.flip(false, true);
+        return sprite;
     }
 
     private static void loadPlayer() {
         Texture plTex = new Texture(Gdx.files.internal("mobs/char.png"));
         //LOOK TO LEFT
         //head
-        playerSprite[0][0] = new Sprite(new TextureRegion(plTex, 0, 0, 12, 12));
-        playerSprite[0][0].flip(false, true);
+        playerSprite[0][0] = flippedSprite(new TextureRegion(plTex, 0, 0, 12, 12));
         //body
-        playerSprite[0][1] = new Sprite(new TextureRegion(plTex, 0, 13, 12, 12));
-        playerSprite[0][1].flip(false, true);
+        playerSprite[0][1] = flippedSprite(new TextureRegion(plTex, 0, 13, 12, 12));
         //hand
-        playerSprite[0][2] = new Sprite(new TextureRegion(plTex, 25, 5, 20, 20));
-        playerSprite[0][2].flip(false, true);
+        playerSprite[0][2] = flippedSprite(new TextureRegion(plTex, 25, 5, 20, 20));
         //leg
-        playerSprite[0][3] = new Sprite(new TextureRegion(plTex, 25, 27, 20, 20));
-        playerSprite[0][3].flip(false, true);
+        playerSprite[0][3] = flippedSprite(new TextureRegion(plTex, 25, 27, 20, 20));
         //LOOK TO RIGHT
         //head
-        playerSprite[1][0] = new Sprite(new TextureRegion(plTex, 13, 0, 12, 12));
-        playerSprite[1][0].flip(false, true);
+        playerSprite[1][0] = flippedSprite(new TextureRegion(plTex, 13, 0, 12, 12));
         //body
-        playerSprite[1][1] = new Sprite(new TextureRegion(plTex, 13, 13, 12, 12));
-        playerSprite[1][1].flip(false, true);
+        playerSprite[1][1] = flippedSprite(new TextureRegion(plTex, 13, 13, 12, 12));
         //hand
-        playerSprite[1][2] = new Sprite(new TextureRegion(plTex, 37, 5, 20, 20));
-        playerSprite[1][2].flip(false, true);
+        playerSprite[1][2] = flippedSprite(new TextureRegion(plTex, 37, 5, 20, 20));
         //leg
-        playerSprite[1][3] = new Sprite(new TextureRegion(plTex, 37, 27, 20, 20));
-        playerSprite[1][3].flip(false, true);
+        playerSprite[1][3] = flippedSprite(new TextureRegion(plTex, 37, 27, 20, 20));
     }
 
     private static void loadPig() {
         Texture pigTex = new Texture(Gdx.files.internal("mobs/pig.png"));
-        pigSprite[0][0] = new Sprite(new TextureRegion(pigTex, 0, 0, 25, 12));
-        pigSprite[0][0].flip(false, true);
-        pigSprite[1][0] = new Sprite(new TextureRegion(pigTex, 0, 12, 25, 12));
-        pigSprite[1][0].flip(false, true);
-        pigSprite[0][1] = new Sprite(new TextureRegion(pigTex, 4, 26, 12, 12));
-        pigSprite[0][1].flip(false, true);
-        pigSprite[1][1] = new Sprite(new TextureRegion(pigTex, 16, 26, 12, 12));
-        pigSprite[1][1].flip(false, true);
+        pigSprite[0][0] = flippedSprite(new TextureRegion(pigTex, 0, 0, 25, 12));
+        pigSprite[1][0] = flippedSprite(new TextureRegion(pigTex, 0, 12, 25, 12));
+        pigSprite[0][1] = flippedSprite(new TextureRegion(pigTex, 4, 26, 12, 12));
+        pigSprite[1][1] = flippedSprite(new TextureRegion(pigTex, 16, 26, 12, 12));
+    }
+
+    private static void loadFallingBlocks() {
+        fallingSandSprite = flippedSprite(new Texture((Gdx.files.internal("textures/blocks/sand.png"))));
+        fallingGravelSprite = flippedSprite(new Texture((Gdx.files.internal("textures/blocks/gravel.png"))));
     }
 
     /**
@@ -74,15 +84,19 @@ public class Assets {
      * and puts to {@link #textureRegions} HashMap
      */
     private static void loadJSON() {
-        JsonValue json = Assets.jsonReader.parse(Gdx.files.internal("json/texture_regions.json"));
+        JsonValue json = jsonReader.parse(Gdx.files.internal("json/texture_regions.json"));
         for (JsonValue file = json.child(); file != null; file = file.next()) {
             Texture texture = new Texture(Gdx.files.internal(file.name() + ".png"));
-            for (JsonValue key = file.child(); key != null; key = key.next()) {
-                int x = key.has("x") ? key.getInt("x") : 0;
-                int y = key.has("y") ? key.getInt("y") : 0;
-                int w = key.has("w") ? key.getInt("w") : texture.getWidth();
-                int h = key.has("h") ? key.getInt("h") : texture.getHeight();
-                textureRegions.put(key.name(), flippedRegion(texture, x, y, w, h));
+            if (file.size == 0) {
+                textureRegions.put(file.name(), flippedRegion(texture, 0, 0, texture.getWidth(), texture.getHeight()));
+            } else {
+                for (JsonValue key = file.child(); key != null; key = key.next()) {
+                    int x = key.has("x") ? key.getInt("x") : 0;
+                    int y = key.has("y") ? key.getInt("y") : 0;
+                    int w = key.has("w") ? key.getInt("w") : texture.getWidth();
+                    int h = key.has("h") ? key.getInt("h") : texture.getHeight();
+                    textureRegions.put(key.name(), flippedRegion(texture, x, y, w, h));
+                }
             }
         }
     }
@@ -92,6 +106,7 @@ public class Assets {
         minecraftFont.getData().setScale(.375f);
         loadPlayer();
         loadPig();
+        loadFallingBlocks();
         loadJSON();
     }
 

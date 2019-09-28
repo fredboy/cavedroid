@@ -132,10 +132,7 @@
       "h": 16
     }
   },
-  "shade": {
-    "shade": {}
-  },
-  "gamelogo": {
-    "gamelogo": {}
-  }
+  "shade": {},
+  "gamelogo": {},
+  "background": {}
 }

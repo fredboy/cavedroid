@@ -95,14 +95,13 @@ public class MenuRenderer extends Renderer {
 
     @Override
     public void render() {
-        TextureRegion shade = textureRegions.get("shade");
+        TextureRegion background = textureRegions.get("background");
         TextureRegion gamelogo = textureRegions.get("gamelogo");
 
         spriter.begin();
         for (int x = 0; x <= getWidth() / 16; x++) {
             for (int y = 0; y <= getHeight() / 16; y++) {
-//                spriter.draw(GameItems.getBlock(3).getTex(), x * 16, y * 16);
-                spriter.draw(shade, x * 16, y * 16);
+                spriter.draw(background, x * 16, y * 16);
             }
         }
         spriter.draw(gamelogo, getWidth() / 2 - (float) gamelogo.getRegionWidth() / 2, 8);
