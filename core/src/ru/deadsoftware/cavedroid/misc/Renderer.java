@@ -7,16 +7,16 @@ import ru.deadsoftware.cavedroid.GameScreen;
 
 public abstract class Renderer {
 
-    private OrthographicCamera camera;
+    private final OrthographicCamera camera;
 
-    protected ShapeRenderer shaper;
-    protected SpriteBatch spriter;
+    protected final ShapeRenderer shaper;
+    protected final SpriteBatch spriter;
 
-    public Renderer() {
+    protected Renderer() {
         this(GameScreen.getWidth(), GameScreen.getHeight());
     }
 
-    public Renderer(float width, float height) {
+    protected Renderer(float width, float height) {
         camera = new OrthographicCamera();
         camera.setToOrtho(true, width, height);
         shaper = new ShapeRenderer();

@@ -14,11 +14,12 @@ public abstract class Mob implements Serializable {
     public static final int LEFT = 0;
     public static final int RIGHT = 1;
 
-    private float width, height;
+    private final float width;
+    private final float height;
     private int dir;
 
     public boolean flyMode;
-    public Vector2 pos;
+    public final Vector2 pos;
     public Vector2 mov;
 
     private boolean dead;
@@ -36,7 +37,7 @@ public abstract class Mob implements Serializable {
      * @param dir integer representing a direction where 0 is left and 1 is right.
      *            You should use {@link #LEFT} and {@link #RIGHT} constants
      */
-    public Mob(float x, float y, float width, float height, int dir) {
+    protected Mob(float x, float y, float width, float height, int dir) {
         pos = new Vector2(x, y);
         mov = new Vector2(0, 0);
         this.width = width;

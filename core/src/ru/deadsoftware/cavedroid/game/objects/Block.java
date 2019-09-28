@@ -5,12 +5,20 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Block {
 
-    private int x, y, w, h;
-    private int hp;
-    private String drop, meta;
-    private Sprite tex;
+    private final int x;
+    private final int y;
+    private final int w;
+    private final int h;
+    private final int hp;
+    private final String drop;
+    private final String meta;
+    private final Sprite tex;
 
-    private boolean coll, bg, tp, rb, fluid;
+    private final boolean coll;
+    private final boolean bg;
+    private final boolean tp;
+    private final boolean rb;
+    private final boolean fluid;
 
     /**
      *

@@ -10,9 +10,10 @@ import static ru.deadsoftware.cavedroid.GameScreen.GP;
 
 public class Drop implements Serializable {
 
-    private int id;
+    private final int id;
     public boolean pickedUp = false;
-    public Vector2 move, pos;
+    public final Vector2 move;
+    public final Vector2 pos;
 
     public Drop(float x, float y, int id) {
         this.id = id;

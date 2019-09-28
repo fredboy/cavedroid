@@ -17,7 +17,7 @@ class GamePhysics {
 
     static final int PL_SPEED = 2;
 
-    private Vector2 gravity  = new Vector2(0, .9f);
+    private final Vector2 gravity  = new Vector2(0, .9f);
 
     private boolean checkJump(Rectangle rect, int dir) {
         int bl;

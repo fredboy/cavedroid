@@ -7,7 +7,7 @@ import java.util.Arrays;
 import static ru.deadsoftware.cavedroid.GameScreen.GP;
 import static ru.deadsoftware.cavedroid.game.GameItems.*;
 
-public class GameFluidsThread extends Thread {
+class GameFluidsThread extends Thread {
 
     private static final int FLUID_UPDATE_INTERVAL_MS = 100;
     private static final int FLUID_STATES = 5;

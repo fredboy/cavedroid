@@ -26,7 +26,7 @@ public class GameScreen implements Screen {
     private MenuRenderer menuRenderer;
 
     private InputHandlerGame inputHandlerGame;
-    private InputHandlerMenu inputHandlerMenu;
+    private final InputHandlerMenu inputHandlerMenu;
 
     public GameScreen() {
         Assets.load();

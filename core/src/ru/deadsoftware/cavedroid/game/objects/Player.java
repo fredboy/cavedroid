@@ -12,9 +12,9 @@ import static ru.deadsoftware.cavedroid.GameScreen.GP;
 
 public class Player extends Mob implements Serializable {
 
-    public int[] inventory;
+    public final int[] inventory;
     public int slot;
-    public int gameMode;
+    public final int gameMode;
     public boolean swim;
 
     public Player(int gameMode) {

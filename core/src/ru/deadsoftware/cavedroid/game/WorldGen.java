@@ -3,7 +3,7 @@ package ru.deadsoftware.cavedroid.game;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.utils.TimeUtils;
 
-public class WorldGen {
+class WorldGen {
 
     private static RandomXS128 rand;
     private static long seed;

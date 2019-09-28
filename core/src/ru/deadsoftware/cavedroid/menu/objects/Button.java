@@ -4,18 +4,18 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Button {
 
-    private Rectangle rect;
-    private String label;
+    private final Rectangle rect;
+    private final String label;
     private int type;
 
-    public Button(String label, float x, float y, float width, float heigth, int type) {
+    public Button(String label, float x, float y, float width, float height, int type) {
         this.label = label;
-        rect = new Rectangle(x, y, width, heigth);
+        rect = new Rectangle(x, y, width, height);
         this.type = type;
     }
 
-    public Button(String label, float x, float y, float width, float heigth) {
-        this(label, x, y, width, heigth, 1);
+    public Button(String label, float x, float y, float width, float height) {
+        this(label, x, y, width, height, 1);
     }
 
     public Button(String label, float x, float y, int type) {

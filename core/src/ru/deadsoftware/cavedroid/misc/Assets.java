@@ -15,18 +15,18 @@ import java.util.HashMap;
 
 public class Assets {
 
-    public static JsonReader jsonReader = new JsonReader();
+    public static final JsonReader jsonReader = new JsonReader();
 
-    private static GlyphLayout glyphLayout = new GlyphLayout();
+    private static final GlyphLayout glyphLayout = new GlyphLayout();
 
     static BitmapFont minecraftFont;
 
-    public static Sprite[][] playerSprite = new Sprite[2][4];
-    public static Sprite[][] pigSprite = new Sprite[2][2];
+    public static final Sprite[][] playerSprite = new Sprite[2][4];
+    public static final Sprite[][] pigSprite = new Sprite[2][2];
     public static Sprite fallingSandSprite;
     public static Sprite fallingGravelSprite;
-    public static HashMap<String, TextureRegion> textureRegions = new HashMap<>();
-    public static ArrayMap<String, Rectangle> guiMap = new ArrayMap<>();
+    public static final HashMap<String, TextureRegion> textureRegions = new HashMap<>();
+    public static final ArrayMap<String, Rectangle> guiMap = new ArrayMap<>();
 
     private static TextureRegion flippedRegion(Texture texture, int x, int y, int width, int height) {
         return new TextureRegion(texture, x, y + height, width, -height);

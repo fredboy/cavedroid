@@ -1,6 +1,5 @@
 package ru.deadsoftware.cavedroid.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
 import ru.deadsoftware.cavedroid.CaveGame;
 import ru.deadsoftware.cavedroid.GameScreen;
@@ -32,9 +31,9 @@ public class GameProc implements Serializable, Disposable {
     transient GamePhysics physics;
 
     public ControlMode controlMode;
-    public Player player;
-    public ArrayList<Mob> mobs;
-    ArrayList<Drop> drops;
+    public final Player player;
+    public final ArrayList<Mob> mobs;
+    final ArrayList<Drop> drops;
 
     public void resetRenderer() {
         int scale = CaveGame.TOUCH ? 320 : 480;

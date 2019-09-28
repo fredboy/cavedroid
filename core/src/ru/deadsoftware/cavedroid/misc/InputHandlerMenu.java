@@ -8,7 +8,7 @@ import ru.deadsoftware.cavedroid.menu.objects.Button;
 
 public class InputHandlerMenu implements InputProcessor {
 
-    private MenuRenderer menuRenderer;
+    private final MenuRenderer menuRenderer;
 
     public InputHandlerMenu(MenuRenderer menuRenderer) {
         this.menuRenderer = menuRenderer;

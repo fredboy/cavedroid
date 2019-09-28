@@ -4,8 +4,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Item {
 
-    private String name, type;
-    private Sprite tex;
+    private final String name;
+    private final String type;
+    private final Sprite tex;
 
     public Item(String name, String type, Sprite tex) {
         this.name = name;

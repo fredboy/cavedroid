@@ -19,8 +19,8 @@ import static ru.deadsoftware.cavedroid.misc.Assets.*;
 
 public class MenuRenderer extends Renderer {
 
-    public Array<Button> menuMainBtns;
-    public Array<Button> menuNGBtns;
+    public final Array<Button> menuMainBtns;
+    public final Array<Button> menuNGBtns;
 
     public MenuRenderer(int width) {
         super(width, width * GameScreen.getHeight() / GameScreen.getWidth());

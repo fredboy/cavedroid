@@ -9,9 +9,10 @@ import static ru.deadsoftware.cavedroid.GameScreen.GP;
 @SuppressWarnings("WeakerAccess")
 public class GameWorld {
 
-    private int WIDTH, HEIGHT;
-    private int[][] foreMap;
-    private int[][] backMap;
+    private final int WIDTH;
+    private final int HEIGHT;
+    private final int[][] foreMap;
+    private final int[][] backMap;
 
     GameWorld(int width, int height) {
         WIDTH = width;
