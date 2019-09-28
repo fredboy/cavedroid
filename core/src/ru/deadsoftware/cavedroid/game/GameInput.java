@@ -1,10 +1,13 @@
 package ru.deadsoftware.cavedroid.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.google.common.collect.Range;
 import ru.deadsoftware.cavedroid.CaveGame;
 import ru.deadsoftware.cavedroid.GameScreen;
+import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.mobs.Pig;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
@@ -12,8 +15,19 @@ import ru.deadsoftware.cavedroid.misc.states.AppState;
 import ru.deadsoftware.cavedroid.misc.states.GameState;
 
 import static ru.deadsoftware.cavedroid.GameScreen.GP;
+import static ru.deadsoftware.cavedroid.game.GameItems.*;
 
 public class GameInput {
+
+    private boolean keyDown, touchedDown;
+
+    private int keyDownCode, touchDownBtn;
+    private float touchDownX, touchDownY;
+    private long touchDownTime;
+
+    private int curX, curY;
+    private int creativeScroll;
+    private int blockDamage;
 
     private boolean checkSwim() {
         return GameItems.isFluid(GP.world.getForeMap(GP.player.getMapX(), GP.player.getLowerMapY()));
@@ -45,25 +59,142 @@ public class GameInput {
         } else {
             switch (keycode) {
                 case Input.Keys.A:
-                    GP.curX--;
+                    curX--;
                     break;
                 case Input.Keys.D:
-                    GP.curX++;
+                    curX++;
                     break;
                 case Input.Keys.W:
-                    GP.curY--;
+                    curY--;
                     break;
                 case Input.Keys.S:
-                    GP.curY++;
+                    curY++;
                     break;
             }
-            GP.blockDmg = 0;
+            blockDamage = 0;
+        }
+    }
+
+    private boolean isNotAutoselectable(int x, int y) {
+        return (!GP.world.hasForeAt(x, y) || !GP.world.getForeMapBlock(x, y).hasCollision());
+    }
+
+    private void checkCursorBounds() {
+        if (curY < 0) {
+            curY = 0;
+        } else if (curY >= GP.world.getHeight()) {
+            curY = GP.world.getHeight() - 1;
+        }
+
+        if (GP.controlMode == ControlMode.CURSOR) {
+            if (curX * 16 + 8 < GP.player.pos.x + GP.player.getWidth() / 2) {
+                GP.player.setDir(Mob.LEFT);
+            } else {
+                GP.player.setDir(Mob.RIGHT);
+            }
+        }
+    }
+
+    private void moveCursor() {
+        int pastX = curX;
+        int pastY = curY;
+
+        if (GP.controlMode == ControlMode.WALK && CaveGame.TOUCH) {
+            curX = GP.player.getMapX() + (GP.player.looksLeft() ? -1 : 1);
+            curY = GP.player.getUpperMapY();
+            for (int i = 0; i < 2 && isNotAutoselectable(curX, curY); i++) {
+                curY++;
+            }
+            if (isNotAutoselectable(curX, curY)) {
+                curX += GP.player.looksLeft() ? 1 : -1;
+            }
+        } else if (!CaveGame.TOUCH) {
+            curX = (int) (Gdx.input.getX() * (GP.renderer.getWidth() / GameScreen.getWidth()) + GP.renderer.getCamX()) / 16;
+            curY = (int) (Gdx.input.getY() * (GP.renderer.getHeight() / GameScreen.getHeight()) + GP.renderer.getCamY()) / 16;
+            if (curX < 0) curX--;
+        }
+
+        if (pastX != curX || pastY != curY) {
+            blockDamage = 0;
+        }
+
+        checkCursorBounds();
+    }
+
+    private void useItem(int x, int y, int id, boolean bg) {
+        String key = getItem(id).isBlock() ? getBlockKey(id) : getItemKey(id);
+        if (id > 0) {
+            if (getItem(id).isBlock()) {
+                if (!bg) {
+                    GP.world.placeToForeground(x, y, getBlockIdByItemId(id));
+                } else {
+                    GP.world.placeToBackground(x, y, getBlockIdByItemId(id));
+                }
+            } else {
+                switch (key) {
+                    case "bucket_water":
+                        GP.world.placeToForeground(x, y, getBlockId("water"));
+                        GP.player.inventory[GP.player.slot] = getItemId("bucket_empty");
+                        break;
+                    case "bucket_lava":
+                        GP.world.placeToForeground(x, y, getBlockId("lava"));
+                        GP.player.inventory[GP.player.slot] = getItemId("bucket_empty");
+                        break;
+                }
+            }
+        }
+    }
+
+    private void pressLMB() {
+        if ((GP.world.hasForeAt(curX, curY) && GP.world.getForeMapBlock(curX, curY).getHp() >= 0) ||
+                (!GP.world.hasForeAt(curX, curY) && GP.world.hasBackAt(curX, curY) &&
+                        GP.world.getBackMapBlock(curX, curY).getHp() >= 0)) {
+            if (GP.player.gameMode == 0) {
+                blockDamage++;
+                if (GP.world.hasForeAt(curX, curY)) {
+                    if (blockDamage >= GP.world.getForeMapBlock(curX, curY).getHp()) {
+                        GP.world.destroyForeMap(curX, curY);
+                        blockDamage = 0;
+                    }
+                } else if (GP.world.hasBackAt(curX, curY)) {
+                    if (blockDamage >= GP.world.getBackMapBlock(curX, curY).getHp()) {
+                        GP.world.destroyBackMap(curX, curY);
+                        blockDamage = 0;
+                    }
+                }
+            } else {
+                if (GP.world.hasForeAt(curX, curY)) {
+                    GP.world.placeToForeground(curX, curY, 0);
+                } else if (GP.world.hasBackAt(curX, curY)) {
+                    GP.world.placeToBackground(curX, curY, 0);
+                }
+                touchedDown = false;
+            }
+        }
+    }
+
+    private boolean insideHotbar(float x, float y) {
+        TextureRegion hotbar = Assets.textureRegions.get("hotbar");
+        return y < hotbar.getRegionHeight() &&
+                Range.open(GP.renderer.getWidth() / 2 - (float) hotbar.getRegionWidth() / 2,
+                        GP.renderer.getWidth() / 2 + (float) hotbar.getRegionWidth() / 2).contains(x);
+    }
+
+    private void holdMB() {
+        if (touchDownBtn == Input.Buttons.RIGHT) {
+            useItem(curX, curY, GP.player.inventory[GP.player.slot], true);
+            touchedDown = false;
+        } else {
+            if (insideHotbar(touchDownX, touchDownY)) {
+                CaveGame.GAME_STATE = GameState.CREATIVE_INV;
+                touchedDown = false;
+            }
         }
     }
 
     public void keyDown(int keycode) {
-        GP.isKeyDown = true;
-        GP.keyDownCode = keycode;
+        keyDown = true;
+        keyDownCode = keycode;
         if (keycode == Input.Keys.W || keycode == Input.Keys.A ||
                 keycode == Input.Keys.S || keycode == Input.Keys.D) {
             wasdPressed(keycode);
@@ -92,7 +223,7 @@ public class GameInput {
                 break;
 
             case Input.Keys.E:
-                if (CaveGame.GAME_STATE == GameState.PLAY){
+                if (CaveGame.GAME_STATE == GameState.PLAY) {
                     switch (GP.player.gameMode) {
                         case 0:
                             //TODO survival inv
@@ -107,11 +238,11 @@ public class GameInput {
                 break;
 
             case Input.Keys.G:
-                GP.mobs.add(new Pig(GP.curX * 16, GP.curY * 16));
+                GP.mobs.add(new Pig(curX * 16, curY * 16));
                 break;
 
             case Input.Keys.Q:
-                GP.world.placeToForeground(GP.curX, GP.curY, 8);
+                GP.world.placeToForeground(curX, curY, 8);
                 break;
 
             case Input.Keys.ESCAPE:
@@ -147,25 +278,25 @@ public class GameInput {
     }
 
     public void touchDown(float touchX, float touchY, int button) {
-        GP.touchDownTime = TimeUtils.millis();
-        GP.isTouchDown = true;
-        GP.touchDownBtn = button;
-        GP.touchDownX = touchX;
-        GP.touchDownY = touchY;
+        touchDownTime = TimeUtils.millis();
+        touchedDown = true;
+        touchDownBtn = button;
+        touchDownX = touchX;
+        touchDownY = touchY;
     }
 
     public void touchUp(float screenX, float screenY, int button) {
-        if (CaveGame.TOUCH && GP.isKeyDown) {
-            keyUp(GP.keyDownCode);
-            GP.isKeyDown = false;
+        if (CaveGame.TOUCH && keyDown) {
+            keyUp(keyDownCode);
+            keyDown = false;
         }
         TextureRegion hotbar = Assets.textureRegions.get("hotbar");
         TextureRegion creative = Assets.textureRegions.get("creative");
-        if (GP.isTouchDown) {
+        if (touchedDown) {
             if (CaveGame.GAME_STATE == GameState.CREATIVE_INV && insideCreativeInv(screenX, screenY)) {
                 int ix = (int) (screenX - (GP.renderer.getWidth() / 2 - creative.getRegionWidth() / 2 + 8)) / 18;
                 int iy = (int) (screenY - (GP.renderer.getHeight() / 2 - creative.getRegionHeight() / 2 + 18)) / 18;
-                int item = GP.creativeScroll * 8 + (ix + iy * 8);
+                int item = creativeScroll * 8 + (ix + iy * 8);
                 if (ix >= 8 || ix < 0 || iy < 0 || iy >= 5) item = -1;
                 if (item >= 0 && item < GameItems.getItemsSize()) {
                     System.arraycopy(GP.player.inventory, 0, GP.player.inventory, 1, 8);
@@ -178,24 +309,24 @@ public class GameInput {
                     screenX < GP.renderer.getWidth() / 2 + (float) hotbar.getRegionWidth() / 2) {
                 GP.player.slot = (int) ((screenX - (GP.renderer.getWidth() / 2 - hotbar.getRegionWidth() / 2)) / 20);
             } else if (button == Input.Buttons.RIGHT) {
-                GP.useItem(GP.curX, GP.curY,
+                useItem(curX, curY,
                         GP.player.inventory[GP.player.slot], false);
             } else if (button == Input.Buttons.LEFT) {
-                GP.blockDmg = 0;
+                blockDamage = 0;
             }
         }
-        GP.isTouchDown = false;
+        touchedDown = false;
     }
 
     public void touchDragged(float screenX, float screenY) {
-        if (CaveGame.GAME_STATE == GameState.CREATIVE_INV && Math.abs(screenY - GP.touchDownY) > 16) {
+        if (CaveGame.GAME_STATE == GameState.CREATIVE_INV && Math.abs(screenY - touchDownY) > 16) {
             if (insideCreativeInv(screenX, screenY)) {
-                GP.creativeScroll -= (screenY - GP.touchDownY) / 16;
-                GP.touchDownX = screenX;
-                GP.touchDownY = screenY;
-                if (GP.creativeScroll < 0) GP.creativeScroll = 0;
-                if (GP.creativeScroll > GameProc.MAX_CREATIVE_SCROLL)
-                    GP.creativeScroll = GameProc.MAX_CREATIVE_SCROLL;
+                creativeScroll -= (screenY - touchDownY) / 16;
+                touchDownX = screenX;
+                touchDownY = screenY;
+                if (creativeScroll < 0) creativeScroll = 0;
+                if (creativeScroll > GameProc.MAX_CREATIVE_SCROLL)
+                    creativeScroll = GameProc.MAX_CREATIVE_SCROLL;
             }
         }
     }
@@ -208,11 +339,45 @@ public class GameInput {
                 if (GP.player.slot > 8) GP.player.slot = 0;
                 break;
             case CREATIVE_INV:
-                GP.creativeScroll += amount;
-                if (GP.creativeScroll < 0) GP.creativeScroll = 0;
-                if (GP.creativeScroll > GameProc.MAX_CREATIVE_SCROLL)
-                    GP.creativeScroll = GameProc.MAX_CREATIVE_SCROLL;
+                creativeScroll += amount;
+                if (creativeScroll < 0) creativeScroll = 0;
+                if (creativeScroll > GameProc.MAX_CREATIVE_SCROLL)
+                    creativeScroll = GameProc.MAX_CREATIVE_SCROLL;
                 break;
+        }
+    }
+
+    public int getKeyDownCode() {
+        return keyDownCode;
+    }
+
+    public boolean isKeyDown() {
+        return keyDown;
+    }
+
+    int getBlockDamage() {
+        return blockDamage;
+    }
+
+    int getCurX() {
+        return curX;
+    }
+
+    int getCurY() {
+        return curY;
+    }
+
+    int getCreativeScroll() {
+        return creativeScroll;
+    }
+
+    void update() {
+        moveCursor();
+        if (touchedDown && touchDownBtn == Input.Buttons.LEFT) {
+            pressLMB();
+        }
+        if (touchedDown && TimeUtils.timeSinceMillis(touchDownTime) > 500) {
+            holdMB();
         }
     }
 

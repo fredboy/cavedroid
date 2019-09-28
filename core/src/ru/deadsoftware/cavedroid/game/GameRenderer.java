@@ -33,10 +33,10 @@ public class GameRenderer extends Renderer {
     }
 
     private void drawWreck(int bl) {
-        if (GP.blockDmg > 0) {
-            int index = 10 * GP.blockDmg / GameItems.getBlock(bl).getHp();
+        if (GP.input.getBlockDamage() > 0) {
+            int index = 10 * GP.input.getBlockDamage() / GameItems.getBlock(bl).getHp();
             String key = "break_" + index;
-            spriter.draw(textureRegions.get(key), GP.curX * 16 - getCamX(), GP.curY * 16 - getCamY());
+            spriter.draw(textureRegions.get(key), GP.input.getCurX() * 16 - getCamX(), GP.input.getCurY() * 16 - getCamY());
         }
     }
 
@@ -45,14 +45,14 @@ public class GameRenderer extends Renderer {
             if ((!GP.world.hasForeAt(x, y) || GP.world.getForeMapBlock(x, y).isTransparent())
                     && GP.world.hasBackAt(x, y)) {
                 spriter.draw(GP.world.getBackMapBlock(x, y).getTex(), drawX(x), drawY(y));
-                if (!GP.world.hasForeAt(x, y) && x == GP.curX && y == GP.curY)
-                    drawWreck(GP.world.getBackMap(GP.curX, GP.curY));
+                if (!GP.world.hasForeAt(x, y) && x == GP.input.getCurX() && y == GP.input.getCurY())
+                    drawWreck(GP.world.getBackMap(GP.input.getCurX(), GP.input.getCurY()));
             }
         }
         if (GP.world.hasForeAt(x, y) && GP.world.getForeMapBlock(x, y).isBackground() == drawBG) {
             spriter.draw(GP.world.getForeMapBlock(x, y).getTex(), drawX(x), drawY(y));
-            if (x == GP.curX && y == GP.curY)
-                drawWreck(GP.world.getForeMap(GP.curX, GP.curY));
+            if (x == GP.input.getCurX() && y == GP.input.getCurY())
+                drawWreck(GP.world.getForeMap(GP.input.getCurX(), GP.input.getCurY()));
         }
     }
 
@@ -111,17 +111,17 @@ public class GameRenderer extends Renderer {
         float y = getHeight() / 2 - (float) creative.getRegionHeight() / 2;
         spriter.draw(creative, x, y);
         spriter.draw(textureRegions.get("handle"), x + 156,
-                y + 18 + (GP.creativeScroll * (72f / GameProc.MAX_CREATIVE_SCROLL)));
-        for (int i = GP.creativeScroll * 8; i < GP.creativeScroll * 8 + 40; i++) {
+                y + 18 + (GP.input.getCreativeScroll() * (72f / GameProc.MAX_CREATIVE_SCROLL)));
+        for (int i = GP.input.getCreativeScroll() * 8; i < GP.input.getCreativeScroll() * 8 + 40; i++) {
             if (i > 0 && i < GameItems.getItemsSize())
                 if (GameItems.getItem(i).isBlock()) {
                     spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(i)).getTex(),
-                            x + 8 + ((i - GP.creativeScroll * 8) % 8) * 18,
-                            y + 18 + ((i - GP.creativeScroll * 8) / 8) * 18);
+                            x + 8 + ((i - GP.input.getCreativeScroll() * 8) % 8) * 18,
+                            y + 18 + ((i - GP.input.getCreativeScroll() * 8) / 8) * 18);
                 } else {
                     spriter.draw(GameItems.getItem(i).getTex(),
-                            x + 8 + ((i - GP.creativeScroll * 8) % 8) * 18,
-                            y + 18 + ((i - GP.creativeScroll * 8) / 8) * 18);
+                            x + 8 + ((i - GP.input.getCreativeScroll() * 8) % 8) * 18,
+                            y + 18 + ((i - GP.input.getCreativeScroll() * 8) / 8) * 18);
                 }
         }
         for (int i = 0; i < 9; i++) {
@@ -142,13 +142,13 @@ public class GameRenderer extends Renderer {
         TextureRegion hotbar = textureRegions.get("hotbar");
         TextureRegion hotbarSelector = textureRegions.get("hotbar_selector");
 
-        if (GP.world.hasForeAt(GP.curX, GP.curY) ||
-                GP.world.hasBackAt(GP.curX, GP.curY) ||
+        if (GP.world.hasForeAt(GP.input.getCurX(), GP.input.getCurY()) ||
+                GP.world.hasBackAt(GP.input.getCurX(), GP.input.getCurY()) ||
                 GP.controlMode == ControlMode.CURSOR ||
                 !CaveGame.TOUCH)
             spriter.draw(cursor,
-                    GP.curX * 16 - getCamX(),
-                    GP.curY * 16 - getCamY());
+                    GP.input.getCurX() * 16 - getCamX(),
+                    GP.input.getCurY() * 16 - getCamY());
         spriter.draw(hotbar, getWidth() / 2 - (float) hotbar.getRegionWidth() / 2, 0);
         for (int i = 0; i < 9; i++) {
             if (GP.player.inventory[i] > 0) {
@@ -241,11 +241,11 @@ public class GameRenderer extends Renderer {
             drawString("FPS: " + GameScreen.FPS, 0, 0);
             drawString("X: " + (int) (GP.player.pos.x / 16), 0, 10);
             drawString("Y: " + (int) (GP.player.pos.y / 16), 0, 20);
-            drawString("CurX: " + GP.curX, 0, 30);
-            drawString("CurY: " + GP.curY, 0, 40);
+            drawString("CurX: " + GP.input.getCurX(), 0, 30);
+            drawString("CurY: " + GP.input.getCurY(), 0, 40);
             drawString("Mobs: " + GP.mobs.size(), 0, 50);
             drawString("Drops: " + GP.drops.size(), 0, 60);
-            drawString("Block: " + GameItems.getBlockKey(GP.world.getForeMap(GP.curX, GP.curY)), 0, 70);
+            drawString("Block: " + GameItems.getBlockKey(GP.world.getForeMap(GP.input.getCurX(), GP.input.getCurY())), 0, 70);
             drawString("Hand: " + GameItems.getItemKey(GP.player.inventory[GP.player.slot]), 0, 80);
             drawString("Game mode: " + GP.player.gameMode, 0, 90);
             spriter.end();

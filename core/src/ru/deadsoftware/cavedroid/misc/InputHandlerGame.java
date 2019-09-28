@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.JsonValue;
 import ru.deadsoftware.cavedroid.CaveGame;
 import ru.deadsoftware.cavedroid.GameScreen;
-import ru.deadsoftware.cavedroid.game.GameInput;
 
 import static ru.deadsoftware.cavedroid.GameScreen.GP;
 
@@ -22,10 +21,7 @@ public class InputHandlerGame extends InputAdapter {
             LMB = 5,
             RMB = 6;
 
-    private GameInput gameInput;
-
     public InputHandlerGame() {
-        this.gameInput = new GameInput();
         loadTouchButtonsFromJSON();
     }
 
@@ -62,13 +58,13 @@ public class InputHandlerGame extends InputAdapter {
 
     @Override
     public boolean keyDown(int keycode) {
-        gameInput.keyDown(keycode);
+        GP.input.keyDown(keycode);
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        gameInput.keyUp(keycode);
+        GP.input.keyUp(keycode);
         return false;
     }
 
@@ -81,31 +77,31 @@ public class InputHandlerGame extends InputAdapter {
             int touchedKey = getTouchedKey(touchX, touchY);
             switch (touchedKey) {
                 case UP:
-                    gameInput.keyDown(GP.controlMode == ControlMode.CURSOR ? Input.Keys.W : Input.Keys.SPACE);
+                    GP.input.keyDown(GP.controlMode == ControlMode.CURSOR ? Input.Keys.W : Input.Keys.SPACE);
                     break;
                 case DOWN:
-                    gameInput.keyDown(GP.controlMode == ControlMode.CURSOR ? Input.Keys.S : Input.Keys.CONTROL_LEFT);
+                    GP.input.keyDown(GP.controlMode == ControlMode.CURSOR ? Input.Keys.S : Input.Keys.CONTROL_LEFT);
                     break;
                 case LEFT:
-                    gameInput.keyDown(Input.Keys.A);
+                    GP.input.keyDown(Input.Keys.A);
                     break;
                 case RIGHT:
-                    gameInput.keyDown(Input.Keys.D);
+                    GP.input.keyDown(Input.Keys.D);
                     break;
                 case ALT:
-                    gameInput.keyDown(Input.Keys.ALT_LEFT);
+                    GP.input.keyDown(Input.Keys.ALT_LEFT);
                     break;
                 case LMB:
-                    gameInput.touchDown(touchX, touchY, Input.Buttons.LEFT);
+                    GP.input.touchDown(touchX, touchY, Input.Buttons.LEFT);
                     break;
                 case RMB:
-                    gameInput.touchDown(touchX, touchY, Input.Buttons.RIGHT);
+                    GP.input.touchDown(touchX, touchY, Input.Buttons.RIGHT);
                     break;
                 default:
-                    gameInput.touchDown(touchX, touchY, touchedKey);
+                    GP.input.touchDown(touchX, touchY, touchedKey);
             }
         } else {
-            gameInput.touchDown(touchX, touchY, button);
+            GP.input.touchDown(touchX, touchY, button);
         }
         return false;
     }
@@ -123,19 +119,19 @@ public class InputHandlerGame extends InputAdapter {
                 case LEFT:
                 case RIGHT:
                 case ALT:
-                    gameInput.keyUp(GP.keyDownCode);
+                    GP.input.keyUp(GP.input.getKeyDownCode());
                     break;
                 case LMB:
-                    gameInput.touchUp(touchX, touchY, Input.Buttons.LEFT);
+                    GP.input.touchUp(touchX, touchY, Input.Buttons.LEFT);
                     break;
                 case RMB:
-                    gameInput.touchUp(touchX, touchY, Input.Buttons.RIGHT);
+                    GP.input.touchUp(touchX, touchY, Input.Buttons.RIGHT);
                     break;
                 default:
-                    gameInput.touchUp(touchX, touchY, touchedKey);
+                    GP.input.touchUp(touchX, touchY, touchedKey);
             }
         } else {
-            gameInput.touchUp(touchX, touchY, button);
+            GP.input.touchUp(touchX, touchY, button);
         }
         return false;
     }
@@ -144,19 +140,19 @@ public class InputHandlerGame extends InputAdapter {
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         float touchX = transformScreenX(screenX);
         float touchY = transformScreenY(screenY);
-        if (CaveGame.TOUCH && GP.isKeyDown) {
+        if (CaveGame.TOUCH && GP.input.isKeyDown()) {
             if (getTouchedKey(touchX, touchY) == -1) {
-                gameInput.keyUp(GP.keyDownCode);
+                GP.input.keyUp(GP.input.getKeyDownCode());
             }
         } else {
-            gameInput.touchDragged(touchX, touchY);
+            GP.input.touchDragged(touchX, touchY);
         }
         return false;
     }
 
     @Override
     public boolean scrolled(int amount) {
-        gameInput.scrolled(amount);
+        GP.input.scrolled(amount);
         return false;
     }
 }
