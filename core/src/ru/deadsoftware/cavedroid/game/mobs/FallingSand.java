@@ -2,7 +2,6 @@ package ru.deadsoftware.cavedroid.game.mobs;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import ru.deadsoftware.cavedroid.game.GameItems;
 import ru.deadsoftware.cavedroid.misc.Assets;
 
 /**
@@ -31,7 +30,7 @@ public class FallingSand extends Mob {
 
     @Override
     public void draw(SpriteBatch spriteBatch, float x, float y) {
-        spriteBatch.draw(Assets.fallingSandSprite, x, y);
+        spriteBatch.draw(Assets.sandSprite, x, y);
     }
 
     @Override

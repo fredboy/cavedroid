@@ -18,15 +18,14 @@ public class Assets {
     public static final JsonReader jsonReader = new JsonReader();
 
     private static final GlyphLayout glyphLayout = new GlyphLayout();
-
-    static BitmapFont minecraftFont;
+    static final BitmapFont minecraftFont = new BitmapFont(Gdx.files.internal("font.fnt"), true);;
 
     public static final Sprite[][] playerSprite = new Sprite[2][4];
     public static final Sprite[][] pigSprite = new Sprite[2][2];
-    public static Sprite fallingSandSprite;
-    public static Sprite fallingGravelSprite;
     public static final HashMap<String, TextureRegion> textureRegions = new HashMap<>();
     public static final ArrayMap<String, Rectangle> guiMap = new ArrayMap<>();
+    public static final Sprite sandSprite = flippedSprite(new Texture((Gdx.files.internal("textures/blocks/sand.png"))));
+    public static final Sprite gravelSprite = flippedSprite(new Texture((Gdx.files.internal("textures/blocks/gravel.png"))));
 
     private static TextureRegion flippedRegion(Texture texture, int x, int y, int width, int height) {
         return new TextureRegion(texture, x, y + height, width, -height);
@@ -74,11 +73,6 @@ public class Assets {
         pigSprite[1][1] = flippedSprite(new TextureRegion(pigTex, 16, 26, 12, 12));
     }
 
-    private static void loadFallingBlocks() {
-        fallingSandSprite = flippedSprite(new Texture((Gdx.files.internal("textures/blocks/sand.png"))));
-        fallingGravelSprite = flippedSprite(new Texture((Gdx.files.internal("textures/blocks/gravel.png"))));
-    }
-
     /**
      * Loads texture names and sizes from <b>json/texture_regions.json</b>, cuts them to TextureRegions
      * and puts to {@link #textureRegions} HashMap
@@ -102,11 +96,9 @@ public class Assets {
     }
 
     public static void load() {
-        minecraftFont = new BitmapFont(Gdx.files.internal("font.fnt"), true);
         minecraftFont.getData().setScale(.375f);
         loadPlayer();
         loadPig();
-        loadFallingBlocks();
         loadJSON();
     }
 
