@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import ru.deadsoftware.cavedroid.CaveGame;
 import ru.deadsoftware.cavedroid.GameScreen;
 import ru.deadsoftware.cavedroid.menu.objects.Button;
-import ru.deadsoftware.cavedroid.menu.objects.ButtonDrawer;
+import ru.deadsoftware.cavedroid.menu.objects.ButtonRenderer;
 import ru.deadsoftware.cavedroid.menu.objects.ButtonEventListener;
 import ru.deadsoftware.cavedroid.misc.Assets;
 
@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 public abstract class Menu {
 
-    private ButtonDrawer buttonDrawer;
+    private ButtonRenderer buttonRenderer;
 
     private float width;
     private float height;
@@ -30,12 +30,12 @@ public abstract class Menu {
     /**
      * @param width  Viewport width
      * @param height Viewport height
-     * @param buttonDrawer {@link ButtonDrawer} that will draw the buttons of this menu
+     * @param buttonRenderer {@link ButtonRenderer} that will draw the buttons of this menu
      */
-    Menu(float width, float height, ButtonDrawer buttonDrawer) {
+    Menu(float width, float height, ButtonRenderer buttonRenderer) {
         this.width = width;
         this.height = height;
-        this.buttonDrawer = buttonDrawer;
+        this.buttonRenderer = buttonRenderer;
         initButtons();
     }
 
@@ -96,7 +96,7 @@ public abstract class Menu {
                     button.setType(1);
                 }
             }
-            button.draw(buttonDrawer);
+            button.draw(buttonRenderer);
         }
     }
 

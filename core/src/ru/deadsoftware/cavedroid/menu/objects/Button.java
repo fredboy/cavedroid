@@ -63,7 +63,7 @@ public class Button {
         this.type = type;
     }
 
-    public void draw(ButtonDrawer drawer) {
+    public void draw(ButtonRenderer drawer) {
         drawer.draw(this);
     }
 

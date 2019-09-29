@@ -1,6 +1,6 @@
 package ru.deadsoftware.cavedroid.menu.objects;
 
-public interface ButtonDrawer {
+public interface ButtonRenderer {
 
     void draw(Button button);
 

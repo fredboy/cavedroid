@@ -3,15 +3,15 @@ package ru.deadsoftware.cavedroid.menu.submenus;
 import com.badlogic.gdx.Gdx;
 import ru.deadsoftware.cavedroid.game.GameSaver;
 import ru.deadsoftware.cavedroid.menu.objects.Button;
-import ru.deadsoftware.cavedroid.menu.objects.ButtonDrawer;
+import ru.deadsoftware.cavedroid.menu.objects.ButtonRenderer;
 import ru.deadsoftware.cavedroid.menu.objects.ButtonEventListener;
 
 import java.util.HashMap;
 
 public class MenuMain extends Menu {
 
-    public MenuMain(float width, float height, ButtonDrawer buttonDrawer) {
-        super(width, height, buttonDrawer);
+    public MenuMain(float width, float height, ButtonRenderer buttonRenderer) {
+        super(width, height, buttonRenderer);
     }
 
     @Override
