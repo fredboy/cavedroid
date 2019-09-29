@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import ru.deadsoftware.cavedroid.game.objects.TouchButton;
 
 import java.util.HashMap;
 
@@ -23,7 +24,7 @@ public class Assets {
     public static final Sprite[][] playerSprite = new Sprite[2][4];
     public static final Sprite[][] pigSprite = new Sprite[2][2];
     public static final HashMap<String, TextureRegion> textureRegions = new HashMap<>();
-    public static final ArrayMap<String, Rectangle> guiMap = new ArrayMap<>();
+    public static final ArrayMap<String, TouchButton> guiMap = new ArrayMap<>();
     public static final Sprite sandSprite = flippedSprite(new Texture((Gdx.files.internal("textures/blocks/sand.png"))));
     public static final Sprite gravelSprite = flippedSprite(new Texture((Gdx.files.internal("textures/blocks/gravel.png"))));
 

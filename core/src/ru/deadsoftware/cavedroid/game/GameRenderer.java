@@ -170,7 +170,7 @@ public class GameRenderer extends Renderer {
 
     private void drawTouchGui() {
         for (int i = 0; i < guiMap.size; i++) {
-            Rectangle touchKey = guiMap.getValueAt(i);
+            Rectangle touchKey = guiMap.getValueAt(i).getRect();
             spriter.draw(textureRegions.get(guiMap.getKeyAt(i)),
                     touchKey.x, touchKey.y, touchKey.width, touchKey.height);
         }

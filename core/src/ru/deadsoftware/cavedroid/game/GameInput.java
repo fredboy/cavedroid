@@ -33,6 +33,19 @@ public class GameInput {
         return GameItems.isFluid(GP.world.getForeMap(GP.player.getMapX(), GP.player.getLowerMapY()));
     }
 
+    private void goUpwards() {
+        if (checkSwim()) {
+            GP.player.swim = true;
+        } else if (GP.player.canJump) {
+            GP.player.mov.add(0, -7);
+        } else if (!GP.player.flyMode && GP.player.gameMode == 1) {
+            GP.player.flyMode = true;
+            GP.player.mov.y = 0;
+        } else if (GP.player.flyMode) {
+            GP.player.mov.y = -GamePhysics.PL_SPEED;
+        }
+    }
+
     @SuppressWarnings("IntegerDivisionInFloatingPointContext")
     private boolean insideCreativeInv(float screenX, float screenY) {
         TextureRegion creative = Assets.textureRegions.get("creative");
@@ -47,13 +60,21 @@ public class GameInput {
             switch (keycode) {
                 case Input.Keys.A:
                     GP.player.mov.x = -GamePhysics.PL_SPEED;
-                    GP.player.setDir(0);
+                    GP.player.setDir(Mob.LEFT);
                     if (CaveGame.TOUCH && checkSwim()) GP.player.swim = true;
                     break;
                 case Input.Keys.D:
                     GP.player.mov.x = GamePhysics.PL_SPEED;
-                    GP.player.setDir(1);
+                    GP.player.setDir(Mob.RIGHT);
                     if (CaveGame.TOUCH && checkSwim()) GP.player.swim = true;
+                    break;
+                case Input.Keys.W:
+                case Input.Keys.SPACE:
+                    goUpwards();
+                    break;
+                case Input.Keys.S:
+                case Input.Keys.CONTROL_LEFT:
+                    GP.player.mov.y = GamePhysics.PL_SPEED;
                     break;
             }
         } else {
@@ -195,31 +216,20 @@ public class GameInput {
     public void keyDown(int keycode) {
         keyDown = true;
         keyDownCode = keycode;
-        if (keycode == Input.Keys.W || keycode == Input.Keys.A ||
-                keycode == Input.Keys.S || keycode == Input.Keys.D) {
-            wasdPressed(keycode);
-        } else switch (keycode) {
+        switch (keycode) {
+            case Input.Keys.A:
+            case Input.Keys.D:
+            case Input.Keys.W:
+            case Input.Keys.S:
+            case Input.Keys.SPACE:
+            case Input.Keys.CONTROL_LEFT:
+                wasdPressed(keycode);
+                break;
+
             case Input.Keys.ALT_LEFT:
                 if (CaveGame.TOUCH) {
                     GP.controlMode = GP.controlMode == ControlMode.WALK ? ControlMode.CURSOR : ControlMode.WALK;
                 }
-                break;
-
-            case Input.Keys.SPACE:
-                if (checkSwim()) {
-                    GP.player.swim = true;
-                } else if (GP.player.canJump) {
-                    GP.player.mov.add(0, -7);
-                } else if (!GP.player.flyMode && GP.player.gameMode == 1) {
-                    GP.player.flyMode = true;
-                    GP.player.mov.y = 0;
-                } else if (GP.player.flyMode) {
-                    GP.player.mov.y = -GamePhysics.PL_SPEED;
-                }
-                break;
-
-            case Input.Keys.CONTROL_LEFT:
-                GP.player.mov.y = GamePhysics.PL_SPEED;
                 break;
 
             case Input.Keys.E:
@@ -269,6 +279,8 @@ public class GameInput {
                 if (CaveGame.TOUCH && GP.player.swim) GP.player.swim = false;
                 break;
 
+            case Input.Keys.W:
+            case Input.Keys.S:
             case Input.Keys.SPACE:
             case Input.Keys.CONTROL_LEFT:
                 if (GP.player.flyMode) GP.player.mov.y = 0;
