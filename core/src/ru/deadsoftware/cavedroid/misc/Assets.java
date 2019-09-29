@@ -19,14 +19,14 @@ public class Assets {
     public static final JsonReader jsonReader = new JsonReader();
 
     private static final GlyphLayout glyphLayout = new GlyphLayout();
-    static final BitmapFont minecraftFont = new BitmapFont(Gdx.files.internal("font.fnt"), true);
+    static BitmapFont minecraftFont;
 
     public static final Sprite[][] playerSprite = new Sprite[2][4];
     public static final Sprite[][] pigSprite = new Sprite[2][2];
     public static final HashMap<String, TextureRegion> textureRegions = new HashMap<>();
     public static final ArrayMap<String, TouchButton> guiMap = new ArrayMap<>();
-    public static final Sprite sandSprite = flippedSprite(new Texture((Gdx.files.internal("textures/blocks/sand.png"))));
-    public static final Sprite gravelSprite = flippedSprite(new Texture((Gdx.files.internal("textures/blocks/gravel.png"))));
+    public static Sprite sandSprite;
+    public static Sprite gravelSprite;
 
     private static TextureRegion flippedRegion(Texture texture, int x, int y, int width, int height) {
         return new TextureRegion(texture, x, y + height, width, -height);
@@ -97,10 +97,13 @@ public class Assets {
     }
 
     public static void load() {
-        minecraftFont.getData().setScale(.375f);
         loadPlayer();
         loadPig();
         loadJSON();
+        minecraftFont = new BitmapFont(Gdx.files.internal("font.fnt"), true);
+        minecraftFont.getData().setScale(.375f);
+        sandSprite = flippedSprite(new Texture((Gdx.files.internal("textures/blocks/sand.png"))));
+        gravelSprite = flippedSprite(new Texture((Gdx.files.internal("textures/blocks/gravel.png"))));
     }
 
     /**
