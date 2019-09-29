@@ -23,8 +23,8 @@ public class MenuProc extends Renderer {
 
     public MenuProc(int width) {
         super(width, width * GameScreen.getHeight() / GameScreen.getWidth());
-        mainMenu = new MenuMain(getWidth(), getHeight());
-        newGameMenu = new MenuNewGame(getWidth(), getHeight());
+        mainMenu = new MenuMain(getWidth(), getHeight(), this::drawButton);
+        newGameMenu = new MenuNewGame(getWidth(), getHeight(), this::drawButton);
         currentMenu = mainMenu;
     }
 
@@ -34,6 +34,27 @@ public class MenuProc extends Renderer {
         drawString(button.getLabel(),
                 (button.getX() + button.getWidth() / 2) - (float) getStringWidth(button.getLabel()) / 2,
                 (button.getY() + button.getHeight() / 2) - (float) getStringHeight(button.getLabel()) / 2);
+    }
+
+    private void update() {
+        switch (CaveGame.MENU_STATE) {
+            case MAIN:
+                currentMenu = mainMenu;
+                break;
+            case NEW_GAME:
+                currentMenu = newGameMenu;
+                break;
+            case LOADING:
+                drawString("Generating World...");
+                CaveGame.APP_STATE = AppState.GAME;
+                CaveGame.GAME_STATE = GameState.PLAY;
+                break;
+            case SAVING:
+                drawString("Saving Game...");
+                CaveGame.APP_STATE = AppState.MENU;
+                CaveGame.MENU_STATE = MenuState.MAIN;
+                break;
+        }
     }
 
     @Override
@@ -54,26 +75,9 @@ public class MenuProc extends Renderer {
 
     @Override
     public void render() {
+        update();
         spriter.begin();
-        switch (CaveGame.MENU_STATE) {
-            case MAIN:
-                currentMenu = mainMenu;
-                break;
-            case NEW_GAME:
-                currentMenu = newGameMenu;
-                break;
-            case LOADING:
-                drawString("Generating World...");
-                CaveGame.APP_STATE = AppState.GAME;
-                CaveGame.GAME_STATE = GameState.PLAY;
-                break;
-            case SAVING:
-                drawString("Saving Game...");
-                CaveGame.APP_STATE = AppState.MENU;
-                CaveGame.MENU_STATE = MenuState.MAIN;
-                break;
-        }
-        currentMenu.draw(spriter, this::drawButton, getWidth(), getHeight());
+        currentMenu.draw(spriter);
         drawString("CaveDroid " + CaveGame.VERSION, 0,
                 getHeight() - getStringHeight("CaveDroid " + CaveGame.VERSION) * 1.5f);
         spriter.end();

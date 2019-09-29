@@ -17,6 +17,8 @@ import java.util.HashMap;
 
 public abstract class Menu {
 
+    private ButtonDrawer buttonDrawer;
+
     private float width;
     private float height;
 
@@ -28,10 +30,12 @@ public abstract class Menu {
     /**
      * @param width  Viewport width
      * @param height Viewport height
+     * @param buttonDrawer {@link ButtonDrawer} that will draw the buttons of this menu
      */
-    Menu(float width, float height) {
+    Menu(float width, float height, ButtonDrawer buttonDrawer) {
         this.width = width;
         this.height = height;
+        this.buttonDrawer = buttonDrawer;
         initButtons();
     }
 
@@ -71,7 +75,7 @@ public abstract class Menu {
      *
      * @param spriter {@link SpriteBatch} that will draw it. Should be already started.
      */
-    public void draw(SpriteBatch spriter, ButtonDrawer buttonDrawer, float width, float height) {
+    public void draw(SpriteBatch spriter) {
         TextureRegion background = Assets.textureRegions.get("background");
         TextureRegion gamelogo = Assets.textureRegions.get("gamelogo");
 
