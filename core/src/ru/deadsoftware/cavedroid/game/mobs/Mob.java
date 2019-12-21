@@ -1,6 +1,7 @@
 package ru.deadsoftware.cavedroid.game.mobs;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -18,15 +19,18 @@ public abstract class Mob implements Serializable {
     private final float height;
     private int dir;
 
-    public boolean flyMode;
-    public final Vector2 pos;
-    public Vector2 mov;
+    protected final Vector2 pos;
+    protected Vector2 mov;
 
     private boolean dead;
 
+    private boolean canJump, flyMode;
     protected int animDelta = 6;
-    public boolean canJump;
-    int anim;
+    protected int anim;
+
+    protected static int randomDir() {
+        return MathUtils.random(1);
+    }
 
     /**
      *
@@ -43,7 +47,6 @@ public abstract class Mob implements Serializable {
         this.width = width;
         this.height = height;
         canJump = false;
-        flyMode = false;
         dead = false;
         this.dir = dir;
     }
@@ -115,6 +118,10 @@ public abstract class Mob implements Serializable {
         return dead;
     }
 
+    public int getAnim() {
+        return anim;
+    }
+
     /**
      * Set's mob's dead variable to true and nothing else. It doesn't delete the mob.
      */
@@ -130,11 +137,43 @@ public abstract class Mob implements Serializable {
         return new Rectangle(pos.x, pos.y, getWidth(), getHeight());
     }
 
+    public Vector2 getPos() {
+        return pos;
+    }
+
+    public Vector2 getMov() {
+        return mov;
+    }
+
+    public float getX() {
+        return pos.x;
+    }
+
+    public float getY() {
+        return pos.y;
+    }
+
+    public boolean canJump() {
+        return canJump;
+    }
+
+    public void setCanJump(boolean canJump) {
+        this.canJump = canJump;
+    }
+
+    public boolean isFlyMode() {
+        return flyMode;
+    }
+
+    public void setFlyMode(boolean flyMode) {
+        this.flyMode = flyMode;
+    }
+
+    public abstract void draw(SpriteBatch spriteBatch, float x, float y);
+
     public abstract void ai();
 
     public abstract void changeDir();
-
-    public abstract void draw(SpriteBatch spriteBatch, float x, float y);
 
     /**
      *

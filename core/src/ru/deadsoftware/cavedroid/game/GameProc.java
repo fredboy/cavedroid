@@ -7,7 +7,7 @@ import ru.deadsoftware.cavedroid.game.mobs.FallingGravel;
 import ru.deadsoftware.cavedroid.game.mobs.FallingSand;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
-import ru.deadsoftware.cavedroid.game.objects.Player;
+import ru.deadsoftware.cavedroid.game.mobs.Player;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
 
 import java.io.Serializable;

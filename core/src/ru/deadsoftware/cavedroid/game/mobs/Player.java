@@ -1,4 +1,4 @@
-package ru.deadsoftware.cavedroid.game.objects;
+package ru.deadsoftware.cavedroid.game.mobs;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;

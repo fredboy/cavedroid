@@ -5,10 +5,13 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavedroid.misc.Assets;
 
+import static ru.deadsoftware.cavedroid.GameScreen.GP;
+import static ru.deadsoftware.cavedroid.misc.Assets.pigSprite;
+
 public class Pig extends Mob {
 
     public Pig(float x, float y) {
-        super(x, y, 25, 18, MathUtils.random(1));
+        super(x, y, 25, 18, Mob.randomDir());
         mov = new Vector2(looksLeft() ? -1 : 1, 0);
     }
 
@@ -33,26 +36,31 @@ public class Pig extends Mob {
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch, float x, float y) {
-        Assets.pigSprite[0][1].setRotation(anim);
-        Assets.pigSprite[1][1].setRotation(-anim);
-        //back legs
-        Assets.pigSprite[1][1].setPosition(x - 4 + (9 - getDirection() * 9), y + 6);
-        Assets.pigSprite[1][1].draw(spriteBatch);
-        Assets.pigSprite[1][1].setPosition(x + 17 - (9 * getDirection()), y + 6);
-        Assets.pigSprite[1][1].draw(spriteBatch);
-        //front legs
-        Assets.pigSprite[0][1].setPosition(x - 4 + (9 - getDirection() * 9), y + 6);
-        Assets.pigSprite[0][1].draw(spriteBatch);
-        Assets.pigSprite[0][1].setPosition(x + 17 - (9 * getDirection()), y + 6);
-        Assets.pigSprite[0][1].draw(spriteBatch);
-        //head & body
-        spriteBatch.draw(Assets.pigSprite[getDirection()][0], x, y);
-    }
-
-    @Override
     public int getType() {
         return 0;
     }
 
+    @Override
+    public void draw(SpriteBatch spriteBatch, float x, float y) {
+        if (x + getWidth() - GP.world.getWidthPx() >= 0 && x - GP.world.getWidthPx() <= getWidth()) {
+            x -= GP.world.getWidthPx();
+        } else if (x + getWidth() + GP.world.getWidthPx() >= 0 && x + GP.world.getWidthPx() <= getWidth()) {
+            x += GP.world.getWidthPx();
+        }
+
+        pigSprite[0][1].setRotation(getAnim());
+        pigSprite[1][1].setRotation(-getAnim());
+        //back legs
+        pigSprite[1][1].setPosition(x - 4 + (9 - getDirection() * 9), y + 6);
+        pigSprite[1][1].draw(spriteBatch);
+        pigSprite[1][1].setPosition(x + 17 - (9 * getDirection()), y + 6);
+        pigSprite[1][1].draw(spriteBatch);
+        //front legs
+        pigSprite[0][1].setPosition(x - 4 + (9 - getDirection() * 9), y + 6);
+        pigSprite[0][1].draw(spriteBatch);
+        pigSprite[0][1].setPosition(x + 17 - (9 * getDirection()), y + 6);
+        pigSprite[0][1].draw(spriteBatch);
+        //head & body
+        spriteBatch.draw(Assets.pigSprite[getDirection()][0], x, y);
+    }
 }

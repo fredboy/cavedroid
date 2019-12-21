@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavedroid.CaveGame;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
-import ru.deadsoftware.cavedroid.game.objects.Player;
+import ru.deadsoftware.cavedroid.game.mobs.Player;
 
 import java.util.Iterator;
 
@@ -17,7 +17,7 @@ class GamePhysics {
 
     static final int PL_SPEED = 2;
 
-    private final Vector2 gravity  = new Vector2(0, .9f);
+    private final Vector2 gravity = new Vector2(0, .9f);
 
     private boolean checkJump(Rectangle rect, int dir) {
         int bl;
@@ -77,90 +77,90 @@ class GamePhysics {
 
     private void mobXColl(Mob mob) {
         if (checkColl(mob.getRect())) {
-            if (mob.canJump && !mob.flyMode) {
-                mob.pos.y -= 8;
+            if (mob.canJump() && !mob.isFlyMode()) {
+                mob.getPos().y -= 8;
             }
             if (checkColl(mob.getRect())) {
-                if (mob.canJump && !mob.flyMode) mob.pos.y += 8;
+                if (mob.canJump() && !mob.isFlyMode()) mob.getPos().y += 8;
                 int d = 0;
-                if (mob.mov.x < 0) d = 1;
-                else if (mob.mov.x > 0) d = -1;
-                mob.pos.x = MathUtils.round(mob.pos.x);
-                while (checkColl(mob.getRect())) mob.pos.x += d;
-                if (mob.canJump) mob.changeDir();
+                if (mob.getMov().x < 0) d = 1;
+                else if (mob.getMov().x > 0) d = -1;
+                mob.getPos().x = MathUtils.round(mob.getX());
+                while (checkColl(mob.getRect())) mob.getPos().x += d;
+                if (mob.canJump()) mob.changeDir();
             }
         }
-        if (mob.pos.x + mob.getWidth() / 2 < 0) mob.pos.x += GP.world.getWidthPx();
-        if (mob.pos.x + mob.getWidth() / 2 > GP.world.getWidthPx()) mob.pos.x -= GP.world.getWidthPx();
+        if (mob.getX() + mob.getWidth() / 2 < 0) mob.getPos().x += GP.world.getWidthPx();
+        if (mob.getX() + mob.getWidth() / 2 > GP.world.getWidthPx()) mob.getPos().x -= GP.world.getWidthPx();
     }
 
     private void mobYColl(Mob mob) {
         if (checkColl(mob.getRect())) {
             int d = -1;
-            if (mob.mov.y < 0) d = 1;
+            if (mob.getMov().y < 0) d = 1;
             if (d == -1) {
-                mob.canJump = true;
-                mob.flyMode = false;
+                mob.setCanJump(true);
+                mob.setFlyMode(false);
             }
-            mob.pos.y = MathUtils.round(mob.pos.y);
-            while (checkColl(mob.getRect())) mob.pos.y += d;
-            mob.mov.y = 0;
+            mob.getPos().y = MathUtils.round(mob.getY());
+            while (checkColl(mob.getRect())) mob.getPos().y += d;
+            mob.getMov().y = 0;
             if (mob.getType() > 0) {
                 GP.world.setForeMap(mob.getMapX(), mob.getMiddleMapY(), mob.getType());
                 mob.kill();
             }
         } else {
-            mob.canJump = false;
+            mob.setCanJump(false);
         }
-        if (mob.pos.y > GP.world.getHeightPx()) {
+        if (mob.getY() > GP.world.getHeightPx()) {
             mob.kill();
         }
     }
 
     private void playerPhy(Player pl) {
-        pl.pos.y += pl.mov.y;
+        pl.getPos().y += pl.getMov().y;
         mobYColl(pl);
         if (pl.isDead()) return;
 
         if (GameItems.isFluid(getBlock(pl.getRect()))) {
-            if (CaveGame.TOUCH && pl.mov.x != 0 && !pl.swim && !pl.flyMode) pl.swim = true;
+            if (CaveGame.TOUCH && pl.getMov().x != 0 && !pl.swim && !pl.isFlyMode()) pl.swim = true;
             if (!pl.swim) {
-                if (!pl.flyMode && pl.mov.y < 4.5f) pl.mov.add(gravity.x / 4, gravity.y / 4);
-                if (!pl.flyMode && pl.mov.y > 4.5f) pl.mov.add(0, -1f);
+                if (!pl.isFlyMode() && pl.getMov().y < 4.5f) pl.getMov().add(gravity.x / 4, gravity.y / 4);
+                if (!pl.isFlyMode() && pl.getMov().y > 4.5f) pl.getMov().add(0, -1f);
             } else {
-                pl.mov.add(0, -.5f);
-                if (pl.mov.y < -3) pl.mov.y = -3;
+                pl.getMov().add(0, -.5f);
+                if (pl.getMov().y < -3) pl.getMov().y = -3;
             }
         } else {
-            if (!pl.flyMode && pl.mov.y < 18) pl.mov.add(gravity);
+            if (!pl.isFlyMode() && pl.getMov().y < 18) pl.getMov().add(gravity);
         }
 
-        pl.pos.x += pl.mov.x * (pl.flyMode ? 1.5f : 1) * (GameItems.isFluid(getBlock(pl.getRect())) && !pl.flyMode ? .8f : 1);
+        pl.getPos().x += pl.getMov().x * (pl.isFlyMode() ? 1.5f : 1) * (GameItems.isFluid(getBlock(pl.getRect())) && !pl.isFlyMode() ? .8f : 1);
         mobXColl(pl);
 
-        if (CaveGame.TOUCH && checkJump(pl.getRect(), pl.getDirection()) && !pl.flyMode && pl.canJump && pl.mov.x != 0) {
-            pl.mov.add(0, -8);
-            pl.canJump = false;
+        if (CaveGame.TOUCH && checkJump(pl.getRect(), pl.getDirection()) && !pl.isFlyMode() && pl.canJump() && pl.getMov().x != 0) {
+            pl.getMov().add(0, -8);
+            pl.setCanJump(false);
         }
     }
 
     private void mobPhy(Mob mob) {
-        mob.pos.y += mob.mov.y;
+        mob.getPos().y += mob.getMov().y;
         mobYColl(mob);
         if (mob.isDead()) return;
 
         if (mob.getType() == 0 && GameItems.isFluid(getBlock(mob.getRect()))) {
-            if (mob.mov.y > 9) mob.mov.add(0, -.9f);
-            mob.mov.add(0, -.5f);
-            if (mob.mov.y < -3) mob.mov.y = -3;
-        } else if (!mob.flyMode && mob.mov.y < 18) mob.mov.add(gravity);
+            if (mob.getMov().y > 9) mob.getMov().add(0, -.9f);
+            mob.getMov().add(0, -.5f);
+            if (mob.getMov().y < -3) mob.getMov().y = -3;
+        } else if (!mob.isFlyMode() && mob.getMov().y < 18) mob.getMov().add(gravity);
 
-        mob.pos.x += mob.mov.x;
+        mob.getPos().x += mob.getMov().x;
         mobXColl(mob);
 
-        if (checkJump(mob.getRect(), mob.getDirection()) && mob.canJump && mob.mov.x != 0) {
-            mob.mov.add(0, -8);
-            mob.canJump = false;
+        if (checkJump(mob.getRect(), mob.getDirection()) && mob.canJump() && mob.getMov().x != 0) {
+            mob.getMov().add(0, -8);
+            mob.setCanJump(false);
         }
     }
 
@@ -183,8 +183,8 @@ class GamePhysics {
         if (GP.player.isDead()) GP.player.respawn();
 
         GP.renderer.setCamPos(
-                GP.player.pos.x + GP.player.getWidth() / 2 - GP.renderer.getWidth() / 2,
-                GP.player.pos.y + GP.player.getHeight() / 2 - GP.renderer.getHeight() / 2);
+                GP.player.getPos().x + GP.player.getWidth() / 2 - GP.renderer.getWidth() / 2,
+                GP.player.getPos().y + GP.player.getHeight() / 2 - GP.renderer.getHeight() / 2);
     }
 
 }

@@ -9,13 +9,14 @@ import com.badlogic.gdx.math.Rectangle;
 import ru.deadsoftware.cavedroid.CaveGame;
 import ru.deadsoftware.cavedroid.GameScreen;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
+import ru.deadsoftware.cavedroid.game.mobs.Pig;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
+import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
 import ru.deadsoftware.cavedroid.misc.Renderer;
 
 import static ru.deadsoftware.cavedroid.GameScreen.GP;
-import static ru.deadsoftware.cavedroid.misc.Assets.guiMap;
-import static ru.deadsoftware.cavedroid.misc.Assets.textureRegions;
+import static ru.deadsoftware.cavedroid.misc.Assets.*;
 
 public class GameRenderer extends Renderer {
 
@@ -36,7 +37,8 @@ public class GameRenderer extends Renderer {
         if (GP.input.getBlockDamage() > 0) {
             int index = 10 * GP.input.getBlockDamage() / GameItems.getBlock(bl).getHp();
             String key = "break_" + index;
-            spriter.draw(textureRegions.get(key), GP.input.getCurX() * 16 - getCamX(), GP.input.getCurY() * 16 - getCamY());
+            spriter.draw(textureRegions.get(key), GP.input.getCurX() * 16 - getCamX(),
+                    GP.input.getCurY() * 16 - getCamY());
         }
     }
 
@@ -88,17 +90,9 @@ public class GameRenderer extends Renderer {
     }
 
     private void drawMob(Mob mob) {
-        float mobDrawX = mob.pos.x - getCamX();
-        float mobDrawY = mob.pos.y - getCamY();
-
-        if (mobDrawX + mob.getWidth() - GP.world.getWidthPx() >= 0 && mobDrawX - GP.world.getWidthPx() <= getWidth())
-            mob.draw(spriter, mobDrawX - GP.world.getWidthPx(), mobDrawY);
-
-        if (mobDrawX + mob.getWidth() >= 0 && mobDrawX <= getWidth())
-            mob.draw(spriter, mobDrawX, mobDrawY);
-
-        if (mobDrawX + mob.getWidth() + GP.world.getWidthPx() >= 0 && mobDrawX + GP.world.getWidthPx() <= getWidth())
-            mob.draw(spriter, mobDrawX + GP.world.getWidthPx(), mobDrawY);
+        float mobDrawX = mob.getX() - getCamX();
+        float mobDrawY = mob.getY() - getCamY();
+        mob.draw(spriter, mobDrawX, mobDrawY);
     }
 
     private void drawDrop(Drop drop) {
@@ -181,9 +175,9 @@ public class GameRenderer extends Renderer {
 
     private void drawGamePlay() {
         drawWorld(true);
-        GP.player.draw(spriter, GP.player.pos.x - getCamX() - 2, GP.player.pos.y - getCamY());
-        for (Mob mob : GP.mobs) drawMob(mob);
-        for (Drop drop : GP.drops) drawDrop(drop);
+        GP.player.draw(spriter, GP.player.getX() - getCamX() - 2, GP.player.getY() - getCamY());
+        GP.mobs.forEach(this::drawMob);
+        GP.drops.forEach(this::drawDrop);
         drawWorld(false);
         drawGUI();
     }
@@ -231,7 +225,7 @@ public class GameRenderer extends Renderer {
                 }
             }
             shaper.setColor(Color.OLIVE);
-            shaper.rect(GP.player.pos.x / 16, GP.player.pos.y / 16 - 128, 1, 2);
+            shaper.rect(GP.player.getMapX(), GP.player.getUpperMapY() - 128, 1, 2);
             shaper.end();
             //=================
         }
@@ -239,8 +233,8 @@ public class GameRenderer extends Renderer {
         if (GameScreen.SHOW_DEBUG) {
             spriter.begin();
             drawString("FPS: " + GameScreen.FPS, 0, 0);
-            drawString("X: " + (int) (GP.player.pos.x / 16), 0, 10);
-            drawString("Y: " + (int) (GP.player.pos.y / 16), 0, 20);
+            drawString("X: " + GP.player.getMapX(), 0, 10);
+            drawString("Y: " + GP.player.getUpperMapY() / 16, 0, 20);
             drawString("CurX: " + GP.input.getCurX(), 0, 30);
             drawString("CurY: " + GP.input.getCurY(), 0, 40);
             drawString("Mobs: " + GP.mobs.size(), 0, 50);

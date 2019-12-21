@@ -36,13 +36,13 @@ public class GameInput {
     private void goUpwards() {
         if (checkSwim()) {
             GP.player.swim = true;
-        } else if (GP.player.canJump) {
-            GP.player.mov.add(0, -7);
-        } else if (!GP.player.flyMode && GP.player.gameMode == 1) {
-            GP.player.flyMode = true;
-            GP.player.mov.y = 0;
-        } else if (GP.player.flyMode) {
-            GP.player.mov.y = -GamePhysics.PL_SPEED;
+        } else if (GP.player.canJump()) {
+            GP.player.getMov().add(0, -7);
+        } else if (!GP.player.isFlyMode() && GP.player.gameMode == 1) {
+            GP.player.setFlyMode(true);
+            GP.player.getMov().y = 0;
+        } else if (GP.player.isFlyMode()) {
+            GP.player.getMov().y = -GamePhysics.PL_SPEED;
         }
     }
 
@@ -59,12 +59,12 @@ public class GameInput {
         if (GP.controlMode == ControlMode.WALK || !CaveGame.TOUCH) {
             switch (keycode) {
                 case Input.Keys.A:
-                    GP.player.mov.x = -GamePhysics.PL_SPEED;
+                    GP.player.getMov().x = -GamePhysics.PL_SPEED;
                     GP.player.setDir(Mob.LEFT);
                     if (CaveGame.TOUCH && checkSwim()) GP.player.swim = true;
                     break;
                 case Input.Keys.D:
-                    GP.player.mov.x = GamePhysics.PL_SPEED;
+                    GP.player.getMov().x = GamePhysics.PL_SPEED;
                     GP.player.setDir(Mob.RIGHT);
                     if (CaveGame.TOUCH && checkSwim()) GP.player.swim = true;
                     break;
@@ -74,7 +74,7 @@ public class GameInput {
                     break;
                 case Input.Keys.S:
                 case Input.Keys.CONTROL_LEFT:
-                    GP.player.mov.y = GamePhysics.PL_SPEED;
+                    GP.player.getMov().y = GamePhysics.PL_SPEED;
                     break;
             }
         } else {
@@ -108,7 +108,7 @@ public class GameInput {
         }
 
         if (GP.controlMode == ControlMode.CURSOR) {
-            if (curX * 16 + 8 < GP.player.pos.x + GP.player.getWidth() / 2) {
+            if (curX * 16 + 8 < GP.player.getX() + GP.player.getWidth() / 2) {
                 GP.player.setDir(Mob.LEFT);
             } else {
                 GP.player.setDir(Mob.RIGHT);
@@ -275,7 +275,7 @@ public class GameInput {
         switch (keycode) {
             case Input.Keys.A:
             case Input.Keys.D:
-                GP.player.mov.x = 0;
+                GP.player.getMov().x = 0;
                 if (CaveGame.TOUCH && GP.player.swim) GP.player.swim = false;
                 break;
 
@@ -283,7 +283,7 @@ public class GameInput {
             case Input.Keys.S:
             case Input.Keys.SPACE:
             case Input.Keys.CONTROL_LEFT:
-                if (GP.player.flyMode) GP.player.mov.y = 0;
+                if (GP.player.isFlyMode()) GP.player.getMov().y = 0;
                 if (GP.player.swim) GP.player.swim = false;
                 break;
         }
