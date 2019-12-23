@@ -19,77 +19,77 @@ public class GameItems {
     private static final ArrayMap<String, Block> blocks = new ArrayMap<>();
     private static final ArrayMap<String, Item> items = new ArrayMap<>();
 
-    static boolean isFluid(int id) {
+    public static boolean isFluid(int id) {
         return getBlock(id).isFluid();
     }
 
-    static boolean isWater(int id) {
+    public static boolean isWater(int id) {
         return getBlock(id).getMeta().equals("water");
     }
 
-    static boolean isLava(int id) {
+    public static boolean isLava(int id) {
         return getBlock(id).getMeta().equals("lava");
     }
 
-    static boolean isSlab(int id) {
+    public static boolean isSlab(int id) {
         return getBlock(id).getMeta().equals("slab");
     }
 
-    static boolean fluidCanFlowThere(int thisId, int thatId) {
+    public static boolean fluidCanFlowThere(int thisId, int thatId) {
         return thatId == 0 || (!getBlock(thatId).hasCollision() && !isFluid(thatId)) ||
                 (isWater(thisId) && isWater(thatId) && thisId < thatId) ||
                 (isLava(thisId) && isLava(thatId) && thisId < thatId);
     }
 
-    static Block getBlock(int id) {
+    public static Block getBlock(int id) {
         return blocks.getValueAt(id);
     }
 
-    static Item getItem(int id) {
+    public static Item getItem(int id) {
         return items.getValueAt(id);
     }
 
-    static Block getBlock(String key) {
+    public static Block getBlock(String key) {
         return blocks.getValueAt(blocksIds.get(key));
     }
 
-    static Item getItem(String key) {
+    public static Item getItem(String key) {
         return items.getValueAt(itemsIds.get(key));
     }
 
-    static int getBlockId(String key) {
+    public static int getBlockId(String key) {
         return blocksIds.get(key);
     }
 
-    static int getItemId(String key) {
+    public static int getItemId(String key) {
         return itemsIds.get(key);
     }
 
-    static String getBlockKey(int id) {
+    public static String getBlockKey(int id) {
         return blocks.getKeyAt(id);
     }
 
-    static String getItemKey(int id) {
+    public static String getItemKey(int id) {
         return items.getKeyAt(id);
     }
 
-    static int getBlockIdByItemId(int id) {
+    public static int getBlockIdByItemId(int id) {
         return getBlockId(items.getKeyAt(id));
     }
 
-    static int getBlocksSize() {
+    public static int getBlocksSize() {
         return blocks.size;
     }
 
-    static int getItemsSize() {
+    public static int getItemsSize() {
         return items.size;
     }
 
-    static Sprite getBlockTex(int id) {
+    public static Sprite getBlockTex(int id) {
         return getBlock(id).getTex();
     }
 
-    static Sprite getItemTex(int id) {
+    public static Sprite getItemTex(int id) {
         if (items.getValueAt(id).getType().equals("block")) {
             return getBlockTex(id);
         } else {
