@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Vector2;
 import org.jetbrains.annotations.NotNull;
 import ru.deadsoftware.cavedroid.misc.Assets;
 
+import static ru.deadsoftware.cavedroid.GameScreen.GP;
+
 /**
  * Falling gravel is actually a mob, that spawns in place of gravel when there is no block under it,
  * falls down to the next block and becomes a block of gravel again.
@@ -17,12 +19,16 @@ public class FallingGravel extends Mob {
      * @param y Y in pixels
      */
     public FallingGravel(float x, float y) {
-        super(x, y, 16, 16, 0);
-        mov = new Vector2(0, 1);
+        super(x, y, 16, 16, Direction.LEFT, Type.GRAVEL);
+        move = new Vector2(0, 1);
     }
 
     @Override
     public void ai() {
+        if (move.isZero()) {
+            GP.world.setForeMap(getMapX(), getMiddleMapY(), 11);
+            kill();
+        }
     }
 
     @Override
@@ -32,11 +38,6 @@ public class FallingGravel extends Mob {
     @Override
     public void draw(@NotNull SpriteBatch spriteBatch, float x, float y) {
         spriteBatch.draw(Assets.gravelSprite, x, y);
-    }
-
-    @Override
-    public int getType() {
-        return 11;
     }
 
 }

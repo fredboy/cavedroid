@@ -6,12 +6,12 @@ import ru.deadsoftware.cavedroid.GameScreen;
 import ru.deadsoftware.cavedroid.game.mobs.FallingGravel;
 import ru.deadsoftware.cavedroid.game.mobs.FallingSand;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
-import ru.deadsoftware.cavedroid.game.objects.Drop;
 import ru.deadsoftware.cavedroid.game.mobs.Player;
+import ru.deadsoftware.cavedroid.game.objects.Drop;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class GameProc implements Serializable, Disposable {
 
@@ -32,8 +32,8 @@ public class GameProc implements Serializable, Disposable {
 
     public ControlMode controlMode;
     public final Player player;
-    public final ArrayList<Mob> mobs;
-    final ArrayList<Drop> drops;
+    public final LinkedList<Mob> mobs;
+    final LinkedList<Drop> drops;
 
     public void resetRenderer() {
         int scale = CaveGame.TOUCH ? 320 : 480;
@@ -43,8 +43,8 @@ public class GameProc implements Serializable, Disposable {
     public GameProc(int gameMode) {
         world = new GameWorld(WORLD_WIDTH, WORLD_HEIGHT);
         player = new Player(gameMode);
-        drops = new ArrayList<>();
-        mobs = new ArrayList<>();
+        drops = new LinkedList<>();
+        mobs = new LinkedList<>();
         physics = new GamePhysics();
         input = new GameInput();
         controlMode = CaveGame.TOUCH ? ControlMode.WALK : ControlMode.CURSOR;

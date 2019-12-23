@@ -9,14 +9,13 @@ import com.badlogic.gdx.math.Rectangle;
 import ru.deadsoftware.cavedroid.CaveGame;
 import ru.deadsoftware.cavedroid.GameScreen;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
-import ru.deadsoftware.cavedroid.game.mobs.Pig;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
-import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
 import ru.deadsoftware.cavedroid.misc.Renderer;
 
 import static ru.deadsoftware.cavedroid.GameScreen.GP;
-import static ru.deadsoftware.cavedroid.misc.Assets.*;
+import static ru.deadsoftware.cavedroid.misc.Assets.guiMap;
+import static ru.deadsoftware.cavedroid.misc.Assets.textureRegions;
 
 public class GameRenderer extends Renderer {
 
@@ -92,6 +91,15 @@ public class GameRenderer extends Renderer {
     private void drawMob(Mob mob) {
         float mobDrawX = mob.getX() - getCamX();
         float mobDrawY = mob.getY() - getCamY();
+
+        if (mobDrawX + mob.getWidth() < 0 && mobDrawX + GP.world.getWidthPx() > 0) {
+            mobDrawX += GP.world.getWidthPx();
+        } else if (mobDrawX > getWidth() && mobDrawX + mob.getWidth() - GP.world.getWidthPx() > 0) {
+            mobDrawX -= GP.world.getWidthPx();
+        } else if (mobDrawX + mob.getWidth() < 0 && mobDrawX > getWidth()) {
+            return;
+        }
+
         mob.draw(spriter, mobDrawX, mobDrawY);
     }
 

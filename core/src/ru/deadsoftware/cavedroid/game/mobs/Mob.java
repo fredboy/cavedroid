@@ -7,20 +7,32 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.io.Serializable;
 
+import static ru.deadsoftware.cavedroid.GameScreen.GP;
+
 /**
  * Mob class.
  */
-public abstract class Mob implements Serializable {
+public abstract class Mob extends Rectangle implements Serializable {
 
-    public static final int LEFT = 0;
-    public static final int RIGHT = 1;
+    protected Vector2 move;
+    protected Type type;
+    private Direction dir;
 
-    private final float width;
-    private final float height;
-    private int dir;
-
-    protected final Vector2 pos;
-    protected Vector2 mov;
+    /**
+     * @param x      in pixels
+     * @param y      in pixels
+     * @param width  in pixels
+     * @param height in pixels
+     * @param dir    Direction in which mob is looking
+     */
+    protected Mob(float x, float y, float width, float height, Direction dir, Type type) {
+        super(x, y, width, height);
+        move = new Vector2(0, 0);
+        canJump = false;
+        dead = false;
+        this.dir = dir;
+        this.type = type;
+    }
 
     private boolean dead;
 
@@ -28,145 +40,136 @@ public abstract class Mob implements Serializable {
     protected int animDelta = 6;
     protected int anim;
 
-    protected static int randomDir() {
-        return MathUtils.random(1);
+    protected static Direction randomDir() {
+        return MathUtils.randomBoolean(.5f) ? Direction.LEFT : Direction.RIGHT;
     }
 
     /**
-     *
-     * @param x in pixels
-     * @param y in pixels
-     * @param width in pixels
-     * @param height in pixels
-     * @param dir integer representing a direction where 0 is left and 1 is right.
-     *            You should use {@link #LEFT} and {@link #RIGHT} constants
-     */
-    protected Mob(float x, float y, float width, float height, int dir) {
-        pos = new Vector2(x, y);
-        mov = new Vector2(0, 0);
-        this.width = width;
-        this.height = height;
-        canJump = false;
-        dead = false;
-        this.dir = dir;
-    }
-
-    /**
-     *
      * @return The X coordinate of a mob in blocks
      */
-    public int getMapX() {
-        return (int) (pos.x + (getWidth() / 2)) / 16;
+    public final int getMapX() {
+        return (int) (x + (getWidth() / 2)) / 16;
     }
 
     /**
-     *
      * @return The Y coordinate of mob's upper edge in blocks
      */
-    public int getUpperMapY() {
-        return (int) (pos.y / 16);
+    public final int getUpperMapY() {
+        return (int) (y / 16);
     }
 
     /**
      *
      * @return The Y coordinate if mob's vertical center in blocks
      */
-    public int getMiddleMapY() {
-        return (int) (pos.y + (getHeight() / 2)) / 16;
+    public final int getMiddleMapY() {
+        return (int) (y + (getHeight() / 2)) / 16;
     }
 
     /**
      *
      * @return The Y coordinate of mob's legs in blocks
      */
-    public int getLowerMapY() {
-        return (int) (pos.y + getHeight()) / 16;
+    public final int getLowerMapY() {
+        return (int) (y + getHeight()) / 16;
     }
 
-    public float getWidth() {
+    public final float getWidth() {
         return width;
     }
 
-    public float getHeight() {
+    public final float getHeight() {
         return height;
     }
 
     /**
-     *
      * @return Integer representing a direction in which mob is looking, where 0 is left and 1 is right
      */
-    public int getDirection() {
+    public final Direction getDirection() {
         return dir;
     }
 
-    public boolean looksLeft() {
-        return getDirection() == LEFT;
+    public final boolean looksLeft() {
+        return dir == Direction.LEFT;
     }
 
-    public boolean looksRight() {
-        return getDirection() == RIGHT;
+    public final boolean looksRight() {
+        return dir == Direction.RIGHT;
     }
 
     /**
      * Switches direction in which mob is looking
      */
-    protected void switchDir() {
-        dir = looksLeft() ? RIGHT : LEFT;
+    protected final void switchDir() {
+        dir = looksLeft() ? Direction.RIGHT : Direction.LEFT;
     }
 
-    public boolean isDead() {
+    protected final int dirMultiplier() {
+        return looksLeft() ? 0 : 1;
+    }
+
+    public final boolean isDead() {
         return dead;
     }
 
-    public int getAnim() {
+    public final int getAnim() {
         return anim;
     }
 
     /**
-     * Set's mob's dead variable to true and nothing else. It doesn't delete the mob.
+     * Set's mob's dead variable to true and nothing else. It doesn't delete the
      */
-    public void kill() {
+    public final void kill() {
         dead = true;
     }
 
-    /**
-     *
-     * @return A {@link Rectangle} with mob's coordinates and size
-     */
-    public Rectangle getRect() {
-        return new Rectangle(pos.x, pos.y, getWidth(), getHeight());
+    public final void move() {
+        x += move.x;
+        y += move.y;
     }
 
-    public Vector2 getPos() {
-        return pos;
+    public final Vector2 getMove() {
+        return move;
     }
 
-    public Vector2 getMov() {
-        return mov;
-    }
-
-    public float getX() {
-        return pos.x;
-    }
-
-    public float getY() {
-        return pos.y;
-    }
-
-    public boolean canJump() {
+    public final boolean canJump() {
         return canJump;
     }
 
-    public void setCanJump(boolean canJump) {
+    public final void setCanJump(boolean canJump) {
         this.canJump = canJump;
     }
 
-    public boolean isFlyMode() {
+    public final boolean isFlyMode() {
         return flyMode;
     }
 
-    public void setFlyMode(boolean flyMode) {
+    public final void setFlyMode(boolean flyMode) {
         this.flyMode = flyMode;
+    }
+
+    public final Type getType() {
+        return type;
+    }
+
+    public void checkWorldBounds() {
+        if (x + width / 2 < 0) {
+            x += GP.world.getWidthPx();
+        }
+        if (x + width / 2 > GP.world.getWidthPx()) {
+            x -= GP.world.getWidthPx();
+        }
+    }
+
+    public enum Type {
+        MOB,
+        SAND,
+        GRAVEL
+    }
+
+    public enum Direction {
+        LEFT,
+        RIGHT
     }
 
     public abstract void draw(SpriteBatch spriteBatch, float x, float y);
@@ -174,11 +177,4 @@ public abstract class Mob implements Serializable {
     public abstract void ai();
 
     public abstract void changeDir();
-
-    /**
-     *
-     * @return 0 - if regular mob. <br>
-     *     10 - if instance of {@link FallingSand} <br> 11 - if instance of {@link FallingGravel}
-     */
-    public abstract int getType(); //0 - mob, 10 - sand, 11 - gravel
 }

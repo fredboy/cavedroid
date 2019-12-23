@@ -1,16 +1,12 @@
 package ru.deadsoftware.cavedroid.game.mobs;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.misc.Assets;
-
-import java.io.Serializable;
 
 import static ru.deadsoftware.cavedroid.GameScreen.GP;
 
-public class Player extends Mob implements Serializable {
+public class Player extends Mob {
 
     public final int[] inventory;
     public int slot;
@@ -18,15 +14,17 @@ public class Player extends Mob implements Serializable {
     public boolean swim;
 
     public Player(int gameMode) {
-        super(0, 0, 4, 30, 1);
+        super(0, 0, 4, 30, randomDir(), Type.MOB);
         this.gameMode = gameMode;
         inventory = new int[9];
         swim = false;
     }
 
     public void respawn() {
-        pos.set(getSpawnPoint());
-        mov.setZero();
+        Vector2 pos = getSpawnPoint();
+        this.x = pos.x;
+        this.y = pos.y;
+        move.setZero();
     }
 
     private Vector2 getSpawnPoint() {
@@ -37,13 +35,17 @@ public class Player extends Mob implements Serializable {
                 GP.world.setForeMap(x, y, 1);
                 break;
             }
-            if (GP.world.hasForeAt(x, y) && GP.world.getForeMapBlock(x, y).hasCollision()) break;
+            if (GP.world.hasForeAt(x, y) && GP.world.getForeMapBlock(x, y).hasCollision()) {
+                break;
+            }
         }
-        return new Vector2(x * 16 + 8 -  getWidth() / 2, (float) y * 16 - getHeight());
+        return new Vector2(x * 16 + 8 - getWidth() / 2, (float) y * 16 - getHeight());
     }
 
-    public void setDir(int dir) {
-        if (dir != getDirection()) switchDir();
+    public void setDir(Direction dir) {
+        if (dir != getDirection()) {
+            switchDir();
+        }
     }
 
     @Override
@@ -56,7 +58,7 @@ public class Player extends Mob implements Serializable {
 
     @Override
     public void draw(SpriteBatch spriteBatch, float x, float y) {
-        if (mov.x != 0 || Assets.playerSprite[0][2].getRotation() != 0) {
+        if (move.x != 0 || Assets.playerSprite[0][2].getRotation() != 0) {
             Assets.playerSprite[0][2].rotate(animDelta);
             Assets.playerSprite[1][2].rotate(-animDelta);
             Assets.playerSprite[0][3].rotate(-animDelta);
@@ -80,22 +82,12 @@ public class Player extends Mob implements Serializable {
         Assets.playerSprite[0][3].setPosition(x - 6, y + 10);
         Assets.playerSprite[0][3].draw(spriteBatch);
         //head
-        spriteBatch.draw(Assets.playerSprite[getDirection()][0], x - 2, y - 2);
+        spriteBatch.draw(Assets.playerSprite[dirMultiplier()][0], x - 2, y - 2);
         //body
-        spriteBatch.draw(Assets.playerSprite[getDirection()][1], x - 2, y + 8);
+        spriteBatch.draw(Assets.playerSprite[dirMultiplier()][1], x - 2, y + 8);
         //front hand
         Assets.playerSprite[0][2].setPosition(x - 6, y);
         Assets.playerSprite[0][2].draw(spriteBatch);
-    }
-
-    @Override
-    public int getType() {
-        return 0;
-    }
-
-    @Override
-    public Rectangle getRect() {
-        return new Rectangle(pos.x, pos.y, getWidth(), getHeight());
     }
 
 }
