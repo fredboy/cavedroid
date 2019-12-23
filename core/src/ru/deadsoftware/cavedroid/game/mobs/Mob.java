@@ -21,6 +21,7 @@ public abstract class Mob extends Rectangle implements Serializable {
     private Direction dir;
     private boolean dead;
     private boolean canJump, flyMode;
+
     /**
      * @param x      in pixels
      * @param y      in pixels

@@ -46,16 +46,16 @@ public class Pig extends Mob {
         pigSprite[0][1].setRotation(getAnim());
         pigSprite[1][1].setRotation(-getAnim());
         //back legs
-        pigSprite[1][1].setPosition(x - 4 + (9 - dirMultiplier() * 9), y + 6);
+        pigSprite[1][1].setPosition(x + (9 - dirMultiplier() * 9), y + 12);
         pigSprite[1][1].draw(spriteBatch);
-        pigSprite[1][1].setPosition(x + 17 - (9 * dirMultiplier()), y + 6);
+        pigSprite[1][1].setPosition(x + 21 - (9 * dirMultiplier()), y + 12);
         pigSprite[1][1].draw(spriteBatch);
-        //front legs
-        pigSprite[0][1].setPosition(x - 4 + (9 - dirMultiplier() * 9), y + 6);
-        pigSprite[0][1].draw(spriteBatch);
-        pigSprite[0][1].setPosition(x + 17 - (9 * dirMultiplier()), y + 6);
-        pigSprite[0][1].draw(spriteBatch);
         //head & body
         spriteBatch.draw(Assets.pigSprite[dirMultiplier()][0], x, y);
+        //front legs
+        pigSprite[0][1].setPosition(x + (9 - dirMultiplier() * 9), y + 12);
+        pigSprite[0][1].draw(spriteBatch);
+        pigSprite[0][1].setPosition(x + 21 - (9 * dirMultiplier()), y + 12);
+        pigSprite[0][1].draw(spriteBatch);
     }
 }

@@ -9,8 +9,8 @@ import static ru.deadsoftware.cavedroid.GameScreen.GP;
 public class Player extends Mob {
 
     public final int[] inventory;
-    public final int gameMode;
     public int slot;
+    public final int gameMode;
     public boolean swim;
 
     public Player(int gameMode) {
@@ -74,20 +74,20 @@ public class Player extends Mob {
         }
 
         //back hand
-        Assets.playerSprite[1][2].setPosition(x - 6, y);
+        Assets.playerSprite[1][2].setPosition(x + 2, y + 8);
         Assets.playerSprite[1][2].draw(spriteBatch);
         //back leg
-        Assets.playerSprite[1][3].setPosition(x - 6, y + 10);
+        Assets.playerSprite[1][3].setPosition(x + 2, y + 20);
         Assets.playerSprite[1][3].draw(spriteBatch);
         //front leg
-        Assets.playerSprite[0][3].setPosition(x - 6, y + 10);
+        Assets.playerSprite[0][3].setPosition(x + 2, y + 20);
         Assets.playerSprite[0][3].draw(spriteBatch);
         //head
-        spriteBatch.draw(Assets.playerSprite[dirMultiplier()][0], x - 2, y - 2);
+        spriteBatch.draw(Assets.playerSprite[dirMultiplier()][0], x, y);
         //body
-        spriteBatch.draw(Assets.playerSprite[dirMultiplier()][1], x - 2, y + 8);
+        spriteBatch.draw(Assets.playerSprite[dirMultiplier()][1], x + 2, y + 8);
         //front hand
-        Assets.playerSprite[0][2].setPosition(x - 6, y);
+        Assets.playerSprite[0][2].setPosition(x + 2, y + 8);
         Assets.playerSprite[0][2].draw(spriteBatch);
     }
 

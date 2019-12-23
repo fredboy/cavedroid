@@ -21,8 +21,6 @@ public class Assets {
     public static final HashMap<String, TextureRegion> textureRegions = new HashMap<>();
     public static final ArrayMap<String, TouchButton> guiMap = new ArrayMap<>();
     private static final GlyphLayout glyphLayout = new GlyphLayout();
-    public static Sprite sandSprite;
-    public static Sprite gravelSprite;
     static BitmapFont minecraftFont;
 
     private static TextureRegion flippedRegion(Texture texture, int x, int y, int width, int height) {
@@ -41,34 +39,14 @@ public class Assets {
         return sprite;
     }
 
-    private static void loadPlayer() {
-        Texture plTex = new Texture(Gdx.files.internal("mobs/char.png"));
-        //LOOK TO LEFT
-        //head
-        playerSprite[0][0] = flippedSprite(new TextureRegion(plTex, 0, 0, 12, 12));
-        //body
-        playerSprite[0][1] = flippedSprite(new TextureRegion(plTex, 0, 13, 12, 12));
-        //hand
-        playerSprite[0][2] = flippedSprite(new TextureRegion(plTex, 25, 5, 20, 20));
-        //leg
-        playerSprite[0][3] = flippedSprite(new TextureRegion(plTex, 25, 27, 20, 20));
-        //LOOK TO RIGHT
-        //head
-        playerSprite[1][0] = flippedSprite(new TextureRegion(plTex, 13, 0, 12, 12));
-        //body
-        playerSprite[1][1] = flippedSprite(new TextureRegion(plTex, 13, 13, 12, 12));
-        //hand
-        playerSprite[1][2] = flippedSprite(new TextureRegion(plTex, 37, 5, 20, 20));
-        //leg
-        playerSprite[1][3] = flippedSprite(new TextureRegion(plTex, 37, 27, 20, 20));
-    }
-
-    private static void loadPig() {
-        Texture pigTex = new Texture(Gdx.files.internal("mobs/pig.png"));
-        pigSprite[0][0] = flippedSprite(new TextureRegion(pigTex, 0, 0, 25, 12));
-        pigSprite[1][0] = flippedSprite(new TextureRegion(pigTex, 0, 12, 25, 12));
-        pigSprite[0][1] = flippedSprite(new TextureRegion(pigTex, 4, 26, 12, 12));
-        pigSprite[1][1] = flippedSprite(new TextureRegion(pigTex, 16, 26, 12, 12));
+    private static void loadMob(Sprite[][] sprite, String mob) {
+        for (int i = 0; i < sprite.length; i++) {
+            for (int j = 0; j < sprite[i].length; j++) {
+                sprite[i][j] = flippedSprite(new Texture(
+                        Gdx.files.internal("mobs/" + mob + "/" + i + "_" + j + ".png")));
+                sprite[i][j].setOrigin(sprite[i][j].getWidth() / 2, 0);
+            }
+        }
     }
 
     /**
@@ -95,13 +73,11 @@ public class Assets {
     }
 
     public static void load() {
-        loadPlayer();
-        loadPig();
+        loadMob(playerSprite, "char");
+        loadMob(pigSprite, "pig");
         loadJSON();
         minecraftFont = new BitmapFont(Gdx.files.internal("font.fnt"), true);
         minecraftFont.getData().setScale(.375f);
-        sandSprite = flippedSprite(new Texture((Gdx.files.internal("textures/blocks/sand.png"))));
-        gravelSprite = flippedSprite(new Texture((Gdx.files.internal("textures/blocks/gravel.png"))));
     }
 
     /**
