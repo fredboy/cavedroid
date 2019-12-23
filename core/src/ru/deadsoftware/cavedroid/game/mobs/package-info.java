@@ -1,4 +1,4 @@
-@ParametersAreNonnullByDefault
+@NonnullByDefault
 package ru.deadsoftware.cavedroid.game.mobs;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import ru.deadsoftware.cavedroid.misc.annotations.NonnullByDefault;
