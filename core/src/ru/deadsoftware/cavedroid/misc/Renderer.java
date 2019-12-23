@@ -8,10 +8,9 @@ import ru.deadsoftware.cavedroid.GameScreen;
 
 public abstract class Renderer implements InputProcessor {
 
-    private final OrthographicCamera camera;
-
     protected final ShapeRenderer shaper;
     protected final SpriteBatch spriter;
+    private final OrthographicCamera camera;
 
     protected Renderer() {
         this(GameScreen.getWidth(), GameScreen.getHeight());

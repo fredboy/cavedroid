@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -17,16 +16,14 @@ import java.util.HashMap;
 public class Assets {
 
     public static final JsonReader jsonReader = new JsonReader();
-
-    private static final GlyphLayout glyphLayout = new GlyphLayout();
-    static BitmapFont minecraftFont;
-
     public static final Sprite[][] playerSprite = new Sprite[2][4];
     public static final Sprite[][] pigSprite = new Sprite[2][2];
     public static final HashMap<String, TextureRegion> textureRegions = new HashMap<>();
     public static final ArrayMap<String, TouchButton> guiMap = new ArrayMap<>();
+    private static final GlyphLayout glyphLayout = new GlyphLayout();
     public static Sprite sandSprite;
     public static Sprite gravelSprite;
+    static BitmapFont minecraftFont;
 
     private static TextureRegion flippedRegion(Texture texture, int x, int y, int width, int height) {
         return new TextureRegion(texture, x, y + height, width, -height);
@@ -83,7 +80,8 @@ public class Assets {
         for (JsonValue file = json.child(); file != null; file = file.next()) {
             Texture texture = new Texture(Gdx.files.internal(file.name() + ".png"));
             if (file.size == 0) {
-                textureRegions.put(file.name(), flippedRegion(texture, 0, 0, texture.getWidth(), texture.getHeight()));
+                textureRegions.put(file.name(),
+                        flippedRegion(texture, 0, 0, texture.getWidth(), texture.getHeight()));
             } else {
                 for (JsonValue key = file.child(); key != null; key = key.next()) {
                     int x = getIntFromJson(key, "x", 0);

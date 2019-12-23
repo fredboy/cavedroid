@@ -55,7 +55,9 @@ public class GameWorld {
 
     private int transformX(int x) {
         x = x % getWidth();
-        if (x < 0) x = getWidth() - Math.abs(x);
+        if (x < 0) {
+            x = getWidth() - Math.abs(x);
+        }
         return x;
     }
 
@@ -72,8 +74,11 @@ public class GameWorld {
     private void setMap(int x, int y, int layer, int value) {
         try {
             x = transformX(x);
-            if (layer == 0) foreMap[x][y] = value;
-            else backMap[x][y] = value;
+            if (layer == 0) {
+                foreMap[x][y] = value;
+            } else {
+                backMap[x][y] = value;
+            }
         } catch (ArrayIndexOutOfBoundsException ignored) {
         }
     }
@@ -152,16 +157,18 @@ public class GameWorld {
     }
 
     public void destroyForeMap(int x, int y) {
-        if (GameItems.getBlock(getForeMap(x, y)).hasDrop())
+        if (GameItems.getBlock(getForeMap(x, y)).hasDrop()) {
             GP.drops.add(new Drop(transformX(x) * 16 + 4, y * 16 + 4,
                     GameItems.getItemId(GameItems.getBlock(getForeMap(x, y)).getDrop())));
+        }
         placeToForeground(x, y, 0);
     }
 
     public void destroyBackMap(int x, int y) {
-        if (GameItems.getBlock(getBackMap(x, y)).hasDrop())
+        if (GameItems.getBlock(getBackMap(x, y)).hasDrop()) {
             GP.drops.add(new Drop(transformX(x) * 16 + 4, y * 16 + 4,
                     GameItems.getItemId(GameItems.getBlock(getBackMap(x, y)).getDrop())));
+        }
         placeToBackground(x, y, 0);
     }
 

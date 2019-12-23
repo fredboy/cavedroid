@@ -90,8 +90,11 @@ public class GameItems {
     }
 
     static Sprite getItemTex(int id) {
-        if (items.getValueAt(id).getType().equals("block")) return getBlockTex(id);
-        else return getItem(id).getTex();
+        if (items.getValueAt(id).getType().equals("block")) {
+            return getBlockTex(id);
+        } else {
+            return getItem(id).getTex();
+        }
     }
 
     public static void load() {

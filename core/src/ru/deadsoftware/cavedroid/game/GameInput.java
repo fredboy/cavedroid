@@ -61,12 +61,16 @@ public class GameInput {
                 case Input.Keys.A:
                     GP.player.getMove().x = -GamePhysics.PL_SPEED;
                     GP.player.setDir(Mob.Direction.LEFT);
-                    if (CaveGame.TOUCH && checkSwim()) GP.player.swim = true;
+                    if (CaveGame.TOUCH && checkSwim()) {
+                        GP.player.swim = true;
+                    }
                     break;
                 case Input.Keys.D:
                     GP.player.getMove().x = GamePhysics.PL_SPEED;
                     GP.player.setDir(Mob.Direction.RIGHT);
-                    if (CaveGame.TOUCH && checkSwim()) GP.player.swim = true;
+                    if (CaveGame.TOUCH && checkSwim()) {
+                        GP.player.swim = true;
+                    }
                     break;
                 case Input.Keys.W:
                 case Input.Keys.SPACE:
@@ -130,9 +134,14 @@ public class GameInput {
                 curX += GP.player.looksLeft() ? 1 : -1;
             }
         } else if (!CaveGame.TOUCH) {
-            curX = (int) (Gdx.input.getX() * (GP.renderer.getWidth() / GameScreen.getWidth()) + GP.renderer.getCamX()) / 16;
-            curY = (int) (Gdx.input.getY() * (GP.renderer.getHeight() / GameScreen.getHeight()) + GP.renderer.getCamY()) / 16;
-            if (curX < 0) curX--;
+            curX = (int) (Gdx.input.getX() * (GP.renderer.getWidth() /
+                    GameScreen.getWidth()) + GP.renderer.getCamX()) / 16;
+
+            curY = (int) (Gdx.input.getY() * (GP.renderer.getHeight() /
+                    GameScreen.getHeight()) + GP.renderer.getCamY()) / 16;
+            if (curX < 0) {
+                curX--;
+            }
         }
 
         if (pastX != curX || pastY != curY) {
@@ -276,15 +285,21 @@ public class GameInput {
             case Input.Keys.A:
             case Input.Keys.D:
                 GP.player.getMove().x = 0;
-                if (CaveGame.TOUCH && GP.player.swim) GP.player.swim = false;
+                if (CaveGame.TOUCH && GP.player.swim) {
+                    GP.player.swim = false;
+                }
                 break;
 
             case Input.Keys.W:
             case Input.Keys.S:
             case Input.Keys.SPACE:
             case Input.Keys.CONTROL_LEFT:
-                if (GP.player.isFlyMode()) GP.player.getMove().y = 0;
-                if (GP.player.swim) GP.player.swim = false;
+                if (GP.player.isFlyMode()) {
+                    GP.player.getMove().y = 0;
+                }
+                if (GP.player.swim) {
+                    GP.player.swim = false;
+                }
                 break;
         }
     }
@@ -309,7 +324,9 @@ public class GameInput {
                 int ix = (int) (screenX - (GP.renderer.getWidth() / 2 - creative.getRegionWidth() / 2 + 8)) / 18;
                 int iy = (int) (screenY - (GP.renderer.getHeight() / 2 - creative.getRegionHeight() / 2 + 18)) / 18;
                 int item = creativeScroll * 8 + (ix + iy * 8);
-                if (ix >= 8 || ix < 0 || iy < 0 || iy >= 5) item = -1;
+                if (ix >= 8 || ix < 0 || iy < 0 || iy >= 5) {
+                    item = -1;
+                }
                 if (item >= 0 && item < GameItems.getItemsSize()) {
                     System.arraycopy(GP.player.inventory, 0, GP.player.inventory, 1, 8);
                     GP.player.inventory[0] = item;
@@ -336,9 +353,12 @@ public class GameInput {
                 creativeScroll -= (screenY - touchDownY) / 16;
                 touchDownX = screenX;
                 touchDownY = screenY;
-                if (creativeScroll < 0) creativeScroll = 0;
-                if (creativeScroll > GameProc.MAX_CREATIVE_SCROLL)
+                if (creativeScroll < 0) {
+                    creativeScroll = 0;
+                }
+                if (creativeScroll > GameProc.MAX_CREATIVE_SCROLL) {
                     creativeScroll = GameProc.MAX_CREATIVE_SCROLL;
+                }
             }
         }
     }
@@ -347,14 +367,21 @@ public class GameInput {
         switch (CaveGame.GAME_STATE) {
             case PLAY:
                 GP.player.slot += amount;
-                if (GP.player.slot < 0) GP.player.slot = 8;
-                if (GP.player.slot > 8) GP.player.slot = 0;
+                if (GP.player.slot < 0) {
+                    GP.player.slot = 8;
+                }
+                if (GP.player.slot > 8) {
+                    GP.player.slot = 0;
+                }
                 break;
             case CREATIVE_INV:
                 creativeScroll += amount;
-                if (creativeScroll < 0) creativeScroll = 0;
-                if (creativeScroll > GameProc.MAX_CREATIVE_SCROLL)
+                if (creativeScroll < 0) {
+                    creativeScroll = 0;
+                }
+                if (creativeScroll > GameProc.MAX_CREATIVE_SCROLL) {
                     creativeScroll = GameProc.MAX_CREATIVE_SCROLL;
+                }
                 break;
         }
     }

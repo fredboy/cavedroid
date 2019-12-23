@@ -23,15 +23,25 @@ class WorldGen {
         res[0] = mid;
         for (int i = 1; i < width; i++) {
             t = rand.nextInt(7) - 3;
-            if (t > -3 && t < 3) t = 0;
-            else t /= Math.abs(t);
+            if (t > -3 && t < 3) {
+                t = 0;
+            } else {
+                t /= Math.abs(t);
+            }
             if (i > width - (max - min)) {
-                if (res[i - 1] + t < res[0]) t = Math.abs(t);
-                else if (res[i - 1] + t > res[0]) t = -Math.abs(t);
+                if (res[i - 1] + t < res[0]) {
+                    t = Math.abs(t);
+                } else if (res[i - 1] + t > res[0]) {
+                    t = -Math.abs(t);
+                }
             }
             res[i] = res[i - 1] + t;
-            if (res[i] < min) res[i] = min;
-            if (res[i] > max) res[i] = max;
+            if (res[i] < min) {
+                res[i] = min;
+            }
+            if (res[i] > max) {
+                res[i] = max;
+            }
             bMap[i] = 0;
 //            if (i >= width / 2) {
 //                bMap[i] = 1;
@@ -40,7 +50,9 @@ class WorldGen {
 //                bMap[i] = 0;
 //            }
         }
-        if (res[0] < res[width - 1]) res[width - 1] = res[0];
+        if (res[0] < res[width - 1]) {
+            res[width - 1] = res[0];
+        }
         return res;
     }
 

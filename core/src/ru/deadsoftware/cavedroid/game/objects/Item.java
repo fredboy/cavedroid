@@ -2,17 +2,21 @@ package ru.deadsoftware.cavedroid.game.objects;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
+import javax.annotation.CheckForNull;
+
 public class Item {
 
     private final String name;
     private final String type;
     private final Sprite tex;
 
-    public Item(String name, String type, Sprite tex) {
+    public Item(String name, String type, @CheckForNull Sprite tex) {
         this.name = name;
         this.type = type;
         this.tex = tex;
-        if (this.tex != null) this.tex.flip(false, true);
+        if (this.tex != null) {
+            this.tex.flip(false, true);
+        }
     }
 
     public Sprite getTex() {

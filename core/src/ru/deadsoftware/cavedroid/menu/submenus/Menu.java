@@ -9,8 +9,8 @@ import com.badlogic.gdx.utils.JsonValue;
 import ru.deadsoftware.cavedroid.CaveGame;
 import ru.deadsoftware.cavedroid.GameScreen;
 import ru.deadsoftware.cavedroid.menu.objects.Button;
-import ru.deadsoftware.cavedroid.menu.objects.ButtonRenderer;
 import ru.deadsoftware.cavedroid.menu.objects.ButtonEventListener;
+import ru.deadsoftware.cavedroid.menu.objects.ButtonRenderer;
 import ru.deadsoftware.cavedroid.misc.Assets;
 
 import java.util.HashMap;
@@ -28,8 +28,8 @@ public abstract class Menu {
     private ArrayMap<String, Button> buttons;
 
     /**
-     * @param width  Viewport width
-     * @param height Viewport height
+     * @param width          Viewport width
+     * @param height         Viewport height
      * @param buttonRenderer {@link ButtonRenderer} that will draw the buttons of this menu
      */
     Menu(float width, float height, ButtonRenderer buttonRenderer) {
@@ -56,7 +56,9 @@ public abstract class Menu {
      * @param jsonFile A {@link FileHandle} to json file
      */
     void loadButtonsFromJson(FileHandle jsonFile) {
-        if (buttons == null) buttons = new ArrayMap<>();
+        if (buttons == null) {
+            buttons = new ArrayMap<>();
+        }
         HashMap<String, ButtonEventListener> eventListeners = getButtonEventListeners();
         JsonValue json = Assets.jsonReader.parse(jsonFile);
         int y = (int) height / 4;
@@ -64,7 +66,8 @@ public abstract class Menu {
             buttons.put(key.name(),
                     new Button(Assets.getStringFromJson(key, "label", ""),
                             (int) width / 2 - Button.WIDTH / 2,
-                            Assets.getIntFromJson(key, "y", y), Assets.getIntFromJson(key, "type", Button.NORMAL),
+                            Assets.getIntFromJson(key, "y", y),
+                            Assets.getIntFromJson(key, "type", Button.NORMAL),
                             eventListeners.containsKey(key.name()) ? eventListeners.get(key.name()) : () -> {
                             }));
         }

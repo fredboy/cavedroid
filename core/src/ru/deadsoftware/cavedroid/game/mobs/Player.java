@@ -9,8 +9,8 @@ import static ru.deadsoftware.cavedroid.GameScreen.GP;
 public class Player extends Mob {
 
     public final int[] inventory;
-    public int slot;
     public final int gameMode;
+    public int slot;
     public boolean swim;
 
     public Player(int gameMode) {
@@ -69,8 +69,9 @@ public class Player extends Mob {
             Assets.playerSprite[0][3].setRotation(0);
             Assets.playerSprite[1][3].setRotation(0);
         }
-        if (Assets.playerSprite[0][2].getRotation() >= 60 || Assets.playerSprite[0][2].getRotation() <= -60)
+        if (Assets.playerSprite[0][2].getRotation() >= 60 || Assets.playerSprite[0][2].getRotation() <= -60) {
             animDelta = -animDelta;
+        }
 
         //back hand
         Assets.playerSprite[1][2].setPosition(x - 6, y);

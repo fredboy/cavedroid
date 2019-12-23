@@ -47,8 +47,12 @@ public class InputHandlerGame extends InputAdapter {
             boolean mouse = Assets.getBooleanFromJson(key, "mouse", false);
             String name = key.getString("key");
             int code = mouse ? getMouseKey(name) : Input.Keys.valueOf(name);
-            if (x < 0) x = GP.renderer.getWidth() + x;
-            if (y < 0) y = GP.renderer.getHeight() + y;
+            if (x < 0) {
+                x = GP.renderer.getWidth() + x;
+            }
+            if (y < 0) {
+                y = GP.renderer.getHeight() + y;
+            }
             Assets.guiMap.put(key.name(), new TouchButton(new Rectangle(x, y, w, h), code, mouse));
         }
 

@@ -23,22 +23,15 @@ public class GameProc implements Serializable, Disposable {
 
     static boolean DO_UPD = false;
     static int UPD_X = -1, UPD_Y = -1;
-
-    private transient GameFluidsThread fluidThread;
-    public transient GameWorld world;
-    public transient GameRenderer renderer;
-    public transient GameInput input;
-    transient GamePhysics physics;
-
-    public ControlMode controlMode;
     public final Player player;
     public final LinkedList<Mob> mobs;
     final LinkedList<Drop> drops;
-
-    public void resetRenderer() {
-        int scale = CaveGame.TOUCH ? 320 : 480;
-        renderer = new GameRenderer(scale, scale * GameScreen.getHeight() / GameScreen.getWidth());
-    }
+    public transient GameWorld world;
+    public transient GameRenderer renderer;
+    public transient GameInput input;
+    public ControlMode controlMode;
+    transient GamePhysics physics;
+    private transient GameFluidsThread fluidThread;
 
     public GameProc(int gameMode) {
         world = new GameWorld(WORLD_WIDTH, WORLD_HEIGHT);
@@ -50,6 +43,11 @@ public class GameProc implements Serializable, Disposable {
         controlMode = CaveGame.TOUCH ? ControlMode.WALK : ControlMode.CURSOR;
         resetRenderer();
         startFluidThread();
+    }
+
+    public void resetRenderer() {
+        int scale = CaveGame.TOUCH ? 320 : 480;
+        renderer = new GameRenderer(scale, scale * GameScreen.getHeight() / GameScreen.getWidth());
     }
 
     private void startFluidThread() {
@@ -104,7 +102,9 @@ public class GameProc implements Serializable, Disposable {
         physics.update();
         input.update();
         blockUpdater();
-        if (fluidThread == null || !fluidThread.isAlive()) startFluidThread();
+        if (fluidThread == null || !fluidThread.isAlive()) {
+            startFluidThread();
+        }
     }
 
     @Override

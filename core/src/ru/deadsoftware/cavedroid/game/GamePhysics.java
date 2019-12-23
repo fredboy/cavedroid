@@ -194,7 +194,9 @@ class GamePhysics {
             }
         }
 
-        player.x += player.getMove().x * (player.isFlyMode() ? 1.5f : 1) * (GameItems.isFluid(getBlock(player)) && !player.isFlyMode() ? .8f : 1);
+        player.x += player.getMove().x * (player.isFlyMode() ? 1.5f : 1) *
+                (GameItems.isFluid(getBlock(player)) && !player.isFlyMode() ? .8f : 1);
+
         mobXColl(player);
 
         if (CaveGame.TOUCH && !player.isFlyMode() && player.canJump() && player.getMove().x != 0 && checkJump(player)) {

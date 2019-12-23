@@ -16,8 +16,11 @@ public abstract class Mob extends Rectangle implements Serializable {
 
     protected Vector2 move;
     protected Type type;
+    protected int animDelta = 6;
+    protected int anim;
     private Direction dir;
-
+    private boolean dead;
+    private boolean canJump, flyMode;
     /**
      * @param x      in pixels
      * @param y      in pixels
@@ -33,12 +36,6 @@ public abstract class Mob extends Rectangle implements Serializable {
         this.dir = dir;
         this.type = type;
     }
-
-    private boolean dead;
-
-    private boolean canJump, flyMode;
-    protected int animDelta = 6;
-    protected int anim;
 
     protected static Direction randomDir() {
         return MathUtils.randomBoolean(.5f) ? Direction.LEFT : Direction.RIGHT;
@@ -59,7 +56,6 @@ public abstract class Mob extends Rectangle implements Serializable {
     }
 
     /**
-     *
      * @return The Y coordinate if mob's vertical center in blocks
      */
     public final int getMiddleMapY() {
@@ -67,7 +63,6 @@ public abstract class Mob extends Rectangle implements Serializable {
     }
 
     /**
-     *
      * @return The Y coordinate of mob's legs in blocks
      */
     public final int getLowerMapY() {
@@ -161,6 +156,12 @@ public abstract class Mob extends Rectangle implements Serializable {
         }
     }
 
+    public abstract void draw(SpriteBatch spriteBatch, float x, float y);
+
+    public abstract void ai();
+
+    public abstract void changeDir();
+
     public enum Type {
         MOB,
         SAND,
@@ -171,10 +172,4 @@ public abstract class Mob extends Rectangle implements Serializable {
         LEFT,
         RIGHT
     }
-
-    public abstract void draw(SpriteBatch spriteBatch, float x, float y);
-
-    public abstract void ai();
-
-    public abstract void changeDir();
 }

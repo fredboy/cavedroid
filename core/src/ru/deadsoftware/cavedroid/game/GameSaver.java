@@ -58,11 +58,15 @@ public class GameSaver {
                 for (int x = 0; x < width; x += rl) {
                     rl = in.readInt();
                     bl = in.readInt();
-                    for (int i = x; i < x + rl; i++) map[i][y] = bl;
+                    for (int i = x; i < x + rl; i++) {
+                        map[i][y] = bl;
+                    }
                 }
             }
             in.close();
-        } else throw new Exception("version mismatch");
+        } else {
+            throw new Exception("version mismatch");
+        }
         return map;
     }
 
@@ -72,8 +76,11 @@ public class GameSaver {
         try {
             ObjectInputStream in = new ObjectInputStream(file.read());
             int ver = in.readInt();
-            if (VERSION == ver) gameProc = (GameProc) in.readObject();
-            else throw new Exception("version mismatch");
+            if (VERSION == ver) {
+                gameProc = (GameProc) in.readObject();
+            } else {
+                throw new Exception("version mismatch");
+            }
             in.close();
             gameProc.world = new GameWorld(
                     loadMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/foremap.sav")),

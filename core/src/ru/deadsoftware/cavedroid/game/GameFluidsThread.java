@@ -34,7 +34,9 @@ class GameFluidsThread extends Thread {
 
     private int getNextBlockStateId(int id) {
         int nextState = getNextBlockState(id);
-        if (nextState == -1) return 0;
+        if (nextState == -1) {
+            return 0;
+        }
         if (isWater(id)) {
             return WATER_IDS[nextState];
         }
@@ -100,8 +102,12 @@ class GameFluidsThread extends Thread {
     }
 
     private void updateFluids(int x, int y) {
-        if (!isFluid(id(x, y))) return;
-        if (drainFluid(x, y)) return;
+        if (!isFluid(id(x, y))) {
+            return;
+        }
+        if (drainFluid(x, y)) {
+            return;
+        }
         flowFluid(x, y);
     }
 

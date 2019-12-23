@@ -11,11 +11,9 @@ public class Button {
             DISABLED = 0,
             NORMAL = 1,
             SELECTED = 2;
-
-    private ButtonEventListener listener;
-
     private final Rectangle rect;
     private final String label;
+    private ButtonEventListener listener;
     private int type;
 
     /**

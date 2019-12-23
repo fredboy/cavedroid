@@ -3,6 +3,8 @@ package ru.deadsoftware.cavedroid.game.objects;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
+import javax.annotation.CheckForNull;
+
 public class Block {
 
     private final int x;
@@ -21,23 +23,22 @@ public class Block {
     private final boolean fluid;
 
     /**
-     *
-     * @param left margin from left edge
-     * @param top margin from top edge
-     * @param right margin from right edge
+     * @param left   margin from left edge
+     * @param top    margin from top edge
+     * @param right  margin from right edge
      * @param bottom margin from bottom edge
-     * @param hp hit points
-     * @param drop id of an item the block will drop when destroyed
-     * @param coll true if block has collision
-     * @param bg true if block should be drawn behind player
-     * @param tp true if block is transparent and renderer should draw a block behind it
-     * @param rb true if block should break when there is no block with collision under it
-     * @param fluid true if fluid
-     * @param meta extra info for storing
-     * @param tex block's texture
+     * @param hp     hit points
+     * @param drop   id of an item the block will drop when destroyed
+     * @param coll   true if block has collision
+     * @param bg     true if block should be drawn behind player
+     * @param tp     true if block is transparent and renderer should draw a block behind it
+     * @param rb     true if block should break when there is no block with collision under it
+     * @param fluid  true if fluid
+     * @param meta   extra info for storing
+     * @param tex    block's texture
      */
-    public Block(int left, int top, int right, int bottom, int hp,
-                 String drop, boolean coll, boolean bg, boolean tp, boolean rb, boolean fluid, String meta, Sprite tex) {
+    public Block(int left, int top, int right, int bottom, int hp, String drop, boolean coll, boolean bg, boolean tp,
+                 boolean rb, boolean fluid, String meta, @CheckForNull Sprite tex) {
         this.x = left;
         this.y = top;
         this.w = 16 - right - left;
@@ -51,7 +52,9 @@ public class Block {
         this.fluid = fluid;
         this.meta = meta;
         this.tex = tex;
-        if (this.tex != null) this.tex.flip(false, true);
+        if (this.tex != null) {
+            this.tex.flip(false, true);
+        }
     }
 
     public boolean hasCollision() {

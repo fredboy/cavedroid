@@ -46,14 +46,16 @@ public class GameRenderer extends Renderer {
             if ((!GP.world.hasForeAt(x, y) || GP.world.getForeMapBlock(x, y).isTransparent())
                     && GP.world.hasBackAt(x, y)) {
                 spriter.draw(GP.world.getBackMapBlock(x, y).getTex(), drawX(x), drawY(y));
-                if (!GP.world.hasForeAt(x, y) && x == GP.input.getCurX() && y == GP.input.getCurY())
+                if (!GP.world.hasForeAt(x, y) && x == GP.input.getCurX() && y == GP.input.getCurY()) {
                     drawWreck(GP.world.getBackMap(GP.input.getCurX(), GP.input.getCurY()));
+                }
             }
         }
         if (GP.world.hasForeAt(x, y) && GP.world.getForeMapBlock(x, y).isBackground() == drawBG) {
             spriter.draw(GP.world.getForeMapBlock(x, y).getTex(), drawX(x), drawY(y));
-            if (x == GP.input.getCurX() && y == GP.input.getCurY())
+            if (x == GP.input.getCurX() && y == GP.input.getCurY()) {
                 drawWreck(GP.world.getForeMap(GP.input.getCurX(), GP.input.getCurY()));
+            }
         }
     }
 
@@ -62,8 +64,12 @@ public class GameRenderer extends Renderer {
         int minY = (int) (getCamY() / 16) - 1;
         int maxX = (int) ((getCamX() + getWidth()) / 16) + 1;
         int maxY = (int) ((getCamY() + getHeight()) / 16) + 1;
-        if (minY < 0) minY = 0;
-        if (maxY > GP.world.getHeight()) maxY = GP.world.getHeight();
+        if (minY < 0) {
+            minY = 0;
+        }
+        if (maxY > GP.world.getHeight()) {
+            maxY = GP.world.getHeight();
+        }
         for (int y = minY; y < maxY; y++) {
             for (int x = minX; x < maxX; x++) {
                 drawBlock(x, y, bg);
@@ -78,8 +84,9 @@ public class GameRenderer extends Renderer {
             for (int y = minY; y < maxY; y++) {
                 for (int x = minX; x < maxX; x++) {
                     if ((!GP.world.hasForeAt(x, y) || GP.world.getForeMapBlock(x, y).isTransparent())
-                            && GP.world.hasBackAt(x, y))
+                            && GP.world.hasBackAt(x, y)) {
                         shaper.rect(drawX(x), drawY(y), 16, 16);
+                    }
                 }
             }
             shaper.end();
@@ -115,7 +122,7 @@ public class GameRenderer extends Renderer {
         spriter.draw(textureRegions.get("handle"), x + 156,
                 y + 18 + (GP.input.getCreativeScroll() * (72f / GameProc.MAX_CREATIVE_SCROLL)));
         for (int i = GP.input.getCreativeScroll() * 8; i < GP.input.getCreativeScroll() * 8 + 40; i++) {
-            if (i > 0 && i < GameItems.getItemsSize())
+            if (i > 0 && i < GameItems.getItemsSize()) {
                 if (GameItems.getItem(i).isBlock()) {
                     spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(i)).getTex(),
                             x + 8 + ((i - GP.input.getCreativeScroll() * 8) % 8) * 18,
@@ -125,9 +132,10 @@ public class GameRenderer extends Renderer {
                             x + 8 + ((i - GP.input.getCreativeScroll() * 8) % 8) * 18,
                             y + 18 + ((i - GP.input.getCreativeScroll() * 8) / 8) * 18);
                 }
+            }
         }
         for (int i = 0; i < 9; i++) {
-            if (GP.player.inventory[i] > 0)
+            if (GP.player.inventory[i] > 0) {
                 if (GameItems.getItem(GP.player.inventory[i]).isBlock()) {
                     spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(GP.player.inventory[i])).getTex(),
                             x + 8 + i * 18, y + creative.getRegionHeight() - 24);
@@ -135,6 +143,7 @@ public class GameRenderer extends Renderer {
                     spriter.draw(GameItems.getItem(GP.player.inventory[i]).getTex(),
                             x + 8 + i * 18, y + creative.getRegionHeight() - 24);
                 }
+            }
         }
 
     }
@@ -147,10 +156,11 @@ public class GameRenderer extends Renderer {
         if (GP.world.hasForeAt(GP.input.getCurX(), GP.input.getCurY()) ||
                 GP.world.hasBackAt(GP.input.getCurX(), GP.input.getCurY()) ||
                 GP.controlMode == ControlMode.CURSOR ||
-                !CaveGame.TOUCH)
+                !CaveGame.TOUCH) {
             spriter.draw(cursor,
                     GP.input.getCurX() * 16 - getCamX(),
                     GP.input.getCurY() * 16 - getCamY());
+        }
         spriter.draw(hotbar, getWidth() / 2 - (float) hotbar.getRegionWidth() / 2, 0);
         for (int i = 0; i < 9; i++) {
             if (GP.player.inventory[i] > 0) {
@@ -205,7 +215,9 @@ public class GameRenderer extends Renderer {
                 break;
         }
 
-        if (CaveGame.TOUCH) drawTouchGui();
+        if (CaveGame.TOUCH) {
+            drawTouchGui();
+        }
 
         spriter.end();
 
