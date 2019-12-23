@@ -10,6 +10,7 @@ import ru.deadsoftware.cavedroid.game.mobs.Player;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.LinkedList;
 
@@ -31,7 +32,7 @@ public class GameProc implements Serializable, Disposable {
     public transient GameInput input;
     public ControlMode controlMode;
     transient GamePhysics physics;
-    private transient GameFluidsThread fluidThread;
+    @Nullable private transient GameFluidsThread fluidThread;
 
     public GameProc(int gameMode) {
         world = new GameWorld(WORLD_WIDTH, WORLD_HEIGHT);
@@ -41,13 +42,14 @@ public class GameProc implements Serializable, Disposable {
         physics = new GamePhysics();
         input = new GameInput();
         controlMode = CaveGame.TOUCH ? ControlMode.WALK : ControlMode.CURSOR;
-        resetRenderer();
+        renderer = resetRenderer();
         startFluidThread();
     }
 
-    public void resetRenderer() {
+    public GameRenderer resetRenderer() {
         int scale = CaveGame.TOUCH ? 320 : 480;
-        renderer = new GameRenderer(scale, scale * GameScreen.getHeight() / GameScreen.getWidth());
+        renderer =  new GameRenderer(scale, scale * GameScreen.getHeight() / GameScreen.getWidth());
+        return renderer;
     }
 
     private void startFluidThread() {
@@ -109,6 +111,8 @@ public class GameProc implements Serializable, Disposable {
 
     @Override
     public void dispose() {
-        fluidThread.interrupt();
+        if (fluidThread != null) {
+            fluidThread.interrupt();
+        }
     }
 }

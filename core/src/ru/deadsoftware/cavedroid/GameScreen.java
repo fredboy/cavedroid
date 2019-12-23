@@ -13,6 +13,8 @@ import ru.deadsoftware.cavedroid.misc.states.AppState;
 import ru.deadsoftware.cavedroid.misc.states.GameState;
 import ru.deadsoftware.cavedroid.misc.states.MenuState;
 
+import javax.annotation.Nullable;
+
 public class GameScreen implements Screen {
 
     public static GameProc GP;
@@ -24,7 +26,7 @@ public class GameScreen implements Screen {
     private Renderer renderer;
     private MenuProc menuProc;
 
-    private InputHandlerGame inputHandlerGame;
+    @Nullable private InputHandlerGame inputHandlerGame;
 
     public GameScreen() {
         Assets.load();
@@ -66,8 +68,7 @@ public class GameScreen implements Screen {
                 break;
 
             case LOAD:
-                GP.resetRenderer();
-                renderer = GP.renderer;
+                renderer = GP.resetRenderer();
                 if (inputHandlerGame == null) {
                     inputHandlerGame = new InputHandlerGame();
                 }
@@ -97,8 +98,7 @@ public class GameScreen implements Screen {
                 renderer = menuProc;
                 break;
             case GAME:
-                GP.resetRenderer();
-                renderer = GP.renderer;
+                renderer = GP.resetRenderer();
                 break;
         }
     }
