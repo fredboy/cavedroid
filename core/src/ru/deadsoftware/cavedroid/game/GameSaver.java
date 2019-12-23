@@ -2,7 +2,6 @@ package ru.deadsoftware.cavedroid.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import org.jetbrains.annotations.NotNull;
 import ru.deadsoftware.cavedroid.CaveGame;
 
 import java.io.*;
@@ -12,12 +11,12 @@ public class GameSaver {
 
     private static final int VERSION = 0;
 
-    @NotNull
+
     private static byte[] intToBytes(int i) {
         return ByteBuffer.allocate(4).putInt(i).array();
     }
 
-    private static void saveMap(@NotNull FileHandle file, @NotNull int[][] map) throws IOException {
+    private static void saveMap(FileHandle file, int[][] map) throws IOException {
         int rl, bl;
         int width = map.length;
         int height = map[0].length;
@@ -44,8 +43,8 @@ public class GameSaver {
         out.close();
     }
 
-    @NotNull
-    private static int[][] loadMap(@NotNull FileHandle file) throws Exception {
+
+    private static int[][] loadMap(FileHandle file) throws Exception {
         int[][] map;
         int ver, width, height;
         int rl, bl;

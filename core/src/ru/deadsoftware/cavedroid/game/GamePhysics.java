@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import org.jetbrains.annotations.NotNull;
 import ru.deadsoftware.cavedroid.CaveGame;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.mobs.Player;
@@ -25,7 +24,7 @@ class GamePhysics {
      *
      * @return true if mob should jump
      */
-    private boolean checkJump(@NotNull Mob mob) {
+    private boolean checkJump(Mob mob) {
         int dir = mob.looksLeft() ? 0 : 1;
         int blX = (int) (mob.getX() + mob.getWidth() * dir - 8 + 16 * dir);
         int blY = (int) (mob.getY() + mob.getHeight() - 8);
@@ -39,7 +38,7 @@ class GamePhysics {
                 (mob.getY() + mob.getHeight()) - GameItems.getBlock(block).getRect(blX / 16, blY / 16).y > 8);
     }
 
-    private boolean checkColl(@NotNull Rectangle rect) {
+    private boolean checkColl(Rectangle rect) {
         int minX = (int) ((rect.x + rect.width / 2) / 16) - 4;
         int minY = (int) ((rect.y + rect.height / 2) / 16) - 4;
         int maxX = (int) ((rect.x + rect.width / 2) / 16) + 4;
@@ -68,7 +67,7 @@ class GamePhysics {
         return false;
     }
 
-    private int getBlock(@NotNull Rectangle rect) {
+    private int getBlock(Rectangle rect) {
         return GP.world.getForeMap((int) (rect.x + rect.width / 2) / 16,
                 (int) (rect.y + rect.height / 8 * 7) / 16);
     }

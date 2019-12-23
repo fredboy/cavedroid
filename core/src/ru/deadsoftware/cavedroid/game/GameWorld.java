@@ -1,6 +1,5 @@
 package ru.deadsoftware.cavedroid.game;
 
-import org.jetbrains.annotations.NotNull;
 import ru.deadsoftware.cavedroid.game.objects.Block;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
 
@@ -23,7 +22,7 @@ public class GameWorld {
         WorldGen.clear();
     }
 
-    GameWorld(@NotNull int[][] foreMap, @NotNull int[][] backMap) {
+    GameWorld(int[][] foreMap, int[][] backMap) {
         this.foreMap = foreMap.clone();
         this.backMap = backMap.clone();
         WIDTH = foreMap.length;
