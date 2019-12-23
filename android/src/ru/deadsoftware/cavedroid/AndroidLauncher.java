@@ -20,6 +20,10 @@ public class AndroidLauncher extends AndroidApplication {
             exit();
         }
         initialize(new CaveGame(gameFolder, true), config);
+
+        if (BuildConfig.DEBUG) {
+            GameScreen.SHOW_DEBUG = true;
+        }
     }
 
     @Override
