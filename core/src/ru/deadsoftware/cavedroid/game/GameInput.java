@@ -68,10 +68,10 @@ public class GameInput {
             mPlayer.swim = true;
         } else if (mPlayer.canJump()) {
             mPlayer.getMove().add(0, -7);
-        } else if (!mPlayer.isFlyMode() && mPlayer.gameMode == 1) {
-            mPlayer.setFlyMode(true);
-            mPlayer.getMove().y = 0;
         } else if (mPlayer.isFlyMode()) {
+            mPlayer.getMove().y -= GamePhysics.PL_SPEED;
+        } else if (mPlayer.gameMode == 1) {
+            mPlayer.setFlyMode(true);
             mPlayer.getMove().y = -GamePhysics.PL_SPEED;
         }
     }
@@ -108,7 +108,7 @@ public class GameInput {
                     break;
                 case Input.Keys.S:
                 case Input.Keys.CONTROL_LEFT:
-                    mPlayer.getMove().y = GamePhysics.PL_SPEED;
+                    mPlayer.getMove().y += GamePhysics.PL_SPEED;
                     break;
             }
         } else {
@@ -325,16 +325,17 @@ public class GameInput {
                     mPlayer.getMove().x -= GamePhysics.PL_SPEED;
                     break;
                 case Input.Keys.W:
-                case Input.Keys.S:
                 case Input.Keys.SPACE:
+                    if (mPlayer.isFlyMode()) {
+                        mPlayer.getMove().y += GamePhysics.PL_SPEED;
+                    }
+                    mPlayer.swim = false;
+                    break;
+                case Input.Keys.S:
                 case Input.Keys.CONTROL_LEFT:
                     if (mPlayer.isFlyMode()) {
-                        mPlayer.getMove().y = 0;
+                        mPlayer.getMove().y -= GamePhysics.PL_SPEED;
                     }
-                    if (mPlayer.swim) {
-                        mPlayer.swim = false;
-                    }
-                    break;
             }
             mKeyDownCode = 0;
         }
