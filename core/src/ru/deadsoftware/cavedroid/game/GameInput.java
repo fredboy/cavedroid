@@ -19,7 +19,7 @@ import static ru.deadsoftware.cavedroid.game.GameItems.*;
 
 public class GameInput {
 
-    private boolean keyDown, touchedDown;
+    private boolean keyDown, touchedDown, dragging;
 
     private int keyDownCode, touchDownBtn;
     private float touchDownX, touchDownY;
@@ -176,9 +176,10 @@ public class GameInput {
     }
 
     private void pressLMB() {
-        if ((GP.world.hasForeAt(curX, curY) && GP.world.getForeMapBlock(curX, curY).getHp() >= 0) ||
+        if (CaveGame.GAME_STATE == GameState.PLAY &&
+                ((GP.world.hasForeAt(curX, curY) && GP.world.getForeMapBlock(curX, curY).getHp() >= 0) ||
                 (!GP.world.hasForeAt(curX, curY) && GP.world.hasBackAt(curX, curY) &&
-                        GP.world.getBackMapBlock(curX, curY).getHp() >= 0)) {
+                        GP.world.getBackMapBlock(curX, curY).getHp() >= 0))) {
             if (GP.player.gameMode == 0) {
                 blockDamage++;
                 if (GP.world.hasForeAt(curX, curY)) {
@@ -313,6 +314,11 @@ public class GameInput {
     }
 
     public void touchUp(float screenX, float screenY, int button) {
+        if (dragging) {
+            dragging = false;
+            return;
+        }
+
         if (CaveGame.TOUCH && keyDown) {
             keyUp(keyDownCode);
             keyDown = false;
@@ -348,6 +354,7 @@ public class GameInput {
     }
 
     public void touchDragged(float screenX, float screenY) {
+        dragging = true;
         if (CaveGame.GAME_STATE == GameState.CREATIVE_INV && Math.abs(screenY - touchDownY) > 16) {
             if (insideCreativeInv(screenX, screenY)) {
                 creativeScroll -= (screenY - touchDownY) / 16;
