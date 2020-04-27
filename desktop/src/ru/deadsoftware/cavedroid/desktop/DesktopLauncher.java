@@ -14,6 +14,7 @@ class DesktopLauncher {
         config.title = "CaveDroid";
 		config.width = 960;
 		config.height = 540;
+		config.forceExit = false;
 
 		boolean touch = false;
 		for (String anArg : arg) {
