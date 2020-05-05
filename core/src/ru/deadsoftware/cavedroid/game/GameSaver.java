@@ -1,12 +1,13 @@
 package ru.deadsoftware.cavedroid.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import ru.deadsoftware.cavedroid.CaveGame;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
+//TODO rewrite saver
 public class GameSaver {
 
     private static final int VERSION = 0;
@@ -71,50 +72,52 @@ public class GameSaver {
     }
 
     public static GameProc load() {
-        FileHandle file = Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/game.sav");
-        GameProc gameProc = null;
-        try {
-            ObjectInputStream in = new ObjectInputStream(file.read());
-            int ver = in.readInt();
-            if (VERSION == ver) {
-                gameProc = (GameProc) in.readObject();
-            } else {
-                throw new Exception("version mismatch");
-            }
-            in.close();
-            gameProc.world = new GameWorld(
-                    loadMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/foremap.sav")),
-                    loadMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/backmap.sav"))
-            );
-            gameProc.physics = new GamePhysics();
-            gameProc.input = new GameInput();
-        } catch (Exception e) {
-            Gdx.app.error("GameSaver", e.getMessage(), e);
-            Gdx.app.exit();
-        }
-        return gameProc;
+//        FileHandle file = Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/game.sav");
+//        GameProc gameProc = null;
+//        try {
+//            ObjectInputStream in = new ObjectInputStream(file.read());
+//            int ver = in.readInt();
+//            if (VERSION == ver) {
+//                gameProc = (GameProc) in.readObject();
+//            } else {
+//                throw new Exception("version mismatch");
+//            }
+//            in.close();
+//            gameProc.world = new GameWorld(
+//                    loadMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/foremap.sav")),
+//                    loadMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/backmap.sav"))
+//            );
+//            gameProc.physics = new GamePhysics();
+//            gameProc.input = new GameInput();
+//        } catch (Exception e) {
+//            Gdx.app.error("GameSaver", e.getMessage(), e);
+//            Gdx.app.exit();
+//        }
+//        return gameProc;
+        return null;
     }
 
     public static void save(GameProc gp) {
-        FileHandle file = Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/");
-        file.mkdirs();
-        file = Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/game.sav");
-        try {
-            ObjectOutputStream out = new ObjectOutputStream(file.write(false));
-            out.writeInt(VERSION);
-            out.writeObject(gp);
-            out.close();
-            saveMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/foremap.sav"), gp.world.getFullForeMap());
-            saveMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/backmap.sav"), gp.world.getFullBackMap());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        FileHandle file = Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/");
+//        file.mkdirs();
+//        file = Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/game.sav");
+//        try {
+//            ObjectOutputStream out = new ObjectOutputStream(file.write(false));
+//            out.writeInt(VERSION);
+//            out.writeObject(gp);
+//            out.close();
+//            saveMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/foremap.sav"), gp.world.getFullForeMap());
+//            saveMap(Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/backmap.sav"), gp.world.getFullBackMap());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static boolean exists() {
-        return (Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/game.sav").exists() &&
-                Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/foremap.sav").exists() &&
-                Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/backmap.sav").exists());
+//        return (Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/game.sav").exists() &&
+//                Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/foremap.sav").exists() &&
+//                Gdx.files.absolute(CaveGame.GAME_FOLDER + "/saves/backmap.sav").exists());
+        return false;
     }
 
 }

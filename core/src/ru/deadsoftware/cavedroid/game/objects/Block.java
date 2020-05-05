@@ -14,6 +14,7 @@ public class Block {
     private final int hp;
     private final String drop;
     private final String meta;
+    @CheckForNull
     private final Sprite tex;
 
     private final boolean coll;
@@ -85,11 +86,12 @@ public class Block {
         return !drop.equals("none");
     }
 
-    public Sprite getTex() {
+    public Sprite getTexture() {
+        assert tex != null;
         return tex;
     }
 
-    public Rectangle getRect(int x, int y) {
+    public Rectangle getRectangle(int x, int y) {
         x *= 16;
         y *= 16;
         return new Rectangle(x + this.x, y + this.y, w, h);

@@ -1,10 +1,10 @@
 package ru.deadsoftware.cavedroid.misc;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import ru.deadsoftware.cavedroid.GameScreen;
 
 public abstract class Renderer implements InputProcessor {
 
@@ -13,7 +13,7 @@ public abstract class Renderer implements InputProcessor {
     private final OrthographicCamera camera;
 
     protected Renderer() {
-        this(GameScreen.getWidth(), GameScreen.getHeight());
+        this(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     protected Renderer(float width, float height) {
@@ -63,7 +63,7 @@ public abstract class Renderer implements InputProcessor {
                 getHeight() / 2 - (float) Assets.getStringHeight(str) / 2);
     }
 
-    public abstract void render();
+    public abstract void render(float delta);
 
     @Override
     public boolean keyDown(int keycode) {

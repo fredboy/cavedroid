@@ -2,9 +2,8 @@ package ru.deadsoftware.cavedroid.game.mobs;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import ru.deadsoftware.cavedroid.game.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Assets;
-
-import static ru.deadsoftware.cavedroid.GameScreen.GP;
 
 public class Player extends Mob {
 
@@ -13,33 +12,33 @@ public class Player extends Mob {
     public final int gameMode;
     public boolean swim;
 
-    public Player(int gameMode) {
+    public Player() {
         super(0, 0, 4, 30, randomDir(), Type.MOB);
-        this.gameMode = gameMode;
+        this.gameMode = 1;
         inventory = new int[9];
         swim = false;
     }
 
-    public void respawn() {
-        Vector2 pos = getSpawnPoint();
+    public void respawn(GameWorld gameWorld) {
+        Vector2 pos = getSpawnPoint(gameWorld);
         this.x = pos.x;
         this.y = pos.y;
-        move.setZero();
+        mMove.setZero();
     }
 
-    private Vector2 getSpawnPoint() {
-        int x = 0, y;
-        for (y = 0; y < GP.world.getHeight(); y++) {
-            if (y == GP.world.getHeight() - 1) {
+    private Vector2 getSpawnPoint(GameWorld gameWorld) {
+        int y;
+        for (y = 0; y < gameWorld.getHeight(); y++) {
+            if (y == gameWorld.getHeight() - 1) {
                 y = 60;
-                GP.world.setForeMap(x, y, 1);
+                gameWorld.setForeMap(0, y, 1);
                 break;
             }
-            if (GP.world.hasForeAt(x, y) && GP.world.getForeMapBlock(x, y).hasCollision()) {
+            if (gameWorld.hasForeAt(0, y) && gameWorld.getForeMapBlock(0, y).hasCollision()) {
                 break;
             }
         }
-        return new Vector2(x * 16 + 8 - getWidth() / 2, (float) y * 16 - getHeight());
+        return new Vector2(8 - getWidth() / 2, (float) y * 16 - getHeight());
     }
 
     public void setDir(Direction dir) {
@@ -49,7 +48,7 @@ public class Player extends Mob {
     }
 
     @Override
-    public void ai() {
+    public void ai(GameWorld gameWorld) {
     }
 
     @Override
@@ -58,11 +57,11 @@ public class Player extends Mob {
 
     @Override
     public void draw(SpriteBatch spriteBatch, float x, float y) {
-        if (move.x != 0 || Assets.playerSprite[0][2].getRotation() != 0) {
-            Assets.playerSprite[0][2].rotate(animDelta);
-            Assets.playerSprite[1][2].rotate(-animDelta);
-            Assets.playerSprite[0][3].rotate(-animDelta);
-            Assets.playerSprite[1][3].rotate(animDelta);
+        if (mMove.x != 0 || Assets.playerSprite[0][2].getRotation() != 0) {
+            Assets.playerSprite[0][2].rotate(mAnimDelta);
+            Assets.playerSprite[1][2].rotate(-mAnimDelta);
+            Assets.playerSprite[0][3].rotate(-mAnimDelta);
+            Assets.playerSprite[1][3].rotate(mAnimDelta);
         } else {
             Assets.playerSprite[0][2].setRotation(0);
             Assets.playerSprite[1][2].setRotation(0);
@@ -70,7 +69,7 @@ public class Player extends Mob {
             Assets.playerSprite[1][3].setRotation(0);
         }
         if (Assets.playerSprite[0][2].getRotation() >= 60 || Assets.playerSprite[0][2].getRotation() <= -60) {
-            animDelta = -animDelta;
+            mAnimDelta = -mAnimDelta;
         }
 
         //back hand

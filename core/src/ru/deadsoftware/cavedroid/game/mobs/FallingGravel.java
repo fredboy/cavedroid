@@ -3,8 +3,7 @@ package ru.deadsoftware.cavedroid.game.mobs;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavedroid.game.GameItems;
-
-import static ru.deadsoftware.cavedroid.GameScreen.GP;
+import ru.deadsoftware.cavedroid.game.GameWorld;
 
 /**
  * Falling gravel is actually a mob, that spawns in place of gravel when there is no block under it,
@@ -20,13 +19,13 @@ public class FallingGravel extends Mob {
      */
     public FallingGravel(float x, float y) {
         super(x, y, 16, 16, Direction.LEFT, Type.GRAVEL);
-        move = new Vector2(0, 1);
+        mMove = new Vector2(0, 1);
     }
 
     @Override
-    public void ai() {
-        if (move.isZero()) {
-            GP.world.setForeMap(getMapX(), getMiddleMapY(), 11);
+    public void ai(GameWorld gameWorld) {
+        if (mMove.isZero()) {
+            gameWorld.setForeMap(getMapX(), getMiddleMapY(), 11);
             kill();
         }
     }

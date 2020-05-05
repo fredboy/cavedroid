@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.JsonValue;
 import ru.deadsoftware.cavedroid.CaveGame;
-import ru.deadsoftware.cavedroid.GameScreen;
+import ru.deadsoftware.cavedroid.game.GameScreen;
 import ru.deadsoftware.cavedroid.menu.objects.Button;
 import ru.deadsoftware.cavedroid.menu.objects.ButtonEventListener;
 import ru.deadsoftware.cavedroid.menu.objects.ButtonRenderer;
@@ -89,11 +89,11 @@ public abstract class Menu {
         }
         spriter.draw(gamelogo, width / 2 - (float) gamelogo.getRegionWidth() / 2, 8);
 
-        float inputX = Gdx.input.getX() * width / GameScreen.getWidth();
-        float inputY = Gdx.input.getY() * height / GameScreen.getHeight();
+        float inputX = Gdx.input.getX() * width / Gdx.graphics.getWidth();
+        float inputY = Gdx.input.getY() * height / Gdx.graphics.getHeight();
         for (Button button : buttons.values()) {
             if (button.getType() > 0) {
-                if (button.getRect().contains(inputX, inputY) && (!CaveGame.TOUCH || Gdx.input.isTouched())) {
+                if (button.getRect().contains(inputX, inputY) && (/*!CaveGame.TOUCH || */Gdx.input.isTouched())) {
                     button.setType(2);
                 } else {
                     button.setType(1);

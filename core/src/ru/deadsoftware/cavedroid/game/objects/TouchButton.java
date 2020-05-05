@@ -4,9 +4,9 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class TouchButton {
 
-    private Rectangle rect;
-    private int code;
-    private boolean mouse;
+    private final Rectangle rect;
+    private final int code;
+    private final boolean mouse;
 
     public TouchButton(Rectangle rect, int code, boolean mouse) {
         this.rect = rect;

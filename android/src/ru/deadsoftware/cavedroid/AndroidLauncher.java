@@ -12,18 +12,16 @@ public class AndroidLauncher extends AndroidApplication {
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         config.hideStatusBar = true;
         config.useImmersiveMode = true;
-        String gameFolder = null;
+        String gameFolder = "";
         try {
             gameFolder = getPackageManager().getPackageInfo(getPackageName(), 0).applicationInfo.dataDir;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             exit();
         }
-        initialize(new CaveGame(gameFolder, true), config);
-
-        if (BuildConfig.DEBUG) {
-            GameScreen.SHOW_DEBUG = true;
-        }
+        CaveGame caveGame = new CaveGame(gameFolder, true);
+        caveGame.setDebug(BuildConfig.DEBUG);
+        initialize(caveGame, config);
     }
 
     @Override

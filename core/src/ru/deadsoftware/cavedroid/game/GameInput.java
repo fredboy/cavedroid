@@ -5,71 +5,97 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.google.common.collect.Range;
-import ru.deadsoftware.cavedroid.CaveGame;
-import ru.deadsoftware.cavedroid.GameScreen;
+import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
+import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.mobs.Pig;
+import ru.deadsoftware.cavedroid.game.mobs.Player;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
-import ru.deadsoftware.cavedroid.misc.states.AppState;
-import ru.deadsoftware.cavedroid.misc.states.GameState;
 
-import static ru.deadsoftware.cavedroid.GameScreen.GP;
+import javax.inject.Inject;
+
 import static ru.deadsoftware.cavedroid.game.GameItems.*;
 
+@GameScope
 public class GameInput {
 
-    private boolean keyDown, touchedDown, dragging;
+    private final MainConfig mMainConfig;
+    private final GameWorld mGameWorld;
+    private final MobsController mMobsController;
+    private final Player mPlayer;
 
-    private int keyDownCode, touchDownBtn;
-    private float touchDownX, touchDownY;
-    private long touchDownTime;
+    private ControlMode mControlMode;
 
-    private int curX, curY;
-    private int creativeScroll;
-    private int blockDamage;
+    private boolean mKeyDown;
+    private boolean mTouchedDown;
+    private boolean mDragging;
+
+    private int mKeyDownCode;
+    private int mTouchDownBtn;
+    private float mTouchDownX;
+    private float mTouchDownY;
+    private long mTouchDownTime;
+
+    private int mCurX;
+    private int mCurY;
+    private int mCreativeScroll;
+    private int mBlockDamage;
+
+    @Inject
+    public GameInput(MainConfig mainConfig,
+                     GameWorld gameWorld,
+                     MobsController mobsController) {
+        mMainConfig = mainConfig;
+        mGameWorld = gameWorld;
+        mMobsController = mobsController;
+
+        mPlayer = mMobsController.getPlayer();
+
+        mControlMode = mMainConfig.isTouch() ? ControlMode.WALK : ControlMode.CURSOR;
+    }
 
     private boolean checkSwim() {
-        return GameItems.isFluid(GP.world.getForeMap(GP.player.getMapX(), GP.player.getLowerMapY()));
+        return GameItems.isFluid(mGameWorld.getForeMap(mPlayer.getMapX(), mPlayer.getLowerMapY()));
     }
 
     private void goUpwards() {
         if (checkSwim()) {
-            GP.player.swim = true;
-        } else if (GP.player.canJump()) {
-            GP.player.getMove().add(0, -7);
-        } else if (!GP.player.isFlyMode() && GP.player.gameMode == 1) {
-            GP.player.setFlyMode(true);
-            GP.player.getMove().y = 0;
-        } else if (GP.player.isFlyMode()) {
-            GP.player.getMove().y = -GamePhysics.PL_SPEED;
+            mPlayer.swim = true;
+        } else if (mPlayer.canJump()) {
+            mPlayer.getMove().add(0, -7);
+        } else if (!mPlayer.isFlyMode() && mPlayer.gameMode == 1) {
+            mPlayer.setFlyMode(true);
+            mPlayer.getMove().y = 0;
+        } else if (mPlayer.isFlyMode()) {
+            mPlayer.getMove().y = -GamePhysics.PL_SPEED;
         }
     }
 
     @SuppressWarnings("IntegerDivisionInFloatingPointContext")
     private boolean insideCreativeInv(float screenX, float screenY) {
         TextureRegion creative = Assets.textureRegions.get("creative");
-        return (screenX > GP.renderer.getWidth() / 2 - creative.getRegionWidth() / 2 &&
-                screenX < GP.renderer.getWidth() / 2 + creative.getRegionWidth() / 2 &&
-                screenY > GP.renderer.getHeight() / 2 - creative.getRegionHeight() / 2 &&
-                screenY < GP.renderer.getHeight() / 2 + creative.getRegionHeight() / 2);
+        return (screenX > mMainConfig.getWidth() / 2 - creative.getRegionWidth() / 2 &&
+                screenX < mMainConfig.getWidth() / 2 + creative.getRegionWidth() / 2 &&
+                screenY > mMainConfig.getHeight() / 2 - creative.getRegionHeight() / 2 &&
+                screenY < mMainConfig.getHeight() / 2 + creative.getRegionHeight() / 2);
     }
 
     private void wasdPressed(int keycode) {
-        if (GP.controlMode == ControlMode.WALK || !CaveGame.TOUCH) {
+        if (mControlMode == ControlMode.WALK || !mMainConfig.isTouch()) {
             switch (keycode) {
                 case Input.Keys.A:
-                    GP.player.getMove().x = -GamePhysics.PL_SPEED;
-                    GP.player.setDir(Mob.Direction.LEFT);
-                    if (CaveGame.TOUCH && checkSwim()) {
-                        GP.player.swim = true;
+                    mPlayer.getMove().x = -GamePhysics.PL_SPEED;
+                    mPlayer.setDir(Mob.Direction.LEFT);
+                    if (mMainConfig.isTouch() && checkSwim()) {
+                        mPlayer.swim = true;
                     }
                     break;
                 case Input.Keys.D:
-                    GP.player.getMove().x = GamePhysics.PL_SPEED;
-                    GP.player.setDir(Mob.Direction.RIGHT);
-                    if (CaveGame.TOUCH && checkSwim()) {
-                        GP.player.swim = true;
+                    mPlayer.getMove().x = GamePhysics.PL_SPEED;
+                    mPlayer.setDir(Mob.Direction.RIGHT);
+                    if (mMainConfig.isTouch() && checkSwim()) {
+                        mPlayer.swim = true;
                     }
                     break;
                 case Input.Keys.W:
@@ -78,74 +104,74 @@ public class GameInput {
                     break;
                 case Input.Keys.S:
                 case Input.Keys.CONTROL_LEFT:
-                    GP.player.getMove().y = GamePhysics.PL_SPEED;
+                    mPlayer.getMove().y = GamePhysics.PL_SPEED;
                     break;
             }
         } else {
             switch (keycode) {
                 case Input.Keys.A:
-                    curX--;
+                    mCurX--;
                     break;
                 case Input.Keys.D:
-                    curX++;
+                    mCurX++;
                     break;
                 case Input.Keys.W:
-                    curY--;
+                    mCurY--;
                     break;
                 case Input.Keys.S:
-                    curY++;
+                    mCurY++;
                     break;
             }
-            blockDamage = 0;
+            mBlockDamage = 0;
         }
     }
 
     private boolean isNotAutoselectable(int x, int y) {
-        return (!GP.world.hasForeAt(x, y) || !GP.world.getForeMapBlock(x, y).hasCollision());
+        return (!mGameWorld.hasForeAt(x, y) || !mGameWorld.getForeMapBlock(x, y).hasCollision());
     }
 
     private void checkCursorBounds() {
-        if (curY < 0) {
-            curY = 0;
-        } else if (curY >= GP.world.getHeight()) {
-            curY = GP.world.getHeight() - 1;
+        if (mCurY < 0) {
+            mCurY = 0;
+        } else if (mCurY >= mGameWorld.getHeight()) {
+            mCurY = mGameWorld.getHeight() - 1;
         }
 
-        if (GP.controlMode == ControlMode.CURSOR) {
-            if (curX * 16 + 8 < GP.player.getX() + GP.player.getWidth() / 2) {
-                GP.player.setDir(Mob.Direction.LEFT);
+        if (mControlMode == ControlMode.CURSOR) {
+            if (mCurX * 16 + 8 < mPlayer.getX() + mPlayer.getWidth() / 2) {
+                mPlayer.setDir(Mob.Direction.LEFT);
             } else {
-                GP.player.setDir(Mob.Direction.RIGHT);
+                mPlayer.setDir(Mob.Direction.RIGHT);
             }
         }
     }
 
-    private void moveCursor() {
-        int pastX = curX;
-        int pastY = curY;
+    public void moveCursor(GameRenderer gameRenderer) {
+        int pastX = mCurX;
+        int pastY = mCurY;
 
-        if (GP.controlMode == ControlMode.WALK && CaveGame.TOUCH) {
-            curX = GP.player.getMapX() + (GP.player.looksLeft() ? -1 : 1);
-            curY = GP.player.getUpperMapY();
-            for (int i = 0; i < 2 && isNotAutoselectable(curX, curY); i++) {
-                curY++;
+        if (mControlMode == ControlMode.WALK && mMainConfig.isTouch()) {
+            mCurX = mPlayer.getMapX() + (mPlayer.looksLeft() ? -1 : 1);
+            mCurY = mPlayer.getUpperMapY();
+            for (int i = 0; i < 2 && isNotAutoselectable(mCurX, mCurY); i++) {
+                mCurY++;
             }
-            if (isNotAutoselectable(curX, curY)) {
-                curX += GP.player.looksLeft() ? 1 : -1;
+            if (isNotAutoselectable(mCurX, mCurY)) {
+                mCurX += mPlayer.looksLeft() ? 1 : -1;
             }
-        } else if (!CaveGame.TOUCH) {
-            curX = (int) (Gdx.input.getX() * (GP.renderer.getWidth() /
-                    GameScreen.getWidth()) + GP.renderer.getCamX()) / 16;
+        } else if (!mMainConfig.isTouch()) {
+            mCurX = (int) (Gdx.input.getX() * (mMainConfig.getWidth() /
+                    Gdx.graphics.getWidth()) + gameRenderer.getCamX()) / 16;
 
-            curY = (int) (Gdx.input.getY() * (GP.renderer.getHeight() /
-                    GameScreen.getHeight()) + GP.renderer.getCamY()) / 16;
-            if (curX < 0) {
-                curX--;
+            mCurY = (int) (Gdx.input.getY() * (mMainConfig.getHeight() /
+                    Gdx.graphics.getHeight()) + gameRenderer.getCamY()) / 16;
+            if (mCurX < 0) {
+                mCurX--;
             }
         }
 
-        if (pastX != curX || pastY != curY) {
-            blockDamage = 0;
+        if (pastX != mCurX || pastY != mCurY) {
+            mBlockDamage = 0;
         }
 
         checkCursorBounds();
@@ -156,19 +182,19 @@ public class GameInput {
         if (id > 0) {
             if (getItem(id).isBlock()) {
                 if (!bg) {
-                    GP.world.placeToForeground(x, y, getBlockIdByItemId(id));
+                    mGameWorld.placeToForeground(x, y, getBlockIdByItemId(id));
                 } else {
-                    GP.world.placeToBackground(x, y, getBlockIdByItemId(id));
+                    mGameWorld.placeToBackground(x, y, getBlockIdByItemId(id));
                 }
             } else {
                 switch (key) {
                     case "bucket_water":
-                        GP.world.placeToForeground(x, y, getBlockId("water"));
-                        GP.player.inventory[GP.player.slot] = getItemId("bucket_empty");
+                        mGameWorld.placeToForeground(x, y, getBlockId("water"));
+                        mPlayer.inventory[mPlayer.slot] = getItemId("bucket_empty");
                         break;
                     case "bucket_lava":
-                        GP.world.placeToForeground(x, y, getBlockId("lava"));
-                        GP.player.inventory[GP.player.slot] = getItemId("bucket_empty");
+                        mGameWorld.placeToForeground(x, y, getBlockId("lava"));
+                        mPlayer.inventory[mPlayer.slot] = getItemId("bucket_empty");
                         break;
                 }
             }
@@ -176,30 +202,30 @@ public class GameInput {
     }
 
     private void pressLMB() {
-        if (CaveGame.GAME_STATE == GameState.PLAY &&
-                ((GP.world.hasForeAt(curX, curY) && GP.world.getForeMapBlock(curX, curY).getHp() >= 0) ||
-                (!GP.world.hasForeAt(curX, curY) && GP.world.hasBackAt(curX, curY) &&
-                        GP.world.getBackMapBlock(curX, curY).getHp() >= 0))) {
-            if (GP.player.gameMode == 0) {
-                blockDamage++;
-                if (GP.world.hasForeAt(curX, curY)) {
-                    if (blockDamage >= GP.world.getForeMapBlock(curX, curY).getHp()) {
-                        GP.world.destroyForeMap(curX, curY);
-                        blockDamage = 0;
+        if (mMainConfig.checkGameUiWindow(GameUiWindow.NONE) &&
+                ((mGameWorld.hasForeAt(mCurX, mCurY) && mGameWorld.getForeMapBlock(mCurX, mCurY).getHp() >= 0) ||
+                        (!mGameWorld.hasForeAt(mCurX, mCurY) && mGameWorld.hasBackAt(mCurX, mCurY) &&
+                                mGameWorld.getBackMapBlock(mCurX, mCurY).getHp() >= 0))) {
+            if (mPlayer.gameMode == 0) {
+                mBlockDamage++;
+                if (mGameWorld.hasForeAt(mCurX, mCurY)) {
+                    if (mBlockDamage >= mGameWorld.getForeMapBlock(mCurX, mCurY).getHp()) {
+                        mGameWorld.destroyForeMap(mCurX, mCurY);
+                        mBlockDamage = 0;
                     }
-                } else if (GP.world.hasBackAt(curX, curY)) {
-                    if (blockDamage >= GP.world.getBackMapBlock(curX, curY).getHp()) {
-                        GP.world.destroyBackMap(curX, curY);
-                        blockDamage = 0;
+                } else if (mGameWorld.hasBackAt(mCurX, mCurY)) {
+                    if (mBlockDamage >= mGameWorld.getBackMapBlock(mCurX, mCurY).getHp()) {
+                        mGameWorld.destroyBackMap(mCurX, mCurY);
+                        mBlockDamage = 0;
                     }
                 }
             } else {
-                if (GP.world.hasForeAt(curX, curY)) {
-                    GP.world.placeToForeground(curX, curY, 0);
-                } else if (GP.world.hasBackAt(curX, curY)) {
-                    GP.world.placeToBackground(curX, curY, 0);
+                if (mGameWorld.hasForeAt(mCurX, mCurY)) {
+                    mGameWorld.placeToForeground(mCurX, mCurY, 0);
+                } else if (mGameWorld.hasBackAt(mCurX, mCurY)) {
+                    mGameWorld.placeToBackground(mCurX, mCurY, 0);
                 }
-                touchedDown = false;
+                mTouchedDown = false;
             }
         }
     }
@@ -207,25 +233,25 @@ public class GameInput {
     private boolean insideHotbar(float x, float y) {
         TextureRegion hotbar = Assets.textureRegions.get("hotbar");
         return y < hotbar.getRegionHeight() &&
-                Range.open(GP.renderer.getWidth() / 2 - (float) hotbar.getRegionWidth() / 2,
-                        GP.renderer.getWidth() / 2 + (float) hotbar.getRegionWidth() / 2).contains(x);
+                Range.open(mMainConfig.getWidth() / 2 - (float) hotbar.getRegionWidth() / 2,
+                        mMainConfig.getWidth() / 2 + (float) hotbar.getRegionWidth() / 2).contains(x);
     }
 
     private void holdMB() {
-        if (touchDownBtn == Input.Buttons.RIGHT) {
-            useItem(curX, curY, GP.player.inventory[GP.player.slot], true);
-            touchedDown = false;
+        if (mTouchDownBtn == Input.Buttons.RIGHT) {
+            useItem(mCurX, mCurY, mPlayer.inventory[mPlayer.slot], true);
+            mTouchedDown = false;
         } else {
-            if (insideHotbar(touchDownX, touchDownY)) {
-                CaveGame.GAME_STATE = GameState.CREATIVE_INV;
-                touchedDown = false;
+            if (insideHotbar(mTouchDownX, mTouchDownY)) {
+//                CaveGame.GAME_STATE = GameState.CREATIVE_INV;
+                mTouchedDown = false;
             }
         }
     }
 
     public void keyDown(int keycode) {
-        keyDown = true;
-        keyDownCode = keycode;
+        mKeyDown = true;
+        mKeyDownCode = keycode;
         switch (keycode) {
             case Input.Keys.A:
             case Input.Keys.D:
@@ -237,46 +263,46 @@ public class GameInput {
                 break;
 
             case Input.Keys.ALT_LEFT:
-                if (CaveGame.TOUCH) {
-                    GP.controlMode = GP.controlMode == ControlMode.WALK ? ControlMode.CURSOR : ControlMode.WALK;
+                if (mMainConfig.isTouch()) {
+                    mControlMode = mControlMode == ControlMode.WALK ? ControlMode.CURSOR : ControlMode.WALK;
                 }
                 break;
 
             case Input.Keys.E:
-                if (CaveGame.GAME_STATE == GameState.PLAY) {
-                    switch (GP.player.gameMode) {
+                if (mMainConfig.checkGameUiWindow(GameUiWindow.NONE)) {
+                    switch (mPlayer.gameMode) {
                         case 0:
                             //TODO survival inv
                             break;
                         case 1:
-                            CaveGame.GAME_STATE = GameState.CREATIVE_INV;
+                            mMainConfig.setGameUiWindow(GameUiWindow.CREATIVE_INVENTORY);
                             break;
                     }
                 } else {
-                    CaveGame.GAME_STATE = GameState.PLAY;
+                    mMainConfig.setGameUiWindow(GameUiWindow.NONE);
                 }
                 break;
 
             case Input.Keys.G:
-                GP.mobs.add(new Pig(curX * 16, curY * 16));
+                mMobsController.addMob(Pig.class, mCurX * 16, mCurY * 16);
                 break;
 
             case Input.Keys.Q:
-                GP.world.placeToForeground(curX, curY, 8);
+                mGameWorld.placeToForeground(mCurX, mCurY, 8);
                 break;
 
-            case Input.Keys.ESCAPE:
-            case Input.Keys.BACK:
-                CaveGame.APP_STATE = AppState.SAVE;
-                CaveGame.GAME_STATE = GameState.PAUSE;
-                break;
+//            case Input.Keys.ESCAPE:
+//            case Input.Keys.BACK:
+//                CaveGame.APP_STATE = AppState.SAVE;
+//                CaveGame.GAME_STATE = GameState.PAUSE;
+//                break;
 
             case Input.Keys.F1:
-                GameScreen.SHOW_DEBUG = !GameScreen.SHOW_DEBUG;
+                mMainConfig.setShowInfo(!mMainConfig.isShowInfo());
                 break;
 
             case Input.Keys.M:
-                GameScreen.SHOW_MAP = !GameScreen.SHOW_MAP;
+                mMainConfig.setShowMap(!mMainConfig.isShowMap());
                 break;
         }
     }
@@ -285,9 +311,9 @@ public class GameInput {
         switch (keycode) {
             case Input.Keys.A:
             case Input.Keys.D:
-                GP.player.getMove().x = 0;
-                if (CaveGame.TOUCH && GP.player.swim) {
-                    GP.player.swim = false;
+                mPlayer.getMove().x = 0;
+                if (mMainConfig.isTouch() && mPlayer.swim) {
+                    mPlayer.swim = false;
                 }
                 break;
 
@@ -295,134 +321,141 @@ public class GameInput {
             case Input.Keys.S:
             case Input.Keys.SPACE:
             case Input.Keys.CONTROL_LEFT:
-                if (GP.player.isFlyMode()) {
-                    GP.player.getMove().y = 0;
+                if (mPlayer.isFlyMode()) {
+                    mPlayer.getMove().y = 0;
                 }
-                if (GP.player.swim) {
-                    GP.player.swim = false;
+                if (mPlayer.swim) {
+                    mPlayer.swim = false;
                 }
                 break;
         }
     }
 
     public void touchDown(float touchX, float touchY, int button) {
-        touchDownTime = TimeUtils.millis();
-        touchedDown = true;
-        touchDownBtn = button;
-        touchDownX = touchX;
-        touchDownY = touchY;
+        mTouchDownTime = TimeUtils.millis();
+        mTouchedDown = true;
+        mTouchDownBtn = button;
+        mTouchDownX = touchX;
+        mTouchDownY = touchY;
     }
 
     public void touchUp(float screenX, float screenY, int button) {
-        if (dragging) {
-            dragging = false;
+        if (mDragging) {
+            mDragging = false;
             return;
         }
 
-        if (CaveGame.TOUCH && keyDown) {
-            keyUp(keyDownCode);
-            keyDown = false;
+        if (mMainConfig.isTouch() && mKeyDown) {
+            keyUp(mKeyDownCode);
+            mKeyDown = false;
         }
         TextureRegion hotbar = Assets.textureRegions.get("hotbar");
         TextureRegion creative = Assets.textureRegions.get("creative");
-        if (touchedDown) {
-            if (CaveGame.GAME_STATE == GameState.CREATIVE_INV && insideCreativeInv(screenX, screenY)) {
-                int ix = (int) (screenX - (GP.renderer.getWidth() / 2 - creative.getRegionWidth() / 2 + 8)) / 18;
-                int iy = (int) (screenY - (GP.renderer.getHeight() / 2 - creative.getRegionHeight() / 2 + 18)) / 18;
-                int item = creativeScroll * 8 + (ix + iy * 8);
+        if (mTouchedDown) {
+            if (mMainConfig.checkGameUiWindow(GameUiWindow.CREATIVE_INVENTORY) && insideCreativeInv(screenX, screenY)) {
+                int ix = (int) (screenX - (mMainConfig.getWidth() / 2 - creative.getRegionWidth() / 2 + 8)) / 18;
+                int iy = (int) (screenY - (mMainConfig.getHeight() / 2 - creative.getRegionHeight() / 2 + 18)) / 18;
+                int item = mCreativeScroll * 8 + (ix + iy * 8);
                 if (ix >= 8 || ix < 0 || iy < 0 || iy >= 5) {
                     item = -1;
                 }
                 if (item >= 0 && item < GameItems.getItemsSize()) {
-                    System.arraycopy(GP.player.inventory, 0, GP.player.inventory, 1, 8);
-                    GP.player.inventory[0] = item;
+                    System.arraycopy(mPlayer.inventory, 0, mPlayer.inventory, 1, 8);
+                    mPlayer.inventory[0] = item;
                 }
-            } else if (CaveGame.GAME_STATE == GameState.CREATIVE_INV) {
-                CaveGame.GAME_STATE = GameState.PLAY;
+            } else if (mMainConfig.checkGameUiWindow(GameUiWindow.CREATIVE_INVENTORY)) {
+                mMainConfig.setGameUiWindow(GameUiWindow.NONE);
             } else if (screenY < hotbar.getRegionHeight() &&
-                    screenX > GP.renderer.getWidth() / 2 - (float) hotbar.getRegionWidth() / 2 &&
-                    screenX < GP.renderer.getWidth() / 2 + (float) hotbar.getRegionWidth() / 2) {
-                GP.player.slot = (int) ((screenX - (GP.renderer.getWidth() / 2 - hotbar.getRegionWidth() / 2)) / 20);
+                    screenX > mMainConfig.getWidth() / 2 - (float) hotbar.getRegionWidth() / 2 &&
+                    screenX < mMainConfig.getWidth() / 2 + (float) hotbar.getRegionWidth() / 2) {
+                mPlayer.slot = (int) ((screenX - (mMainConfig.getWidth() / 2 - hotbar.getRegionWidth() / 2)) / 20);
             } else if (button == Input.Buttons.RIGHT) {
-                useItem(curX, curY,
-                        GP.player.inventory[GP.player.slot], false);
+                useItem(mCurX, mCurY,
+                        mPlayer.inventory[mPlayer.slot], false);
             } else if (button == Input.Buttons.LEFT) {
-                blockDamage = 0;
+                mBlockDamage = 0;
             }
         }
-        touchedDown = false;
+        mTouchedDown = false;
     }
 
     public void touchDragged(float screenX, float screenY) {
-        dragging = true;
-        if (CaveGame.GAME_STATE == GameState.CREATIVE_INV && Math.abs(screenY - touchDownY) > 16) {
+        mDragging = true;
+        if (mMainConfig.checkGameUiWindow(GameUiWindow.CREATIVE_INVENTORY) && Math.abs(screenY - mTouchDownY) > 16) {
             if (insideCreativeInv(screenX, screenY)) {
-                creativeScroll -= (screenY - touchDownY) / 16;
-                touchDownX = screenX;
-                touchDownY = screenY;
-                if (creativeScroll < 0) {
-                    creativeScroll = 0;
+                mCreativeScroll -= (screenY - mTouchDownY) / 16;
+                mTouchDownX = screenX;
+                mTouchDownY = screenY;
+                if (mCreativeScroll < 0) {
+                    mCreativeScroll = 0;
                 }
-                if (creativeScroll > GameProc.MAX_CREATIVE_SCROLL) {
-                    creativeScroll = GameProc.MAX_CREATIVE_SCROLL;
+                if (mCreativeScroll > GameProc.MAX_CREATIVE_SCROLL) {
+                    mCreativeScroll = GameProc.MAX_CREATIVE_SCROLL;
                 }
             }
         }
     }
 
     public void scrolled(int amount) {
-        switch (CaveGame.GAME_STATE) {
-            case PLAY:
-                GP.player.slot += amount;
-                if (GP.player.slot < 0) {
-                    GP.player.slot = 8;
+        switch (mMainConfig.getGameUiWindow()) {
+            case NONE:
+                mPlayer.slot += amount;
+                if (mPlayer.slot < 0) {
+                    mPlayer.slot = 8;
                 }
-                if (GP.player.slot > 8) {
-                    GP.player.slot = 0;
+                if (mPlayer.slot > 8) {
+                    mPlayer.slot = 0;
                 }
                 break;
-            case CREATIVE_INV:
-                creativeScroll += amount;
-                if (creativeScroll < 0) {
-                    creativeScroll = 0;
+            case CREATIVE_INVENTORY:
+                mCreativeScroll += amount;
+                if (mCreativeScroll < 0) {
+                    mCreativeScroll = 0;
                 }
-                if (creativeScroll > GameProc.MAX_CREATIVE_SCROLL) {
-                    creativeScroll = GameProc.MAX_CREATIVE_SCROLL;
+                if (mCreativeScroll > GameProc.MAX_CREATIVE_SCROLL) {
+                    mCreativeScroll = GameProc.MAX_CREATIVE_SCROLL;
                 }
                 break;
         }
     }
 
     public int getKeyDownCode() {
-        return keyDownCode;
+        return mKeyDownCode;
     }
 
     public boolean isKeyDown() {
-        return keyDown;
+        return mKeyDown;
     }
 
     int getBlockDamage() {
-        return blockDamage;
+        return mBlockDamage;
     }
 
     int getCurX() {
-        return curX;
+        return mCurX;
     }
 
     int getCurY() {
-        return curY;
+        return mCurY;
     }
 
     int getCreativeScroll() {
-        return creativeScroll;
+        return mCreativeScroll;
+    }
+
+    public ControlMode getControlMode() {
+        return mControlMode;
+    }
+
+    public void setControlMode(ControlMode controlMode) {
+        mControlMode = controlMode;
     }
 
     void update() {
-        moveCursor();
-        if (touchedDown && touchDownBtn == Input.Buttons.LEFT) {
+        if (mTouchedDown && mTouchDownBtn == Input.Buttons.LEFT) {
             pressLMB();
         }
-        if (touchedDown && TimeUtils.timeSinceMillis(touchDownTime) > 500) {
+        if (mTouchedDown && TimeUtils.timeSinceMillis(mTouchDownTime) > 500) {
             holdMB();
         }
     }
