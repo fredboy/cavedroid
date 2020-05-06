@@ -86,15 +86,11 @@ public class GameItems {
     }
 
     public static Sprite getBlockTex(int id) {
-        return getBlock(id).getTex();
+        return getBlock(id).getTexture();
     }
 
     public static Sprite getItemTex(int id) {
-        if (items.getValueAt(id).getType().equals("block")) {
-            return getBlockTex(id);
-        } else {
-            return getItem(id).getTex();
-        }
+        return items.getValueAt(id).getType().equals("block") ? getBlockTex(id) : getItem(id).getTexture();
     }
 
     public static void load() {

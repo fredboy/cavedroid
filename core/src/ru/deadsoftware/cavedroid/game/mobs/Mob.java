@@ -4,38 +4,50 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import ru.deadsoftware.cavedroid.game.GameWorld;
 
 import java.io.Serializable;
-
-import static ru.deadsoftware.cavedroid.GameScreen.GP;
 
 /**
  * Mob class.
  */
 public abstract class Mob extends Rectangle implements Serializable {
 
-    protected Vector2 move;
-    protected Type type;
-    protected int animDelta = 6;
-    protected int anim;
-    private Direction dir;
-    private boolean dead;
-    private boolean canJump, flyMode;
+    public enum Type {
+        MOB,
+        SAND,
+        GRAVEL
+    }
+
+    public enum Direction {
+        LEFT,
+        RIGHT
+    }
+
+    protected Vector2 mMove;
+    protected Type mType;
+    protected int mAnimDelta = 6;
+    protected int mAnim;
+
+    private Direction mDirection;
+    private boolean mDead;
+    private boolean mCanJump;
+    private boolean mFlyMode;
 
     /**
-     * @param x      in pixels
-     * @param y      in pixels
-     * @param width  in pixels
-     * @param height in pixels
-     * @param dir    Direction in which mob is looking
+     * @param x          in pixels
+     * @param y          in pixels
+     * @param width      in pixels
+     * @param height     in pixels
+     * @param mDirection Direction in which mob is looking
      */
-    protected Mob(float x, float y, float width, float height, Direction dir, Type type) {
+    protected Mob(float x, float y, float width, float height, Direction mDirection, Type type) {
         super(x, y, width, height);
-        move = new Vector2(0, 0);
-        canJump = false;
-        dead = false;
-        this.dir = dir;
-        this.type = type;
+        mMove = new Vector2(0, 0);
+        mCanJump = false;
+        mDead = false;
+        this.mDirection = mDirection;
+        this.mType = type;
     }
 
     protected static Direction randomDir() {
@@ -82,22 +94,22 @@ public abstract class Mob extends Rectangle implements Serializable {
      * @return Integer representing a direction in which mob is looking, where 0 is left and 1 is right
      */
     public final Direction getDirection() {
-        return dir;
+        return mDirection;
     }
 
     public final boolean looksLeft() {
-        return dir == Direction.LEFT;
+        return mDirection == Direction.LEFT;
     }
 
     public final boolean looksRight() {
-        return dir == Direction.RIGHT;
+        return mDirection == Direction.RIGHT;
     }
 
     /**
      * Switches direction in which mob is looking
      */
     protected final void switchDir() {
-        dir = looksLeft() ? Direction.RIGHT : Direction.LEFT;
+        mDirection = looksLeft() ? Direction.RIGHT : Direction.LEFT;
     }
 
     protected final int dirMultiplier() {
@@ -105,72 +117,61 @@ public abstract class Mob extends Rectangle implements Serializable {
     }
 
     public final boolean isDead() {
-        return dead;
+        return mDead;
     }
 
     public final int getAnim() {
-        return anim;
+        return mAnim;
     }
 
     /**
      * Set's mob's dead variable to true and nothing else. It doesn't delete the
      */
     public final void kill() {
-        dead = true;
+        mDead = true;
     }
 
     public final void move() {
-        x += move.x;
-        y += move.y;
+        x += mMove.x;
+        y += mMove.y;
     }
 
     public final Vector2 getMove() {
-        return move;
+        return mMove;
     }
 
     public final boolean canJump() {
-        return canJump;
+        return mCanJump;
     }
 
     public final void setCanJump(boolean canJump) {
-        this.canJump = canJump;
+        this.mCanJump = canJump;
     }
 
     public final boolean isFlyMode() {
-        return flyMode;
+        return mFlyMode;
     }
 
     public final void setFlyMode(boolean flyMode) {
-        this.flyMode = flyMode;
+        this.mFlyMode = flyMode;
     }
 
     public final Type getType() {
-        return type;
+        return mType;
     }
 
-    public void checkWorldBounds() {
+    public void checkWorldBounds(GameWorld gameWorld) {
         if (x + width / 2 < 0) {
-            x += GP.world.getWidthPx();
+            x += gameWorld.getWidthPx();
         }
-        if (x + width / 2 > GP.world.getWidthPx()) {
-            x -= GP.world.getWidthPx();
+        if (x + width / 2 > gameWorld.getWidthPx()) {
+            x -= gameWorld.getWidthPx();
         }
     }
 
     public abstract void draw(SpriteBatch spriteBatch, float x, float y);
 
-    public abstract void ai();
+    public abstract void ai(GameWorld gameWorld);
 
     public abstract void changeDir();
-
-    public enum Type {
-        MOB,
-        SAND,
-        GRAVEL
-    }
-
-    public enum Direction {
-        LEFT,
-        RIGHT
-    }
 }

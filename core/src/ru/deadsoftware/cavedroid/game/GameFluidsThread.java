@@ -1,10 +1,10 @@
 package ru.deadsoftware.cavedroid.game;
 
 import com.badlogic.gdx.utils.TimeUtils;
+import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 
 import java.util.Arrays;
 
-import static ru.deadsoftware.cavedroid.GameScreen.GP;
 import static ru.deadsoftware.cavedroid.game.GameItems.*;
 
 class GameFluidsThread extends Thread {
@@ -15,7 +15,20 @@ class GameFluidsThread extends Thread {
     private static final int[] WATER_IDS = {8, 60, 61, 62, 63};
     private static final int[] LAVA_IDS = {9, 64, 65, 66, 67};
 
-    private long fluidLastUpdateTimestamp = 0;
+    private long mFluidLastUpdateTimestamp = 0;
+
+    private final GameWorld mGameWorld;
+    private final MobsController mMobsController;
+
+    private final Thread mMainThread;
+
+    GameFluidsThread(GameWorld gameWorld,
+                     MobsController mobsController,
+                     Thread mainThread) {
+        mGameWorld = gameWorld;
+        mMobsController = mobsController;
+        mMainThread = mainThread;
+    }
 
     private int getBlockState(int id) {
         return isWater(id) ? Arrays.binarySearch(WATER_IDS, id) : Arrays.binarySearch(LAVA_IDS, id);
@@ -44,7 +57,7 @@ class GameFluidsThread extends Thread {
     }
 
     private int id(int x, int y) {
-        return GP.world.getForeMap(x, y);
+        return mGameWorld.getForeMap(x, y);
     }
 
     private boolean sameFluid(int thisId, int thatId) {
@@ -60,10 +73,10 @@ class GameFluidsThread extends Thread {
     private boolean drainFluid(int x, int y) {
         if (getBlockState(id(x, y)) > 0) {
             if (noFluidNearby(x, y)) {
-                GP.world.setForeMap(x, y, getNextBlockStateId(id(x, y)));
+                mGameWorld.setForeMap(x, y, getNextBlockStateId(id(x, y)));
             }
             if (!isFluid(id(x, y))) {
-                GP.world.setForeMap(x, y, 0);
+                mGameWorld.setForeMap(x, y, 0);
                 return true;
             }
         }
@@ -73,15 +86,15 @@ class GameFluidsThread extends Thread {
     private void flowFluidTo(int thisId, int x, int y, int nextStateId) {
         int thatId = id(x, y);
         if (fluidCanFlowThere(thisId, thatId)) {
-            GP.world.setForeMap(x, y, nextStateId);
+            mGameWorld.setForeMap(x, y, nextStateId);
         } else if (isWater(thisId) && isLava(thatId)) {
             if (getBlockState(thatId) > 0) {
-                GP.world.setForeMap(x, y, 4); //cobblestone
+                mGameWorld.setForeMap(x, y, 4); //cobblestone
             } else {
-                GP.world.setForeMap(x, y, 68); //obsidian
+                mGameWorld.setForeMap(x, y, 68); //obsidian
             }
         } else if (isLava(thisId) && isWater(thatId)) {
-            GP.world.setForeMap(x, y, 1); //stone
+            mGameWorld.setForeMap(x, y, 1); //stone
         }
     }
 
@@ -112,9 +125,9 @@ class GameFluidsThread extends Thread {
     }
 
     private void fluidUpdater() {
-        int midScreen = (int) (GP.renderer.getCamX() + GP.renderer.getWidth() / 2) / 16;
-        for (int y = GP.world.getHeight() - 1; y >= 0; y--) {
-            for (int x = 0; x <= GP.world.getWidth() / 2; x++) {
+        int midScreen = (int) mMobsController.getPlayer().x / 16;
+        for (int y = mGameWorld.getHeight() - 1; y >= 0; y--) {
+            for (int x = 0; x <= mGameWorld.getWidth() / 2; x++) {
                 updateFluids(midScreen + x, y);
                 updateFluids(midScreen - x, y);
             }
@@ -122,8 +135,8 @@ class GameFluidsThread extends Thread {
     }
 
     private boolean timeToUpdate() {
-        if (TimeUtils.timeSinceMillis(fluidLastUpdateTimestamp) >= FLUID_UPDATE_INTERVAL_MS) {
-            fluidLastUpdateTimestamp = TimeUtils.millis();
+        if (TimeUtils.timeSinceMillis(mFluidLastUpdateTimestamp) >= FLUID_UPDATE_INTERVAL_MS) {
+            mFluidLastUpdateTimestamp = TimeUtils.millis();
             return true;
         }
         return false;
@@ -131,7 +144,7 @@ class GameFluidsThread extends Thread {
 
     @Override
     public void run() {
-        while (!this.isInterrupted()) {
+        while (!this.isInterrupted() && mMainThread.isAlive()) {
             if (timeToUpdate()) {
                 fluidUpdater();
             }

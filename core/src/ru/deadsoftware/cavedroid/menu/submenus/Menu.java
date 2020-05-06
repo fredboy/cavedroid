@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.JsonValue;
-import ru.deadsoftware.cavedroid.CaveGame;
-import ru.deadsoftware.cavedroid.GameScreen;
+import ru.deadsoftware.cavedroid.MainConfig;
+import ru.deadsoftware.cavedroid.menu.MenuProc;
 import ru.deadsoftware.cavedroid.menu.objects.Button;
 import ru.deadsoftware.cavedroid.menu.objects.ButtonEventListener;
 import ru.deadsoftware.cavedroid.menu.objects.ButtonRenderer;
@@ -17,10 +17,13 @@ import java.util.HashMap;
 
 public abstract class Menu {
 
-    private ButtonRenderer buttonRenderer;
+    protected final MainConfig mMainConfig;
+    protected final MenuProc.Input mMenuInput;
 
-    private float width;
-    private float height;
+    private final ButtonRenderer mButtonRenderer;
+
+    private final float mWidth;
+    private final float mHeight;
 
     /**
      * {@link ArrayMap} of {@link Button Buttons} of this menu screen
@@ -32,10 +35,12 @@ public abstract class Menu {
      * @param height         Viewport height
      * @param buttonRenderer {@link ButtonRenderer} that will draw the buttons of this menu
      */
-    Menu(float width, float height, ButtonRenderer buttonRenderer) {
-        this.width = width;
-        this.height = height;
-        this.buttonRenderer = buttonRenderer;
+    Menu(float width, float height, ButtonRenderer buttonRenderer, MainConfig mainConfig, MenuProc.Input menuInput) {
+        mWidth = width;
+        mHeight = height;
+        mButtonRenderer = buttonRenderer;
+        mMainConfig = mainConfig;
+        mMenuInput = menuInput;
         initButtons();
     }
 
@@ -61,11 +66,11 @@ public abstract class Menu {
         }
         HashMap<String, ButtonEventListener> eventListeners = getButtonEventListeners();
         JsonValue json = Assets.jsonReader.parse(jsonFile);
-        int y = (int) height / 4;
+        int y = (int) mHeight / 4;
         for (JsonValue key = json.child(); key != null; key = key.next(), y += Button.HEIGHT + 10) {
             buttons.put(key.name(),
                     new Button(Assets.getStringFromJson(key, "label", ""),
-                            (int) width / 2 - Button.WIDTH / 2,
+                            (int) mWidth / 2 - Button.WIDTH / 2,
                             Assets.getIntFromJson(key, "y", y),
                             Assets.getIntFromJson(key, "type", Button.NORMAL),
                             eventListeners.containsKey(key.name()) ? eventListeners.get(key.name()) : () -> {
@@ -82,24 +87,24 @@ public abstract class Menu {
         TextureRegion background = Assets.textureRegions.get("background");
         TextureRegion gamelogo = Assets.textureRegions.get("gamelogo");
 
-        for (int x = 0; x <= width / 16; x++) {
-            for (int y = 0; y <= height / 16; y++) {
+        for (int x = 0; x <= mWidth / 16; x++) {
+            for (int y = 0; y <= mHeight / 16; y++) {
                 spriter.draw(background, x * 16, y * 16);
             }
         }
-        spriter.draw(gamelogo, width / 2 - (float) gamelogo.getRegionWidth() / 2, 8);
+        spriter.draw(gamelogo, mWidth / 2 - (float) gamelogo.getRegionWidth() / 2, 8);
 
-        float inputX = Gdx.input.getX() * width / GameScreen.getWidth();
-        float inputY = Gdx.input.getY() * height / GameScreen.getHeight();
+        float inputX = Gdx.input.getX() * mWidth / Gdx.graphics.getWidth();
+        float inputY = Gdx.input.getY() * mHeight / Gdx.graphics.getHeight();
         for (Button button : buttons.values()) {
             if (button.getType() > 0) {
-                if (button.getRect().contains(inputX, inputY) && (!CaveGame.TOUCH || Gdx.input.isTouched())) {
+                if (button.getRect().contains(inputX, inputY) && (/*!CaveGame.TOUCH || */Gdx.input.isTouched())) {
                     button.setType(2);
                 } else {
                     button.setType(1);
                 }
             }
-            button.draw(buttonRenderer);
+            button.draw(mButtonRenderer);
         }
     }
 

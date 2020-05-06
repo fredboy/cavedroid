@@ -3,8 +3,8 @@ package ru.deadsoftware.cavedroid.game.mobs;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavedroid.game.GameItems;
+import ru.deadsoftware.cavedroid.game.GameWorld;
 
-import static ru.deadsoftware.cavedroid.GameScreen.GP;
 
 /**
  * Falling sand is actually a mob, that spawns in place of gravel when there is no block under it,
@@ -20,13 +20,13 @@ public class FallingSand extends Mob {
      */
     public FallingSand(float x, float y) {
         super(x, y, 16, 16, Direction.LEFT, Type.SAND);
-        move = new Vector2(0, 1);
+        mMove = new Vector2(0, 1);
     }
 
     @Override
-    public void ai() {
-        if (move.isZero()) {
-            GP.world.setForeMap(getMapX(), getMiddleMapY(), 10);
+    public void ai(GameWorld gameWorld) {
+        if (mMove.isZero()) {
+            gameWorld.setForeMap(getMapX(), getMiddleMapY(), 10);
             kill();
         }
     }

@@ -6,21 +6,43 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import ru.deadsoftware.cavedroid.CaveGame;
-import ru.deadsoftware.cavedroid.GameScreen;
+import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
+import ru.deadsoftware.cavedroid.game.mobs.MobsController;
+import ru.deadsoftware.cavedroid.game.mobs.Player;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
+import ru.deadsoftware.cavedroid.game.objects.DropController;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
 import ru.deadsoftware.cavedroid.misc.Renderer;
 
-import static ru.deadsoftware.cavedroid.GameScreen.GP;
+import javax.inject.Inject;
+
 import static ru.deadsoftware.cavedroid.misc.Assets.guiMap;
 import static ru.deadsoftware.cavedroid.misc.Assets.textureRegions;
 
+@GameScope
 public class GameRenderer extends Renderer {
 
-    GameRenderer(float width, float height) {
-        super(width, height);
+    private final MainConfig mMainConfig;
+    private final GameInput mGameInput;
+    private final GameWorld mGameWorld;
+    private final MobsController mMobsController;
+    private final DropController mDropController;
+
+    @Inject
+    GameRenderer(MainConfig mainConfig,
+                 GameInput gameInput,
+                 GameWorld gameWorld,
+                 MobsController mobsController,
+                 DropController dropController) {
+        super(mainConfig.getWidth(), mainConfig.getHeight());
+
+        mMainConfig = mainConfig;
+        mGameInput = gameInput;
+        mGameWorld = gameWorld;
+        mMobsController = mobsController;
+        mDropController = dropController;
+
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f);
     }
 
@@ -33,28 +55,28 @@ public class GameRenderer extends Renderer {
     }
 
     private void drawWreck(int bl) {
-        if (GP.input.getBlockDamage() > 0) {
-            int index = 10 * GP.input.getBlockDamage() / GameItems.getBlock(bl).getHp();
+        if (mGameInput.getBlockDamage() > 0) {
+            int index = 10 * mGameInput.getBlockDamage() / GameItems.getBlock(bl).getHp();
             String key = "break_" + index;
-            spriter.draw(textureRegions.get(key), GP.input.getCurX() * 16 - getCamX(),
-                    GP.input.getCurY() * 16 - getCamY());
+            spriter.draw(textureRegions.get(key), mGameInput.getCurX() * 16 - getCamX(),
+                    mGameInput.getCurY() * 16 - getCamY());
         }
     }
 
     private void drawBlock(int x, int y, boolean drawBG) {
         if (drawBG) {
-            if ((!GP.world.hasForeAt(x, y) || GP.world.getForeMapBlock(x, y).isTransparent())
-                    && GP.world.hasBackAt(x, y)) {
-                spriter.draw(GP.world.getBackMapBlock(x, y).getTex(), drawX(x), drawY(y));
-                if (!GP.world.hasForeAt(x, y) && x == GP.input.getCurX() && y == GP.input.getCurY()) {
-                    drawWreck(GP.world.getBackMap(GP.input.getCurX(), GP.input.getCurY()));
+            if ((!mGameWorld.hasForeAt(x, y) || mGameWorld.getForeMapBlock(x, y).isTransparent())
+                    && mGameWorld.hasBackAt(x, y)) {
+                spriter.draw(mGameWorld.getBackMapBlock(x, y).getTexture(), drawX(x), drawY(y));
+                if (!mGameWorld.hasForeAt(x, y) && x == mGameInput.getCurX() && y == mGameInput.getCurY()) {
+                    drawWreck(mGameWorld.getBackMap(mGameInput.getCurX(), mGameInput.getCurY()));
                 }
             }
         }
-        if (GP.world.hasForeAt(x, y) && GP.world.getForeMapBlock(x, y).isBackground() == drawBG) {
-            spriter.draw(GP.world.getForeMapBlock(x, y).getTex(), drawX(x), drawY(y));
-            if (x == GP.input.getCurX() && y == GP.input.getCurY()) {
-                drawWreck(GP.world.getForeMap(GP.input.getCurX(), GP.input.getCurY()));
+        if (mGameWorld.hasForeAt(x, y) && mGameWorld.getForeMapBlock(x, y).isBackground() == drawBG) {
+            spriter.draw(mGameWorld.getForeMapBlock(x, y).getTexture(), drawX(x), drawY(y));
+            if (x == mGameInput.getCurX() && y == mGameInput.getCurY()) {
+                drawWreck(mGameWorld.getForeMap(mGameInput.getCurX(), mGameInput.getCurY()));
             }
         }
     }
@@ -67,8 +89,8 @@ public class GameRenderer extends Renderer {
         if (minY < 0) {
             minY = 0;
         }
-        if (maxY > GP.world.getHeight()) {
-            maxY = GP.world.getHeight();
+        if (maxY > mGameWorld.getHeight()) {
+            maxY = mGameWorld.getHeight();
         }
         for (int y = minY; y < maxY; y++) {
             for (int x = minX; x < maxX; x++) {
@@ -83,8 +105,8 @@ public class GameRenderer extends Renderer {
             shaper.setColor(0f, 0f, 0f, .5f);
             for (int y = minY; y < maxY; y++) {
                 for (int x = minX; x < maxX; x++) {
-                    if ((!GP.world.hasForeAt(x, y) || GP.world.getForeMapBlock(x, y).isTransparent())
-                            && GP.world.hasBackAt(x, y)) {
+                    if ((!mGameWorld.hasForeAt(x, y) || mGameWorld.getForeMapBlock(x, y).isTransparent())
+                            && mGameWorld.hasBackAt(x, y)) {
                         shaper.rect(drawX(x), drawY(y), 16, 16);
                     }
                 }
@@ -99,10 +121,10 @@ public class GameRenderer extends Renderer {
         float mobDrawX = mob.getX() - getCamX();
         float mobDrawY = mob.getY() - getCamY();
 
-        if (mobDrawX + mob.getWidth() < 0 && mobDrawX + GP.world.getWidthPx() > 0) {
-            mobDrawX += GP.world.getWidthPx();
-        } else if (mobDrawX > getWidth() && mobDrawX + mob.getWidth() - GP.world.getWidthPx() > 0) {
-            mobDrawX -= GP.world.getWidthPx();
+        if (mobDrawX + mob.getWidth() < 0 && mobDrawX + mGameWorld.getWidthPx() > 0) {
+            mobDrawX += mGameWorld.getWidthPx();
+        } else if (mobDrawX > getWidth() && mobDrawX + mob.getWidth() - mGameWorld.getWidthPx() > 0) {
+            mobDrawX -= mGameWorld.getWidthPx();
         } else if (mobDrawX + mob.getWidth() < 0 && mobDrawX > getWidth()) {
             return;
         }
@@ -120,27 +142,27 @@ public class GameRenderer extends Renderer {
         float y = getHeight() / 2 - (float) creative.getRegionHeight() / 2;
         spriter.draw(creative, x, y);
         spriter.draw(textureRegions.get("handle"), x + 156,
-                y + 18 + (GP.input.getCreativeScroll() * (72f / GameProc.MAX_CREATIVE_SCROLL)));
-        for (int i = GP.input.getCreativeScroll() * 8; i < GP.input.getCreativeScroll() * 8 + 40; i++) {
+                y + 18 + (mGameInput.getCreativeScroll() * (72f / GameProc.MAX_CREATIVE_SCROLL)));
+        for (int i = mGameInput.getCreativeScroll() * 8; i < mGameInput.getCreativeScroll() * 8 + 40; i++) {
             if (i > 0 && i < GameItems.getItemsSize()) {
                 if (GameItems.getItem(i).isBlock()) {
-                    spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(i)).getTex(),
-                            x + 8 + ((i - GP.input.getCreativeScroll() * 8) % 8) * 18,
-                            y + 18 + ((i - GP.input.getCreativeScroll() * 8) / 8) * 18);
+                    spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(i)).getTexture(),
+                            x + 8 + ((i - mGameInput.getCreativeScroll() * 8) % 8) * 18,
+                            y + 18 + ((i - mGameInput.getCreativeScroll() * 8) / 8) * 18);
                 } else {
-                    spriter.draw(GameItems.getItem(i).getTex(),
-                            x + 8 + ((i - GP.input.getCreativeScroll() * 8) % 8) * 18,
-                            y + 18 + ((i - GP.input.getCreativeScroll() * 8) / 8) * 18);
+                    spriter.draw(GameItems.getItem(i).getTexture(),
+                            x + 8 + ((i - mGameInput.getCreativeScroll() * 8) % 8) * 18,
+                            y + 18 + ((i - mGameInput.getCreativeScroll() * 8) / 8) * 18);
                 }
             }
         }
         for (int i = 0; i < 9; i++) {
-            if (GP.player.inventory[i] > 0) {
-                if (GameItems.getItem(GP.player.inventory[i]).isBlock()) {
-                    spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(GP.player.inventory[i])).getTex(),
+            if (mMobsController.getPlayer().inventory[i] > 0) {
+                if (GameItems.getItem(mMobsController.getPlayer().inventory[i]).isBlock()) {
+                    spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(mMobsController.getPlayer().inventory[i])).getTexture(),
                             x + 8 + i * 18, y + creative.getRegionHeight() - 24);
                 } else {
-                    spriter.draw(GameItems.getItem(GP.player.inventory[i]).getTex(),
+                    spriter.draw(GameItems.getItem(mMobsController.getPlayer().inventory[i]).getTexture(),
                             x + 8 + i * 18, y + creative.getRegionHeight() - 24);
                 }
             }
@@ -153,30 +175,27 @@ public class GameRenderer extends Renderer {
         TextureRegion hotbar = textureRegions.get("hotbar");
         TextureRegion hotbarSelector = textureRegions.get("hotbar_selector");
 
-        if (GP.world.hasForeAt(GP.input.getCurX(), GP.input.getCurY()) ||
-                GP.world.hasBackAt(GP.input.getCurX(), GP.input.getCurY()) ||
-                GP.controlMode == ControlMode.CURSOR ||
-                !CaveGame.TOUCH) {
-            spriter.draw(cursor,
-                    GP.input.getCurX() * 16 - getCamX(),
-                    GP.input.getCurY() * 16 - getCamY());
+        if (mGameWorld.hasForeAt(mGameInput.getCurX(), mGameInput.getCurY()) ||
+                mGameWorld.hasBackAt(mGameInput.getCurX(), mGameInput.getCurY()) ||
+                mGameInput.getControlMode() == ControlMode.CURSOR || mMainConfig.isTouch()) {
+            spriter.draw(cursor, mGameInput.getCurX() * 16 - getCamX(), mGameInput.getCurY() * 16 - getCamY());
         }
         spriter.draw(hotbar, getWidth() / 2 - (float) hotbar.getRegionWidth() / 2, 0);
         for (int i = 0; i < 9; i++) {
-            if (GP.player.inventory[i] > 0) {
-                if (GameItems.getItem(GP.player.inventory[i]).isBlock()) {
-                    spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(GP.player.inventory[i])).getTex(),
+            if (mMobsController.getPlayer().inventory[i] > 0) {
+                if (GameItems.getItem(mMobsController.getPlayer().inventory[i]).isBlock()) {
+                    spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(mMobsController.getPlayer().inventory[i])).getTexture(),
                             getWidth() / 2 - (float) hotbar.getRegionWidth() / 2 + 3 + i * 20,
                             3);
                 } else {
-                    spriter.draw(GameItems.getItem(GP.player.inventory[i]).getTex(),
+                    spriter.draw(GameItems.getItem(mMobsController.getPlayer().inventory[i]).getTexture(),
                             getWidth() / 2 - (float) hotbar.getRegionWidth() / 2 + 3 + i * 20,
                             3);
                 }
             }
         }
         spriter.draw(hotbarSelector,
-                getWidth() / 2 - (float) hotbar.getRegionWidth() / 2 - 1 + 20 * GP.player.slot,
+                getWidth() / 2 - (float) hotbar.getRegionWidth() / 2 - 1 + 20 * mMobsController.getPlayer().slot,
                 -1);
     }
 
@@ -186,55 +205,68 @@ public class GameRenderer extends Renderer {
             spriter.draw(textureRegions.get(guiMap.getKeyAt(i)),
                     touchKey.x, touchKey.y, touchKey.width, touchKey.height);
         }
-        if (GP.controlMode == ControlMode.CURSOR) {
+        if (mGameInput.getControlMode() == ControlMode.CURSOR) {
             spriter.draw(textureRegions.get("shade"), 83, getHeight() - 21);
         }
     }
 
     private void drawGamePlay() {
+        Player player = mMobsController.getPlayer();
+
         drawWorld(true);
-        GP.player.draw(spriter, GP.player.getX() - getCamX() - 2, GP.player.getY() - getCamY());
-        GP.mobs.forEach(this::drawMob);
-        GP.drops.forEach(this::drawDrop);
+        player.draw(spriter, player.getX() - getCamX() - player.getWidth() / 2, player.getY() - getCamY());
+        mMobsController.forEach(this::drawMob);
+        mDropController.forEach(this::drawDrop);
         drawWorld(false);
         drawGUI();
     }
 
+    private void updateCameraPosition() {
+        Player player = mMobsController.getPlayer();
+        setCamPos(player.getX() + player.getWidth() / 2 - getWidth() / 2,
+                player.getY() + player.getHeight() / 2 - getHeight() / 2);
+    }
+
     @Override
-    public void render() {
+    public void render(float delta) {
+        int fps = (int) (1 / delta);
+        updateCameraPosition();
+        mGameInput.moveCursor(this);
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         spriter.begin();
-        switch (CaveGame.GAME_STATE) {
-            case PLAY:
-                drawGamePlay();
-                break;
-            case CREATIVE_INV:
-                drawGamePlay();
+
+        drawGamePlay();
+
+        switch (mMainConfig.getGameUiWindow()) {
+            case CREATIVE_INVENTORY:
                 drawCreative();
                 break;
+            //TODO draw other ui windows
         }
 
-        if (CaveGame.TOUCH) {
+
+        if (mMainConfig.isTouch()) {
             drawTouchGui();
         }
 
         spriter.end();
 
-        if (GameScreen.SHOW_MAP) {
+        if (mMainConfig.isShowMap()) {
             //DRAW MAP
             shaper.begin(ShapeRenderer.ShapeType.Filled);
             shaper.setColor(Color.LIGHT_GRAY);
-            shaper.rect(0, 0, GP.world.getWidth(), 128);
+            shaper.rect(0, 0, mGameWorld.getWidth(), 128);
             for (int y = 128; y < 256; y++) {
                 for (int x = 0; x < getWidth(); x++) {
-                    if (GP.world.hasForeAt(x, y) || GP.world.hasBackAt(x, y)) {
-                        if (GameItems.isWater(GP.world.getForeMap(x, y))) {
+                    if (mGameWorld.hasForeAt(x, y) || mGameWorld.hasBackAt(x, y)) {
+                        if (GameItems.isWater(mGameWorld.getForeMap(x, y))) {
                             shaper.setColor(Color.BLUE);
-                        } else if (GameItems.isLava(GP.world.getForeMap(x, y))) {
+                        } else if (GameItems.isLava(mGameWorld.getForeMap(x, y))) {
                             shaper.setColor(Color.RED);
                         } else {
-                            if (GP.world.hasForeAt(x, y)) {
+                            if (mGameWorld.hasForeAt(x, y)) {
                                 shaper.setColor(Color.BLACK);
                             } else {
                                 shaper.setColor(Color.DARK_GRAY);
@@ -245,26 +277,26 @@ public class GameRenderer extends Renderer {
                 }
             }
             shaper.setColor(Color.OLIVE);
-            shaper.rect(GP.player.getMapX(), GP.player.getUpperMapY() - 128, 1, 2);
+            shaper.rect(mMobsController.getPlayer().getMapX(), mMobsController.getPlayer().getUpperMapY() - 128, 1, 2);
             shaper.end();
             //=================
         }
 
-        if (GameScreen.SHOW_DEBUG) {
+        if (mMainConfig.isShowInfo()) {
             spriter.begin();
-            drawString("FPS: " + GameScreen.FPS, 0, 0);
-            drawString("X: " + GP.player.getMapX(), 0, 10);
-            drawString("Y: " + GP.player.getUpperMapY() / 16, 0, 20);
-            drawString("CurX: " + GP.input.getCurX(), 0, 30);
-            drawString("CurY: " + GP.input.getCurY(), 0, 40);
-            drawString("Mobs: " + GP.mobs.size(), 0, 50);
-            drawString("Drops: " + GP.drops.size(), 0, 60);
-            drawString("Block: " + GameItems.getBlockKey(GP.world.getForeMap(GP.input.getCurX(), GP.input.getCurY())), 0, 70);
-            drawString("Hand: " + GameItems.getItemKey(GP.player.inventory[GP.player.slot]), 0, 80);
-            drawString("Game mode: " + GP.player.gameMode, 0, 90);
+            Player player = mMobsController.getPlayer();
+            drawString("FPS: " + fps, 0, 0);
+            drawString("X: " + player.getMapX(), 0, 10);
+            drawString("Y: " + player.getUpperMapY(), 0, 20);
+            drawString("CurX: " + mGameInput.getCurX(), 0, 30);
+            drawString("CurY: " + mGameInput.getCurY(), 0, 40);
+            drawString("Mobs: " + mMobsController.getSize(), 0, 50);
+            drawString("Drops: " + mDropController.getSize(), 0, 60);
+            drawString("Block: " + GameItems.getBlockKey(mGameWorld.getForeMap(mGameInput.getCurX(), mGameInput.getCurY())), 0, 70);
+            drawString("Hand: " + GameItems.getItemKey(mMobsController.getPlayer().inventory[mMobsController.getPlayer().slot]), 0, 80);
+            drawString("Game mode: " + player.gameMode, 0, 90);
             spriter.end();
         }
-
 
     }
 

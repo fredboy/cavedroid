@@ -1,56 +1,85 @@
 package ru.deadsoftware.cavedroid.game;
 
+import com.badlogic.gdx.utils.Disposable;
+import ru.deadsoftware.cavedroid.game.mobs.FallingGravel;
+import ru.deadsoftware.cavedroid.game.mobs.FallingSand;
+import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.objects.Block;
-import ru.deadsoftware.cavedroid.game.objects.Drop;
+import ru.deadsoftware.cavedroid.game.objects.DropController;
 
-import static ru.deadsoftware.cavedroid.GameScreen.GP;
+import javax.annotation.CheckForNull;
+import javax.inject.Inject;
 
-@SuppressWarnings("WeakerAccess")
-public class GameWorld {
+@GameScope
+public class GameWorld implements Disposable {
 
-    private final int WIDTH;
-    private final int HEIGHT;
-    private final int[][] foreMap;
-    private final int[][] backMap;
+    private static final int DEFAULT_WIDTH = 1024;
+    private static final int DEFAULT_HEIGHT = 256;
+    private static final int UPDATE_RANGE = 16;
 
-    GameWorld(int width, int height) {
-        WIDTH = width;
-        HEIGHT = height;
-        WorldGen.genWorld(WIDTH, HEIGHT);
-        foreMap = WorldGen.getForeMap();
-        backMap = WorldGen.getBackMap();
-        WorldGen.clear();
-    }
+    private final DropController mDropController;
+    private final MobsController mMobsController;
+    private final GameFluidsThread mGameFluidsThread;
 
-    GameWorld(int[][] foreMap, int[][] backMap) {
-        this.foreMap = foreMap.clone();
-        this.backMap = backMap.clone();
-        WIDTH = foreMap.length;
-        HEIGHT = foreMap[0].length;
+    private final int mWidth;
+    private final int mHeight;
+    private final int[][] mForeMap;
+    private final int[][] mBackMap;
+
+    private boolean mShouldUpdate;
+    private int mUpdateX;
+    private int mUpdateY;
+
+    @Inject
+    public GameWorld(DropController dropController,
+                     MobsController mobsController,
+                     @CheckForNull int[][] foreMap,
+                     @CheckForNull int[][] backMap) {
+        mDropController = dropController;
+        mMobsController = mobsController;
+
+        boolean isNewGame = foreMap == null || backMap == null;
+
+        if (isNewGame) {
+            mWidth = DEFAULT_WIDTH;
+            mHeight = DEFAULT_HEIGHT;
+            WorldGen.genWorld(mWidth, mHeight);
+            mForeMap = WorldGen.getForeMap();
+            mBackMap = WorldGen.getBackMap();
+            WorldGen.clear();
+            mMobsController.getPlayer().respawn(this);
+        } else {
+            mForeMap = foreMap;
+            mBackMap = backMap;
+            mWidth = mForeMap.length;
+            mHeight = mForeMap[0].length;
+        }
+
+        mGameFluidsThread = new GameFluidsThread(this, mMobsController, Thread.currentThread());
     }
 
     public int getWidth() {
-        return WIDTH;
+        return mWidth;
     }
 
     public int getHeight() {
-        return HEIGHT;
+        return mHeight;
     }
 
     public float getWidthPx() {
-        return WIDTH * 16f;
+        return mWidth * 16f;
     }
 
     public float getHeightPx() {
-        return HEIGHT * 16f;
+        return mHeight * 16f;
     }
 
     int[][] getFullForeMap() {
-        return foreMap;
+        return mForeMap;
     }
 
     int[][] getFullBackMap() {
-        return backMap;
+        return mBackMap;
     }
 
     private int transformX(int x) {
@@ -65,7 +94,7 @@ public class GameWorld {
         int map = 0;
         try {
             x = transformX(x);
-            map = (layer == 0) ? foreMap[x][y] : backMap[x][y];
+            map = (layer == 0) ? mForeMap[x][y] : mBackMap[x][y];
         } catch (ArrayIndexOutOfBoundsException ignored) {
         }
         return map;
@@ -75,9 +104,9 @@ public class GameWorld {
         try {
             x = transformX(x);
             if (layer == 0) {
-                foreMap[x][y] = value;
+                mForeMap[x][y] = value;
             } else {
-                backMap[x][y] = value;
+                mBackMap[x][y] = value;
             }
         } catch (ArrayIndexOutOfBoundsException ignored) {
         }
@@ -144,9 +173,9 @@ public class GameWorld {
         } else if (GameItems.isSlab(value) && getForeMap(x, y) == value) {
             placeSlab(x, y, value);
         }
-        GameProc.UPD_X = x - 8;
-        GameProc.UPD_Y = y - 8;
-        GameProc.DO_UPD = true;
+        mUpdateX = x - 8;
+        mUpdateY = y - 8;
+        mShouldUpdate = true;
     }
 
     public void placeToBackground(int x, int y, int value) {
@@ -157,19 +186,74 @@ public class GameWorld {
     }
 
     public void destroyForeMap(int x, int y) {
-        if (GameItems.getBlock(getForeMap(x, y)).hasDrop()) {
-            GP.drops.add(new Drop(transformX(x) * 16 + 4, y * 16 + 4,
-                    GameItems.getItemId(GameItems.getBlock(getForeMap(x, y)).getDrop())));
+        Block block = GameItems.getBlock(getForeMap(x, y));
+        if (block.hasDrop()) {
+            mDropController.addDrop(transformX(x) * 16 + 4, y * 16 + 4, GameItems.getItemId(block.getDrop()));
         }
         placeToForeground(x, y, 0);
     }
 
     public void destroyBackMap(int x, int y) {
-        if (GameItems.getBlock(getBackMap(x, y)).hasDrop()) {
-            GP.drops.add(new Drop(transformX(x) * 16 + 4, y * 16 + 4,
-                    GameItems.getItemId(GameItems.getBlock(getBackMap(x, y)).getDrop())));
+        Block block = GameItems.getBlock(getBackMap(x, y));
+        if (block.hasDrop()) {
+            mDropController.addDrop(transformX(x) * 16 + 4, y * 16 + 4, GameItems.getItemId(block.getDrop()));
         }
         placeToBackground(x, y, 0);
     }
 
+    private void updateBlock(int x, int y) {
+        if (getForeMap(x, y) == 10) {
+            if (!hasForeAt(x, y + 1) || !getForeMapBlock(x, y + 1).hasCollision()) {
+                setForeMap(x, y, 0);
+                mMobsController.addMob(FallingSand.class, x * 16, y * 16);
+                updateBlock(x, y - 1);
+            }   
+        }
+
+        if (getForeMap(x, y) == 11) {
+            if (!hasForeAt(x, y + 1) || !getForeMapBlock(x, y + 1).hasCollision()) {
+                setForeMap(x, y, 0);
+                mMobsController.addMob(FallingGravel.class, x * 16, y * 16);
+                updateBlock(x, y - 1);
+            }
+        }
+
+        if (hasForeAt(x, y) && getForeMapBlock(x, y).requiresBlock()) {
+            if (!hasForeAt(x, y + 1) || !getForeMapBlock(x, y + 1).hasCollision()) {
+                destroyForeMap(x, y);
+                updateBlock(x, y - 1);
+            }
+        }
+
+        if (getForeMap(x, y) == 2) {
+            if (hasForeAt(x, y - 1) && (getForeMapBlock(x, y - 1).hasCollision() ||
+                    GameItems.isFluid(getForeMap(x, y - 1)))) {
+                setForeMap(x, y, 3);
+            }
+        }
+    }
+
+    public void update() {
+        if (mShouldUpdate) {
+            for (int y = mUpdateY; y < mUpdateY + UPDATE_RANGE; y++) {
+                for (int x = mUpdateX; x < mUpdateX + UPDATE_RANGE; x++) {
+                    updateBlock(x, y);
+                }
+            }
+            mShouldUpdate = false;
+        }
+
+        if (!mGameFluidsThread.isAlive()) {
+            mGameFluidsThread.start();
+        }
+    }
+
+    public void startFluidsThread() {
+        mGameFluidsThread.start();
+    }
+
+    @Override
+    public void dispose() {
+        mGameFluidsThread.interrupt();
+    }
 }

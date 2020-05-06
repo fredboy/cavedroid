@@ -8,6 +8,7 @@ public class Item {
 
     private final String name;
     private final String type;
+    @CheckForNull
     private final Sprite tex;
 
     public Item(String name, String type, @CheckForNull Sprite tex) {
@@ -19,7 +20,8 @@ public class Item {
         }
     }
 
-    public Sprite getTex() {
+    public Sprite getTexture() {
+        assert tex != null;
         return tex;
     }
 

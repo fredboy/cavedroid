@@ -1,6 +1,5 @@
 buildscript {
 
-
     repositories {
         mavenLocal()
         mavenCentral()
@@ -9,10 +8,9 @@ buildscript {
         jcenter()
         google()
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.0'
-
-
     }
 }
 
@@ -42,7 +40,6 @@ allprojects {
 project(":desktop") {
     apply plugin: "java-library"
 
-
     dependencies {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
@@ -69,9 +66,11 @@ project(":android") {
 project(":core") {
     apply plugin: "java-library"
 
-
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.google.guava:guava:$guavaVersion-android"
+        api 'com.google.dagger:dagger:2.27'
+        implementation 'org.jetbrains:annotations:15.0'
+        annotationProcessor 'com.google.dagger:dagger-compiler:2.27'
     }
 }

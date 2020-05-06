@@ -4,11 +4,10 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import ru.deadsoftware.cavedroid.game.GameWorld;
 import ru.deadsoftware.cavedroid.game.mobs.Player;
 
 import java.io.Serializable;
-
-import static ru.deadsoftware.cavedroid.GameScreen.GP;
 
 public class Drop extends Rectangle implements Serializable {
 
@@ -16,7 +15,7 @@ public class Drop extends Rectangle implements Serializable {
     private final Vector2 move;
     private boolean pickedUp = false;
 
-    public Drop(float x, float y, int id) {
+    Drop(float x, float y, int id) {
         super(x, y, 8, 8);
         this.id = id;
         this.move = new Vector2(0, -1);
@@ -26,15 +25,15 @@ public class Drop extends Rectangle implements Serializable {
         return move;
     }
 
-    public int closeToPlayer() {
+    public int closeToPlayer(GameWorld gameWorld, Player player) {
         boolean[] c = new boolean[3];
 
-        c[0] = Intersector.overlaps(new Rectangle(GP.player.getX() - 16,
-                GP.player.getY() - 16, GP.player.getWidth() + 32, GP.player.getHeight() + 32), this);
-        c[1] = Intersector.overlaps(new Rectangle((GP.player.getX() + GP.world.getWidthPx()) - 16,
-                GP.player.getY() - 16, GP.player.getWidth() + 32, GP.player.getHeight() + 32), this);
-        c[2] = Intersector.overlaps(new Rectangle((GP.player.getX() - GP.world.getWidthPx()) - 16,
-                GP.player.getY() - 16, GP.player.getWidth() + 32, GP.player.getHeight() + 32), this);
+        c[0] = Intersector.overlaps(new Rectangle(player.getX() - 16,
+                player.getY() - 16, player.getWidth() + 32, player.getHeight() + 32), this);
+        c[1] = Intersector.overlaps(new Rectangle((player.getX() + gameWorld.getWidthPx()) - 16,
+                player.getY() - 16, player.getWidth() + 32, player.getHeight() + 32), this);
+        c[2] = Intersector.overlaps(new Rectangle((player.getX() - gameWorld.getWidthPx()) - 16,
+                player.getY() - 16, player.getWidth() + 32, player.getHeight() + 32), this);
 
         for (int i = 0; i < 3; i++) {
             if (c[i]) {
@@ -45,30 +44,29 @@ public class Drop extends Rectangle implements Serializable {
         return 0;
     }
 
-    public void moveToPlayer() {
-        int ctp = closeToPlayer();
+    public void moveToPlayer(GameWorld gameWorld, Player player, int ctp) {
         if (ctp > 0) {
-            float px = GP.player.getX();
-            float py = GP.player.getY();
+            float px = player.getX();
+            float py = player.getY();
 
             switch (ctp) {
                 case 2:
-                    px += GP.world.getWidthPx();
+                    px += gameWorld.getWidthPx();
                     break;
                 case 3:
-                    px -= GP.world.getWidthPx();
+                    px -= gameWorld.getWidthPx();
                     break;
             }
 
             float dx = 0, dy = 0;
 
-            if (px + GP.player.getWidth() < x + 4) {
+            if (px + player.getWidth() < x + 4) {
                 dx = -.5f;
             } else if (px > x + 4) {
                 dx = .5f;
             }
 
-            if (py + GP.player.getHeight() < y + 4) {
+            if (py + player.getHeight() < y + 4) {
                 dy = -.5f;
             } else if (py > y + 4) {
                 dy = .5f;
@@ -101,11 +99,11 @@ public class Drop extends Rectangle implements Serializable {
     }
 
     private void checkWorldBounds() {
-        if (x + 8 > GP.world.getWidthPx()) {
-            x -= GP.world.getWidthPx();
-        } else if (x < 0) {
-            x += GP.world.getWidthPx();
-        }
+//        if (x + 8 > world.getWidthPx()) {
+//            x -= world.getWidthPx();
+//        } else if (x < 0) {
+//            x += world.getWidthPx();
+//        }
     }
 
     public void move() {

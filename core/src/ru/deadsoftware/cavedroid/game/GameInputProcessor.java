@@ -1,22 +1,35 @@
-package ru.deadsoftware.cavedroid.misc;
+package ru.deadsoftware.cavedroid.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.JsonValue;
-import ru.deadsoftware.cavedroid.CaveGame;
-import ru.deadsoftware.cavedroid.GameScreen;
+import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.objects.TouchButton;
+import ru.deadsoftware.cavedroid.misc.Assets;
+
+import javax.inject.Inject;
 
 import static com.badlogic.gdx.utils.ObjectMap.Entry;
-import static ru.deadsoftware.cavedroid.GameScreen.GP;
 
-public class InputHandlerGame extends InputAdapter {
+@GameScope
+public class GameInputProcessor extends InputAdapter {
 
-    private static TouchButton nullButton = new TouchButton(null, -1, true);
+    private static final TouchButton nullButton = new TouchButton(null, -1, true);
 
-    public InputHandlerGame() {
+    private final GameInput mGameInput;
+    private final GameRenderer mGameRenderer;
+    private final MainConfig mMainConfig;
+
+    @Inject
+    public GameInputProcessor(GameInput gameInput,
+                              GameRenderer gameRenderer,
+                              MainConfig mainConfig) {
+        mGameInput = gameInput;
+        mGameRenderer = gameRenderer;
+        mMainConfig = mainConfig;
+
         loadTouchButtonsFromJSON();
     }
 
@@ -48,10 +61,10 @@ public class InputHandlerGame extends InputAdapter {
             String name = key.getString("key");
             int code = mouse ? getMouseKey(name) : Input.Keys.valueOf(name);
             if (x < 0) {
-                x = GP.renderer.getWidth() + x;
+                x = mGameRenderer.getWidth() + x;
             }
             if (y < 0) {
-                y = GP.renderer.getHeight() + y;
+                y = mGameRenderer.getHeight() + y;
             }
             Assets.guiMap.put(key.name(), new TouchButton(new Rectangle(x, y, w, h), code, mouse));
         }
@@ -59,16 +72,16 @@ public class InputHandlerGame extends InputAdapter {
     }
 
     private float transformScreenX(int screenX) {
-        return GP.renderer.getWidth() / GameScreen.getWidth() * screenX;
+        return mGameRenderer.getWidth() / Gdx.graphics.getWidth() * screenX;
     }
 
     private float transformScreenY(int screenY) {
-        return GP.renderer.getHeight() / GameScreen.getHeight() * screenY;
+        return mGameRenderer.getHeight() / Gdx.graphics.getHeight() * screenY;
     }
 
     private TouchButton getTouchedKey(float touchX, float touchY) {
-        for (Entry entry : Assets.guiMap) {
-            TouchButton button = (TouchButton) entry.value;
+        for (Entry<String, TouchButton> entry : Assets.guiMap) {
+            TouchButton button = entry.value;
             if (button.getRect().contains(touchX, touchY)) {
                 return button;
             }
@@ -78,13 +91,13 @@ public class InputHandlerGame extends InputAdapter {
 
     @Override
     public boolean keyDown(int keycode) {
-        GP.input.keyDown(keycode);
+        mGameInput.keyDown(keycode);
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        GP.input.keyUp(keycode);
+        mGameInput.keyUp(keycode);
         return false;
     }
 
@@ -93,15 +106,15 @@ public class InputHandlerGame extends InputAdapter {
         float touchX = transformScreenX(screenX);
         float touchY = transformScreenY(screenY);
 
-        if (CaveGame.TOUCH) {
+        if (mMainConfig.isTouch()) {
             TouchButton touchedKey = getTouchedKey(touchX, touchY);
             if (touchedKey.isMouse()) {
-                GP.input.touchDown(touchX, touchY, touchedKey.getCode());
+                mGameInput.touchDown(touchX, touchY, touchedKey.getCode());
             } else {
-                GP.input.keyDown(touchedKey.getCode());
+                mGameInput.keyDown(touchedKey.getCode());
             }
         } else {
-            GP.input.touchDown(touchX, touchY, button);
+            mGameInput.touchDown(touchX, touchY, button);
         }
         return false;
     }
@@ -111,15 +124,15 @@ public class InputHandlerGame extends InputAdapter {
         float touchX = transformScreenX(screenX);
         float touchY = transformScreenY(screenY);
 
-        if (CaveGame.TOUCH) {
+        if (mMainConfig.isTouch()) {
             TouchButton touchedKey = getTouchedKey(touchX, touchY);
             if (touchedKey.isMouse()) {
-                GP.input.touchUp(touchX, touchY, touchedKey.getCode());
+                mGameInput.touchUp(touchX, touchY, touchedKey.getCode());
             } else {
-                GP.input.keyUp(GP.input.getKeyDownCode());
+                mGameInput.keyUp(mGameInput.getKeyDownCode());
             }
         } else {
-            GP.input.touchUp(touchX, touchY, button);
+            mGameInput.touchUp(touchX, touchY, button);
         }
         return false;
     }
@@ -128,19 +141,19 @@ public class InputHandlerGame extends InputAdapter {
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         float touchX = transformScreenX(screenX);
         float touchY = transformScreenY(screenY);
-        if (CaveGame.TOUCH && GP.input.isKeyDown()) {
+        if (mMainConfig.isTouch() && mGameInput.isKeyDown()) {
             if (getTouchedKey(touchX, touchY).getCode() == -1) {
-                GP.input.keyUp(GP.input.getKeyDownCode());
+                mGameInput.keyUp(mGameInput.getKeyDownCode());
             }
         } else {
-            GP.input.touchDragged(touchX, touchY);
+            mGameInput.touchDragged(touchX, touchY);
         }
         return false;
     }
 
     @Override
     public boolean scrolled(int amount) {
-        GP.input.scrolled(amount);
+        mGameInput.scrolled(amount);
         return false;
     }
 }
