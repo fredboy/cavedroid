@@ -23,8 +23,6 @@ import static ru.deadsoftware.cavedroid.misc.Assets.textureRegions;
 @GameScope
 public class GameRenderer extends Renderer {
 
-    private static final String TAG = "GameRenderer";
-
     private final MainConfig mMainConfig;
     private final GameInput mGameInput;
     private final GameWorld mGameWorld;
@@ -286,16 +284,17 @@ public class GameRenderer extends Renderer {
 
         if (mMainConfig.isShowInfo()) {
             spriter.begin();
+            Player player = mMobsController.getPlayer();
             drawString("FPS: " + fps, 0, 0);
-            drawString("X: " + mMobsController.getPlayer().getMapX(), 0, 10);
-            drawString("Y: " + mMobsController.getPlayer().getUpperMapY(), 0, 20);
+            drawString("X: " + player.getMapX(), 0, 10);
+            drawString("Y: " + player.getUpperMapY(), 0, 20);
             drawString("CurX: " + mGameInput.getCurX(), 0, 30);
             drawString("CurY: " + mGameInput.getCurY(), 0, 40);
             drawString("Mobs: " + mMobsController.getSize(), 0, 50);
             drawString("Drops: " + mDropController.getSize(), 0, 60);
             drawString("Block: " + GameItems.getBlockKey(mGameWorld.getForeMap(mGameInput.getCurX(), mGameInput.getCurY())), 0, 70);
             drawString("Hand: " + GameItems.getItemKey(mMobsController.getPlayer().inventory[mMobsController.getPlayer().slot]), 0, 80);
-            drawString("Game mode: " + mMobsController.getPlayer().gameMode, 0, 90);
+            drawString("Game mode: " + player.gameMode, 0, 90);
             spriter.end();
         }
 

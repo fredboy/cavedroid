@@ -2,12 +2,16 @@ package ru.deadsoftware.cavedroid;
 
 import ru.deadsoftware.cavedroid.game.GameUiWindow;
 
+import javax.annotation.CheckForNull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class MainConfig {
 
+    private final CaveGame mCaveGame;
+
+    @CheckForNull
     private MainComponent mMainComponent;
 
     private GameUiWindow mGameUiWindow;
@@ -21,12 +25,19 @@ public class MainConfig {
     private float mHeight;
 
     @Inject
-    public MainConfig() {
+    public MainConfig(CaveGame caveGame) {
+        mCaveGame = caveGame;
+
         mGameUiWindow = GameUiWindow.NONE;
         mGameFolder = "";
     }
 
+    public CaveGame getCaveGame() {
+        return mCaveGame;
+    }
+
     public MainComponent getMainComponent() {
+        assert mMainComponent != null;
         return mMainComponent;
     }
 

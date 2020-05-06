@@ -16,12 +16,12 @@ class GameFluidsThread extends Thread {
     private static final int[] LAVA_IDS = {9, 64, 65, 66, 67};
 
     private long mFluidLastUpdateTimestamp = 0;
-    
+
     private final GameWorld mGameWorld;
     private final MobsController mMobsController;
 
     private final Thread mMainThread;
-    
+
     GameFluidsThread(GameWorld gameWorld,
                      MobsController mobsController,
                      Thread mainThread) {

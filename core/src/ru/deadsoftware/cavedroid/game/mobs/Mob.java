@@ -35,11 +35,11 @@ public abstract class Mob extends Rectangle implements Serializable {
     private boolean mFlyMode;
 
     /**
-     * @param x      in pixels
-     * @param y      in pixels
-     * @param width  in pixels
-     * @param height in pixels
-     * @param mDirection    Direction in which mob is looking
+     * @param x          in pixels
+     * @param y          in pixels
+     * @param width      in pixels
+     * @param height     in pixels
+     * @param mDirection Direction in which mob is looking
      */
     protected Mob(float x, float y, float width, float height, Direction mDirection, Type type) {
         super(x, y, width, height);

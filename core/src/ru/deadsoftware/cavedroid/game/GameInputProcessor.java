@@ -21,7 +21,7 @@ public class GameInputProcessor extends InputAdapter {
     private final GameInput mGameInput;
     private final GameRenderer mGameRenderer;
     private final MainConfig mMainConfig;
-    
+
     @Inject
     public GameInputProcessor(GameInput gameInput,
                               GameRenderer gameRenderer,
@@ -29,7 +29,7 @@ public class GameInputProcessor extends InputAdapter {
         mGameInput = gameInput;
         mGameRenderer = gameRenderer;
         mMainConfig = mainConfig;
-        
+
         loadTouchButtonsFromJSON();
     }
 

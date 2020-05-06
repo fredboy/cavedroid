@@ -4,11 +4,12 @@ import com.badlogic.gdx.Gdx;
 import ru.deadsoftware.cavedroid.game.GameScope;
 
 import javax.inject.Inject;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 @GameScope
-public class MobsController {
+public class MobsController implements Serializable {
 
     public interface Callback {
         void run(Mob mob);

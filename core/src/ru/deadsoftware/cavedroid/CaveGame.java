@@ -3,6 +3,7 @@ package ru.deadsoftware.cavedroid;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import ru.deadsoftware.cavedroid.game.GameItems;
+import ru.deadsoftware.cavedroid.game.GameScreen;
 import ru.deadsoftware.cavedroid.misc.Assets;
 
 public class CaveGame extends Game {
@@ -11,6 +12,9 @@ public class CaveGame extends Game {
 
     public static final String VERSION = "alpha 0.4";
 
+    private final MainConfig mMainConfig;
+    private final MainComponent mMainComponent;
+
     private final String mGameFolder;
     private final boolean mTouch;
     private boolean mDebug;
@@ -18,22 +22,41 @@ public class CaveGame extends Game {
     public CaveGame(String gameFolder, boolean touch) {
         mGameFolder = gameFolder;
         mTouch = touch;
+
+        mMainComponent = DaggerMainComponent.builder().caveGame(this).build();
+        mMainConfig = mMainComponent.getMainConfig();
     }
 
     public void setDebug(boolean debug) {
         mDebug = debug;
     }
 
-    private void initConfig(MainConfig mainConfig, MainComponent mainComponent) {
+    private void initConfig() {
         int width = mTouch ? 320 : 480;
         int height = (int) (width * ((float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth()));
 
-        mainConfig.setMainComponent(mainComponent);
-        mainConfig.setGameFolder(mGameFolder);
-        mainConfig.setTouch(mTouch);
-        mainConfig.setWidth(width);
-        mainConfig.setHeight(height);
-        mainConfig.setShowInfo(true);
+        mMainConfig.setMainComponent(mMainComponent);
+        mMainConfig.setGameFolder(mGameFolder);
+        mMainConfig.setTouch(mTouch);
+        mMainConfig.setWidth(width);
+        mMainConfig.setHeight(height);
+        mMainConfig.setShowInfo(mDebug);
+    }
+
+    public void newGame() {
+        GameScreen gameScreen = mMainComponent.getGameScreen();
+        gameScreen.newGame();
+        setScreen(gameScreen);
+    }
+
+    public void loadGame() {
+        GameScreen gameScreen = mMainComponent.getGameScreen();
+        gameScreen.loadGame();
+        setScreen(gameScreen);
+    }
+
+    public void quitGame() {
+        setScreen(mMainComponent.getMenuScreen());
     }
 
     @Override
@@ -44,9 +67,9 @@ public class CaveGame extends Game {
         Assets.load();
         GameItems.load();
 
-        MainComponent mainComponent = DaggerMainComponent.create();
-        initConfig(mainComponent.getGameConfig(), mainComponent);
-        setScreen(mainComponent.getGameScreen());
+        initConfig();
+
+        setScreen(mMainComponent.getMenuScreen());
     }
 
 }

@@ -3,13 +3,19 @@ package ru.deadsoftware.cavedroid.game;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import javax.annotation.CheckForNull;
+
 class WorldGen {
 
+    @CheckForNull
     private static RandomXS128 rand;
     private static long seed;
 
+    @CheckForNull
     private static int[][] foreMap, backMap;
+    @CheckForNull
     private static int[] hMap;
+    @CheckForNull
     private static int[] bMap; //biomes, 0-plains, 1-desert
 
     public static long getSeed() {
@@ -57,12 +63,14 @@ class WorldGen {
     }
 
     private static void genCactus(int x, int y) {
+        assert foreMap != null;
         foreMap[x][y] = 59;
         foreMap[x][y - 1] = 59;
         foreMap[x][y - 2] = 59;
     }
 
     private static void genOak(int x, int y) {
+        assert foreMap != null && backMap != null;
         backMap[x][y] = 15;
         backMap[x][y - 1] = 15;
         backMap[x][y - 2] = 15;
@@ -183,16 +191,16 @@ class WorldGen {
     }
 
     static int[][] getForeMap() {
+        assert foreMap != null;
         return foreMap;
     }
 
     static int[][] getBackMap() {
+        assert backMap != null;
         return backMap;
     }
 
     static void clear() {
-        foreMap = null;
-        backMap = null;
         hMap = null;
         bMap = null;
     }

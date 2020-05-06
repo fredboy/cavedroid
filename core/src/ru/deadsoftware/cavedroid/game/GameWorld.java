@@ -1,15 +1,17 @@
 package ru.deadsoftware.cavedroid.game;
 
+import com.badlogic.gdx.utils.Disposable;
 import ru.deadsoftware.cavedroid.game.mobs.FallingGravel;
 import ru.deadsoftware.cavedroid.game.mobs.FallingSand;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.objects.Block;
 import ru.deadsoftware.cavedroid.game.objects.DropController;
 
+import javax.annotation.CheckForNull;
 import javax.inject.Inject;
 
 @GameScope
-public class GameWorld {
+public class GameWorld implements Disposable {
 
     private static final int DEFAULT_WIDTH = 1024;
     private static final int DEFAULT_HEIGHT = 256;
@@ -29,27 +31,32 @@ public class GameWorld {
     private int mUpdateY;
 
     @Inject
-    GameWorld(DropController dropController,
-              MobsController mobsController) {
+    public GameWorld(DropController dropController,
+                     MobsController mobsController,
+                     @CheckForNull int[][] foreMap,
+                     @CheckForNull int[][] backMap) {
         mDropController = dropController;
         mMobsController = mobsController;
 
-        mWidth = DEFAULT_WIDTH;
-        mHeight = DEFAULT_HEIGHT;
-        WorldGen.genWorld(mWidth, mHeight);
-        mForeMap = WorldGen.getForeMap();
-        mBackMap = WorldGen.getBackMap();
-        WorldGen.clear();
+        boolean isNewGame = foreMap == null || backMap == null;
+
+        if (isNewGame) {
+            mWidth = DEFAULT_WIDTH;
+            mHeight = DEFAULT_HEIGHT;
+            WorldGen.genWorld(mWidth, mHeight);
+            mForeMap = WorldGen.getForeMap();
+            mBackMap = WorldGen.getBackMap();
+            WorldGen.clear();
+            mMobsController.getPlayer().respawn(this);
+        } else {
+            mForeMap = foreMap;
+            mBackMap = backMap;
+            mWidth = mForeMap.length;
+            mHeight = mForeMap[0].length;
+        }
 
         mGameFluidsThread = new GameFluidsThread(this, mMobsController, Thread.currentThread());
     }
-
-//    GameWorld(int[][] foreMap, int[][] backMap) {
-//        this.foreMap = foreMap.clone();
-//        this.backMap = backMap.clone();
-//        WIDTH = foreMap.length;
-//        HEIGHT = foreMap[0].length;
-//    }
 
     public int getWidth() {
         return mWidth;
@@ -200,7 +207,7 @@ public class GameWorld {
                 setForeMap(x, y, 0);
                 mMobsController.addMob(FallingSand.class, x * 16, y * 16);
                 updateBlock(x, y - 1);
-            }
+            }   
         }
 
         if (getForeMap(x, y) == 11) {
@@ -245,4 +252,8 @@ public class GameWorld {
         mGameFluidsThread.start();
     }
 
+    @Override
+    public void dispose() {
+        mGameFluidsThread.interrupt();
+    }
 }

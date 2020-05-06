@@ -10,6 +10,7 @@ import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.mobs.Pig;
 import ru.deadsoftware.cavedroid.game.mobs.Player;
+import ru.deadsoftware.cavedroid.game.objects.DropController;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
 
@@ -22,6 +23,7 @@ public class GameInput {
 
     private final MainConfig mMainConfig;
     private final GameWorld mGameWorld;
+    private final DropController mDropController;
     private final MobsController mMobsController;
     private final Player mPlayer;
 
@@ -45,9 +47,11 @@ public class GameInput {
     @Inject
     public GameInput(MainConfig mainConfig,
                      GameWorld gameWorld,
+                     DropController dropController,
                      MobsController mobsController) {
         mMainConfig = mainConfig;
         mGameWorld = gameWorld;
+        mDropController = dropController;
         mMobsController = mobsController;
 
         mPlayer = mMobsController.getPlayer();
@@ -243,7 +247,7 @@ public class GameInput {
             mTouchedDown = false;
         } else {
             if (insideHotbar(mTouchDownX, mTouchDownY)) {
-//                CaveGame.GAME_STATE = GameState.CREATIVE_INV;
+                mMainConfig.setGameUiWindow(GameUiWindow.CREATIVE_INVENTORY);
                 mTouchedDown = false;
             }
         }
@@ -291,11 +295,11 @@ public class GameInput {
                 mGameWorld.placeToForeground(mCurX, mCurY, 8);
                 break;
 
-//            case Input.Keys.ESCAPE:
-//            case Input.Keys.BACK:
-//                CaveGame.APP_STATE = AppState.SAVE;
-//                CaveGame.GAME_STATE = GameState.PAUSE;
-//                break;
+            case Input.Keys.ESCAPE:
+            case Input.Keys.BACK:
+                GameSaver.save(mMainConfig, mDropController, mMobsController, mGameWorld);
+                mMainConfig.getCaveGame().quitGame();
+                break;
 
             case Input.Keys.F1:
                 mMainConfig.setShowInfo(!mMainConfig.isShowInfo());

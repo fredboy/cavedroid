@@ -9,6 +9,7 @@ import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.mobs.Player;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
+import ru.deadsoftware.cavedroid.game.objects.DropController;
 
 import javax.inject.Inject;
 import java.util.Iterator;
@@ -24,14 +25,17 @@ class GamePhysics {
     private final GameWorld mGameWorld;
     private final MainConfig mMainConfig;
     private final MobsController mMobsController;
+    private final DropController mDropController;
 
     @Inject
     public GamePhysics(GameWorld gameWorld,
                        MainConfig mainConfig,
-                       MobsController mobsController) {
+                       MobsController mobsController,
+                       DropController dropController) {
         mGameWorld = gameWorld;
         mMainConfig = mainConfig;
         mMobsController = mobsController;
+        mDropController = dropController;
     }
 
     /**
@@ -253,16 +257,18 @@ class GamePhysics {
     }
 
     void update() {
-//        for (Iterator<Drop> it = GP.drops.iterator(); it.hasNext(); ) {
-//            Drop drop = it.next();
-//            dropPhy(drop);
-//            if (Intersector.overlaps(drop, GP.player)) {
-//                drop.pickUpDrop(GP.player);
-//            }
-//            if (drop.isPickedUp()) {
-//                it.remove();
-//            }
-//        }
+        Player player = mMobsController.getPlayer();
+
+        for (Iterator<Drop> it = mDropController.getIterator(); it.hasNext(); ) {
+            Drop drop = it.next();
+            dropPhy(drop);
+            if (Intersector.overlaps(drop, player)) {
+                drop.pickUpDrop(player);
+            }
+            if (drop.isPickedUp()) {
+                it.remove();
+            }
+        }
 
         for (Iterator<Mob> it = mMobsController.getIterator(); it.hasNext(); ) {
             Mob mob = it.next();
@@ -273,7 +279,6 @@ class GamePhysics {
             }
         }
 
-        Player player = mMobsController.getPlayer();
         playerPhy(player);
         if (player.isDead()) {
             player.respawn(mGameWorld);

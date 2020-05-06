@@ -1,9 +1,11 @@
 package ru.deadsoftware.cavedroid.game;
 
+import com.badlogic.gdx.utils.Disposable;
+
 import javax.inject.Inject;
 
 @GameScope
-public class GameProc {
+public class GameProc implements Disposable {
 
     public static final int MAX_CREATIVE_SCROLL = GameItems.getItemsSize() / 8;
 
@@ -32,4 +34,8 @@ public class GameProc {
         mGameRenderer.render(delta);
     }
 
+    @Override
+    public void dispose() {
+        mGameWorld.dispose();
+    }
 }
