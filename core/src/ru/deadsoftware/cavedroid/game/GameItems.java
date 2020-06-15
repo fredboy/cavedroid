@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.ArrayMap;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.JsonValue;
 import ru.deadsoftware.cavedroid.game.objects.Block;
 import ru.deadsoftware.cavedroid.game.objects.Item;
@@ -12,6 +13,8 @@ import ru.deadsoftware.cavedroid.misc.Assets;
 import java.util.HashMap;
 
 public class GameItems {
+
+    private static final String TAG = "GameItems";
 
     private static final HashMap<String, Integer> blocksIds = new HashMap<>();
     private static final HashMap<String, Integer> itemsIds = new HashMap<>();
@@ -96,35 +99,44 @@ public class GameItems {
     public static void load() {
         JsonValue json = Assets.jsonReader.parse(Gdx.files.internal("json/game_items.json"));
         for (JsonValue block = json.get("blocks").child(); block != null; block = block.next()) {
-            String key = block.name();
-            int left = Assets.getIntFromJson(block, "left", 0);
-            int right = Assets.getIntFromJson(block, "right", 0);
-            int top = Assets.getIntFromJson(block, "top", 0);
-            int bottom = Assets.getIntFromJson(block, "bottom", 0);
-            int hp = Assets.getIntFromJson(block, "hp", -1);
-            boolean coll = Assets.getBooleanFromJson(block, "collision", true);
-            boolean bg = Assets.getBooleanFromJson(block, "background", false);
-            boolean tp = Assets.getBooleanFromJson(block, "transparent", false);
-            boolean br = Assets.getBooleanFromJson(block, "block_required", false);
-            boolean fluid = Assets.getBooleanFromJson(block, "fluid", false);
-            String drop = Assets.getStringFromJson(block, "drop", key);
-            String meta = Assets.getStringFromJson(block, "meta", "");
-            String tex = Assets.getStringFromJson(block, "texture", key);
-            Sprite sprite = tex.equals("none") ? null :
-                    new Sprite(new Texture(Gdx.files.internal("textures/blocks/" + tex + ".png")));
-            Block newBlock = new Block(left, top, right, bottom, hp, drop, coll, bg, tp, br, fluid, meta, sprite);
-            blocksIds.put(key, blocks.size);
-            blocks.put(key, newBlock);
+            try {
+                String key = block.name();
+                int left = Assets.getIntFromJson(block, "left", 0);
+                int right = Assets.getIntFromJson(block, "right", 0);
+                int top = Assets.getIntFromJson(block, "top", 0);
+                int bottom = Assets.getIntFromJson(block, "bottom", 0);
+                int hp = Assets.getIntFromJson(block, "hp", -1);
+                boolean coll = Assets.getBooleanFromJson(block, "collision", true);
+                boolean bg = Assets.getBooleanFromJson(block, "background", false);
+                boolean tp = Assets.getBooleanFromJson(block, "transparent", false);
+                boolean br = Assets.getBooleanFromJson(block, "block_required", false);
+                boolean fluid = Assets.getBooleanFromJson(block, "fluid", false);
+                String drop = Assets.getStringFromJson(block, "drop", key);
+                String meta = Assets.getStringFromJson(block, "meta", "");
+                String tex = Assets.getStringFromJson(block, "texture", key);
+                Sprite sprite = tex.equals("none") ? null :
+                        new Sprite(new Texture(Gdx.files.internal("textures/blocks/" + tex + ".png")));
+
+                Block newBlock = new Block(left, top, right, bottom, hp, drop, coll, bg, tp, br, fluid, meta, sprite);
+                blocksIds.put(key, blocks.size);
+                blocks.put(key, newBlock);
+            } catch (GdxRuntimeException e) {
+                Gdx.app.error(TAG, e.getMessage());
+            }
         }
         for (JsonValue item = json.get("items").child(); item != null; item = item.next()) {
-            String key = item.name();
-            String name = Assets.getStringFromJson(item, "name", key);
-            String type = Assets.getStringFromJson(item, "type", "item");
-            String texture = Assets.getStringFromJson(item, "texture", key);
-            Sprite sprite = type.equals("block") ? null :
-                    new Sprite(new Texture(Gdx.files.internal("textures/items/" + texture + ".png")));
-            itemsIds.put(key, items.size);
-            items.put(key, new Item(name, type, sprite));
+            try {
+                String key = item.name();
+                String name = Assets.getStringFromJson(item, "name", key);
+                String type = Assets.getStringFromJson(item, "type", "item");
+                String texture = Assets.getStringFromJson(item, "texture", key);
+                Sprite sprite = type.equals("block") ? null :
+                        new Sprite(new Texture(Gdx.files.internal("textures/items/" + texture + ".png")));
+                itemsIds.put(key, items.size);
+                items.put(key, new Item(name, type, sprite));
+            } catch (GdxRuntimeException e) {
+                Gdx.app.error(TAG, e.getMessage());
+            }
         }
     }
 
