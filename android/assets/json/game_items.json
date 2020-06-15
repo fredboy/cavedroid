@@ -18,10 +18,10 @@
     "cobblestone": {
       "hp": 600
     },
-    "planks": {
+    "planks_oak": {
       "hp": 180
     },
-    "sapling": {
+    "sapling_oak": {
       "hp": 0,
       "collision": false,
       "background": false,
@@ -44,6 +44,9 @@
       "collision": false,
       "background": false,
       "fluid": true,
+      "animated": true,
+      "frames": 16,
+      "texture": "lava_still",
       "meta": "lava"
     },
     "sand": {
@@ -62,7 +65,7 @@
       "hp": 900,
       "drop": "coal"
     },
-    "log": {
+    "log_oak": {
       "hp": 180
     },
     "leaves": {
@@ -155,52 +158,52 @@
       "transparent": true,
       "block_required": true
     },
-    "wool": {
+    "wool_colored_white": {
       "hp": 75
     },
-    "wool_orange": {
+    "wool_colored_orange": {
       "hp": 75
     },
-    "wool_magenta": {
+    "wool_colored_magenta": {
       "hp": 75
     },
-    "wool_lightblue": {
+    "wool_colored_light_blue": {
       "hp": 75
     },
-    "wool_yellow": {
+    "wool_colored_yellow": {
       "hp": 75
     },
-    "wool_lime": {
+    "wool_colored_lime": {
       "hp": 75
     },
-    "wool_pink": {
+    "wool_colored_pink": {
       "hp": 75
     },
-    "wool_gray": {
+    "wool_colored_gray": {
       "hp": 75
     },
-    "wool_lightgray": {
+    "wool_colored_silver": {
       "hp": 75
     },
-    "wool_cyan": {
+    "wool_colored_cyan": {
       "hp": 75
     },
-    "wool_purple": {
+    "wool_colored_purple": {
       "hp": 75
     },
-    "wool_blue": {
+    "wool_colored_blue": {
       "hp": 75
     },
-    "wool_brown": {
+    "wool_colored_brown": {
       "hp": 75
     },
-    "wool_green": {
+    "wool_colored_green": {
       "hp": 75
     },
-    "wool_red": {
+    "wool_colored_red": {
       "hp": 75
     },
-    "wool_black": {
+    "wool_colored_black": {
       "hp": 75
     },
     "gold_block": {
@@ -216,27 +219,32 @@
     },
     "double_stone_slab": {
       "hp": 600,
-      "drop": "stone_slab"
+      "drop": "stone_slab",
+      "texture": "stone_slab"
     },
     "sandstone_slab": {
       "top": 8,
       "hp": 600,
-      "transparent": true
+      "transparent": true,
+      "texture": "sandstone"
     },
-    "wooden_slab": {
+    "oak_slab": {
       "top": 8,
       "hp": 180,
-      "transparent": true
+      "transparent": true,
+      "texture": "planks_oak"
     },
     "cobblestone_slab": {
       "top": 8,
       "hp": 600,
-      "transparent": true
+      "transparent": true,
+      "texture": "cobblestone"
     },
     "brick_slab": {
       "top": 8,
       "hp": 600,
-      "transparent": true
+      "transparent": true,
+      "texture": "bricks"
     },
     "stonebrick": {
       "hp": 450
@@ -244,7 +252,8 @@
     "stonebrick_slab": {
       "top": 8,
       "hp": 450,
-      "transparent": true
+      "transparent": true,
+      "texture": "stonebrick"
     },
     "cactus": {
       "left": 1,
@@ -286,39 +295,6 @@
       "fluid": true,
       "meta": "water"
     },
-    "lava_16": {
-      "hp": -1,
-      "collision": false,
-      "background": false,
-      "transparent": true,
-      "texture": "lava",
-      "fluid": true,
-      "meta": "lava"
-    },
-    "lava_12": {
-      "hp": -1,
-      "collision": false,
-      "background": false,
-      "transparent": true,
-      "fluid": true,
-      "meta": "lava"
-    },
-    "lava_8": {
-      "hp": -1,
-      "collision": false,
-      "background": false,
-      "transparent": true,
-      "fluid": true,
-      "meta": "lava"
-    },
-    "lava_4": {
-      "hp": -1,
-      "collision": false,
-      "background": false,
-      "transparent": true,
-      "fluid": true,
-      "meta": "lava"
-    },
     "obsidian": {
       "hp": 1500
     }
@@ -344,12 +320,12 @@
       "name": "Cobblestone",
       "type": "block"
     },
-    "planks": {
-      "name": "Planks",
+    "planks_oak": {
+      "name": "Oak Planks",
       "type": "block"
     },
-    "sapling": {
-      "name": "Sapling",
+    "sapling_oak": {
+      "name": "Oak Sapling",
       "type": "block"
     },
     "bedrock": {
@@ -384,7 +360,7 @@
       "name": "Coal Ore",
       "type": "block"
     },
-    "log": {
+    "log_oak": {
       "name": "Wood",
       "type": "block"
     },
@@ -440,67 +416,67 @@
       "name": "Mushroom",
       "type": "block"
     },
-    "wool": {
+    "wool_colored_white": {
       "name": "Wool",
       "type": "block"
     },
-    "wool_orange": {
+    "wool_colored_orange": {
       "name": "Wool",
       "type": "block"
     },
-    "wool_magenta": {
+    "wool_colored_magenta": {
       "name": "Wool",
       "type": "block"
     },
-    "wool_lightblue": {
+    "wool_colored_light_blue": {
       "name": "Wool",
       "type": "block"
     },
-    "wool_yellow": {
+    "wool_colored_yellow": {
       "name": "Wool",
       "type": "block"
     },
-    "wool_lime": {
+    "wool_colored_lime": {
       "name": "Wool",
       "type": "block"
     },
-    "wool_pink": {
+    "wool_colored_pink": {
       "name": "Wool",
       "type": "block"
     },
-    "wool_gray": {
+    "wool_colored_gray": {
       "name": "Wool",
       "type": "block"
     },
-    "wool_lightgray": {
+    "wool_colored_silver": {
       "name": "Wool",
       "type": "block"
     },
-    "wool_cyan": {
+    "wool_colored_cyan": {
       "name": "Wool",
       "type": "block"
     },
-    "wool_purple": {
+    "wool_colored_purple": {
       "name": "Wool",
       "type": "block"
     },
-    "wool_blue": {
+    "wool_colored_blue": {
       "name": "Wool",
       "type": "block"
     },
-    "wool_brown": {
+    "wool_colored_brown": {
       "name": "Wool",
       "type": "block"
     },
-    "wool_green": {
+    "wool_colored_green": {
       "name": "Wool",
       "type": "block"
     },
-    "wool_red": {
+    "wool_colored_red": {
       "name": "Wool",
       "type": "block"
     },
-    "wool_black": {
+    "wool_colored_black": {
       "name": "Wool",
       "type": "block"
     },
@@ -522,8 +498,8 @@
       "type": "block",
       "meta": "slab"
     },
-    "wooden_slab": {
-      "name": "Wooden Slab",
+    "oak_slab": {
+      "name": "Oak Slab",
       "type": "block",
       "meta": "slab"
     },
