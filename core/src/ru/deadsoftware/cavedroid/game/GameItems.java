@@ -105,19 +105,46 @@ public class GameItems {
                 int right = Assets.getIntFromJson(block, "right", 0);
                 int top = Assets.getIntFromJson(block, "top", 0);
                 int bottom = Assets.getIntFromJson(block, "bottom", 0);
+                int clipX = Assets.getIntFromJson(block, "sprite_left", 0);
+                int clipY = Assets.getIntFromJson(block, "sprite_top", 0);
+                int clipWidth = Assets.getIntFromJson(block, "sprite_right", 0);
+                int clipHeight = Assets.getIntFromJson(block, "sprite_bottom", 0);
                 int hp = Assets.getIntFromJson(block, "hp", -1);
-                boolean coll = Assets.getBooleanFromJson(block, "collision", true);
-                boolean bg = Assets.getBooleanFromJson(block, "background", false);
-                boolean tp = Assets.getBooleanFromJson(block, "transparent", false);
-                boolean br = Assets.getBooleanFromJson(block, "block_required", false);
+                boolean collision = Assets.getBooleanFromJson(block, "collision", true);
+                boolean background = Assets.getBooleanFromJson(block, "background", false);
+                boolean transparent = Assets.getBooleanFromJson(block, "transparent", false);
+                boolean requiresBlock = Assets.getBooleanFromJson(block, "block_required", false);
                 boolean fluid = Assets.getBooleanFromJson(block, "fluid", false);
                 String drop = Assets.getStringFromJson(block, "drop", key);
                 String meta = Assets.getStringFromJson(block, "meta", "");
                 String tex = Assets.getStringFromJson(block, "texture", key);
-                Sprite sprite = tex.equals("none") ? null :
-                        new Sprite(new Texture(Gdx.files.internal("textures/blocks/" + tex + ".png")));
+                Texture texture = tex.equals("none") ? null :
+                        new Texture(Gdx.files.internal("textures/blocks/" + tex + ".png"));
+                boolean animated = Assets.getBooleanFromJson(block, "animated", false);
+                int frames = Assets.getIntFromJson(block, "frames", 0);
 
-                Block newBlock = new Block(left, top, right, bottom, hp, drop, coll, bg, tp, br, fluid, meta, sprite);
+                Block newBlock = new Block(
+                        left,
+                        top,
+                        right,
+                        bottom,
+                        hp,
+                        drop,
+                        collision,
+                        background,
+                        transparent,
+                        requiresBlock,
+                        fluid,
+                        meta,
+                        texture,
+                        animated,
+                        frames,
+                        clipX,
+                        clipY,
+                        clipWidth,
+                        clipHeight
+                );
+
                 blocksIds.put(key, blocks.size);
                 blocks.put(key, newBlock);
             } catch (GdxRuntimeException e) {
