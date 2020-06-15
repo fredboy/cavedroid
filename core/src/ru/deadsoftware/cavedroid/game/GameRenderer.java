@@ -67,14 +67,14 @@ public class GameRenderer extends Renderer {
         if (drawBG) {
             if ((!mGameWorld.hasForeAt(x, y) || mGameWorld.getForeMapBlock(x, y).isTransparent())
                     && mGameWorld.hasBackAt(x, y)) {
-                spriter.draw(mGameWorld.getBackMapBlock(x, y).getTexture(), drawX(x), drawY(y));
+                mGameWorld.getBackMapBlock(x, y).draw(spriter, drawX(x), drawY(y));
                 if (!mGameWorld.hasForeAt(x, y) && x == mGameInput.getCurX() && y == mGameInput.getCurY()) {
                     drawWreck(mGameWorld.getBackMap(mGameInput.getCurX(), mGameInput.getCurY()));
                 }
             }
         }
         if (mGameWorld.hasForeAt(x, y) && mGameWorld.getForeMapBlock(x, y).isBackground() == drawBG) {
-            spriter.draw(mGameWorld.getForeMapBlock(x, y).getTexture(), drawX(x), drawY(y));
+            mGameWorld.getForeMapBlock(x, y).draw(spriter, drawX(x), drawY(y));
             if (x == mGameInput.getCurX() && y == mGameInput.getCurY()) {
                 drawWreck(mGameWorld.getForeMap(mGameInput.getCurX(), mGameInput.getCurY()));
             }
