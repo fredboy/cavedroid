@@ -71,8 +71,9 @@
     "log_oak": {
       "hp": 180
     },
-    "leaves": {
-      "hp": 21
+    "leaves_oak": {
+      "hp": 21,
+      "transparent": true
     },
     "sponge": {
       "hp": 54
@@ -272,7 +273,7 @@
       "background": false,
       "transparent": true,
       "fluid": true,
-      "texture": "water_still",
+      "texture": "water_flow",
       "meta": "water",
       "animated": true,
       "frames": 16
@@ -284,7 +285,7 @@
       "background": false,
       "transparent": true,
       "fluid": true,
-      "texture": "water_still",
+      "texture": "water_flow",
       "meta": "water",
       "animated": true,
       "frames": 16,
@@ -297,7 +298,7 @@
       "background": false,
       "transparent": true,
       "fluid": true,
-      "texture": "water_still",
+      "texture": "water_flow",
       "meta": "water",
       "animated": true,
       "frames": 16,
@@ -310,7 +311,7 @@
       "background": false,
       "transparent": true,
       "fluid": true,
-      "texture": "water_still",
+      "texture": "water_flow",
       "meta": "water",
       "animated": true,
       "frames": 16,
@@ -321,7 +322,7 @@
       "collision": false,
       "background": false,
       "fluid": true,
-      "texture": "lava_still",
+      "texture": "lava_flow",
       "meta": "lava",
       "animated": true,
       "frames": 16
@@ -332,7 +333,7 @@
       "collision": false,
       "background": false,
       "fluid": true,
-      "texture": "lava_still",
+      "texture": "lava_flow",
       "meta": "lava",
       "animated": true,
       "frames": 16,
@@ -344,7 +345,7 @@
       "collision": false,
       "background": false,
       "fluid": true,
-      "texture": "lava_still",
+      "texture": "lava_flow",
       "meta": "lava",
       "animated": true,
       "frames": 16,
@@ -356,7 +357,7 @@
       "collision": false,
       "background": false,
       "fluid": true,
-      "texture": "lava_still",
+      "texture": "lava_flow",
       "meta": "lava",
       "animated": true,
       "frames": 16,
@@ -431,7 +432,7 @@
       "name": "Wood",
       "type": "block"
     },
-    "leaves": {
+    "leaves_oak": {
       "name": "Leaves",
       "type": "block"
     },
