@@ -37,17 +37,20 @@
       "background": false,
       "transparent": true,
       "fluid": true,
-      "meta": "water"
+      "texture": "water_still",
+      "meta": "water",
+      "animated": true,
+      "frames": 16
     },
     "lava": {
       "hp": -1,
       "collision": false,
       "background": false,
       "fluid": true,
-      "animated": true,
-      "frames": 16,
       "texture": "lava_still",
-      "meta": "lava"
+      "meta": "lava",
+      "animated": true,
+      "frames": 16
     },
     "sand": {
       "hp": 45
@@ -215,7 +218,8 @@
     "stone_slab": {
       "top": 8,
       "hp": 600,
-      "transparent": true
+      "transparent": true,
+      "sprite_top": 8
     },
     "double_stone_slab": {
       "hp": 600,
@@ -267,33 +271,96 @@
       "collision": false,
       "background": false,
       "transparent": true,
-      "texture": "water",
       "fluid": true,
-      "meta": "water"
+      "texture": "water_still",
+      "meta": "water",
+      "animated": true,
+      "frames": 16
     },
     "water_12": {
+      "top": 4,
       "hp": -1,
       "collision": false,
       "background": false,
       "transparent": true,
       "fluid": true,
-      "meta": "water"
+      "texture": "water_still",
+      "meta": "water",
+      "animated": true,
+      "frames": 16,
+      "sprite_top": 4
     },
     "water_8": {
+      "top": 8,
       "hp": -1,
       "collision": false,
       "background": false,
       "transparent": true,
       "fluid": true,
-      "meta": "water"
+      "texture": "water_still",
+      "meta": "water",
+      "animated": true,
+      "frames": 16,
+      "sprite_top": 8
     },
     "water_4": {
+      "top": 12,
       "hp": -1,
       "collision": false,
       "background": false,
       "transparent": true,
       "fluid": true,
-      "meta": "water"
+      "texture": "water_still",
+      "meta": "water",
+      "animated": true,
+      "frames": 16,
+      "sprite_top": 12
+    },
+    "lava_16": {
+      "hp": -1,
+      "collision": false,
+      "background": false,
+      "fluid": true,
+      "texture": "lava_still",
+      "meta": "lava",
+      "animated": true,
+      "frames": 16
+    },
+    "lava_12": {
+      "top": 4,
+      "hp": -1,
+      "collision": false,
+      "background": false,
+      "fluid": true,
+      "texture": "lava_still",
+      "meta": "lava",
+      "animated": true,
+      "frames": 16,
+      "sprite_top": 4
+    },
+    "lava_8": {
+      "top": 8,
+      "hp": -1,
+      "collision": false,
+      "background": false,
+      "fluid": true,
+      "texture": "lava_still",
+      "meta": "lava",
+      "animated": true,
+      "frames": 16,
+      "sprite_top": 8
+    },
+    "lava_4": {
+      "top": 12,
+      "hp": -1,
+      "collision": false,
+      "background": false,
+      "fluid": true,
+      "texture": "lava_still",
+      "meta": "lava",
+      "animated": true,
+      "frames": 16,
+      "sprite_top": 12
     },
     "obsidian": {
       "hp": 1500
