@@ -1,6 +1,8 @@
 package ru.deadsoftware.cavedroid.game;
 
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.TimeUtils;
+import kotlin.Pair;
 import ru.deadsoftware.cavedroid.game.mobs.FallingGravel;
 import ru.deadsoftware.cavedroid.game.mobs.FallingSand;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
@@ -43,10 +45,9 @@ public class GameWorld implements Disposable {
         if (isNewGame) {
             mWidth = DEFAULT_WIDTH;
             mHeight = DEFAULT_HEIGHT;
-            WorldGen.genWorld(mWidth, mHeight);
-            mForeMap = WorldGen.getForeMap();
-            mBackMap = WorldGen.getBackMap();
-            WorldGen.clear();
+            Pair<int[][], int[][]> maps = GameWorldGeneratorKt.generate(mWidth, mHeight, TimeUtils.millis());
+            mForeMap = maps.getFirst();
+            mBackMap = maps.getSecond();
             mMobsController.getPlayer().respawn(this);
         } else {
             mForeMap = foreMap;
