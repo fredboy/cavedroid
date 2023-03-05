@@ -2,11 +2,10 @@ plugins {
     id "org.jetbrains.kotlin.jvm"
     id "java"
     id "idea"
-    id "net.ltgt.apt" version "0.21"
 }
 
 sourceCompatibility = 1.8
 
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-
 sourceSets.main.java.srcDirs = [ "src/" ]
+
+java.targetCompatibility = JavaVersion.VERSION_1_8

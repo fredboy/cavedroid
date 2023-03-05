@@ -400,10 +400,10 @@ public class GameInput {
         }
     }
 
-    public void scrolled(int amount) {
+    public void scrolled(float amountX, float amountY) {
         switch (mMainConfig.getGameUiWindow()) {
             case NONE:
-                mPlayer.slot += amount;
+                mPlayer.slot += (int) amountY;
                 if (mPlayer.slot < 0) {
                     mPlayer.slot = 8;
                 }
@@ -412,7 +412,7 @@ public class GameInput {
                 }
                 break;
             case CREATIVE_INVENTORY:
-                mCreativeScroll += amount;
+                mCreativeScroll += (int) amountY;
                 if (mCreativeScroll < 0) {
                     mCreativeScroll = 0;
                 }

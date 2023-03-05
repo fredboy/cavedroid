@@ -152,8 +152,8 @@ public class GameInputProcessor extends InputAdapter {
     }
 
     @Override
-    public boolean scrolled(int amount) {
-        mGameInput.scrolled(amount);
+    public boolean scrolled(float amountX, float amountY) {
+        mGameInput.scrolled(amountX, amountY);
         return false;
     }
 }
