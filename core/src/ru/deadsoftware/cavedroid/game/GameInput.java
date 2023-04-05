@@ -68,10 +68,10 @@ public class GameInput {
             mPlayer.swim = true;
         } else if (mPlayer.canJump()) {
             mPlayer.getMove().add(0, -7);
-        } else if (!mPlayer.isFlyMode() && mPlayer.gameMode == 1) {
-            mPlayer.setFlyMode(true);
-            mPlayer.getMove().y = 0;
         } else if (mPlayer.isFlyMode()) {
+            mPlayer.getMove().y -= GamePhysics.PL_SPEED;
+        } else if (mPlayer.gameMode == 1) {
+            mPlayer.setFlyMode(true);
             mPlayer.getMove().y = -GamePhysics.PL_SPEED;
         }
     }
@@ -89,16 +89,16 @@ public class GameInput {
         if (mControlMode == ControlMode.WALK || !mMainConfig.isTouch()) {
             switch (keycode) {
                 case Input.Keys.A:
-                    mPlayer.getMove().x = -GamePhysics.PL_SPEED;
+                    mPlayer.getMove().x -= GamePhysics.PL_SPEED;
                     mPlayer.setDir(Mob.Direction.LEFT);
-                    if (mMainConfig.isTouch() && checkSwim()) {
+                    if (!mPlayer.isFlyMode() && mMainConfig.isTouch() && checkSwim()) {
                         mPlayer.swim = true;
                     }
                     break;
                 case Input.Keys.D:
-                    mPlayer.getMove().x = GamePhysics.PL_SPEED;
+                    mPlayer.getMove().x += GamePhysics.PL_SPEED;
                     mPlayer.setDir(Mob.Direction.RIGHT);
-                    if (mMainConfig.isTouch() && checkSwim()) {
+                    if (!mPlayer.isFlyMode() && mMainConfig.isTouch() && checkSwim()) {
                         mPlayer.swim = true;
                     }
                     break;
@@ -108,7 +108,7 @@ public class GameInput {
                     break;
                 case Input.Keys.S:
                 case Input.Keys.CONTROL_LEFT:
-                    mPlayer.getMove().y = GamePhysics.PL_SPEED;
+                    mPlayer.getMove().y += GamePhysics.PL_SPEED;
                     break;
             }
         } else {
@@ -309,29 +309,35 @@ public class GameInput {
                 mMainConfig.setShowMap(!mMainConfig.isShowMap());
                 break;
         }
+        mKeyDownCode = 0;
     }
 
     public void keyUp(int keycode) {
-        switch (keycode) {
-            case Input.Keys.A:
-            case Input.Keys.D:
-                mPlayer.getMove().x = 0;
-                if (mMainConfig.isTouch() && mPlayer.swim) {
+        if (mMainConfig.isTouch()) {
+            mPlayer.swim = false;
+        }
+        if (!mMainConfig.isTouch() || mControlMode == ControlMode.WALK) {
+            switch (keycode) {
+                case Input.Keys.A:
+                    mPlayer.getMove().x += GamePhysics.PL_SPEED;
+                    break;
+                case Input.Keys.D:
+                    mPlayer.getMove().x -= GamePhysics.PL_SPEED;
+                    break;
+                case Input.Keys.W:
+                case Input.Keys.SPACE:
+                    if (mPlayer.isFlyMode()) {
+                        mPlayer.getMove().y += GamePhysics.PL_SPEED;
+                    }
                     mPlayer.swim = false;
-                }
-                break;
-
-            case Input.Keys.W:
-            case Input.Keys.S:
-            case Input.Keys.SPACE:
-            case Input.Keys.CONTROL_LEFT:
-                if (mPlayer.isFlyMode()) {
-                    mPlayer.getMove().y = 0;
-                }
-                if (mPlayer.swim) {
-                    mPlayer.swim = false;
-                }
-                break;
+                    break;
+                case Input.Keys.S:
+                case Input.Keys.CONTROL_LEFT:
+                    if (mPlayer.isFlyMode()) {
+                        mPlayer.getMove().y -= GamePhysics.PL_SPEED;
+                    }
+            }
+            mKeyDownCode = 0;
         }
     }
 
