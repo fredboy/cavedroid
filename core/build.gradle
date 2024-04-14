@@ -1,11 +1,11 @@
 plugins {
     id "org.jetbrains.kotlin.jvm"
-    id "java"
+    id "kotlin"
     id "idea"
 }
 
-sourceCompatibility = 1.8
+sourceCompatibility = 11
 
 sourceSets.main.java.srcDirs = [ "src/" ]
 
-java.targetCompatibility = JavaVersion.VERSION_1_8
+java.targetCompatibility = JavaVersion.VERSION_11

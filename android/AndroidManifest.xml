@@ -9,6 +9,7 @@
             android:theme="@style/GdxTheme" tools:ignore="GoogleAppIndexingWarning"
             android:fullBackupContent="@xml/backup_descriptor">
         <activity
+                android:exported="true"
                 android:name="ru.deadsoftware.cavedroid.AndroidLauncher"
                 android:label="@string/app_name"
                 android:screenOrientation="sensorLandscape"

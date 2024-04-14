@@ -1,25 +1,25 @@
 package ru.deadsoftware.cavedroid.desktop;
 
 import com.badlogic.gdx.Files;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import ru.deadsoftware.cavedroid.CaveGame;
 
 class DesktopLauncher {
 	public static void main (String[] arg) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.addIcon("icons/icon256.png", Files.FileType.Internal);
-		config.addIcon("icons/icon128.png", Files.FileType.Internal);
-		config.foregroundFPS = 144;
-        config.title = "CaveDroid";
-		config.width = 960;
-		config.height = 540;
-		config.forceExit = false;
+		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+		config.setWindowIcon(Files.FileType.Internal, "icons/icon256.png", "icons/icon128.png");
+		config.setForegroundFPS(144);
+        config.setTitle("CaveDroid");
+		config.setWindowedMode(960, 540);
 
 		boolean touch = false;
 		for (String anArg : arg) {
-			if (anArg.equals("--touch")) touch = true;
+            if (anArg.equals("--touch")) {
+                touch = true;
+                break;
+            }
 		}
-        new LwjglApplication(new CaveGame(System.getProperty("user.home") + "/.cavedroid", touch), config);
+        new Lwjgl3Application(new CaveGame(System.getProperty("user.home") + "/.cavedroid", touch), config);
 	}
 }
