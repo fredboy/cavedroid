@@ -164,12 +164,13 @@ public class GameInput {
                 mCurX += mPlayer.looksLeft() ? 1 : -1;
             }
         } else if (!mMainConfig.isTouch()) {
-            mCurX = (int) (Gdx.input.getX() * (mMainConfig.getWidth() /
-                    Gdx.graphics.getWidth()) + gameRenderer.getCamX()) / 16;
+            final int tmpX = (int) (Gdx.input.getX() * (mMainConfig.getWidth() /
+                    Gdx.graphics.getWidth()) + gameRenderer.getCamX());
+            mCurX = tmpX / 16;
 
             mCurY = (int) (Gdx.input.getY() * (mMainConfig.getHeight() /
                     Gdx.graphics.getHeight()) + gameRenderer.getCamY()) / 16;
-            if (mCurX < 0) {
+            if (tmpX < 0) {
                 mCurX--;
             }
         }
