@@ -19,12 +19,12 @@ public class FallingGravel extends Mob {
      */
     public FallingGravel(float x, float y) {
         super(x, y, 16, 16, Direction.LEFT, Type.GRAVEL);
-        mMove = new Vector2(0, 1);
+        mVelocity = new Vector2(0, 1);
     }
 
     @Override
     public void ai(GameWorld gameWorld) {
-        if (mMove.isZero()) {
+        if (mVelocity.isZero()) {
             gameWorld.setForeMap(getMapX(), getMiddleMapY(), 11);
             kill();
         }

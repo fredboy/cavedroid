@@ -24,7 +24,7 @@ public abstract class Mob extends Rectangle implements Serializable {
         RIGHT
     }
 
-    protected Vector2 mMove;
+    protected Vector2 mVelocity;
     protected Type mType;
     protected int mAnimDelta = 6;
     protected int mAnim;
@@ -43,7 +43,7 @@ public abstract class Mob extends Rectangle implements Serializable {
      */
     protected Mob(float x, float y, float width, float height, Direction mDirection, Type type) {
         super(x, y, width, height);
-        mMove = new Vector2(0, 0);
+        mVelocity = new Vector2(0, 0);
         mCanJump = false;
         mDead = false;
         this.mDirection = mDirection;
@@ -131,13 +131,13 @@ public abstract class Mob extends Rectangle implements Serializable {
         mDead = true;
     }
 
-    public final void move() {
-        x += mMove.x;
-        y += mMove.y;
+    public final void move(float delta) {
+        x += mVelocity.x * delta;
+        y += mVelocity.y * delta;
     }
 
-    public final Vector2 getMove() {
-        return mMove;
+    public final Vector2 getVelocity() {
+        return mVelocity;
     }
 
     public final boolean canJump() {

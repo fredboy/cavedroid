@@ -23,7 +23,7 @@ public class Player extends Mob {
         Vector2 pos = getSpawnPoint(gameWorld);
         this.x = pos.x;
         this.y = pos.y;
-        mMove.setZero();
+        mVelocity.setZero();
     }
 
     private Vector2 getSpawnPoint(GameWorld gameWorld) {
@@ -57,7 +57,7 @@ public class Player extends Mob {
 
     @Override
     public void draw(SpriteBatch spriteBatch, float x, float y) {
-        if (mMove.x != 0 || Assets.playerSprite[0][2].getRotation() != 0) {
+        if (mVelocity.x != 0 || Assets.playerSprite[0][2].getRotation() != 0) {
             Assets.playerSprite[0][2].rotate(mAnimDelta);
             Assets.playerSprite[1][2].rotate(-mAnimDelta);
             Assets.playerSprite[0][3].rotate(-mAnimDelta);

@@ -20,12 +20,12 @@ public class FallingSand extends Mob {
      */
     public FallingSand(float x, float y) {
         super(x, y, 16, 16, Direction.LEFT, Type.SAND);
-        mMove = new Vector2(0, 1);
+        mVelocity = new Vector2(0, 1);
     }
 
     @Override
     public void ai(GameWorld gameWorld) {
-        if (mMove.isZero()) {
+        if (mVelocity.isZero()) {
             gameWorld.setForeMap(getMapX(), getMiddleMapY(), 10);
             kill();
         }

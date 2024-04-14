@@ -12,17 +12,17 @@ import java.io.Serializable;
 public class Drop extends Rectangle implements Serializable {
 
     private final int id;
-    private final Vector2 move;
+    private final Vector2 velocity;
     private boolean pickedUp = false;
 
     Drop(float x, float y, int id) {
         super(x, y, 8, 8);
         this.id = id;
-        this.move = new Vector2(0, -1);
+        this.velocity = new Vector2(0, -1);
     }
 
-    public Vector2 getMove() {
-        return move;
+    public Vector2 getVelocity() {
+        return velocity;
     }
 
     public int closeToPlayer(GameWorld gameWorld, Player player) {
@@ -72,18 +72,18 @@ public class Drop extends Rectangle implements Serializable {
                 dy = .5f;
             }
 
-            move.add(dx, dy);
+            velocity.add(dx, dy);
 
-            if (move.x > 2) {
-                move.x = 1;
-            } else if (move.x < -2) {
-                move.x = -1;
+            if (velocity.x > 2) {
+                velocity.x = 1;
+            } else if (velocity.x < -2) {
+                velocity.x = -1;
             }
 
-            if (move.y > 2) {
-                move.y = 1;
-            } else if (move.y < -2) {
-                move.y = -1;
+            if (velocity.y > 2) {
+                velocity.y = 1;
+            } else if (velocity.y < -2) {
+                velocity.y = -1;
             }
         }
     }
@@ -107,8 +107,8 @@ public class Drop extends Rectangle implements Serializable {
     }
 
     public void move() {
-        x += move.x;
-        y += move.y;
+        x += velocity.x;
+        y += velocity.y;
         checkWorldBounds();
         y = MathUtils.round(y);
     }

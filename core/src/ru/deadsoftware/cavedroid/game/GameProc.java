@@ -28,7 +28,7 @@ public class GameProc implements Disposable {
     }
 
     public void update(float delta) {
-        mGamePhysics.update();
+        mGamePhysics.update(delta);
         mGameInput.update();
         mGameWorld.update();
         mGameRenderer.render(delta);

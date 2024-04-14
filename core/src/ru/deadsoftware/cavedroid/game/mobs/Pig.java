@@ -12,26 +12,26 @@ public class Pig extends Mob {
 
     public Pig(float x, float y) {
         super(x, y, 25, 18, randomDir(), Type.MOB);
-        mMove = new Vector2(looksLeft() ? -1 : 1, 0);
+        mVelocity = new Vector2(looksLeft() ? -1 : 1, 0);
     }
 
     @Override
     public void changeDir() {
         switchDir();
-        mMove.x = -1 + 2 * dirMultiplier();
+        mVelocity.x = -1 + 2 * dirMultiplier();
     }
 
     @Override
     public void ai(GameWorld gameWorld) {
         if (MathUtils.randomBoolean(.0025f)) {
-            if (mMove.x != 0f) {
-                mMove.x = 0;
+            if (mVelocity.x != 0f) {
+                mVelocity.x = 0;
             } else {
                 changeDir();
             }
         }
 
-        if (mMove.x != 0f) {
+        if (mVelocity.x != 0f) {
             mAnim += mAnimDelta;
         } else {
             mAnim = 0;
