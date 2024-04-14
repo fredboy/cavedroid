@@ -117,7 +117,7 @@ public class GameRenderer extends Renderer {
         }
     }
 
-    private void drawMob(Mob mob) {
+    private void drawMob(Mob mob, float delta) {
         float mobDrawX = mob.getX() - getCamX();
         float mobDrawY = mob.getY() - getCamY();
 
@@ -129,7 +129,7 @@ public class GameRenderer extends Renderer {
             return;
         }
 
-        mob.draw(spriter, mobDrawX, mobDrawY);
+        mob.draw(spriter, mobDrawX, mobDrawY, delta);
     }
 
     private void drawDrop(Drop drop) {
@@ -210,12 +210,12 @@ public class GameRenderer extends Renderer {
         }
     }
 
-    private void drawGamePlay() {
+    private void drawGamePlay(float delta) {
         Player player = mMobsController.getPlayer();
 
         drawWorld(true);
-        player.draw(spriter, player.getX() - getCamX() - player.getWidth() / 2, player.getY() - getCamY());
-        mMobsController.forEach(this::drawMob);
+        player.draw(spriter, player.getX() - getCamX() - player.getWidth() / 2, player.getY() - getCamY(), delta);
+        mMobsController.forEach( (mob) -> { drawMob(mob, delta); });
         mDropController.forEach(this::drawDrop);
         drawWorld(false);
         drawGUI();
@@ -237,7 +237,7 @@ public class GameRenderer extends Renderer {
 
         spriter.begin();
 
-        drawGamePlay();
+        drawGamePlay(delta);
 
         switch (mMainConfig.getGameUiWindow()) {
             case CREATIVE_INVENTORY:

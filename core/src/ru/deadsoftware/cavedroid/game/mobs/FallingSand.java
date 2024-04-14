@@ -24,7 +24,7 @@ public class FallingSand extends Mob {
     }
 
     @Override
-    public void ai(GameWorld gameWorld) {
+    public void ai(GameWorld gameWorld, float delta) {
         if (mVelocity.isZero()) {
             gameWorld.setForeMap(getMapX(), getMiddleMapY(), 10);
             kill();
@@ -36,7 +36,7 @@ public class FallingSand extends Mob {
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch, float x, float y) {
+    public void draw(SpriteBatch spriteBatch, float x, float y, float delta) {
         spriteBatch.draw(GameItems.getBlockTex(10), x, y);
     }
 

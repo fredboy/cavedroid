@@ -23,7 +23,7 @@ public class FallingGravel extends Mob {
     }
 
     @Override
-    public void ai(GameWorld gameWorld) {
+    public void ai(GameWorld gameWorld, float delta) {
         if (mVelocity.isZero()) {
             gameWorld.setForeMap(getMapX(), getMiddleMapY(), 11);
             kill();
@@ -35,7 +35,7 @@ public class FallingGravel extends Mob {
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch, float x, float y) {
+    public void draw(SpriteBatch spriteBatch, float x, float y, float delta) {
         spriteBatch.draw(GameItems.getBlockTex(11), x, y);
     }
 

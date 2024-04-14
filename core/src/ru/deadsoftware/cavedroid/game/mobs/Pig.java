@@ -22,7 +22,7 @@ public class Pig extends Mob {
     }
 
     @Override
-    public void ai(GameWorld gameWorld) {
+    public void ai(GameWorld gameWorld, float delta) {
         if (MathUtils.randomBoolean(.0025f)) {
             if (mVelocity.x != 0f) {
                 mVelocity.x = 0;
@@ -32,7 +32,7 @@ public class Pig extends Mob {
         }
 
         if (mVelocity.x != 0f) {
-            mAnim += mAnimDelta;
+            mAnim += mAnimDelta * delta;
         } else {
             mAnim = 0;
         }
@@ -43,7 +43,7 @@ public class Pig extends Mob {
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch, float x, float y) {
+    public void draw(SpriteBatch spriteBatch, float x, float y, float delta) {
         pigSprite[0][1].setRotation(getAnim());
         pigSprite[1][1].setRotation(-getAnim());
         //back legs

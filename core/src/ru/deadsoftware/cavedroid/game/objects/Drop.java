@@ -106,9 +106,9 @@ public class Drop extends Rectangle implements Serializable {
 //        }
     }
 
-    public void move() {
-        x += velocity.x;
-        y += velocity.y;
+    public void move(float delta) {
+        x += velocity.x * delta;
+        y += velocity.y * delta;
         checkWorldBounds();
         y = MathUtils.round(y);
     }

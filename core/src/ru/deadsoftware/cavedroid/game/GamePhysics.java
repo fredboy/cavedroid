@@ -16,11 +16,11 @@ import java.util.Iterator;
 
 
 @GameScope
-class GamePhysics {
+public class GamePhysics {
 
-    static final int PL_SPEED = 2;
+    public static final int PL_SPEED = 120;
 
-    private final Vector2 gravity = new Vector2(0, .9f);
+    private final Vector2 gravity = new Vector2(0, .09f);
 
     private final GameWorld mGameWorld;
     private final MainConfig mMainConfig;
@@ -91,7 +91,7 @@ class GamePhysics {
                 (int) (rect.y + rect.height / 8 * 7) / 16);
     }
 
-    private void dropPhy(Drop drop) {
+    private void dropPhy(Drop drop, float delta) {
         int dropToPlayer = drop.closeToPlayer(mGameWorld, mMobsController.getPlayer());
         if (dropToPlayer > 0) {
             drop.moveToPlayer(mGameWorld, mMobsController.getPlayer(), dropToPlayer);
@@ -107,13 +107,13 @@ class GamePhysics {
                 drop.getVelocity().y += gravity.y / 4;
             }
         }
-        drop.move();
+        drop.move(delta);
 
 
         if (checkColl(drop)) {
             drop.getVelocity().set(0, -1);
             do {
-                drop.move();
+                drop.move(delta);
             } while (checkColl(drop));
             drop.getVelocity().setZero();
         }
@@ -175,7 +175,9 @@ class GamePhysics {
             mob.getVelocity().y = 0;
 
         } else {
-            mob.setCanJump(false);
+            mob.y += 1;
+            mob.setCanJump(checkColl(mob));
+            mob.y -= 1;
         }
 
         if (mob.getY() > mGameWorld.getHeightPx()) {
@@ -183,10 +185,7 @@ class GamePhysics {
         }
     }
 
-    private void playerPhy(Player player) {
-        player.y += player.getVelocity().y;
-        mobYColl(player);
-
+    private void playerPhy(Player player, float delta) {
         if (player.isDead()) {
             return;
         }
@@ -196,62 +195,65 @@ class GamePhysics {
                 player.swim = true;
             }
             if (!player.swim) {
-                if (!player.isFlyMode() && player.getVelocity().y < 4.5f) {
-                    player.getVelocity().add(gravity.x / 4, gravity.y / 4);
+                if (!player.isFlyMode() && player.getVelocity().y < 270f) {
+                    player.getVelocity().x += gravity.y / 4;
                 }
-                if (!player.isFlyMode() && player.getVelocity().y > 4.5f) {
-                    player.getVelocity().add(0, -1f);
+                if (!player.isFlyMode() && player.getVelocity().y > 270f) {
+                    player.getVelocity().add(0, -60f);
                 }
             } else {
-                player.getVelocity().add(0, -.5f);
-                if (player.getVelocity().y < -3) {
-                    player.getVelocity().y = -3;
+                player.getVelocity().add(0, -30f);
+                if (player.getVelocity().y < -180) {
+                    player.getVelocity().y = -180;
                 }
             }
         } else {
-            if (!player.isFlyMode() && player.getVelocity().y < 18) {
+            if (!player.isFlyMode() && player.getVelocity().y < 1080) {
                 player.getVelocity().add(gravity);
             }
         }
 
+        player.y += player.getVelocity().y * delta;
+        mobYColl(player);
+
         player.x += player.getVelocity().x * (player.isFlyMode() ? 1.5f : 1) *
-                (GameItems.isFluid(getBlock(player)) && !player.isFlyMode() ? .8f : 1);
+                (GameItems.isFluid(getBlock(player)) && !player.isFlyMode() ? .8f : 1) * delta;
 
         mobXColl(player);
 
         if (mMainConfig.isTouch() && !player.isFlyMode() && player.canJump() && player.getVelocity().x != 0 && checkJump(player)) {
-            player.getVelocity().add(0, -8);
+            player.getVelocity().add(0, -480);
             player.setCanJump(false);
         }
     }
 
-    private void mobPhy(Mob mob) {
+    private void mobPhy(Mob mob, float delta) {
         if (mob.getType() == Mob.Type.MOB && GameItems.isFluid(getBlock(mob))) {
-            if (mob.getVelocity().y > 9) {
-                mob.getVelocity().add(0, -.9f);
+            if (mob.getVelocity().y > 540) {
+                mob.getVelocity().add(0, -5.4f);
             }
 
-            mob.getVelocity().add(0, -.5f);
+            mob.getVelocity().add(0, -30f);
 
-            if (mob.getVelocity().y < -3) {
-                mob.getVelocity().y = -3;
+            if (mob.getVelocity().y < -180) {
+                mob.getVelocity().y = -180;
             }
-        } else if (!mob.isFlyMode() && mob.getVelocity().y < 18) {
+        } else if (!mob.isFlyMode() && mob.getVelocity().y < 1080) {
             mob.getVelocity().add(gravity);
         }
 
-        mob.y += mob.getVelocity().y;
+        mob.y += mob.getVelocity().y * delta;
         mobYColl(mob);
 
         if (mob.isDead()) {
             return;
         }
 
-        mob.x += mob.getVelocity().x;
+        mob.x += mob.getVelocity().x * delta;
         mobXColl(mob);
 
         if (mob.canJump() && mob.getVelocity().x != 0 && checkJump(mob)) {
-            mob.getVelocity().add(0, -8);
+            mob.getVelocity().add(0, -480);
             mob.setCanJump(false);
         }
     }
@@ -261,7 +263,7 @@ class GamePhysics {
 
         for (Iterator<Drop> it = mDropController.getIterator(); it.hasNext(); ) {
             Drop drop = it.next();
-            dropPhy(drop);
+            dropPhy(drop, delta);
             if (Intersector.overlaps(drop, player)) {
                 drop.pickUpDrop(player);
             }
@@ -272,14 +274,14 @@ class GamePhysics {
 
         for (Iterator<Mob> it = mMobsController.getIterator(); it.hasNext(); ) {
             Mob mob = it.next();
-            mob.ai(mGameWorld);
-            mobPhy(mob);
+            mob.ai(mGameWorld, delta);
+            mobPhy(mob, delta);
             if (mob.isDead()) {
                 it.remove();
             }
         }
 
-        playerPhy(player);
+        playerPhy(player, delta);
         if (player.isDead()) {
             player.respawn(mGameWorld);
         }

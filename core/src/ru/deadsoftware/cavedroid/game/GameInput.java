@@ -67,7 +67,7 @@ public class GameInput {
         if (checkSwim()) {
             mPlayer.swim = true;
         } else if (mPlayer.canJump()) {
-            mPlayer.getVelocity().add(0, -7);
+            mPlayer.getVelocity().add(0, -180);
         } else if (!mPlayer.isFlyMode() && mPlayer.gameMode == 1) {
             mPlayer.setFlyMode(true);
             mPlayer.getVelocity().y = 0;

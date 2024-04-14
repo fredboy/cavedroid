@@ -2,6 +2,7 @@ package ru.deadsoftware.cavedroid.game.mobs;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import ru.deadsoftware.cavedroid.game.GamePhysics;
 import ru.deadsoftware.cavedroid.game.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Assets;
 
@@ -48,7 +49,7 @@ public class Player extends Mob {
     }
 
     @Override
-    public void ai(GameWorld gameWorld) {
+    public void ai(GameWorld gameWorld, float delta) {
     }
 
     @Override
@@ -56,12 +57,14 @@ public class Player extends Mob {
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch, float x, float y) {
-        if (mVelocity.x != 0 || Assets.playerSprite[0][2].getRotation() != 0) {
-            Assets.playerSprite[0][2].rotate(mAnimDelta);
-            Assets.playerSprite[1][2].rotate(-mAnimDelta);
-            Assets.playerSprite[0][3].rotate(-mAnimDelta);
-            Assets.playerSprite[1][3].rotate(mAnimDelta);
+    public void draw(SpriteBatch spriteBatch, float x, float y, float delta) {
+        final float correctedAnimationDelta = mAnimDelta * delta;
+
+        if (mVelocity.x != 0 || Math.abs(Assets.playerSprite[0][2].getRotation()) > Math.abs(correctedAnimationDelta)) {
+            Assets.playerSprite[0][2].rotate(correctedAnimationDelta);
+            Assets.playerSprite[1][2].rotate(-correctedAnimationDelta);
+            Assets.playerSprite[0][3].rotate(-correctedAnimationDelta);
+            Assets.playerSprite[1][3].rotate(correctedAnimationDelta);
         } else {
             Assets.playerSprite[0][2].setRotation(0);
             Assets.playerSprite[1][2].setRotation(0);

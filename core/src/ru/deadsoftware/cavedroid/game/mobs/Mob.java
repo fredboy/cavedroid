@@ -13,6 +13,8 @@ import java.io.Serializable;
  */
 public abstract class Mob extends Rectangle implements Serializable {
 
+    protected static int ANIMATION_SPEED = 360;
+
     public enum Type {
         MOB,
         SAND,
@@ -26,8 +28,8 @@ public abstract class Mob extends Rectangle implements Serializable {
 
     protected Vector2 mVelocity;
     protected Type mType;
-    protected int mAnimDelta = 6;
-    protected int mAnim;
+    protected int mAnimDelta = ANIMATION_SPEED;
+    protected float mAnim;
 
     private Direction mDirection;
     private boolean mDead;
@@ -120,7 +122,7 @@ public abstract class Mob extends Rectangle implements Serializable {
         return mDead;
     }
 
-    public final int getAnim() {
+    public final float getAnim() {
         return mAnim;
     }
 
@@ -169,9 +171,9 @@ public abstract class Mob extends Rectangle implements Serializable {
         }
     }
 
-    public abstract void draw(SpriteBatch spriteBatch, float x, float y);
+    public abstract void draw(SpriteBatch spriteBatch, float x, float y, float delta);
 
-    public abstract void ai(GameWorld gameWorld);
+    public abstract void ai(GameWorld gameWorld, float delta);
 
     public abstract void changeDir();
 }
