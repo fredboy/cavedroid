@@ -1,5 +1,5 @@
 # CaveDroid
-[![Build Status](https://travis-ci.org/fredboy/cavedroid.svg?branch=master)](https://travis-ci.org/fredboy/cavedroid)
+[![Android CI](https://github.com/fredboy/cavedroid/actions/workflows/android.yml/badge.svg)](https://github.com/fredboy/cavedroid/actions/workflows/android.yml)
 [![Releases](https://img.shields.io/github/release/fredboy/cavedroid.svg)](https://github.com/fredboy/cavedroid/releases/latest) <br>
 2D Minecraft clone for Android and Desktop. <br>
 Written in Java using libGDX framework. <br>
