@@ -19,9 +19,10 @@ import java.util.Iterator;
 @GameScope
 public class GamePhysics {
 
-    public static final int PL_SPEED = 120;
+    public static final float PL_SPEED = 69.072f;
+    public static final float PL_JUMP_VELOCITY = -133.332f;
 
-    private final Vector2 gravity = new Vector2(0, .09f);
+    private final Vector2 gravity = new Vector2(0, 444.44f);
 
     private final GameWorld mGameWorld;
     private final MainConfig mMainConfig;
@@ -210,7 +211,7 @@ public class GamePhysics {
             }
         } else {
             if (!player.isFlyMode() && player.getVelocity().y < 1080) {
-                player.getVelocity().add(gravity);
+                player.getVelocity().y += gravity.y * delta;
             }
         }
 
@@ -223,7 +224,7 @@ public class GamePhysics {
         mobXColl(player);
 
         if (mMainConfig.isTouch() && !player.isFlyMode() && player.canJump() && player.getVelocity().x != 0 && checkJump(player)) {
-            player.getVelocity().add(0, -480);
+            player.getVelocity().y = PL_JUMP_VELOCITY;
             player.setCanJump(false);
         }
     }

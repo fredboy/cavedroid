@@ -291,11 +291,12 @@ public class GameRenderer extends Renderer {
             drawString("Y: " + player.getUpperMapY(), 0, 20);
             drawString("CurX: " + mGameInput.getCurX(), 0, 30);
             drawString("CurY: " + mGameInput.getCurY(), 0, 40);
-            drawString("Mobs: " + mMobsController.getSize(), 0, 50);
-            drawString("Drops: " + mDropController.getSize(), 0, 60);
-            drawString("Block: " + GameItems.getBlockKey(mGameWorld.getForeMap(mGameInput.getCurX(), mGameInput.getCurY())), 0, 70);
-            drawString("Hand: " + GameItems.getItemKey(mMobsController.getPlayer().inventory[mMobsController.getPlayer().slot]), 0, 80);
-            drawString("Game mode: " + player.gameMode, 0, 90);
+            drawString("Velocity: " + player.getVelocity(), 0, 50);
+            drawString("Mobs: " + mMobsController.getSize(), 0, 60);
+            drawString("Drops: " + mDropController.getSize(), 0, 70);
+            drawString("Block: " + GameItems.getBlockKey(mGameWorld.getForeMap(mGameInput.getCurX(), mGameInput.getCurY())), 0, 80);
+            drawString("Hand: " + GameItems.getItemKey(mMobsController.getPlayer().inventory[mMobsController.getPlayer().slot]), 0, 90);
+            drawString("Game mode: " + player.gameMode, 0, 100);
             spriter.end();
         }
 

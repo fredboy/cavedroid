@@ -68,7 +68,7 @@ public class GameInput {
         if (checkSwim()) {
             mPlayer.swim = true;
         } else if (mPlayer.canJump()) {
-            mPlayer.getVelocity().add(0, -180);
+            mPlayer.getVelocity().add(0, GamePhysics.PL_JUMP_VELOCITY);
         } else if (!mPlayer.isFlyMode() && mPlayer.gameMode == 1) {
             mPlayer.setFlyMode(true);
             mPlayer.getVelocity().y = 0;
@@ -386,6 +386,10 @@ public class GameInput {
     }
 
     public void touchDragged(float screenX, float screenY) {
+        if (Math.abs(screenX - mTouchDownX) < 16 && Math.abs(screenY - mTouchDownY) < 16) {
+            return;
+        }
+
         mDragging = true;
         if (mMainConfig.checkGameUiWindow(GameUiWindow.CREATIVE_INVENTORY) && Math.abs(screenY - mTouchDownY) > 16) {
             if (insideCreativeInv(screenX, screenY)) {
