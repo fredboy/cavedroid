@@ -59,7 +59,7 @@ public class Player extends Mob {
     public void draw(SpriteBatch spriteBatch, float x, float y, float delta) {
         final float correctedAnimationDelta = mAnimDelta * delta;
 
-        if (mVelocity.x != 0 || Math.abs(Assets.playerSprite[0][2].getRotation()) > Math.abs(correctedAnimationDelta)) {
+        if (mVelocity.x != 0f || Math.abs(Assets.playerSprite[0][2].getRotation()) > Math.abs(correctedAnimationDelta)) {
             Assets.playerSprite[0][2].rotate(correctedAnimationDelta);
             Assets.playerSprite[1][2].rotate(-correctedAnimationDelta);
             Assets.playerSprite[0][3].rotate(-correctedAnimationDelta);

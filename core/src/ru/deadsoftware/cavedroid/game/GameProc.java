@@ -24,8 +24,6 @@ public class GameProc implements Disposable {
         mGamePhysics = gamePhysics;
         mGameInput = gameInput;
         mGameRenderer = gameRenderer;
-
-        mGameWorld.startFluidsThread();
     }
 
     public void update(float delta) {

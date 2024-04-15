@@ -13,6 +13,8 @@ import ru.deadsoftware.cavedroid.game.objects.DropController;
 
 import javax.annotation.CheckForNull;
 import javax.inject.Inject;
+import java.sql.Time;
+import java.util.Timer;
 
 @GameScope
 public class GameWorld implements Disposable {
@@ -23,6 +25,8 @@ public class GameWorld implements Disposable {
 
     private final DropController mDropController;
     private final MobsController mMobsController;
+
+    private final Timer mGameFluidsTimer;
     private final GameFluidsThread mGameFluidsThread;
 
     private final int mWidth;
@@ -59,6 +63,9 @@ public class GameWorld implements Disposable {
         }
 
         mGameFluidsThread = new GameFluidsThread(this, mMobsController, Thread.currentThread());
+
+        mGameFluidsTimer = new Timer();
+        mGameFluidsTimer.scheduleAtFixedRate(mGameFluidsThread, 0, GameFluidsThread.FLUID_UPDATE_INTERVAL_MS);
     }
 
     public int getWidth() {
@@ -245,18 +252,10 @@ public class GameWorld implements Disposable {
             }
             mShouldUpdate = false;
         }
-
-        if (!mGameFluidsThread.isAlive()) {
-            mGameFluidsThread.start();
-        }
-    }
-
-    public void startFluidsThread() {
-        mGameFluidsThread.start();
     }
 
     @Override
     public void dispose() {
-        mGameFluidsThread.interrupt();
+        mGameFluidsTimer.cancel();
     }
 }

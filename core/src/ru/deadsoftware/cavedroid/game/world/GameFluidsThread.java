@@ -4,12 +4,13 @@ import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 
 import java.util.Arrays;
+import java.util.TimerTask;
 
 import static ru.deadsoftware.cavedroid.game.GameItems.*;
 
-class GameFluidsThread extends Thread {
+class GameFluidsThread extends TimerTask {
 
-    private static final int FLUID_UPDATE_INTERVAL_MS = 100;
+    public static final int FLUID_UPDATE_INTERVAL_MS = 100;
     private static final int FLUID_STATES = 5;
 
     private static final int[] WATER_IDS = {8, 60, 61, 62, 63};
@@ -144,10 +145,6 @@ class GameFluidsThread extends Thread {
 
     @Override
     public void run() {
-        while (!this.isInterrupted() && mMainThread.isAlive()) {
-            if (timeToUpdate()) {
-                fluidUpdater();
-            }
-        }
+        fluidUpdater();
     }
 }
