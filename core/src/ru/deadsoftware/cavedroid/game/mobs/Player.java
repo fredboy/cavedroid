@@ -41,6 +41,10 @@ public class Player extends Mob {
         return new Vector2(8 - getWidth() / 2, (float) y * 16 - getHeight());
     }
 
+    private boolean isAnimationIncreasing() {
+        return mAnim > 0 && mAnimDelta > 0 || mAnim < 0 && mAnimDelta < 0;
+    }
+
     public void setDir(Direction dir) {
         if (dir != getDirection()) {
             switchDir();
@@ -57,20 +61,18 @@ public class Player extends Mob {
 
     @Override
     public void draw(SpriteBatch spriteBatch, float x, float y, float delta) {
-        final float correctedAnimationDelta = mAnimDelta * delta;
-
-        if (mVelocity.x != 0f || Math.abs(Assets.playerSprite[0][2].getRotation()) > Math.abs(correctedAnimationDelta)) {
-            Assets.playerSprite[0][2].rotate(correctedAnimationDelta);
-            Assets.playerSprite[1][2].rotate(-correctedAnimationDelta);
-            Assets.playerSprite[0][3].rotate(-correctedAnimationDelta);
-            Assets.playerSprite[1][3].rotate(correctedAnimationDelta);
+        if (mVelocity.x != 0f || Math.abs(mAnim) > 5f) {
+            mAnim += mAnimDelta * delta;
         } else {
-            Assets.playerSprite[0][2].setRotation(0);
-            Assets.playerSprite[1][2].setRotation(0);
-            Assets.playerSprite[0][3].setRotation(0);
-            Assets.playerSprite[1][3].setRotation(0);
+            mAnim = 0;
         }
-        if (Assets.playerSprite[0][2].getRotation() >= 60 || Assets.playerSprite[0][2].getRotation() <= -60) {
+
+        Assets.playerSprite[0][2].setRotation(mAnim);
+        Assets.playerSprite[1][2].setRotation(-mAnim);
+        Assets.playerSprite[0][3].setRotation(-mAnim);
+        Assets.playerSprite[1][3].setRotation(mAnim);
+
+        if (mAnim >= 60 || mAnim <= -60 ||(mVelocity.x == 0f && isAnimationIncreasing())) {
             mAnimDelta = -mAnimDelta;
         }
 
