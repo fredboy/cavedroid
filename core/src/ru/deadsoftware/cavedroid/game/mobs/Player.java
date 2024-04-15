@@ -72,7 +72,15 @@ public class Player extends Mob {
         Assets.playerSprite[0][3].setRotation(-mAnim);
         Assets.playerSprite[1][3].setRotation(mAnim);
 
-        if (mAnim >= 60 || mAnim <= -60 ||(mVelocity.x == 0f && isAnimationIncreasing())) {
+        if (mAnim > 60f) {
+            mAnim = 60f;
+            mAnimDelta = -ANIMATION_SPEED;
+        } else if (mAnim < -60f) {
+            mAnim = -60f;
+            mAnimDelta = ANIMATION_SPEED;
+        }
+
+        if (mVelocity.x == 0f && isAnimationIncreasing()) {
             mAnimDelta = -mAnimDelta;
         }
 
