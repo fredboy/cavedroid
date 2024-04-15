@@ -1,6 +1,7 @@
 package ru.deadsoftware.cavedroid.game;
 
 import com.badlogic.gdx.utils.Disposable;
+import ru.deadsoftware.cavedroid.game.world.GameWorld;
 
 import javax.inject.Inject;
 

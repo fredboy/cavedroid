@@ -3,7 +3,7 @@ package ru.deadsoftware.cavedroid.game.mobs;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavedroid.game.GameItems;
-import ru.deadsoftware.cavedroid.game.GameWorld;
+import ru.deadsoftware.cavedroid.game.world.GameWorld;
 
 /**
  * Falling gravel is actually a mob, that spawns in place of gravel when there is no block under it,

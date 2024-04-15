@@ -2,8 +2,7 @@ package ru.deadsoftware.cavedroid.game.mobs;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import ru.deadsoftware.cavedroid.game.GamePhysics;
-import ru.deadsoftware.cavedroid.game.GameWorld;
+import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Assets;
 
 public class Player extends Mob {

@@ -1,4 +1,4 @@
-package ru.deadsoftware.cavedroid.game;
+package ru.deadsoftware.cavedroid.game.world;
 
 import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;

@@ -3,7 +3,7 @@ package ru.deadsoftware.cavedroid.game.mobs;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import ru.deadsoftware.cavedroid.game.GameWorld;
+import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Assets;
 
 import static ru.deadsoftware.cavedroid.misc.Assets.pigSprite;
