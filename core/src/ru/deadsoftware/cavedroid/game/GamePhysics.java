@@ -21,6 +21,7 @@ public class GamePhysics {
 
     public static final float PL_SPEED = 69.072f;
     public static final float PL_JUMP_VELOCITY = -133.332f;
+    public static final float PL_TERMINAL_VELOCITY = 1254.4f;
 
     private final Vector2 gravity = new Vector2(0, 444.44f);
 
@@ -166,6 +167,9 @@ public class GamePhysics {
             if (d == -1) {
                 mob.setCanJump(true);
                 mob.setFlyMode(false);
+
+                int dmg = ((int)Math.max(0f, (((mob.getVelocity().y * mob.getVelocity().y) / (2 * gravity.y)) - 48f) / 16f));
+                if (dmg > 0) System.out.println("Damage: " + dmg);
             }
 
             mob.y = MathUtils.round(mob.getY());
@@ -175,6 +179,12 @@ public class GamePhysics {
             }
 
             mob.getVelocity().y = 0;
+
+
+
+            //todo fall damage
+            // h = (v^2) / 2g
+            // dmg = max(0, (h - 48) / 32) - half of blocks fallen starting from 3 blocks height
 
         } else {
             mob.y += 1;
@@ -197,20 +207,20 @@ public class GamePhysics {
                 player.swim = true;
             }
             if (!player.swim) {
-                if (!player.isFlyMode() && player.getVelocity().y < 270f) {
-                    player.getVelocity().x += gravity.y / 4;
+                if (!player.isFlyMode() && player.getVelocity().y < 32f) {
+                    player.getVelocity().y += gravity.y * delta;
                 }
-                if (!player.isFlyMode() && player.getVelocity().y > 270f) {
-                    player.getVelocity().add(0, -60f);
+                if (!player.isFlyMode() && player.getVelocity().y > 32f) {
+                    player.getVelocity().y -= player.getVelocity().y * 32f * delta;
                 }
             } else {
-                player.getVelocity().add(0, -30f);
-                if (player.getVelocity().y < -180) {
-                    player.getVelocity().y = -180;
+                player.getVelocity().y += PL_JUMP_VELOCITY * delta;
+                if (player.getVelocity().y < -PL_SPEED) {
+                    player.getVelocity().y = -PL_SPEED;
                 }
             }
         } else {
-            if (!player.isFlyMode() && player.getVelocity().y < 1080) {
+            if (!player.isFlyMode() && player.getVelocity().y < PL_TERMINAL_VELOCITY) {
                 player.getVelocity().y += gravity.y * delta;
             }
         }

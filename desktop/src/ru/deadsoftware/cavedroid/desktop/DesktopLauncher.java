@@ -9,10 +9,9 @@ class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setWindowIcon(Files.FileType.Internal, "icons/icon256.png", "icons/icon128.png");
-//		config.setForegroundFPS(144);
         config.setTitle("CaveDroid");
 		config.setWindowedMode(960, 540);
-		config.useVsync(false);
+		config.useVsync(true);
 
 		boolean touch = false;
 		for (String anArg : arg) {
