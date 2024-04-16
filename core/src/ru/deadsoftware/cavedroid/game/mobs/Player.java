@@ -45,30 +45,6 @@ public class Player extends Mob {
         return new Vector2(8 - getWidth() / 2, (float) y * 16 - getHeight());
     }
 
-    private boolean isAnimationIncreasing() {
-        return mAnim > 0 && mAnimDelta > 0 || mAnim < 0 && mAnimDelta < 0;
-    }
-
-    private void updateAnimation(float delta) {
-        if (mVelocity.x != 0f || Math.abs(mAnim) > 5f) {
-            mAnim += mAnimDelta * delta;
-        } else {
-            mAnim = 0;
-        }
-
-        if (mAnim > 60f) {
-            mAnim = 60f;
-            mAnimDelta = -ANIMATION_SPEED;
-        } else if (mAnim < -60f) {
-            mAnim = -60f;
-            mAnimDelta = ANIMATION_SPEED;
-        }
-
-        if (mVelocity.x == 0f && isAnimationIncreasing()) {
-            mAnimDelta = -mAnimDelta;
-        }
-    }
-
     public void setDir(Direction dir) {
         if (dir != getDirection()) {
             switchDir();

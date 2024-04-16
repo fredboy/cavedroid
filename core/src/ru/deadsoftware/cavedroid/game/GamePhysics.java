@@ -264,7 +264,7 @@ public class GamePhysics {
         mobXColl(mob);
 
         if (mob.canJump() && mob.getVelocity().x != 0 && checkJump(mob)) {
-            mob.getVelocity().y += PL_JUMP_VELOCITY;
+            mob.getVelocity().y = PL_JUMP_VELOCITY;
             mob.setCanJump(false);
         }
     }

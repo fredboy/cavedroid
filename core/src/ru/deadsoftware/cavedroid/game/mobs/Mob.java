@@ -56,6 +56,30 @@ public abstract class Mob extends Rectangle implements Serializable {
         return MathUtils.randomBoolean(.5f) ? Direction.LEFT : Direction.RIGHT;
     }
 
+    private boolean isAnimationIncreasing() {
+        return mAnim > 0 && mAnimDelta > 0 || mAnim < 0 && mAnimDelta < 0;
+    }
+
+    protected final void updateAnimation(float delta) {
+        if (mVelocity.x != 0f || Math.abs(mAnim) > mAnimDelta * delta) {
+            mAnim += mAnimDelta * delta;
+        } else {
+            mAnim = 0;
+        }
+
+        if (mAnim > 60f) {
+            mAnim = 60f;
+            mAnimDelta = -ANIMATION_SPEED;
+        } else if (mAnim < -60f) {
+            mAnim = -60f;
+            mAnimDelta = ANIMATION_SPEED;
+        }
+
+        if (mVelocity.x == 0f && isAnimationIncreasing()) {
+            mAnimDelta = -mAnimDelta;
+        }
+    }
+
     /**
      * @return The X coordinate of a mob in blocks
      */
