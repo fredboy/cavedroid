@@ -6,16 +6,20 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.mobs.Player;
+import ru.deadsoftware.cavedroid.game.objects.Block;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
 import ru.deadsoftware.cavedroid.game.objects.DropController;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
 import ru.deadsoftware.cavedroid.misc.Renderer;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import static ru.deadsoftware.cavedroid.misc.Assets.guiMap;
@@ -228,6 +232,57 @@ public class GameRenderer extends Renderer {
                 player.getY() + player.getHeight() / 2 - getHeight() / 2);
     }
 
+    @Nullable
+    private Color getMinimapColor(int x, int y) {
+        @Nullable Color result = null;
+
+        final boolean hasForeMap = mGameWorld.hasForeAt(x, y);
+        final boolean hasBackMap = mGameWorld.hasBackAt(x, y);
+
+        if (hasForeMap) {
+            final Block block = mGameWorld.getForeMapBlock(x, y);
+
+            if (GameItems.isWater(block)) {
+                result = Color.BLUE;
+            } else if (GameItems.isLava(block)) {
+                result = Color.RED;
+            } else {
+                result = Color.BLACK;
+            }
+        } else if (hasBackMap) {
+            result = Color.DARK_GRAY;
+        }
+
+        return result;
+    }
+
+    private void drawMiniMap(float miniMapX, float miniMapY, float size) {
+        shaper.begin(ShapeRenderer.ShapeType.Filled);
+
+        shaper.setColor(Color.LIGHT_GRAY);
+        shaper.rect(miniMapX, miniMapY, size, size);
+
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+
+                final int worldX = (int) (mMobsController.getPlayer().getMapX() - size / 2 + x);
+                final int worldY = (int) (mMobsController.getPlayer().getUpperMapY() - size / 2 + y);
+
+                @Nullable
+                final Color color = getMinimapColor(worldX, worldY);
+
+                if (color != null) {
+                    shaper.setColor(color);
+                    shaper.rect(miniMapX + x, miniMapY + y, 1, 1);
+                }
+            }
+        }
+
+        shaper.setColor(Color.OLIVE);
+        shaper.rect(miniMapX + size / 2, miniMapY + size / 2, 1, 2);
+        shaper.end();
+    }
+
     @Override
     public void render(float delta) {
         int fps = (int) (1 / delta);
@@ -255,32 +310,7 @@ public class GameRenderer extends Renderer {
         spriter.end();
 
         if (mMainConfig.isShowMap()) {
-            //DRAW MAP
-            shaper.begin(ShapeRenderer.ShapeType.Filled);
-            shaper.setColor(Color.LIGHT_GRAY);
-            shaper.rect(0, 0, mGameWorld.getWidth(), 128);
-            for (int y = 128; y < 256; y++) {
-                for (int x = 0; x < getWidth(); x++) {
-                    if (mGameWorld.hasForeAt(x, y) || mGameWorld.hasBackAt(x, y)) {
-                        if (GameItems.isWater(mGameWorld.getForeMap(x, y))) {
-                            shaper.setColor(Color.BLUE);
-                        } else if (GameItems.isLava(mGameWorld.getForeMap(x, y))) {
-                            shaper.setColor(Color.RED);
-                        } else {
-                            if (mGameWorld.hasForeAt(x, y)) {
-                                shaper.setColor(Color.BLACK);
-                            } else {
-                                shaper.setColor(Color.DARK_GRAY);
-                            }
-                        }
-                        shaper.rect(x, y - 128, 1, 1);
-                    }
-                }
-            }
-            shaper.setColor(Color.OLIVE);
-            shaper.rect(mMobsController.getPlayer().getMapX(), mMobsController.getPlayer().getUpperMapY() - 128, 1, 2);
-            shaper.end();
-            //=================
+            drawMiniMap(getWidth() - 64f - 24f, 24f, 64f);
         }
 
         if (mMainConfig.isShowInfo()) {

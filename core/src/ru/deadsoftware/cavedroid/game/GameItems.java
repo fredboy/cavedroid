@@ -27,11 +27,19 @@ public class GameItems {
     }
 
     public static boolean isWater(int id) {
-        return getBlock(id).getMeta().equals("water");
+        return isWater(getBlock(id));
+    }
+
+    public static boolean isWater(Block block) {
+        return block.getMeta().equals("water");
     }
 
     public static boolean isLava(int id) {
-        return getBlock(id).getMeta().equals("lava");
+        return isLava(getBlock(id));
+    }
+
+    public static boolean isLava(Block block) {
+        return block.getMeta().equals("lava");
     }
 
     public static boolean isSlab(int id) {
