@@ -4,8 +4,8 @@ plugins {
     id "idea"
 }
 
-sourceCompatibility = 11
+sourceCompatibility = 17
 
 sourceSets.main.java.srcDirs = [ "src/" ]
 
-java.targetCompatibility = JavaVersion.VERSION_11
+java.targetCompatibility = JavaVersion.VERSION_17

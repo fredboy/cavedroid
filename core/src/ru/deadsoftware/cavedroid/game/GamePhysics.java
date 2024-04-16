@@ -96,18 +96,19 @@ public class GamePhysics {
 
     private void dropPhy(Drop drop, float delta) {
         int dropToPlayer = drop.closeToPlayer(mGameWorld, mMobsController.getPlayer());
+
         if (dropToPlayer > 0) {
-            drop.moveToPlayer(mGameWorld, mMobsController.getPlayer(), dropToPlayer);
+            drop.moveToPlayer(mGameWorld, mMobsController.getPlayer(), dropToPlayer, delta);
         } else {
-            if (drop.getVelocity().x >= .5f) {
-                drop.getVelocity().x -= .5f;
-            } else if (drop.getVelocity().x <= -.5f) {
-                drop.getVelocity().x += .5f;
+            if (drop.getVelocity().x >= 300f) {
+                drop.getVelocity().x = 300f;
+            } else if (drop.getVelocity().x <= -300f) {
+                drop.getVelocity().x = -300f;
             } else {
                 drop.getVelocity().x = 0;
             }
-            if (drop.getVelocity().y < 9) {
-                drop.getVelocity().y += gravity.y / 4;
+            if (drop.getVelocity().y < PL_TERMINAL_VELOCITY) {
+                drop.getVelocity().y += gravity.y * delta;
             }
         }
         drop.move(delta);
@@ -116,7 +117,7 @@ public class GamePhysics {
         if (checkColl(drop)) {
             drop.getVelocity().set(0, -1);
             do {
-                drop.move(delta);
+                drop.move(1);
             } while (checkColl(drop));
             drop.getVelocity().setZero();
         }

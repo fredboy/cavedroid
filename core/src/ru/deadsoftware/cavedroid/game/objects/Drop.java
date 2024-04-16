@@ -44,7 +44,7 @@ public class Drop extends Rectangle implements Serializable {
         return 0;
     }
 
-    public void moveToPlayer(GameWorld gameWorld, Player player, int ctp) {
+    public void moveToPlayer(GameWorld gameWorld, Player player, int ctp, float delta) {
         if (ctp > 0) {
             float px = player.getX();
             float py = player.getY();
@@ -61,29 +61,29 @@ public class Drop extends Rectangle implements Serializable {
             float dx = 0, dy = 0;
 
             if (px + player.getWidth() < x + 4) {
-                dx = -.5f;
+                dx = -300f;
             } else if (px > x + 4) {
-                dx = .5f;
+                dx = 300f;
             }
 
             if (py + player.getHeight() < y + 4) {
-                dy = -.5f;
+                dy = -300f;
             } else if (py > y + 4) {
-                dy = .5f;
+                dy = .300f;
             }
 
-            velocity.add(dx, dy);
+            velocity.add(dx * delta, dy * delta);
 
-            if (velocity.x > 2) {
-                velocity.x = 1;
-            } else if (velocity.x < -2) {
-                velocity.x = -1;
+            if (velocity.x > 300f) {
+                velocity.x = 300f;
+            } else if (velocity.x < -300f) {
+                velocity.x = -300f;
             }
 
-            if (velocity.y > 2) {
-                velocity.y = 1;
-            } else if (velocity.y < -2) {
-                velocity.y = -1;
+            if (velocity.y > 300f) {
+                velocity.y = 300f;
+            } else if (velocity.y < -300f) {
+                velocity.y = -300f;
             }
         }
     }

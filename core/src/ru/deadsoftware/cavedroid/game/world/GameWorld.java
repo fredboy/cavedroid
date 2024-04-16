@@ -8,6 +8,7 @@ import ru.deadsoftware.cavedroid.game.GameScope;
 import ru.deadsoftware.cavedroid.game.mobs.FallingGravel;
 import ru.deadsoftware.cavedroid.game.mobs.FallingSand;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
+import ru.deadsoftware.cavedroid.game.model.world.generator.WorldGeneratorConfig;
 import ru.deadsoftware.cavedroid.game.objects.Block;
 import ru.deadsoftware.cavedroid.game.objects.DropController;
 
@@ -51,7 +52,7 @@ public class GameWorld implements Disposable {
         if (isNewGame) {
             mWidth = DEFAULT_WIDTH;
             mHeight = DEFAULT_HEIGHT;
-            Pair<int[][], int[][]> maps = GameWorldGenerator.INSTANCE.generate(mWidth, mHeight, TimeUtils.millis());
+            Pair<int[][], int[][]> maps = new GameWorldGenerator(WorldGeneratorConfig.Companion.getDefaultWithSeed(TimeUtils.millis())).generate();
             mForeMap = maps.getFirst();
             mBackMap = maps.getSecond();
             mMobsController.getPlayer().respawn(this);
@@ -217,7 +218,7 @@ public class GameWorld implements Disposable {
                 setForeMap(x, y, 0);
                 mMobsController.addMob(FallingSand.class, x * 16, y * 16);
                 updateBlock(x, y - 1);
-            }   
+            }
         }
 
         if (getForeMap(x, y) == 11) {
