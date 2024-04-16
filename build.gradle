@@ -56,6 +56,10 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
+
+        configurations.implementation {
+            exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+        }
     }
 }
 
@@ -67,7 +71,7 @@ project(":core") {
         api "com.google.guava:guava:$guavaVersion-android"
         api 'com.google.dagger:dagger:2.40.1'
         implementation 'org.jetbrains:annotations:23.1.0'
-        implementation "org.jetbrains.kotlin:kotlin-stdlib"
+        implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.23"
         annotationProcessor 'com.google.dagger:dagger-compiler:2.40.1'
     }
 }
