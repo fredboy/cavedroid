@@ -49,6 +49,12 @@ public class Assets {
         }
     }
 
+    private static void setPlayerHeadOrigin() {
+        for (Sprite[] sprites : playerSprite) {
+            sprites[0].setOrigin(sprites[0].getWidth() / 2, sprites[0].getHeight());
+        }
+    }
+
     /**
      * Loads texture names and sizes from <b>json/texture_regions.json</b>, cuts them to TextureRegions
      * and puts to {@link #textureRegions} HashMap
@@ -76,6 +82,7 @@ public class Assets {
         loadMob(playerSprite, "char");
         loadMob(pigSprite, "pig");
         loadJSON();
+        setPlayerHeadOrigin();
         minecraftFont = new BitmapFont(Gdx.files.internal("font.fnt"), true);
         minecraftFont.getData().setScale(.375f);
     }

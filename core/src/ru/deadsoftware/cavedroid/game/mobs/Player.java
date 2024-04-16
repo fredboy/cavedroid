@@ -1,9 +1,12 @@
 package ru.deadsoftware.cavedroid.game.mobs;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Assets;
+import ru.deadsoftware.cavedroid.misc.utils.SpriteUtilsKt;
 
 public class Player extends Mob {
 
@@ -11,6 +14,7 @@ public class Player extends Mob {
     public int slot;
     public final int gameMode;
     public boolean swim;
+    public float headRotation = 0f;
 
     public Player() {
         super(0, 0, 4, 30, randomDir(), Type.MOB);
@@ -45,6 +49,26 @@ public class Player extends Mob {
         return mAnim > 0 && mAnimDelta > 0 || mAnim < 0 && mAnimDelta < 0;
     }
 
+    private void updateAnimation(float delta) {
+        if (mVelocity.x != 0f || Math.abs(mAnim) > 5f) {
+            mAnim += mAnimDelta * delta;
+        } else {
+            mAnim = 0;
+        }
+
+        if (mAnim > 60f) {
+            mAnim = 60f;
+            mAnimDelta = -ANIMATION_SPEED;
+        } else if (mAnim < -60f) {
+            mAnim = -60f;
+            mAnimDelta = ANIMATION_SPEED;
+        }
+
+        if (mVelocity.x == 0f && isAnimationIncreasing()) {
+            mAnimDelta = -mAnimDelta;
+        }
+    }
+
     public void setDir(Direction dir) {
         if (dir != getDirection()) {
             switchDir();
@@ -61,45 +85,21 @@ public class Player extends Mob {
 
     @Override
     public void draw(SpriteBatch spriteBatch, float x, float y, float delta) {
-        if (mVelocity.x != 0f || Math.abs(mAnim) > 5f) {
-            mAnim += mAnimDelta * delta;
-        } else {
-            mAnim = 0;
-        }
+        updateAnimation(delta);
 
-        Assets.playerSprite[0][2].setRotation(mAnim);
-        Assets.playerSprite[1][2].setRotation(-mAnim);
-        Assets.playerSprite[0][3].setRotation(-mAnim);
-        Assets.playerSprite[1][3].setRotation(mAnim);
+        final Sprite backHand = Assets.playerSprite[1][2];
+        final Sprite backLeg = Assets.playerSprite[1][3];
+        final Sprite frontLeg = Assets.playerSprite[0][3];
+        final Sprite head = Assets.playerSprite[dirMultiplier()][0];
+        final Sprite body = Assets.playerSprite[dirMultiplier()][1];
+        final Sprite frontHand = Assets.playerSprite[0][2];
 
-        if (mAnim > 60f) {
-            mAnim = 60f;
-            mAnimDelta = -ANIMATION_SPEED;
-        } else if (mAnim < -60f) {
-            mAnim = -60f;
-            mAnimDelta = ANIMATION_SPEED;
-        }
-
-        if (mVelocity.x == 0f && isAnimationIncreasing()) {
-            mAnimDelta = -mAnimDelta;
-        }
-
-        //back hand
-        Assets.playerSprite[1][2].setPosition(x + 2, y + 8);
-        Assets.playerSprite[1][2].draw(spriteBatch);
-        //back leg
-        Assets.playerSprite[1][3].setPosition(x + 2, y + 20);
-        Assets.playerSprite[1][3].draw(spriteBatch);
-        //front leg
-        Assets.playerSprite[0][3].setPosition(x + 2, y + 20);
-        Assets.playerSprite[0][3].draw(spriteBatch);
-        //head
-        spriteBatch.draw(Assets.playerSprite[dirMultiplier()][0], x, y);
-        //body
-        spriteBatch.draw(Assets.playerSprite[dirMultiplier()][1], x + 2, y + 8);
-        //front hand
-        Assets.playerSprite[0][2].setPosition(x + 2, y + 8);
-        Assets.playerSprite[0][2].draw(spriteBatch);
+        SpriteUtilsKt.draw(spriteBatch, backHand, x + 2, y + 8, -mAnim);
+        SpriteUtilsKt.draw(spriteBatch, backLeg, x + 2, y + 20, mAnim);
+        SpriteUtilsKt.draw(spriteBatch, frontLeg, x + 2, y + 20, -mAnim);
+        SpriteUtilsKt.draw(spriteBatch, head, x, y, headRotation);
+        SpriteUtilsKt.draw(spriteBatch, body, x + 2, y + 8);
+        SpriteUtilsKt.draw(spriteBatch, frontHand, x + 2, y + 8, mAnim);
     }
 
 }

@@ -3,6 +3,7 @@ package ru.deadsoftware.cavedroid.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.google.common.collect.Range;
 import ru.deadsoftware.cavedroid.MainConfig;
@@ -169,11 +170,18 @@ public class GameInput {
                     Gdx.graphics.getWidth()) + gameRenderer.getCamX());
             mCurX = tmpX / 16;
 
-            mCurY = (int) (Gdx.input.getY() * (mMainConfig.getHeight() /
-                    Gdx.graphics.getHeight()) + gameRenderer.getCamY()) / 16;
+            final int tmpY = (int) (Gdx.input.getY() * (mMainConfig.getHeight() /
+                    Gdx.graphics.getHeight()) + gameRenderer.getCamY());
+            mCurY = tmpY / 16;
+
             if (tmpX < 0) {
                 mCurX--;
             }
+
+            final double a = tmpX - mPlayer.x;
+            final double b = tmpY - mPlayer.y;
+
+            mPlayer.headRotation = (float) Math.atan(b / a) * MathUtils.radDeg;
         }
 
         if (pastX != mCurX || pastY != mCurY) {
