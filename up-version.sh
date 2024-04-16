@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-git stash > /dev/null
-stashed=$?
-
 new_version=$1
 
 new_version_string=$(echo $new_version | sed 's/\(alpha\|beta\)\(.*\)/\1 \2/')
@@ -16,7 +13,3 @@ git add build.gradle android/build.gradle core/src/ru/deadsoftware/cavedroid/Cav
 
 git commit -m "Update version"
 git tag "$new_version"
-
-if [ $stashed ]; then
-  git stash pop
-fi
