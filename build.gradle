@@ -51,6 +51,7 @@ project(":android") {
 
     dependencies {
         implementation project(":core")
+        implementation platform("org.jetbrains.kotlin:kotlin-bom:1.9.23")
         api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
