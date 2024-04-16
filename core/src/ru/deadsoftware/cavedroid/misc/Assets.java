@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import ru.deadsoftware.cavedroid.game.objects.TouchButton;
+import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
 
 import java.util.HashMap;
 
@@ -39,11 +40,11 @@ public class Assets {
         return sprite;
     }
 
-    private static void loadMob(Sprite[][] sprite, String mob) {
+    private static void loadMob(AssetLoader assetLoader, Sprite[][] sprite, String mob) {
         for (int i = 0; i < sprite.length; i++) {
             for (int j = 0; j < sprite[i].length; j++) {
                 sprite[i][j] = flippedSprite(new Texture(
-                        Gdx.files.internal("mobs/" + mob + "/" + i + "_" + j + ".png")));
+                        assetLoader.getAssetHandle("mobs/" + mob + "/" + i + "_" + j + ".png")));
                 sprite[i][j].setOrigin(sprite[i][j].getWidth() / 2, 0);
             }
         }
@@ -59,10 +60,10 @@ public class Assets {
      * Loads texture names and sizes from <b>json/texture_regions.json</b>, cuts them to TextureRegions
      * and puts to {@link #textureRegions} HashMap
      */
-    private static void loadJSON() {
-        JsonValue json = jsonReader.parse(Gdx.files.internal("json/texture_regions.json"));
+    private static void loadJSON(AssetLoader assetLoader) {
+        JsonValue json = jsonReader.parse(assetLoader.getAssetHandle("json/texture_regions.json"));
         for (JsonValue file = json.child(); file != null; file = file.next()) {
-            Texture texture = new Texture(Gdx.files.internal(file.name() + ".png"));
+            Texture texture = new Texture(assetLoader.getAssetHandle(file.name() + ".png"));
             if (file.size == 0) {
                 textureRegions.put(file.name(),
                         flippedRegion(texture, 0, 0, texture.getWidth(), texture.getHeight()));
@@ -78,12 +79,12 @@ public class Assets {
         }
     }
 
-    public static void load() {
-        loadMob(playerSprite, "char");
-        loadMob(pigSprite, "pig");
-        loadJSON();
+    public static void load(final AssetLoader assetLoader) {
+        loadMob(assetLoader, playerSprite, "char");
+        loadMob(assetLoader, pigSprite, "pig");
+        loadJSON(assetLoader);
         setPlayerHeadOrigin();
-        minecraftFont = new BitmapFont(Gdx.files.internal("font.fnt"), true);
+        minecraftFont = new BitmapFont(assetLoader.getAssetHandle("font.fnt"), true);
         minecraftFont.getData().setScale(.375f);
     }
 

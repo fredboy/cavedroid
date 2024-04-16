@@ -33,16 +33,6 @@ public class Pig extends Mob {
                 changeDir();
             }
         }
-
-        if (mVelocity.x != 0f) {
-            mAnim += mAnimDelta * delta;
-        } else {
-            mAnim = 0;
-        }
-
-        if (mAnim >= 60 || mAnim <= -60) {
-            mAnimDelta = -mAnimDelta;
-        }
     }
 
     @Override

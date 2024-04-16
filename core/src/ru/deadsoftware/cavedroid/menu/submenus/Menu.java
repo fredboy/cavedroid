@@ -12,6 +12,7 @@ import ru.deadsoftware.cavedroid.menu.objects.Button;
 import ru.deadsoftware.cavedroid.menu.objects.ButtonEventListener;
 import ru.deadsoftware.cavedroid.menu.objects.ButtonRenderer;
 import ru.deadsoftware.cavedroid.misc.Assets;
+import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
 
 import java.util.HashMap;
 
@@ -19,6 +20,7 @@ public abstract class Menu {
 
     protected final MainConfig mMainConfig;
     protected final MenuProc.Input mMenuInput;
+    protected final AssetLoader mAssetLoader;
 
     private final ButtonRenderer mButtonRenderer;
 
@@ -35,12 +37,18 @@ public abstract class Menu {
      * @param height         Viewport height
      * @param buttonRenderer {@link ButtonRenderer} that will draw the buttons of this menu
      */
-    Menu(float width, float height, ButtonRenderer buttonRenderer, MainConfig mainConfig, MenuProc.Input menuInput) {
+    Menu(float width,
+         float height,
+         ButtonRenderer buttonRenderer,
+         MainConfig mainConfig,
+         MenuProc.Input menuInput,
+         AssetLoader assetLoader) {
         mWidth = width;
         mHeight = height;
         mButtonRenderer = buttonRenderer;
         mMainConfig = mainConfig;
         mMenuInput = menuInput;
+        mAssetLoader = assetLoader;
         initButtons();
     }
 

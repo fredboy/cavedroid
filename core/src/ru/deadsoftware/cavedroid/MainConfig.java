@@ -3,6 +3,7 @@ package ru.deadsoftware.cavedroid;
 import ru.deadsoftware.cavedroid.game.GameUiWindow;
 
 import javax.annotation.CheckForNull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -23,6 +24,9 @@ public class MainConfig {
 
     private float mWidth;
     private float mHeight;
+
+    @Nullable
+    private String mAssetsPackPath = null;
 
     @Inject
     public MainConfig(CaveGame caveGame) {
@@ -103,5 +107,14 @@ public class MainConfig {
 
     public void setShowMap(boolean showMap) {
         mShowMap = showMap;
+    }
+
+    @Nullable
+    public String getAssetsPackPath() {
+        return mAssetsPackPath;
+    }
+
+    public void setAssetsPackPath(@Nullable String assetsPackPath) {
+        mAssetsPackPath = assetsPackPath;
     }
 }

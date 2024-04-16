@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import ru.deadsoftware.cavedroid.game.objects.Block;
 import ru.deadsoftware.cavedroid.game.objects.Item;
 import ru.deadsoftware.cavedroid.misc.Assets;
+import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
 
 import java.util.HashMap;
 
@@ -104,8 +105,8 @@ public class GameItems {
         return items.getValueAt(id).getType().equals("block") ? getBlockTex(id) : getItem(id).getTexture();
     }
 
-    public static void load() {
-        JsonValue json = Assets.jsonReader.parse(Gdx.files.internal("json/game_items.json"));
+    public static void load(AssetLoader assetLoader) {
+        JsonValue json = Assets.jsonReader.parse(assetLoader.getAssetHandle("json/game_items.json"));
         for (JsonValue block = json.get("blocks").child(); block != null; block = block.next()) {
             try {
                 String key = block.name();
@@ -127,7 +128,7 @@ public class GameItems {
                 String meta = Assets.getStringFromJson(block, "meta", "");
                 String tex = Assets.getStringFromJson(block, "texture", key);
                 Texture texture = tex.equals("none") ? null :
-                        new Texture(Gdx.files.internal("textures/blocks/" + tex + ".png"));
+                        new Texture(assetLoader.getAssetHandle("textures/blocks/" + tex + ".png"));
                 boolean animated = Assets.getBooleanFromJson(block, "animated", false);
                 int frames = Assets.getIntFromJson(block, "frames", 0);
 
@@ -166,7 +167,7 @@ public class GameItems {
                 String type = Assets.getStringFromJson(item, "type", "item");
                 String texture = Assets.getStringFromJson(item, "texture", key);
                 Sprite sprite = type.equals("block") ? null :
-                        new Sprite(new Texture(Gdx.files.internal("textures/items/" + texture + ".png")));
+                        new Sprite(new Texture(assetLoader.getAssetHandle("textures/items/" + texture + ".png")));
                 itemsIds.put(key, items.size);
                 items.put(key, new Item(name, type, sprite));
             } catch (GdxRuntimeException e) {

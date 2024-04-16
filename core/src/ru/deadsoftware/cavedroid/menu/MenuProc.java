@@ -55,15 +55,19 @@ public class MenuProc extends Renderer {
     private Menu mCurrentMenu;
 
     @Inject
-    public MenuProc(MainConfig mainConfig) {
+    public MenuProc(
+            MainConfig mainConfig,
+            MenuMain.Factory menuMainFactory,
+            MenuNewGame.Factory menuNewGameFactory
+    ) {
         super(mainConfig.getWidth(), mainConfig.getHeight());
 
         mMainConfig = mainConfig;
 
         Input menuInput = new Input();
 
-        mMenuMain = new MenuMain(getWidth(), getHeight(), this::drawButton, mainConfig, menuInput);
-        mMenuNewGame = new MenuNewGame(getWidth(), getHeight(), this::drawButton, mainConfig, menuInput);
+        mMenuMain = menuMainFactory.get(getWidth(), getHeight(), this::drawButton, menuInput);
+        mMenuNewGame = menuNewGameFactory.get(getWidth(), getHeight(), this::drawButton, menuInput);
 
         mCurrentMenu = mMenuMain;
     }

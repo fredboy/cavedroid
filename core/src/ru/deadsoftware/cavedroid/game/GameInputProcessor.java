@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.objects.TouchButton;
 import ru.deadsoftware.cavedroid.misc.Assets;
+import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
 
 import javax.inject.Inject;
 
@@ -21,14 +22,17 @@ public class GameInputProcessor extends InputAdapter {
     private final GameInput mGameInput;
     private final GameRenderer mGameRenderer;
     private final MainConfig mMainConfig;
+    private final AssetLoader mAssetLoader;
 
     @Inject
     public GameInputProcessor(GameInput gameInput,
                               GameRenderer gameRenderer,
-                              MainConfig mainConfig) {
+                              MainConfig mainConfig,
+                              AssetLoader assetLoader) {
         mGameInput = gameInput;
         mGameRenderer = gameRenderer;
         mMainConfig = mainConfig;
+        mAssetLoader = assetLoader;
 
         loadTouchButtonsFromJSON();
     }
@@ -51,7 +55,7 @@ public class GameInputProcessor extends InputAdapter {
     }
 
     private void loadTouchButtonsFromJSON() {
-        JsonValue json = Assets.jsonReader.parse(Gdx.files.internal("json/touch_buttons.json"));
+        JsonValue json = Assets.jsonReader.parse(mAssetLoader.getAssetHandle("json/touch_buttons.json"));
         for (JsonValue key = json.child(); key != null; key = key.next()) {
             float x = key.getFloat("x");
             float y = key.getFloat("y");

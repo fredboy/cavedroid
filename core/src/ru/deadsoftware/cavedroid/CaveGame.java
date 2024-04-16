@@ -5,6 +5,9 @@ import com.badlogic.gdx.Gdx;
 import ru.deadsoftware.cavedroid.game.GameItems;
 import ru.deadsoftware.cavedroid.game.GameScreen;
 import ru.deadsoftware.cavedroid.misc.Assets;
+import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
+
+import javax.annotation.Nullable;
 
 public class CaveGame extends Game {
 
@@ -14,17 +17,24 @@ public class CaveGame extends Game {
 
     private final MainConfig mMainConfig;
     private final MainComponent mMainComponent;
+    private final AssetLoader mAssetLoader;
 
     private final String mGameFolder;
     private final boolean mTouch;
     private boolean mDebug;
 
-    public CaveGame(String gameFolder, boolean touch) {
+    @Nullable
+    private final String mAssetsPackPath;
+
+    public CaveGame(String gameFolder, boolean touch, @Nullable String assetsPackPath) {
         mGameFolder = gameFolder;
         mTouch = touch;
+        mAssetsPackPath = assetsPackPath;
 
         mMainComponent = DaggerMainComponent.builder().caveGame(this).build();
+
         mMainConfig = mMainComponent.getMainConfig();
+        mAssetLoader = mMainComponent.getAssetLoader();
     }
 
     public void setDebug(boolean debug) {
@@ -41,6 +51,7 @@ public class CaveGame extends Game {
         mMainConfig.setWidth(width);
         mMainConfig.setHeight(height);
         mMainConfig.setShowInfo(mDebug);
+        mMainConfig.setAssetsPackPath(mAssetsPackPath);
     }
 
     public void newGame() {
@@ -64,10 +75,10 @@ public class CaveGame extends Game {
         Gdx.app.log(TAG, mGameFolder);
         Gdx.files.absolute(mGameFolder).mkdirs();
 
-        Assets.load();
-        GameItems.load();
-
         initConfig();
+
+        Assets.load(mAssetLoader);
+        GameItems.load(mAssetLoader);
 
         setScreen(mMainComponent.getMenuScreen());
     }
