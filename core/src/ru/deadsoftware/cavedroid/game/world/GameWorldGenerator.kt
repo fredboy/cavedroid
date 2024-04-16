@@ -91,6 +91,18 @@ object GameWorldGenerator {
         }
     }
 
+    private fun fillWater(foreMap: Array<IntArray>, width: Int, height: Int, waterLevel: Int) {
+        for (x in 0 until width) {
+            for (y in waterLevel until height) {
+                if (foreMap[x][y] != 0) {
+                    break
+                }
+
+                foreMap[x][y] = GameItems.getBlockId("water")
+            }
+        }
+    }
+
     /**
      * Generates world of given width and height with given seed
      * @param width world width
@@ -102,7 +114,7 @@ object GameWorldGenerator {
         val random = Random(seed)
         val foreMap = Array(width) { IntArray(height) }
         val backMap = Array(width) { IntArray(width) }
-        val heightsMap = generateHeights(width, height / 2, height * 3 / 4, random)
+        val heightsMap = generateHeights(width, height / 4, height * 3 / 4, random)
         val biomesMap = generateBiomes(width, random)
 
         var biome = Biome.PLAINS
@@ -115,8 +127,10 @@ object GameWorldGenerator {
                 Biome.PLAINS -> plainsBiome(foreMap, backMap, width, height, x, xHeight, random)
                 Biome.DESERT -> desertBiome(foreMap, backMap, width, height, x, xHeight, random)
             }
-
         }
+
+        fillWater(foreMap, width, height, height / 2)
+
         return Pair(foreMap, backMap)
     }
 
