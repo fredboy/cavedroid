@@ -167,9 +167,6 @@ public class GamePhysics {
             if (d == -1) {
                 mob.setCanJump(true);
                 mob.setFlyMode(false);
-
-                int dmg = ((int)Math.max(0f, (((mob.getVelocity().y * mob.getVelocity().y) / (2 * gravity.y)) - 48f) / 16f));
-                if (dmg > 0) System.out.println("Damage: " + dmg);
             }
 
             mob.y = MathUtils.round(mob.getY());
@@ -185,6 +182,8 @@ public class GamePhysics {
             //todo fall damage
             // h = (v^2) / 2g
             // dmg = max(0, (h - 48) / 32) - half of blocks fallen starting from 3 blocks height
+            //                int dmg = ((int)Math.max(0f, (((mob.getVelocity().y * mob.getVelocity().y) / (2 * gravity.y)) - 48f) / 16f));
+            //                if (dmg > 0) System.out.println("Damage: " + dmg);
 
         } else {
             mob.y += 1;
@@ -241,17 +240,17 @@ public class GamePhysics {
 
     private void mobPhy(Mob mob, float delta) {
         if (mob.getType() == Mob.Type.MOB && GameItems.isFluid(getBlock(mob))) {
-            if (mob.getVelocity().y > 540) {
-                mob.getVelocity().add(0, -5.4f);
+            if (mob.getVelocity().y > 32f) {
+                mob.getVelocity().y -= mob.getVelocity().y * 32f * delta;
             }
 
-            mob.getVelocity().add(0, -30f);
+            mob.getVelocity().y += PL_JUMP_VELOCITY * delta;
 
-            if (mob.getVelocity().y < -180) {
-                mob.getVelocity().y = -180;
+            if (mob.getVelocity().y < -PL_SPEED) {
+                mob.getVelocity().y = -PL_SPEED;
             }
-        } else if (!mob.isFlyMode() && mob.getVelocity().y < 1080) {
-            mob.getVelocity().add(gravity);
+        } else if (!mob.isFlyMode() && mob.getVelocity().y < PL_TERMINAL_VELOCITY) {
+            mob.getVelocity().y += gravity.y * delta;
         }
 
         mob.y += mob.getVelocity().y * delta;
@@ -265,7 +264,7 @@ public class GamePhysics {
         mobXColl(mob);
 
         if (mob.canJump() && mob.getVelocity().x != 0 && checkJump(mob)) {
-            mob.getVelocity().add(0, -480);
+            mob.getVelocity().y += PL_JUMP_VELOCITY;
             mob.setCanJump(false);
         }
     }
