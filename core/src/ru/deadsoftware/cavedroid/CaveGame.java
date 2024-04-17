@@ -67,6 +67,9 @@ public class CaveGame extends Game {
     }
 
     public void quitGame() {
+        if (screen != null) {
+            screen.dispose();
+        }
         setScreen(mMainComponent.getMenuScreen());
     }
 

@@ -63,7 +63,7 @@ public class GameWorld implements Disposable {
             mHeight = mForeMap[0].length;
         }
 
-        mGameFluidsThread = new GameFluidsThread(this, mMobsController, Thread.currentThread());
+        mGameFluidsThread = new GameFluidsThread(this, mMobsController);
 
         mGameFluidsTimer = new Timer();
         mGameFluidsTimer.scheduleAtFixedRate(mGameFluidsThread, 0, GameFluidsThread.FLUID_UPDATE_INTERVAL_MS);

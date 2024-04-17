@@ -1,6 +1,5 @@
 package ru.deadsoftware.cavedroid.game.world;
 
-import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 
 import java.util.Arrays;
@@ -21,14 +20,10 @@ class GameFluidsThread extends TimerTask {
     private final GameWorld mGameWorld;
     private final MobsController mMobsController;
 
-    private final Thread mMainThread;
-
     GameFluidsThread(GameWorld gameWorld,
-                     MobsController mobsController,
-                     Thread mainThread) {
+                     MobsController mobsController) {
         mGameWorld = gameWorld;
         mMobsController = mobsController;
-        mMainThread = mainThread;
     }
 
     private int getBlockState(int id) {
@@ -133,14 +128,6 @@ class GameFluidsThread extends TimerTask {
                 updateFluids(midScreen - x, y);
             }
         }
-    }
-
-    private boolean timeToUpdate() {
-        if (TimeUtils.timeSinceMillis(mFluidLastUpdateTimestamp) >= FLUID_UPDATE_INTERVAL_MS) {
-            mFluidLastUpdateTimestamp = TimeUtils.millis();
-            return true;
-        }
-        return false;
     }
 
     @Override

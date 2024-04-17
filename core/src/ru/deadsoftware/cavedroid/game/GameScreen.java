@@ -85,6 +85,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        if (mGameProc != null) {
+            mGameProc.dispose();
+        }
     }
 
 }
