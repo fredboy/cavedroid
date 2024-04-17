@@ -19,7 +19,7 @@ data class WorldGeneratorConfig(
         private const val DEFAULT_HEIGHT = 256
         private const val DEFAULT_MIN_BIOME_SIZE = 64
 
-        fun getDefaultWithSeed(): WorldGeneratorConfig {
+        fun getDefault(): WorldGeneratorConfig {
             return WorldGeneratorConfig(
                 width = DEFAULT_WIDTH,
                 height = DEFAULT_HEIGHT,

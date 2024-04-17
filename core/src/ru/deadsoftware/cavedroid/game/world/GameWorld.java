@@ -1,7 +1,6 @@
 package ru.deadsoftware.cavedroid.game.world;
 
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.TimeUtils;
 import kotlin.Pair;
 import ru.deadsoftware.cavedroid.game.GameItems;
 import ru.deadsoftware.cavedroid.game.GameScope;
@@ -14,14 +13,11 @@ import ru.deadsoftware.cavedroid.game.objects.DropController;
 
 import javax.annotation.CheckForNull;
 import javax.inject.Inject;
-import java.sql.Time;
 import java.util.Timer;
 
 @GameScope
 public class GameWorld implements Disposable {
 
-    private static final int DEFAULT_WIDTH = 1024;
-    private static final int DEFAULT_HEIGHT = 256;
     private static final int UPDATE_RANGE = 16;
 
     private final DropController mDropController;
@@ -50,9 +46,10 @@ public class GameWorld implements Disposable {
         boolean isNewGame = foreMap == null || backMap == null;
 
         if (isNewGame) {
-            mWidth = DEFAULT_WIDTH;
-            mHeight = DEFAULT_HEIGHT;
-            Pair<int[][], int[][]> maps = new GameWorldGenerator(WorldGeneratorConfig.Companion.getDefaultWithSeed()).generate();
+            final WorldGeneratorConfig config = WorldGeneratorConfig.Companion.getDefault();
+            mWidth = config.getWidth();
+            mHeight = config.getHeight();
+            Pair<int[][], int[][]> maps = new GameWorldGenerator(config).generate();
             mForeMap = maps.getFirst();
             mBackMap = maps.getSecond();
             mMobsController.getPlayer().respawn(this);
