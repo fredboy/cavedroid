@@ -6,6 +6,9 @@
 
 previous_tag=0
 i=0
+
+echo '<!--#include virtual="/includes/pre_header.shtml" -->'
+
 for current_tag in $(git tag --sort=-creatordate)
 do
 
@@ -18,3 +21,5 @@ if [ "$previous_tag" != 0 ] &&  [ $i -lt 1 ]; then
 fi
 previous_tag=${current_tag}
 done
+
+echo '<!--#include virtual="/includes/pre_footer.shtml" -->'
