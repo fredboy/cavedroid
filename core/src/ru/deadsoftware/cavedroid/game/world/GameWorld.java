@@ -52,7 +52,7 @@ public class GameWorld implements Disposable {
         if (isNewGame) {
             mWidth = DEFAULT_WIDTH;
             mHeight = DEFAULT_HEIGHT;
-            Pair<int[][], int[][]> maps = new GameWorldGenerator(WorldGeneratorConfig.Companion.getDefaultWithSeed(TimeUtils.millis())).generate();
+            Pair<int[][], int[][]> maps = new GameWorldGenerator(WorldGeneratorConfig.Companion.getDefaultWithSeed()).generate();
             mForeMap = maps.getFirst();
             mBackMap = maps.getSecond();
             mMobsController.getPlayer().respawn(this);
