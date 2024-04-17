@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import ru.deadsoftware.cavedroid.game.objects.Drop;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.utils.SpriteUtilsKt;
@@ -28,6 +29,16 @@ public class Player extends Mob {
         this.x = pos.x;
         this.y = pos.y;
         mVelocity.setZero();
+    }
+
+    public void pickUpDrop(Drop drop) {
+        for (int i = 0; i < inventory.length; i++) {
+            if (inventory[i] == 0 || inventory[i] == drop.getId()) {
+                inventory[i] = drop.getId();
+                drop.setPickedUp(true);
+                break;
+            }
+        }
     }
 
     private Vector2 getSpawnPoint(GameWorld gameWorld) {

@@ -12,6 +12,7 @@ import ru.deadsoftware.cavedroid.game.objects.Drop;
 import ru.deadsoftware.cavedroid.game.objects.DropController;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 
+import javax.annotation.CheckForNull;
 import javax.inject.Inject;
 import java.util.Iterator;
 
@@ -94,32 +95,72 @@ public class GamePhysics {
                 (int) (rect.y + rect.height / 8 * 7) / 16);
     }
 
-    private void dropPhy(Drop drop, float delta) {
-        int dropToPlayer = drop.closeToPlayer(mGameWorld, mMobsController.getPlayer());
+    private Rectangle getShiftedPlayerRect(float shift) {
+        final Player player = mMobsController.getPlayer();
+        return new Rectangle(player.x + shift, player.y, player.width, player.height);
+    }
 
-        if (dropToPlayer > 0) {
-            drop.moveToPlayer(mGameWorld, mMobsController.getPlayer(), dropToPlayer, delta);
-        } else {
-            if (drop.getVelocity().x >= 300f) {
-                drop.getVelocity().x = 300f;
-            } else if (drop.getVelocity().x <= -300f) {
-                drop.getVelocity().x = -300f;
-            } else {
-                drop.getVelocity().x = 0;
-            }
-            if (drop.getVelocity().y < PL_TERMINAL_VELOCITY) {
-                drop.getVelocity().y += gravity.y * delta;
-            }
+    /**
+     * @return Rectangle representing magneting target for this drop
+     */
+    @CheckForNull
+    private Rectangle getShiftedMagnetingPlayerRect(Drop drop) {
+        final Player player = mMobsController.getPlayer();
+
+        if (drop.canMagnetTo(player)) {
+            return getShiftedPlayerRect(0);
         }
-        drop.move(delta);
 
+        final Rectangle shiftedLeft = getShiftedPlayerRect(-mGameWorld.getWidthPx());
+        if (drop.canMagnetTo(shiftedLeft)) {
+            return shiftedLeft;
+        }
+
+        final Rectangle shiftedRight = getShiftedPlayerRect(mGameWorld.getWidthPx());
+        if (drop.canMagnetTo(shiftedRight)) {
+            return shiftedRight;
+        }
+
+        return null;
+    }
+
+    private void pickUpDropIfPossible(Rectangle shiftedPlayerTarget, Drop drop) {
+        final Player player = mMobsController.getPlayer();
+
+        if (Intersector.overlaps(shiftedPlayerTarget, drop)) {
+            player.pickUpDrop(drop);
+        }
+    }
+
+    private void dropPhy(Drop drop, float delta) {
+        final Rectangle playerMagnetTarget = getShiftedMagnetingPlayerRect(drop);
+        final Vector2 dropVelocity = drop.getVelocity();
+
+
+        if (playerMagnetTarget != null) {
+            final Vector2 magnetVector = new Vector2(playerMagnetTarget.x - drop.x,
+                    playerMagnetTarget.y - drop.y);
+            magnetVector.nor().scl(Drop.MAGNET_VELOCITY * delta);
+            dropVelocity.add(magnetVector);
+        } else {
+            dropVelocity.y += gravity.y * delta;
+        }
+
+        dropVelocity.x = MathUtils.clamp(dropVelocity.x, -Drop.MAGNET_VELOCITY, Drop.MAGNET_VELOCITY);
+        dropVelocity.y = MathUtils.clamp(dropVelocity.y, -Drop.MAGNET_VELOCITY, Drop.MAGNET_VELOCITY);
+
+        drop.x += dropVelocity.x * delta;
+        drop.y += dropVelocity.y * delta;
 
         if (checkColl(drop)) {
-            drop.getVelocity().set(0, -1);
+            dropVelocity.setZero();
             do {
-                drop.move(1);
+                drop.y--;
             } while (checkColl(drop));
-            drop.getVelocity().setZero();
+        }
+
+        if (playerMagnetTarget != null) {
+            pickUpDropIfPossible(playerMagnetTarget, drop);
         }
     }
 
@@ -276,10 +317,7 @@ public class GamePhysics {
         for (Iterator<Drop> it = mDropController.getIterator(); it.hasNext(); ) {
             Drop drop = it.next();
             dropPhy(drop, delta);
-            if (Intersector.overlaps(drop, player)) {
-                drop.pickUpDrop(player);
-            }
-            if (drop.isPickedUp()) {
+            if (drop.getPickedUp()) {
                 it.remove();
             }
         }

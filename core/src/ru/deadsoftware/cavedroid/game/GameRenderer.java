@@ -3,8 +3,10 @@ package ru.deadsoftware.cavedroid.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
@@ -15,15 +17,17 @@ import ru.deadsoftware.cavedroid.game.mobs.Player;
 import ru.deadsoftware.cavedroid.game.objects.Block;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
 import ru.deadsoftware.cavedroid.game.objects.DropController;
+import ru.deadsoftware.cavedroid.game.objects.Item;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
 import ru.deadsoftware.cavedroid.misc.Renderer;
+import ru.deadsoftware.cavedroid.misc.utils.SpriteUtilsKt;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
-import static ru.deadsoftware.cavedroid.misc.Assets.guiMap;
-import static ru.deadsoftware.cavedroid.misc.Assets.textureRegions;
+import static ru.deadsoftware.cavedroid.misc.Assets.*;
 
 @GameScope
 public class GameRenderer extends Renderer {
@@ -122,6 +126,32 @@ public class GameRenderer extends Renderer {
         }
     }
 
+    private Rectangle getShiftedRectRespectfulToViewPort(final Rectangle rect, final float shift) {
+        return new Rectangle(rect.x + shift - getCamX(), rect.y - getCamY(), rect.width, rect.height);
+    }
+
+    @CheckForNull
+    private Rectangle getDrawingRectIfInsideViewport(final Rectangle rectangle) {
+        final Rectangle viewportRect = new Rectangle(0, 0, getWidth(), getHeight());
+
+        final Rectangle notShifted = getShiftedRectRespectfulToViewPort(rectangle, 0);
+        if (Intersector.overlaps(viewportRect, notShifted)) {
+            return notShifted;
+        }
+
+        final Rectangle shiftedLeft = getShiftedRectRespectfulToViewPort(rectangle, -mGameWorld.getWidthPx());
+        if (Intersector.overlaps(viewportRect, shiftedLeft)) {
+            return shiftedLeft;
+        }
+
+        final Rectangle shiftedRight = getShiftedRectRespectfulToViewPort(rectangle, mGameWorld.getWidthPx());
+        if (Intersector.overlaps(viewportRect, shiftedRight)) {
+            return shiftedRight;
+        }
+
+        return null;
+    }
+
     private void drawMob(Mob mob, float delta) {
         float mobDrawX = mob.getX() - getCamX();
         float mobDrawY = mob.getY() - getCamY();
@@ -138,6 +168,29 @@ public class GameRenderer extends Renderer {
     }
 
     private void drawDrop(Drop drop) {
+        if (drop.getId() <= 0) {
+            return;
+        }
+
+        @CheckForNull final Rectangle drawingRect = getDrawingRectIfInsideViewport(drop);
+
+        if (drawingRect == null) {
+            return;
+        }
+
+        final Item item = GameItems.getItem(drop.getId());
+        @CheckForNull final Block block = GameItems.getBlock(GameItems.getItemKey(drop.getId()));
+        @CheckForNull final Sprite sprite = item.isBlock()
+                ? block.getTexture()
+                : item.getSprite();
+
+        if (sprite == null) {
+            return;
+        }
+
+        sprite.setPosition(drawingRect.x, drawingRect.y);
+        sprite.setSize(drawingRect.width, drawingRect.height);
+        sprite.draw(spriter);
     }
 
     @SuppressWarnings("IntegerDivisionInFloatingPointContext")
