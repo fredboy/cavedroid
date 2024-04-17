@@ -33,6 +33,7 @@ private const val DEPRECATION_MESSAGE =
  * @param spriteBottom  block's sprite bottom on texture
  */
 data class Block(
+        val id: Int,
         val left: Int,
         val top: Int,
         val right: Int,

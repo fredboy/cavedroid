@@ -3,6 +3,7 @@ package ru.deadsoftware.cavedroid.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.JsonValue;
@@ -10,6 +11,7 @@ import ru.deadsoftware.cavedroid.game.objects.Block;
 import ru.deadsoftware.cavedroid.game.objects.Item;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
+import ru.deadsoftware.cavedroid.misc.utils.SpriteOrigin;
 
 import java.util.HashMap;
 
@@ -131,8 +133,11 @@ public class GameItems {
                         new Texture(assetLoader.getAssetHandle("textures/blocks/" + tex + ".png"));
                 boolean animated = Assets.getBooleanFromJson(block, "animated", false);
                 int frames = Assets.getIntFromJson(block, "frames", 0);
+                int id = blocks.size;
+                blocksIds.put(key, id);
 
                 Block newBlock = new Block(
+                        id,
                         left,
                         top,
                         right,
@@ -153,8 +158,6 @@ public class GameItems {
                         clipWidth,
                         clipHeight
                 );
-
-                blocksIds.put(key, blocks.size);
                 blocks.put(key, newBlock);
             } catch (GdxRuntimeException e) {
                 Gdx.app.error(TAG, e.getMessage());
@@ -168,8 +171,16 @@ public class GameItems {
                 String texture = Assets.getStringFromJson(item, "texture", key);
                 Sprite sprite = type.equals("block") ? null :
                         new Sprite(new Texture(assetLoader.getAssetHandle("textures/items/" + texture + ".png")));
-                itemsIds.put(key, items.size);
-                items.put(key, new Item(name, type, sprite));
+
+                float originX = Assets.getFloatFromJson(item, "origin_x", 0f);
+                float originY = Assets.getFloatFromJson(item, "origin_y", 1f);
+                originX = MathUtils.clamp(originX, 0f, 1f);
+                originY = MathUtils.clamp(originY, 0f, 1f);
+                SpriteOrigin origin = new SpriteOrigin(originX, originY);
+
+                int id = items.size;
+                itemsIds.put(key, id);
+                items.put(key, new Item(id, name, type, sprite, origin));
             } catch (GdxRuntimeException e) {
                 Gdx.app.error(TAG, e.getMessage());
             }

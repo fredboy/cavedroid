@@ -458,11 +458,13 @@
     },
     "tallgrass": {
       "name": "Tall Grass",
-      "type": "block"
+      "type": "block",
+      "origin_x": 0.5
     },
     "deadbush": {
       "name": "Dead Bush",
-      "type": "block"
+      "type": "block",
+      "origin_x": 0.5
     },
     "bricks": {
       "name": "Bricks",
@@ -470,19 +472,23 @@
     },
     "dandelion": {
       "name": "Dandelion",
-      "type": "block"
+      "type": "block",
+      "origin_x": 0.5
     },
     "rose": {
       "name": "Rose",
-      "type": "block"
+      "type": "block",
+      "origin_x": 0.5
     },
     "mushroom_brown": {
       "name": "Mushroom",
-      "type": "block"
+      "type": "block",
+      "origin_x": 0.5
     },
     "mushroom_red": {
       "name": "Mushroom",
-      "type": "block"
+      "type": "block",
+      "origin_x": 0.5
     },
     "wool_colored_white": {
       "name": "Wool",
@@ -600,55 +606,71 @@
     },
     "wood_sword": {
       "name": "Wooden Sword",
-      "type": "tool"
+      "type": "tool",
+      "origin_x": 0.125
     },
     "stone_sword": {
       "name": "Stone Sword",
-      "type": "tool"
+      "type": "tool",
+      "origin_x": 0.125
     },
     "iron_sword": {
       "name": "Iron Sword",
-      "type": "tool"
+      "type": "tool",
+      "origin_x": 0.125
     },
     "diamond_sword": {
       "name": "Diamond Sword",
-      "type": "tool"
+      "type": "tool",
+      "origin_x": 0.125
     },
     "gold_sword": {
       "name": "Golden Sword",
-      "type": "tool"
+      "type": "tool",
+      "origin_x": 0.125
     },
     "wood_shovel": {
       "name": "Wooden Shovel",
-      "type": "tool"
+      "type": "tool",
+      "origin_x": 0.125
     },
     "stone_shovel": {
       "name": "Stone Shovel",
-      "type": "tool"
+      "type": "tool",
+      "origin_x": 0.125
     },
     "iron_shovel": {
       "name": "Iron Shovel",
-      "type": "tool"
+      "type": "tool",
+      "origin_x": 0.125
     },
     "diamond_shovel": {
       "name": "Diamond Shovel",
-      "type": "tool"
+      "type": "tool",
+      "origin_x": 0.125
     },
     "gold_shovel": {
       "name": "Golden Shovel",
-      "type": "tool"
+      "type": "tool",
+      "origin_x": 0.125
     },
     "bucket_empty": {
       "name": "Empty Bucket",
-      "type": "tool"
+      "type": "bucket",
+      "origin_x": 0.25,
+      "origin_y": 1
     },
     "bucket_water": {
       "name": "Water Bucket",
-      "type": "tool"
+      "type": "bucket",
+      "origin_x": 0.25,
+      "origin_y": 1
     },
     "bucket_lava": {
       "name": "Lava Bucket",
-      "type": "tool"
+      "type": "bucket",
+      "origin_x": 0.25,
+      "origin_y": 1
     }
   }
 }

@@ -32,7 +32,7 @@ public abstract class Mob extends Rectangle implements Serializable {
     protected float mAnim;
 
     private Direction mDirection;
-    private boolean mDead;
+    protected boolean mDead;
     private boolean mCanJump;
     private boolean mFlyMode;
 

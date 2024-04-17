@@ -110,6 +110,10 @@ public class Assets {
         return json.has(name) ? json.getInt(name) : defaultValue;
     }
 
+    public static float getFloatFromJson(JsonValue json, String name, float defaultValue) {
+        return json.has(name) ? json.getFloat(name) : defaultValue;
+    }
+
     public static String getStringFromJson(JsonValue json, String name, String defaultValue) {
         return json.has(name) ? json.getString(name) : defaultValue;
     }

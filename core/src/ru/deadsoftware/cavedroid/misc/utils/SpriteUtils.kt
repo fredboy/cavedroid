@@ -12,3 +12,7 @@ fun SpriteBatch.draw(sprite: Sprite, x: Float, y: Float, rotation: Float = 0f) {
     sprite.setPosition(x, y)
     sprite.draw(this)
 }
+
+fun Sprite.applyOrigin(origin: SpriteOrigin) {
+    setOrigin(width * origin.x, height * origin.y)
+}
