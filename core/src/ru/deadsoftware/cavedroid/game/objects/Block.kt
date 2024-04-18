@@ -35,6 +35,7 @@ private const val DEPRECATION_MESSAGE =
  */
 data class Block(
         val id: Int,
+        val key: String,
         val left: Int,
         val top: Int,
         val right: Int,

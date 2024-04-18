@@ -13,7 +13,7 @@ import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
 import ru.deadsoftware.cavedroid.misc.utils.SpriteOrigin;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class GameItems {
 
@@ -113,6 +113,12 @@ public class GameItems {
 
     public static void load(AssetLoader assetLoader) {
         JsonValue json = Assets.jsonReader.parse(assetLoader.getAssetHandle("json/game_items.json"));
+
+        TreeSet<Block> blocksSet = new TreeSet<>(Comparator.comparingInt(Block::getId));
+        TreeSet<Item> itemsSet = new TreeSet<>(Comparator.comparingInt(Item::getId));
+
+
+        int count = 0;
         for (JsonValue block = json.get("blocks").child(); block != null; block = block.next()) {
             try {
                 String key = block.name();
@@ -137,11 +143,16 @@ public class GameItems {
                         new Texture(assetLoader.getAssetHandle("textures/blocks/" + tex + ".png"));
                 boolean animated = Assets.getBooleanFromJson(block, "animated", false);
                 int frames = Assets.getIntFromJson(block, "frames", 0);
-                int id = blocks.size;
+                int id = Assets.getIntFromJson(block, "id", count);
                 blocksIds.put(key, id);
+
+                if (count >= id) {
+                    count++;
+                }
 
                 Block newBlock = new Block(
                         id,
+                        key,
                         left,
                         top,
                         right,
@@ -162,11 +173,13 @@ public class GameItems {
                         clipWidth,
                         clipHeight
                 );
-                blocks.put(key, newBlock);
+                blocksSet.add(newBlock);
             } catch (GdxRuntimeException e) {
                 Gdx.app.error(TAG, e.getMessage());
             }
         }
+
+        count = 0;
         for (JsonValue item = json.get("items").child(); item != null; item = item.next()) {
             try {
                 String key = item.name();
@@ -182,13 +195,21 @@ public class GameItems {
                 originY = MathUtils.clamp(originY, 0f, 1f);
                 SpriteOrigin origin = new SpriteOrigin(originX, originY);
 
-                int id = items.size;
+                int id = Assets.getIntFromJson(item, "id", count);
+
+                if (count >= id) {
+                    count++;
+                }
+
                 itemsIds.put(key, id);
-                items.put(key, new Item(id, name, type, sprite, origin));
+                itemsSet.add(new Item(id, key, name, type, sprite, origin));
             } catch (GdxRuntimeException e) {
                 Gdx.app.error(TAG, e.getMessage());
             }
         }
+
+        blocksSet.forEach((block -> blocks.put(block.getKey(), block)));
+        itemsSet.forEach((item -> items.put(item.getKey(), item)));
     }
 
 }
