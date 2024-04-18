@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
+import ru.deadsoftware.cavedroid.game.GameItems
 
 private const val ANIMATION_FRAME_DURATION = 100L
 private const val DEPRECATION_MESSAGE =
@@ -123,6 +124,8 @@ data class Block(
     fun hasDrop() = drop != "none"
 
     fun toJump() = top < 8 && collision
+
+    fun getItem() = GameItems.getItem(GameItems.getBlockKey(id))
 
     @Deprecated(DEPRECATION_MESSAGE)
     fun hasCollision() = collision

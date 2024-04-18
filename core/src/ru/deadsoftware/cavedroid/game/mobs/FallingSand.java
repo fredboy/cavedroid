@@ -24,6 +24,16 @@ public class FallingSand extends Mob {
     }
 
     @Override
+    public float getSpeed() {
+        return 0;
+    }
+
+    @Override
+    public void jump() {
+        // no-op
+    }
+
+    @Override
     public void ai(GameWorld gameWorld, float delta) {
         if (mVelocity.isZero()) {
             gameWorld.setForeMap(getMapX(), getMiddleMapY(), 10);

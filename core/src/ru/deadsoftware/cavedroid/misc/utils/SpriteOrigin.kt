@@ -1,5 +1,7 @@
 package ru.deadsoftware.cavedroid.misc.utils
 
+import com.badlogic.gdx.graphics.g2d.Sprite
+
 /**
  * An origin of a [com.badlogic.gdx.graphics.g2d.Sprite]
  *
@@ -20,6 +22,10 @@ data class SpriteOrigin(
             x = if (flipX) 1 - x else x,
             y = if (flipY) 1 - y else y,
         )
+    }
+
+    fun applyToSprite(sprite: Sprite) {
+        sprite.setOrigin(sprite.width * x, sprite.height * y)
     }
 
 }

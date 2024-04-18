@@ -16,6 +16,9 @@ import javax.annotation.CheckForNull;
 
 public class Player extends Mob {
 
+    private static final float SPEED = 69.072f;
+    private static final float JUMP_VELOCITY = -133.332f;
+
     public final int[] inventory;
     public int slot;
     public final int gameMode;
@@ -69,6 +72,16 @@ public class Player extends Mob {
     }
 
     @Override
+    public float getSpeed() {
+        return SPEED;
+    }
+
+    @Override
+    public void jump() {
+        mVelocity.y = JUMP_VELOCITY;
+    }
+
+    @Override
     public void ai(GameWorld gameWorld, float delta) {
     }
 
@@ -95,8 +108,8 @@ public class Player extends Mob {
         final float handLength = Assets.playerSprite[0][2].getHeight();
 
         final SpriteOrigin spriteOrigin = item.getDefaultOrigin();
-        final int handMultiplier = 1 + -2 * dirMultiplier();
-        final float xOffset = (-1 + dirMultiplier()) * sprite.getWidth() + 4 + handMultiplier * (sprite.getWidth() * spriteOrigin.getX());
+        final int handMultiplier = -getDirection().getBasis();
+        final float xOffset = (-1 + getDirection().getIndex()) * sprite.getWidth() + 4 + handMultiplier * (sprite.getWidth() * spriteOrigin.getX());
         final float yOffset = item.isTool() ? -sprite.getHeight() / 2 : 0;
 
         float rotate = mAnim + 30;
@@ -112,7 +125,7 @@ public class Player extends Mob {
             SpriteUtilsKt.applyOrigin(sprite, spriteOrigin);
         }
 
-        SpriteUtilsKt.draw(spriteBatch, sprite, itemX, itemY, -handMultiplier * rotate);
+        SpriteUtilsKt.drawSprite(spriteBatch, sprite, itemX, itemY, -handMultiplier * rotate);
 
         // dont forget to reset
         sprite.setFlip(false, sprite.isFlipY());
@@ -127,26 +140,26 @@ public class Player extends Mob {
         final Sprite backHand = Assets.playerSprite[1][2];
         final Sprite backLeg = Assets.playerSprite[1][3];
         final Sprite frontLeg = Assets.playerSprite[0][3];
-        final Sprite head = Assets.playerSprite[dirMultiplier()][0];
-        final Sprite body = Assets.playerSprite[dirMultiplier()][1];
+        final Sprite head = Assets.playerSprite[getDirection().getIndex()][0];
+        final Sprite body = Assets.playerSprite[getDirection().getIndex()][1];
         final Sprite frontHand = Assets.playerSprite[0][2];
 
-        SpriteUtilsKt.draw(spriteBatch, backHand, x + 2, y + 8, -mAnim);
+        SpriteUtilsKt.drawSprite(spriteBatch, backHand, x + 2, y + 8, -mAnim);
 
         if (looksLeft()) {
             drawItem(spriteBatch, x, y);
         }
 
-        SpriteUtilsKt.draw(spriteBatch, backLeg, x + 2, y + 20, mAnim);
-        SpriteUtilsKt.draw(spriteBatch, frontLeg, x + 2, y + 20, -mAnim);
-        SpriteUtilsKt.draw(spriteBatch, head, x, y, headRotation);
-        SpriteUtilsKt.draw(spriteBatch, body, x + 2, y + 8);
+        SpriteUtilsKt.drawSprite(spriteBatch, backLeg, x + 2, y + 20, mAnim);
+        SpriteUtilsKt.drawSprite(spriteBatch, frontLeg, x + 2, y + 20, -mAnim);
+        SpriteUtilsKt.drawSprite(spriteBatch, head, x, y, headRotation);
+        SpriteUtilsKt.drawSprite(spriteBatch, body, x + 2, y + 8);
 
         if (looksRight()) {
             drawItem(spriteBatch, x, y);
         }
 
-        SpriteUtilsKt.draw(spriteBatch, frontHand, x + 2, y + 8, mAnim);
+        SpriteUtilsKt.drawSprite(spriteBatch, frontHand, x + 2, y + 8, mAnim);
     }
 
 }

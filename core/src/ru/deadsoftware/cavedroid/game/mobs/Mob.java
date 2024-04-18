@@ -22,8 +22,31 @@ public abstract class Mob extends Rectangle implements Serializable {
     }
 
     public enum Direction {
-        LEFT,
-        RIGHT
+
+        LEFT(0, -1),
+        RIGHT(1, 1);
+
+        private final int index;
+        private final int basis;
+
+        /**
+         * Index for this direction (left = 0, right = 1)
+         */
+        public final int getIndex() {
+            return index;
+        }
+
+        /**
+         * Basis for this direction (left = -1, right = 1)
+         */
+        public final int getBasis() {
+            return basis;
+        }
+
+        Direction(int index, int basis) {
+            this.index = index;
+            this.basis = basis;
+        }
     }
 
     protected Vector2 mVelocity;
@@ -138,10 +161,6 @@ public abstract class Mob extends Rectangle implements Serializable {
         mDirection = looksLeft() ? Direction.RIGHT : Direction.LEFT;
     }
 
-    protected final int dirMultiplier() {
-        return looksLeft() ? 0 : 1;
-    }
-
     public final boolean isDead() {
         return mDead;
     }
@@ -166,6 +185,10 @@ public abstract class Mob extends Rectangle implements Serializable {
         return mVelocity;
     }
 
+    protected final void setVelocity(Vector2 velocity) {
+        mVelocity = velocity;
+    }
+
     public final boolean canJump() {
         return mCanJump;
     }
@@ -186,7 +209,7 @@ public abstract class Mob extends Rectangle implements Serializable {
         return mType;
     }
 
-    public void checkWorldBounds(GameWorld gameWorld) {
+    public final void checkWorldBounds(GameWorld gameWorld) {
         if (x + width / 2 < 0) {
             x += gameWorld.getWidthPx();
         }
@@ -200,4 +223,8 @@ public abstract class Mob extends Rectangle implements Serializable {
     public abstract void ai(GameWorld gameWorld, float delta);
 
     public abstract void changeDir();
+
+    public abstract float getSpeed();
+
+    public abstract void jump();
 }
