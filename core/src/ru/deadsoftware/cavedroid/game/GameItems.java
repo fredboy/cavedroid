@@ -91,6 +91,10 @@ public class GameItems {
         return getBlockId(items.getKeyAt(id));
     }
 
+    public static int getItemIdByBlockId(int id) {
+        return getItemId(blocks.getKeyAt(id));
+    }
+
     public static int getBlocksSize() {
         return blocks.size;
     }

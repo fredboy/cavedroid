@@ -20,7 +20,6 @@ import java.util.Iterator;
 @GameScope
 public class GamePhysics {
 
-    public static final float PL_SPEED = 69.072f;
     public static final float PL_JUMP_VELOCITY = -133.332f;
     public static final float PL_TERMINAL_VELOCITY = 1254.4f;
 
@@ -256,8 +255,8 @@ public class GamePhysics {
                 }
             } else {
                 player.getVelocity().y += PL_JUMP_VELOCITY * delta;
-                if (player.getVelocity().y < -PL_SPEED) {
-                    player.getVelocity().y = -PL_SPEED;
+                if (player.getVelocity().y < -player.getSpeed()) {
+                    player.getVelocity().y = -player.getSpeed();
                 }
             }
         } else {
@@ -275,7 +274,7 @@ public class GamePhysics {
         mobXColl(player);
 
         if (mMainConfig.isTouch() && !player.isFlyMode() && player.canJump() && player.getVelocity().x != 0 && checkJump(player)) {
-            player.getVelocity().y = PL_JUMP_VELOCITY;
+            player.jump();
             player.setCanJump(false);
         }
     }
@@ -288,8 +287,8 @@ public class GamePhysics {
 
             mob.getVelocity().y += PL_JUMP_VELOCITY * delta;
 
-            if (mob.getVelocity().y < -PL_SPEED) {
-                mob.getVelocity().y = -PL_SPEED;
+            if (mob.getVelocity().y < -mob.getSpeed()) {
+                mob.getVelocity().y = -mob.getSpeed();
             }
         } else if (!mob.isFlyMode() && mob.getVelocity().y < PL_TERMINAL_VELOCITY) {
             mob.getVelocity().y += gravity.y * delta;
@@ -306,7 +305,7 @@ public class GamePhysics {
         mobXColl(mob);
 
         if (mob.canJump() && mob.getVelocity().x != 0 && checkJump(mob)) {
-            mob.getVelocity().y = PL_JUMP_VELOCITY;
+            mob.jump();
             mob.setCanJump(false);
         }
     }

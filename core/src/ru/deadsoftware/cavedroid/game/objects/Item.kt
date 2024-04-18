@@ -33,6 +33,14 @@ data class Item(
         return GameItems.getBlock(GameItems.getBlockIdByItemId(id))
     }
 
+    fun getItemOrBlockSprite(): Sprite {
+        return requireNotNull(sprite ?: toBlock()?.requireSprite()) { "wtf: sprite is null" }
+    }
+
+    fun isNone(): Boolean {
+        return id == 0;
+    }
+
     @Deprecated("Was renamed to Sprite to comply with variable type.", ReplaceWith("requireSprite()"))
     fun getTexture() = sprite
 }
