@@ -32,6 +32,8 @@ import static ru.deadsoftware.cavedroid.misc.Assets.*;
 @GameScope
 public class GameRenderer extends Renderer {
 
+    private static final String TAG = "GameRenderer";
+
     private final MainConfig mMainConfig;
     private final GameInput mGameInput;
     private final GameWorld mGameWorld;
@@ -67,6 +69,11 @@ public class GameRenderer extends Renderer {
         if (mGameInput.getBlockDamage() > 0) {
             int index = 10 * mGameInput.getBlockDamage() / GameItems.getBlock(bl).getHp();
             String key = "break_" + index;
+
+            if (index > 10 || index < 0) {
+                return;
+            }
+
             spriter.draw(textureRegions.get(key), mGameInput.getCurX() * 16 - getCamX(),
                     mGameInput.getCurY() * 16 - getCamY());
         }

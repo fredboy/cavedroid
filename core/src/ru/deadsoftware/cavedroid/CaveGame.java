@@ -54,9 +54,9 @@ public class CaveGame extends Game {
         mMainConfig.setAssetsPackPath(mAssetsPackPath);
     }
 
-    public void newGame() {
+    public void newGame(int gameMode) {
         GameScreen gameScreen = mMainComponent.getGameScreen();
-        gameScreen.newGame();
+        gameScreen.newGame(gameMode);
         setScreen(gameScreen);
     }
 

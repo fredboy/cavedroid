@@ -26,13 +26,12 @@ public class Player extends Mob {
 
     public final int[] inventory;
     public int slot;
-    public final int gameMode;
+    public int gameMode;
     public boolean swim;
     public float headRotation = 0f;
 
     public Player() {
         super(0, 0, 4, 30, randomDir(), Type.MOB, MAX_HEALTH);
-        this.gameMode = 1;
         inventory = new int[9];
         swim = false;
     }

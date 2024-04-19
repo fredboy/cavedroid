@@ -19,7 +19,7 @@ public class MenuProc extends Renderer {
 
     public class Input {
         private void startNewGame(int gameMode) {
-            mMainConfig.getCaveGame().newGame();
+            mMainConfig.getCaveGame().newGame(gameMode);
         }
 
         public void newGameClicked() {

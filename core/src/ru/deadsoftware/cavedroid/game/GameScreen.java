@@ -23,7 +23,7 @@ public class GameScreen implements Screen {
         mMainConfig = mainConfig;
     }
 
-    public void newGame() {
+    public void newGame(int gameMode) {
         if (mGameProc != null) {
             mGameProc.dispose();
         }
@@ -33,6 +33,8 @@ public class GameScreen implements Screen {
 
         mGameProc = gameComponent.getGameProc();
         mGameInputProcessor = gameComponent.getGameInputProcessor();
+
+        mGameProc.setPlayerGameMode(gameMode);
 
         Gdx.input.setInputProcessor(gameComponent.getGameInputProcessor());
     }

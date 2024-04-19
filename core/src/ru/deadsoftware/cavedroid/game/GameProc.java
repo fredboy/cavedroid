@@ -1,6 +1,7 @@
 package ru.deadsoftware.cavedroid.game;
 
 import com.badlogic.gdx.utils.Disposable;
+import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 
 import javax.inject.Inject;
@@ -14,16 +15,24 @@ public class GameProc implements Disposable {
     private final GamePhysics mGamePhysics;
     private final GameInput mGameInput;
     private final GameRenderer mGameRenderer;
+    private final MobsController mMobsController;
 
     @Inject
     public GameProc(GameWorld gameWorld,
                     GamePhysics gamePhysics,
                     GameInput gameInput,
-                    GameRenderer gameRenderer) {
+                    GameRenderer gameRenderer,
+                    MobsController mobsController
+    ) {
         mGameWorld = gameWorld;
         mGamePhysics = gamePhysics;
         mGameInput = gameInput;
         mGameRenderer = gameRenderer;
+        mMobsController = mobsController;
+    }
+
+    public void setPlayerGameMode(int gameMode) {
+        mMobsController.getPlayer().gameMode = gameMode;
     }
 
     public void update(float delta) {
