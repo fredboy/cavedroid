@@ -1,15 +1,15 @@
 package ru.deadsoftware.cavedroid.game.world;
 
+import com.badlogic.gdx.utils.Timer;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 
 import java.util.Arrays;
-import java.util.TimerTask;
 
 import static ru.deadsoftware.cavedroid.game.GameItems.*;
 
-class GameFluidsThread extends TimerTask {
+class GameFluidsThread extends Timer.Task {
 
-    public static final int FLUID_UPDATE_INTERVAL_MS = 100;
+    public static final float FLUID_UPDATE_INTERVAL_SEC = 0.1f;
     private static final int FLUID_STATES = 5;
 
     private static final int[] WATER_IDS = {8, 60, 61, 62, 63};

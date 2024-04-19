@@ -1,6 +1,7 @@
 package ru.deadsoftware.cavedroid.game.world;
 
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Timer;
 import kotlin.Pair;
 import ru.deadsoftware.cavedroid.game.GameItems;
 import ru.deadsoftware.cavedroid.game.GameScope;
@@ -13,7 +14,6 @@ import ru.deadsoftware.cavedroid.game.objects.DropController;
 
 import javax.annotation.CheckForNull;
 import javax.inject.Inject;
-import java.util.Timer;
 
 @GameScope
 public class GameWorld implements Disposable {
@@ -63,7 +63,7 @@ public class GameWorld implements Disposable {
         mGameFluidsThread = new GameFluidsThread(this, mMobsController);
 
         mGameFluidsTimer = new Timer();
-        mGameFluidsTimer.scheduleAtFixedRate(mGameFluidsThread, 0, GameFluidsThread.FLUID_UPDATE_INTERVAL_MS);
+        mGameFluidsTimer.scheduleTask(mGameFluidsThread, 0, GameFluidsThread.FLUID_UPDATE_INTERVAL_SEC);
     }
 
     public int getWidth() {
@@ -254,6 +254,6 @@ public class GameWorld implements Disposable {
 
     @Override
     public void dispose() {
-        mGameFluidsTimer.cancel();
+        mGameFluidsThread.cancel();
     }
 }
