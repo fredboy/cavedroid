@@ -173,6 +173,7 @@ public class Player extends Mob {
 
         if (hitAnim < 30f || hitAnim > 90f) {
             if (hitting) {
+                hitAnim = MathUtils.clamp(hitAnim, 30f, 90f);
                 hitAnimDelta = -hitAnimDelta;
             } else  {
                 hitAnimDelta = ANIMATION_SPEED;

@@ -193,6 +193,7 @@ public class GameInput {
     }
 
     private void useItem(int x, int y, int id, boolean bg) {
+        mPlayer.startHitting();
         String key = getItem(id).isBlock() ? getBlockKey(id) : getItemKey(id);
         if (id > 0) {
             if (getItem(id).isBlock()) {
@@ -320,6 +321,10 @@ public class GameInput {
 
             case Input.Keys.Q:
                 mGameWorld.placeToForeground(mCurX, mCurY, 8);
+                break;
+
+            case Input.Keys.GRAVE:
+                mMobsController.getPlayer().gameMode = (mMobsController.getPlayer().gameMode + 1) % 2;
                 break;
 
             case Input.Keys.ESCAPE:
@@ -487,11 +492,15 @@ public class GameInput {
     }
 
     void update() {
-        if (mTouchedDown && mTouchDownBtn == Input.Buttons.LEFT) {
-            pressLMB();
-        } else {
+        if (!mTouchedDown) {
             mPlayer.stopHitting();
+            return;
         }
+
+        if (mTouchDownBtn == Input.Buttons.LEFT) {
+            pressLMB();
+        }
+
         if (mTouchedDown && TimeUtils.timeSinceMillis(mTouchDownTime) > 500) {
             holdMB();
         }
