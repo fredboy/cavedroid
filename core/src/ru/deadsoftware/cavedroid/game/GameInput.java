@@ -216,29 +216,34 @@ public class GameInput {
     }
 
     private void pressLMB() {
-        if (mMainConfig.checkGameUiWindow(GameUiWindow.NONE) &&
-                ((mGameWorld.hasForeAt(mCurX, mCurY) && mGameWorld.getForeMapBlock(mCurX, mCurY).getHp() >= 0) ||
-                        (!mGameWorld.hasForeAt(mCurX, mCurY) && mGameWorld.hasBackAt(mCurX, mCurY) &&
-                                mGameWorld.getBackMapBlock(mCurX, mCurY).getHp() >= 0))) {
-            if (mPlayer.gameMode == 0) {
-                mBlockDamage++;
-                if (mGameWorld.hasForeAt(mCurX, mCurY)) {
-                    if (mBlockDamage >= mGameWorld.getForeMapBlock(mCurX, mCurY).getHp()) {
-                        mGameWorld.destroyForeMap(mCurX, mCurY);
-                        mBlockDamage = 0;
+        if (mMainConfig.checkGameUiWindow(GameUiWindow.NONE)) {
+            mPlayer.startHitting();
+
+            if ((mGameWorld.hasForeAt(mCurX, mCurY) && mGameWorld.getForeMapBlock(mCurX, mCurY).getHp() >= 0) ||
+                    (!mGameWorld.hasForeAt(mCurX, mCurY) && mGameWorld.hasBackAt(mCurX, mCurY) &&
+                            mGameWorld.getBackMapBlock(mCurX, mCurY).getHp() >= 0)) {
+                if (mPlayer.gameMode == 0) {
+                    mBlockDamage++;
+                    if (mGameWorld.hasForeAt(mCurX, mCurY)) {
+                        if (mBlockDamage >= mGameWorld.getForeMapBlock(mCurX, mCurY).getHp()) {
+                            mGameWorld.destroyForeMap(mCurX, mCurY);
+                            mBlockDamage = 0;
+                        }
+                    } else if (mGameWorld.hasBackAt(mCurX, mCurY)) {
+                        if (mBlockDamage >= mGameWorld.getBackMapBlock(mCurX, mCurY).getHp()) {
+                            mGameWorld.destroyBackMap(mCurX, mCurY);
+                            mBlockDamage = 0;
+                        }
                     }
-                } else if (mGameWorld.hasBackAt(mCurX, mCurY)) {
-                    if (mBlockDamage >= mGameWorld.getBackMapBlock(mCurX, mCurY).getHp()) {
-                        mGameWorld.destroyBackMap(mCurX, mCurY);
-                        mBlockDamage = 0;
+                } else {
+                    if (mGameWorld.hasForeAt(mCurX, mCurY)) {
+                        mGameWorld.placeToForeground(mCurX, mCurY, 0);
+                    } else if (mGameWorld.hasBackAt(mCurX, mCurY)) {
+                        mGameWorld.placeToBackground(mCurX, mCurY, 0);
                     }
+                    mTouchedDown = false;
                 }
             } else {
-                if (mGameWorld.hasForeAt(mCurX, mCurY)) {
-                    mGameWorld.placeToForeground(mCurX, mCurY, 0);
-                } else if (mGameWorld.hasBackAt(mCurX, mCurY)) {
-                    mGameWorld.placeToBackground(mCurX, mCurY, 0);
-                }
                 mTouchedDown = false;
             }
         }
@@ -472,6 +477,8 @@ public class GameInput {
     void update() {
         if (mTouchedDown && mTouchDownBtn == Input.Buttons.LEFT) {
             pressLMB();
+        } else {
+            mPlayer.stopHitting();
         }
         if (mTouchedDown && TimeUtils.timeSinceMillis(mTouchDownTime) > 500) {
             holdMB();

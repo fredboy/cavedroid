@@ -19,6 +19,10 @@ public class Player extends Mob {
     private static final float SPEED = 69.072f;
     private static final float JUMP_VELOCITY = -133.332f;
 
+    private boolean hitting = false;
+    private float hitAnim = 0f;
+    private float hitAnimDelta = ANIMATION_SPEED;
+
     public final int[] inventory;
     public int slot;
     public final int gameMode;
@@ -89,7 +93,7 @@ public class Player extends Mob {
     public void changeDir() {
     }
 
-    private void drawItem(SpriteBatch spriteBatch, float x, float y) {
+    private void drawItem(SpriteBatch spriteBatch, float x, float y, float anim) {
         final int itemId = inventory[slot];
         final Item item = GameItems.getItem(itemId);
 
@@ -112,10 +116,10 @@ public class Player extends Mob {
         final float xOffset = (-1 + getDirection().getIndex()) * sprite.getWidth() + 4 + handMultiplier * (sprite.getWidth() * spriteOrigin.getX());
         final float yOffset = item.isTool() ? -sprite.getHeight() / 2 : 0;
 
-        float rotate = mAnim + 30;
+        float rotate = anim + 30;
 
-        final float itemX = x + handLength * MathUtils.sin(handMultiplier * mAnim * MathUtils.degRad) + xOffset;
-        final float itemY = y + handLength * MathUtils.cos(handMultiplier * mAnim * MathUtils.degRad) + yOffset;
+        final float itemX = x + handLength * MathUtils.sin(handMultiplier * anim * MathUtils.degRad) + xOffset;
+        final float itemY = y + handLength * MathUtils.cos(handMultiplier * anim * MathUtils.degRad) + yOffset;
 
         if (looksLeft()) {
             sprite.setFlip(true, sprite.isFlipY());
@@ -133,6 +137,42 @@ public class Player extends Mob {
         sprite.setOriginCenter();
     }
 
+    public void startHitting() {
+        if (hitting) {
+            return;
+        }
+
+        hitting = true;
+        hitAnim = 90f;
+        hitAnimDelta = ANIMATION_SPEED;
+    }
+
+    public void stopHitting() {
+        hitting = false;
+    }
+
+    private float getRightHandAnim(float delta) {
+        hitAnim -= hitAnimDelta * delta;
+
+        if (hitAnim < 30f || hitAnim > 90f) {
+            if (hitting) {
+                hitAnimDelta = -hitAnimDelta;
+            } else  {
+                hitAnimDelta = ANIMATION_SPEED;
+            }
+        }
+
+        if (!hitting) {
+            if (hitAnim < hitAnimDelta * delta) {
+                hitAnim = 0;
+                hitAnimDelta = 0;
+                return -mAnim;
+            }
+        }
+
+        return hitAnim;
+    }
+
     @Override
     public void draw(SpriteBatch spriteBatch, float x, float y, float delta) {
         updateAnimation(delta);
@@ -144,10 +184,22 @@ public class Player extends Mob {
         final Sprite body = Assets.playerSprite[getDirection().getIndex()][1];
         final Sprite frontHand = Assets.playerSprite[0][2];
 
-        SpriteUtilsKt.drawSprite(spriteBatch, backHand, x + 2, y + 8, -mAnim);
+        float backHandAnim, frontHandAnim;
+
+        final float rightHandAnim = getRightHandAnim(delta);
 
         if (looksLeft()) {
-            drawItem(spriteBatch, x, y);
+            backHandAnim = rightHandAnim;
+            frontHandAnim = mAnim;
+        } else {
+            backHandAnim = -mAnim;
+            frontHandAnim = -rightHandAnim;
+        }
+
+        SpriteUtilsKt.drawSprite(spriteBatch, backHand, x + 2, y + 8, backHandAnim);
+
+        if (looksLeft()) {
+            drawItem(spriteBatch, x, y, -backHandAnim);
         }
 
         SpriteUtilsKt.drawSprite(spriteBatch, backLeg, x + 2, y + 20, mAnim);
@@ -156,10 +208,10 @@ public class Player extends Mob {
         SpriteUtilsKt.drawSprite(spriteBatch, body, x + 2, y + 8);
 
         if (looksRight()) {
-            drawItem(spriteBatch, x, y);
+            drawItem(spriteBatch, x, y, frontHandAnim);
         }
 
-        SpriteUtilsKt.drawSprite(spriteBatch, frontHand, x + 2, y + 8, mAnim);
+        SpriteUtilsKt.drawSprite(spriteBatch, frontHand, x + 2, y + 8, frontHandAnim);
     }
 
 }
