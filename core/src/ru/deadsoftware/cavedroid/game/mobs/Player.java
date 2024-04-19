@@ -76,6 +76,10 @@ public class Player extends Mob {
         }
     }
 
+    public void setCurrentInventorySlotItem(int itemId) {
+        inventory[slot] = itemId;
+    }
+
     @Override
     public float getSpeed() {
         return SPEED;

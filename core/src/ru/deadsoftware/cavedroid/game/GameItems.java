@@ -197,12 +197,14 @@ public class GameItems {
 
                 int id = Assets.getIntFromJson(item, "id", count);
 
+                String actionKey = Assets.getStringFromJson(item, "action_key", null);
+
                 if (count >= id) {
                     count++;
                 }
 
                 itemsIds.put(key, id);
-                itemsSet.add(new Item(id, key, name, type, sprite, origin));
+                itemsSet.add(new Item(id, key, name, type, sprite, origin, actionKey));
             } catch (GdxRuntimeException e) {
                 Gdx.app.error(TAG, e.getMessage());
             }

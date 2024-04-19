@@ -445,13 +445,15 @@
       "id": 68,
       "name": "Lava Bucket",
       "origin_x": 0.25,
-      "type": "bucket"
+      "type": "bucket",
+      "action_key": "use_lava_bucket"
     },
     "bucket_water": {
       "id": 67,
       "name": "Water Bucket",
       "origin_x": 0.25,
-      "type": "bucket"
+      "type": "bucket",
+      "action_key": "use_water_bucket"
     },
     "cactus": {
       "id": 54,

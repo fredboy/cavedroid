@@ -5,12 +5,13 @@ import ru.deadsoftware.cavedroid.game.GameItems
 import ru.deadsoftware.cavedroid.misc.utils.SpriteOrigin
 
 data class Item(
-        val id: Int,
-        val key: String,
-        val name: String,
-        val type: String,
-        val sprite: Sprite?,
-        val defaultOrigin: SpriteOrigin,
+    val id: Int,
+    val key: String,
+    val name: String,
+    val type: String,
+    val sprite: Sprite?,
+    val defaultOrigin: SpriteOrigin,
+    val actionKey: String?,
 ) {
 
     init {

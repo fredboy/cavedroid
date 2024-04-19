@@ -8,26 +8,36 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.google.common.collect.Range;
 import ru.deadsoftware.cavedroid.MainConfig;
+import ru.deadsoftware.cavedroid.game.actions.PlaceBlockActionUtilsKt;
+import ru.deadsoftware.cavedroid.game.actions.useitem.IUseItemAction;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.mobs.Pig;
 import ru.deadsoftware.cavedroid.game.mobs.Player;
 import ru.deadsoftware.cavedroid.game.objects.DropController;
+import ru.deadsoftware.cavedroid.game.objects.Item;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
 
+import javax.annotation.CheckForNull;
 import javax.inject.Inject;
+
+import java.util.Map;
 
 import static ru.deadsoftware.cavedroid.game.GameItems.*;
 
 @GameScope
 public class GameInput {
 
+    private static final String TAG = "GameInput";
+
     private final MainConfig mMainConfig;
     private final GameWorld mGameWorld;
     private final DropController mDropController;
     private final MobsController mMobsController;
+    private final Map<String, IUseItemAction> mUseItemActionMap;
+
     private final Player mPlayer;
 
     private ControlMode mControlMode;
@@ -51,11 +61,13 @@ public class GameInput {
     public GameInput(MainConfig mainConfig,
                      GameWorld gameWorld,
                      DropController dropController,
-                     MobsController mobsController) {
+                     MobsController mobsController,
+                     Map<String, IUseItemAction> useItemActionMap) {
         mMainConfig = mainConfig;
         mGameWorld = gameWorld;
         mDropController = dropController;
         mMobsController = mobsController;
+        mUseItemActionMap = useItemActionMap;
 
         mPlayer = mMobsController.getPlayer();
 
@@ -194,24 +206,23 @@ public class GameInput {
 
     private void useItem(int x, int y, int id, boolean bg) {
         mPlayer.startHitting();
-        String key = getItem(id).isBlock() ? getBlockKey(id) : getItemKey(id);
+
         if (id > 0) {
-            if (getItem(id).isBlock()) {
+            final Item item = getItem(id);
+            @CheckForNull final String actionKey = item.getActionKey();
+            if (item.isBlock()) {
                 if (!bg) {
-                    mGameWorld.placeToForeground(x, y, getBlockIdByItemId(id));
+                    PlaceBlockActionUtilsKt.placeToForegroundAction(mUseItemActionMap, item, x, y);
                 } else {
-                    mGameWorld.placeToBackground(x, y, getBlockIdByItemId(id));
+                    PlaceBlockActionUtilsKt.placeToBackgroundAction(mUseItemActionMap, item, x, y);
                 }
-            } else {
-                switch (key) {
-                    case "bucket_water":
-                        mGameWorld.placeToForeground(x, y, getBlockId("water"));
-                        mPlayer.inventory[mPlayer.slot] = getItemId("bucket_empty");
-                        break;
-                    case "bucket_lava":
-                        mGameWorld.placeToForeground(x, y, getBlockId("lava"));
-                        mPlayer.inventory[mPlayer.slot] = getItemId("bucket_empty");
-                        break;
+            } else if (actionKey != null) {
+                final IUseItemAction useItemAction = mUseItemActionMap.get(actionKey);
+
+                if (useItemAction != null) {
+                    useItemAction.perform(item, x, y);
+                } else {
+                    Gdx.app.error(TAG, "use item action " + actionKey + "not found");
                 }
             }
         }
