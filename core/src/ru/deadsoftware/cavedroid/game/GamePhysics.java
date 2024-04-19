@@ -318,7 +318,7 @@ public class GamePhysics {
             }
         }
 
-        for (Iterator<Mob> it = mMobsController.getIterator(); it.hasNext(); ) {
+        for (Iterator<Mob> it = mMobsController.getMobs().iterator(); it.hasNext(); ) {
             Mob mob = it.next();
             mob.ai(mGameWorld, delta);
             mobPhy(mob, delta);

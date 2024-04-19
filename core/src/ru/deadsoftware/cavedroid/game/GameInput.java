@@ -218,7 +218,7 @@ public class GameInput {
 
     private void hitMobs() {
         final Player player = mMobsController.getPlayer();
-        mMobsController.forEach((mob) -> {
+        mMobsController.getMobs().forEach((mob) -> {
             if (Intersector.overlaps(mob, player)) {
                 mob.damage(5);
                 mob.jump();
@@ -315,7 +315,7 @@ public class GameInput {
                 break;
 
             case Input.Keys.G:
-                mMobsController.addMob(Pig.class, mCurX * 16, mCurY * 16);
+                mMobsController.addMob(new Pig(mCurX * 16, mCurY * 16));
                 break;
 
             case Input.Keys.Q:

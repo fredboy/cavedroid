@@ -213,7 +213,7 @@ public class GameWorld implements Disposable {
         if (getForeMap(x, y) == 10) {
             if (!hasForeAt(x, y + 1) || !getForeMapBlock(x, y + 1).hasCollision()) {
                 setForeMap(x, y, 0);
-                mMobsController.addMob(FallingSand.class, x * 16, y * 16);
+                mMobsController.addMob(new FallingSand(x * 16, y * 16));
                 updateBlock(x, y - 1);
             }
         }
@@ -221,7 +221,7 @@ public class GameWorld implements Disposable {
         if (getForeMap(x, y) == 11) {
             if (!hasForeAt(x, y + 1) || !getForeMapBlock(x, y + 1).hasCollision()) {
                 setForeMap(x, y, 0);
-                mMobsController.addMob(FallingGravel.class, x * 16, y * 16);
+                mMobsController.addMob(new FallingGravel(x * 16, y * 16));
                 updateBlock(x, y - 1);
             }
         }

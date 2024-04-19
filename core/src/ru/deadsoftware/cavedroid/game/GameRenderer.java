@@ -305,7 +305,7 @@ public class GameRenderer extends Renderer {
 
         drawWorld(true);
         player.draw(spriter, player.getX() - getCamX() - player.getWidth() / 2, player.getY() - getCamY(), delta);
-        mMobsController.forEach( (mob) -> { drawMob(mob, delta); });
+        mMobsController.getMobs().forEach( (mob) -> { drawMob(mob, delta); });
         mDropController.forEach(this::drawDrop);
         drawWorld(false);
         drawGUI();
@@ -408,7 +408,7 @@ public class GameRenderer extends Renderer {
             drawString("CurY: " + mGameInput.getCurY(), 0, 40);
             drawString("Velocity: " + player.getVelocity(), 0, 50);
             drawString("Swim: " + player.swim, 0, 60);
-            drawString("Mobs: " + mMobsController.getSize(), 0, 70);
+            drawString("Mobs: " + mMobsController.getMobs().size(), 0, 70);
             drawString("Drops: " + mDropController.getSize(), 0, 80);
             drawString("Block: " + GameItems.getBlockKey(mGameWorld.getForeMap(mGameInput.getCurX(), mGameInput.getCurY())), 0, 90);
             drawString("Hand: " + GameItems.getItemKey(mMobsController.getPlayer().inventory[mMobsController.getPlayer().slot]), 0, 100);
