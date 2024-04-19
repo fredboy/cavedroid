@@ -25,6 +25,8 @@
       "id": 56,
       "texture": "bricks",
       "top": 8,
+      "sprite_top": 8,
+      "meta": "slab",
       "transparent": true
     },
     "bricks": {
@@ -208,7 +210,9 @@
       "id": 54,
       "texture": "planks_oak",
       "top": 8,
-      "transparent": true
+      "transparent": true,
+      "meta": "slab",
+      "sprite_top": 8
     },
     "obsidian": {
       "hp": 1500,
@@ -237,7 +241,9 @@
       "id": 53,
       "texture": "sandstone",
       "top": 8,
-      "transparent": true
+      "transparent": true,
+      "meta": "slab",
+      "sprite_top": 8
     },
     "sapling_oak": {
       "block_required": true,
@@ -259,7 +265,8 @@
       "id": 51,
       "sprite_top": 8,
       "top": 8,
-      "transparent": true
+      "transparent": true,
+      "meta": "slab"
     },
     "stonebrick": {
       "hp": 450,
@@ -270,7 +277,9 @@
       "id": 58,
       "texture": "stonebrick",
       "top": 8,
-      "transparent": true
+      "transparent": true,
+      "meta": "slab",
+      "sprite_top": 8
     },
     "tallgrass": {
       "block_required": true,
