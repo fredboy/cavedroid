@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavedroid.game.mobs;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -59,6 +60,9 @@ public abstract class Mob extends Rectangle implements Serializable {
     private boolean mCanJump;
     private boolean mFlyMode;
 
+    private final int mMaxHealth;
+    private int mHealth;
+
     /**
      * @param x          in pixels
      * @param y          in pixels
@@ -66,13 +70,15 @@ public abstract class Mob extends Rectangle implements Serializable {
      * @param height     in pixels
      * @param mDirection Direction in which mob is looking
      */
-    protected Mob(float x, float y, float width, float height, Direction mDirection, Type type) {
+    protected Mob(float x, float y, float width, float height, Direction mDirection, Type type, int maxHealth) {
         super(x, y, width, height);
         mVelocity = new Vector2(0, 0);
         mCanJump = false;
         mDead = false;
         this.mDirection = mDirection;
         this.mType = type;
+        this.mMaxHealth = maxHealth;
+        this.mHealth = mMaxHealth;
     }
 
     protected static Direction randomDir() {
@@ -81,6 +87,14 @@ public abstract class Mob extends Rectangle implements Serializable {
 
     private boolean isAnimationIncreasing() {
         return mAnim > 0 && mAnimDelta > 0 || mAnim < 0 && mAnimDelta < 0;
+    }
+
+    private void checkHealth() {
+        mHealth = MathUtils.clamp(mHealth, 0, mMaxHealth);
+
+        if (mHealth <= 0) {
+            kill();
+        }
     }
 
     protected final void updateAnimation(float delta) {
@@ -216,6 +230,38 @@ public abstract class Mob extends Rectangle implements Serializable {
         if (x + width / 2 > gameWorld.getWidthPx()) {
             x -= gameWorld.getWidthPx();
         }
+    }
+
+    public final int getHealth() {
+        return mHealth;
+    }
+
+    public void damage(int damage) {
+        if (damage < 0) {
+            Gdx.app.error(this.getClass().getSimpleName(), "Damage cant be negative!");
+            return;
+        }
+
+        if (mHealth <= Integer.MIN_VALUE + damage) {
+            mHealth = Integer.MIN_VALUE + damage;
+        }
+
+        mHealth -= damage;
+        checkHealth();
+    }
+
+    public void heal(int heal) {
+        if (heal < 0) {
+            Gdx.app.error(this.getClass().getSimpleName(), "Heal cant be negative!");
+            return;
+        }
+
+        if (mHealth >= Integer.MAX_VALUE - heal) {
+            mHealth = Integer.MAX_VALUE - heal;
+        }
+
+        mHealth += heal;
+        checkHealth();
     }
 
     public abstract void draw(SpriteBatch spriteBatch, float x, float y, float delta);

@@ -19,7 +19,7 @@ public class FallingSand extends Mob {
      * @param y Y in pixels
      */
     public FallingSand(float x, float y) {
-        super(x, y, 16, 16, Direction.LEFT, Type.SAND);
+        super(x, y, 16, 16, Direction.LEFT, Type.SAND, Integer.MAX_VALUE);
         mVelocity = new Vector2(0, 1);
     }
 

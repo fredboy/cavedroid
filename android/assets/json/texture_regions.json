@@ -134,5 +134,14 @@
   },
   "shade": {},
   "gamelogo": {},
-  "background": {}
+  "background": {},
+  "health":{
+    "heart_whole": {
+      "w": 9
+    },
+    "heart_half": {
+      "x": 9,
+      "w": 9
+    }
+  }
 }

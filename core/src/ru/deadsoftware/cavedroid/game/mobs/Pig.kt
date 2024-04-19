@@ -12,7 +12,7 @@ import ru.deadsoftware.cavedroid.misc.utils.mobs.MobSprites.Pig.getLeftLegRelati
 import ru.deadsoftware.cavedroid.misc.utils.mobs.MobSprites.Pig.getLegsRelativeY
 import ru.deadsoftware.cavedroid.misc.utils.mobs.MobSprites.Pig.getRightLegRelativeX
 
-class Pig(x: Float, y: Float) : Mob(x, y, WIDTH, HEIGHT, randomDir(), Type.MOB) {
+class Pig(x: Float, y: Float) : Mob(x, y, WIDTH, HEIGHT, randomDir(), Type.MOB, MAX_HEALTH) {
 
     override fun getSpeed(): Float {
         return SPEED
@@ -57,5 +57,6 @@ class Pig(x: Float, y: Float) : Mob(x, y, WIDTH, HEIGHT, randomDir(), Type.MOB) 
         private const val HEIGHT = 18f
         private const val SPEED =  69.072f
         private const val JUMP_VELOCITY = -133.332f
+        private const val MAX_HEALTH = 10;
     }
 }

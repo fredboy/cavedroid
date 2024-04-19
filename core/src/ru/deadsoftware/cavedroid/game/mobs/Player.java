@@ -18,6 +18,7 @@ public class Player extends Mob {
 
     private static final float SPEED = 69.072f;
     private static final float JUMP_VELOCITY = -133.332f;
+    private static final int MAX_HEALTH = 20;
 
     private boolean hitting = false;
     private float hitAnim = 0f;
@@ -30,7 +31,7 @@ public class Player extends Mob {
     public float headRotation = 0f;
 
     public Player() {
-        super(0, 0, 4, 30, randomDir(), Type.MOB);
+        super(0, 0, 4, 30, randomDir(), Type.MOB, MAX_HEALTH);
         this.gameMode = 1;
         inventory = new int[9];
         swim = false;
@@ -42,6 +43,7 @@ public class Player extends Mob {
         this.y = pos.y;
         mVelocity.setZero();
         mDead = false;
+        heal(MAX_HEALTH);
     }
 
     public void pickUpDrop(Drop drop) {
@@ -91,6 +93,22 @@ public class Player extends Mob {
 
     @Override
     public void changeDir() {
+    }
+
+    @Override
+    public void damage(int damage) {
+        if (gameMode == 1) {
+            return;
+        }
+        super.damage(damage);
+    }
+
+    @Override
+    public void heal(int heal) {
+        if (gameMode == 1) {
+            return;
+        }
+        super.heal(heal);
     }
 
     private void drawItem(SpriteBatch spriteBatch, float x, float y, float anim) {

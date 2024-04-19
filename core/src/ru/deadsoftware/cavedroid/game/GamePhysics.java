@@ -208,6 +208,11 @@ public class GamePhysics {
             if (d == -1) {
                 mob.setCanJump(true);
                 mob.setFlyMode(false);
+
+                int dmg = ((int)Math.max(0f, (((mob.getVelocity().y * mob.getVelocity().y) / (2 * gravity.y)) - 48f) / 16f));
+                if (dmg > 0) {
+                    mob.damage(dmg);
+                }
             }
 
             mob.y = MathUtils.round(mob.getY());
@@ -217,14 +222,6 @@ public class GamePhysics {
             }
 
             mob.getVelocity().y = 0;
-
-
-
-            //todo fall damage
-            // h = (v^2) / 2g
-            // dmg = max(0, (h - 48) / 32) - half of blocks fallen starting from 3 blocks height
-            //                int dmg = ((int)Math.max(0f, (((mob.getVelocity().y * mob.getVelocity().y) / (2 * gravity.y)) - 48f) / 16f));
-            //                if (dmg > 0) System.out.println("Damage: " + dmg);
 
         } else {
             mob.y += 1;

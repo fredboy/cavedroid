@@ -18,7 +18,7 @@ public class FallingGravel extends Mob {
      * @param y Y in pixels
      */
     public FallingGravel(float x, float y) {
-        super(x, y, 16, 16, Direction.LEFT, Type.GRAVEL);
+        super(x, y, 16, 16, Direction.LEFT, Type.GRAVEL, Integer.MAX_VALUE);
         mVelocity = new Vector2(0, 1);
     }
 

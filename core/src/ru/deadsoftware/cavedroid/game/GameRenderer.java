@@ -228,6 +228,27 @@ public class GameRenderer extends Renderer {
 
     }
 
+    private void drawHealth(float x, float y) {
+        Player player = mMobsController.getPlayer();
+
+        if (player.gameMode == 1) {
+            return;
+        }
+
+        TextureRegion wholeHeart = textureRegions.get("heart_whole");
+        TextureRegion halfHeart = textureRegions.get("heart_half");
+
+        int wholeHearts = player.getHealth() / 2;
+
+        for (int i = 0; i < wholeHearts; i++) {
+            spriter.draw(wholeHeart, x + i * wholeHeart.getRegionWidth(), y);
+        }
+
+        if (player.getHealth() % 2 == 1) {
+            spriter.draw(halfHeart, x + wholeHearts * wholeHeart.getRegionWidth(), y);
+        }
+    }
+
     private void drawGUI() {
         TextureRegion cursor = textureRegions.get("cursor");
         TextureRegion hotbar = textureRegions.get("hotbar");
@@ -238,7 +259,11 @@ public class GameRenderer extends Renderer {
                 mGameInput.getControlMode() == ControlMode.CURSOR || mMainConfig.isTouch()) {
             spriter.draw(cursor, mGameInput.getCurX() * 16 - getCamX(), mGameInput.getCurY() * 16 - getCamY());
         }
-        spriter.draw(hotbar, getWidth() / 2 - (float) hotbar.getRegionWidth() / 2, 0);
+
+        float hotbarX = getWidth() / 2 - (float) hotbar.getRegionWidth() / 2;
+        spriter.draw(hotbar, hotbarX, 0);
+        drawHealth(hotbarX, hotbar.getRegionHeight());
+
         for (int i = 0; i < 9; i++) {
             if (mMobsController.getPlayer().inventory[i] > 0) {
                 if (GameItems.getItem(mMobsController.getPlayer().inventory[i]).isBlock()) {
