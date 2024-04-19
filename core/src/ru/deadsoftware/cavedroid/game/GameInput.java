@@ -3,6 +3,7 @@ package ru.deadsoftware.cavedroid.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.google.common.collect.Range;
@@ -215,6 +216,16 @@ public class GameInput {
         }
     }
 
+    private void hitMobs() {
+        final Player player = mMobsController.getPlayer();
+        mMobsController.forEach((mob) -> {
+            if (Intersector.overlaps(mob, player)) {
+                mob.damage(5);
+                mob.jump();
+            }
+        });
+    }
+
     private void pressLMB() {
         if (mMainConfig.checkGameUiWindow(GameUiWindow.NONE)) {
             mPlayer.startHitting();
@@ -244,6 +255,7 @@ public class GameInput {
                     mTouchedDown = false;
                 }
             } else {
+                hitMobs();
                 mTouchedDown = false;
             }
         }
