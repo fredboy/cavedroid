@@ -1,12 +1,8 @@
 package ru.deadsoftware.cavedroid.game.world;
 
-import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.Timer;
 import kotlin.Pair;
 import ru.deadsoftware.cavedroid.game.GameItems;
 import ru.deadsoftware.cavedroid.game.GameScope;
-import ru.deadsoftware.cavedroid.game.mobs.FallingGravel;
-import ru.deadsoftware.cavedroid.game.mobs.FallingSand;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.model.world.generator.WorldGeneratorConfig;
 import ru.deadsoftware.cavedroid.game.objects.Block;
@@ -16,24 +12,15 @@ import javax.annotation.CheckForNull;
 import javax.inject.Inject;
 
 @GameScope
-public class GameWorld implements Disposable {
-
-    private static final int UPDATE_RANGE = 16;
+public class GameWorld {
 
     private final DropController mDropController;
     private final MobsController mMobsController;
-
-    private final Timer mGameFluidsTimer;
-    private final GameFluidsThread mGameFluidsThread;
 
     private final int mWidth;
     private final int mHeight;
     private final int[][] mForeMap;
     private final int[][] mBackMap;
-
-    private boolean mShouldUpdate;
-    private int mUpdateX;
-    private int mUpdateY;
 
     @Inject
     public GameWorld(DropController dropController,
@@ -59,11 +46,6 @@ public class GameWorld implements Disposable {
             mWidth = mForeMap.length;
             mHeight = mForeMap[0].length;
         }
-
-        mGameFluidsThread = new GameFluidsThread(this, mMobsController);
-
-        mGameFluidsTimer = new Timer();
-        mGameFluidsTimer.scheduleTask(mGameFluidsThread, 0, GameFluidsThread.FLUID_UPDATE_INTERVAL_SEC);
     }
 
     public int getWidth() {
@@ -181,9 +163,6 @@ public class GameWorld implements Disposable {
         } else if (GameItems.isSlab(value) && getForeMap(x, y) == value) {
             placeSlab(x, y, value);
         }
-        mUpdateX = x - 8;
-        mUpdateY = y - 8;
-        mShouldUpdate = true;
     }
 
     public void placeToBackground(int x, int y, int value) {
@@ -207,53 +186,5 @@ public class GameWorld implements Disposable {
             mDropController.addDrop(transformX(x) * 16 + 4, y * 16 + 4, GameItems.getItemId(block.getDrop()));
         }
         placeToBackground(x, y, 0);
-    }
-
-    private void updateBlock(int x, int y) {
-        if (getForeMap(x, y) == 10) {
-            if (!hasForeAt(x, y + 1) || !getForeMapBlock(x, y + 1).hasCollision()) {
-                setForeMap(x, y, 0);
-                mMobsController.addMob(new FallingSand(x * 16, y * 16));
-                updateBlock(x, y - 1);
-            }
-        }
-
-        if (getForeMap(x, y) == 11) {
-            if (!hasForeAt(x, y + 1) || !getForeMapBlock(x, y + 1).hasCollision()) {
-                setForeMap(x, y, 0);
-                mMobsController.addMob(new FallingGravel(x * 16, y * 16));
-                updateBlock(x, y - 1);
-            }
-        }
-
-        if (hasForeAt(x, y) && getForeMapBlock(x, y).requiresBlock()) {
-            if (!hasForeAt(x, y + 1) || !getForeMapBlock(x, y + 1).hasCollision()) {
-                destroyForeMap(x, y);
-                updateBlock(x, y - 1);
-            }
-        }
-
-        if (getForeMap(x, y) == 2) {
-            if (hasForeAt(x, y - 1) && (getForeMapBlock(x, y - 1).hasCollision() ||
-                    GameItems.isFluid(getForeMap(x, y - 1)))) {
-                setForeMap(x, y, 3);
-            }
-        }
-    }
-
-    public void update() {
-        if (mShouldUpdate) {
-            for (int y = mUpdateY; y < mUpdateY + UPDATE_RANGE; y++) {
-                for (int x = mUpdateX; x < mUpdateX + UPDATE_RANGE; x++) {
-                    updateBlock(x, y);
-                }
-            }
-            mShouldUpdate = false;
-        }
-    }
-
-    @Override
-    public void dispose() {
-        mGameFluidsThread.cancel();
     }
 }

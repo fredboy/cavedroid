@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.google.common.collect.Range;
 import ru.deadsoftware.cavedroid.MainConfig;
-import ru.deadsoftware.cavedroid.game.actions.PlaceBlockActionUtilsKt;
+import ru.deadsoftware.cavedroid.game.actions.CommonBlockActionUtilsKt;
 import ru.deadsoftware.cavedroid.game.actions.useitem.IUseItemAction;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
@@ -212,9 +212,9 @@ public class GameInput {
             @CheckForNull final String actionKey = item.getActionKey();
             if (item.isBlock()) {
                 if (!bg) {
-                    PlaceBlockActionUtilsKt.placeToForegroundAction(mUseItemActionMap, item, x, y);
+                    CommonBlockActionUtilsKt.placeToForegroundAction(mUseItemActionMap, item, x, y);
                 } else {
-                    PlaceBlockActionUtilsKt.placeToBackgroundAction(mUseItemActionMap, item, x, y);
+                    CommonBlockActionUtilsKt.placeToBackgroundAction(mUseItemActionMap, item, x, y);
                 }
             } else if (actionKey != null) {
                 final IUseItemAction useItemAction = mUseItemActionMap.get(actionKey);

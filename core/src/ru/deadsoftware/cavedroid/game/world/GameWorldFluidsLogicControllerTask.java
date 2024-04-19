@@ -1,13 +1,16 @@
 package ru.deadsoftware.cavedroid.game.world;
 
 import com.badlogic.gdx.utils.Timer;
+import ru.deadsoftware.cavedroid.game.GameScope;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 
 import static ru.deadsoftware.cavedroid.game.GameItems.*;
 
-class GameFluidsThread extends Timer.Task {
+@GameScope
+public class GameWorldFluidsLogicControllerTask extends Timer.Task {
 
     public static final float FLUID_UPDATE_INTERVAL_SEC = 0.1f;
     private static final int FLUID_STATES = 5;
@@ -15,13 +18,12 @@ class GameFluidsThread extends Timer.Task {
     private static final int[] WATER_IDS = {8, 60, 61, 62, 63};
     private static final int[] LAVA_IDS = {9, 64, 65, 66, 67};
 
-    private long mFluidLastUpdateTimestamp = 0;
-
     private final GameWorld mGameWorld;
     private final MobsController mMobsController;
 
-    GameFluidsThread(GameWorld gameWorld,
-                     MobsController mobsController) {
+    @Inject
+    GameWorldFluidsLogicControllerTask(GameWorld gameWorld,
+                                       MobsController mobsController) {
         mGameWorld = gameWorld;
         mMobsController = mobsController;
     }

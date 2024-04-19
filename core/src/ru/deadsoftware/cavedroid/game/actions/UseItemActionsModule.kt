@@ -8,7 +8,7 @@ import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.actions.useitem.*
 
 @Module
-class GameActionsModule {
+class UseItemActionsModule {
 
     @Binds
     @IntoMap
