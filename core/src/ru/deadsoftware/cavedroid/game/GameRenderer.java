@@ -212,8 +212,8 @@ public class GameRenderer extends Renderer {
             }
         }
         for (int i = 0; i < 9; i++) {
-            if (mMobsController.getPlayer().inventory[i] != null && mMobsController.getPlayer().inventory[i] != mGameItemsHolder.getFallbackItem()) {
-                spriter.draw(mMobsController.getPlayer().inventory[i].getSprite(),
+            if (mMobsController.getPlayer().inventory[i] != null && mMobsController.getPlayer().inventory[i].getItem() != mGameItemsHolder.getFallbackItem()) {
+                spriter.draw(mMobsController.getPlayer().inventory[i].getItem().getSprite(),
                         x + 8 + i * 18, y + creative.getRegionHeight() - 24);
             }
         }
@@ -257,8 +257,8 @@ public class GameRenderer extends Renderer {
         drawHealth(hotbarX, hotbar.getRegionHeight());
 
         for (int i = 0; i < 9; i++) {
-            if (mMobsController.getPlayer().inventory[i] != null && mMobsController.getPlayer().inventory[i] != mGameItemsHolder.getFallbackItem()) {
-                spriter.draw(mMobsController.getPlayer().inventory[i].getSprite(),
+            if (mMobsController.getPlayer().inventory[i] != null && mMobsController.getPlayer().inventory[i].getItem() != mGameItemsHolder.getFallbackItem()) {
+                spriter.draw(mMobsController.getPlayer().inventory[i].getItem().getSprite(),
                         getWidth() / 2 - (float) hotbar.getRegionWidth() / 2 + 3 + i * 20,
                         3);
             }
@@ -391,7 +391,7 @@ public class GameRenderer extends Renderer {
             drawString("Mobs: " + mMobsController.getMobs().size(), 0, 70);
             drawString("Drops: " + mDropController.getSize(), 0, 80);
             drawString("Block: " + mGameWorld.getForeMap(mGameInput.getCurX(), mGameInput.getCurY()).getParams().getKey(), 0, 90);
-            drawString("Hand: " + mMobsController.getPlayer().inventory[mMobsController.getPlayer().slot].getParams().getKey(), 0, 100);
+            drawString("Hand: " + mMobsController.getPlayer().inventory[mMobsController.getPlayer().slot].getItem().getParams().getKey(), 0, 100);
             drawString("Game mode: " + player.gameMode, 0, 110);
             spriter.end();
         }

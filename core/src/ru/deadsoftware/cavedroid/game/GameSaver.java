@@ -4,12 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
+import ru.deadsoftware.cavedroid.game.model.block.Block;
 import ru.deadsoftware.cavedroid.game.objects.DropController;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 
 import javax.annotation.CheckForNull;
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameSaver {
 
@@ -21,9 +24,9 @@ public class GameSaver {
         @CheckForNull
         private DropController mDropController;
         @CheckForNull
-        private int[][] mForeMap, mBackMap;
+        private Block[][] mForeMap, mBackMap;
 
-        public Data(MobsController mobsController, DropController dropController, int[][] foreMap, int[][] backMap) {
+        public Data(MobsController mobsController, DropController dropController, Block[][] foreMap, Block[][] backMap) {
             mMobsController = mobsController;
             mDropController = dropController;
             mForeMap = foreMap;
@@ -44,16 +47,16 @@ public class GameSaver {
             return dropController;
         }
 
-        public int[][] retrieveForeMap() {
+        public Block[][] retrieveForeMap() {
             assert mForeMap != null;
-            int[][] foreMap = mForeMap;
+            Block[][] foreMap = mForeMap;
             mForeMap = null;
             return foreMap;
         }
 
-        public int[][] retrieveBackMap() {
+        public Block[][] retrieveBackMap() {
             assert mBackMap != null;
-            int[][] backMap = mBackMap;
+            Block[][] backMap = mBackMap;
             mBackMap = null;
             return backMap;
         }
@@ -69,7 +72,46 @@ public class GameSaver {
         return ByteBuffer.allocate(4).putInt(i).array();
     }
 
-    private static void saveMap(FileHandle file, int[][] map) throws IOException {
+    private static Map<String, Integer> buildBlocksDictionary(Block[][] foreMap, Block[][] backMap) {
+        final HashMap<String, Integer> dict = new HashMap<>();
+
+        int id = 0;
+        for (int i = 0; i < foreMap.length; i++) {
+            for (int j = 0; j < foreMap[i].length; j++) {
+                for (int k = 0; k < 2; k++) {
+                    final Block block = k == 0 ? foreMap[i][j] : backMap[i][j];
+                    final String key = block.getParams().getKey();
+                    if (!dict.containsKey(key)) {
+                        dict.put(key, id++);
+                    }
+                }
+            }
+        }
+
+        return dict;
+    }
+
+    private static void saveDict(FileHandle file, Map<String, Integer> dict) {
+        final String[] arr = new String[dict.size()];
+
+        for (Map.Entry<String, Integer> entry : dict.entrySet()) {
+            arr[entry.getValue()] = entry.getKey();
+        }
+
+        final StringBuilder builder = new StringBuilder();
+        for (String key : arr) {
+            builder.append(key);
+            builder.append('\n');
+        }
+
+        file.writeString(builder.toString(), false);
+    }
+
+    private static String[] loadDict(FileHandle file) {
+        return file.readString().split("\n");
+    }
+
+    private static void saveMap(FileHandle file, Block[][] map, Map<String, Integer> dict) throws IOException {
         int run, block;
         int width = map.length;
         int height = map[0].length;
@@ -81,14 +123,15 @@ public class GameSaver {
         out.write(intToBytes(height));
 
         for (int y = 0; y < height; y++) {
-            block = map[0][y];
+            block = dict.get(map[0][y].getParams().getKey());
             run = 0;
-            for (int[] ints : map) {
-                if (ints[y] != block) {
+            for (Block[] blocks : map) {
+                int newValue = dict.get(blocks[y].getParams().getKey());
+                if (newValue != block) {
                     out.write(intToBytes(run));
                     out.write(intToBytes(block));
                     run = 0;
-                    block = ints[y];
+                    block = dict.get(blocks[y].getParams().getKey());
                 }
                 run++;
             }
@@ -100,8 +143,8 @@ public class GameSaver {
         out.close();
     }
 
-    private static int[][] loadMap(FileHandle file) throws Exception {
-        int[][] map;
+    private static Block[][] loadMap(GameItemsHolder gameItemsHolder, FileHandle file, String[] dict) throws Exception {
+        Block[][] map;
         int version, width, height;
         int run, block;
 
@@ -112,13 +155,13 @@ public class GameSaver {
         if (SAVE_VERSION == version) {
             width = in.readInt();
             height = in.readInt();
-            map = new int[width][height];
+            map = new Block[width][height];
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x += run) {
                     run = in.readInt();
                     block = in.readInt();
                     for (int i = x; i < x + run; i++) {
-                        map[i][y] = block;
+                        map[i][y] = gameItemsHolder.getBlock(dict[block]);
                     }
                 }
             }
@@ -131,7 +174,7 @@ public class GameSaver {
     }
 
     @CheckForNull
-    public static Data load(MainConfig mainConfig) {
+    public static Data load(MainConfig mainConfig, GameItemsHolder gameItemsHolder) {
         String folder = mainConfig.getGameFolder();
         FileHandle file = Gdx.files.absolute(folder + "/saves/game.sav");
 
@@ -150,8 +193,9 @@ public class GameSaver {
 
             in.close();
 
-            int[][] foreMap = loadMap(Gdx.files.absolute(mainConfig.getGameFolder() + "/saves/foremap.sav"));
-            int[][] backMap = loadMap(Gdx.files.absolute(mainConfig.getGameFolder() + "/saves/backmap.sav"));
+            final String[] dict = loadDict(Gdx.files.absolute(mainConfig.getGameFolder() + "/saves/dict"));
+            Block[][] foreMap = loadMap(gameItemsHolder, Gdx.files.absolute(mainConfig.getGameFolder() + "/saves/foremap.sav"), dict);
+            Block[][] backMap = loadMap(gameItemsHolder, Gdx.files.absolute(mainConfig.getGameFolder() + "/saves/backmap.sav"), dict);
 
             if (dropController == null || mobsController == null) {
                 throw new Exception("couldn't load");
@@ -169,15 +213,16 @@ public class GameSaver {
                             DropController dropController,
                             MobsController mobsController,
                             GameWorld gameWorld) {
-
-        Gdx.app.debug(TAG, "Saves are disabled for this build");
-        return;
-
-
-/*        String folder = mainConfig.getGameFolder();
+        String folder = mainConfig.getGameFolder();
         FileHandle file = Gdx.files.absolute(folder + "/saves/");
         file.mkdirs();
         file = Gdx.files.absolute(folder + "/saves/game.sav");
+
+        final Block[][] foreMap, backMap;
+        foreMap = gameWorld.getFullForeMap();
+        backMap = gameWorld.getFullBackMap();
+
+        final Map<String, Integer> dict = buildBlocksDictionary(foreMap, backMap);
 
         try {
             ObjectOutputStream out = new ObjectOutputStream(file.write(false));
@@ -185,19 +230,19 @@ public class GameSaver {
             out.writeObject(dropController);
             out.writeObject(mobsController);
             out.close();
-            // TODO: 4/20/24 save map
-//            saveMap(Gdx.files.absolute(folder + "/saves/foremap.sav"), gameWorld.getFullForeMap());
-//            saveMap(Gdx.files.absolute(folder + "/saves/backmap.sav"), gameWorld.getFullBackMap());
+
+            saveDict(Gdx.files.absolute(folder + "/saves/dict"), dict);
+            saveMap(Gdx.files.absolute(folder + "/saves/foremap.sav"), gameWorld.getFullForeMap(), dict);
+            saveMap(Gdx.files.absolute(folder + "/saves/backmap.sav"), gameWorld.getFullBackMap(), dict);
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     public static boolean exists(MainConfig mainConfig) {
-        return false;
-//        String folder = mainConfig.getGameFolder();
-//        return (Gdx.files.absolute(folder + "/saves/game.sav").exists() &&
-//                Gdx.files.absolute(folder + "/saves/foremap.sav").exists() &&
-//                Gdx.files.absolute(folder + "/saves/backmap.sav").exists());
+        String folder = mainConfig.getGameFolder();
+        return (Gdx.files.absolute(folder + "/saves/game.sav").exists() &&
+                Gdx.files.absolute(folder + "/saves/foremap.sav").exists() &&
+                Gdx.files.absolute(folder + "/saves/backmap.sav").exists());
     }
 }

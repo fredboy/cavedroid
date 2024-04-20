@@ -288,7 +288,7 @@ public class GameInput {
 
     private void holdMB() {
         if (mTouchDownBtn == Input.Buttons.RIGHT) {
-            useItem(mCurX, mCurY, mPlayer.inventory[mPlayer.slot], true);
+            useItem(mCurX, mCurY, mPlayer.inventory[mPlayer.slot].getItem(), true);
             mTouchedDown = false;
         } else {
             if (insideHotbar(mTouchDownX, mTouchDownY)) {
@@ -411,7 +411,7 @@ public class GameInput {
                 }
 
                 System.arraycopy(mPlayer.inventory, 0, mPlayer.inventory, 1, 8);
-                mPlayer.inventory[0] = mGameItemsHolder.getItemFromCreativeInventory(itemPos);
+                mPlayer.inventory[0] = mGameItemsHolder.getItemFromCreativeInventory(itemPos).toInventoryItem();
             } else if (mMainConfig.checkGameUiWindow(GameUiWindow.CREATIVE_INVENTORY)) {
                 mMainConfig.setGameUiWindow(GameUiWindow.NONE);
             } else if (screenY < hotbar.getRegionHeight() &&
@@ -420,7 +420,7 @@ public class GameInput {
                 mPlayer.slot = (int) ((screenX - (mMainConfig.getWidth() / 2 - hotbar.getRegionWidth() / 2)) / 20);
             } else if (button == Input.Buttons.RIGHT) {
                 useItem(mCurX, mCurY,
-                        mPlayer.inventory[mPlayer.slot], false);
+                        mPlayer.inventory[mPlayer.slot].getItem(), false);
             } else if (button == Input.Buttons.LEFT) {
                 mBlockDamage = 0;
             }

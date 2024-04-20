@@ -29,8 +29,7 @@ public class GameProc implements Disposable {
                     MobsController mobsController,
                     GameWorldFluidsLogicControllerTask gameWorldFluidsLogicControllerTask,
                     GameWorldBlocksLogicControllerTask gameWorldBlocksLogicControllerTask,
-                    GameItemsHolder gameItemsHolder,
-                    AssetLoader assetLoader
+                    GameItemsHolder gameItemsHolder
     ) {
         mGamePhysics = gamePhysics;
         mGameInput = gameInput;

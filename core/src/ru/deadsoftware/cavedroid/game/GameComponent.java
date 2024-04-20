@@ -12,4 +12,6 @@ public interface GameComponent {
     GameProc getGameProc();
 
     GameInputProcessor getGameInputProcessor();
+
+    GameItemsHolder getGameItemsHolder();
 }

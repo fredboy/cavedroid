@@ -33,6 +33,11 @@ sealed class Item {
         contract { returns(true) implies (this@Item is Placeable) }
         return this is Placeable
     }
+
+    @JvmOverloads
+    fun toInventoryItem(amount: Int = 1): InventoryItem {
+        return InventoryItem(this, amount)
+    }
     
     sealed class Tool : Item() {
         abstract val mobDamageMultiplier: Float

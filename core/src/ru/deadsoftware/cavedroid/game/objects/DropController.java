@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavedroid.game.objects;
 
+import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.GameScope;
 import ru.deadsoftware.cavedroid.game.model.item.Item;
 
@@ -19,6 +20,10 @@ public class DropController implements Serializable {
 
     @Inject
     public DropController() {
+    }
+
+    public void initDrops(GameItemsHolder gameItemsHolder) {
+        mDrops.forEach((drop) -> drop.initItem(gameItemsHolder));
     }
 
     public void addDrop(float x, float y, Item item) {

@@ -17,6 +17,8 @@ public class GameScreen implements Screen {
     private GameProc mGameProc;
     @CheckForNull
     private GameInputProcessor mGameInputProcessor;
+    @CheckForNull
+    private GameItemsHolder mGameItemsHolder;
 
     @Inject
     public GameScreen(MainConfig mainConfig) {
@@ -27,6 +29,8 @@ public class GameScreen implements Screen {
         if (mGameProc != null) {
             mGameProc.dispose();
         }
+
+        GameModule.loaded = true;
 
         GameComponent gameComponent = DaggerGameComponent.builder()
                 .mainComponent(mMainConfig.getMainComponent()).build();
@@ -44,7 +48,7 @@ public class GameScreen implements Screen {
             mGameProc.dispose();
         }
 
-        GameModule.load(mMainConfig);
+        GameModule.loaded = false;
 
         GameComponent gameComponent = DaggerGameComponent.builder()
                 .mainComponent(mMainConfig.getMainComponent()).build();
