@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavedroid.misc;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -11,7 +12,10 @@ import com.badlogic.gdx.utils.JsonValue;
 import ru.deadsoftware.cavedroid.game.objects.TouchButton;
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Assets {
 
@@ -22,6 +26,9 @@ public class Assets {
     public static final ArrayMap<String, TouchButton> guiMap = new ArrayMap<>();
     private static final GlyphLayout glyphLayout = new GlyphLayout();
     static BitmapFont minecraftFont;
+
+    public static Map<String, Texture> blockTextures = new HashMap<>();
+    public static Map<String, Texture> itemTextures = new HashMap<>();
 
     private static TextureRegion flippedRegion(Texture texture, int x, int y, int width, int height) {
         return new TextureRegion(texture, x, y + height, width, -height);
@@ -78,10 +85,28 @@ public class Assets {
         }
     }
 
+    private static void loadAllPngsFromDirInto(FileHandle dir, Map<String, Texture> loadInto) {
+        for (FileHandle handle : dir.list((d, name) -> name.endsWith(".png"))) {
+            loadInto.put(handle.nameWithoutExtension(), new Texture(handle));
+        }
+    }
+
+    private static void loadItems(AssetLoader assetLoader) {
+        final FileHandle itemsDir = assetLoader.getAssetHandle("textures/items");
+        loadAllPngsFromDirInto(itemsDir, itemTextures);
+    }
+
+    private static void loadBlocks(AssetLoader assetLoader) {
+        final FileHandle blocksDir = assetLoader.getAssetHandle("textures/blocks");
+        loadAllPngsFromDirInto(blocksDir, blockTextures);
+    }
+
     public static void load(final AssetLoader assetLoader) {
         loadMob(assetLoader, playerSprite, "char");
         loadMob(assetLoader, pigSprite, "pig");
         loadJSON(assetLoader);
+        loadBlocks(assetLoader);
+        loadItems(assetLoader);
         setPlayerHeadOrigin();
         minecraftFont = new BitmapFont(assetLoader.getAssetHandle("font.fnt"), true);
         minecraftFont.getData().setScale(.375f);

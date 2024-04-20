@@ -21,11 +21,10 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
 
+import javax.annotation.CheckForNull;
 import javax.inject.Inject;
 
 import java.util.Map;
-
-import static ru.deadsoftware.cavedroid.game.GameItems.*;
 
 @GameScope
 public class GameInput {
@@ -210,27 +209,27 @@ public class GameInput {
         checkCursorBounds();
     }
 
-    private void useItem(int x, int y, int id, boolean bg) {
+    private void useItem(int x, int y, @CheckForNull Item item, boolean bg) {
         mPlayer.startHitting();
 
-        if (id > 0) {
-            final Item item = getItem(id);
+        if (item == null) {
+            return;
+        }
 
-            if (item instanceof Item.Placeable) {
-                if (!bg) {
-                    CommonBlockActionUtilsKt.placeToForegroundAction(mPlaceBlockActionMap, (Item.Placeable) item, x, y);
-                } else {
-                    CommonBlockActionUtilsKt.placeToBackgroundAction(mPlaceBlockActionMap, (Item.Placeable) item, x, y);
-                }
-            } else if (item instanceof Item.Usable) {
-                final String actionKey = ((Item.Usable)item).getUseActionKey();
-                final IUseItemAction useItemAction = mUseItemActionMap.get(actionKey);
+        if (item instanceof Item.Placeable) {
+            if (!bg) {
+                CommonBlockActionUtilsKt.placeToForegroundAction(mPlaceBlockActionMap, (Item.Placeable) item, x, y);
+            } else {
+                CommonBlockActionUtilsKt.placeToBackgroundAction(mPlaceBlockActionMap, (Item.Placeable) item, x, y);
+            }
+        } else if (item instanceof Item.Usable) {
+            final String actionKey = ((Item.Usable) item).getUseActionKey();
+            final IUseItemAction useItemAction = mUseItemActionMap.get(actionKey);
 
-                if (useItemAction != null) {
-                    useItemAction.perform((Item.Usable) item, x, y);
-                } else {
-                    Gdx.app.error(TAG, "use item action " + actionKey + " not found");
-                }
+            if (useItemAction != null) {
+                useItemAction.perform((Item.Usable) item, x, y);
+            } else {
+                Gdx.app.error(TAG, "use item action " + actionKey + " not found");
             }
         }
     }
@@ -406,14 +405,13 @@ public class GameInput {
             if (mMainConfig.checkGameUiWindow(GameUiWindow.CREATIVE_INVENTORY) && insideCreativeInv(screenX, screenY)) {
                 int ix = (int) (screenX - (mMainConfig.getWidth() / 2 - creative.getRegionWidth() / 2 + 8)) / 18;
                 int iy = (int) (screenY - (mMainConfig.getHeight() / 2 - creative.getRegionHeight() / 2 + 18)) / 18;
-                int item = mCreativeScroll * 8 + (ix + iy * 8);
+                int itemPos = mCreativeScroll * 8 + (ix + iy * 8);
                 if (ix >= 8 || ix < 0 || iy < 0 || iy >= 5) {
-                    item = -1;
+                    itemPos = -1;
                 }
-                if (item >= 0 && item < GameItems.getItemsSize()) {
-                    System.arraycopy(mPlayer.inventory, 0, mPlayer.inventory, 1, 8);
-                    mPlayer.inventory[0] = item;
-                }
+
+                System.arraycopy(mPlayer.inventory, 0, mPlayer.inventory, 1, 8);
+                mPlayer.inventory[0] = mGameItemsHolder.getItemFromCreativeInventory(itemPos);
             } else if (mMainConfig.checkGameUiWindow(GameUiWindow.CREATIVE_INVENTORY)) {
                 mMainConfig.setGameUiWindow(GameUiWindow.NONE);
             } else if (screenY < hotbar.getRegionHeight() &&
@@ -444,8 +442,10 @@ public class GameInput {
                 if (mCreativeScroll < 0) {
                     mCreativeScroll = 0;
                 }
-                if (mCreativeScroll > GameProc.MAX_CREATIVE_SCROLL) {
-                    mCreativeScroll = GameProc.MAX_CREATIVE_SCROLL;
+
+                final int maxScroll = mGameItemsHolder.getCreativeScrollAmount();
+                if (mCreativeScroll > maxScroll) {
+                    mCreativeScroll = maxScroll;
                 }
             }
         }
@@ -467,8 +467,10 @@ public class GameInput {
                 if (mCreativeScroll < 0) {
                     mCreativeScroll = 0;
                 }
-                if (mCreativeScroll > GameProc.MAX_CREATIVE_SCROLL) {
-                    mCreativeScroll = GameProc.MAX_CREATIVE_SCROLL;
+
+                final int maxScroll = mGameItemsHolder.getCreativeScrollAmount();
+                if (mCreativeScroll > maxScroll) {
+                    mCreativeScroll = maxScroll;
                 }
                 break;
         }

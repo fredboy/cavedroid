@@ -12,8 +12,6 @@ import javax.inject.Inject;
 @GameScope
 public class GameProc implements Disposable {
 
-    public static final int MAX_CREATIVE_SCROLL = GameItems.getItemsSize() / 8;
-
     private final GamePhysics mGamePhysics;
     private final GameInput mGameInput;
     private final GameRenderer mGameRenderer;

@@ -1,7 +1,6 @@
 package ru.deadsoftware.cavedroid.game.world;
 
 import kotlin.Pair;
-import ru.deadsoftware.cavedroid.game.GameItems;
 import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.GameScope;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
@@ -152,7 +151,7 @@ public class GameWorld {
     public void destroyForeMap(int x, int y) {
         Block block = getForeMap(x, y);
         if (block.hasDrop()) {
-            mDropController.addDrop(transformX(x) * 16 + 4, y * 16 + 4, GameItems.getItemId(block.getDrop()));
+            mDropController.addDrop(transformX(x) * 16 + 4, y * 16 + 4, mGameItemsHolder.getItem(block.getDrop()));
         }
         placeToForeground(x, y, mGameItemsHolder.getFallbackBlock());
     }
@@ -160,7 +159,7 @@ public class GameWorld {
     public void destroyBackMap(int x, int y) {
         Block block = getBackMap(x, y);
         if (block.hasDrop()) {
-            mDropController.addDrop(transformX(x) * 16 + 4, y * 16 + 4, GameItems.getItemId(block.getDrop()));
+            mDropController.addDrop(transformX(x) * 16 + 4, y * 16 + 4, mGameItemsHolder.getItem(block.getDrop()));
         }
         placeToBackground(x, y, mGameItemsHolder.getFallbackBlock());
     }

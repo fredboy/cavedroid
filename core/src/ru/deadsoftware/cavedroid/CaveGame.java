@@ -3,7 +3,6 @@ package ru.deadsoftware.cavedroid;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import ru.deadsoftware.cavedroid.game.GameItems;
 import ru.deadsoftware.cavedroid.game.GameScreen;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
@@ -84,12 +83,8 @@ public class CaveGame extends Game {
     public void create() {
         Gdx.app.log(TAG, mGameFolder);
         Gdx.files.absolute(mGameFolder).mkdirs();
-
         initConfig();
-
         Assets.load(mAssetLoader);
-        GameItems.load(mAssetLoader);
-
         setScreen(mMainComponent.getMenuScreen());
     }
 

@@ -1,10 +1,14 @@
 package ru.deadsoftware.cavedroid.game.mobs;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import ru.deadsoftware.cavedroid.game.GameItems;
 import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
+import ru.deadsoftware.cavedroid.misc.Assets;
+
+import javax.annotation.CheckForNull;
 
 
 /**
@@ -12,6 +16,8 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld;
  * falls down to the next block and becomes a block of sand again.
  */
 public class FallingSand extends Mob {
+
+    private static final String TAG = "FallingSand";
 
     /**
      * Creates a FallingSand mob at coordinates
@@ -48,7 +54,15 @@ public class FallingSand extends Mob {
 
     @Override
     public void draw(SpriteBatch spriteBatch, float x, float y, float delta) {
-        spriteBatch.draw(GameItems.getBlockTex(10), x, y);
+        @CheckForNull final Texture texture = Assets.blockTextures.get("sand");
+
+        if (texture == null) {
+            Gdx.app.error(TAG, "Couldn't draw: texture not found");
+            kill();
+            return;
+        }
+
+        spriteBatch.draw(texture, x, y);
     }
 
 }

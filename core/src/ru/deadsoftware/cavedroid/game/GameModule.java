@@ -35,8 +35,8 @@ public class GameModule {
 
     @Provides
     @GameScope
-    public static MobsController provideMobsController() {
-        MobsController controller = data != null ? data.retrieveMobsController() : new MobsController();
+    public static MobsController provideMobsController(GameItemsHolder gameItemsHolder) {
+        MobsController controller = data != null ? data.retrieveMobsController() : new MobsController(gameItemsHolder);
         makeDataNullIfEmpty();
         return controller;
     }

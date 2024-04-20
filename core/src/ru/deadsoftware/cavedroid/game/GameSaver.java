@@ -13,6 +13,8 @@ import java.nio.ByteBuffer;
 
 public class GameSaver {
 
+    private static final String TAG = "GameSaver";
+
     public static class Data {
         @CheckForNull
         private MobsController mMobsController;
@@ -168,7 +170,11 @@ public class GameSaver {
                             MobsController mobsController,
                             GameWorld gameWorld) {
 
-        String folder = mainConfig.getGameFolder();
+        Gdx.app.debug(TAG, "Saves are disabled for this build");
+        return;
+
+
+/*        String folder = mainConfig.getGameFolder();
         FileHandle file = Gdx.files.absolute(folder + "/saves/");
         file.mkdirs();
         file = Gdx.files.absolute(folder + "/saves/game.sav");
@@ -184,13 +190,14 @@ public class GameSaver {
 //            saveMap(Gdx.files.absolute(folder + "/saves/backmap.sav"), gameWorld.getFullBackMap());
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public static boolean exists(MainConfig mainConfig) {
-        String folder = mainConfig.getGameFolder();
-        return (Gdx.files.absolute(folder + "/saves/game.sav").exists() &&
-                Gdx.files.absolute(folder + "/saves/foremap.sav").exists() &&
-                Gdx.files.absolute(folder + "/saves/backmap.sav").exists());
+        return false;
+//        String folder = mainConfig.getGameFolder();
+//        return (Gdx.files.absolute(folder + "/saves/game.sav").exists() &&
+//                Gdx.files.absolute(folder + "/saves/foremap.sav").exists() &&
+//                Gdx.files.absolute(folder + "/saves/backmap.sav").exists());
     }
 }

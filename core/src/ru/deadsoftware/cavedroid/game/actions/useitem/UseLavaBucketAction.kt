@@ -1,6 +1,5 @@
 package ru.deadsoftware.cavedroid.game.actions.useitem
 
-import ru.deadsoftware.cavedroid.game.GameItems
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
@@ -17,7 +16,7 @@ class UseLavaBucketAction @Inject constructor(
 
     override fun perform(item: Item.Usable, x: Int, y: Int) {
         gameWorld.placeToForeground(x, y, gameItemsHolder.getBlock("lava"))
-        mobsController.player.setCurrentInventorySlotItem(GameItems.getItemId("bucket_empty"))
+        mobsController.player.setCurrentInventorySlotItem(gameItemsHolder.getItem("bucket_empty"))
     }
 
     companion object {

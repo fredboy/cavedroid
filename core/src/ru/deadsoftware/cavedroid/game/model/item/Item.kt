@@ -11,6 +11,14 @@ sealed class Item {
     abstract val params: CommonItemParams
     abstract val sprite: Sprite
 
+    override fun hashCode(): Int {
+        return params.key.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return params.key == (other as Item).params.key
+    }
+
     fun isPlaceable(): Boolean {
         contract { returns(true) implies (this@Item is Placeable) }
         return this is Placeable

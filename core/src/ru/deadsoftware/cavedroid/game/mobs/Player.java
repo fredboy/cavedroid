@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import ru.deadsoftware.cavedroid.game.GameItems;
 import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.model.item.Item;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
@@ -12,8 +11,6 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.utils.SpriteOrigin;
 import ru.deadsoftware.cavedroid.misc.utils.SpriteUtilsKt;
-
-import javax.annotation.CheckForNull;
 
 public class Player extends Mob {
 
@@ -25,15 +22,18 @@ public class Player extends Mob {
     private float hitAnim = 0f;
     private float hitAnimDelta = ANIMATION_SPEED;
 
-    public final int[] inventory;
+    public final Item[] inventory;
     public int slot;
     public int gameMode;
     public boolean swim;
     public float headRotation = 0f;
 
-    public Player() {
+    public Player(GameItemsHolder gameItemsHolder) {
         super(0, 0, 4, 30, randomDir(), Type.MOB, MAX_HEALTH);
-        inventory = new int[9];
+        inventory = new Item[9];
+        for (int i = 0; i < 9; i++) {
+            inventory[i] = gameItemsHolder.getFallbackItem();
+        }
         swim = false;
     }
 
@@ -48,8 +48,8 @@ public class Player extends Mob {
 
     public void pickUpDrop(Drop drop) {
         for (int i = 0; i < inventory.length; i++) {
-            if (inventory[i] == 0 || inventory[i] == drop.getId()) {
-                inventory[i] = drop.getId();
+            if (inventory[i] == null || inventory[i].getParams().getKey().equals(GameItemsHolder.FALLBACK_ITEM_KEY) || inventory[i] == drop.getItem()) {
+                inventory[i] = drop.getItem();
                 drop.setPickedUp(true);
                 break;
             }
@@ -77,8 +77,8 @@ public class Player extends Mob {
         }
     }
 
-    public void setCurrentInventorySlotItem(int itemId) {
-        inventory[slot] = itemId;
+    public void setCurrentInventorySlotItem(Item item) {
+        inventory[slot] = item;
     }
 
     @Override
@@ -116,13 +116,12 @@ public class Player extends Mob {
     }
 
     private void drawItem(SpriteBatch spriteBatch, float x, float y, float anim) {
-        final int itemId = inventory[slot];
+        final Item item = inventory[slot];
 
-        if (itemId == 0) {
+        if (item == null || item.getParams().getKey().equals(GameItemsHolder.FALLBACK_ITEM_KEY)) {
             return;
         }
 
-        final Item item = GameItems.getItem(itemId);
         final Sprite sprite = item.getSprite();
 
         if (!item.isTool()) {

@@ -1,16 +1,19 @@
 package ru.deadsoftware.cavedroid.game.mobs
 
+import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
 import java.io.Serializable
 import java.util.*
 import javax.inject.Inject
 
 @GameScope
-class MobsController @Inject constructor() : Serializable {
+class MobsController @Inject constructor(
+    gameItemsHolder: GameItemsHolder
+) : Serializable {
 
     private val _mobs = LinkedList<Mob>()
 
-    val player: Player = Player()
+    val player: Player = Player(gameItemsHolder)
 
     val mobs: List<Mob>
         get() = _mobs

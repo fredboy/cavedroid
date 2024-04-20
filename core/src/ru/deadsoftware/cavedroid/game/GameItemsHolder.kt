@@ -63,7 +63,7 @@ class GameItemsHolder @Inject constructor(
         }
 
         val jsonString = assetLoader.getAssetHandle("json/game_items.json").readString()
-        val gameItemsDto = JsonFormat.decodeFromString(GameItemsDto.GameItemsDtoJsonSerializer, jsonString)
+        val gameItemsDto = JsonFormat.decodeFromString<GameItemsDto>(jsonString)
 
         loadBlocks(gameItemsDto.blocks)
         loadItems(gameItemsDto.items)
@@ -94,6 +94,20 @@ class GameItemsHolder @Inject constructor(
             "No item with key '$key' found. Returning $FALLBACK_BLOCK_KEY"
         }
     }
+
+    fun getAllItems(): Collection<Item> {
+        return itemsMap.values
+    }
+
+    fun getItemFromCreativeInventory(position: Int): Item? {
+        return if (position in itemsMap.values.indices) {
+            itemsMap.values.elementAt(position)
+        } else {
+            null
+        }
+    }
+
+    fun getCreativeScrollAmount(): Int = itemsMap.size / 8
 
     fun <T : Block> getBlocksByType(type: Class<T>): List<T> {
         return blocksMap.values.filterIsInstance(type)

@@ -3,11 +3,12 @@ package ru.deadsoftware.cavedroid.game.objects
 import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
+import ru.deadsoftware.cavedroid.game.model.item.Item
 
 class Drop(
     x: Float,
     y: Float,
-    val id: Int,
+    val item: Item,
 ) : Rectangle(x, y, DROP_SIZE, DROP_SIZE) {
 
     val velocity = getInitialVelocity()

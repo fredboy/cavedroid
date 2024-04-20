@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.TimeUtils
+import ru.deadsoftware.cavedroid.game.model.item.Item
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
@@ -34,6 +35,14 @@ sealed class Block {
                 ((TimeUtils.millis() / ANIMATION_FRAME_DURATION_MS) % animInfo.framesCount).toInt()
             } ?: 0
         }
+
+    override fun hashCode(): Int {
+        return params.key.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return params.key == (other as Item).params.key
+    }
 
     fun initialize() {
         initAnimation()

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import kotlin.collections.CollectionsKt;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
@@ -25,6 +26,8 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
+import java.util.Collection;
+
 import static ru.deadsoftware.cavedroid.misc.Assets.*;
 
 @GameScope
@@ -37,13 +40,15 @@ public class GameRenderer extends Renderer {
     private final GameWorld mGameWorld;
     private final MobsController mMobsController;
     private final DropController mDropController;
+    private final GameItemsHolder mGameItemsHolder;
 
     @Inject
     GameRenderer(MainConfig mainConfig,
                  GameInput gameInput,
                  GameWorld gameWorld,
                  MobsController mobsController,
-                 DropController dropController) {
+                 DropController dropController,
+                 GameItemsHolder gameItemsHolder) {
         super(mainConfig.getWidth(), mainConfig.getHeight());
 
         mMainConfig = mainConfig;
@@ -51,6 +56,7 @@ public class GameRenderer extends Renderer {
         mGameWorld = gameWorld;
         mMobsController = mobsController;
         mDropController = dropController;
+        mGameItemsHolder = gameItemsHolder;
 
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f);
     }
@@ -173,18 +179,13 @@ public class GameRenderer extends Renderer {
     }
 
     private void drawDrop(Drop drop) {
-        if (drop.getId() <= 0) {
-            return;
-        }
-
         @CheckForNull final Rectangle drawingRect = getDrawingRectIfInsideViewport(drop);
 
         if (drawingRect == null) {
             return;
         }
 
-        final Item item = GameItems.getItem(drop.getId());
-        final Sprite sprite = item.getSprite();
+        final Sprite sprite = drop.getItem().getSprite();
 
         sprite.setPosition(drawingRect.x, drawingRect.y);
         sprite.setSize(drawingRect.width, drawingRect.height);
@@ -198,17 +199,21 @@ public class GameRenderer extends Renderer {
         float y = getHeight() / 2 - (float) creative.getRegionHeight() / 2;
         spriter.draw(creative, x, y);
         spriter.draw(textureRegions.get("handle"), x + 156,
-                y + 18 + (mGameInput.getCreativeScroll() * (72f / GameProc.MAX_CREATIVE_SCROLL)));
+                y + 18 + (mGameInput.getCreativeScroll() * (72f / mGameItemsHolder.getCreativeScrollAmount())));
+        final Collection<Item> items = mGameItemsHolder.getAllItems();
         for (int i = mGameInput.getCreativeScroll() * 8; i < mGameInput.getCreativeScroll() * 8 + 40; i++) {
-            if (i > 0 && i < GameItems.getItemsSize()) {
-                spriter.draw(GameItems.getItem(i).getSprite(),
-                        x + 8 + ((i - mGameInput.getCreativeScroll() * 8) % 8) * 18,
-                        y + 18 + ((i - mGameInput.getCreativeScroll() * 8) / 8) * 18);
+            if (i > 0 && i < items.size()) {
+                Item item = CollectionsKt.elementAt(items, i);
+                if (item != mGameItemsHolder.getFallbackItem()) {
+                    spriter.draw(CollectionsKt.elementAt(items, i).getSprite(),
+                            x + 8 + ((i - mGameInput.getCreativeScroll() * 8) % 8) * 18,
+                            y + 18 + ((i - mGameInput.getCreativeScroll() * 8) / 8) * 18);
+                }
             }
         }
         for (int i = 0; i < 9; i++) {
-            if (mMobsController.getPlayer().inventory[i] > 0) {
-                spriter.draw(GameItems.getItem(mMobsController.getPlayer().inventory[i]).getSprite(),
+            if (mMobsController.getPlayer().inventory[i] != null && mMobsController.getPlayer().inventory[i] != mGameItemsHolder.getFallbackItem()) {
+                spriter.draw(mMobsController.getPlayer().inventory[i].getSprite(),
                         x + 8 + i * 18, y + creative.getRegionHeight() - 24);
             }
         }
@@ -252,8 +257,8 @@ public class GameRenderer extends Renderer {
         drawHealth(hotbarX, hotbar.getRegionHeight());
 
         for (int i = 0; i < 9; i++) {
-            if (mMobsController.getPlayer().inventory[i] > 0) {
-                spriter.draw(GameItems.getItem(mMobsController.getPlayer().inventory[i]).getSprite(),
+            if (mMobsController.getPlayer().inventory[i] != null && mMobsController.getPlayer().inventory[i] != mGameItemsHolder.getFallbackItem()) {
+                spriter.draw(mMobsController.getPlayer().inventory[i].getSprite(),
                         getWidth() / 2 - (float) hotbar.getRegionWidth() / 2 + 3 + i * 20,
                         3);
             }
@@ -303,9 +308,9 @@ public class GameRenderer extends Renderer {
         if (hasForeMap) {
             final Block block = mGameWorld.getForeMap(x, y);
 
-            if (GameItems.isWater(block)) {
+            if (block.isWater()) {
                 result = Color.BLUE;
-            } else if (GameItems.isLava(block)) {
+            } else if (block.isLava()) {
                 result = Color.RED;
             } else {
                 result = Color.BLACK;
@@ -386,7 +391,7 @@ public class GameRenderer extends Renderer {
             drawString("Mobs: " + mMobsController.getMobs().size(), 0, 70);
             drawString("Drops: " + mDropController.getSize(), 0, 80);
             drawString("Block: " + mGameWorld.getForeMap(mGameInput.getCurX(), mGameInput.getCurY()).getParams().getKey(), 0, 90);
-            drawString("Hand: " + GameItems.getItemKey(mMobsController.getPlayer().inventory[mMobsController.getPlayer().slot]), 0, 100);
+            drawString("Hand: " + mMobsController.getPlayer().inventory[mMobsController.getPlayer().slot].getParams().getKey(), 0, 100);
             drawString("Game mode: " + player.gameMode, 0, 110);
             spriter.end();
         }

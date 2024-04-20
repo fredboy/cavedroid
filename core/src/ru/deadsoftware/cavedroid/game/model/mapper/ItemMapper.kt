@@ -1,6 +1,5 @@
 package ru.deadsoftware.cavedroid.game.model.mapper
 
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import dagger.Reusable
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
@@ -9,14 +8,12 @@ import ru.deadsoftware.cavedroid.game.model.dto.ItemDto
 import ru.deadsoftware.cavedroid.game.model.item.CommonItemParams
 import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.game.model.item.Item.*
-import ru.deadsoftware.cavedroid.misc.utils.AssetLoader
+import ru.deadsoftware.cavedroid.misc.Assets
 import ru.deadsoftware.cavedroid.misc.utils.SpriteOrigin
 import javax.inject.Inject
 
 @Reusable
-class ItemMapper @Inject constructor(
-    private val assetLoader: AssetLoader,
-) {
+class ItemMapper @Inject constructor() {
 
     fun map(key: String, dto: ItemDto, block: Block?): Item {
         val params = mapCommonParams(key, dto)
@@ -47,7 +44,8 @@ class ItemMapper @Inject constructor(
             return null
         }
 
-        return Sprite(Texture(assetLoader.getAssetHandle("textures/items/${dto.texture}.png")))
+        return Sprite(Assets.itemTextures[dto.texture])
+            .apply { flip(false, true) }
     }
 
 }
