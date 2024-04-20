@@ -134,34 +134,14 @@ public class GameWorld {
         setMap(x, y, 1, id);
     }
 
-    private void placeSlab(int x, int y, int value) {
-        switch (value) {
-            case 51:
-                setForeMap(x, y, 52);
-                break;
-            case 53:
-                setForeMap(x, y, 21);
-                break;
-            case 54:
-                setForeMap(x, y, 5);
-                break;
-            case 55:
-                setForeMap(x, y, 4);
-                break;
-            case 56:
-                setForeMap(x, y, 28);
-                break;
-            case 58:
-                setForeMap(x, y, 57);
-                break;
-        }
-    }
-
     public void placeToForeground(int x, int y, int value) {
         if (!hasForeAt(x, y) || value == 0 || !GameItems.getBlock(getForeMap(x, y)).hasCollision()) {
             setForeMap(x, y, value);
         } else if (GameItems.isSlab(value) && getForeMap(x, y) == value) {
-            placeSlab(x, y, value);
+            final Block block = GameItems.getBlock(value);
+            if (block.getFullBlockKey() != null) {
+                setForeMap(x, y, GameItems.getBlockId(block.getFullBlockKey()));
+            }
         }
     }
 

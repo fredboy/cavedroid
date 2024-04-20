@@ -32,6 +32,7 @@ private const val DEPRECATION_MESSAGE =
  * @param spriteTop     block's sprite y on texture
  * @param spriteRight   block's sprite right edge on texture
  * @param spriteBottom  block's sprite bottom on texture
+ * @param fullBlockKey for slabs. block for two slabs of one kind
  */
 data class Block(
         val id: Int,
@@ -54,7 +55,8 @@ data class Block(
         private val spriteLeft: Int,
         private val spriteTop: Int,
         private val spriteRight: Int,
-        private val spriteBottom: Int
+        private val spriteBottom: Int,
+        val fullBlockKey: String?,
 ) {
 
     val width = 16 - right - left

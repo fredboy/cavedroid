@@ -144,6 +144,7 @@ public class GameItems {
                 boolean animated = Assets.getBooleanFromJson(block, "animated", false);
                 int frames = Assets.getIntFromJson(block, "frames", 0);
                 int id = Assets.getIntFromJson(block, "id", count);
+                String fullBlock = Assets.getStringFromJson(block, "full_block", null);
                 blocksIds.put(key, id);
 
                 if (count >= id) {
@@ -171,7 +172,8 @@ public class GameItems {
                         clipX,
                         clipY,
                         clipWidth,
-                        clipHeight
+                        clipHeight,
+                        fullBlock
                 );
                 blocksSet.add(newBlock);
             } catch (GdxRuntimeException e) {

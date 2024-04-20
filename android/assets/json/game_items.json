@@ -212,7 +212,8 @@
       "top": 8,
       "transparent": true,
       "meta": "slab",
-      "sprite_top": 8
+      "sprite_top": 8,
+      "full_block": "planks_oak"
     },
     "obsidian": {
       "hp": 1500,
@@ -243,7 +244,8 @@
       "top": 8,
       "transparent": true,
       "meta": "slab",
-      "sprite_top": 8
+      "sprite_top": 8,
+      "full_block": "sandstone"
     },
     "sapling_oak": {
       "block_required": true,
@@ -266,7 +268,8 @@
       "sprite_top": 8,
       "top": 8,
       "transparent": true,
-      "meta": "slab"
+      "meta": "slab",
+      "full_block": "double_stone_slab"
     },
     "stonebrick": {
       "hp": 450,
@@ -279,6 +282,7 @@
       "top": 8,
       "transparent": true,
       "meta": "slab",
+      "full_block": "stonebrick",
       "sprite_top": 8
     },
     "tallgrass": {
