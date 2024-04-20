@@ -2,7 +2,6 @@ package ru.deadsoftware.cavedroid.game.actions.updateblock
 
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.mobs.FallingGravel
-import ru.deadsoftware.cavedroid.game.mobs.FallingSand
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
@@ -18,7 +17,8 @@ class UpdateGravelAction @Inject constructor(
 
         if (shouldFall) {
             gameWorld.setForeMap(x, y, 0)
-            mobsController.addMob(FallingGravel(x * 16f, y * 16f))
+            FallingGravel(x * 16f, y * 16f)
+                .apply { attachToController(mobsController) }
         }
     }
 

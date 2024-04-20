@@ -17,7 +17,8 @@ class UpdateSandAction @Inject constructor(
 
         if (shouldFall) {
             gameWorld.setForeMap(x, y, 0)
-            mobsController.addMob(FallingSand(x * 16f, y * 16f))
+            FallingSand(x * 16f, y * 16f)
+                .apply { attachToController(mobsController) }
         }
     }
 

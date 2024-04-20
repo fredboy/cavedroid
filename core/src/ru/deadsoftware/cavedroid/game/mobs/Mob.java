@@ -236,6 +236,10 @@ public abstract class Mob extends Rectangle implements Serializable {
         return mHealth;
     }
 
+    public final void attachToController(MobsController controller) {
+        controller.addMob(this);
+    }
+
     public void damage(int damage) {
         if (damage < 0) {
             Gdx.app.error(this.getClass().getSimpleName(), "Damage cant be negative!");

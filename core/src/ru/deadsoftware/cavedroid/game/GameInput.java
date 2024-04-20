@@ -332,7 +332,8 @@ public class GameInput {
                 break;
 
             case Input.Keys.G:
-                mMobsController.addMob(new Pig(mCurX * 16, mCurY * 16));
+                final Mob pig = new Pig(mCurX * 16, mCurY * 16);
+                pig.attachToController(mMobsController);
                 break;
 
             case Input.Keys.Q:
