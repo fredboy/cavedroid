@@ -13,6 +13,7 @@ task run(dependsOn: classes, type: JavaExec) {
     standardInput = System.in
     workingDir = project.assetsDir
     ignoreExitValue = true as JavaExecSpec
+    args "--debug"
 }
 
 task runTouch(dependsOn: classes, type: JavaExec) {
@@ -21,7 +22,7 @@ task runTouch(dependsOn: classes, type: JavaExec) {
     standardInput = System.in
     workingDir = project.assetsDir
     ignoreExitValue = true as JavaExecSpec
-    args "--touch"
+    args "--touch --debug"
 }
 
 task debug(dependsOn: classes, type: JavaExec) {

@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavedroid;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import ru.deadsoftware.cavedroid.game.GameItems;
@@ -52,6 +53,12 @@ public class CaveGame extends Game {
         mMainConfig.setHeight(height);
         mMainConfig.setShowInfo(mDebug);
         mMainConfig.setAssetsPackPath(mAssetsPackPath);
+
+        if (mDebug) {
+            Gdx.app.setLogLevel(Application.LOG_DEBUG);
+        } else {
+            Gdx.app.setLogLevel(Application.LOG_ERROR);
+        }
     }
 
     public void newGame(int gameMode) {
