@@ -14,6 +14,7 @@ import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
 import ru.deadsoftware.cavedroid.misc.utils.SpriteOrigin;
 
+import java.io.FileInputStream;
 import java.util.*;
 
 public class GameItems {
@@ -177,8 +178,8 @@ public class GameItems {
                 );
 
                 Block newBlock = switch (meta) {
-                    case "water" -> new Block.Water(params, 5);
-                    case "lava" -> new Block.Lava(params, 5);
+                    case "water" -> new Block.Water(params);
+                    case "lava" -> new Block.Lava(params);
                     case "slab" -> new Block.Slab(params, fullBlock);
                     default -> new Block.Normal(params);
                 };

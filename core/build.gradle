@@ -2,6 +2,7 @@ plugins {
     id "org.jetbrains.kotlin.jvm"
     id "kotlin"
     id "idea"
+    id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlinVersion"
 }
 
 sourceCompatibility = 17

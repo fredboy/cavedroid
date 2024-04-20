@@ -115,18 +115,14 @@ sealed class Block {
         val fullBlockKey: String,
     ): Block()
 
-    sealed class Fluid: Block() {
-        abstract val statesCount: Int
-    }
+    sealed class Fluid: Block()
     
     data class Water(
         override val params: CommonBlockParams,
-        override val statesCount: Int
     ) : Fluid()
 
     data class Lava(
         override val params: CommonBlockParams,
-        override val statesCount: Int
     ) : Fluid()
 
     /* Legacy accessors below */
