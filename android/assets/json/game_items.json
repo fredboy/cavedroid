@@ -27,7 +27,8 @@
       "top": 8,
       "sprite_top": 8,
       "meta": "slab",
-      "transparent": true
+      "transparent": true,
+      "full_block": "bricks"
     },
     "bricks": {
       "hp": 600,

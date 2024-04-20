@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.JsonValue;
-import ru.deadsoftware.cavedroid.game.objects.Block;
+import ru.deadsoftware.cavedroid.game.model.block.*;
 import ru.deadsoftware.cavedroid.game.objects.Item;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
@@ -33,20 +33,24 @@ public class GameItems {
         return isWater(getBlock(id));
     }
 
+    @Deprecated
     public static boolean isWater(Block block) {
-        return block.getMeta().equals("water");
+        return block instanceof Block.Water;
     }
 
+    @Deprecated
     public static boolean isLava(int id) {
         return isLava(getBlock(id));
     }
 
+    @Deprecated
     public static boolean isLava(Block block) {
-        return block.getMeta().equals("lava");
+        return block instanceof Block.Lava;
     }
 
+    @Deprecated
     public static boolean isSlab(int id) {
-        return getBlock(id).getMeta().equals("slab");
+        return getBlock(id) instanceof Block.Slab;
     }
 
     public static boolean fluidCanFlowThere(int thisId, int thatId) {
@@ -114,7 +118,7 @@ public class GameItems {
     public static void load(AssetLoader assetLoader) {
         JsonValue json = Assets.jsonReader.parse(assetLoader.getAssetHandle("json/game_items.json"));
 
-        TreeSet<Block> blocksSet = new TreeSet<>(Comparator.comparingInt(Block::getId));
+        TreeSet<Block> blocksSet = new TreeSet<>(Comparator.comparingInt(a -> a.getParams().getId()));
         TreeSet<Item> itemsSet = new TreeSet<>(Comparator.comparingInt(Item::getId));
 
 
@@ -144,6 +148,7 @@ public class GameItems {
                 boolean animated = Assets.getBooleanFromJson(block, "animated", false);
                 int frames = Assets.getIntFromJson(block, "frames", 0);
                 int id = Assets.getIntFromJson(block, "id", count);
+                int dropCount = Assets.getIntFromJson(block, "drop_count", 1);
                 String fullBlock = Assets.getStringFromJson(block, "full_block", null);
                 blocksIds.put(key, id);
 
@@ -151,30 +156,37 @@ public class GameItems {
                     count++;
                 }
 
-                Block newBlock = new Block(
+                BlockMargins collMargins = new BlockMargins(left, top, right, bottom);
+                BlockMargins spriteMargins = new BlockMargins(clipX, clipY, clipWidth, clipHeight);
+                BlockDropInfo dropInfo = new BlockDropInfo(drop, dropCount);
+                BlockAnimationInfo animInfo = null;
+                if (animated) {
+                    animInfo = new BlockAnimationInfo(frames);
+                }
+
+                CommonBlockParams params = new CommonBlockParams(
                         id,
                         key,
-                        left,
-                        top,
-                        right,
-                        bottom,
+                        collMargins,
                         hp,
-                        drop,
+                        dropInfo,
                         collision,
                         background,
                         transparent,
                         requiresBlock,
-                        fluid,
-                        meta,
+                        animInfo,
                         texture,
-                        animated,
-                        frames,
-                        clipX,
-                        clipY,
-                        clipWidth,
-                        clipHeight,
-                        fullBlock
+                        spriteMargins
                 );
+
+                Block newBlock = switch (meta) {
+                    case "water" -> new Block.Water(params, 5);
+                    case "lava" -> new Block.Lava(params, 5);
+                    case "slab" -> new Block.Slab(params, fullBlock);
+                    default -> new Block.Normal(params);
+                };
+
+                newBlock.initialize();
                 blocksSet.add(newBlock);
             } catch (GdxRuntimeException e) {
                 Gdx.app.error(TAG, e.getMessage());
@@ -212,7 +224,7 @@ public class GameItems {
             }
         }
 
-        blocksSet.forEach((block -> blocks.put(block.getKey(), block)));
+        blocksSet.forEach((block -> blocks.put(block.getParams().getKey(), block)));
         itemsSet.forEach((item -> items.put(item.getKey(), item)));
     }
 

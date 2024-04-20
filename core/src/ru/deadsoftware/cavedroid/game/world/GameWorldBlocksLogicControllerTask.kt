@@ -1,7 +1,5 @@
 package ru.deadsoftware.cavedroid.game.world
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.utils.TimeUtils
 import com.badlogic.gdx.utils.Timer.Task
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.actions.getRequiresBlockAction
@@ -28,9 +26,9 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
 
     private fun updateBlock(x: Int, y: Int) {
         val block = gameWorld.getForeMapBlock(x, y)
-        val blockKey = block.key
+        val blockKey = block.params.key
         val action = updateBlockActions[blockKey]
-            ?: updateBlockActions.getRequiresBlockAction().takeIf { block.requiresBlock }
+            ?: updateBlockActions.getRequiresBlockAction().takeIf { block.params.requiresBlock }
 
         action?.update(x, y)
     }

@@ -13,7 +13,7 @@ class PlaceBlockItemToBackgroundAction @Inject constructor(
     override fun perform(item: Item, x: Int, y: Int) {
         val block = item.toBlock()
         requireNotNull(block) { "error: trying to place non block item" }
-        gameWorld.placeToBackground(x, y, block.id)
+        gameWorld.placeToBackground(x, y, block.params.id)
     }
 
     companion object {

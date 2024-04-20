@@ -12,7 +12,7 @@ class UpdateGrassAction @Inject constructor(
 
     override fun update(x: Int, y: Int) {
         val blockOnTop = gameWorld.getForeMapBlock(x, y - 1)
-        if (blockOnTop.collision || blockOnTop.fluid) {
+        if (blockOnTop.collision || blockOnTop.isFluid()) {
             gameWorld.setForeMap(x, y, GameItems.getBlockId("dirt"))
         }
     }

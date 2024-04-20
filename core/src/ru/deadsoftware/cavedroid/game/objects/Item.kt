@@ -2,6 +2,7 @@ package ru.deadsoftware.cavedroid.game.objects
 
 import com.badlogic.gdx.graphics.g2d.Sprite
 import ru.deadsoftware.cavedroid.game.GameItems
+import ru.deadsoftware.cavedroid.game.model.block.Block
 import ru.deadsoftware.cavedroid.misc.utils.SpriteOrigin
 
 data class Item(

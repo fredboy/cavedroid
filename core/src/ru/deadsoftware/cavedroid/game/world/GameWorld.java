@@ -4,8 +4,8 @@ import kotlin.Pair;
 import ru.deadsoftware.cavedroid.game.GameItems;
 import ru.deadsoftware.cavedroid.game.GameScope;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
+import ru.deadsoftware.cavedroid.game.model.block.Block;
 import ru.deadsoftware.cavedroid.game.model.world.generator.WorldGeneratorConfig;
-import ru.deadsoftware.cavedroid.game.objects.Block;
 import ru.deadsoftware.cavedroid.game.objects.DropController;
 
 import javax.annotation.CheckForNull;
@@ -139,8 +139,8 @@ public class GameWorld {
             setForeMap(x, y, value);
         } else if (GameItems.isSlab(value) && getForeMap(x, y) == value) {
             final Block block = GameItems.getBlock(value);
-            if (block.getFullBlockKey() != null) {
-                setForeMap(x, y, GameItems.getBlockId(block.getFullBlockKey()));
+            if (block instanceof Block.Slab) {
+                setForeMap(x, y, GameItems.getBlockId(((Block.Slab) block).getFullBlockKey()));
             }
         }
     }

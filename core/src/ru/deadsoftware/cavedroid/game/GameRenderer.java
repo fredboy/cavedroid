@@ -15,7 +15,7 @@ import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.mobs.Player;
-import ru.deadsoftware.cavedroid.game.objects.Block;
+import ru.deadsoftware.cavedroid.game.model.block.Block;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
 import ru.deadsoftware.cavedroid.game.objects.DropController;
 import ru.deadsoftware.cavedroid.game.objects.Item;
