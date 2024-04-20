@@ -118,3 +118,4 @@ Thumbs.db
 /ios-moe/xcode/native/
 
 release-*/
+keystore.properties

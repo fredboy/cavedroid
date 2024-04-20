@@ -2,6 +2,10 @@ plugins {
     id "kotlin-android"
 }
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     namespace "ru.deadsoftware.cavedroid"
     compileSdkVersion 34
@@ -38,12 +42,30 @@ android {
             outputFileName = "android-${versionName}.apk"
         }
     }
+
+    signingConfigs {
+        debug_config {
+            storeFile file(keystoreProperties['debugKeystorePath'])
+            storePassword keystoreProperties['debugKeystorePassword']
+            keyAlias keystoreProperties['debugKeyAlias']
+            keyPassword keystoreProperties['debugKeyPassword']
+        }
+        release_config {
+            storeFile file(keystoreProperties['releaseKeystorePath'])
+            storePassword keystoreProperties['releaseKeystorePassword']
+            keyAlias keystoreProperties['releaseKeyAlias']
+            keyPassword keystoreProperties['releaseKeyPassword']
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release_config
         }
         debug {
             applicationIdSuffix ".debug"
+            signingConfig signingConfigs.debug_config
         }
     }
     buildFeatures {
