@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavedroid.game.GameItems;
+import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.model.item.Item;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
@@ -36,8 +37,8 @@ public class Player extends Mob {
         swim = false;
     }
 
-    public void respawn(GameWorld gameWorld) {
-        Vector2 pos = getSpawnPoint(gameWorld);
+    public void respawn(GameWorld gameWorld, GameItemsHolder itemsHolder) {
+        Vector2 pos = getSpawnPoint(gameWorld, itemsHolder);
         this.x = pos.x;
         this.y = pos.y;
         mVelocity.setZero();
@@ -55,15 +56,15 @@ public class Player extends Mob {
         }
     }
 
-    private Vector2 getSpawnPoint(GameWorld gameWorld) {
+    private Vector2 getSpawnPoint(GameWorld gameWorld, GameItemsHolder itemsHolder) {
         int y;
         for (y = 0; y < gameWorld.getHeight(); y++) {
             if (y == gameWorld.getHeight() - 1) {
                 y = 60;
-                gameWorld.setForeMap(0, y, 1);
+                gameWorld.setForeMap(0, y, itemsHolder.getBlock("grass"));
                 break;
             }
-            if (gameWorld.hasForeAt(0, y) && gameWorld.getForeMapBlock(0, y).hasCollision()) {
+            if (gameWorld.hasForeAt(0, y) && gameWorld.getForeMap(0, y).hasCollision()) {
                 break;
             }
         }
@@ -91,7 +92,7 @@ public class Player extends Mob {
     }
 
     @Override
-    public void ai(GameWorld gameWorld, float delta) {
+    public void ai(GameWorld gameWorld, GameItemsHolder gameItemsHolder, float delta) {
     }
 
     @Override

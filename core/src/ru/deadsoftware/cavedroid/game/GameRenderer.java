@@ -63,9 +63,9 @@ public class GameRenderer extends Renderer {
         return y * 16 - getCamY();
     }
 
-    private void drawWreck(int bl) {
+    private void drawWreck(Block bl) {
         if (mGameInput.getBlockDamage() > 0) {
-            int index = 10 * mGameInput.getBlockDamage() / GameItems.getBlock(bl).getHp();
+            int index = 10 * mGameInput.getBlockDamage() / bl.getHp();
             String key = "break_" + index;
 
             if (index > 10 || index < 0) {
@@ -79,16 +79,16 @@ public class GameRenderer extends Renderer {
 
     private void drawBlock(int x, int y, boolean drawBG) {
         if (drawBG) {
-            if ((!mGameWorld.hasForeAt(x, y) || mGameWorld.getForeMapBlock(x, y).isTransparent())
+            if ((!mGameWorld.hasForeAt(x, y) || mGameWorld.getForeMap(x, y).isTransparent())
                     && mGameWorld.hasBackAt(x, y)) {
-                mGameWorld.getBackMapBlock(x, y).draw(spriter, drawX(x), drawY(y));
+                mGameWorld.getBackMap(x, y).draw(spriter, drawX(x), drawY(y));
                 if (!mGameWorld.hasForeAt(x, y) && x == mGameInput.getCurX() && y == mGameInput.getCurY()) {
                     drawWreck(mGameWorld.getBackMap(mGameInput.getCurX(), mGameInput.getCurY()));
                 }
             }
         }
-        if (mGameWorld.hasForeAt(x, y) && mGameWorld.getForeMapBlock(x, y).isBackground() == drawBG) {
-            mGameWorld.getForeMapBlock(x, y).draw(spriter, drawX(x), drawY(y));
+        if (mGameWorld.hasForeAt(x, y) && mGameWorld.getForeMap(x, y).isBackground() == drawBG) {
+            mGameWorld.getForeMap(x, y).draw(spriter, drawX(x), drawY(y));
             if (x == mGameInput.getCurX() && y == mGameInput.getCurY()) {
                 drawWreck(mGameWorld.getForeMap(mGameInput.getCurX(), mGameInput.getCurY()));
             }
@@ -119,7 +119,7 @@ public class GameRenderer extends Renderer {
             shaper.setColor(0f, 0f, 0f, .5f);
             for (int y = minY; y < maxY; y++) {
                 for (int x = minX; x < maxX; x++) {
-                    if ((!mGameWorld.hasForeAt(x, y) || mGameWorld.getForeMapBlock(x, y).isTransparent())
+                    if ((!mGameWorld.hasForeAt(x, y) || mGameWorld.getForeMap(x, y).isTransparent())
                             && mGameWorld.hasBackAt(x, y)) {
                         shaper.rect(drawX(x), drawY(y), 16, 16);
                     }
@@ -301,7 +301,7 @@ public class GameRenderer extends Renderer {
         final boolean hasBackMap = mGameWorld.hasBackAt(x, y);
 
         if (hasForeMap) {
-            final Block block = mGameWorld.getForeMapBlock(x, y);
+            final Block block = mGameWorld.getForeMap(x, y);
 
             if (GameItems.isWater(block)) {
                 result = Color.BLUE;
@@ -385,10 +385,9 @@ public class GameRenderer extends Renderer {
             drawString("Swim: " + player.swim, 0, 60);
             drawString("Mobs: " + mMobsController.getMobs().size(), 0, 70);
             drawString("Drops: " + mDropController.getSize(), 0, 80);
-            drawString("Block: " + GameItems.getBlockKey(mGameWorld.getForeMap(mGameInput.getCurX(), mGameInput.getCurY())), 0, 90);
+            drawString("Block: " + mGameWorld.getForeMap(mGameInput.getCurX(), mGameInput.getCurY()).getParams().getKey(), 0, 90);
             drawString("Hand: " + GameItems.getItemKey(mMobsController.getPlayer().inventory[mMobsController.getPlayer().slot]), 0, 100);
             drawString("Game mode: " + player.gameMode, 0, 110);
-            drawString("Check swim: " + GameItems.isFluid(mGameWorld.getForeMap(player.getMapX(), player.getLowerMapY())), 0, 120);
             spriter.end();
         }
 

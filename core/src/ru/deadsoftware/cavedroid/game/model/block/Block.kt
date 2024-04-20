@@ -26,7 +26,7 @@ sealed class Block {
         }
 
     val sprite: Sprite
-        get() = requireNotNull(_sprite)
+        get() = requireNotNull(_sprite) { "null sprite for block '${params.key}'" }
 
     private val currentAnimationFrame: Int
         get() {
@@ -115,14 +115,18 @@ sealed class Block {
         val fullBlockKey: String,
     ): Block()
 
-    sealed class Fluid: Block()
+    sealed class Fluid: Block() {
+        abstract val state: Int
+    }
     
     data class Water(
         override val params: CommonBlockParams,
+        override val state: Int,
     ) : Fluid()
 
     data class Lava(
         override val params: CommonBlockParams,
+        override val state: Int,
     ) : Fluid()
 
     /* Legacy accessors below */

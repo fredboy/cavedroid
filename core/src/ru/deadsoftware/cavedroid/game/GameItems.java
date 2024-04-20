@@ -55,12 +55,6 @@ public class GameItems {
         return getBlock(id) instanceof Block.Slab;
     }
 
-    public static boolean fluidCanFlowThere(int thisId, int thatId) {
-        return thatId == 0 || (!getBlock(thatId).hasCollision() && !isFluid(thatId)) ||
-                (isWater(thisId) && isWater(thatId) && thisId < thatId) ||
-                (isLava(thisId) && isLava(thatId) && thisId < thatId);
-    }
-
     public static Block getBlock(int id) {
         return blocks.getValueAt(id);
     }
@@ -148,6 +142,7 @@ public class GameItems {
                 int id = Assets.getIntFromJson(block, "id", count);
                 int dropCount = Assets.getIntFromJson(block, "drop_count", 1);
                 String fullBlock = Assets.getStringFromJson(block, "full_block", null);
+                int state = Assets.getIntFromJson(block, "state", 0);
                 blocksIds.put(key, id);
 
                 if (count >= id) {
@@ -178,8 +173,8 @@ public class GameItems {
                 );
 
                 Block newBlock = switch (meta) {
-                    case "water" -> new Block.Water(params);
-                    case "lava" -> new Block.Lava(params);
+                    case "water" -> new Block.Water(params, state);
+                    case "lava" -> new Block.Lava(params, state);
                     case "slab" -> new Block.Slab(params, fullBlock);
                     default -> new Block.Normal(params);
                 };

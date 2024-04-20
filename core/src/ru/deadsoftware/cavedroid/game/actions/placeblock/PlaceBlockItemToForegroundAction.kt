@@ -10,8 +10,8 @@ class PlaceBlockItemToForegroundAction @Inject constructor(
     private val gameWorld: GameWorld,
 ) : IPlaceBlockAction {
 
-    override fun place(item: Item.Placeable, x: Int, y: Int) {
-        gameWorld.placeToForeground(x, y, item.block.params.id)
+    override fun place(placeable: Item.Placeable, x: Int, y: Int) {
+        gameWorld.placeToForeground(x, y, placeable.block)
     }
 
     companion object {

@@ -42,7 +42,7 @@ public class GameProc implements Disposable {
         mGameWorldBlocksLogicControllerTask = gameWorldBlocksLogicControllerTask;
         mGameItemsHolder = gameItemsHolder;
 
-        mGameItemsHolder.initialize(assetLoader);
+        mGameItemsHolder.initialize();
 
         mWorldLogicTimer.scheduleTask(gameWorldFluidsLogicControllerTask, 0,
                 GameWorldFluidsLogicControllerTask.FLUID_UPDATE_INTERVAL_SEC);

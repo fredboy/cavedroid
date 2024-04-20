@@ -2,6 +2,7 @@ package ru.deadsoftware.cavedroid.game.world;
 
 import kotlin.Pair;
 import ru.deadsoftware.cavedroid.game.GameItems;
+import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.GameScope;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.model.block.Block;
@@ -16,19 +17,22 @@ public class GameWorld {
 
     private final DropController mDropController;
     private final MobsController mMobsController;
+    private final GameItemsHolder mGameItemsHolder;
 
     private final int mWidth;
     private final int mHeight;
-    private final int[][] mForeMap;
-    private final int[][] mBackMap;
+    private final Block[][] mForeMap;
+    private final Block[][] mBackMap;
 
     @Inject
     public GameWorld(DropController dropController,
                      MobsController mobsController,
-                     @CheckForNull int[][] foreMap,
-                     @CheckForNull int[][] backMap) {
+                     GameItemsHolder gameItemsHolder,
+                     @CheckForNull Block[][] foreMap,
+                     @CheckForNull Block[][] backMap) {
         mDropController = dropController;
         mMobsController = mobsController;
+        mGameItemsHolder = gameItemsHolder;
 
         boolean isNewGame = foreMap == null || backMap == null;
 
@@ -36,10 +40,10 @@ public class GameWorld {
             final WorldGeneratorConfig config = WorldGeneratorConfig.Companion.getDefault();
             mWidth = config.getWidth();
             mHeight = config.getHeight();
-            Pair<int[][], int[][]> maps = new GameWorldGenerator(config).generate();
+            Pair<Block[][], Block[][]> maps = new GameWorldGenerator(config, mGameItemsHolder).generate();
             mForeMap = maps.getFirst();
             mBackMap = maps.getSecond();
-            mMobsController.getPlayer().respawn(this);
+            mMobsController.getPlayer().respawn(this, mGameItemsHolder);
         } else {
             mForeMap = foreMap;
             mBackMap = backMap;
@@ -64,11 +68,11 @@ public class GameWorld {
         return mHeight * 16f;
     }
 
-    public int[][] getFullForeMap() {
+    public Block[][] getFullForeMap() {
         return mForeMap;
     }
 
-    public int[][] getFullBackMap() {
+    public Block[][] getFullBackMap() {
         return mBackMap;
     }
 
@@ -80,8 +84,8 @@ public class GameWorld {
         return x;
     }
 
-    private int getMap(int x, int y, int layer) {
-        int map = 0;
+    private Block getMap(int x, int y, int layer) {
+        Block map = mGameItemsHolder.getFallbackBlock();
         try {
             x = transformX(x);
             map = (layer == 0) ? mForeMap[x][y] : mBackMap[x][y];
@@ -90,7 +94,7 @@ public class GameWorld {
         return map;
     }
 
-    private void setMap(int x, int y, int layer, int value) {
+    private void setMap(int x, int y, int layer, Block value) {
         try {
             x = transformX(x);
             if (layer == 0) {
@@ -103,68 +107,61 @@ public class GameWorld {
     }
 
     public boolean hasForeAt(int x, int y) {
-        return getMap(x, y, 0) != 0;
+        return getMap(x, y, 0) != mGameItemsHolder.getFallbackBlock();
     }
 
     public boolean hasBackAt(int x, int y) {
-        return getMap(x, y, 1) != 0;
+        return getMap(x, y, 1) != mGameItemsHolder.getFallbackBlock();
     }
 
-    public int getForeMap(int x, int y) {
+    public Block getForeMap(int x, int y) {
         return getMap(x, y, 0);
     }
 
-    public Block getForeMapBlock(int x, int y) {
-        return GameItems.getBlock(getMap(x, y, 0));
+    public void setForeMap(int x, int y, Block block) {
+        setMap(x, y, 0, block);
     }
 
-    public void setForeMap(int x, int y, int id) {
-        setMap(x, y, 0, id);
+    public void resetForeMap(int x, int y) {
+        setForeMap(x, y, mGameItemsHolder.getFallbackBlock());
     }
 
-    public int getBackMap(int x, int y) {
+    public Block getBackMap(int x, int y) {
         return getMap(x, y, 1);
     }
 
-    public Block getBackMapBlock(int x, int y) {
-        return GameItems.getBlock(getMap(x, y, 1));
+    public void setBackMap(int x, int y, Block block) {
+        setMap(x, y, 1, block);
     }
 
-    public void setBackMap(int x, int y, int id) {
-        setMap(x, y, 1, id);
-    }
-
-    public void placeToForeground(int x, int y, int value) {
-        if (!hasForeAt(x, y) || value == 0 || !GameItems.getBlock(getForeMap(x, y)).hasCollision()) {
+    public void placeToForeground(int x, int y, Block value) {
+        if (!hasForeAt(x, y) || value == mGameItemsHolder.getFallbackBlock() || !getForeMap(x, y).hasCollision()) {
             setForeMap(x, y, value);
-        } else if (GameItems.isSlab(value) && getForeMap(x, y) == value) {
-            final Block block = GameItems.getBlock(value);
-            if (block instanceof Block.Slab) {
-                setForeMap(x, y, GameItems.getBlockId(((Block.Slab) block).getFullBlockKey()));
-            }
+        } else if (value instanceof Block.Slab && getForeMap(x, y) == value) {
+            setForeMap(x, y, mGameItemsHolder.getBlock(((Block.Slab) value).getFullBlockKey()));
         }
     }
 
-    public void placeToBackground(int x, int y, int value) {
-        if (value == 0 || (getBackMap(x, y) == 0 && GameItems.getBlock(value).hasCollision()) &&
-                (!GameItems.getBlock(value).isTransparent() || value == 18)) {
+    public void placeToBackground(int x, int y, Block value) {
+        if (value == mGameItemsHolder.getFallbackBlock() || (getBackMap(x, y) == mGameItemsHolder.getFallbackBlock() && value.hasCollision()) &&
+                (!value.isTransparent() || value == mGameItemsHolder.getBlock("glass"))) {
             setBackMap(x, y, value);
         }
     }
 
     public void destroyForeMap(int x, int y) {
-        Block block = GameItems.getBlock(getForeMap(x, y));
+        Block block = getForeMap(x, y);
         if (block.hasDrop()) {
             mDropController.addDrop(transformX(x) * 16 + 4, y * 16 + 4, GameItems.getItemId(block.getDrop()));
         }
-        placeToForeground(x, y, 0);
+        placeToForeground(x, y, mGameItemsHolder.getFallbackBlock());
     }
 
     public void destroyBackMap(int x, int y) {
-        Block block = GameItems.getBlock(getBackMap(x, y));
+        Block block = getBackMap(x, y);
         if (block.hasDrop()) {
             mDropController.addDrop(transformX(x) * 16 + 4, y * 16 + 4, GameItems.getItemId(block.getDrop()));
         }
-        placeToBackground(x, y, 0);
+        placeToBackground(x, y, mGameItemsHolder.getFallbackBlock());
     }
 }

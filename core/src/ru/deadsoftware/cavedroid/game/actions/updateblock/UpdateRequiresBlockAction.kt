@@ -10,7 +10,7 @@ class UpdateRequiresBlockAction @Inject constructor(
 ) : IUpdateBlockAction {
 
     override fun update(x: Int, y: Int) {
-        if (!gameWorld.getForeMapBlock(x, y + 1).collision) {
+        if (gameWorld.getForeMap(x, y + 1).params.hasCollision.not()) {
             gameWorld.destroyForeMap(x, y)
         }
     }

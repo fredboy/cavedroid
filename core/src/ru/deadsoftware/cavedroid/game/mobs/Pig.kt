@@ -3,6 +3,7 @@ package ru.deadsoftware.cavedroid.game.mobs
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
+import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.utils.drawSprite
 import ru.deadsoftware.cavedroid.misc.utils.mobs.MobSprites.Pig.getBackgroundLeg
@@ -27,7 +28,7 @@ class Pig(x: Float, y: Float) : Mob(x, y, WIDTH, HEIGHT, randomDir(), Type.MOB, 
         velocity.y = JUMP_VELOCITY
     }
     
-    override fun ai(world: GameWorld, delta: Float) {
+    override fun ai(world: GameWorld, gameItemsHolder: GameItemsHolder, delta: Float) {
         if (MathUtils.randomBoolean(delta)) {
             if (velocity.x != 0f) {
                 velocity.x = 0f

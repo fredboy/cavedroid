@@ -8,6 +8,7 @@ import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.mobs.Player;
+import ru.deadsoftware.cavedroid.game.model.block.Block;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
 import ru.deadsoftware.cavedroid.game.objects.DropController;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
@@ -29,16 +30,19 @@ public class GamePhysics {
     private final MainConfig mMainConfig;
     private final MobsController mMobsController;
     private final DropController mDropController;
+    private final GameItemsHolder mGameItemsHolder;
 
     @Inject
     public GamePhysics(GameWorld gameWorld,
                        MainConfig mainConfig,
                        MobsController mobsController,
-                       DropController dropController) {
+                       DropController dropController,
+                       GameItemsHolder gameItemsHolder) {
         mGameWorld = gameWorld;
         mMainConfig = mainConfig;
         mMobsController = mobsController;
         mDropController = dropController;
+        mGameItemsHolder = gameItemsHolder;
     }
 
     /**
@@ -50,14 +54,14 @@ public class GamePhysics {
         int dir = mob.looksLeft() ? 0 : 1;
         int blX = (int) (mob.getX() + mob.getWidth() * dir - 8 + 16 * dir);
         int blY = (int) (mob.getY() + mob.getHeight() - 8);
-        int block = mGameWorld.getForeMap(blX / 16, blY / 16);
+        Block block = mGameWorld.getForeMap(blX / 16, blY / 16);
 
         if (checkColl(new Rectangle(blX, mob.getY() - 18, mob.getWidth(), mob.getHeight()))) {
-            block = 0;
+            return false;
         }
 
-        return (block > 0 && GameItems.getBlock(block).toJump() &&
-                (mob.getY() + mob.getHeight()) - GameItems.getBlock(block).getRectangle(blX / 16, blY / 16).y > 8);
+        return (block.toJump() &&
+                (mob.getY() + mob.getHeight()) - block.getRectangle(blX / 16, blY / 16).y > 8);
     }
 
     private boolean checkColl(Rectangle rect) {
@@ -74,12 +78,15 @@ public class GamePhysics {
             maxY = mGameWorld.getHeight();
         }
 
-        int block;
+        Block block;
         for (int y = minY; y < maxY; y++) {
             for (int x = minX; x < maxX; x++) {
+                if (!mGameWorld.hasForeAt(x, y)) {
+                    continue;
+                }
                 block = mGameWorld.getForeMap(x, y);
-                if (block > 0 && GameItems.getBlock(block).hasCollision()) {
-                    if (Intersector.overlaps(rect, GameItems.getBlock(block).getRectangle(x, y))) {
+                if (block.hasCollision()) {
+                    if (Intersector.overlaps(rect, block.getRectangle(x, y))) {
                         return true;
                     }
                 }
@@ -89,7 +96,7 @@ public class GamePhysics {
         return false;
     }
 
-    private int getBlock(Rectangle rect) {
+    private Block getBlock(Rectangle rect) {
         return mGameWorld.getForeMap((int) (rect.x + rect.width / 2) / 16,
                 (int) (rect.y + rect.height / 8 * 7) / 16);
     }
@@ -239,7 +246,7 @@ public class GamePhysics {
             return;
         }
 
-        if (GameItems.isFluid(getBlock(player))) {
+        if (getBlock(player).isFluid()) {
             if (mMainConfig.isTouch() && player.getVelocity().x != 0 && !player.swim && !player.isFlyMode()) {
                 player.swim = true;
             }
@@ -266,7 +273,7 @@ public class GamePhysics {
         mobYColl(player);
 
         player.x += player.getVelocity().x * (player.isFlyMode() ? 1.5f : 1) *
-                (GameItems.isFluid(getBlock(player)) && !player.isFlyMode() ? .8f : 1) * delta;
+                (getBlock(player).isFluid() && !player.isFlyMode() ? .8f : 1) * delta;
 
         mobXColl(player);
 
@@ -277,7 +284,7 @@ public class GamePhysics {
     }
 
     private void mobPhy(Mob mob, float delta) {
-        if (mob.getType() == Mob.Type.MOB && GameItems.isFluid(getBlock(mob))) {
+        if (mob.getType() == Mob.Type.MOB && getBlock(mob).isFluid()) {
             if (mob.getVelocity().y > 32f) {
                 mob.getVelocity().y -= mob.getVelocity().y * 32f * delta;
             }
@@ -320,7 +327,7 @@ public class GamePhysics {
 
         for (Iterator<Mob> it = mMobsController.getMobs().iterator(); it.hasNext(); ) {
             Mob mob = it.next();
-            mob.ai(mGameWorld, delta);
+            mob.ai(mGameWorld, mGameItemsHolder, delta);
             mobPhy(mob, delta);
             if (mob.isDead()) {
                 it.remove();
@@ -329,7 +336,7 @@ public class GamePhysics {
 
         playerPhy(player, delta);
         if (player.isDead()) {
-            player.respawn(mGameWorld);
+            player.respawn(mGameWorld, mGameItemsHolder);
         }
     }
 

@@ -14,6 +14,7 @@ import javax.inject.Inject
 
 @GameScope
 class GameItemsHolder @Inject constructor(
+    private val assetLoader: AssetLoader,
     private val blockMapper: BlockMapper,
     private val itemMapper: ItemMapper,
 ) {
@@ -23,14 +24,19 @@ class GameItemsHolder @Inject constructor(
     private val blocksMap = LinkedHashMap<String, Block>()
     private val itemsMap = LinkedHashMap<String, Item>()
 
-    private lateinit var fallbackBlock: Block
-    private lateinit var fallbackItem: Item
+    lateinit var fallbackBlock: Block
+        private set
+    lateinit var fallbackItem: Item
+        private set
 
-
+    init {
+        initialize()
+    }
 
     private fun loadBlocks(dtoMap: Map<String, BlockDto>) {
         dtoMap.forEach { (key, dto) ->
             blocksMap[key] = blockMapper.map(key, dto)
+                .apply(Block::initialize)
         }
 
         fallbackBlock = blocksMap[FALLBACK_BLOCK_KEY]
@@ -50,7 +56,7 @@ class GameItemsHolder @Inject constructor(
             ?: throw IllegalArgumentException("Fallback item key '$FALLBACK_ITEM_KEY' not found")
     }
 
-    fun initialize(assetLoader: AssetLoader) {
+    fun initialize() {
         if (_initialized) {
             Gdx.app.debug(TAG, "Attempted to init when already initialized")
             return
@@ -66,6 +72,10 @@ class GameItemsHolder @Inject constructor(
     }
 
     private fun <T> Map<String, T>.getOrFallback(key: String, fallback: T, lazyErrorMessage: () -> String): T {
+        if (!_initialized) {
+            throw IllegalStateException("GameItemsHolder was not initialized before use")
+        }
+
         val t = this[key] ?: run {
             Gdx.app.error(TAG, lazyErrorMessage.invoke())
             return fallback
@@ -83,6 +93,10 @@ class GameItemsHolder @Inject constructor(
         return itemsMap.getOrFallback(key, fallbackItem) {
             "No item with key '$key' found. Returning $FALLBACK_BLOCK_KEY"
         }
+    }
+
+    fun <T : Block> getBlocksByType(type: Class<T>): List<T> {
+        return blocksMap.values.filterIsInstance(type)
     }
 
     companion object {

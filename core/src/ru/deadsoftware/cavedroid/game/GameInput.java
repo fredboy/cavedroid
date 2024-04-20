@@ -21,7 +21,6 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
 
-import javax.annotation.CheckForNull;
 import javax.inject.Inject;
 
 import java.util.Map;
@@ -37,6 +36,7 @@ public class GameInput {
     private final GameWorld mGameWorld;
     private final DropController mDropController;
     private final MobsController mMobsController;
+    private final GameItemsHolder mGameItemsHolder;
     private final Map<String, IUseItemAction> mUseItemActionMap;
     private final Map<String, IPlaceBlockAction> mPlaceBlockActionMap;
 
@@ -64,12 +64,14 @@ public class GameInput {
                      GameWorld gameWorld,
                      DropController dropController,
                      MobsController mobsController,
+                     GameItemsHolder gameItemsHolder,
                      Map<String, IUseItemAction> useItemActionMap,
                      Map<String, IPlaceBlockAction> placeBlockActionMap) {
         mMainConfig = mainConfig;
         mGameWorld = gameWorld;
         mDropController = dropController;
         mMobsController = mobsController;
+        mGameItemsHolder = gameItemsHolder;
         mUseItemActionMap = useItemActionMap;
         mPlaceBlockActionMap = placeBlockActionMap;
 
@@ -79,7 +81,7 @@ public class GameInput {
     }
 
     private boolean checkSwim() {
-        return GameItems.isFluid(mGameWorld.getForeMap(mPlayer.getMapX(), mPlayer.getLowerMapY()));
+        return mGameWorld.getForeMap(mPlayer.getMapX(), mPlayer.getLowerMapY()).isFluid();
     }
 
     private void goUpwards() {
@@ -150,7 +152,7 @@ public class GameInput {
     }
 
     private boolean isNotAutoselectable(int x, int y) {
-        return (!mGameWorld.hasForeAt(x, y) || !mGameWorld.getForeMapBlock(x, y).hasCollision());
+        return (!mGameWorld.hasForeAt(x, y) || !mGameWorld.getForeMap(x, y).hasCollision());
     }
 
     private void checkCursorBounds() {
@@ -247,27 +249,27 @@ public class GameInput {
         if (mMainConfig.checkGameUiWindow(GameUiWindow.NONE)) {
             mPlayer.startHitting();
 
-            if ((mGameWorld.hasForeAt(mCurX, mCurY) && mGameWorld.getForeMapBlock(mCurX, mCurY).getHp() >= 0) ||
+            if ((mGameWorld.hasForeAt(mCurX, mCurY) && mGameWorld.getForeMap(mCurX, mCurY).getHp() >= 0) ||
                     (!mGameWorld.hasForeAt(mCurX, mCurY) && mGameWorld.hasBackAt(mCurX, mCurY) &&
-                            mGameWorld.getBackMapBlock(mCurX, mCurY).getHp() >= 0)) {
+                            mGameWorld.getBackMap(mCurX, mCurY).getHp() >= 0)) {
                 if (mPlayer.gameMode == 0) {
                     mBlockDamage++;
                     if (mGameWorld.hasForeAt(mCurX, mCurY)) {
-                        if (mBlockDamage >= mGameWorld.getForeMapBlock(mCurX, mCurY).getHp()) {
+                        if (mBlockDamage >= mGameWorld.getForeMap(mCurX, mCurY).getHp()) {
                             mGameWorld.destroyForeMap(mCurX, mCurY);
                             mBlockDamage = 0;
                         }
                     } else if (mGameWorld.hasBackAt(mCurX, mCurY)) {
-                        if (mBlockDamage >= mGameWorld.getBackMapBlock(mCurX, mCurY).getHp()) {
+                        if (mBlockDamage >= mGameWorld.getBackMap(mCurX, mCurY).getHp()) {
                             mGameWorld.destroyBackMap(mCurX, mCurY);
                             mBlockDamage = 0;
                         }
                     }
                 } else {
                     if (mGameWorld.hasForeAt(mCurX, mCurY)) {
-                        mGameWorld.placeToForeground(mCurX, mCurY, 0);
+                        mGameWorld.placeToForeground(mCurX, mCurY, mGameItemsHolder.getFallbackBlock());
                     } else if (mGameWorld.hasBackAt(mCurX, mCurY)) {
-                        mGameWorld.placeToBackground(mCurX, mCurY, 0);
+                        mGameWorld.placeToBackground(mCurX, mCurY, mGameItemsHolder.getFallbackBlock());
                     }
                     mTouchedDown = false;
                 }
@@ -334,10 +336,6 @@ public class GameInput {
             case Input.Keys.G:
                 final Mob pig = new Pig(mCurX * 16, mCurY * 16);
                 pig.attachToController(mMobsController);
-                break;
-
-            case Input.Keys.Q:
-                mGameWorld.placeToForeground(mCurX, mCurY, 8);
                 break;
 
             case Input.Keys.GRAVE:

@@ -43,11 +43,14 @@ public class GameModule {
 
     @Provides
     @GameScope
-    public static GameWorld provideGameWorld(DropController dropController, MobsController mobsController) {
-        int[][] fm = data != null ? data.retrieveForeMap() : null;
-        int[][] bm = data != null ? data.retrieveBackMap() : null;
+    public static GameWorld provideGameWorld(DropController dropController,
+                                             MobsController mobsController,
+                                             GameItemsHolder gameItemsHolder) {
+        // TODO: 4/20/24 RE-enable saves
+//        int[][] fm = data != null ? data.retrieveForeMap() : null;
+//        int[][] bm = data != null ? data.retrieveBackMap() : null;
         makeDataNullIfEmpty();
-        return new GameWorld(dropController, mobsController, fm, bm);
+        return new GameWorld(dropController, mobsController, gameItemsHolder, null, null);
     }
 
 }

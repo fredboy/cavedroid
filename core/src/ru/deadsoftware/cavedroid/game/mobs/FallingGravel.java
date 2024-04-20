@@ -3,6 +3,7 @@ package ru.deadsoftware.cavedroid.game.mobs;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavedroid.game.GameItems;
+import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 
 /**
@@ -33,9 +34,9 @@ public class FallingGravel extends Mob {
     }
 
     @Override
-    public void ai(GameWorld gameWorld, float delta) {
+    public void ai(GameWorld gameWorld, GameItemsHolder gameItemsHolder, float delta) {
         if (mVelocity.isZero()) {
-            gameWorld.setForeMap(getMapX(), getMiddleMapY(), 11);
+            gameWorld.setForeMap(getMapX(), getMiddleMapY(), gameItemsHolder.getBlock("gravel"));
             kill();
         }
     }

@@ -179,8 +179,9 @@ public class GameSaver {
             out.writeObject(dropController);
             out.writeObject(mobsController);
             out.close();
-            saveMap(Gdx.files.absolute(folder + "/saves/foremap.sav"), gameWorld.getFullForeMap());
-            saveMap(Gdx.files.absolute(folder + "/saves/backmap.sav"), gameWorld.getFullBackMap());
+            // TODO: 4/20/24 save map
+//            saveMap(Gdx.files.absolute(folder + "/saves/foremap.sav"), gameWorld.getFullForeMap());
+//            saveMap(Gdx.files.absolute(folder + "/saves/backmap.sav"), gameWorld.getFullBackMap());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -123,7 +123,7 @@
     "lava": {
       "animated": true,
       "collision": false,
-      "fluid": true,
+      "state": 0,
       "frames": 16,
       "hp": -1,
       "id": 9,
@@ -133,7 +133,7 @@
     "lava_12": {
       "animated": true,
       "collision": false,
-      "fluid": true,
+      "state": 2,
       "frames": 16,
       "hp": -1,
       "id": 65,
@@ -145,7 +145,7 @@
     "lava_16": {
       "animated": true,
       "collision": false,
-      "fluid": true,
+      "state": 1,
       "frames": 16,
       "hp": -1,
       "id": 64,
@@ -155,7 +155,7 @@
     "lava_4": {
       "animated": true,
       "collision": false,
-      "fluid": true,
+      "state": 4,
       "frames": 16,
       "hp": -1,
       "id": 67,
@@ -167,7 +167,7 @@
     "lava_8": {
       "animated": true,
       "collision": false,
-      "fluid": true,
+      "state": 3,
       "frames": 16,
       "hp": -1,
       "id": 66,
@@ -295,7 +295,7 @@
     "water": {
       "animated": true,
       "collision": false,
-      "fluid": true,
+      "state": 0,
       "frames": 16,
       "hp": -1,
       "id": 8,
@@ -306,7 +306,7 @@
     "water_12": {
       "animated": true,
       "collision": false,
-      "fluid": true,
+      "state": 2,
       "frames": 16,
       "hp": -1,
       "id": 61,
@@ -319,7 +319,7 @@
     "water_16": {
       "animated": true,
       "collision": false,
-      "fluid": true,
+      "state": 1,
       "frames": 16,
       "hp": -1,
       "id": 60,
@@ -330,7 +330,7 @@
     "water_4": {
       "animated": true,
       "collision": false,
-      "fluid": true,
+      "state": 4,
       "frames": 16,
       "hp": -1,
       "id": 63,
@@ -343,7 +343,7 @@
     "water_8": {
       "animated": true,
       "collision": false,
-      "fluid": true,
+      "state": 3,
       "frames": 16,
       "hp": -1,
       "id": 62,

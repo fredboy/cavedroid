@@ -13,10 +13,10 @@ class UpdateSandAction @Inject constructor(
 ) : IUpdateBlockAction {
 
     override fun update(x: Int, y: Int) {
-        val shouldFall = gameWorld.getForeMapBlock(x, y + 1).collision.not()
+        val shouldFall = gameWorld.getForeMap(x, y + 1).params.hasCollision.not()
 
         if (shouldFall) {
-            gameWorld.setForeMap(x, y, 0)
+            gameWorld.resetForeMap(x, y)
             FallingSand(x * 16f, y * 16f)
                 .apply { attachToController(mobsController) }
         }
