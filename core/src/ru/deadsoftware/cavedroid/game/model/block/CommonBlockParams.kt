@@ -3,7 +3,7 @@ package ru.deadsoftware.cavedroid.game.model.block
 import com.badlogic.gdx.graphics.Texture
 
 data class CommonBlockParams(
-    @Deprecated(ID_DEPRECATION_MESSAGE) val id: Int,
+    @Deprecated("numeric id's will be removed") val id: Int,
     val key: String,
     val collisionMargins: BlockMargins,
     val hitPoints: Int,
@@ -15,8 +15,4 @@ data class CommonBlockParams(
     val animationInfo: BlockAnimationInfo?,
     val texture: Texture?,
     val spriteMargins: BlockMargins,
-) {
-    companion object {
-        private const val ID_DEPRECATION_MESSAGE = "numeric id's will be removed"
-    }
-}
+)

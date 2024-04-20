@@ -26,21 +26,4 @@ class UseItemActionsModule {
         return action
     }
 
-    @Binds
-    @IntoMap
-    @StringKey(PlaceBlockItemToForegroundAction.ACTION_KEY)
-    @GameScope
-    fun bindPlaceBlockItemToForegroundAction(action: PlaceBlockItemToForegroundAction): IUseItemAction {
-        return action
-    }
-
-    @Binds
-    @IntoMap
-    @StringKey(PlaceBlockItemToBackgroundAction.ACTION_KEY)
-    @GameScope
-    fun bindPlaceBlockItemToBackgroundAction(action: PlaceBlockItemToBackgroundAction): IUseItemAction {
-        return action
-    }
-
-
 }

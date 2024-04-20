@@ -20,10 +20,13 @@ sealed class Block {
 
     private var animation: Array<Sprite>? = null
 
-    private var sprite: Sprite? = null
+    private var _sprite: Sprite? = null
         get() {
             return animation?.get(currentAnimationFrame) ?: field
         }
+
+    val sprite: Sprite
+        get() = requireNotNull(_sprite)
 
     private val currentAnimationFrame: Int
         get() {
@@ -50,7 +53,7 @@ sealed class Block {
     }
 
     private fun initSprite() {
-        sprite = animation?.get(0) ?: params.texture?.let { tex ->
+        _sprite = animation?.get(0) ?: params.texture?.let { tex ->
             val width = 16 - params.spriteMargins.left - params.spriteMargins.right
             val height = 16 - params.spriteMargins.top - params.spriteMargins.bottom
             Sprite(tex, params.spriteMargins.left, params.spriteMargins.top, width, height)
@@ -61,7 +64,7 @@ sealed class Block {
     fun requireSprite() = requireNotNull(sprite)
 
     fun draw(spriter: SpriteBatch, x: Float, y: Float) {
-        sprite?.apply {
+        sprite.apply {
             setBounds(
                 /* x = */ x + params.spriteMargins.left,
                 /* y = */ y + params.spriteMargins.top,
@@ -112,7 +115,7 @@ sealed class Block {
         val fullBlockKey: String,
     ): Block()
 
-    abstract class Fluid: Block() {
+    sealed class Fluid: Block() {
         abstract val statesCount: Int
     }
     

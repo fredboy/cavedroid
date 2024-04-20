@@ -9,13 +9,14 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.google.common.collect.Range;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.actions.CommonBlockActionUtilsKt;
+import ru.deadsoftware.cavedroid.game.actions.placeblock.IPlaceBlockAction;
 import ru.deadsoftware.cavedroid.game.actions.useitem.IUseItemAction;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.mobs.Pig;
 import ru.deadsoftware.cavedroid.game.mobs.Player;
+import ru.deadsoftware.cavedroid.game.model.item.Item;
 import ru.deadsoftware.cavedroid.game.objects.DropController;
-import ru.deadsoftware.cavedroid.game.objects.Item;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
@@ -37,6 +38,7 @@ public class GameInput {
     private final DropController mDropController;
     private final MobsController mMobsController;
     private final Map<String, IUseItemAction> mUseItemActionMap;
+    private final Map<String, IPlaceBlockAction> mPlaceBlockActionMap;
 
     private final Player mPlayer;
 
@@ -62,12 +64,14 @@ public class GameInput {
                      GameWorld gameWorld,
                      DropController dropController,
                      MobsController mobsController,
-                     Map<String, IUseItemAction> useItemActionMap) {
+                     Map<String, IUseItemAction> useItemActionMap,
+                     Map<String, IPlaceBlockAction> placeBlockActionMap) {
         mMainConfig = mainConfig;
         mGameWorld = gameWorld;
         mDropController = dropController;
         mMobsController = mobsController;
         mUseItemActionMap = useItemActionMap;
+        mPlaceBlockActionMap = placeBlockActionMap;
 
         mPlayer = mMobsController.getPlayer();
 
@@ -209,20 +213,21 @@ public class GameInput {
 
         if (id > 0) {
             final Item item = getItem(id);
-            @CheckForNull final String actionKey = item.getActionKey();
-            if (item.isBlock()) {
+
+            if (item instanceof Item.Placeable) {
                 if (!bg) {
-                    CommonBlockActionUtilsKt.placeToForegroundAction(mUseItemActionMap, item, x, y);
+                    CommonBlockActionUtilsKt.placeToForegroundAction(mPlaceBlockActionMap, (Item.Placeable) item, x, y);
                 } else {
-                    CommonBlockActionUtilsKt.placeToBackgroundAction(mUseItemActionMap, item, x, y);
+                    CommonBlockActionUtilsKt.placeToBackgroundAction(mPlaceBlockActionMap, (Item.Placeable) item, x, y);
                 }
-            } else if (actionKey != null) {
+            } else if (item instanceof Item.Usable) {
+                final String actionKey = ((Item.Usable)item).getUseActionKey();
                 final IUseItemAction useItemAction = mUseItemActionMap.get(actionKey);
 
                 if (useItemAction != null) {
-                    useItemAction.perform(item, x, y);
+                    useItemAction.perform((Item.Usable) item, x, y);
                 } else {
-                    Gdx.app.error(TAG, "use item action " + actionKey + "not found");
+                    Gdx.app.error(TAG, "use item action " + actionKey + " not found");
                 }
             }
         }

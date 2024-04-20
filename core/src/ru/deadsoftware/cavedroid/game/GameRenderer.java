@@ -9,20 +9,17 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.mobs.Player;
 import ru.deadsoftware.cavedroid.game.model.block.Block;
+import ru.deadsoftware.cavedroid.game.model.item.Item;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
 import ru.deadsoftware.cavedroid.game.objects.DropController;
-import ru.deadsoftware.cavedroid.game.objects.Item;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.ControlMode;
 import ru.deadsoftware.cavedroid.misc.Renderer;
-import ru.deadsoftware.cavedroid.misc.utils.SpriteUtilsKt;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
@@ -187,14 +184,7 @@ public class GameRenderer extends Renderer {
         }
 
         final Item item = GameItems.getItem(drop.getId());
-        @CheckForNull final Block block = GameItems.getBlock(GameItems.getItemKey(drop.getId()));
-        @CheckForNull final Sprite sprite = item.isBlock()
-                ? block.getTexture()
-                : item.getSprite();
-
-        if (sprite == null) {
-            return;
-        }
+        final Sprite sprite = item.getSprite();
 
         sprite.setPosition(drawingRect.x, drawingRect.y);
         sprite.setSize(drawingRect.width, drawingRect.height);
@@ -211,26 +201,15 @@ public class GameRenderer extends Renderer {
                 y + 18 + (mGameInput.getCreativeScroll() * (72f / GameProc.MAX_CREATIVE_SCROLL)));
         for (int i = mGameInput.getCreativeScroll() * 8; i < mGameInput.getCreativeScroll() * 8 + 40; i++) {
             if (i > 0 && i < GameItems.getItemsSize()) {
-                if (GameItems.getItem(i).isBlock()) {
-                    spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(i)).getTexture(),
-                            x + 8 + ((i - mGameInput.getCreativeScroll() * 8) % 8) * 18,
-                            y + 18 + ((i - mGameInput.getCreativeScroll() * 8) / 8) * 18);
-                } else {
-                    spriter.draw(GameItems.getItem(i).getTexture(),
-                            x + 8 + ((i - mGameInput.getCreativeScroll() * 8) % 8) * 18,
-                            y + 18 + ((i - mGameInput.getCreativeScroll() * 8) / 8) * 18);
-                }
+                spriter.draw(GameItems.getItem(i).getSprite(),
+                        x + 8 + ((i - mGameInput.getCreativeScroll() * 8) % 8) * 18,
+                        y + 18 + ((i - mGameInput.getCreativeScroll() * 8) / 8) * 18);
             }
         }
         for (int i = 0; i < 9; i++) {
             if (mMobsController.getPlayer().inventory[i] > 0) {
-                if (GameItems.getItem(mMobsController.getPlayer().inventory[i]).isBlock()) {
-                    spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(mMobsController.getPlayer().inventory[i])).getTexture(),
-                            x + 8 + i * 18, y + creative.getRegionHeight() - 24);
-                } else {
-                    spriter.draw(GameItems.getItem(mMobsController.getPlayer().inventory[i]).getTexture(),
-                            x + 8 + i * 18, y + creative.getRegionHeight() - 24);
-                }
+                spriter.draw(GameItems.getItem(mMobsController.getPlayer().inventory[i]).getSprite(),
+                        x + 8 + i * 18, y + creative.getRegionHeight() - 24);
             }
         }
 
@@ -274,15 +253,9 @@ public class GameRenderer extends Renderer {
 
         for (int i = 0; i < 9; i++) {
             if (mMobsController.getPlayer().inventory[i] > 0) {
-                if (GameItems.getItem(mMobsController.getPlayer().inventory[i]).isBlock()) {
-                    spriter.draw(GameItems.getBlock(GameItems.getBlockIdByItemId(mMobsController.getPlayer().inventory[i])).getTexture(),
-                            getWidth() / 2 - (float) hotbar.getRegionWidth() / 2 + 3 + i * 20,
-                            3);
-                } else {
-                    spriter.draw(GameItems.getItem(mMobsController.getPlayer().inventory[i]).getTexture(),
-                            getWidth() / 2 - (float) hotbar.getRegionWidth() / 2 + 3 + i * 20,
-                            3);
-                }
+                spriter.draw(GameItems.getItem(mMobsController.getPlayer().inventory[i]).getSprite(),
+                        getWidth() / 2 - (float) hotbar.getRegionWidth() / 2 + 3 + i * 20,
+                        3);
             }
         }
         spriter.draw(hotbarSelector,
@@ -306,7 +279,9 @@ public class GameRenderer extends Renderer {
 
         drawWorld(true);
         player.draw(spriter, player.getX() - getCamX() - player.getWidth() / 2, player.getY() - getCamY(), delta);
-        mMobsController.getMobs().forEach( (mob) -> { drawMob(mob, delta); });
+        mMobsController.getMobs().forEach((mob) -> {
+            drawMob(mob, delta);
+        });
         mDropController.forEach(this::drawDrop);
         drawWorld(false);
         drawGUI();
@@ -354,8 +329,7 @@ public class GameRenderer extends Renderer {
                 final int worldX = (int) (mMobsController.getPlayer().getMapX() - size / 2 + x);
                 final int worldY = (int) (mMobsController.getPlayer().getUpperMapY() - size / 2 + y);
 
-                @Nullable
-                final Color color = getMinimapColor(worldX, worldY);
+                @Nullable final Color color = getMinimapColor(worldX, worldY);
 
                 if (color != null) {
                     shaper.setColor(color);

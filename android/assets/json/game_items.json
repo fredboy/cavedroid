@@ -444,7 +444,8 @@
       "id": 66,
       "name": "Empty Bucket",
       "origin_x": 0.25,
-      "type": "bucket"
+      "type": "bucket",
+      "action_key": "use_empty_bucket"
     },
     "bucket_lava": {
       "id": 68,
@@ -496,13 +497,13 @@
       "id": 64,
       "name": "Diamond Shovel",
       "origin_x": 0.125,
-      "type": "tool"
+      "type": "shovel"
     },
     "diamond_sword": {
       "id": 59,
       "name": "Diamond Sword",
       "origin_x": 0.125,
-      "type": "tool"
+      "type": "sword"
     },
     "dirt": {
       "id": 3,
@@ -528,13 +529,13 @@
       "id": 65,
       "name": "Golden Shovel",
       "origin_x": 0.125,
-      "type": "tool"
+      "type": "shovel"
     },
     "gold_sword": {
       "id": 60,
       "name": "Golden Sword",
       "origin_x": 0.125,
-      "type": "tool"
+      "type": "sword"
     },
     "grass": {
       "id": 2,
@@ -560,13 +561,13 @@
       "id": 63,
       "name": "Iron Shovel",
       "origin_x": 0.125,
-      "type": "tool"
+      "type": "shovel"
     },
     "iron_sword": {
       "id": 58,
       "name": "Iron Sword",
       "origin_x": 0.125,
-      "type": "tool"
+      "type": "sword"
     },
     "lapis_block": {
       "id": 19,
@@ -660,7 +661,7 @@
       "id": 62,
       "name": "Stone Shovel",
       "origin_x": 0.125,
-      "type": "tool"
+      "type": "shovel"
     },
     "stone_slab": {
       "id": 47,
@@ -671,7 +672,7 @@
       "id": 57,
       "name": "Stone Sword",
       "origin_x": 0.125,
-      "type": "tool"
+      "type": "sword"
     },
     "stonebrick": {
       "id": 52,
@@ -703,13 +704,13 @@
       "id": 61,
       "name": "Wooden Shovel",
       "origin_x": 0.125,
-      "type": "tool"
+      "type": "shovel"
     },
     "wood_sword": {
       "id": 56,
       "name": "Wooden Sword",
       "origin_x": 0.125,
-      "type": "tool"
+      "type": "sword"
     },
     "wool_colored_black": {
       "id": 44,

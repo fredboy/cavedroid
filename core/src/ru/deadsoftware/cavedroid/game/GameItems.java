@@ -8,7 +8,8 @@ import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.JsonValue;
 import ru.deadsoftware.cavedroid.game.model.block.*;
-import ru.deadsoftware.cavedroid.game.objects.Item;
+import ru.deadsoftware.cavedroid.game.model.item.CommonItemParams;
+import ru.deadsoftware.cavedroid.game.model.item.Item;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
 import ru.deadsoftware.cavedroid.misc.utils.SpriteOrigin;
@@ -111,15 +112,11 @@ public class GameItems {
         return getBlock(id).getTexture();
     }
 
-    public static Sprite getItemTex(int id) {
-        return items.getValueAt(id).getType().equals("block") ? getBlockTex(id) : getItem(id).getTexture();
-    }
-
     public static void load(AssetLoader assetLoader) {
         JsonValue json = Assets.jsonReader.parse(assetLoader.getAssetHandle("json/game_items.json"));
 
         TreeSet<Block> blocksSet = new TreeSet<>(Comparator.comparingInt(a -> a.getParams().getId()));
-        TreeSet<Item> itemsSet = new TreeSet<>(Comparator.comparingInt(Item::getId));
+        TreeSet<Item> itemsSet = new TreeSet<>(Comparator.comparingInt(a -> a.getParams().getId()));
 
 
         int count = 0;
@@ -193,6 +190,8 @@ public class GameItems {
             }
         }
 
+        blocksSet.forEach((block -> blocks.put(block.getParams().getKey(), block)));
+
         count = 0;
         for (JsonValue item = json.get("items").child(); item != null; item = item.next()) {
             try {
@@ -202,6 +201,10 @@ public class GameItems {
                 String texture = Assets.getStringFromJson(item, "texture", key);
                 Sprite sprite = type.equals("block") ? null :
                         new Sprite(new Texture(assetLoader.getAssetHandle("textures/items/" + texture + ".png")));
+
+                if (sprite != null) {
+                    sprite.flip(false, true);
+                }
 
                 float originX = Assets.getFloatFromJson(item, "origin_x", 0f);
                 float originY = Assets.getFloatFromJson(item, "origin_y", 1f);
@@ -213,19 +216,31 @@ public class GameItems {
 
                 String actionKey = Assets.getStringFromJson(item, "action_key", null);
 
+                float mobDamage = Assets.getFloatFromJson(item, "mob_damage_multiplier", 1f);
+                float blockDamage = Assets.getFloatFromJson(item, "block_damage_multiplier", 1f);
+
                 if (count >= id) {
                     count++;
                 }
 
+                CommonItemParams params = new CommonItemParams(id, key, name, origin);
+
+                Item newItem = switch (type) {
+                    case "bucket" -> new Item.Bucket(params, sprite, actionKey);
+                    case "shovel" -> new Item.Shovel(params, sprite, mobDamage, blockDamage);
+                    case "sword" -> new Item.Sword(params, sprite, mobDamage, blockDamage);
+                    case "block" -> new Item.Placeable(params, blocks.get(key));
+                    default -> throw new RuntimeException("Unknown item type: " + type);
+                };
+
                 itemsIds.put(key, id);
-                itemsSet.add(new Item(id, key, name, type, sprite, origin, actionKey));
+                itemsSet.add(newItem);
             } catch (GdxRuntimeException e) {
                 Gdx.app.error(TAG, e.getMessage());
             }
         }
 
-        blocksSet.forEach((block -> blocks.put(block.getParams().getKey(), block)));
-        itemsSet.forEach((item -> items.put(item.getKey(), item)));
+        itemsSet.forEach((item -> items.put(item.getParams().getKey(), item)));
     }
 
 }

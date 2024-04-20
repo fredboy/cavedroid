@@ -1,9 +1,9 @@
 package ru.deadsoftware.cavedroid.game.actions.useitem
 
-import ru.deadsoftware.cavedroid.game.objects.Item
+import ru.deadsoftware.cavedroid.game.model.item.Item
 
 interface IUseItemAction {
 
-    fun perform(item: Item, x: Int, y: Int)
+    fun perform(item: Item.Usable, x: Int, y: Int)
 
 }

@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavedroid.game.GameItems;
+import ru.deadsoftware.cavedroid.game.model.item.Item;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
-import ru.deadsoftware.cavedroid.game.objects.Item;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.utils.SpriteOrigin;
@@ -116,15 +116,13 @@ public class Player extends Mob {
 
     private void drawItem(SpriteBatch spriteBatch, float x, float y, float anim) {
         final int itemId = inventory[slot];
-        final Item item = GameItems.getItem(itemId);
 
-        @CheckForNull final Sprite sprite = item.isBlock()
-                ? item.toBlock().getTexture()
-                : item.getSprite();
-
-        if (sprite == null) {
+        if (itemId == 0) {
             return;
         }
+
+        final Item item = GameItems.getItem(itemId);
+        final Sprite sprite = item.getSprite();
 
         if (!item.isTool()) {
             sprite.setSize(Drop.DROP_SIZE, Drop.DROP_SIZE);
@@ -132,7 +130,7 @@ public class Player extends Mob {
 
         final float handLength = Assets.playerSprite[0][2].getHeight();
 
-        final SpriteOrigin spriteOrigin = item.getDefaultOrigin();
+        final SpriteOrigin spriteOrigin = item.getParams().getInHandSpriteOrigin();
         final int handMultiplier = -getDirection().getBasis();
         final float xOffset = (-1 + getDirection().getIndex()) * sprite.getWidth() + 4 + handMultiplier * (sprite.getWidth() * spriteOrigin.getX());
         final float yOffset = item.isTool() ? -sprite.getHeight() / 2 : 0;
