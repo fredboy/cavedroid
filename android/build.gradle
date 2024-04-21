@@ -59,7 +59,6 @@ android {
         }
         debug {
             applicationIdSuffix ".debug"
-            signingConfig signingConfigs.debug_config
         }
     }
     buildFeatures {
