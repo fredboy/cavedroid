@@ -167,7 +167,7 @@ public class GameWorldFluidsLogicControllerTask extends Timer.Task {
     private void fluidUpdater() {
         int midScreen = (int) mMobsController.getPlayer().x / 16;
         for (int y = mGameWorld.getHeight() - 1; y >= 0; y--) {
-            for (int x = 0; x <= mGameWorld.getWidth() / 2; x++) {
+            for (int x = 0; x <= Math.min(mGameWorld.getWidth() / 2, 32); x++) {
                 updateFluids(midScreen + x, y);
                 updateFluids(midScreen - x, y);
             }
