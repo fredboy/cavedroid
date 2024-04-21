@@ -41,6 +41,11 @@ object RenderModule {
     @Binds
     @IntoSet
     @GameScope
+    fun bindTouchControlsRenderer(renderer: TouchControlsRenderer): IGameRenderer = renderer
+
+    @Binds
+    @IntoSet
+    @GameScope
     fun bindDebugRenderer(renderer: DebugRenderer): IGameRenderer = renderer
 
 //    @Provides

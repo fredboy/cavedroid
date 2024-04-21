@@ -3,6 +3,7 @@ package ru.deadsoftware.cavedroid.game.render
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
+import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.GameInput
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.misc.Assets
@@ -13,6 +14,7 @@ import javax.inject.Inject
 
 @GameScope
 class TouchControlsRenderer @Inject constructor(
+    private val mainConfig: MainConfig,
     private val gameInput: GameInput
 ) : IGameRenderer {
 
@@ -21,6 +23,10 @@ class TouchControlsRenderer @Inject constructor(
     private val shadeTexture get() = Assets.textureRegions[SHADE_KEY]
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
+        if (!mainConfig.isTouch) {
+            return
+        }
+
         val touchControlsMap = Assets.guiMap
 
         touchControlsMap.forEach { (key, value) ->
