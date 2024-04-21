@@ -1,9 +1,10 @@
 package ru.deadsoftware.cavedroid.game.model.block
 
 import com.badlogic.gdx.graphics.Texture
+import ru.deadsoftware.cavedroid.game.model.item.Item
 
 data class CommonBlockParams(
-    @Deprecated("numeric id's will be removed") val id: Int,
+    @Deprecated("numeric id's will be removed") val id: Int?,
     val key: String,
     val collisionMargins: BlockMargins,
     val hitPoints: Int,
@@ -15,4 +16,6 @@ data class CommonBlockParams(
     val animationInfo: BlockAnimationInfo?,
     val texture: Texture?,
     val spriteMargins: BlockMargins,
+    val toolLevel: Int,
+    val toolType: Class<out Item.Tool>?
 )

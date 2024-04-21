@@ -20,8 +20,11 @@ class ItemMapper @Inject constructor() {
 
         return when (dto.type) {
             "bucket" -> Bucket(params, requireNotNull(loadSprite(dto)), requireNotNull(dto.actionKey))
-            "shovel" -> Shovel(params, requireNotNull(loadSprite(dto)), dto.mobDamageMultiplier, dto.blockDamageMultiplier)
-            "sword" -> Sword(params, requireNotNull(loadSprite(dto)), dto.mobDamageMultiplier, dto.blockDamageMultiplier)
+            "shovel" -> Shovel(params, requireNotNull(loadSprite(dto)), dto.mobDamageMultiplier, dto.blockDamageMultiplier, requireNotNull(dto.toolLevel))
+            "sword" -> Sword(params, requireNotNull(loadSprite(dto)), dto.mobDamageMultiplier, dto.blockDamageMultiplier, requireNotNull(dto.toolLevel))
+            "pickaxe" -> Pickaxe(params, requireNotNull(loadSprite(dto)), dto.mobDamageMultiplier, dto.blockDamageMultiplier, requireNotNull(dto.toolLevel))
+            "axe" -> Axe(params, requireNotNull(loadSprite(dto)), dto.mobDamageMultiplier, dto.blockDamageMultiplier, requireNotNull(dto.toolLevel))
+            "shears" -> Shears(params, requireNotNull(loadSprite(dto)), dto.mobDamageMultiplier, dto.blockDamageMultiplier, requireNotNull(dto.toolLevel))
             "block" -> Block(params, requireNotNull(block))
             "slab" -> Slab(params, requireNotNull(slabTopBlock), requireNotNull(slabBottomBlock))
             "none" -> None(params)

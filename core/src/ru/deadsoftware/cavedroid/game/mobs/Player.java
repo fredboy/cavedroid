@@ -118,12 +118,30 @@ public class Player extends Mob {
 
         final Block foregroundBlock = gameWorld.getForeMap(cursorX, cursorY);
         final Block backgroundBlock = gameWorld.getBackMap(cursorX, cursorY);
+        @CheckForNull final Block target;
 
-        final boolean canHitBlock = !foregroundBlock.isNone() && foregroundBlock.getParams().getHitPoints() >= 0
-                || !backgroundBlock.isNone() && backgroundBlock.getParams().getHitPoints() >= 0;
+        if (!foregroundBlock.isNone() && foregroundBlock.getParams().getHitPoints() >= 0) {
+            target = foregroundBlock;
+        } else if (!backgroundBlock.isNone() && backgroundBlock.getParams().getHitPoints() >= 0) {
+            target = backgroundBlock;
+        } else {
+            target = null;
+        }
+
+        final boolean canHitBlock = target != null;
+
+        float multiplier = 1f;
+        final Item currentItem = inventory[slot].getItem();
+        if (currentItem instanceof Item.Tool && canHitBlock) {
+            if (target.getParams().getToolType() == currentItem.getClass()
+                    && ((Item.Tool)currentItem).getLevel() >= target.getParams().getToolLevel()) {
+                multiplier = 2f * ((Item.Tool)currentItem).getLevel();
+            }
+            multiplier *= ((Item.Tool)currentItem).getBlockDamageMultiplier();
+        }
 
         if (hitting && canHitBlock) {
-            blockDamage += 60f * delta;
+            blockDamage += 60f * delta * multiplier;
         } else {
             blockDamage = 0f;
         }

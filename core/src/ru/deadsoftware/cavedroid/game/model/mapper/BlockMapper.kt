@@ -6,6 +6,7 @@ import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.model.block.*
 import ru.deadsoftware.cavedroid.game.model.block.Block.*
 import ru.deadsoftware.cavedroid.game.model.dto.BlockDto
+import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.misc.Assets
 import javax.inject.Inject
 
@@ -47,8 +48,22 @@ class BlockMapper @Inject constructor() {
                 top = dto.spriteTop,
                 right = dto.spriteRight,
                 bottom = dto.spriteBottom,
-            )
+            ),
+            toolLevel = dto.toolLevel,
+            toolType = mapToolType(dto),
         )
+    }
+
+    private fun mapToolType(dto: BlockDto): Class<out Item.Tool>? {
+        return when(dto.toolType) {
+            "shovel" -> Item.Shovel::class.java
+            "sword" -> Item.Sword::class.java
+            "pickaxe" -> Item.Pickaxe::class.java
+            "axe" -> Item.Axe::class.java
+            "shears" -> Item.Shears::class.java
+
+            else -> null
+        }
     }
 
     private fun mapBlockDropInfo(dto: BlockDto): BlockDropInfo? {

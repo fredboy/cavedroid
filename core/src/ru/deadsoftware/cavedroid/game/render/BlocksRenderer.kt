@@ -23,7 +23,7 @@ abstract class BlocksRenderer(
         get() = isNone() || params.isTransparent
 
     private fun blockDamageSprite(index: Int): Sprite? {
-        if (index !in 0..MAX_BLOCK_DAMAGE_INDEX) {
+        if (index !in 0..< MAX_BLOCK_DAMAGE_INDEX) {
             return null
         }
         return Assets.blockDamageSprites[index]

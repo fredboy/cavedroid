@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ItemDto(
-    @Deprecated("numeric ids will be removed") @SerialName("id") val id: Int,
+    @Deprecated("numeric ids will be removed") @SerialName("id") val id: Int? = null,
     @SerialName("name") val name: String,
     @SerialName("type") val type: String,
     @SerialName("texture") val texture: String,
@@ -16,4 +16,5 @@ data class ItemDto(
     @SerialName("block_damage_multiplier") val blockDamageMultiplier: Float = 1f,
     @SerialName("top_slab_block") val topSlabBlock: String? = null,
     @SerialName("bottom_slab_block") val bottomSlabBlock: String? = null,
+    @SerialName("tool_level") val toolLevel: Int? = null,
 )

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class BlockDto(
-    @Deprecated("numeric ids will be removed") @SerialName("id") val id: Int,
+    @Deprecated("numeric ids will be removed") @SerialName("id") val id: Int? = null,
     @SerialName("left") val left: Int = 0,
     @SerialName("top") val top: Int = 0,
     @SerialName("right") val right: Int = 0,
@@ -28,4 +28,6 @@ data class BlockDto(
     @SerialName("full_block") val fullBlock: String? = null,
     @SerialName("state") val state: Int? = null,
     @SerialName("other_part") val otherPart: String? = null,
+    @SerialName("tool_level") val toolLevel: Int = 0,
+    @SerialName("tool_type") val toolType: String? = null,
 )

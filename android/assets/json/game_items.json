@@ -1,7 +1,6 @@
 {
   "blocks": {
     "none": {
-      "id": 0,
       "collision": false,
       "transparent": true,
       "drop": "none",
@@ -9,50 +8,53 @@
       "meta": "none"
     },
     "stone": {
-      "id": 1,
       "hp": 450,
       "drop": "cobblestone",
-      "texture": "stone"
+      "texture": "stone",
+      "tool_level": 1,
+      "tool_type": "pickaxe"
     },
     "grass": {
-      "id": 2,
       "hp": 54,
       "drop": "dirt",
-      "texture": "grass"
+      "texture": "grass",
+      "tool_level": 0,
+      "tool_type": "shovel"
     },
     "dirt": {
-      "id": 3,
       "hp": 45,
       "drop": "dirt",
-      "texture": "dirt"
+      "texture": "dirt",
+      "tool_level": 0,
+      "tool_type": "shovel"
     },
     "cobblestone": {
-      "id": 4,
       "hp": 600,
       "drop": "cobblestone",
-      "texture": "cobblestone"
+      "texture": "cobblestone",
+      "tool_level": 1,
+      "tool_type": "pickaxe"
     },
     "planks_oak": {
-      "id": 5,
       "hp": 180,
       "drop": "planks_oak",
-      "texture": "planks_oak"
+      "texture": "planks_oak",
+      "tool_level": 0,
+      "tool_type": "axe"
     },
     "sapling_oak": {
-      "id": 6,
       "collision": false,
       "transparent": true,
       "block_required": true,
       "drop": "sapling_oak",
-      "texture": "sapling_oak"
+      "texture": "sapling_oak",
+      "hp": 1
     },
     "bedrock": {
-      "id": 7,
       "drop": "bedrock",
       "texture": "bedrock"
     },
     "water": {
-      "id": 8,
       "collision": false,
       "transparent": true,
       "drop": "water",
@@ -63,7 +65,6 @@
       "state": 0
     },
     "lava": {
-      "id": 9,
       "collision": false,
       "drop": "lava",
       "meta": "lava",
@@ -73,135 +74,151 @@
       "state": 0
     },
     "sand": {
-      "id": 10,
       "hp": 45,
       "drop": "sand",
-      "texture": "sand"
+      "texture": "sand",
+      "tool_level": 0,
+      "tool_type": "shovel"
     },
     "gravel": {
-      "id": 11,
       "hp": 54,
       "drop": "gravel",
-      "texture": "gravel"
+      "texture": "gravel",
+      "tool_level": 0,
+      "tool_type": "shovel"
     },
     "gold_ore": {
-      "id": 12,
       "hp": 900,
       "drop": "gold_ore",
-      "texture": "gold_ore"
+      "texture": "gold_ore",
+      "tool_level": 3,
+      "tool_type": "pickaxe"
     },
     "iron_ore": {
-      "id": 13,
       "hp": 900,
       "drop": "iron_ore",
-      "texture": "iron_ore"
+      "texture": "iron_ore",
+      "tool_level": 2,
+      "tool_type": "pickaxe"
     },
     "coal_ore": {
-      "id": 14,
       "hp": 900,
       "drop": "coal",
-      "texture": "coal_ore"
+      "texture": "coal_ore",
+      "tool_level": 1,
+      "tool_type": "pickaxe"
     },
     "log_oak": {
-      "id": 15,
       "hp": 180,
       "drop": "log_oak",
-      "texture": "log_oak"
+      "texture": "log_oak",
+      "tool_level": 0,
+      "tool_type": "axe"
     },
     "leaves_oak": {
-      "id": 16,
       "hp": 21,
       "transparent": true,
       "drop": "leaves_oak",
-      "texture": "leaves_oak"
+      "texture": "leaves_oak",
+      "tool_level": 1,
+      "tool_type": "shears"
     },
     "sponge": {
-      "id": 17,
       "hp": 54,
       "drop": "sponge",
-      "texture": "sponge"
+      "texture": "sponge",
+      "tool_level": 0,
+      "tool_type": "hoe"
     },
     "glass": {
-      "id": 18,
       "hp": 27,
       "transparent": true,
       "drop": "none",
       "texture": "glass"
     },
     "lapis_ore": {
-      "id": 19,
       "hp": 900,
       "drop": "lapis",
-      "texture": "lapis_ore"
+      "texture": "lapis_ore",
+      "tool_level": 2,
+      "tool_type": "pickaxe"
     },
     "lapis_block": {
-      "id": 20,
       "hp": 900,
       "drop": "lapis_block",
-      "texture": "lapis_block"
+      "texture": "lapis_block",
+      "tool_level": 2,
+      "tool_type": "pickaxe"
     },
     "sandstone": {
-      "id": 21,
       "hp": 240,
       "drop": "sandstone",
-      "texture": "sandstone"
+      "texture": "sandstone",
+      "tool_level": 1,
+      "tool_type": "pickaxe"
     },
     "noteblock": {
-      "id": 22,
       "hp": 75,
       "drop": "noteblock",
-      "texture": "noteblock"
+      "texture": "noteblock",
+      "tool_level": 0,
+      "tool_type": "axe"
     },
     "bed_l": {
-      "id": 23,
       "hp": 21,
       "collision": false,
       "background": true,
       "transparent": true,
       "drop": "none",
-      "texture": "bed_l"
+      "texture": "bed_l",
+      "tool_level": 0,
+      "tool_type": "axe"
     },
     "bed_r": {
-      "id": 24,
       "hp": 21,
       "collision": false,
       "background": true,
       "transparent": true,
       "drop": "none",
-      "texture": "bed_r"
+      "texture": "bed_r",
+      "tool_level": 0,
+      "tool_type": "axe"
     },
     "web": {
-      "id": 25,
       "hp": 1200,
       "collision": false,
       "transparent": true,
       "drop": "web",
-      "texture": "web"
+      "texture": "web",
+      "tool_level": 1,
+      "tool_type": "shears"
     },
     "tallgrass": {
-      "id": 26,
       "collision": false,
       "transparent": true,
       "block_required": true,
       "drop": "tallgrass",
-      "texture": "tallgrass"
+      "texture": "tallgrass",
+      "tool_level": 1,
+      "tool_type": "shears"
     },
     "deadbush": {
-      "id": 27,
       "collision": false,
       "transparent": true,
       "block_required": true,
       "drop": "deadbush",
-      "texture": "deadbush"
+      "texture": "deadbush",
+      "tool_level": 1,
+      "tool_type": "shears"
     },
     "bricks": {
-      "id": 28,
       "hp": 600,
       "drop": "bricks",
-      "texture": "bricks"
+      "texture": "bricks",
+      "tool_level": 1,
+      "tool_type": "pickaxe"
     },
     "dandelion": {
-      "id": 29,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -209,7 +226,6 @@
       "texture": "dandelion"
     },
     "rose": {
-      "id": 30,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -217,7 +233,6 @@
       "texture": "rose"
     },
     "mushroom_brown": {
-      "id": 31,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -225,7 +240,6 @@
       "texture": "mushroom_brown"
     },
     "mushroom_red": {
-      "id": 32,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -233,115 +247,132 @@
       "texture": "mushroom_red"
     },
     "wool_colored_white": {
-      "id": 33,
       "hp": 75,
       "drop": "wool_colored_white",
-      "texture": "wool_colored_white"
+      "texture": "wool_colored_white",
+      "tool_level": 0,
+      "tool_type": "shears"
     },
     "wool_colored_orange": {
-      "id": 34,
       "hp": 75,
       "drop": "wool_colored_orange",
-      "texture": "wool_colored_orange"
+      "texture": "wool_colored_orange",
+      "tool_level": 0,
+      "tool_type": "shears"
     },
     "wool_colored_magenta": {
-      "id": 35,
       "hp": 75,
       "drop": "wool_colored_magenta",
-      "texture": "wool_colored_magenta"
+      "texture": "wool_colored_magenta",
+      "tool_level": 0,
+      "tool_type": "shears"
     },
     "wool_colored_light_blue": {
-      "id": 36,
       "hp": 75,
       "drop": "wool_colored_light_blue",
-      "texture": "wool_colored_light_blue"
+      "texture": "wool_colored_light_blue",
+      "tool_level": 0,
+      "tool_type": "shears"
     },
     "wool_colored_yellow": {
-      "id": 37,
       "hp": 75,
       "drop": "wool_colored_yellow",
-      "texture": "wool_colored_yellow"
+      "texture": "wool_colored_yellow",
+      "tool_level": 0,
+      "tool_type": "shears"
     },
     "wool_colored_lime": {
-      "id": 38,
       "hp": 75,
       "drop": "wool_colored_lime",
-      "texture": "wool_colored_lime"
+      "texture": "wool_colored_lime",
+      "tool_level": 0,
+      "tool_type": "shears"
     },
     "wool_colored_pink": {
-      "id": 39,
       "hp": 75,
       "drop": "wool_colored_pink",
-      "texture": "wool_colored_pink"
+      "texture": "wool_colored_pink",
+      "tool_level": 0,
+      "tool_type": "shears"
     },
     "wool_colored_gray": {
-      "id": 40,
       "hp": 75,
       "drop": "wool_colored_gray",
-      "texture": "wool_colored_gray"
+      "texture": "wool_colored_gray",
+      "tool_level": 0,
+      "tool_type": "shears"
     },
     "wool_colored_silver": {
-      "id": 41,
       "hp": 75,
       "drop": "wool_colored_silver",
-      "texture": "wool_colored_silver"
+      "texture": "wool_colored_silver",
+      "tool_level": 0,
+      "tool_type": "shears"
     },
     "wool_colored_cyan": {
-      "id": 42,
       "hp": 75,
       "drop": "wool_colored_cyan",
-      "texture": "wool_colored_cyan"
+      "texture": "wool_colored_cyan",
+      "tool_level": 0,
+      "tool_type": "shears"
     },
     "wool_colored_purple": {
-      "id": 43,
       "hp": 75,
       "drop": "wool_colored_purple",
-      "texture": "wool_colored_purple"
+      "texture": "wool_colored_purple",
+      "tool_level": 0,
+      "tool_type": "shears"
     },
     "wool_colored_blue": {
-      "id": 44,
       "hp": 75,
       "drop": "wool_colored_blue",
-      "texture": "wool_colored_blue"
+      "texture": "wool_colored_blue",
+      "tool_level": 0,
+      "tool_type": "shears"
     },
     "wool_colored_brown": {
-      "id": 45,
       "hp": 75,
       "drop": "wool_colored_brown",
-      "texture": "wool_colored_brown"
+      "texture": "wool_colored_brown",
+      "tool_level": 0,
+      "tool_type": "shears"
     },
     "wool_colored_green": {
-      "id": 46,
       "hp": 75,
       "drop": "wool_colored_green",
-      "texture": "wool_colored_green"
+      "texture": "wool_colored_green",
+      "tool_level": 0,
+      "tool_type": "shears"
     },
     "wool_colored_red": {
-      "id": 47,
       "hp": 75,
       "drop": "wool_colored_red",
-      "texture": "wool_colored_red"
+      "texture": "wool_colored_red",
+      "tool_level": 0,
+      "tool_type": "shears"
     },
     "wool_colored_black": {
-      "id": 48,
       "hp": 75,
       "drop": "wool_colored_black",
-      "texture": "wool_colored_black"
+      "texture": "wool_colored_black",
+      "tool_level": 0,
+      "tool_type": "shears"
     },
     "gold_block": {
-      "id": 49,
       "hp": 900,
       "drop": "gold_block",
-      "texture": "gold_block"
+      "texture": "gold_block",
+      "tool_level": 3,
+      "tool_type": "pickaxe"
     },
     "iron_block": {
-      "id": 50,
       "hp": 1500,
       "drop": "iron_block",
-      "texture": "iron_block"
+      "texture": "iron_block",
+      "tool_level": 2,
+      "tool_type": "pickaxe"
     },
     "stone_slab_bottom": {
-      "id": 51,
       "top": 8,
       "sprite_top": 8,
       "hp": 600,
@@ -350,10 +381,11 @@
       "meta": "slab",
       "texture": "stone_slab",
       "full_block": "double_stone_slab",
-      "other_part": "stone_slab_top"
+      "other_part": "stone_slab_top",
+      "tool_level": 1,
+      "tool_type": "pickaxe"
     },
     "stone_slab_top": {
-      "id": 51,
       "hp": 600,
       "bottom": 8,
       "sprite_bottom": 8,
@@ -362,17 +394,19 @@
       "meta": "slab",
       "texture": "stone_slab",
       "full_block": "double_stone_slab",
-      "other_part": "stone_slab_bottom"
+      "other_part": "stone_slab_bottom",
+      "tool_level": 1,
+      "tool_type": "pickaxe"
     },
     "double_stone_slab": {
-      "id": 52,
       "hp": 600,
       "drop": "stone_slab",
       "drop_count": 2,
-      "texture": "stone_slab"
+      "texture": "stone_slab",
+      "tool_level": 1,
+      "tool_type": "pickaxe"
     },
     "sandstone_slab_bottom": {
-      "id": 53,
       "top": 8,
       "sprite_top": 8,
       "hp": 600,
@@ -381,10 +415,11 @@
       "meta": "slab",
       "texture": "sandstone",
       "full_block": "sandstone",
-      "other_part": "sandstone_slab_top"
+      "other_part": "sandstone_slab_top",
+      "tool_level": 1,
+      "tool_type": "pickaxe"
     },
     "sandstone_slab_top": {
-      "id": 53,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 600,
@@ -393,10 +428,11 @@
       "meta": "slab",
       "texture": "sandstone",
       "full_block": "sandstone",
-      "other_part": "sandstone_slab_bottom"
+      "other_part": "sandstone_slab_bottom",
+      "tool_level": 1,
+      "tool_type": "pickaxe"
     },
     "oak_slab_bottom": {
-      "id": 54,
       "top": 8,
       "sprite_top": 8,
       "hp": 180,
@@ -405,10 +441,11 @@
       "meta": "slab",
       "texture": "planks_oak",
       "full_block": "planks_oak",
-      "other_part": "oak_slab_top"
+      "other_part": "oak_slab_top",
+      "tool_level": 0,
+      "tool_type": "axe"
     },
     "oak_slab_top": {
-      "id": 54,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 180,
@@ -417,10 +454,11 @@
       "meta": "slab",
       "texture": "planks_oak",
       "full_block": "planks_oak",
-      "other_part": "oak_slab_bottom"
+      "other_part": "oak_slab_bottom",
+      "tool_level": 0,
+      "tool_type": "axe"
     },
     "cobblestone_slab_bottom": {
-      "id": 55,
       "top": 8,
       "sprite_top": 8,
       "hp": 600,
@@ -429,10 +467,11 @@
       "drop": "cobblestone_slab",
       "texture": "cobblestone",
       "full_block": "cobblestone",
-      "other_part": "cobblestone_slab_top"
+      "other_part": "cobblestone_slab_top",
+      "tool_level": 1,
+      "tool_type": "pickaxe"
     },
     "cobblestone_slab_top": {
-      "id": 55,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 600,
@@ -441,10 +480,11 @@
       "drop": "cobblestone_slab",
       "texture": "cobblestone",
       "full_block": "cobblestone",
-      "other_part": "cobblestone_slab_bottom"
+      "other_part": "cobblestone_slab_bottom",
+      "tool_level": 1,
+      "tool_type": "pickaxe"
     },
     "brick_slab_bottom": {
-      "id": 56,
       "top": 8,
       "sprite_top": 8,
       "hp": 600,
@@ -453,10 +493,11 @@
       "meta": "slab",
       "texture": "bricks",
       "full_block": "bricks",
-      "other_part": "brick_slab_top"
+      "other_part": "brick_slab_top",
+      "tool_level": 1,
+      "tool_type": "pickaxe"
     },
     "brick_slab_top": {
-      "id": 56,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 600,
@@ -465,16 +506,18 @@
       "meta": "slab",
       "texture": "bricks",
       "full_block": "bricks",
-      "other_part": "brick_slab_bottom"
+      "other_part": "brick_slab_bottom",
+      "tool_level": 1,
+      "tool_type": "pickaxe"
     },
     "stonebrick": {
-      "id": 57,
       "hp": 450,
       "drop": "stonebrick",
-      "texture": "stonebrick"
+      "texture": "stonebrick",
+      "tool_level": 1,
+      "tool_type": "pickaxe"
     },
     "stonebrick_slab_bottom": {
-      "id": 58,
       "top": 8,
       "sprite_top": 8,
       "hp": 450,
@@ -483,10 +526,11 @@
       "meta": "slab",
       "texture": "stonebrick",
       "full_block": "stonebrick",
-      "other_part": "stonebrick_slab_top"
+      "other_part": "stonebrick_slab_top",
+      "tool_level": 1,
+      "tool_type": "pickaxe"
     },
     "stonebrick_slab_top": {
-      "id": 58,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 450,
@@ -495,10 +539,11 @@
       "meta": "slab",
       "texture": "stonebrick",
       "full_block": "stonebrick",
-      "other_part": "brick_slab_bottom"
+      "other_part": "brick_slab_bottom",
+      "tool_level": 1,
+      "tool_type": "pickaxe"
     },
     "cactus": {
-      "id": 59,
       "left": 1,
       "right": 1,
       "hp": 39,
@@ -508,7 +553,6 @@
       "texture": "cactus"
     },
     "water_16": {
-      "id": 60,
       "collision": false,
       "transparent": true,
       "drop": "water_16",
@@ -519,7 +563,6 @@
       "state": 1
     },
     "water_12": {
-      "id": 61,
       "top": 4,
       "sprite_top": 4,
       "collision": false,
@@ -532,7 +575,6 @@
       "state": 2
     },
     "water_8": {
-      "id": 62,
       "top": 8,
       "sprite_top": 8,
       "collision": false,
@@ -545,7 +587,6 @@
       "state": 3
     },
     "water_4": {
-      "id": 63,
       "top": 12,
       "sprite_top": 12,
       "collision": false,
@@ -558,7 +599,6 @@
       "state": 4
     },
     "lava_16": {
-      "id": 64,
       "collision": false,
       "drop": "lava_16",
       "meta": "lava",
@@ -568,7 +608,6 @@
       "state": 1
     },
     "lava_12": {
-      "id": 65,
       "top": 4,
       "sprite_top": 4,
       "collision": false,
@@ -580,7 +619,6 @@
       "state": 2
     },
     "lava_8": {
-      "id": 66,
       "top": 8,
       "sprite_top": 8,
       "collision": false,
@@ -592,7 +630,6 @@
       "state": 3
     },
     "lava_4": {
-      "id": 67,
       "top": 12,
       "sprite_top": 12,
       "collision": false,
@@ -604,303 +641,256 @@
       "state": 4
     },
     "obsidian": {
-      "id": 68,
       "hp": 1500,
       "drop": "obsidian",
-      "texture": "obsidian"
+      "texture": "obsidian",
+      "tool_level": 4,
+      "tool_type": "pickaxe"
     }
   },
   "items": {
     "none": {
-      "id": 0,
       "name": "",
       "type": "none",
       "texture": "none"
     },
     "stone": {
-      "id": 1,
       "name": "Stone",
       "type": "block",
       "texture": "stone"
     },
     "grass": {
-      "id": 2,
       "name": "Grass",
       "type": "block",
       "texture": "grass"
     },
     "dirt": {
-      "id": 3,
       "name": "Dirt",
       "type": "block",
       "texture": "dirt"
     },
     "cobblestone": {
-      "id": 4,
       "name": "Cobblestone",
       "type": "block",
       "texture": "cobblestone"
     },
     "planks_oak": {
-      "id": 5,
       "name": "Oak Planks",
       "type": "block",
       "texture": "planks_oak"
     },
     "sapling_oak": {
-      "id": 6,
       "name": "Oak Sapling",
       "type": "block",
       "texture": "sapling_oak"
     },
     "bedrock": {
-      "id": 7,
       "name": "Bedrock",
       "type": "block",
       "texture": "bedrock"
     },
     "water": {
-      "id": 8,
       "name": "Water",
       "type": "block",
       "texture": "water"
     },
     "lava": {
-      "id": 9,
       "name": "Lava",
       "type": "block",
       "texture": "lava"
     },
     "sand": {
-      "id": 10,
       "name": "Sand",
       "type": "block",
       "texture": "sand"
     },
     "gravel": {
-      "id": 11,
       "name": "Gravel",
       "type": "block",
       "texture": "gravel"
     },
     "gold_ore": {
-      "id": 12,
       "name": "Golden Ore",
       "type": "block",
       "texture": "gold_ore"
     },
     "iron_ore": {
-      "id": 13,
       "name": "Iron Ore",
       "type": "block",
       "texture": "iron_ore"
     },
     "coal_ore": {
-      "id": 14,
       "name": "Coal Ore",
       "type": "block",
       "texture": "coal_ore"
     },
     "log_oak": {
-      "id": 15,
       "name": "Wood",
       "type": "block",
       "texture": "log_oak"
     },
     "leaves_oak": {
-      "id": 16,
       "name": "Leaves",
       "type": "block",
       "texture": "leaves_oak"
     },
     "glass": {
-      "id": 17,
       "name": "Glass",
       "type": "block",
       "texture": "glass"
     },
     "lapis_ore": {
-      "id": 18,
       "name": "Lapis Ore",
       "type": "block",
       "texture": "lapis_ore"
     },
     "lapis_block": {
-      "id": 19,
       "name": "Lapis Block",
       "type": "block",
       "texture": "lapis_block"
     },
     "sandstone": {
-      "id": 20,
       "name": "Sandstone",
       "type": "block",
       "texture": "sandstone"
     },
     "web": {
-      "id": 21,
       "name": "Cobweb",
       "type": "block",
       "texture": "web"
     },
     "tallgrass": {
-      "id": 22,
       "name": "Tall Grass",
       "type": "block",
       "texture": "tallgrass",
       "origin_x": 0.5
     },
     "deadbush": {
-      "id": 23,
       "name": "Dead Bush",
       "type": "block",
       "texture": "deadbush",
       "origin_x": 0.5
     },
     "bricks": {
-      "id": 24,
       "name": "Bricks",
       "type": "block",
       "texture": "bricks"
     },
     "dandelion": {
-      "id": 25,
       "name": "Dandelion",
       "type": "block",
       "texture": "dandelion",
       "origin_x": 0.5
     },
     "rose": {
-      "id": 26,
       "name": "Rose",
       "type": "block",
       "texture": "rose",
       "origin_x": 0.5
     },
     "mushroom_brown": {
-      "id": 27,
       "name": "Mushroom",
       "type": "block",
       "texture": "mushroom_brown",
       "origin_x": 0.5
     },
     "mushroom_red": {
-      "id": 28,
       "name": "Mushroom",
       "type": "block",
       "texture": "mushroom_red",
       "origin_x": 0.5
     },
     "wool_colored_white": {
-      "id": 29,
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_white"
     },
     "wool_colored_orange": {
-      "id": 30,
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_orange"
     },
     "wool_colored_magenta": {
-      "id": 31,
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_magenta"
     },
     "wool_colored_light_blue": {
-      "id": 32,
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_light_blue"
     },
     "wool_colored_yellow": {
-      "id": 33,
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_yellow"
     },
     "wool_colored_lime": {
-      "id": 34,
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_lime"
     },
     "wool_colored_pink": {
-      "id": 35,
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_pink"
     },
     "wool_colored_gray": {
-      "id": 36,
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_gray"
     },
     "wool_colored_silver": {
-      "id": 37,
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_silver"
     },
     "wool_colored_cyan": {
-      "id": 38,
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_cyan"
     },
     "wool_colored_purple": {
-      "id": 39,
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_purple"
     },
     "wool_colored_blue": {
-      "id": 40,
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_blue"
     },
     "wool_colored_brown": {
-      "id": 41,
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_brown"
     },
     "wool_colored_green": {
-      "id": 42,
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_green"
     },
     "wool_colored_red": {
-      "id": 43,
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_red"
     },
     "wool_colored_black": {
-      "id": 44,
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_black"
     },
     "gold_block": {
-      "id": 45,
       "name": "Gold Block",
       "type": "block",
       "texture": "gold_block"
     },
     "iron_block": {
-      "id": 46,
       "name": "Iron Block",
       "type": "block",
       "texture": "iron_block"
     },
     "stone_slab": {
-      "id": 47,
       "name": "Stone Slab",
       "type": "slab",
       "texture": "stone_slab",
@@ -908,7 +898,6 @@
       "bottom_slab_block": "stone_slab_bottom"
     },
     "sandstone_slab": {
-      "id": 48,
       "name": "Sandstone Slab",
       "type": "slab",
       "texture": "sandstone_slab",
@@ -916,7 +905,6 @@
       "bottom_slab_block": "sandstone_slab_bottom"
     },
     "oak_slab": {
-      "id": 49,
       "name": "Oak Slab",
       "type": "slab",
       "texture": "oak_slab",
@@ -924,7 +912,6 @@
       "bottom_slab_block": "oak_slab_bottom"
     },
     "cobblestone_slab": {
-      "id": 50,
       "name": "Cobblestone Slab",
       "type": "slab",
       "texture": "cobblestone_slab",
@@ -932,7 +919,6 @@
       "bottom_slab_block": "cobblestone_slab_bottom"
     },
     "brick_slab": {
-      "id": 51,
       "name": "Brick Slab",
       "type": "slab",
       "texture": "brick_slab",
@@ -940,13 +926,11 @@
       "bottom_slab_block": "brick_slab_bottom"
     },
     "stonebrick": {
-      "id": 52,
       "name": "Stone Brick",
       "type": "block",
       "texture": "stonebrick"
     },
     "stonebrick_slab": {
-      "id": 53,
       "name": "Stone Brick Slab",
       "type": "slab",
       "texture": "stonebrick_slab",
@@ -954,89 +938,166 @@
       "bottom_slab_block": "stonebrick_slab_bottom"
     },
     "cactus": {
-      "id": 54,
       "name": "Cactus",
       "type": "block",
       "texture": "cactus"
     },
     "obsidian": {
-      "id": 55,
       "name": "Obsidian",
       "type": "block",
       "texture": "obsidian"
     },
     "wood_sword": {
-      "id": 56,
       "name": "Wooden Sword",
       "type": "sword",
       "texture": "wood_sword",
-      "origin_x": 0.125
+      "origin_x": 0.125,
+      "tool_level": 1
     },
     "stone_sword": {
-      "id": 57,
       "name": "Stone Sword",
       "type": "sword",
       "texture": "stone_sword",
-      "origin_x": 0.125
+      "origin_x": 0.125,
+      "tool_level": 2
     },
     "iron_sword": {
-      "id": 58,
       "name": "Iron Sword",
       "type": "sword",
       "texture": "iron_sword",
-      "origin_x": 0.125
+      "origin_x": 0.125,
+      "tool_level": 3
     },
     "diamond_sword": {
-      "id": 59,
       "name": "Diamond Sword",
       "type": "sword",
       "texture": "diamond_sword",
-      "origin_x": 0.125
+      "origin_x": 0.125,
+      "tool_level": 4
     },
     "gold_sword": {
-      "id": 60,
       "name": "Golden Sword",
       "type": "sword",
       "texture": "gold_sword",
-      "origin_x": 0.125
+      "origin_x": 0.125,
+      "tool_level": 1
     },
     "wood_shovel": {
-      "id": 61,
       "name": "Wooden Shovel",
       "type": "shovel",
       "texture": "wood_shovel",
-      "origin_x": 0.125
+      "origin_x": 0.125,
+      "tool_level" : 1
     },
     "stone_shovel": {
-      "id": 62,
       "name": "Stone Shovel",
       "type": "shovel",
       "texture": "stone_shovel",
-      "origin_x": 0.125
+      "origin_x": 0.125,
+      "tool_level" : 2
     },
     "iron_shovel": {
-      "id": 63,
       "name": "Iron Shovel",
       "type": "shovel",
       "texture": "iron_shovel",
-      "origin_x": 0.125
+      "origin_x": 0.125,
+      "tool_level" : 3
     },
     "diamond_shovel": {
-      "id": 64,
       "name": "Diamond Shovel",
       "type": "shovel",
       "texture": "diamond_shovel",
-      "origin_x": 0.125
+      "origin_x": 0.125,
+      "tool_level" : 4
     },
     "gold_shovel": {
-      "id": 65,
       "name": "Golden Shovel",
       "type": "shovel",
       "texture": "gold_shovel",
+      "origin_x": 0.125,
+      "tool_level" : 1,
+      "block_damage_multiplier": 6
+    },
+    "wood_pickaxe": {
+      "name": "Wooden Pickaxe",
+      "type": "pickaxe",
+      "texture": "wood_pickaxe",
+      "origin_x": 0.125,
+      "tool_level" : 1
+    },
+    "stone_pickaxe": {
+      "name": "Stone Pickaxe",
+      "type": "pickaxe",
+      "texture": "stone_pickaxe",
+      "origin_x": 0.125,
+      "tool_level" : 2
+    },
+    "iron_pickaxe": {
+      "name": "Iron Pickaxe",
+      "type": "pickaxe",
+      "texture": "iron_pickaxe",
+      "origin_x": 0.125,
+      "tool_level" : 3
+    },
+    "diamond_pickaxe": {
+      "name": "Diamond Pickaxe",
+      "type": "pickaxe",
+      "texture": "diamond_pickaxe",
+      "origin_x": 0.125,
+      "tool_level" : 4
+    },
+    "gold_pickaxe": {
+      "name": "Golden Pickaxe",
+      "type": "pickaxe",
+      "texture": "gold_pickaxe",
+      "origin_x": 0.125,
+      "tool_level" : 1,
+      "block_damage_multiplier": 6
+    },
+    "wood_axe": {
+      "name": "Wooden Axe",
+      "type": "axe",
+      "texture": "wood_axe",
+      "origin_x": 0.125,
+      "tool_level" : 1
+    },
+    "stone_axe": {
+      "name": "Stone Axe",
+      "type": "axe",
+      "texture": "stone_axe",
+      "origin_x": 0.125,
+      "tool_level" : 2
+    },
+    "iron_axe": {
+      "name": "Iron Axe",
+      "type": "axe",
+      "texture": "iron_axe",
+      "origin_x": 0.125,
+      "tool_level" : 3
+    },
+    "diamond_axe": {
+      "name": "Diamond Axe",
+      "type": "axe",
+      "texture": "diamond_axe",
+      "origin_x": 0.125,
+      "tool_level" : 4
+    },
+    "gold_axe": {
+      "name": "Golden Axe",
+      "type": "axe",
+      "texture": "gold_axe",
+      "origin_x": 0.125,
+      "tool_level" : 1,
+      "block_damage_multiplier": 6
+    },
+    "shears": {
+      "name": "Shears",
+      "type": "shears",
+      "texture": "shears",
+      "tool_level" : 1,
       "origin_x": 0.125
     },
     "bucket_empty": {
-      "id": 66,
       "name": "Empty Bucket",
       "type": "bucket",
       "texture": "bucket_empty",
@@ -1044,7 +1105,6 @@
       "action_key": "use_empty_bucket"
     },
     "bucket_water": {
-      "id": 67,
       "name": "Water Bucket",
       "type": "bucket",
       "texture": "bucket_water",
@@ -1052,7 +1112,6 @@
       "action_key": "use_water_bucket"
     },
     "bucket_lava": {
-      "id": 68,
       "name": "Lava Bucket",
       "type": "bucket",
       "texture": "bucket_lava",

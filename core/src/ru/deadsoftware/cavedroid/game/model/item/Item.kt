@@ -54,6 +54,7 @@ sealed class Item {
     sealed class Tool : Item() {
         abstract val mobDamageMultiplier: Float
         abstract val blockDamageMultiplier: Float
+        abstract val level: Int
     }
 
     sealed class Usable : Item() {
@@ -90,6 +91,7 @@ sealed class Item {
         override val sprite: Sprite,
         override val mobDamageMultiplier: Float,
         override val blockDamageMultiplier: Float,
+        override val level: Int,
     ) : Tool()
 
     data class Shovel(
@@ -97,6 +99,31 @@ sealed class Item {
         override val sprite: Sprite,
         override val mobDamageMultiplier: Float,
         override val blockDamageMultiplier: Float,
+        override val level: Int,
+    ) : Tool()
+
+    data class Axe(
+        override val params: CommonItemParams,
+        override val sprite: Sprite,
+        override val mobDamageMultiplier: Float,
+        override val blockDamageMultiplier: Float,
+        override val level: Int,
+    ) : Tool()
+
+    data class Pickaxe(
+        override val params: CommonItemParams,
+        override val sprite: Sprite,
+        override val mobDamageMultiplier: Float,
+        override val blockDamageMultiplier: Float,
+        override val level: Int,
+    ) : Tool()
+
+    data class Shears(
+        override val params: CommonItemParams,
+        override val sprite: Sprite,
+        override val mobDamageMultiplier: Float,
+        override val blockDamageMultiplier: Float,
+        override val level: Int,
     ) : Tool()
     
     data class Bucket(
