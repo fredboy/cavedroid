@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavedroid.game.GameItemsHolder;
+import ru.deadsoftware.cavedroid.game.model.block.Block;
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem;
 import ru.deadsoftware.cavedroid.game.model.item.Item;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
@@ -30,6 +31,10 @@ public class Player extends Mob {
     public int gameMode;
     public boolean swim;
     public float headRotation = 0f;
+
+    public float blockDamage = 0f;
+    public int cursorX = 0;
+    public int cursorY = 0;
 
     public Player(GameItemsHolder gameItemsHolder) {
         super(0, 0, 4, 30, randomDir(), Type.MOB, MAX_HEALTH);
@@ -107,6 +112,21 @@ public class Player extends Mob {
 
     @Override
     public void ai(GameWorld gameWorld, GameItemsHolder gameItemsHolder, float delta) {
+        if (gameMode == 1) {
+            return;
+        }
+
+        final Block foregroundBlock = gameWorld.getForeMap(cursorX, cursorY);
+        final Block backgroundBlock = gameWorld.getBackMap(cursorX, cursorY);
+
+        final boolean canHitBlock = !foregroundBlock.isNone() && foregroundBlock.getParams().getHitPoints() >= 0
+                || !backgroundBlock.isNone() && backgroundBlock.getParams().getHitPoints() >= 0;
+
+        if (hitting && canHitBlock) {
+            blockDamage += 60f * delta;
+        } else {
+            blockDamage = 0f;
+        }
     }
 
     @Override
@@ -181,6 +201,7 @@ public class Player extends Mob {
     }
 
     public void stopHitting() {
+        blockDamage = 0f;
         hitting = false;
     }
 

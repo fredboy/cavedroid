@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.game.GameInput
+import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.block.Block
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.Assets
@@ -13,7 +14,7 @@ import ru.deadsoftware.cavedroid.misc.utils.px
 
 abstract class BlocksRenderer(
     protected val gameWorld: GameWorld,
-    protected val gameInput: GameInput,
+    protected val mobsController: MobsController,
 ) : IGameRenderer {
 
     protected abstract val background: Boolean
@@ -30,23 +31,23 @@ abstract class BlocksRenderer(
     }
 
     protected fun drawBlockDamage(spriteBatch: SpriteBatch, viewport: Rectangle) {
-        val blockDamage = gameInput.blockDamage
-        if (blockDamage <= 0) {
-            return
-        }
+        val player = mobsController.player
+        val blockDamage = player.blockDamage.takeIf { it > 0f } ?: return
+        val cursorX = player.cursorX
+        val cursorY = player.cursorY
 
         val block = if (background) {
-            gameWorld.getBackMap(gameInput.curX, gameInput.curY)
+            gameWorld.getBackMap(cursorX, cursorY)
         } else {
-            gameWorld.getForeMap(gameInput.curX, gameInput.curY)
+            gameWorld.getForeMap(cursorX, cursorY)
         }
 
         val index = (MAX_BLOCK_DAMAGE_INDEX.toFloat() * (blockDamage.toFloat() / block.params.hitPoints.toFloat()))
             .let(MathUtils::floor)
         val texture = blockDamageTexture(index) ?: return
 
-        if (gameWorld.hasForeAt(gameInput.curX, gameInput.curY) != background) {
-            spriteBatch.draw(texture, gameInput.curX.px - viewport.x, gameInput.curY.px - viewport.y)
+        if (gameWorld.hasForeAt(cursorX, cursorY) != background) {
+            spriteBatch.draw(texture, cursorX.px - viewport.x, cursorY.px - viewport.y)
         }
     }
 

@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
-import ru.deadsoftware.cavedroid.game.GameInput
 import ru.deadsoftware.cavedroid.game.GameScope
+import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.utils.forEachBlockInArea
 import javax.inject.Inject
@@ -14,8 +14,8 @@ import javax.inject.Inject
 @GameScope
 class BackgroundBlocksRenderer @Inject constructor(
     gameWorld: GameWorld,
-    gameInput: GameInput
-) : BlocksRenderer(gameWorld, gameInput) {
+    mobsController: MobsController
+) : BlocksRenderer(gameWorld, mobsController) {
 
     override val renderLayer get() = RENDER_LAYER
 

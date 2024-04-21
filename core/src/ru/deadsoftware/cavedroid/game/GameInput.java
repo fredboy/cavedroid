@@ -52,11 +52,8 @@ public class GameInput {
     private float mTouchDownX;
     private float mTouchDownY;
     private long mTouchDownTime;
-
-    private int mCurX;
-    private int mCurY;
+    
     private int mCreativeScroll;
-    private int mBlockDamage;
 
     @Inject
     public GameInput(MainConfig mainConfig,
@@ -134,19 +131,19 @@ public class GameInput {
         } else {
             switch (keycode) {
                 case Input.Keys.A:
-                    mCurX--;
+                    mPlayer.cursorX--;
                     break;
                 case Input.Keys.D:
-                    mCurX++;
+                    mPlayer.cursorX++;
                     break;
                 case Input.Keys.W:
-                    mCurY--;
+                    mPlayer.cursorY--;
                     break;
                 case Input.Keys.S:
-                    mCurY++;
+                    mPlayer.cursorY++;
                     break;
             }
-            mBlockDamage = 0;
+            mPlayer.blockDamage = 0;
         }
     }
 
@@ -155,14 +152,14 @@ public class GameInput {
     }
 
     private void checkCursorBounds() {
-        if (mCurY < 0) {
-            mCurY = 0;
-        } else if (mCurY >= mGameWorld.getHeight()) {
-            mCurY = mGameWorld.getHeight() - 1;
+        if (mPlayer.cursorY < 0) {
+            mPlayer.cursorY = 0;
+        } else if (mPlayer.cursorY >= mGameWorld.getHeight()) {
+            mPlayer.cursorY = mGameWorld.getHeight() - 1;
         }
 
         if (mControlMode == ControlMode.CURSOR) {
-            if (mCurX * 16 + 8 < mPlayer.getX() + mPlayer.getWidth() / 2) {
+            if (mPlayer.cursorX * 16 + 8 < mPlayer.getX() + mPlayer.getWidth() / 2) {
                 mPlayer.setDir(Mob.Direction.LEFT);
             } else {
                 mPlayer.setDir(Mob.Direction.RIGHT);
@@ -171,29 +168,29 @@ public class GameInput {
     }
 
     public void moveCursor(GameRenderer gameRenderer) {
-        int pastX = mCurX;
-        int pastY = mCurY;
+        int pastX = mPlayer.cursorX;
+        int pastY = mPlayer.cursorY;
 
         if (mControlMode == ControlMode.WALK && mMainConfig.isTouch()) {
-            mCurX = mPlayer.getMapX() + (mPlayer.looksLeft() ? -1 : 1);
-            mCurY = mPlayer.getUpperMapY();
-            for (int i = 0; i < 2 && isNotAutoselectable(mCurX, mCurY); i++) {
-                mCurY++;
+            mPlayer.cursorX = mPlayer.getMapX() + (mPlayer.looksLeft() ? -1 : 1);
+            mPlayer.cursorY = mPlayer.getUpperMapY();
+            for (int i = 0; i < 2 && isNotAutoselectable(mPlayer.cursorX, mPlayer.cursorY); i++) {
+                mPlayer.cursorY++;
             }
-            if (isNotAutoselectable(mCurX, mCurY)) {
-                mCurX += mPlayer.looksLeft() ? 1 : -1;
+            if (isNotAutoselectable(mPlayer.cursorX, mPlayer.cursorY)) {
+                mPlayer.cursorX += mPlayer.looksLeft() ? 1 : -1;
             }
         } else if (!mMainConfig.isTouch()) {
             final int tmpX = (int) (Gdx.input.getX() * (mMainConfig.getWidth() /
                     Gdx.graphics.getWidth()) + gameRenderer.getCamX());
-            mCurX = tmpX / 16;
+            mPlayer.cursorX = tmpX / 16;
 
             final int tmpY = (int) (Gdx.input.getY() * (mMainConfig.getHeight() /
                     Gdx.graphics.getHeight()) + gameRenderer.getCamY());
-            mCurY = tmpY / 16;
+            mPlayer.cursorY = tmpY / 16;
 
             if (tmpX < 0) {
-                mCurX--;
+                mPlayer.cursorX--;
             }
 
             final double a = tmpX - mPlayer.x;
@@ -202,8 +199,8 @@ public class GameInput {
             mPlayer.headRotation = (float) Math.atan(b / a) * MathUtils.radDeg;
         }
 
-        if (pastX != mCurX || pastY != mCurY) {
-            mBlockDamage = 0;
+        if (pastX != mPlayer.cursorX || pastY != mPlayer.cursorY) {
+            mPlayer.blockDamage = 0;
         }
 
         checkCursorBounds();
@@ -248,27 +245,26 @@ public class GameInput {
         if (mMainConfig.checkGameUiWindow(GameUiWindow.NONE)) {
             mPlayer.startHitting();
 
-            if ((mGameWorld.hasForeAt(mCurX, mCurY) && mGameWorld.getForeMap(mCurX, mCurY).getHp() >= 0) ||
-                    (!mGameWorld.hasForeAt(mCurX, mCurY) && mGameWorld.hasBackAt(mCurX, mCurY) &&
-                            mGameWorld.getBackMap(mCurX, mCurY).getHp() >= 0)) {
+            if ((mGameWorld.hasForeAt(mPlayer.cursorX, mPlayer.cursorY) && mGameWorld.getForeMap(mPlayer.cursorX, mPlayer.cursorY).getHp() >= 0) ||
+                    (!mGameWorld.hasForeAt(mPlayer.cursorX, mPlayer.cursorY) && mGameWorld.hasBackAt(mPlayer.cursorX, mPlayer.cursorY) &&
+                            mGameWorld.getBackMap(mPlayer.cursorX, mPlayer.cursorY).getHp() >= 0)) {
                 if (mPlayer.gameMode == 0) {
-                    mBlockDamage++;
-                    if (mGameWorld.hasForeAt(mCurX, mCurY)) {
-                        if (mBlockDamage >= mGameWorld.getForeMap(mCurX, mCurY).getHp()) {
-                            mGameWorld.destroyForeMap(mCurX, mCurY);
-                            mBlockDamage = 0;
+                    if (mGameWorld.hasForeAt(mPlayer.cursorX, mPlayer.cursorY)) {
+                        if (mPlayer.blockDamage >= mGameWorld.getForeMap(mPlayer.cursorX, mPlayer.cursorY).getHp()) {
+                            mGameWorld.destroyForeMap(mPlayer.cursorX, mPlayer.cursorY);
+                            mPlayer.blockDamage = 0;
                         }
-                    } else if (mGameWorld.hasBackAt(mCurX, mCurY)) {
-                        if (mBlockDamage >= mGameWorld.getBackMap(mCurX, mCurY).getHp()) {
-                            mGameWorld.destroyBackMap(mCurX, mCurY);
-                            mBlockDamage = 0;
+                    } else if (mGameWorld.hasBackAt(mPlayer.cursorX, mPlayer.cursorY)) {
+                        if (mPlayer.blockDamage >= mGameWorld.getBackMap(mPlayer.cursorX, mPlayer.cursorY).getHp()) {
+                            mGameWorld.destroyBackMap(mPlayer.cursorX, mPlayer.cursorY);
+                            mPlayer.blockDamage = 0;
                         }
                     }
                 } else {
-                    if (mGameWorld.hasForeAt(mCurX, mCurY)) {
-                        mGameWorld.placeToForeground(mCurX, mCurY, mGameItemsHolder.getFallbackBlock());
-                    } else if (mGameWorld.hasBackAt(mCurX, mCurY)) {
-                        mGameWorld.placeToBackground(mCurX, mCurY, mGameItemsHolder.getFallbackBlock());
+                    if (mGameWorld.hasForeAt(mPlayer.cursorX, mPlayer.cursorY)) {
+                        mGameWorld.placeToForeground(mPlayer.cursorX, mPlayer.cursorY, mGameItemsHolder.getFallbackBlock());
+                    } else if (mGameWorld.hasBackAt(mPlayer.cursorX, mPlayer.cursorY)) {
+                        mGameWorld.placeToBackground(mPlayer.cursorX, mPlayer.cursorY, mGameItemsHolder.getFallbackBlock());
                     }
                     mTouchedDown = false;
                 }
@@ -288,7 +284,7 @@ public class GameInput {
 
     private void holdMB() {
         if (mTouchDownBtn == Input.Buttons.RIGHT) {
-            useItem(mCurX, mCurY, mPlayer.inventory[mPlayer.slot].getItem(), true);
+            useItem(mPlayer.cursorX, mPlayer.cursorY, mPlayer.inventory[mPlayer.slot].getItem(), true);
             mTouchedDown = false;
         } else {
             if (insideHotbar(mTouchDownX, mTouchDownY)) {
@@ -333,7 +329,7 @@ public class GameInput {
                 break;
 
             case Input.Keys.G:
-                final Mob pig = new Pig(mCurX * 16, mCurY * 16);
+                final Mob pig = new Pig(mPlayer.cursorX * 16, mPlayer.cursorY * 16);
                 pig.attachToController(mMobsController);
                 break;
 
@@ -419,10 +415,11 @@ public class GameInput {
                     screenX < mMainConfig.getWidth() / 2 + (float) hotbar.getRegionWidth() / 2) {
                 mPlayer.slot = (int) ((screenX - (mMainConfig.getWidth() / 2 - hotbar.getRegionWidth() / 2)) / 20);
             } else if (button == Input.Buttons.RIGHT) {
-                useItem(mCurX, mCurY,
+                useItem(mPlayer.cursorX, mPlayer.cursorY,
                         mPlayer.inventory[mPlayer.slot].getItem(), false);
             } else if (button == Input.Buttons.LEFT) {
-                mBlockDamage = 0;
+                mPlayer.stopHitting();
+                mPlayer.blockDamage = 0;
             }
         }
         mTouchedDown = false;
@@ -482,18 +479,6 @@ public class GameInput {
 
     public boolean isKeyDown() {
         return mKeyDown;
-    }
-
-    public int getBlockDamage() {
-        return mBlockDamage;
-    }
-
-    public int getCurX() {
-        return mCurX;
-    }
-
-    public int getCurY() {
-        return mCurY;
     }
 
     public int getCreativeScroll() {

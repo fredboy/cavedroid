@@ -29,11 +29,14 @@ class HudRenderer @Inject constructor(
     private val halfHeartTexture get() = requireNotNull(Assets.textureRegions[HALF_HEART_KEY])
 
     private fun drawCursor(spriteBatch: SpriteBatch, viewport: Rectangle) {
-        if (gameWorld.hasForeAt(gameInput.curX, gameInput.curY) ||
-            gameWorld.hasBackAt(gameInput.curX, gameInput.curY) ||
+        val cursorX = mobsController.player.cursorX
+        val cursorY = mobsController.player.cursorY
+
+        if (gameWorld.hasForeAt(cursorX, cursorY) ||
+            gameWorld.hasBackAt(cursorX, cursorY) ||
             gameInput.controlMode == ControlMode.CURSOR
         ) {
-            spriteBatch.draw(cursorTexture, gameInput.curX.px - viewport.x, gameInput.curY.px - viewport.y)
+            spriteBatch.draw(cursorTexture, cursorX.px - viewport.x, cursorY.px - viewport.y)
         }
     }
 

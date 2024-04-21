@@ -335,6 +335,7 @@ public class GamePhysics {
         }
 
         playerPhy(player, delta);
+        player.ai(mGameWorld, mGameItemsHolder, delta);
         if (player.isDead()) {
             player.respawn(mGameWorld, mGameItemsHolder);
         }
