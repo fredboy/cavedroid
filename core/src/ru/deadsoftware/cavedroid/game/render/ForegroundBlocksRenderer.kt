@@ -23,6 +23,7 @@ class ForegroundBlocksRenderer @Inject constructor(
         forEachBlockInArea(viewport) { x, y ->
             drawForeMap(spriteBatch, viewport, x, y)
         }
+        drawBlockDamage(spriteBatch, viewport)
     }
 
     companion object {

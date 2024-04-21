@@ -3,6 +3,7 @@ package ru.deadsoftware.cavedroid.game.render
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.game.GameInput
 import ru.deadsoftware.cavedroid.game.model.block.Block
@@ -28,16 +29,25 @@ abstract class BlocksRenderer(
         return Assets.textureRegions[textureKey]
     }
 
-    private fun drawBlockDamage(spriteBatch: SpriteBatch, block: Block, x: Float, y: Float) {
+    protected fun drawBlockDamage(spriteBatch: SpriteBatch, viewport: Rectangle) {
         val blockDamage = gameInput.blockDamage
         if (blockDamage <= 0) {
             return
         }
 
-        val index = MAX_BLOCK_DAMAGE_INDEX * (blockDamage / block.params.hitPoints)
+        val block = if (background) {
+            gameWorld.getBackMap(gameInput.curX, gameInput.curY)
+        } else {
+            gameWorld.getForeMap(gameInput.curX, gameInput.curY)
+        }
+
+        val index = (MAX_BLOCK_DAMAGE_INDEX.toFloat() * (blockDamage.toFloat() / block.params.hitPoints.toFloat()))
+            .let(MathUtils::floor)
         val texture = blockDamageTexture(index) ?: return
 
-        spriteBatch.draw(texture, x, y)
+        if (gameWorld.hasForeAt(gameInput.curX, gameInput.curY) != background) {
+            spriteBatch.draw(texture, gameInput.curX.px - viewport.x, gameInput.curY.px - viewport.y)
+        }
     }
 
     protected fun shadeBackMap(
@@ -72,10 +82,6 @@ abstract class BlocksRenderer(
             val drawX = x.px - viewport.x
             val drawY = y.px - viewport.y
             backgroundBlock.draw(spriteBatch, drawX, drawY)
-
-            if (foregroundBlock.isNone()) {
-                drawBlockDamage(spriteBatch, backgroundBlock, drawX, drawY)
-            }
         }
     }
 
@@ -86,10 +92,6 @@ abstract class BlocksRenderer(
             val drawX = x.px - viewport.x
             val drawY = y.px - viewport.y
             foregroundBlock.draw(spriteBatch, drawX, drawY)
-
-            if (!foregroundBlock.isNone()) {
-                drawBlockDamage(spriteBatch, foregroundBlock, drawX, drawY)
-            }
         }
     }
 
