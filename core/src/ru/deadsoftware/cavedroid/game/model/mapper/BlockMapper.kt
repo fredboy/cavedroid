@@ -41,7 +41,7 @@ class BlockMapper @Inject constructor() {
             isTransparent = dto.transparent,
             requiresBlock = dto.blockRequired,
             animationInfo = mapBlockAnimationInfo(dto),
-            texture = loadTexture(dto.texture),
+            texture = getTexture(dto.texture),
             spriteMargins = BlockMargins(
                 left = dto.spriteLeft,
                 top = dto.spriteTop,
@@ -75,7 +75,7 @@ class BlockMapper @Inject constructor() {
         )
     }
 
-    private fun loadTexture(textureName: String): Texture? {
+    private fun getTexture(textureName: String): Texture? {
         if (textureName == GameItemsHolder.FALLBACK_BLOCK_KEY) {
             return null
         }

@@ -81,9 +81,10 @@ public class CaveGame extends Game {
 
     @Override
     public void create() {
-        Gdx.app.log(TAG, mGameFolder);
         Gdx.files.absolute(mGameFolder).mkdirs();
         initConfig();
+
+        Gdx.app.debug(TAG, mGameFolder);
         Assets.load(mAssetLoader);
         setScreen(mMainComponent.getMenuScreen());
     }
@@ -93,5 +94,6 @@ public class CaveGame extends Game {
         if (screen != null) {
             screen.dispose();
         }
+        Assets.dispose();
     }
 }

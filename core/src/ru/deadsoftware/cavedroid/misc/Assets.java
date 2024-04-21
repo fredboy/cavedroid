@@ -13,11 +13,16 @@ import ru.deadsoftware.cavedroid.game.objects.TouchButton;
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class Assets {
 
     public static final JsonReader jsonReader = new JsonReader();
+
+    private static final List<Texture> loadedTextures = new LinkedList<>();
+
     public static final Sprite[][] playerSprite = new Sprite[2][4];
     public static final Sprite[][] pigSprite = new Sprite[2][2];
     public static final HashMap<String, TextureRegion> textureRegions = new HashMap<>();
@@ -27,6 +32,18 @@ public class Assets {
 
     public static Map<String, Texture> blockTextures = new HashMap<>();
     public static Map<String, Texture> itemTextures = new HashMap<>();
+
+    public static void dispose() {
+        minecraftFont.dispose();
+        loadedTextures.forEach(Texture::dispose);
+        loadedTextures.clear();
+    }
+    
+    private static Texture loadTexture(FileHandle fileHandle) {
+        Texture texture = new Texture(fileHandle);
+        loadedTextures.add(texture);
+        return texture;
+    }
 
     private static TextureRegion flippedRegion(Texture texture, int x, int y, int width, int height) {
         return new TextureRegion(texture, x, y + height, width, -height);
@@ -47,7 +64,7 @@ public class Assets {
     private static void loadMob(AssetLoader assetLoader, Sprite[][] sprite, String mob) {
         for (int i = 0; i < sprite.length; i++) {
             for (int j = 0; j < sprite[i].length; j++) {
-                sprite[i][j] = flippedSprite(new Texture(
+                sprite[i][j] = flippedSprite(loadTexture(
                         assetLoader.getAssetHandle("mobs/" + mob + "/" + i + "_" + j + ".png")));
                 sprite[i][j].setOrigin(sprite[i][j].getWidth() / 2, 0);
             }
@@ -67,7 +84,7 @@ public class Assets {
     private static void loadJSON(AssetLoader assetLoader) {
         JsonValue json = jsonReader.parse(assetLoader.getAssetHandle("json/texture_regions.json"));
         for (JsonValue file = json.child(); file != null; file = file.next()) {
-            Texture texture = new Texture(assetLoader.getAssetHandle(file.name() + ".png"));
+            Texture texture = loadTexture(assetLoader.getAssetHandle(file.name() + ".png"));
             if (file.size == 0) {
                 textureRegions.put(file.name(),
                         flippedRegion(texture, 0, 0, texture.getWidth(), texture.getHeight()));
@@ -85,7 +102,7 @@ public class Assets {
 
     private static void loadAllPngsFromDirInto(FileHandle dir, Map<String, Texture> loadInto) {
         for (FileHandle handle : dir.list((d, name) -> name.endsWith(".png"))) {
-            loadInto.put(handle.nameWithoutExtension(), new Texture(handle));
+            loadInto.put(handle.nameWithoutExtension(), loadTexture(handle));
         }
     }
 
