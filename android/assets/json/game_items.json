@@ -340,7 +340,7 @@
       "drop": "iron_block",
       "texture": "iron_block"
     },
-    "stone_slab": {
+    "stone_slab_bottom": {
       "id": 51,
       "top": 8,
       "sprite_top": 8,
@@ -349,15 +349,29 @@
       "drop": "stone_slab",
       "meta": "slab",
       "texture": "stone_slab",
-      "full_block": "double_stone_slab"
+      "full_block": "double_stone_slab",
+      "other_part": "stone_slab_top"
+    },
+    "stone_slab_top": {
+      "id": 51,
+      "hp": 600,
+      "bottom": 8,
+      "sprite_bottom": 8,
+      "transparent": true,
+      "drop": "stone_slab",
+      "meta": "slab",
+      "texture": "stone_slab",
+      "full_block": "double_stone_slab",
+      "other_part": "stone_slab_bottom"
     },
     "double_stone_slab": {
       "id": 52,
       "hp": 600,
       "drop": "stone_slab",
+      "drop_count": 2,
       "texture": "stone_slab"
     },
-    "sandstone_slab": {
+    "sandstone_slab_bottom": {
       "id": 53,
       "top": 8,
       "sprite_top": 8,
@@ -366,9 +380,22 @@
       "drop": "sandstone_slab",
       "meta": "slab",
       "texture": "sandstone",
-      "full_block": "sandstone"
+      "full_block": "sandstone",
+      "other_part": "sandstone_slab_top"
     },
-    "oak_slab": {
+    "sandstone_slab_top": {
+      "id": 53,
+      "bottom": 8,
+      "sprite_bottom": 8,
+      "hp": 600,
+      "transparent": true,
+      "drop": "sandstone_slab",
+      "meta": "slab",
+      "texture": "sandstone",
+      "full_block": "sandstone",
+      "other_part": "sandstone_slab_bottom"
+    },
+    "oak_slab_bottom": {
       "id": 54,
       "top": 8,
       "sprite_top": 8,
@@ -377,17 +404,46 @@
       "drop": "oak_slab",
       "meta": "slab",
       "texture": "planks_oak",
-      "full_block": "planks_oak"
+      "full_block": "planks_oak",
+      "other_part": "oak_slab_top"
     },
-    "cobblestone_slab": {
+    "oak_slab_top": {
+      "id": 54,
+      "bottom": 8,
+      "sprite_bottom": 8,
+      "hp": 180,
+      "transparent": true,
+      "drop": "oak_slab",
+      "meta": "slab",
+      "texture": "planks_oak",
+      "full_block": "planks_oak",
+      "other_part": "oak_slab_bottom"
+    },
+    "cobblestone_slab_bottom": {
       "id": 55,
       "top": 8,
+      "sprite_top": 8,
       "hp": 600,
       "transparent": true,
+      "meta": "slab",
       "drop": "cobblestone_slab",
-      "texture": "cobblestone"
+      "texture": "cobblestone",
+      "full_block": "cobblestone",
+      "other_part": "cobblestone_slab_top"
     },
-    "brick_slab": {
+    "cobblestone_slab_top": {
+      "id": 55,
+      "bottom": 8,
+      "sprite_bottom": 8,
+      "hp": 600,
+      "transparent": true,
+      "meta": "slab",
+      "drop": "cobblestone_slab",
+      "texture": "cobblestone",
+      "full_block": "cobblestone",
+      "other_part": "cobblestone_slab_bottom"
+    },
+    "brick_slab_bottom": {
       "id": 56,
       "top": 8,
       "sprite_top": 8,
@@ -396,7 +452,20 @@
       "drop": "brick_slab",
       "meta": "slab",
       "texture": "bricks",
-      "full_block": "bricks"
+      "full_block": "bricks",
+      "other_part": "brick_slab_top"
+    },
+    "brick_slab_top": {
+      "id": 56,
+      "bottom": 8,
+      "sprite_bottom": 8,
+      "hp": 600,
+      "transparent": true,
+      "drop": "brick_slab",
+      "meta": "slab",
+      "texture": "bricks",
+      "full_block": "bricks",
+      "other_part": "brick_slab_bottom"
     },
     "stonebrick": {
       "id": 57,
@@ -404,7 +473,7 @@
       "drop": "stonebrick",
       "texture": "stonebrick"
     },
-    "stonebrick_slab": {
+    "stonebrick_slab_bottom": {
       "id": 58,
       "top": 8,
       "sprite_top": 8,
@@ -413,7 +482,20 @@
       "drop": "stonebrick_slab",
       "meta": "slab",
       "texture": "stonebrick",
-      "full_block": "stonebrick"
+      "full_block": "stonebrick",
+      "other_part": "stonebrick_slab_top"
+    },
+    "stonebrick_slab_top": {
+      "id": 58,
+      "bottom": 8,
+      "sprite_bottom": 8,
+      "hp": 450,
+      "transparent": true,
+      "drop": "stonebrick_slab",
+      "meta": "slab",
+      "texture": "stonebrick",
+      "full_block": "stonebrick",
+      "other_part": "brick_slab_bottom"
     },
     "cactus": {
       "id": 59,
@@ -820,32 +902,42 @@
     "stone_slab": {
       "id": 47,
       "name": "Stone Slab",
-      "type": "block",
-      "texture": "stone_slab"
+      "type": "slab",
+      "texture": "stone_slab",
+      "top_slab_block": "stone_slab_top",
+      "bottom_slab_block": "stone_slab_bottom"
     },
     "sandstone_slab": {
       "id": 48,
       "name": "Sandstone Slab",
-      "type": "block",
-      "texture": "sandstone_slab"
+      "type": "slab",
+      "texture": "sandstone_slab",
+      "top_slab_block": "sandstone_slab_top",
+      "bottom_slab_block": "sandstone_slab_bottom"
     },
     "oak_slab": {
       "id": 49,
       "name": "Oak Slab",
-      "type": "block",
-      "texture": "oak_slab"
+      "type": "slab",
+      "texture": "oak_slab",
+      "top_slab_block": "oak_slab_top",
+      "bottom_slab_block": "oak_slab_bottom"
     },
     "cobblestone_slab": {
       "id": 50,
       "name": "Cobblestone Slab",
-      "type": "block",
-      "texture": "cobblestone_slab"
+      "type": "slab",
+      "texture": "cobblestone_slab",
+      "top_slab_block": "cobblestone_slab_top",
+      "bottom_slab_block": "cobblestone_slab_bottom"
     },
     "brick_slab": {
       "id": 51,
       "name": "Brick Slab",
-      "type": "block",
-      "texture": "brick_slab"
+      "type": "slab",
+      "texture": "brick_slab",
+      "top_slab_block": "brick_slab_top",
+      "bottom_slab_block": "brick_slab_bottom"
     },
     "stonebrick": {
       "id": 52,
@@ -856,8 +948,10 @@
     "stonebrick_slab": {
       "id": 53,
       "name": "Stone Brick Slab",
-      "type": "block",
-      "texture": "stonebrick_slab"
+      "type": "slab",
+      "texture": "stonebrick_slab",
+      "top_slab_block": "stonebrick_slab_top",
+      "bottom_slab_block": "stonebrick_slab_bottom"
     },
     "cactus": {
       "id": 54,

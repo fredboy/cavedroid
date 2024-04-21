@@ -8,6 +8,7 @@ import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.actions.placeblock.IPlaceBlockAction
 import ru.deadsoftware.cavedroid.game.actions.placeblock.PlaceBlockItemToBackgroundAction
 import ru.deadsoftware.cavedroid.game.actions.placeblock.PlaceBlockItemToForegroundAction
+import ru.deadsoftware.cavedroid.game.actions.placeblock.PlaceSlabAction
 
 @Module
 class PlaceBlockActionsModule {
@@ -25,6 +26,14 @@ class PlaceBlockActionsModule {
     @StringKey(PlaceBlockItemToBackgroundAction.ACTION_KEY)
     @GameScope
     fun bindPlaceBlockItemToBackgroundAction(action: PlaceBlockItemToBackgroundAction): IPlaceBlockAction {
+        return action
+    }
+
+    @Binds
+    @IntoMap
+    @StringKey(PlaceSlabAction.ACTION_KEY)
+    @GameScope
+    fun bindPlaceSlabAction(action: PlaceSlabAction): IPlaceBlockAction {
         return action
     }
 

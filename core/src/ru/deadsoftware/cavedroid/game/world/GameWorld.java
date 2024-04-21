@@ -114,6 +114,15 @@ public class GameWorld {
         }
     }
 
+    private boolean isSameSlab(Block slab1, Block slab2) {
+        if (!(slab1 instanceof Block.Slab) || !(slab2 instanceof Block.Slab)) {
+            return false;
+        }
+
+        return slab1.getParams().getKey().equals(((Block.Slab) slab2).getOtherPartBlockKey())
+                || slab1.getParams().getKey().equals(slab2.getParams().getKey());
+    }
+
     public boolean hasForeAt(int x, int y) {
         return getMap(x, y, 0) != mGameItemsHolder.getFallbackBlock();
     }
@@ -145,7 +154,7 @@ public class GameWorld {
     public void placeToForeground(int x, int y, Block value) {
         if (!hasForeAt(x, y) || value == mGameItemsHolder.getFallbackBlock() || !getForeMap(x, y).hasCollision()) {
             setForeMap(x, y, value);
-        } else if (value instanceof Block.Slab && getForeMap(x, y) == value) {
+        } else if (value instanceof Block.Slab && isSameSlab(value, getForeMap(x, y))) {
             setForeMap(x, y, mGameItemsHolder.getBlock(((Block.Slab) value).getFullBlockKey()));
         }
     }

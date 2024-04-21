@@ -18,7 +18,7 @@ class BlockMapper @Inject constructor() {
         return when (dto.meta) {
             "water" -> Water(commonBlockParams, requireNotNull(dto.state))
             "lava" -> Lava(commonBlockParams, requireNotNull(dto.state))
-            "slab" -> Slab(commonBlockParams, requireNotNull(dto.fullBlock))
+            "slab" -> Slab(commonBlockParams, requireNotNull(dto.fullBlock), requireNotNull(dto.otherPart))
             "none" -> None(commonBlockParams)
             else -> Normal(commonBlockParams)
         }

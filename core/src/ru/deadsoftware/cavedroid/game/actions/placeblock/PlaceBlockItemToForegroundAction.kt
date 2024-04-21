@@ -8,10 +8,15 @@ import javax.inject.Inject
 @GameScope
 class PlaceBlockItemToForegroundAction @Inject constructor(
     private val gameWorld: GameWorld,
+    private val placeSlabAction: PlaceSlabAction,
 ) : IPlaceBlockAction {
 
     override fun place(placeable: Item.Placeable, x: Int, y: Int) {
-        gameWorld.placeToForeground(x, y, placeable.block)
+        if (placeable.isSlab()) {
+            placeSlabAction.place(placeable, x, y)
+        } else {
+            gameWorld.placeToForeground(x, y, placeable.block)
+        }
     }
 
     companion object {

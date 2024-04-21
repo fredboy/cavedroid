@@ -15,14 +15,15 @@ import javax.inject.Inject
 @Reusable
 class ItemMapper @Inject constructor() {
 
-    fun map(key: String, dto: ItemDto, block: Block?): Item {
+    fun map(key: String, dto: ItemDto, block: Block?, slabTopBlock: Block.Slab?, slabBottomBlock: Block.Slab?): Item {
         val params = mapCommonParams(key, dto)
 
         return when (dto.type) {
             "bucket" -> Bucket(params, requireNotNull(loadSprite(dto)), requireNotNull(dto.actionKey))
             "shovel" -> Shovel(params, requireNotNull(loadSprite(dto)), dto.mobDamageMultiplier, dto.blockDamageMultiplier)
             "sword" -> Sword(params, requireNotNull(loadSprite(dto)), dto.mobDamageMultiplier, dto.blockDamageMultiplier)
-            "block" -> Placeable(params, requireNotNull(block))
+            "block" -> Block(params, requireNotNull(block))
+            "slab" -> Slab(params, requireNotNull(slabTopBlock), requireNotNull(slabBottomBlock))
             "none" -> None(params)
             else -> throw IllegalArgumentException("Unknown item type ${dto.type}")
         }

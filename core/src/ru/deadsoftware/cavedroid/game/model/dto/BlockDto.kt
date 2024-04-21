@@ -27,4 +27,5 @@ data class BlockDto(
     @SerialName("drop_count") val dropCount: Int = 1,
     @SerialName("full_block") val fullBlock: String? = null,
     @SerialName("state") val state: Int? = null,
+    @SerialName("other_part") val otherPart: String? = null,
 )

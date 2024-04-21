@@ -19,12 +19,17 @@ import java.util.Map;
 
 public class Assets {
 
+    private static final int BLOCK_DAMAGE_STAGES = 10;
+
     public static final JsonReader jsonReader = new JsonReader();
 
     private static final List<Texture> loadedTextures = new LinkedList<>();
 
     public static final Sprite[][] playerSprite = new Sprite[2][4];
     public static final Sprite[][] pigSprite = new Sprite[2][2];
+
+    public static final Sprite[] blockDamageSprites = new Sprite[10];
+
     public static final HashMap<String, TextureRegion> textureRegions = new HashMap<>();
     public static final ArrayMap<String, TouchButton> guiMap = new ArrayMap<>();
     private static final GlyphLayout glyphLayout = new GlyphLayout();
@@ -68,6 +73,13 @@ public class Assets {
                         assetLoader.getAssetHandle("mobs/" + mob + "/" + i + "_" + j + ".png")));
                 sprite[i][j].setOrigin(sprite[i][j].getWidth() / 2, 0);
             }
+        }
+    }
+
+    private static void loadBlockDamage(AssetLoader assetLoader) {
+        final Texture blockDamageTexture = loadTexture(assetLoader.getAssetHandle("break.png"));
+        for (int i = 0; i < BLOCK_DAMAGE_STAGES; i++) {
+            blockDamageSprites[i] = new Sprite(flippedRegion(blockDamageTexture, i * 16, 0, 16, 16));
         }
     }
 
@@ -119,6 +131,7 @@ public class Assets {
     public static void load(final AssetLoader assetLoader) {
         loadMob(assetLoader, playerSprite, "char");
         loadMob(assetLoader, pigSprite, "pig");
+        loadBlockDamage(assetLoader);
         loadJSON(assetLoader);
         loadBlocks(assetLoader);
         loadItems(assetLoader);

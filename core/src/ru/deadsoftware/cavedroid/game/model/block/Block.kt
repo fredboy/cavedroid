@@ -16,8 +16,8 @@ sealed class Block {
     val width: Float get() = 16f - params.collisionMargins.left - params.collisionMargins.right
     val height: Float get() = 16f - params.collisionMargins.top - params.collisionMargins.bottom
 
-    private val spriteWidth: Float get() = 16f - params.spriteMargins.left - params.spriteMargins.right
-    private val spriteHeight: Float get() = 16f - params.spriteMargins.top - params.spriteMargins.bottom
+    val spriteWidth: Float get() = 16f - params.spriteMargins.left - params.spriteMargins.right
+    val spriteHeight: Float get() = 16f - params.spriteMargins.top - params.spriteMargins.bottom
 
     private var animation: Array<Sprite>? = null
 
@@ -129,6 +129,7 @@ sealed class Block {
     data class Slab(
         override val params: CommonBlockParams,
         val fullBlockKey: String,
+        val otherPartBlockKey: String,
     ): Block()
 
     sealed class Fluid: Block() {

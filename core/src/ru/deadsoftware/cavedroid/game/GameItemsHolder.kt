@@ -49,7 +49,18 @@ class GameItemsHolder @Inject constructor(
         }
 
         dtoMap.forEach { (key, dto) ->
-            itemsMap[key] = itemMapper.map(key, dto, blocksMap[key])
+            try {
+                itemsMap[key] = itemMapper.map(
+                    key = key,
+                    dto = dto,
+                    block = blocksMap[key],
+                    slabTopBlock = blocksMap[dto.topSlabBlock] as? Block.Slab,
+                    slabBottomBlock = blocksMap[dto.bottomSlabBlock] as? Block.Slab
+                )
+            } catch (e: Exception) {
+                Gdx.app.error(TAG, "Failed to map item $key. Reason: ${e.message}")
+                e.printStackTrace()
+            }
         }
 
         fallbackItem = itemsMap[FALLBACK_ITEM_KEY]

@@ -14,4 +14,6 @@ data class ItemDto(
     @SerialName("action_key") val actionKey: String? = null,
     @SerialName("mob_damage_multiplier") val mobDamageMultiplier: Float = 1f,
     @SerialName("block_damage_multiplier") val blockDamageMultiplier: Float = 1f,
+    @SerialName("top_slab_block") val topSlabBlock: String? = null,
+    @SerialName("bottom_slab_block") val bottomSlabBlock: String? = null,
 )

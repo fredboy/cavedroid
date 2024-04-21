@@ -1,11 +1,11 @@
 package ru.deadsoftware.cavedroid.game.render
 
+import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
-import ru.deadsoftware.cavedroid.game.GameInput
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.block.Block
 import ru.deadsoftware.cavedroid.game.world.GameWorld
@@ -22,12 +22,11 @@ abstract class BlocksRenderer(
     private val Block.canSeeThrough
         get() = isNone() || params.isTransparent
 
-    private fun blockDamageTexture(index: Int): TextureRegion? {
+    private fun blockDamageSprite(index: Int): Sprite? {
         if (index !in 0..MAX_BLOCK_DAMAGE_INDEX) {
             return null
         }
-        val textureKey = "$BLOCK_DAMAGE_TEXTURE_PREFIX$index"
-        return Assets.textureRegions[textureKey]
+        return Assets.blockDamageSprites[index]
     }
 
     protected fun drawBlockDamage(spriteBatch: SpriteBatch, viewport: Rectangle) {
@@ -44,10 +43,16 @@ abstract class BlocksRenderer(
 
         val index = (MAX_BLOCK_DAMAGE_INDEX.toFloat() * (blockDamage.toFloat() / block.params.hitPoints.toFloat()))
             .let(MathUtils::floor)
-        val texture = blockDamageTexture(index) ?: return
+        val sprite = blockDamageSprite(index) ?: return
 
         if (gameWorld.hasForeAt(cursorX, cursorY) != background) {
-            spriteBatch.draw(texture, cursorX.px - viewport.x, cursorY.px - viewport.y)
+            sprite.setBounds(
+                /* x = */ cursorX.px - viewport.x + block.params.spriteMargins.left,
+                /* y = */ cursorY.px - viewport.y + block.params.spriteMargins.top,
+                /* width = */ block.spriteWidth,
+                /* height = */ block.spriteHeight
+            )
+            sprite.draw(spriteBatch)
         }
     }
 
@@ -97,7 +102,6 @@ abstract class BlocksRenderer(
     }
 
     companion object {
-        private const val BLOCK_DAMAGE_TEXTURE_PREFIX = "break_"
         private const val MAX_BLOCK_DAMAGE_INDEX = 10
     }
 
