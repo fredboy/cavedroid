@@ -132,7 +132,7 @@ public class Player extends Mob {
     private void drawItem(SpriteBatch spriteBatch, float x, float y, float anim) {
         final Item item = inventory(slot);
 
-        if (item == null || item.getParams().getKey().equals(GameItemsHolder.FALLBACK_ITEM_KEY)) {
+        if (item == null || item.isNone()) {
             return;
         }
 

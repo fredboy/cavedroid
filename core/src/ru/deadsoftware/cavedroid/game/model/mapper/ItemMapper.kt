@@ -23,6 +23,7 @@ class ItemMapper @Inject constructor() {
             "shovel" -> Shovel(params, requireNotNull(loadSprite(dto)), dto.mobDamageMultiplier, dto.blockDamageMultiplier)
             "sword" -> Sword(params, requireNotNull(loadSprite(dto)), dto.mobDamageMultiplier, dto.blockDamageMultiplier)
             "block" -> Placeable(params, requireNotNull(block))
+            "none" -> None(params)
             else -> throw IllegalArgumentException("Unknown item type ${dto.type}")
         }
     }
@@ -40,7 +41,7 @@ class ItemMapper @Inject constructor() {
     }
 
     private fun loadSprite(dto: ItemDto): Sprite? {
-        if (dto.type == "block" || dto.texture == GameItemsHolder.FALLBACK_ITEM_KEY) {
+        if (dto.type == "none" || dto.type == "block" || dto.texture == GameItemsHolder.FALLBACK_ITEM_KEY) {
             return null
         }
 

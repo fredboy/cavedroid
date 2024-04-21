@@ -5,7 +5,8 @@
       "collision": false,
       "transparent": true,
       "drop": "none",
-      "texture": "none"
+      "texture": "none",
+      "meta": "none"
     },
     "stone": {
       "id": 1,
@@ -531,7 +532,7 @@
     "none": {
       "id": 0,
       "name": "",
-      "type": "block",
+      "type": "none",
       "texture": "none"
     },
     "stone": {

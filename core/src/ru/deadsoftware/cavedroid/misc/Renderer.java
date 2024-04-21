@@ -5,12 +5,14 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 
 public abstract class Renderer implements InputProcessor {
 
     protected final ShapeRenderer shaper;
     protected final SpriteBatch spriter;
     private final OrthographicCamera camera;
+    private final Rectangle mCameraViewport;
 
     protected Renderer() {
         this(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -23,6 +25,9 @@ public abstract class Renderer implements InputProcessor {
         shaper.setProjectionMatrix(camera.combined);
         spriter = new SpriteBatch();
         spriter.setProjectionMatrix(camera.combined);
+
+        mCameraViewport =
+                new Rectangle(camera.position.x, camera.position.y, camera.viewportWidth, camera.viewportHeight);
     }
 
     public float getWidth() {
@@ -43,6 +48,12 @@ public abstract class Renderer implements InputProcessor {
 
     public void setCamPos(float x, float y) {
         camera.position.set(x, y, 0);
+        mCameraViewport.x = x;
+        mCameraViewport.y = y;
+    }
+
+    public Rectangle getCameraViewport() {
+        return mCameraViewport;
     }
 
     public void setFontScale(float scale) {

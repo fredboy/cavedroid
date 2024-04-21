@@ -99,11 +99,11 @@ class GameItemsHolder @Inject constructor(
         return itemsMap.values
     }
 
-    fun getItemFromCreativeInventory(position: Int): Item? {
+    fun getItemFromCreativeInventory(position: Int): Item {
         return if (position in itemsMap.values.indices) {
             itemsMap.values.elementAt(position)
         } else {
-            null
+            fallbackItem
         }
     }
 

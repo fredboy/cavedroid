@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavedroid.game.model.item
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Sprite
 import ru.deadsoftware.cavedroid.game.model.block.Block
 import kotlin.contracts.ExperimentalContracts
@@ -19,6 +20,11 @@ sealed class Item {
         return params.key == (other as Item).params.key
     }
 
+    fun isNone(): Boolean {
+        contract { returns(true) implies (this@Item is None) }
+        return this is None
+    }
+    
     fun isPlaceable(): Boolean {
         contract { returns(true) implies (this@Item is Placeable) }
         return this is Placeable
@@ -47,7 +53,14 @@ sealed class Item {
     sealed class Usable : Item() {
         abstract val useActionKey: String
     }
-    
+
+    data class None(
+        override val params: CommonItemParams,
+    ): Item() {
+        override val sprite: Sprite
+            get() = throw IllegalAccessException("Trying to get sprite of None")
+    }
+
     data class Placeable(
         override val params: CommonItemParams,
         val block: Block

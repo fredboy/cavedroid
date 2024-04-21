@@ -5,7 +5,6 @@ import com.badlogic.gdx.utils.Timer;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.world.GameWorldBlocksLogicControllerTask;
 import ru.deadsoftware.cavedroid.game.world.GameWorldFluidsLogicControllerTask;
-import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
 
 import javax.inject.Inject;
 
@@ -18,7 +17,6 @@ public class GameProc implements Disposable {
     private final MobsController mMobsController;
     private final GameWorldFluidsLogicControllerTask mGameWorldFluidsLogicControllerTask;
     private final GameWorldBlocksLogicControllerTask mGameWorldBlocksLogicControllerTask;
-    private final GameItemsHolder mGameItemsHolder;
 
     private final Timer mWorldLogicTimer = new Timer();
 
@@ -28,8 +26,7 @@ public class GameProc implements Disposable {
                     GameRenderer gameRenderer,
                     MobsController mobsController,
                     GameWorldFluidsLogicControllerTask gameWorldFluidsLogicControllerTask,
-                    GameWorldBlocksLogicControllerTask gameWorldBlocksLogicControllerTask,
-                    GameItemsHolder gameItemsHolder
+                    GameWorldBlocksLogicControllerTask gameWorldBlocksLogicControllerTask
     ) {
         mGamePhysics = gamePhysics;
         mGameInput = gameInput;
@@ -37,9 +34,8 @@ public class GameProc implements Disposable {
         mMobsController = mobsController;
         mGameWorldFluidsLogicControllerTask = gameWorldFluidsLogicControllerTask;
         mGameWorldBlocksLogicControllerTask = gameWorldBlocksLogicControllerTask;
-        mGameItemsHolder = gameItemsHolder;
 
-        mGameItemsHolder.initialize();
+
 
         mWorldLogicTimer.scheduleTask(gameWorldFluidsLogicControllerTask, 0,
                 GameWorldFluidsLogicControllerTask.FLUID_UPDATE_INTERVAL_SEC);

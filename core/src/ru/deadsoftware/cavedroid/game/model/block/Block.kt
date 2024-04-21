@@ -104,6 +104,11 @@ sealed class Block {
         return this is Slab
     }
 
+    fun isNone(): Boolean {
+        contract { returns(true) implies (this@Block is None) }
+        return this is None
+    }
+
     fun getRectangle(x: Int, y: Int): Rectangle {
         return Rectangle(
             /* x = */ x * 16f + params.collisionMargins.left,
@@ -113,7 +118,9 @@ sealed class Block {
         )
     }
 
-
+    data class None(
+        override val params: CommonBlockParams
+    ) : Block()
 
     data class Normal(
         override val params: CommonBlockParams,
@@ -157,7 +164,6 @@ sealed class Block {
     @Deprecated(LEGACY_ACCESSOR_DEPRECATION) fun isBackground() = params.isBackground
     @Deprecated(LEGACY_ACCESSOR_DEPRECATION) fun isTransparent() = params.isTransparent
     @Deprecated(LEGACY_ACCESSOR_DEPRECATION) fun getTexture() = sprite
-
 
     companion object {
         private const val LEGACY_ACCESSOR_DEPRECATION = "legacy accessors will be removed"

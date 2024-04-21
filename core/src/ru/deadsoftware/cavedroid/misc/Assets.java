@@ -12,8 +12,6 @@ import com.badlogic.gdx.utils.JsonValue;
 import ru.deadsoftware.cavedroid.game.objects.TouchButton;
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +23,7 @@ public class Assets {
     public static final HashMap<String, TextureRegion> textureRegions = new HashMap<>();
     public static final ArrayMap<String, TouchButton> guiMap = new ArrayMap<>();
     private static final GlyphLayout glyphLayout = new GlyphLayout();
-    static BitmapFont minecraftFont;
+    public static BitmapFont minecraftFont;
 
     public static Map<String, Texture> blockTextures = new HashMap<>();
     public static Map<String, Texture> itemTextures = new HashMap<>();

@@ -118,7 +118,7 @@ public class GameSaver {
 
         BufferedOutputStream out = new BufferedOutputStream(file.write(false));
 
-        out.write(intToBytes(SAVE_VERSION));
+        out.write(SAVE_VERSION);
         out.write(intToBytes(width));
         out.write(intToBytes(height));
 
@@ -127,16 +127,16 @@ public class GameSaver {
             run = 0;
             for (Block[] blocks : map) {
                 int newValue = dict.get(blocks[y].getParams().getKey());
-                if (newValue != block) {
-                    out.write(intToBytes(run));
-                    out.write(intToBytes(block));
+                if (run >= 0xFF || newValue != block) {
+                    out.write(run);
+                    out.write(block);
                     run = 0;
                     block = dict.get(blocks[y].getParams().getKey());
                 }
                 run++;
             }
-            out.write(intToBytes(run));
-            out.write(intToBytes(block));
+            out.write(run);
+            out.write(block);
         }
 
         out.flush();
@@ -150,7 +150,7 @@ public class GameSaver {
 
         DataInputStream in = new DataInputStream(file.read());
 
-        version = in.readInt();
+        version = in.readByte();
 
         if (SAVE_VERSION == version) {
             width = in.readInt();
@@ -158,8 +158,8 @@ public class GameSaver {
             map = new Block[width][height];
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x += run) {
-                    run = in.readInt();
-                    block = in.readInt();
+                    run = in.readUnsignedByte();
+                    block = in.readUnsignedByte();
                     for (int i = x; i < x + run; i++) {
                         map[i][y] = gameItemsHolder.getBlock(dict[block]);
                     }

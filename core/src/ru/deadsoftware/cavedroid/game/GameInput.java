@@ -484,19 +484,19 @@ public class GameInput {
         return mKeyDown;
     }
 
-    int getBlockDamage() {
+    public int getBlockDamage() {
         return mBlockDamage;
     }
 
-    int getCurX() {
+    public int getCurX() {
         return mCurX;
     }
 
-    int getCurY() {
+    public int getCurY() {
         return mCurY;
     }
 
-    int getCreativeScroll() {
+    public int getCreativeScroll() {
         return mCreativeScroll;
     }
 

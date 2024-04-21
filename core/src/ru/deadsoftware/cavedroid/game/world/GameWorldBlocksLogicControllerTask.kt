@@ -26,6 +26,11 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
 
     private fun updateBlock(x: Int, y: Int) {
         val block = gameWorld.getForeMap(x, y)
+
+        if (block.isNone()) {
+            return
+        }
+
         val blockKey = block.params.key
         val action = updateBlockActions[blockKey]
             ?: updateBlockActions.getRequiresBlockAction().takeIf { block.params.requiresBlock }

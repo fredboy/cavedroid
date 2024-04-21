@@ -7,6 +7,7 @@ import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.model.block.Block;
 import ru.deadsoftware.cavedroid.game.model.world.generator.WorldGeneratorConfig;
 import ru.deadsoftware.cavedroid.game.objects.DropController;
+import ru.deadsoftware.cavedroid.misc.utils.MeasureUnitsUtilsKt;
 
 import javax.annotation.CheckForNull;
 import javax.inject.Inject;
@@ -59,12 +60,20 @@ public class GameWorld {
         return mHeight;
     }
 
+    /**
+     * @deprecated for kotlin use {@link MeasureUnitsUtilsKt#getPx } extension val
+     */
+    @Deprecated
     public float getWidthPx() {
-        return mWidth * 16f;
+        return MeasureUnitsUtilsKt.getPx(mWidth);
     }
 
+    /**
+     * @deprecated for kotlin use {@link MeasureUnitsUtilsKt#getPx } extension val
+     */
+    @Deprecated
     public float getHeightPx() {
-        return mHeight * 16f;
+        return MeasureUnitsUtilsKt.getPx(mHeight);
     }
 
     public Block[][] getFullForeMap() {
