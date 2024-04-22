@@ -13,13 +13,44 @@ import java.util.*;
 @GameScope
 public class GameWorldFluidsLogicControllerTask extends Timer.Task {
 
-    public static final float FLUID_UPDATE_INTERVAL_SEC = 0.1f;
+    public static final float FLUID_UPDATE_INTERVAL_SEC = 0.25f;
+
+    private short mUpdateTick = 0;
 
     private final GameWorld mGameWorld;
     private final MobsController mMobsController;
     private final GameItemsHolder mGameItemsHolder;
 
     private final Map<Class<? extends Block.Fluid>, List<? extends Block.Fluid>> mFluidStatesMap;
+
+    private final class UpdateCommand {
+        final Runnable command;
+        final int priority;
+
+        private UpdateCommand(int priority, Runnable command) {
+            this.priority = priority;
+            this.command = command;
+        }
+
+        private UpdateCommand(Block block, int x, int y, int priority) {
+            this(priority, () -> mGameWorld.setForeMap(x, y, block));
+        }
+
+        private UpdateCommand(Block.Fluid fluid, int x, int y) {
+            this(fluid, x, y, ((5 -fluid.getState() )+ 1) * (fluid.isLava() ? 2 : 1));
+        }
+
+        private int getPriority() {
+            return priority;
+        }
+
+        private void exec() {
+           command.run();
+        }
+    }
+
+    private final PriorityQueue<UpdateCommand> mUpdateQueue
+            = new PriorityQueue<>(Comparator.comparingInt(UpdateCommand::getPriority));
 
     @Inject
     GameWorldFluidsLogicControllerTask(GameWorld gameWorld,
@@ -97,13 +128,13 @@ public class GameWorldFluidsLogicControllerTask extends Timer.Task {
 
         if (fluid.getState() > 0) {
             if (noFluidNearby(x, y)) {
-                @CheckForNull final Block nextState = getNextStateBlock(fluid);
+                @CheckForNull final Block.Fluid nextState = getNextStateBlock(fluid);
                 if (nextState == null) {
-                    mGameWorld.resetForeMap(x, y);
+                    mUpdateQueue.offer(new UpdateCommand(-1, () -> mGameWorld.resetForeMap(x, y)));
                     return true;
                 }
 
-                mGameWorld.setForeMap(x, y, nextState);
+                mUpdateQueue.offer(new UpdateCommand(nextState, x, y));
             }
         }
         return false;
@@ -119,15 +150,15 @@ public class GameWorldFluidsLogicControllerTask extends Timer.Task {
         final Block targetBlock = mGameWorld.getForeMap(x, y);
 
         if (fluidCanFlowThere(currentFluid, targetBlock)) {
-            mGameWorld.setForeMap(x, y, nextStateFluid);
+            mUpdateQueue.offer(new UpdateCommand(nextStateFluid, x, y));
         } else if (currentFluid.isWater() && targetBlock.isLava()) {
             if (((Block.Lava)targetBlock).getState() > 0) {
-                mGameWorld.setForeMap(x, y, mGameItemsHolder.getBlock("cobblestone"));
+                mUpdateQueue.offer(new UpdateCommand(100, () -> mGameWorld.setForeMap(x, y, mGameItemsHolder.getBlock("cobblestone"))));
             } else {
-                mGameWorld.setForeMap(x, y, mGameItemsHolder.getBlock("obsidian"));
+                mUpdateQueue.offer(new UpdateCommand(300, () -> mGameWorld.setForeMap(x, y, mGameItemsHolder.getBlock("obsidian"))));
             }
         } else if (currentFluid.isLava() && targetBlock.isWater()) {
-            mGameWorld.setForeMap(x, y, mGameItemsHolder.getBlock("stone"));
+            mUpdateQueue.offer(new UpdateCommand(200, () -> mGameWorld.setForeMap(x, y, mGameItemsHolder.getBlock("stone"))));
         }
     }
 
@@ -155,7 +186,8 @@ public class GameWorldFluidsLogicControllerTask extends Timer.Task {
     }
 
     private void updateFluids(int x, int y) {
-        if (!mGameWorld.getForeMap(x, y).isFluid()) {
+        final Block block = mGameWorld.getForeMap(x, y);
+        if (!block.isFluid() || (block.isLava() && mUpdateTick % 2 == 0)) {
             return;
         }
         if (drainFluid(x, y)) {
@@ -172,10 +204,20 @@ public class GameWorldFluidsLogicControllerTask extends Timer.Task {
                 updateFluids(midScreen - x, y);
             }
         }
+
+        while (!mUpdateQueue.isEmpty()) {
+            final UpdateCommand command = mUpdateQueue.poll();
+            command.exec();
+        }
     }
 
     @Override
     public void run() {
+        if (mUpdateTick < 0xFF) {
+            mUpdateTick ++;
+        } else {
+            mUpdateTick = 0;
+        }
         fluidUpdater();
     }
 }
