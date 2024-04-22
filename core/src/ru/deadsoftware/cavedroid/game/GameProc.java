@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Timer;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.world.GameWorldBlocksLogicControllerTask;
 import ru.deadsoftware.cavedroid.game.world.GameWorldFluidsLogicControllerTask;
+import ru.deadsoftware.cavedroid.game.world.GameWorldMobDamageControllerTask;
 
 import javax.inject.Inject;
 
@@ -17,6 +18,7 @@ public class GameProc implements Disposable {
     private final MobsController mMobsController;
     private final GameWorldFluidsLogicControllerTask mGameWorldFluidsLogicControllerTask;
     private final GameWorldBlocksLogicControllerTask mGameWorldBlocksLogicControllerTask;
+    private final GameWorldMobDamageControllerTask mGameWorldMobDamageControllerTask;
 
     private final Timer mWorldLogicTimer = new Timer();
 
@@ -26,7 +28,8 @@ public class GameProc implements Disposable {
                     GameRenderer gameRenderer,
                     MobsController mobsController,
                     GameWorldFluidsLogicControllerTask gameWorldFluidsLogicControllerTask,
-                    GameWorldBlocksLogicControllerTask gameWorldBlocksLogicControllerTask
+                    GameWorldBlocksLogicControllerTask gameWorldBlocksLogicControllerTask,
+                    GameWorldMobDamageControllerTask gameWorldMobDamageControllerTask
     ) {
         mGamePhysics = gamePhysics;
         mGameInput = gameInput;
@@ -34,6 +37,7 @@ public class GameProc implements Disposable {
         mMobsController = mobsController;
         mGameWorldFluidsLogicControllerTask = gameWorldFluidsLogicControllerTask;
         mGameWorldBlocksLogicControllerTask = gameWorldBlocksLogicControllerTask;
+        mGameWorldMobDamageControllerTask = gameWorldMobDamageControllerTask;
 
 
 
@@ -41,6 +45,8 @@ public class GameProc implements Disposable {
                 GameWorldFluidsLogicControllerTask.FLUID_UPDATE_INTERVAL_SEC);
         mWorldLogicTimer.scheduleTask(gameWorldBlocksLogicControllerTask, 0,
                 GameWorldBlocksLogicControllerTask.WORLD_BLOCKS_LOGIC_UPDATE_INTERVAL_SEC);
+        mWorldLogicTimer.scheduleTask(gameWorldMobDamageControllerTask, 0,
+                GameWorldMobDamageControllerTask.ENVIRONMENTAL_MOB_DAMAGE_INTERVAL_SEC);
     }
 
     public void setPlayerGameMode(int gameMode) {
@@ -58,5 +64,6 @@ public class GameProc implements Disposable {
         mWorldLogicTimer.stop();
         mGameWorldFluidsLogicControllerTask.cancel();
         mGameWorldBlocksLogicControllerTask.cancel();
+        mGameWorldMobDamageControllerTask.cancel();
     }
 }

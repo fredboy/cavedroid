@@ -180,6 +180,11 @@ public class Player extends Mob {
         if (gameMode == 1) {
             return;
         }
+
+        if (damage > 0) {
+            getVelocity().y += JUMP_VELOCITY / 3f;
+        }
+
         super.damage(damage);
     }
 

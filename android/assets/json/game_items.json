@@ -71,7 +71,8 @@
       "texture": "lava_still",
       "animated": true,
       "frames": 16,
-      "state": 0
+      "state": 0,
+      "damage": 4
     },
     "sand": {
       "hp": 45,
@@ -550,7 +551,8 @@
       "transparent": true,
       "block_required": true,
       "drop": "cactus",
-      "texture": "cactus"
+      "texture": "cactus",
+      "damage": 1
     },
     "water_16": {
       "collision": false,
@@ -605,7 +607,8 @@
       "texture": "lava_flow",
       "animated": true,
       "frames": 16,
-      "state": 1
+      "state": 1,
+      "damage": 4
     },
     "lava_12": {
       "top": 4,
@@ -617,7 +620,8 @@
       "texture": "lava_flow",
       "animated": true,
       "frames": 16,
-      "state": 2
+      "state": 2,
+      "damage": 4
     },
     "lava_8": {
       "top": 8,
@@ -629,7 +633,8 @@
       "texture": "lava_flow",
       "animated": true,
       "frames": 16,
-      "state": 3
+      "state": 3,
+      "damage": 4
     },
     "lava_4": {
       "top": 12,
@@ -641,7 +646,8 @@
       "texture": "lava_flow",
       "animated": true,
       "frames": 16,
-      "state": 4
+      "state": 4,
+      "damage": 4
     },
     "obsidian": {
       "hp": 1500,

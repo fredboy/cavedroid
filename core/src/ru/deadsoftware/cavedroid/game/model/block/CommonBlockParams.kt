@@ -17,5 +17,6 @@ data class CommonBlockParams(
     val texture: Texture?,
     val spriteMargins: BlockMargins,
     val toolLevel: Int,
-    val toolType: Class<out Item.Tool>?
+    val toolType: Class<out Item.Tool>?,
+    val damage: Int,
 )

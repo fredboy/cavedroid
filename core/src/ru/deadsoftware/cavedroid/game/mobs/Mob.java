@@ -242,6 +242,10 @@ public abstract class Mob extends Rectangle implements Serializable {
     }
 
     public void damage(int damage) {
+        if (damage == 0) {
+            return;
+        }
+
         if (damage < 0) {
             Gdx.app.error(this.getClass().getSimpleName(), "Damage cant be negative!");
             return;

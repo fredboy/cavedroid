@@ -31,12 +31,12 @@ fun Rectangle.cycledInsideWorld(
 
 fun forEachBlockInArea(
     area: Rectangle,
-    func: (x: Int, y: Int) -> Unit
+    func: (x: Int, y: Int) -> Unit,
 ) {
     val startMapX = area.x.bl
-    val endMapX = startMapX + area.width.bl + 1
+    val endMapX = (area.x + area.width - 1f).bl
     val startMapY = area.y.bl
-    val endMapY = startMapY + area.height.bl + 1
+    val endMapY = (area.y + area.height - 1f).bl
 
     for (x in startMapX..endMapX) {
         for (y in startMapY..endMapY) {

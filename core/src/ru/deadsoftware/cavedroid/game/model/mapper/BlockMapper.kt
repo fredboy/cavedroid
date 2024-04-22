@@ -54,6 +54,7 @@ class BlockMapper @Inject constructor(
             ),
             toolLevel = dto.toolLevel,
             toolType = mapToolType(dto),
+            damage = dto.damage,
         )
     }
 
