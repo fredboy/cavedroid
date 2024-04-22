@@ -49,6 +49,12 @@
       "h": 15
     }
   },
+  "inventory": {
+    "survival": {
+      "w": 176,
+      "h": 166
+    }
+  },
   "buttons": {
     "button_0": {
       "w": 200,

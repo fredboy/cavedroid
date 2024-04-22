@@ -282,13 +282,24 @@ public class GameInput {
                         mMainConfig.getWidth() / 2 + (float) hotbar.getRegionWidth() / 2).contains(x);
     }
 
+    private void openInventory() {
+        switch (mPlayer.gameMode) {
+            case 0:
+                mMainConfig.setGameUiWindow(GameUiWindow.SURVIVAL_INVENTORY);
+                break;
+            case 1:
+                mMainConfig.setGameUiWindow(GameUiWindow.CREATIVE_INVENTORY);
+                break;
+        }
+    }
+
     private void holdMB() {
         if (mTouchDownBtn == Input.Buttons.RIGHT) {
             useItem(mPlayer.cursorX, mPlayer.cursorY, mPlayer.inventory[mPlayer.slot].getItem(), true);
             mTouchedDown = false;
         } else {
             if (insideHotbar(mTouchDownX, mTouchDownY)) {
-                mMainConfig.setGameUiWindow(GameUiWindow.CREATIVE_INVENTORY);
+                openInventory();
                 mTouchedDown = false;
             }
         }
@@ -315,14 +326,7 @@ public class GameInput {
 
             case Input.Keys.E:
                 if (mMainConfig.checkGameUiWindow(GameUiWindow.NONE)) {
-                    switch (mPlayer.gameMode) {
-                        case 0:
-                            //TODO survival inv
-                            break;
-                        case 1:
-                            mMainConfig.setGameUiWindow(GameUiWindow.CREATIVE_INVENTORY);
-                            break;
-                    }
+                    openInventory();
                 } else {
                     mMainConfig.setGameUiWindow(GameUiWindow.NONE);
                 }

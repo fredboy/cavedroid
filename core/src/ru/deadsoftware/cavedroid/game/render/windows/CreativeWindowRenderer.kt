@@ -13,6 +13,7 @@ import ru.deadsoftware.cavedroid.game.render.IGameRenderer
 import ru.deadsoftware.cavedroid.game.render.WindowsRenderer
 import ru.deadsoftware.cavedroid.misc.Assets
 import javax.inject.Inject
+import kotlin.math.min
 
 @GameScope
 class CreativeWindowRenderer @Inject constructor(
@@ -20,56 +21,15 @@ class CreativeWindowRenderer @Inject constructor(
     private val gameInput: GameInput,
     private val gameItemsHolder: GameItemsHolder,
     private val mobsController: MobsController,
-) : IGameRenderer {
+) : AbstractWindowRenderer(), IGameRenderer {
 
     override val renderLayer get() = WindowsRenderer.RENDER_LAYER
 
     private val creativeWindowTexture get() = requireNotNull(Assets.textureRegions[CREATIVE_WINDOW_KEY])
     private val scrollIndicatorTexture get() = requireNotNull(Assets.textureRegions[SCROLL_INDICATOR_KEY])
 
-    private fun drawItemsGrid(spriteBatch: SpriteBatch, gridX: Float, gridY: Float) {
-        val allItems = gameItemsHolder.getAllItems()
-        val startIndex = gameInput.creativeScroll * CreativeWindowConfig.itemsInRow
-        val endIndex = startIndex + CreativeWindowConfig.itemsOnPage
 
-        for (i in startIndex..<endIndex) {
-            if (i !in allItems.indices) {
-                break
-            }
-            val item = allItems.elementAt(i)
-
-            if (item.isNone()) {
-                continue
-            }
-
-            val gridIndex = i - startIndex
-
-            val itemX = gridX + (gridIndex % CreativeWindowConfig.itemsInRow) * CreativeWindowConfig.itemsGridColWidth
-            val itemY = gridY + (gridIndex / CreativeWindowConfig.itemsInRow) * CreativeWindowConfig.itemsGridRowHeight
-
-            spriteBatch.draw(item.sprite, itemX, itemY)
-        }
-    }
-
-    private fun drawPlayerInventory(
-        spriteBatch: SpriteBatch,
-        shapeRenderer: ShapeRenderer,
-        inventoryX: Float,
-        inventoryY: Float
-    ) {
-        mobsController.player.inventory.asSequence()
-            .forEachIndexed { index, item ->
-                if (item.item.isNone()) {
-                    return@forEachIndexed
-                }
-
-                val itemX = inventoryX + index * CreativeWindowConfig.itemsGridColWidth
-
-                item.draw(spriteBatch, shapeRenderer, itemX, inventoryY)
-            }
-    }
-
-    private fun drawCreative(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle) {
+    override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
         val creativeWindow = creativeWindowTexture
 
         val windowX = viewport.width / 2 - creativeWindow.regionWidth / 2
@@ -84,22 +44,36 @@ class CreativeWindowRenderer @Inject constructor(
                     + (gameInput.creativeScroll * oneScrollAmount)
         )
 
+        val allItems = gameItemsHolder.getAllItems()
+        val startIndex = gameInput.creativeScroll * CreativeWindowConfig.itemsInRow
+        val endIndex = min(startIndex + CreativeWindowConfig.itemsOnPage, allItems.size)
+        val items = sequence {
+            for (i in startIndex..<endIndex) {
+                yield(allItems.elementAt(i))
+            }
+        }
+
         drawItemsGrid(
             spriteBatch = spriteBatch,
+            shapeRenderer = shapeRenderer,
             gridX = windowX + CreativeWindowConfig.itemsGridMarginLeft,
-            gridY = windowY + CreativeWindowConfig.itemsGridMarginTop
+            gridY = windowY + CreativeWindowConfig.itemsGridMarginTop,
+            items = items.asIterable(),
+            itemsInRow = CreativeWindowConfig.itemsInRow,
+            cellWidth = CreativeWindowConfig.itemsGridColWidth,
+            cellHeight = CreativeWindowConfig.itemsGridRowHeight,
         )
 
-        drawPlayerInventory(
+        drawItemsGrid(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
-            inventoryX = windowX + CreativeWindowConfig.itemsGridMarginLeft,
-            inventoryY = windowY + creativeWindow.regionHeight - CreativeWindowConfig.playerInventoryOffsetFromBottom
+            gridX = windowX + CreativeWindowConfig.itemsGridMarginLeft,
+            gridY = windowY + creativeWindow.regionHeight - CreativeWindowConfig.playerInventoryOffsetFromBottom,
+            items = mobsController.player.inventory.asSequence().take(CreativeWindowConfig.invItems).asIterable(),
+            itemsInRow = CreativeWindowConfig.invItems,
+            cellWidth = CreativeWindowConfig.itemsGridColWidth,
+            cellHeight = CreativeWindowConfig.itemsGridRowHeight,
         )
-    }
-
-    override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
-        drawCreative(spriteBatch, shapeRenderer, viewport)
     }
 
     companion object {
@@ -119,6 +93,8 @@ class CreativeWindowRenderer @Inject constructor(
 
             const val itemsInRow = 8
             const val itemsInCol = 5
+
+            const val invItems = 9
 
             const val playerInventoryOffsetFromBottom = 24f
 

@@ -60,7 +60,7 @@ class HudRenderer @Inject constructor(
     }
 
     private fun drawHotbarItems(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer,  hotbarX: Float) {
-        mobsController.player.inventory
+        mobsController.player.inventory.asSequence().take(HotbarConfig.hotbarCells)
             .forEachIndexed { index, item ->
                 if (item.item.isNone()) {
                     return@forEachIndexed
@@ -114,6 +114,7 @@ class HudRenderer @Inject constructor(
             const val verticalMargin = 3f
             const val itemSeparatorWidth = 4f
             const val itemSlotSpace = 16f
+            const val hotbarCells = 9
         }
 
         private data object HotbarSelectorConfig {

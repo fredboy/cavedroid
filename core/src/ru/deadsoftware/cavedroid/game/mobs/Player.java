@@ -38,8 +38,8 @@ public class Player extends Mob {
 
     public Player(GameItemsHolder gameItemsHolder) {
         super(0, 0, 4, 30, randomDir(), Type.MOB, MAX_HEALTH);
-        inventory = new InventoryItem[9];
-        for (int i = 0; i < 9; i++) {
+        inventory = new InventoryItem[36];
+        for (int i = 0; i < inventory.length; i++) {
             inventory[i] = gameItemsHolder.getFallbackItem().toInventoryItem();
         }
         swim = false;
@@ -136,6 +136,8 @@ public class Player extends Mob {
 
     @Override
     public void ai(GameWorld gameWorld, GameItemsHolder gameItemsHolder, float delta) {
+        updateAnimation(delta);
+
         if (gameMode == 1) {
             return;
         }
@@ -285,8 +287,6 @@ public class Player extends Mob {
 
     @Override
     public void draw(SpriteBatch spriteBatch, float x, float y, float delta) {
-        updateAnimation(delta);
-
         final Sprite backHand = Assets.playerSprite[1][2];
         final Sprite backLeg = Assets.playerSprite[1][3];
         final Sprite frontLeg = Assets.playerSprite[0][3];
