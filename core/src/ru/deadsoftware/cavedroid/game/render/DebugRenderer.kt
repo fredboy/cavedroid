@@ -12,6 +12,7 @@ import ru.deadsoftware.cavedroid.game.model.block.Block
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.Assets
 import ru.deadsoftware.cavedroid.misc.utils.bl
+import ru.deadsoftware.cavedroid.misc.utils.drawString
 import ru.deadsoftware.cavedroid.misc.utils.forEachBlockInArea
 import ru.deadsoftware.cavedroid.misc.utils.px
 import javax.inject.Inject
@@ -25,10 +26,6 @@ class DebugRenderer @Inject constructor(
 ) : IGameRenderer {
 
     override val renderLayer get() = RENDER_LAYER
-
-    private fun SpriteBatch.drawString(str: String, x: Float, y: Float) {
-        Assets.minecraftFont.draw(this, str, x, y)
-    }
 
     private fun getMinimapColor(x: Int, y: Int): Color? {
         val foregroundBlock = gameWorld.getForeMap(x, y)

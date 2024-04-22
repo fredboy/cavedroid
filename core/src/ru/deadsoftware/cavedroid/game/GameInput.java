@@ -407,7 +407,8 @@ public class GameInput {
                 }
 
                 System.arraycopy(mPlayer.inventory, 0, mPlayer.inventory, 1, 8);
-                mPlayer.inventory[0] = mGameItemsHolder.getItemFromCreativeInventory(itemPos).toInventoryItem();
+                final Item newItem = mGameItemsHolder.getItemFromCreativeInventory(itemPos);
+                mPlayer.inventory[0] = newItem.toInventoryItem(newItem.getParams().getMaxStack());
             } else if (mMainConfig.checkGameUiWindow(GameUiWindow.CREATIVE_INVENTORY)) {
                 mMainConfig.setGameUiWindow(GameUiWindow.NONE);
             } else if (screenY < hotbar.getRegionHeight() &&

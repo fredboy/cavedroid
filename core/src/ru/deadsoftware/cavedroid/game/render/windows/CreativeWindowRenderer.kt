@@ -32,7 +32,7 @@ class CreativeWindowRenderer @Inject constructor(
         val startIndex = gameInput.creativeScroll * CreativeWindowConfig.itemsInRow
         val endIndex = startIndex + CreativeWindowConfig.itemsOnPage
 
-        for (i in startIndex ..< endIndex) {
+        for (i in startIndex..<endIndex) {
             if (i !in allItems.indices) {
                 break
             }
@@ -51,21 +51,25 @@ class CreativeWindowRenderer @Inject constructor(
         }
     }
 
-    private fun drawPlayerInventory(spriteBatch: SpriteBatch, inventoryX: Float, inventoryY: Float) {
+    private fun drawPlayerInventory(
+        spriteBatch: SpriteBatch,
+        shapeRenderer: ShapeRenderer,
+        inventoryX: Float,
+        inventoryY: Float
+    ) {
         mobsController.player.inventory.asSequence()
-            .map(InventoryItem::item)
             .forEachIndexed { index, item ->
-                if (item.isNone()) {
+                if (item.item.isNone()) {
                     return@forEachIndexed
                 }
 
                 val itemX = inventoryX + index * CreativeWindowConfig.itemsGridColWidth
 
-                spriteBatch.draw(item.sprite, itemX, inventoryY)
+                item.draw(spriteBatch, shapeRenderer, itemX, inventoryY)
             }
     }
 
-    private fun drawCreative(spriteBatch: SpriteBatch, viewport: Rectangle) {
+    private fun drawCreative(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle) {
         val creativeWindow = creativeWindowTexture
 
         val windowX = viewport.width / 2 - creativeWindow.regionWidth / 2
@@ -88,13 +92,14 @@ class CreativeWindowRenderer @Inject constructor(
 
         drawPlayerInventory(
             spriteBatch = spriteBatch,
+            shapeRenderer = shapeRenderer,
             inventoryX = windowX + CreativeWindowConfig.itemsGridMarginLeft,
             inventoryY = windowY + creativeWindow.regionHeight - CreativeWindowConfig.playerInventoryOffsetFromBottom
         )
     }
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
-            drawCreative(spriteBatch, viewport)
+        drawCreative(spriteBatch, shapeRenderer, viewport)
     }
 
     companion object {

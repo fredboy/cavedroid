@@ -59,19 +59,19 @@ class HudRenderer @Inject constructor(
         }
     }
 
-    private fun drawHotbarItems(spriteBatch: SpriteBatch, hotbarX: Float) {
-        mobsController.player.inventory.asSequence()
-            .map(InventoryItem::item)
+    private fun drawHotbarItems(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer,  hotbarX: Float) {
+        mobsController.player.inventory
             .forEachIndexed { index, item ->
-                if (item.isNone()) {
+                if (item.item.isNone()) {
                     return@forEachIndexed
                 }
 
-                spriteBatch.draw(
-                    /* region = */ item.sprite,
-                    /* x = */ hotbarX + HotbarConfig.horizontalMargin
-                            + index * (HotbarConfig.itemSeparatorWidth + HotbarConfig.itemSlotSpace),
-                    /* y = */ HotbarConfig.verticalMargin,
+                item.draw(
+                    spriteBatch = spriteBatch,
+                    shapeRenderer = shapeRenderer,
+                    x = hotbarX + HotbarConfig.horizontalMargin +
+                            index * (HotbarConfig.itemSeparatorWidth + HotbarConfig.itemSlotSpace),
+                    y = HotbarConfig.verticalMargin,
                 )
             }
     }
@@ -85,19 +85,19 @@ class HudRenderer @Inject constructor(
         )
     }
 
-    private fun drawHotbar(spriteBatch: SpriteBatch, viewport: Rectangle) {
+    private fun drawHotbar(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle) {
         val hotbar = hotbarTexture
         val hotbarX = viewport.width / 2 - hotbar.regionWidth / 2
 
         spriteBatch.draw(hotbar, hotbarX, 0f)
         drawHealth(spriteBatch, hotbarX, hotbarTexture.regionHeight.toFloat())
-        drawHotbarItems(spriteBatch, hotbarX)
         drawHotbarSelector(spriteBatch, hotbarX)
+        drawHotbarItems(spriteBatch, shapeRenderer, hotbarX)
     }
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
         drawCursor(spriteBatch, viewport)
-        drawHotbar(spriteBatch, viewport)
+        drawHotbar(spriteBatch, shapeRenderer, viewport)
     }
 
     companion object {

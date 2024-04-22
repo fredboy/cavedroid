@@ -7,7 +7,6 @@ import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
-import kotlin.random.Random
 
 @GameScope
 class PlaceSlabAction @Inject constructor(
@@ -22,8 +21,18 @@ class PlaceSlabAction @Inject constructor(
             return
         }
 
-        val slabPart = if (Random.nextBoolean()) placeable.topPartBlock else placeable.bottomPartBlock
-        gameWorld.placeToForeground(x, y, slabPart)
+        val slabPart = if ((gameWorld.hasForeAt(x, y - 1)
+                    || gameWorld.getForeMap(x - 1, y) == placeable.topPartBlock
+                    || gameWorld.getForeMap(x + 1, y) == placeable.topPartBlock)
+            && !gameWorld.hasForeAt(x, y + 1)) {
+            placeable.topPartBlock
+        } else {
+            placeable.bottomPartBlock
+        }
+
+        if (gameWorld.placeToForeground(x, y, slabPart)) {
+            mobsController.player.decreaseCurrentItemCount(gameItemsHolder)
+        }
     }
 
     companion object {

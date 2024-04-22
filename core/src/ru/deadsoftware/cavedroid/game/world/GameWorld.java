@@ -5,6 +5,8 @@ import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.GameScope;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.model.block.Block;
+import ru.deadsoftware.cavedroid.game.model.item.InventoryItem;
+import ru.deadsoftware.cavedroid.game.model.item.Item;
 import ru.deadsoftware.cavedroid.game.model.world.generator.WorldGeneratorConfig;
 import ru.deadsoftware.cavedroid.game.objects.DropController;
 import ru.deadsoftware.cavedroid.misc.utils.MeasureUnitsUtilsKt;
@@ -151,34 +153,63 @@ public class GameWorld {
         setMap(x, y, 1, block);
     }
 
-    public void placeToForeground(int x, int y, Block value) {
+    public boolean placeToForeground(int x, int y, Block value) {
         if (!hasForeAt(x, y) || value == mGameItemsHolder.getFallbackBlock() || !getForeMap(x, y).hasCollision()) {
             setForeMap(x, y, value);
+            return true;
         } else if (value instanceof Block.Slab && isSameSlab(value, getForeMap(x, y))) {
             setForeMap(x, y, mGameItemsHolder.getBlock(((Block.Slab) value).getFullBlockKey()));
+            return true;
         }
+        return false;
     }
 
-    public void placeToBackground(int x, int y, Block value) {
+    public boolean placeToBackground(int x, int y, Block value) {
         if (value == mGameItemsHolder.getFallbackBlock() || (getBackMap(x, y) == mGameItemsHolder.getFallbackBlock() && value.hasCollision()) &&
                 (!value.isTransparent() || value == mGameItemsHolder.getBlock("glass"))) {
             setBackMap(x, y, value);
+            return true;
         }
+        return false;
+    }
+
+    private void playerDurateTool() {
+        final InventoryItem playerCurrentItem = mMobsController.getPlayer().getCurrentItem();
+        if (mMobsController.getPlayer().getCurrentItem().getItem().isTool()) {
+            mMobsController.getPlayer().decreaseCurrentItemCount(mGameItemsHolder);
+        }
+    }
+
+    private boolean shouldDrop(Block block) {
+        final Item item = mMobsController.getPlayer().getCurrentItem().getItem();
+        int toolLevel = item.isTool() ? ((Item.Tool)item).getLevel() : 0;
+        if (item.isTool() && block.getParams().getToolType() != item.getClass()) {
+            toolLevel = 0;
+        }
+        return toolLevel >= block.getParams().getToolLevel();
     }
 
     public void destroyForeMap(int x, int y) {
         Block block = getForeMap(x, y);
-        if (block.hasDrop()) {
-            mDropController.addDrop(transformX(x) * 16 + 4, y * 16 + 4, mGameItemsHolder.getItem(block.getDrop()));
+        if (block.hasDrop() && shouldDrop(block)) {
+            for (int i = 0; i < block.getParams().getDropInfo().getCount(); i++) {
+                mDropController.addDrop(transformX(x) * 16 + 4, y * 16 + 4, mGameItemsHolder.getItem(block.getDrop()));
+            }
         }
+        playerDurateTool();
         placeToForeground(x, y, mGameItemsHolder.getFallbackBlock());
     }
 
+
+
     public void destroyBackMap(int x, int y) {
         Block block = getBackMap(x, y);
-        if (block.hasDrop()) {
-            mDropController.addDrop(transformX(x) * 16 + 4, y * 16 + 4, mGameItemsHolder.getItem(block.getDrop()));
+        if (block.hasDrop() && shouldDrop(block)) {
+            for (int i = 0; i < block.getParams().getDropInfo().getCount(); i++) {
+                mDropController.addDrop(transformX(x) * 16 + 4, y * 16 + 4, mGameItemsHolder.getItem(block.getDrop()));
+            }
         }
+        playerDurateTool();
         placeToBackground(x, y, mGameItemsHolder.getFallbackBlock());
     }
 }

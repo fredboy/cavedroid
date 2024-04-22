@@ -952,63 +952,72 @@
       "type": "sword",
       "texture": "wood_sword",
       "origin_x": 0.125,
-      "tool_level": 1
+      "tool_level": 1,
+      "max_stack": 60
     },
     "stone_sword": {
       "name": "Stone Sword",
       "type": "sword",
       "texture": "stone_sword",
       "origin_x": 0.125,
-      "tool_level": 2
+      "tool_level": 2,
+      "max_stack": 132
     },
     "iron_sword": {
       "name": "Iron Sword",
       "type": "sword",
       "texture": "iron_sword",
       "origin_x": 0.125,
-      "tool_level": 3
+      "tool_level": 3,
+      "max_stack": 251
     },
     "diamond_sword": {
       "name": "Diamond Sword",
       "type": "sword",
       "texture": "diamond_sword",
       "origin_x": 0.125,
-      "tool_level": 4
+      "tool_level": 4,
+      "max_stack": 1562
     },
     "gold_sword": {
       "name": "Golden Sword",
       "type": "sword",
       "texture": "gold_sword",
       "origin_x": 0.125,
-      "tool_level": 1
+      "tool_level": 1,
+      "max_stack": 33
     },
     "wood_shovel": {
       "name": "Wooden Shovel",
       "type": "shovel",
       "texture": "wood_shovel",
       "origin_x": 0.125,
-      "tool_level" : 1
+      "tool_level" : 1,
+      "max_stack": 59
     },
     "stone_shovel": {
       "name": "Stone Shovel",
       "type": "shovel",
       "texture": "stone_shovel",
       "origin_x": 0.125,
-      "tool_level" : 2
+      "tool_level" : 2,
+      "max_stack": 131
     },
     "iron_shovel": {
       "name": "Iron Shovel",
       "type": "shovel",
       "texture": "iron_shovel",
       "origin_x": 0.125,
-      "tool_level" : 3
+      "tool_level" : 3,
+      "max_stack": 250
     },
     "diamond_shovel": {
       "name": "Diamond Shovel",
       "type": "shovel",
       "texture": "diamond_shovel",
       "origin_x": 0.125,
-      "tool_level" : 4
+      "tool_level" : 4,
+      "max_stack": 1561
     },
     "gold_shovel": {
       "name": "Golden Shovel",
@@ -1016,35 +1025,40 @@
       "texture": "gold_shovel",
       "origin_x": 0.125,
       "tool_level" : 1,
-      "block_damage_multiplier": 6
+      "block_damage_multiplier": 6,
+      "max_stack": 32
     },
     "wood_pickaxe": {
       "name": "Wooden Pickaxe",
       "type": "pickaxe",
       "texture": "wood_pickaxe",
       "origin_x": 0.125,
-      "tool_level" : 1
+      "tool_level" : 1,
+      "max_stack": 59
     },
     "stone_pickaxe": {
       "name": "Stone Pickaxe",
       "type": "pickaxe",
       "texture": "stone_pickaxe",
       "origin_x": 0.125,
-      "tool_level" : 2
+      "tool_level" : 2,
+      "max_stack": 131
     },
     "iron_pickaxe": {
       "name": "Iron Pickaxe",
       "type": "pickaxe",
       "texture": "iron_pickaxe",
       "origin_x": 0.125,
-      "tool_level" : 3
+      "tool_level" : 3,
+      "max_stack": 251
     },
     "diamond_pickaxe": {
       "name": "Diamond Pickaxe",
       "type": "pickaxe",
       "texture": "diamond_pickaxe",
       "origin_x": 0.125,
-      "tool_level" : 4
+      "tool_level" : 4,
+      "max_stack": 1562
     },
     "gold_pickaxe": {
       "name": "Golden Pickaxe",
@@ -1052,35 +1066,40 @@
       "texture": "gold_pickaxe",
       "origin_x": 0.125,
       "tool_level" : 1,
-      "block_damage_multiplier": 6
+      "block_damage_multiplier": 6,
+      "max_stack": 33
     },
     "wood_axe": {
       "name": "Wooden Axe",
       "type": "axe",
       "texture": "wood_axe",
       "origin_x": 0.125,
-      "tool_level" : 1
+      "tool_level" : 1,
+      "max_stack": 60
     },
     "stone_axe": {
       "name": "Stone Axe",
       "type": "axe",
       "texture": "stone_axe",
       "origin_x": 0.125,
-      "tool_level" : 2
+      "tool_level" : 2,
+      "max_stack": 131
     },
     "iron_axe": {
       "name": "Iron Axe",
       "type": "axe",
       "texture": "iron_axe",
       "origin_x": 0.125,
-      "tool_level" : 3
+      "tool_level" : 3,
+      "max_stack": 250
     },
     "diamond_axe": {
       "name": "Diamond Axe",
       "type": "axe",
       "texture": "diamond_axe",
       "origin_x": 0.125,
-      "tool_level" : 4
+      "tool_level" : 4,
+      "max_stack": 1561
     },
     "gold_axe": {
       "name": "Golden Axe",
@@ -1088,14 +1107,16 @@
       "texture": "gold_axe",
       "origin_x": 0.125,
       "tool_level" : 1,
-      "block_damage_multiplier": 6
+      "block_damage_multiplier": 6,
+      "max_stack": 32
     },
     "shears": {
       "name": "Shears",
       "type": "shears",
       "texture": "shears",
       "tool_level" : 1,
-      "origin_x": 0.125
+      "origin_x": 0.125,
+      "max_stack": 238
     },
     "bucket_empty": {
       "name": "Empty Bucket",

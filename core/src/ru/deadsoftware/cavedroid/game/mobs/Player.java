@@ -65,9 +65,33 @@ public class Player extends Mob {
         heal(MAX_HEALTH);
     }
 
+    public void decreaseCurrentItemCount(GameItemsHolder gameItemsHolder) {
+        if (gameMode == 1) {
+            return;
+        }
+        getCurrentItem().setAmount(getCurrentItem().getAmount() - 1);
+        if (getCurrentItem().getAmount() <= 0) {
+            setCurrentInventorySlotItem(gameItemsHolder.getFallbackItem());
+        }
+    }
+
+    public InventoryItem getCurrentItem() {
+        return inventory[slot];
+    }
+
     public void pickUpDrop(Drop drop) {
+        for (InventoryItem invItem : inventory) {
+            if (!invItem.getItem().isTool()
+                    && invItem.getItem() == drop.getItem()
+                    && invItem.getAmount() < invItem.getItem().getParams().getMaxStack()) {
+                invItem.setAmount(invItem.getAmount() + 1);
+                drop.setPickedUp(true);
+                return;
+            }
+        }
+
         for (int i = 0; i < inventory.length; i++) {
-            if (inventory(i) == null || inventory(i).getParams().getKey().equals(GameItemsHolder.FALLBACK_ITEM_KEY) || inventory(i) == drop.getItem()) {
+            if (inventory(i) == null || inventory(i).getParams().getKey().equals(GameItemsHolder.FALLBACK_ITEM_KEY)) {
                 inventory[i] = drop.getItem().toInventoryItem();
                 drop.setPickedUp(true);
                 break;

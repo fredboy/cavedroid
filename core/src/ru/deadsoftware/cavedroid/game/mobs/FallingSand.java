@@ -43,7 +43,7 @@ public class FallingSand extends Mob {
     @Override
     public void ai(GameWorld gameWorld, GameItemsHolder gameItemsHolder, float delta) {
         if (mVelocity.isZero()) {
-            gameWorld.setForeMap(getMapX(), getMiddleMapY(), gameItemsHolder.getBlock("sand"));
+            gameWorld.setForeMap(getMapX(), getUpperMapY(), gameItemsHolder.getBlock("sand"));
             kill();
         }
     }

@@ -43,7 +43,8 @@ class ItemMapper @Inject constructor(
             inHandSpriteOrigin = SpriteOrigin(
                 x = dto.originX,
                 y = dto.origin_y,
-            )
+            ),
+            maxStack = dto.maxStack,
         )
     }
 

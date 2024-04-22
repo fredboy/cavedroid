@@ -17,4 +17,5 @@ data class ItemDto(
     @SerialName("top_slab_block") val topSlabBlock: String? = null,
     @SerialName("bottom_slab_block") val bottomSlabBlock: String? = null,
     @SerialName("tool_level") val toolLevel: Int? = null,
+    @SerialName("max_stack") val maxStack: Int = 64,
 )

@@ -7,4 +7,5 @@ data class CommonItemParams(
     val key: String,
     val name: String,
     val inHandSpriteOrigin: SpriteOrigin,
+    val maxStack: Int,
 )
