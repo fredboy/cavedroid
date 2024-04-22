@@ -189,14 +189,18 @@ public class Player extends Mob {
 
         float rotate = anim + 30;
 
+        if (item.isTool()) {
+            sprite.rotate90(looksLeft());
+        }
+
         final float itemX = x + handLength * MathUtils.sin(handMultiplier * anim * MathUtils.degRad) + xOffset;
         final float itemY = y + handLength * MathUtils.cos(handMultiplier * anim * MathUtils.degRad) + yOffset;
 
         if (looksLeft()) {
-            sprite.setFlip(true, sprite.isFlipY());
+            sprite.setFlip(!item.isTool(), sprite.isFlipY());
             SpriteUtilsKt.applyOrigin(sprite, spriteOrigin.getFlipped(true, false));
         } else {
-            sprite.setFlip(false, sprite.isFlipY());
+            sprite.setFlip(item.isTool(), sprite.isFlipY());
             SpriteUtilsKt.applyOrigin(sprite, spriteOrigin);
         }
 
@@ -206,6 +210,7 @@ public class Player extends Mob {
         sprite.setFlip(false, sprite.isFlipY());
         sprite.setRotation(0);
         sprite.setOriginCenter();
+        sprite.rotate90(looksRight());
     }
 
     public void startHitting() {
