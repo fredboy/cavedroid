@@ -9,11 +9,14 @@ import ru.deadsoftware.cavedroid.game.model.item.CommonItemParams
 import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.game.model.item.Item.*
 import ru.deadsoftware.cavedroid.misc.Assets
+import ru.deadsoftware.cavedroid.misc.utils.AssetLoader
 import ru.deadsoftware.cavedroid.misc.utils.SpriteOrigin
 import javax.inject.Inject
 
 @Reusable
-class ItemMapper @Inject constructor() {
+class ItemMapper @Inject constructor(
+    private val assetLoader: AssetLoader,
+) {
 
     fun map(key: String, dto: ItemDto, block: Block?, slabTopBlock: Block.Slab?, slabBottomBlock: Block.Slab?): Item {
         val params = mapCommonParams(key, dto)
@@ -49,7 +52,8 @@ class ItemMapper @Inject constructor() {
             return null
         }
 
-        return Sprite(Assets.itemTextures[dto.texture])
+        val texture = Assets.resolveItemTexture(assetLoader, dto.texture)
+        return Sprite(texture)
             .apply { flip(false, true) }
     }
 

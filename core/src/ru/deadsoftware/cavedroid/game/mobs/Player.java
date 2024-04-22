@@ -175,8 +175,9 @@ public class Player extends Mob {
         }
 
         final Sprite sprite = item.getSprite();
+        final boolean smallSprite = !item.isTool() || item.isShears();
 
-        if (!item.isTool()) {
+        if (smallSprite) {
             sprite.setSize(Drop.DROP_SIZE, Drop.DROP_SIZE);
         }
 
@@ -185,7 +186,7 @@ public class Player extends Mob {
         final SpriteOrigin spriteOrigin = item.getParams().getInHandSpriteOrigin();
         final int handMultiplier = -getDirection().getBasis();
         final float xOffset = (-1 + getDirection().getIndex()) * sprite.getWidth() + 4 + handMultiplier * (sprite.getWidth() * spriteOrigin.getX());
-        final float yOffset = item.isTool() ? -sprite.getHeight() / 2 : 0;
+        final float yOffset = !smallSprite ? -sprite.getHeight() / 2 : 0;
 
         float rotate = anim + 30;
 
@@ -210,7 +211,9 @@ public class Player extends Mob {
         sprite.setFlip(false, sprite.isFlipY());
         sprite.setRotation(0);
         sprite.setOriginCenter();
-        sprite.rotate90(looksRight());
+        if (item.isTool()) {
+            sprite.rotate90(looksRight());
+        }
     }
 
     public void startHitting() {

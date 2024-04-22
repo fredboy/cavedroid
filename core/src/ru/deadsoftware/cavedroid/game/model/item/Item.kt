@@ -35,10 +35,14 @@ sealed class Item {
         return this is Slab
     }
 
-
     fun isTool(): Boolean {
         contract { returns(true) implies (this@Item is Tool) }
         return this is Tool
+    }
+
+    fun isShears(): Boolean {
+        contract { returns(true) implies (this@Item is Shears) }
+        return this is Shears
     }
 
     fun isUsable(): Boolean {

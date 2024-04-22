@@ -42,6 +42,7 @@ project(":desktop") {
 
     dependencies {
         implementation project(":core")
+        implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion"
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     }

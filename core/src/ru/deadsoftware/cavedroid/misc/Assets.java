@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import ru.deadsoftware.cavedroid.game.objects.TouchButton;
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -110,6 +111,25 @@ public class Assets {
                 }
             }
         }
+    }
+
+    private static Texture resolveTexture(AssetLoader assetLoader, String textureName, String lookUpPath, Map<String, Texture> cache) {
+        if (cache.containsKey(textureName)) {
+            return cache.get(textureName);
+        }
+
+        final Texture texture = loadTexture(assetLoader.getAssetHandle(lookUpPath + File.separator + textureName + ".png"));
+        cache.put(textureName, texture);
+
+        return texture;
+    }
+
+    public static Texture resolveItemTexture(AssetLoader assetLoader, String textureName) {
+        return resolveTexture(assetLoader, textureName, "textures/items", itemTextures);
+    }
+
+    public static Texture resolveBlockTexture(AssetLoader assetLoader, String textureName) {
+        return resolveTexture(assetLoader, textureName, "textures/blocks", blockTextures);
     }
 
     private static void loadAllPngsFromDirInto(FileHandle dir, Map<String, Texture> loadInto) {
