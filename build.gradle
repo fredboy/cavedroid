@@ -25,7 +25,7 @@ buildscript {
 
 allprojects {
 
-    version = 'alpha0.6.0'
+    version = 'alpha0.6.1'
 
     repositories {
         mavenLocal()
