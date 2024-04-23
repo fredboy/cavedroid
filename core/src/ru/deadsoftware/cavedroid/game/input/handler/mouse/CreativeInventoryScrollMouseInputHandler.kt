@@ -1,6 +1,7 @@
 package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
 import com.badlogic.gdx.math.MathUtils
+import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
@@ -15,6 +16,7 @@ import kotlin.math.abs
 
 @GameScope
 class CreativeInventoryScrollMouseInputHandler @Inject constructor(
+    private val mainConfig: MainConfig,
     private val gameWindowsManager: GameWindowsManager,
     private val gameItemsHolder: GameItemsHolder,
 ) : IGameInputHandler<MouseInputAction> {
@@ -32,17 +34,17 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
     }
 
     private fun checkStartDragConditions(action: MouseInputAction): Boolean {
-        return action.actionKey is MouseInputActionKey.Left &&
+        return (action.actionKey is MouseInputActionKey.Touch) &&
                 !action.actionKey.touchUp && !gameWindowsManager.isDragging
     }
 
     private fun checkEndDragConditions(action: MouseInputAction): Boolean {
-        return action.actionKey is MouseInputActionKey.Left &&
+        return action.actionKey is MouseInputActionKey.Touch &&
                 action.actionKey.touchUp && gameWindowsManager.isDragging
     }
 
     private fun checkDragConditions(action: MouseInputAction): Boolean {
-        return action.actionKey is MouseInputActionKey.Dragged &&
+        return mainConfig.isTouch && action.actionKey is MouseInputActionKey.Dragged &&
                 abs(action.screenY - dragStartY) >= DRAG_SENSITIVITY
     }
 
@@ -73,7 +75,7 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
 
     override fun handle(action: MouseInputAction) {
         when (action.actionKey) {
-            is MouseInputActionKey.Left -> handleStartOrEndDrag(action)
+            is MouseInputActionKey.Touch -> handleStartOrEndDrag(action)
             is MouseInputActionKey.Dragged -> handleDrag(action)
             is MouseInputActionKey.Scroll -> handleScroll(action)
             else -> return

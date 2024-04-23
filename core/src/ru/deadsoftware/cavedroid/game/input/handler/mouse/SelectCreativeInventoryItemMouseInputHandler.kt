@@ -25,7 +25,7 @@ class SelectCreativeInventoryItemMouseInputHandler @Inject constructor(
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.getCurrentWindow() == GameUiWindow.CREATIVE_INVENTORY &&
                 !gameWindowsManager.isDragging &&
-                action.actionKey is MouseInputActionKey.Left &&
+                (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Touch) &&
                 action.actionKey.touchUp && isInsideWindow(action, creativeInventoryTexture)
     }
 
