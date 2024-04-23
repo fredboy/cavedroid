@@ -74,7 +74,7 @@ class HotbarMouseInputHandler @Inject constructor(
             cancelHold()
         }
 
-        if (action.actionKey !is MouseInputActionKey.Left) {
+        if (action.actionKey !is MouseInputActionKey.Left && action.actionKey !is MouseInputActionKey.Touch ) {
             if (action.actionKey is MouseInputActionKey.Scroll) {
                 handleScroll(action)
             }
