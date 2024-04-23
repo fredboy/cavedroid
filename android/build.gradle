@@ -34,8 +34,8 @@ android {
         applicationId "ru.deadsoftware.cavedroid"
         minSdkVersion 24
         targetSdkVersion 34
-        versionCode 18
-        versionName "alpha0.6.1"
+        versionCode 19
+        versionName "alpha0.6.2"
     }
     applicationVariants.all { variant ->
         variant.outputs.all {
