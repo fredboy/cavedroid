@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.misc.Assets
-import java.awt.Color as JavaColor
 
 private fun Rectangle.shifted(shift: Float) = Rectangle(x + shift, y, width, height)
 
@@ -52,7 +51,21 @@ fun SpriteBatch.drawString(str: String, x: Float, y: Float, color: Color = Color
     return Assets.minecraftFont.draw(this, str, x, y)
 }
 
+/**
+ * Parses hex color string into [Color]
+ * Format is strictly #FFFFFF
+ */
 fun colorFromHexString(hex: String): Color {
-    val rgba = (JavaColor.decode(hex).rgb shl 8) or (0xFF)
+    if (hex[0] != '#' || hex.length != 7) {
+        return Color.WHITE
+    }
+
+    var rgba = try {
+        hex.substring(1).toInt(16)
+    } catch (e: NumberFormatException) {
+        0xffffff
+    }
+
+    rgba = (rgba shl 8) or 0xFF
     return Color(rgba)
 }
