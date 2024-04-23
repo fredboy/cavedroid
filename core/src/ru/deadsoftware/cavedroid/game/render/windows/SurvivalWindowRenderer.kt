@@ -11,6 +11,8 @@ import ru.deadsoftware.cavedroid.game.mobs.Mob
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.render.IGameRenderer
 import ru.deadsoftware.cavedroid.game.render.WindowsRenderer
+import ru.deadsoftware.cavedroid.game.windows.GameWindowsConfigs
+import ru.deadsoftware.cavedroid.game.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.misc.Assets
 import javax.inject.Inject
 import kotlin.math.atan
@@ -19,6 +21,7 @@ import kotlin.math.atan
 class SurvivalWindowRenderer @Inject constructor(
     private val mainConfig: MainConfig,
     private val mobsController: MobsController,
+    private val gameWindowsManager: GameWindowsManager,
 ) : AbstractWindowRenderer(), IGameRenderer {
 
     override val renderLayer get() = WindowsRenderer.RENDER_LAYER
@@ -47,10 +50,10 @@ class SurvivalWindowRenderer @Inject constructor(
     }
 
     private fun drawPlayerPortrait(spriteBatch: SpriteBatch, windowX: Float, windowY: Float, delta: Float) {
-        val portraitX = windowX + Config.portraitMarginLeft +
-                (Config.portraitWidth / 2 - mobsController.player.width / 2)
-        val portraitY = windowY + Config.portraitMarginTop +
-                (Config.portraitHeight / 2 - mobsController.player.height / 2)
+        val portraitX = windowX + GameWindowsConfigs.Survival.portraitMarginLeft +
+                (GameWindowsConfigs.Survival.portraitWidth / 2 - mobsController.player.width / 2)
+        val portraitY = windowY + GameWindowsConfigs.Survival.portraitMarginTop +
+                (GameWindowsConfigs.Survival.portraitHeight / 2 - mobsController.player.height / 2)
 
         setPortraitHeadRotation(portraitX, portraitY)
         mobsController.player.draw(spriteBatch, portraitX, portraitY, delta)
@@ -69,51 +72,38 @@ class SurvivalWindowRenderer @Inject constructor(
         drawItemsGrid(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
-            gridX = windowX + Config.itemsGridMarginLeft,
-            gridY = windowY + Config.itemsGridMarginTop,
+            gridX = windowX + GameWindowsConfigs.Survival.itemsGridMarginLeft,
+            gridY = windowY + GameWindowsConfigs.Survival.itemsGridMarginTop,
             items = mobsController.player.inventory.asSequence()
-                .drop(Config.hotbarCells)
-                .take(Config.itemsInCol * Config.itemsInRow)
+                .drop(GameWindowsConfigs.Survival.hotbarCells)
+                .take(GameWindowsConfigs.Survival.itemsInCol * GameWindowsConfigs.Survival.itemsInRow)
                 .asIterable(),
-            itemsInRow = Config.itemsInRow,
-            cellWidth = Config.itemsGridColWidth,
-            cellHeight = Config.itemsGridRowHeight,
+            itemsInRow = GameWindowsConfigs.Survival.itemsInRow,
+            cellWidth = GameWindowsConfigs.Survival.itemsGridColWidth,
+            cellHeight = GameWindowsConfigs.Survival.itemsGridRowHeight,
         )
 
         drawItemsGrid(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
-            gridX = windowX + Config.itemsGridMarginLeft,
-            gridY = windowY + survivalWindow.regionHeight - Config.hotbarOffsetFromBottom,
+            gridX = windowX + GameWindowsConfigs.Survival.itemsGridMarginLeft,
+            gridY = windowY + survivalWindow.regionHeight - GameWindowsConfigs.Survival.hotbarOffsetFromBottom,
             items = mobsController.player.inventory.asSequence()
-                .take(Config.hotbarCells)
+                .take(GameWindowsConfigs.Survival.hotbarCells)
                 .asIterable(),
-            itemsInRow = Config.hotbarCells,
-            cellWidth = Config.itemsGridColWidth,
-            cellHeight = Config.itemsGridRowHeight,
+            itemsInRow = GameWindowsConfigs.Survival.hotbarCells,
+            cellWidth = GameWindowsConfigs.Survival.itemsGridColWidth,
+            cellHeight = GameWindowsConfigs.Survival.itemsGridRowHeight,
+        )
+
+        gameWindowsManager.selectedItem?.drawSelected(
+            spriteBatch = spriteBatch,
+            x = Gdx.input.x * (viewport.width / Gdx.graphics.width),
+            y = Gdx.input.y * (viewport.height / Gdx.graphics.height)
         )
     }
 
     companion object {
         private const val SURVIVAL_WINDOW_KEY = "survival"
-
-        private data object Config {
-            const val itemsGridMarginLeft = 8f
-            const val itemsGridMarginTop = 84f
-
-            const val itemsGridRowHeight = 18f
-            const val itemsGridColWidth = 18f
-
-            const val itemsInRow = 8
-            const val itemsInCol = 5
-
-            const val hotbarOffsetFromBottom = 24f
-            const val hotbarCells = 9
-
-            const val portraitMarginLeft = 24f
-            const val portraitMarginTop = 8f
-            const val portraitWidth = 48f
-            const val portraitHeight = 68f
-        }
     }
 }

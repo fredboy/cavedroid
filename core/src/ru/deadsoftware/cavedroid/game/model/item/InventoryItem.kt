@@ -35,6 +35,19 @@ class InventoryItem @JvmOverloads constructor(
         spriteBatch.drawString(text, x, y, Color.WHITE)
     }
 
+    fun drawSelected(spriteBatch: SpriteBatch, x: Float, y: Float) {
+        if (item.isNone()) {
+            return
+        }
+
+        val sprite = item.sprite
+        sprite.setOriginCenter()
+        sprite.setPosition(x, y)
+        sprite.setScale(1.25f)
+        sprite.draw(spriteBatch)
+        sprite.setScale(1f)
+    }
+
     fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, x: Float, y: Float) {
         if (item.isNone()) {
             return

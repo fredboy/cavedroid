@@ -4,6 +4,7 @@ import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
+import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
 import javax.inject.Inject
 
 @GameScope
@@ -14,6 +15,7 @@ class GameWindowsManager @Inject constructor(
 
     var creativeScrollAmount = 0
     var isDragging = false
+    var selectedItem: InventoryItem? = null
 
     fun getCurrentWindow(): GameUiWindow {
         return mainConfig.gameUiWindow

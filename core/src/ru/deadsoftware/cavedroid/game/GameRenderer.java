@@ -16,6 +16,7 @@ import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.mobs.Player;
 import ru.deadsoftware.cavedroid.game.objects.TouchButton;
 import ru.deadsoftware.cavedroid.game.render.IGameRenderer;
+import ru.deadsoftware.cavedroid.game.windows.GameWindowsManager;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.Renderer;
 
@@ -39,6 +40,7 @@ public class GameRenderer extends Renderer {
     private final KeyboardInputActionMapper mKeyboardInputActionMapper;
     private final Set<IGameInputHandler<MouseInputAction>> mMouseInputHandlers;
     private final Set<IGameInputHandler<KeyboardInputAction>> mKeyboardInputHandlers;
+    private final GameWindowsManager mGameWindowsManager;
 
     @Inject
     GameRenderer(MainConfig mainConfig,
@@ -48,7 +50,8 @@ public class GameRenderer extends Renderer {
                  MouseInputActionMapper mouseInputActionMapper,
                  KeyboardInputActionMapper keyboardInputActionMapper,
                  Set<IGameInputHandler<MouseInputAction>> mouseInputHandlers,
-                 Set<IGameInputHandler<KeyboardInputAction>> keyboardInputHandlers) {
+                 Set<IGameInputHandler<KeyboardInputAction>> keyboardInputHandlers,
+                 GameWindowsManager gameWindowsManager) {
         super(mainConfig.getWidth(), mainConfig.getHeight());
 
         mMainConfig = mainConfig;
@@ -60,6 +63,7 @@ public class GameRenderer extends Renderer {
         mKeyboardInputActionMapper = keyboardInputActionMapper;
         mMouseInputHandlers = mouseInputHandlers;
         mKeyboardInputHandlers = keyboardInputHandlers;
+        mGameWindowsManager = gameWindowsManager;
 
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f);
     }
@@ -134,6 +138,9 @@ public class GameRenderer extends Renderer {
     }
 
     private TouchButton getTouchedKey(float touchX, float touchY) {
+        if (mGameWindowsManager.getCurrentWindow() != GameUiWindow.NONE) {
+            return nullButton;
+        }
         for (ObjectMap.Entry<String, TouchButton> entry : Assets.guiMap) {
             TouchButton button = entry.value;
             if (button.getRect().contains(touchX, touchY)) {
