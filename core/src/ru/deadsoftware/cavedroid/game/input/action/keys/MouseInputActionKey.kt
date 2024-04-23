@@ -26,6 +26,10 @@ sealed interface MouseInputActionKey {
         override val touchUp: Boolean
     ) : MouseInputActionKey
 
+    data class Touch(
+        override val touchUp: Boolean
+    ) : MouseInputActionKey
+
     data class Scroll(
         val amountX: Float,
         val amountY: Float

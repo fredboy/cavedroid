@@ -29,6 +29,8 @@ import java.util.Set;
 @GameScope
 public class GameRenderer extends Renderer {
 
+    private static final TouchButton nullButton = new TouchButton(null, -1, true);
+
     private final MainConfig mMainConfig;
     private final MobsController mMobsController;
     private final List<IGameRenderer> mRenderers;
@@ -120,10 +122,10 @@ public class GameRenderer extends Renderer {
         float touchY = transformScreenY(screenY);
 
         if (mMainConfig.isTouch()) {
-            @CheckForNull TouchButton touchedKey = getTouchedKey(touchX, touchY);
-            if (touchedKey != null && touchedKey.isMouse()) {
+            TouchButton touchedKey = getTouchedKey(touchX, touchY);
+            if (touchedKey.isMouse()) {
                 return onMouseActionEvent(screenX, screenY, touchedKey.getCode(), true);
-            } else if (touchedKey != null) {
+            } else {
                 return keyUp(touchedKey.getCode());
             }
         }
@@ -131,7 +133,6 @@ public class GameRenderer extends Renderer {
         return onMouseActionEvent(screenX, screenY, button, true);
     }
 
-    @CheckForNull
     private TouchButton getTouchedKey(float touchX, float touchY) {
         for (ObjectMap.Entry<String, TouchButton> entry : Assets.guiMap) {
             TouchButton button = entry.value;
@@ -139,7 +140,7 @@ public class GameRenderer extends Renderer {
                 return button;
             }
         }
-        return null;
+        return nullButton;
     }
 
     @Override
@@ -151,10 +152,10 @@ public class GameRenderer extends Renderer {
         mTouchDownY = touchY;
 
         if (mMainConfig.isTouch()) {
-            @CheckForNull TouchButton touchedKey = getTouchedKey(touchX, touchY);
-            if (touchedKey != null && touchedKey.isMouse()) {
+            TouchButton touchedKey = getTouchedKey(touchX, touchY);
+            if (touchedKey.isMouse()) {
                 return onMouseActionEvent(screenX, screenY, touchedKey.getCode(), false);
-            } else if (touchedKey != null) {
+            } else {
                 return keyDown(touchedKey.getCode());
             }
         }

@@ -64,6 +64,7 @@ class MouseInputActionMapper @Inject constructor(
             Input.Buttons.LEFT -> MouseInputActionKey.Left(touchUp)
             Input.Buttons.RIGHT -> MouseInputActionKey.Right(touchUp)
             Input.Buttons.MIDDLE -> MouseInputActionKey.Middle(touchUp)
+            -1 -> MouseInputActionKey.Touch(touchUp)
             else -> null
         }
     }
