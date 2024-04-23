@@ -62,6 +62,8 @@ public class GameRenderer extends Renderer {
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f);
     }
 
+    private float mTouchDownX, mTouchDownY;
+
     private void updateCameraPosition() {
         Player player = mMobsController.getPlayer();
         setCamPos(player.getX() + player.getWidth() / 2 - getWidth() / 2,
@@ -145,6 +147,9 @@ public class GameRenderer extends Renderer {
         float touchX = transformScreenX(screenX);
         float touchY = transformScreenY(screenY);
 
+        mTouchDownX = touchX;
+        mTouchDownY = touchY;
+
         if (mMainConfig.isTouch()) {
             @CheckForNull TouchButton touchedKey = getTouchedKey(touchX, touchY);
             if (touchedKey != null && touchedKey.isMouse()) {
@@ -159,6 +164,13 @@ public class GameRenderer extends Renderer {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        float touchX = transformScreenX(screenX);
+        float touchY = transformScreenY(screenY);
+
+        if (Math.abs(touchX - mTouchDownX) < 16 && Math.abs(touchY - mTouchDownY) < 16) {
+            return false;
+        }
+
         @CheckForNull MouseInputAction action =
                 mMouseInputActionMapper.mapDragged(screenX, screenY, getCameraViewport());
         return handleMouseAction(action);
