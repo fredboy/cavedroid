@@ -26,4 +26,12 @@ class UseItemActionsModule {
         return action
     }
 
+    @Binds
+    @IntoMap
+    @StringKey(UseEmptyBucketAction.ACTION_KEY)
+    @GameScope
+    fun bindUseEmptyBucketAction(action: UseEmptyBucketAction): IUseItemAction {
+        return action
+    }
+
 }

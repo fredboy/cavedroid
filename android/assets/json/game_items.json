@@ -21,6 +21,13 @@
       "tool_level": 0,
       "tool_type": "shovel"
     },
+    "grass_snowed": {
+      "hp": 54,
+      "drop": "dirt",
+      "texture": "grass_snowed",
+      "tool_level": 0,
+      "tool_type": "shovel"
+    },
     "dirt": {
       "hp": 45,
       "drop": "dirt",
@@ -48,7 +55,7 @@
       "block_required": true,
       "drop": "sapling_oak",
       "texture": "sapling_oak",
-      "hp": 1
+      "hp": 0
     },
     "bedrock": {
       "drop": "bedrock",
@@ -109,6 +116,20 @@
       "tool_level": 1,
       "tool_type": "pickaxe"
     },
+    "diamond_ore": {
+      "hp": 900,
+      "drop": "diamond",
+      "texture": "diamond_ore",
+      "tool_level": 3,
+      "tool_type": "pickaxe"
+    },
+    "diamond_block": {
+      "hp": 1500,
+      "drop": "diamond_block",
+      "texture": "diamond_block",
+      "tool_level": 3,
+      "tool_type": "pickaxe"
+    },
     "log_oak": {
       "hp": 180,
       "drop": "log_oak",
@@ -118,11 +139,11 @@
     },
     "leaves_oak": {
       "hp": 21,
-      "transparent": true,
       "drop": "leaves_oak",
       "texture": "leaves_oak",
       "tool_level": 1,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "tint": "#5AC557"
     },
     "sponge": {
       "hp": 54,
@@ -201,7 +222,9 @@
       "drop": "tallgrass",
       "texture": "tallgrass",
       "tool_level": 1,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "tint": "#5AC557",
+      "hp": 0
     },
     "deadbush": {
       "collision": false,
@@ -210,7 +233,8 @@
       "drop": "deadbush",
       "texture": "deadbush",
       "tool_level": 1,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "hp": 0
     },
     "bricks": {
       "hp": 600,
@@ -224,28 +248,32 @@
       "transparent": true,
       "block_required": true,
       "drop": "dandelion",
-      "texture": "dandelion"
+      "texture": "dandelion",
+      "hp": 0
     },
     "rose": {
       "collision": false,
       "transparent": true,
       "block_required": true,
       "drop": "rose",
-      "texture": "rose"
+      "texture": "rose",
+      "hp": 0
     },
     "mushroom_brown": {
       "collision": false,
       "transparent": true,
       "block_required": true,
       "drop": "mushroom_brown",
-      "texture": "mushroom_brown"
+      "texture": "mushroom_brown",
+      "hp": 0
     },
     "mushroom_red": {
       "collision": false,
       "transparent": true,
       "block_required": true,
       "drop": "mushroom_red",
-      "texture": "mushroom_red"
+      "texture": "mushroom_red",
+      "hp": 0
     },
     "wool_colored_white": {
       "hp": 75,
@@ -650,7 +678,7 @@
       "damage": 4
     },
     "obsidian": {
-      "hp": 1500,
+      "hp": 15000,
       "drop": "obsidian",
       "texture": "obsidian",
       "tool_level": 4,
@@ -732,6 +760,11 @@
       "name": "Coal Ore",
       "type": "block",
       "texture": "coal_ore"
+    },
+    "diamond_ore": {
+      "name": "Diamond Ore",
+      "type": "block",
+      "texture": "diamond_ore"
     },
     "log_oak": {
       "name": "Wood",
@@ -898,6 +931,11 @@
       "name": "Iron Block",
       "type": "block",
       "texture": "iron_block"
+    },
+    "diamond_block": {
+      "name": "Diamond Block",
+      "type": "block",
+      "texture": "diamond_block"
     },
     "stone_slab": {
       "name": "Stone Slab",
@@ -1132,21 +1170,24 @@
       "type": "bucket",
       "texture": "bucket_empty",
       "origin_x": 0.25,
-      "action_key": "use_empty_bucket"
+      "action_key": "use_empty_bucket",
+      "max_stack": 1
     },
     "bucket_water": {
       "name": "Water Bucket",
       "type": "bucket",
       "texture": "bucket_water",
       "origin_x": 0.25,
-      "action_key": "use_water_bucket"
+      "action_key": "use_water_bucket",
+      "max_stack": 1
     },
     "bucket_lava": {
       "name": "Lava Bucket",
       "type": "bucket",
       "texture": "bucket_lava",
       "origin_x": 0.25,
-      "action_key": "use_lava_bucket"
+      "action_key": "use_lava_bucket",
+      "max_stack": 1
     }
   }
 }

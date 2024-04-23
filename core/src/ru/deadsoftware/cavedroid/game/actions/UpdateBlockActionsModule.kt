@@ -41,4 +41,12 @@ class UpdateBlockActionsModule {
     fun bindUpdateGrassAction(action: UpdateGrassAction): IUpdateBlockAction {
         return action;
     }
+
+    @Binds
+    @IntoMap
+    @StringKey(UpdateSnowedGrassAction.BLOCK_KEY)
+    @GameScope
+    fun bindUpdateSnowedGrassAction(action: UpdateSnowedGrassAction): IUpdateBlockAction {
+        return action;
+    }
 }

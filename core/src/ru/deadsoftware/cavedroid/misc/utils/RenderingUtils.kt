@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.misc.Assets
+import java.awt.Color as JavaColor
 
 private fun Rectangle.shifted(shift: Float) = Rectangle(x + shift, y, width, height)
 
@@ -49,4 +50,9 @@ fun forEachBlockInArea(
 fun SpriteBatch.drawString(str: String, x: Float, y: Float, color: Color = Color.WHITE): GlyphLayout {
     Assets.minecraftFont.color = color
     return Assets.minecraftFont.draw(this, str, x, y)
+}
+
+fun colorFromHexString(hex: String): Color {
+    val rgba = (JavaColor.decode(hex).rgb shl 8) or (0xFF)
+    return Color(rgba)
 }

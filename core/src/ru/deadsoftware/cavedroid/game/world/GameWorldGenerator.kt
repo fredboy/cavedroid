@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavedroid.game.world
 
+import com.google.common.primitives.Ints.min
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.model.block.Block
 import ru.deadsoftware.cavedroid.game.model.world.Biome
@@ -21,11 +22,14 @@ class GameWorldGenerator(
     private val heights by lazy { generateHeights() }
     private val biomesMap by lazy { generateBiomes() }
 
+    private val plainsPlants = listOf("dandelion", "rose", "tallgrass")
+    private val mushrooms = listOf("mushroom_brown", "mushroom_red",)
+
     private fun generateHeights(): IntArray {
         val surfaceHeightRange = config.minSurfaceHeight .. config.maxSurfaceHeight
         val result = IntArray(config.width)
 
-        result[0] = (config.minSurfaceHeight + config.maxSurfaceHeight) / 2
+        result[0] = surfaceHeightRange.random(random)
 
         for (x in 1 ..< config.width) {
             val previous = result[x - 1]
@@ -59,6 +63,35 @@ class GameWorldGenerator(
         return xSequence.associateWith { config.biomes.random(random) }
     }
 
+    private fun winterBiome(x: Int) {
+        assert(x in 0 ..< config.width) { "x not in range of world width" }
+
+        val surfaceHeight = heights[x]
+
+        val grass = gameItemsHolder.getBlock("grass_snowed")
+        val bedrock = gameItemsHolder.getBlock("bedrock")
+        val dirt = gameItemsHolder.getBlock("dirt")
+        val stone = gameItemsHolder.getBlock("stone")
+
+        foreMap[x][surfaceHeight] = grass
+        foreMap[x][config.height - 1] = bedrock
+        backMap[x][surfaceHeight] = grass
+        backMap[x][config.height - 1] = bedrock
+
+        for (y in min(surfaceHeight + 1, config.seaLevel) ..< config.height - 1) {
+            if (y <= surfaceHeight) {
+                backMap[x][y] = dirt
+                continue
+            }
+
+            foreMap[x][y] = when {
+                y < surfaceHeight + random.nextInt(5, 8) -> dirt
+                else -> stone
+            }
+            backMap[x][y] = foreMap[x][y]
+        }
+    }
+
     private fun plainsBiome(x: Int) {
         assert(x in 0 ..< config.width) { "x not in range of world width" }
 
@@ -74,12 +107,26 @@ class GameWorldGenerator(
         backMap[x][surfaceHeight] = grass
         backMap[x][config.height - 1] = bedrock
 
-        for (y in surfaceHeight + 1 ..< config.height - 1) {
+        for (y in min(surfaceHeight + 1, config.seaLevel) ..< config.height - 1) {
+            if (y <= surfaceHeight) {
+                backMap[x][y] = dirt
+                continue
+            }
+
             foreMap[x][y] = when {
                 y < surfaceHeight + random.nextInt(5, 8) -> dirt
                 else -> stone
             }
             backMap[x][y] = foreMap[x][y]
+        }
+
+        val plant = random.nextInt(100)
+        if (surfaceHeight < config.seaLevel) {
+            if (plant < 10) {
+                generateOak(x)
+            } else if (plant < 40) {
+                generateTallGrass(x)
+            }
         }
     }
 
@@ -99,7 +146,12 @@ class GameWorldGenerator(
         backMap[x][surfaceHeight] = sand
         backMap[x][config.height - 1] = bedrock
 
-        for (y in surfaceHeight + 1 ..< config.height - 1) {
+        for (y in min(surfaceHeight + 1, config.seaLevel) ..< config.height - 1) {
+            if (y <= surfaceHeight) {
+                backMap[x][y] = sand
+                continue
+            }
+
             foreMap[x][y] = when {
                 y < surfaceHeight + random.nextInt(5, 8) -> sand
                 y < surfaceHeight + random.nextInt(0, 2) -> sandstone
@@ -108,8 +160,13 @@ class GameWorldGenerator(
             backMap[x][y] = foreMap[x][y]
         }
 
-        if (surfaceHeight < config.seaLevel && random.nextInt(100) < 5) {
-            generateCactus(x)
+        val plant = random.nextInt(100)
+        if (surfaceHeight < config.seaLevel) {
+            if (plant < 5) {
+                generateCactus(x)
+            } else if (plant < 10) {
+                generateDeadBush(x)
+            }
         }
     }
 
@@ -137,6 +194,77 @@ class GameWorldGenerator(
         }
     }
 
+    private fun generateOak(x: Int) {
+        val log = gameItemsHolder.getBlock("log_oak")
+        val leaves = gameItemsHolder.getBlock("leaves_oak")
+        val h = heights[x] - 1
+        val treeH = random.nextInt(5, 7)
+        val height = max(0, h - treeH)
+
+        val top = height - 1
+        if (top >= 0) {
+            foreMap[x][top] = leaves
+            backMap[x][top] = leaves
+        }
+
+        for (x1 in max(0, x - 1) .. min(config.width - 1, x + 1)) {
+            for (y in height .. height + treeH - 4) {
+                foreMap[x1][y] = leaves
+                backMap[x1][y] = leaves
+            }
+            if (random.nextInt(15) < 3) {
+                foreMap[x1][heights[x1] - 1] = gameItemsHolder.getBlock(mushrooms.random(random))
+            }
+        }
+
+        for (y in h downTo height) {
+            backMap[x][y] = log
+        }
+    }
+
+    private fun generateTallGrass(x: Int) {
+        val tallGrass = gameItemsHolder.getBlock(plainsPlants.random(random))
+        val h = heights[x] - 1
+        if (h > 0) {
+            foreMap[x][h] = tallGrass
+        }
+    }
+
+    private fun generateDeadBush(x: Int) {
+        val bush = gameItemsHolder.getBlock("deadbush")
+        val h = heights[x] - 1
+        if (h > 0) {
+            foreMap[x][h] = bush
+        }
+    }
+
+    private fun generateOres(x : Int) {
+        val stone = gameItemsHolder.getBlock("stone")
+        val coal = gameItemsHolder.getBlock("coal_ore")
+        val iron = gameItemsHolder.getBlock("iron_ore")
+        val gold = gameItemsHolder.getBlock("gold_ore")
+        val diamond = gameItemsHolder.getBlock("diamond_ore")
+        val lapis = gameItemsHolder.getBlock("lapis_ore")
+
+        for (y in heights[x] ..< config.height) {
+            val res = random.nextInt(10000)
+
+            val h = config.height - y
+            val block = when {
+                res in 0..<25 && h < 16 -> diamond
+                res in 25 ..< 50 && h < 32 -> gold
+                res in 50 ..< 250 && h < 64 -> iron
+                res in 250 ..< 450 && h < 128 -> coal
+                res in 450 ..< (450 + (25 - (abs(h - 16) * (25 / 16)))) -> lapis
+                else -> null
+            }
+
+            if (block != null && foreMap[x][y] == stone) {
+                foreMap[x][y] = block
+            }
+        }
+    }
+
     /**
      * Generate world
      */
@@ -149,7 +277,10 @@ class GameWorldGenerator(
             when (biome) {
                 Biome.PLAINS -> plainsBiome(x)
                 Biome.DESERT -> desertBiome(x)
+                Biome.WINTER -> winterBiome(x)
             }
+
+            generateOres(x)
         }
 
         fillWater()

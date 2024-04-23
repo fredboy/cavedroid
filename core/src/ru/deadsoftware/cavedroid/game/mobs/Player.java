@@ -36,6 +36,9 @@ public class Player extends Mob {
     public int cursorX = 0;
     public int cursorY = 0;
 
+    @CheckForNull
+    private Vector2 spawnPoint = null;
+
     public ControlMode controlMode = ControlMode.WALK;
 
     public enum ControlMode {
@@ -107,18 +110,30 @@ public class Player extends Mob {
     }
 
     private Vector2 getSpawnPoint(GameWorld gameWorld, GameItemsHolder itemsHolder) {
-        int y;
-        for (y = 0; y < gameWorld.getHeight(); y++) {
-            if (y == gameWorld.getHeight() - 1) {
-                y = 60;
-                gameWorld.setForeMap(0, y, itemsHolder.getBlock("grass"));
+        if (spawnPoint != null) {
+            return spawnPoint;
+        }
+
+        int y, x = gameWorld.getWidth() / 2;
+        for (y = 0; y <= gameWorld.getWorldConfig().getSeaLevel(); y++) {
+            if (y == gameWorld.getWorldConfig().getSeaLevel()) {
+                for (x = 0; x < gameWorld.getWidth(); x++) {
+                    if (gameWorld.getForeMap(x, y).getParams().getHasCollision()) {
+                        break;
+                    }
+                    if (x == gameWorld.getWidth() - 1) {
+                        gameWorld.setForeMap(x, y, itemsHolder.getBlock("grass"));
+                        break;
+                    }
+                }
                 break;
             }
-            if (gameWorld.hasForeAt(0, y) && gameWorld.getForeMap(0, y).hasCollision()) {
+            if (gameWorld.hasForeAt(x, y) && gameWorld.getForeMap(x, y).hasCollision()) {
                 break;
             }
         }
-        return new Vector2(8 - getWidth() / 2, (float) y * 16 - getHeight());
+        spawnPoint = new Vector2(x * 16 + 8 - getWidth() / 2, (float) y * 16 - getHeight());
+        return spawnPoint;
     }
 
     public void setDir(Direction dir) {
@@ -247,6 +262,9 @@ public class Player extends Mob {
         final Sprite sprite = item.getSprite();
         final boolean smallSprite = !item.isTool() || item.isShears();
 
+        final float originalWidth = sprite.getWidth();
+        final float originalHeight = sprite.getHeight();
+
         if (smallSprite) {
             sprite.setSize(Drop.DROP_SIZE, Drop.DROP_SIZE);
         }
@@ -275,12 +293,15 @@ public class Player extends Mob {
             SpriteUtilsKt.applyOrigin(sprite, spriteOrigin);
         }
 
-        SpriteUtilsKt.drawSprite(spriteBatch, sprite, itemX, itemY, -handMultiplier * rotate);
+        sprite.setRotation(-handMultiplier * rotate);
+        sprite.setPosition(itemX, itemY);
+        sprite.draw(spriteBatch);
 
         // dont forget to reset
         sprite.setFlip(false, sprite.isFlipY());
         sprite.setRotation(0);
         sprite.setOriginCenter();
+        sprite.setSize(originalWidth, originalHeight);
         if (item.isTool()) {
             sprite.rotate90(looksRight());
         }

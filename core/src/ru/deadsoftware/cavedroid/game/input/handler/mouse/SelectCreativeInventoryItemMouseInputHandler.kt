@@ -50,7 +50,7 @@ class SelectCreativeInventoryItemMouseInputHandler @Inject constructor(
             destination = mobsController.player.inventory,
             destinationOffset = 1,
             startIndex = 0,
-            endIndex = mobsController.player.inventory.size - 2
+            endIndex = mobsController.player.inventory.size - 1
         )
 
         val item = gameItemsHolder.getItemFromCreativeInventory(itemIndex)

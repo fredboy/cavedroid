@@ -26,6 +26,8 @@ public class GameWorld {
     private final Block[][] mForeMap;
     private final Block[][] mBackMap;
 
+    private final WorldGeneratorConfig mWorldConfig =  WorldGeneratorConfig.Companion.getDefault();
+
     @Inject
     public GameWorld(DropController dropController,
                      MobsController mobsController,
@@ -39,10 +41,9 @@ public class GameWorld {
         boolean isNewGame = foreMap == null || backMap == null;
 
         if (isNewGame) {
-            final WorldGeneratorConfig config = WorldGeneratorConfig.Companion.getDefault();
-            mWidth = config.getWidth();
-            mHeight = config.getHeight();
-            Pair<Block[][], Block[][]> maps = new GameWorldGenerator(config, mGameItemsHolder).generate();
+            mWidth = mWorldConfig.getWidth();
+            mHeight = mWorldConfig.getHeight();
+            Pair<Block[][], Block[][]> maps = new GameWorldGenerator(mWorldConfig, mGameItemsHolder).generate();
             mForeMap = maps.getFirst();
             mBackMap = maps.getSecond();
             mMobsController.getPlayer().respawn(this, mGameItemsHolder);
@@ -200,7 +201,9 @@ public class GameWorld {
         placeToForeground(x, y, mGameItemsHolder.getFallbackBlock());
     }
 
-
+    public WorldGeneratorConfig getWorldConfig() {
+        return mWorldConfig;
+    }
 
     public void destroyBackMap(int x, int y) {
         Block block = getBackMap(x, y);

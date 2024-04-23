@@ -19,4 +19,5 @@ data class CommonBlockParams(
     val toolLevel: Int,
     val toolType: Class<out Item.Tool>?,
     val damage: Int,
+    val tint: String?,
 )

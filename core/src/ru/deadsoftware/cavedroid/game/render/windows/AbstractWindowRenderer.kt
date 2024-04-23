@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
 import ru.deadsoftware.cavedroid.game.model.item.Item
+import ru.deadsoftware.cavedroid.misc.utils.drawSprite
 
 abstract class AbstractWindowRenderer {
 
@@ -39,7 +40,7 @@ abstract class AbstractWindowRenderer {
             val itemY = gridY + (index / itemsInRow) * cellHeight
 
             inventoryItem?.draw(spriteBatch, shapeRenderer, itemX, itemY)
-                ?: item?.let { spriteBatch.draw(it.sprite, itemX, itemY) }
+                ?: item?.let { spriteBatch.drawSprite(it.sprite, itemX, itemY) }
         }
     }
 

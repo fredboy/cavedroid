@@ -22,11 +22,12 @@ class DropsRenderer @Inject constructor(
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
         dropController.forEach { drop ->
             drop.cycledInsideWorld(viewport, gameWorld.width.px)?.let { dropRect ->
-                drop.item.sprite.setSize(dropRect.width, dropRect.height)
                 spriteBatch.drawSprite(
                     sprite = drop.item.sprite,
                     x = dropRect.x - viewport.x,
                     y = dropRect.y - viewport.y,
+                    width = dropRect.width,
+                    height = dropRect.height,
                 )
             }
         }

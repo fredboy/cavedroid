@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.misc.Assets
+import ru.deadsoftware.cavedroid.misc.utils.drawSprite
 import ru.deadsoftware.cavedroid.misc.utils.drawString
 import ru.deadsoftware.cavedroid.misc.utils.px
 import java.io.Serializable
@@ -54,7 +55,7 @@ class InventoryItem @JvmOverloads constructor(
         }
 
         val sprite = item.sprite
-        spriteBatch.draw(sprite, x, y)
+        spriteBatch.drawSprite(sprite, x, y)
 
         if (amount < 2) {
             return

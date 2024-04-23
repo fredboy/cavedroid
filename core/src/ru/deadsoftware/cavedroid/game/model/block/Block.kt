@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.TimeUtils
 import ru.deadsoftware.cavedroid.game.model.item.Item
+import ru.deadsoftware.cavedroid.misc.utils.colorFromHexString
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
@@ -56,7 +57,10 @@ sealed class Block {
                 val width = 16 - params.spriteMargins.left - params.spriteMargins.right
                 val height = 16 - params.spriteMargins.top - params.spriteMargins.bottom
                 Sprite(params.texture, params.spriteMargins.left, 16 * y + params.spriteMargins.top, width, height)
-                    .apply { flip(false, true) }
+                    .apply {
+                        flip(false, true)
+                        params.tint?.let { tint -> color = colorFromHexString(tint) }
+                    }
             }
         }
     }
@@ -66,7 +70,10 @@ sealed class Block {
             val width = 16 - params.spriteMargins.left - params.spriteMargins.right
             val height = 16 - params.spriteMargins.top - params.spriteMargins.bottom
             Sprite(tex, params.spriteMargins.left, params.spriteMargins.top, width, height)
-                .apply { flip(false, true) }
+                .apply {
+                    flip(false, true)
+                    params.tint?.let { tint -> color = colorFromHexString(tint) }
+                }
         }
     }
 

@@ -15,20 +15,17 @@ data class WorldGeneratorConfig(
 ) {
 
     companion object {
-        private const val DEFAULT_WIDTH = 1024
-        private const val DEFAULT_HEIGHT = 256
-        private const val DEFAULT_MIN_BIOME_SIZE = 64
 
         fun getDefault(): WorldGeneratorConfig {
             return WorldGeneratorConfig(
-                width = DEFAULT_WIDTH,
-                height = DEFAULT_HEIGHT,
+                width = 1024,
+                height = 256,
                 seed = TimeUtils.millis(),
-                minSurfaceHeight = DEFAULT_HEIGHT / 4,
-                maxSurfaceHeight = DEFAULT_HEIGHT * 3 / 4,
+                maxSurfaceHeight = 208,
+                minSurfaceHeight = 128,
                 biomes = Biome.entries.toList(),
-                minBiomeSize = DEFAULT_MIN_BIOME_SIZE,
-                seaLevel = DEFAULT_HEIGHT / 2,
+                minBiomeSize = 64,
+                seaLevel = 192,
             )
         }
 
