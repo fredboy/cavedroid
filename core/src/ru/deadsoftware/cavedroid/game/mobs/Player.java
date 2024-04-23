@@ -22,7 +22,7 @@ public class Player extends Mob {
     private static final float JUMP_VELOCITY = -133.332f;
     private static final int MAX_HEALTH = 20;
 
-    private boolean hitting = false;
+    private boolean hitting = false, hittingWithDamage = false;
     private float hitAnim = 0f;
     private float hitAnimDelta = ANIMATION_SPEED;
 
@@ -35,6 +35,13 @@ public class Player extends Mob {
     public float blockDamage = 0f;
     public int cursorX = 0;
     public int cursorY = 0;
+
+    public ControlMode controlMode = ControlMode.WALK;
+
+    public enum ControlMode {
+        WALK,
+        CURSOR
+    }
 
     public Player(GameItemsHolder gameItemsHolder) {
         super(0, 0, 4, 30, randomDir(), Type.MOB, MAX_HEALTH);
@@ -134,9 +141,41 @@ public class Player extends Mob {
         mVelocity.y = JUMP_VELOCITY;
     }
 
+    private void hitBlock(GameWorld gameWorld, GameItemsHolder gameItemsHolder) {
+        if (!hitting || !hittingWithDamage) {
+            return;
+        }
+
+        final Block foregroundBlock = gameWorld.getForeMap(cursorX, cursorY);
+        final Block backgroundBlock = gameWorld.getBackMap(cursorX, cursorY);
+
+        if ((!foregroundBlock.isNone() && foregroundBlock.getParams().getHitPoints() >= 0) ||
+                (foregroundBlock.isNone() && !backgroundBlock.isNone() && backgroundBlock.getParams().getHitPoints() >= 0)) {
+            if (gameMode == 0) {
+                if (!foregroundBlock.isNone() && blockDamage >= foregroundBlock.getParams().getHitPoints()) {
+                    gameWorld.destroyForeMap(cursorX, cursorY);
+                    blockDamage = 0;
+                } else if (!backgroundBlock.isNone() && blockDamage >= backgroundBlock.getParams().getHitPoints()) {
+                    gameWorld.destroyBackMap(cursorX, cursorY);
+                    blockDamage = 0;
+                }
+            } else {
+                if (!foregroundBlock.isNone()) {
+                    gameWorld.placeToForeground(cursorX, cursorY, gameItemsHolder.getFallbackBlock());
+                } else if (!backgroundBlock.isNone()) {
+                    gameWorld.placeToBackground(cursorX, cursorY, gameItemsHolder.getFallbackBlock());
+                }
+                stopHitting();
+            }
+        } else {
+            stopHitting();
+        }
+    }
+
     @Override
     public void ai(GameWorld gameWorld, GameItemsHolder gameItemsHolder, float delta) {
         updateAnimation(delta);
+        hitBlock(gameWorld, gameItemsHolder);
 
         if (gameMode == 1) {
             return;
@@ -166,7 +205,7 @@ public class Player extends Mob {
             multiplier *= ((Item.Tool)currentItem).getBlockDamageMultiplier();
         }
 
-        if (hitting && canHitBlock) {
+        if (hitting && hittingWithDamage && canHitBlock) {
             blockDamage += 60f * delta * multiplier;
         } else {
             blockDamage = 0f;
@@ -247,14 +286,19 @@ public class Player extends Mob {
         }
     }
 
-    public void startHitting() {
+    public void startHitting(boolean withDamage) {
         if (hitting) {
             return;
         }
 
         hitting = true;
+        hittingWithDamage = withDamage;
         hitAnim = 90f;
         hitAnimDelta = ANIMATION_SPEED;
+    }
+
+    public void startHitting() {
+        startHitting(true);
     }
 
     public void stopHitting() {

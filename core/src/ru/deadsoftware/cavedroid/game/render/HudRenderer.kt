@@ -3,19 +3,16 @@ package ru.deadsoftware.cavedroid.game.render
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
-import ru.deadsoftware.cavedroid.game.GameInput
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
+import ru.deadsoftware.cavedroid.game.mobs.Player.ControlMode
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.Assets
-import ru.deadsoftware.cavedroid.misc.ControlMode
 import ru.deadsoftware.cavedroid.misc.utils.px
 import javax.inject.Inject
 
 @GameScope
 class HudRenderer @Inject constructor(
-    private val gameInput: GameInput,
     private val gameWorld: GameWorld,
     private val mobsController: MobsController,
 ) : IGameRenderer {
@@ -34,7 +31,7 @@ class HudRenderer @Inject constructor(
 
         if (gameWorld.hasForeAt(cursorX, cursorY) ||
             gameWorld.hasBackAt(cursorX, cursorY) ||
-            gameInput.controlMode == ControlMode.CURSOR
+            mobsController.player.controlMode == ControlMode.CURSOR
         ) {
             spriteBatch.draw(cursorTexture, cursorX.px - viewport.x, cursorY.px - viewport.y)
         }

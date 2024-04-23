@@ -1,11 +1,13 @@
 package ru.deadsoftware.cavedroid.misc;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -113,6 +115,44 @@ public class Assets {
         }
     }
 
+    private static int getMouseKey(String name) {
+        switch (name) {
+            case "Left":
+                return Input.Buttons.LEFT;
+            case "Right":
+                return Input.Buttons.RIGHT;
+            case "Middle":
+                return Input.Buttons.MIDDLE;
+            case "Back":
+                return Input.Buttons.BACK;
+            case "Forward":
+                return Input.Buttons.FORWARD;
+            default:
+                return -1;
+        }
+    }
+
+    private static void loadTouchButtonsFromJSON(AssetLoader assetLoader) {
+        JsonValue json = Assets.jsonReader.parse(assetLoader.getAssetHandle("json/touch_buttons.json"));
+        for (JsonValue key = json.child(); key != null; key = key.next()) {
+            float x = key.getFloat("x");
+            float y = key.getFloat("y");
+            float w = key.getFloat("w");
+            float h = key.getFloat("h");
+            boolean mouse = Assets.getBooleanFromJson(key, "mouse", false);
+            String name = key.getString("key");
+            int code = mouse ? getMouseKey(name) : Input.Keys.valueOf(name);
+            if (x < 0) {
+                x = assetLoader.getGameRendererWidth() + x;
+            }
+            if (y < 0) {
+                y = assetLoader.getGameRendererHeight() + y;
+            }
+            Assets.guiMap.put(key.name(), new TouchButton(new Rectangle(x, y, w, h), code, mouse));
+        }
+
+    }
+
     private static Texture resolveTexture(AssetLoader assetLoader, String textureName, String lookUpPath, Map<String, Texture> cache) {
         if (cache.containsKey(textureName)) {
             return cache.get(textureName);
@@ -155,6 +195,7 @@ public class Assets {
         loadJSON(assetLoader);
         loadBlocks(assetLoader);
         loadItems(assetLoader);
+        loadTouchButtonsFromJSON(assetLoader);
         setPlayerHeadOrigin();
         minecraftFont = new BitmapFont(assetLoader.getAssetHandle("font.fnt"), true);
         minecraftFont.getData().setScale(.375f);

@@ -118,7 +118,7 @@ class GameItemsHolder @Inject constructor(
         }
     }
 
-    fun getCreativeScrollAmount(): Int = itemsMap.size / 8
+    fun getMaxCreativeScrollAmount(): Int = itemsMap.size / 8
 
     fun <T : Block> getBlocksByType(type: Class<T>): List<T> {
         return blocksMap.values.filterIsInstance(type)

@@ -4,10 +4,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.MainConfig
-import ru.deadsoftware.cavedroid.game.GameInput
 import ru.deadsoftware.cavedroid.game.GameScope
+import ru.deadsoftware.cavedroid.game.mobs.MobsController
+import ru.deadsoftware.cavedroid.game.mobs.Player.ControlMode
 import ru.deadsoftware.cavedroid.misc.Assets
-import ru.deadsoftware.cavedroid.misc.ControlMode
 import ru.deadsoftware.cavedroid.misc.utils.ArrayMapExtensions.component1
 import ru.deadsoftware.cavedroid.misc.utils.ArrayMapExtensions.component2
 import javax.inject.Inject
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @GameScope
 class TouchControlsRenderer @Inject constructor(
     private val mainConfig: MainConfig,
-    private val gameInput: GameInput
+    private val mobsController: MobsController,
 ) : IGameRenderer {
 
     override val renderLayer get() = RENDER_LAYER
@@ -41,7 +41,7 @@ class TouchControlsRenderer @Inject constructor(
         }
 
         // FIXME: Add pressed state for buttons
-        if (gameInput.controlMode == ControlMode.CURSOR) {
+        if (mobsController.player.controlMode == ControlMode.CURSOR) {
             val altKeyRect = touchControlsMap.get("alt").rect
             spriteBatch.draw(shadeTexture, altKeyRect.x, altKeyRect.y, altKeyRect.width, altKeyRect.height)
         }

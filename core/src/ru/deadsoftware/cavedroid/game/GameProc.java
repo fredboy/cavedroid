@@ -1,8 +1,11 @@
 package ru.deadsoftware.cavedroid.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Timer;
+import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
+import ru.deadsoftware.cavedroid.game.mobs.Player;
 import ru.deadsoftware.cavedroid.game.world.GameWorldBlocksLogicControllerTask;
 import ru.deadsoftware.cavedroid.game.world.GameWorldFluidsLogicControllerTask;
 import ru.deadsoftware.cavedroid.game.world.GameWorldMobDamageControllerTask;
@@ -13,7 +16,6 @@ import javax.inject.Inject;
 public class GameProc implements Disposable {
 
     private final GamePhysics mGamePhysics;
-    private final GameInput mGameInput;
     private final GameRenderer mGameRenderer;
     private final MobsController mMobsController;
     private final GameWorldFluidsLogicControllerTask mGameWorldFluidsLogicControllerTask;
@@ -23,8 +25,8 @@ public class GameProc implements Disposable {
     private final Timer mWorldLogicTimer = new Timer();
 
     @Inject
-    public GameProc(GamePhysics gamePhysics,
-                    GameInput gameInput,
+    public GameProc(MainConfig mainConfig,
+                    GamePhysics gamePhysics,
                     GameRenderer gameRenderer,
                     MobsController mobsController,
                     GameWorldFluidsLogicControllerTask gameWorldFluidsLogicControllerTask,
@@ -32,14 +34,13 @@ public class GameProc implements Disposable {
                     GameWorldMobDamageControllerTask gameWorldMobDamageControllerTask
     ) {
         mGamePhysics = gamePhysics;
-        mGameInput = gameInput;
         mGameRenderer = gameRenderer;
         mMobsController = mobsController;
         mGameWorldFluidsLogicControllerTask = gameWorldFluidsLogicControllerTask;
         mGameWorldBlocksLogicControllerTask = gameWorldBlocksLogicControllerTask;
         mGameWorldMobDamageControllerTask = gameWorldMobDamageControllerTask;
 
-
+        mobsController.getPlayer().controlMode = mainConfig.isTouch() ? Player.ControlMode.WALK : Player.ControlMode.CURSOR;
 
         mWorldLogicTimer.scheduleTask(gameWorldFluidsLogicControllerTask, 0,
                 GameWorldFluidsLogicControllerTask.FLUID_UPDATE_INTERVAL_SEC);
@@ -55,8 +56,11 @@ public class GameProc implements Disposable {
 
     public void update(float delta) {
         mGamePhysics.update(delta);
-        mGameInput.update();
         mGameRenderer.render(delta);
+    }
+
+    public void show() {
+        Gdx.input.setInputProcessor(mGameRenderer);
     }
 
     @Override

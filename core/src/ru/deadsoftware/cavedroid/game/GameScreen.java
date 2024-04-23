@@ -16,8 +16,6 @@ public class GameScreen implements Screen {
     @CheckForNull
     private GameProc mGameProc;
     @CheckForNull
-    private GameInputProcessor mGameInputProcessor;
-    @CheckForNull
     private GameItemsHolder mGameItemsHolder;
 
     @Inject
@@ -36,11 +34,8 @@ public class GameScreen implements Screen {
                 .mainComponent(mMainConfig.getMainComponent()).build();
 
         mGameProc = gameComponent.getGameProc();
-        mGameInputProcessor = gameComponent.getGameInputProcessor();
 
         mGameProc.setPlayerGameMode(gameMode);
-
-        Gdx.input.setInputProcessor(gameComponent.getGameInputProcessor());
     }
 
     public void loadGame() {
@@ -54,9 +49,6 @@ public class GameScreen implements Screen {
                 .mainComponent(mMainConfig.getMainComponent()).build();
 
         mGameProc = gameComponent.getGameProc();
-        mGameInputProcessor = gameComponent.getGameInputProcessor();
-
-        Gdx.input.setInputProcessor(gameComponent.getGameInputProcessor());
     }
 
     @Override
@@ -66,7 +58,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(mGameInputProcessor);
+//        Gdx.input.setInputProcessor(mGameInputProcessor);
+        mGameProc.show();
     }
 
     @Override

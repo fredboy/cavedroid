@@ -4,13 +4,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.MainConfig
-import ru.deadsoftware.cavedroid.game.GameInput
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
+import ru.deadsoftware.cavedroid.game.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
 import ru.deadsoftware.cavedroid.game.render.IGameRenderer
 import ru.deadsoftware.cavedroid.game.render.WindowsRenderer
+import ru.deadsoftware.cavedroid.game.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.misc.Assets
 import javax.inject.Inject
 import kotlin.math.min
@@ -18,7 +18,7 @@ import kotlin.math.min
 @GameScope
 class CreativeWindowRenderer @Inject constructor(
     private val mainConfig: MainConfig,
-    private val gameInput: GameInput,
+    private val gameWindowsManager: GameWindowsManager,
     private val gameItemsHolder: GameItemsHolder,
     private val mobsController: MobsController,
 ) : AbstractWindowRenderer(), IGameRenderer {
@@ -34,19 +34,19 @@ class CreativeWindowRenderer @Inject constructor(
 
         val windowX = viewport.width / 2 - creativeWindow.regionWidth / 2
         val windowY = viewport.height / 2 - creativeWindow.regionHeight / 2
-        val oneScrollAmount = CreativeWindowConfig.scrollIndicatorFullHeight / gameItemsHolder.getCreativeScrollAmount()
+        val oneScrollAmount = GameWindowsConfigs.Creative.scrollIndicatorFullHeight / gameItemsHolder.getMaxCreativeScrollAmount()
 
         spriteBatch.draw(creativeWindow, windowX, windowY)
         spriteBatch.draw(
             /* region = */ scrollIndicatorTexture,
-            /* x = */ windowX + CreativeWindowConfig.scrollIndicatorMarginLeft,
-            /* y = */ windowY + CreativeWindowConfig.scrollIndicatorMarginTop
-                    + (gameInput.creativeScroll * oneScrollAmount)
+            /* x = */ windowX + GameWindowsConfigs.Creative.scrollIndicatorMarginLeft,
+            /* y = */ windowY + GameWindowsConfigs.Creative.scrollIndicatorMarginTop
+                    + (gameWindowsManager.creativeScrollAmount * oneScrollAmount)
         )
 
         val allItems = gameItemsHolder.getAllItems()
-        val startIndex = gameInput.creativeScroll * CreativeWindowConfig.itemsInRow
-        val endIndex = min(startIndex + CreativeWindowConfig.itemsOnPage, allItems.size)
+        val startIndex = gameWindowsManager.creativeScrollAmount * GameWindowsConfigs.Creative.itemsInRow
+        val endIndex = min(startIndex + GameWindowsConfigs.Creative.itemsOnPage, allItems.size)
         val items = sequence {
             for (i in startIndex..<endIndex) {
                 yield(allItems.elementAt(i))
@@ -56,49 +56,28 @@ class CreativeWindowRenderer @Inject constructor(
         drawItemsGrid(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
-            gridX = windowX + CreativeWindowConfig.itemsGridMarginLeft,
-            gridY = windowY + CreativeWindowConfig.itemsGridMarginTop,
+            gridX = windowX + GameWindowsConfigs.Creative.itemsGridMarginLeft,
+            gridY = windowY + GameWindowsConfigs.Creative.itemsGridMarginTop,
             items = items.asIterable(),
-            itemsInRow = CreativeWindowConfig.itemsInRow,
-            cellWidth = CreativeWindowConfig.itemsGridColWidth,
-            cellHeight = CreativeWindowConfig.itemsGridRowHeight,
+            itemsInRow = GameWindowsConfigs.Creative.itemsInRow,
+            cellWidth = GameWindowsConfigs.Creative.itemsGridColWidth,
+            cellHeight = GameWindowsConfigs.Creative.itemsGridRowHeight,
         )
 
         drawItemsGrid(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
-            gridX = windowX + CreativeWindowConfig.itemsGridMarginLeft,
-            gridY = windowY + creativeWindow.regionHeight - CreativeWindowConfig.playerInventoryOffsetFromBottom,
-            items = mobsController.player.inventory.asSequence().take(CreativeWindowConfig.invItems).asIterable(),
-            itemsInRow = CreativeWindowConfig.invItems,
-            cellWidth = CreativeWindowConfig.itemsGridColWidth,
-            cellHeight = CreativeWindowConfig.itemsGridRowHeight,
+            gridX = windowX + GameWindowsConfigs.Creative.itemsGridMarginLeft,
+            gridY = windowY + creativeWindow.regionHeight - GameWindowsConfigs.Creative.playerInventoryOffsetFromBottom,
+            items = mobsController.player.inventory.asSequence().take(GameWindowsConfigs.Creative.invItems).asIterable(),
+            itemsInRow = GameWindowsConfigs.Creative.invItems,
+            cellWidth = GameWindowsConfigs.Creative.itemsGridColWidth,
+            cellHeight = GameWindowsConfigs.Creative.itemsGridRowHeight,
         )
     }
 
     companion object {
         private const val CREATIVE_WINDOW_KEY = "creative"
         private const val SCROLL_INDICATOR_KEY = "handle"
-
-        private data object CreativeWindowConfig {
-            const val scrollIndicatorMarginLeft = 156f
-            const val scrollIndicatorMarginTop = 18f
-            const val scrollIndicatorFullHeight = 72f
-
-            const val itemsGridMarginLeft = 8f
-            const val itemsGridMarginTop = 18f
-
-            const val itemsGridRowHeight = 18f
-            const val itemsGridColWidth = 18f
-
-            const val itemsInRow = 8
-            const val itemsInCol = 5
-
-            const val invItems = 9
-
-            const val playerInventoryOffsetFromBottom = 24f
-
-            val itemsOnPage get() = itemsInCol * itemsInRow
-        }
     }
 }
