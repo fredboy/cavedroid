@@ -39,5 +39,35 @@ object GameWindowsConfigs {
         const val portraitMarginTop = 8f
         const val portraitWidth = 48f
         const val portraitHeight = 68f
+
+        const val craftGridSize = 2
+
+        const val craftOffsetX = 98f
+        const val craftOffsetY = 18f
+
+        const val craftResultOffsetX = 154f
+        const val craftResultOffsetY = 28f
+    }
+
+    data object Crafting {
+        const val itemsGridMarginLeft = 8f
+        const val itemsGridMarginTop = 84f
+
+        const val itemsGridRowHeight = 18f
+        const val itemsGridColWidth = 18f
+
+        const val itemsInRow = 9
+        const val itemsInCol = 5
+
+        const val hotbarOffsetFromBottom = 24f
+        const val hotbarCells = 9
+
+        const val craftGridSize = 3
+
+        const val craftOffsetX = 30f
+        const val craftOffsetY = 18f
+
+        const val craftResultOffsetX = 128f
+        const val craftResultOffsetY = 36f
     }
 }

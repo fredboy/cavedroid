@@ -138,7 +138,7 @@ public class GameRenderer extends Renderer {
     }
 
     private TouchButton getTouchedKey(float touchX, float touchY) {
-        if (mGameWindowsManager.getCurrentWindow() != GameUiWindow.NONE) {
+        if (mGameWindowsManager.getCurrentWindowType() != GameUiWindow.NONE) {
             return nullButton;
         }
         for (ObjectMap.Entry<String, TouchButton> entry : Assets.guiMap) {

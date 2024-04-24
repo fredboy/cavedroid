@@ -994,6 +994,10 @@
       "type": "block",
       "texture": "obsidian"
     },
+    "stick": {
+      "name": "Stick",
+      "texture": "stick"
+    },
     "wood_sword": {
       "name": "Wooden Sword",
       "type": "sword",

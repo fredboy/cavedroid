@@ -54,7 +54,12 @@ sealed class Item {
     fun toInventoryItem(amount: Int = 1): InventoryItem {
         return InventoryItem(this, amount)
     }
-    
+
+    data class Normal(
+        override val params: CommonItemParams,
+        override val sprite: Sprite
+    ) : Item()
+
     sealed class Tool : Item() {
         abstract val mobDamageMultiplier: Float
         abstract val blockDamageMultiplier: Float

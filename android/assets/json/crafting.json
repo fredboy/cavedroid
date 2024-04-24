@@ -1,0 +1,42 @@
+{
+  "planks_oak": {
+    "input": ["log_oak", "none", "none", "none", "none", "none", "none", "none", "none"],
+    "count": 4
+  },
+  "stick": {
+    "input": ["planks_oak", "none", "none", "planks_oak", "none", "none", "none", "none", "none"],
+    "count": 4
+  },
+  "wood_pickaxe": {
+    "input": ["planks_oak", "planks_oak", "planks_oak", "none", "stick", "none", "none", "stick", "none"],
+    "count": 59
+  },
+  "wood_axe": {
+    "input": ["planks_oak", "planks_oak", "none", "planks_oak", "stick", "none", "none", "stick", "none"],
+    "count": 60
+  },
+  "wood_sword": {
+    "input": ["none", "planks_oak", "none", "none", "planks_oak", "none", "none", "stick", "none"],
+    "count": 60
+  },
+  "wood_shovel": {
+    "input": ["none", "planks_oak", "none", "none", "stick", "none", "none", "stick", "none"],
+    "count": 59
+  },
+  "stone_pickaxe": {
+    "input": ["cobblestone", "cobblestone", "cobblestone", "none", "stick", "none", "none", "stick", "none"],
+    "count": 131
+  },
+  "stone_axe": {
+    "input": ["cobblestone", "cobblestone", "none", "cobblestone", "stick", "none", "none", "stick", "none"],
+    "count": 131
+  },
+  "stone_sword": {
+    "input": ["none", "cobblestone", "none", "none", "cobblestone", "none", "none", "stick", "none"],
+    "count": 132
+  },
+  "stone_shovel": {
+    "input": ["none", "cobblestone", "none", "none", "stick", "none", "none", "stick", "none"],
+    "count": 131
+  }
+}

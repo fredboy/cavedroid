@@ -55,6 +55,12 @@
       "h": 166
     }
   },
+  "crafting_table": {
+    "crafting_table": {
+      "w": 176,
+      "h": 166
+    }
+  },
   "buttons": {
     "button_0": {
       "w": 200,

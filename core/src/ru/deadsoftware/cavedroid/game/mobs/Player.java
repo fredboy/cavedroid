@@ -15,6 +15,7 @@ import ru.deadsoftware.cavedroid.misc.utils.SpriteOrigin;
 import ru.deadsoftware.cavedroid.misc.utils.SpriteUtilsKt;
 
 import javax.annotation.CheckForNull;
+import java.util.ArrayList;
 
 public class Player extends Mob {
 
@@ -26,7 +27,7 @@ public class Player extends Mob {
     private float hitAnim = 0f;
     private float hitAnimDelta = ANIMATION_SPEED;
 
-    public final InventoryItem[] inventory;
+    public final ArrayList<InventoryItem> inventory;
     public int slot;
     public int gameMode;
     public boolean swim;
@@ -48,9 +49,9 @@ public class Player extends Mob {
 
     public Player(GameItemsHolder gameItemsHolder) {
         super(0, 0, 4, 30, randomDir(), Type.MOB, MAX_HEALTH);
-        inventory = new InventoryItem[36];
-        for (int i = 0; i < inventory.length; i++) {
-            inventory[i] = gameItemsHolder.getFallbackItem().toInventoryItem();
+        inventory = new ArrayList<>(36);
+        for (int i = 0; i < 36; i++) {
+            inventory.add(gameItemsHolder.getFallbackItem().toInventoryItem());
         }
         swim = false;
     }
@@ -63,7 +64,7 @@ public class Player extends Mob {
 
     @CheckForNull
     public Item inventory(int i) {
-        return inventory[i].getItem();
+        return inventory.get(i).getItem();
     }
     
     public void respawn(GameWorld gameWorld, GameItemsHolder itemsHolder) {
@@ -86,7 +87,7 @@ public class Player extends Mob {
     }
 
     public InventoryItem getCurrentItem() {
-        return inventory[slot];
+        return inventory.get(slot);
     }
 
     public void pickUpDrop(Drop drop) {
@@ -100,9 +101,9 @@ public class Player extends Mob {
             }
         }
 
-        for (int i = 0; i < inventory.length; i++) {
+        for (int i = 0; i < inventory.size(); i++) {
             if (inventory(i) == null || inventory(i).getParams().getKey().equals(GameItemsHolder.FALLBACK_ITEM_KEY)) {
-                inventory[i] = drop.getItem().toInventoryItem();
+                inventory.set(i, drop.getItem().toInventoryItem());
                 drop.setPickedUp(true);
                 break;
             }
@@ -143,7 +144,7 @@ public class Player extends Mob {
     }
 
     public void setCurrentInventorySlotItem(Item item) {
-        inventory[slot] = item.toInventoryItem();
+        inventory.set(slot, item.toInventoryItem());
     }
 
     @Override
@@ -211,7 +212,7 @@ public class Player extends Mob {
         final boolean canHitBlock = target != null;
 
         float multiplier = 1f;
-        final Item currentItem = inventory[slot].getItem();
+        final Item currentItem = inventory.get(slot).getItem();
         if (currentItem instanceof Item.Tool && canHitBlock) {
             if (target.getParams().getToolType() == currentItem.getClass()
                     && ((Item.Tool)currentItem).getLevel() >= target.getParams().getToolLevel()) {

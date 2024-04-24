@@ -89,15 +89,6 @@ class DebugRenderer @Inject constructor(
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
         if (mainConfig.isShowInfo) {
             drawDebugInfo(spriteBatch)
-
-            spriteBatch.end();
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            forEachBlockInArea(mobsController.player) { x: Int, y: Int ->
-                shapeRenderer.color = Color.CYAN
-                shapeRenderer.rect(x.px - viewport.x, y.px - viewport.y, 16f, 16f)
-            }
-            shapeRenderer.end()
-            spriteBatch.begin()
         }
 
         if (mainConfig.isShowMap) {

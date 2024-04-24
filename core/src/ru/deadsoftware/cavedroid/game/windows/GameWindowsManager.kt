@@ -5,6 +5,10 @@ import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
+import ru.deadsoftware.cavedroid.game.windows.inventory.AbstractInventoryWindow
+import ru.deadsoftware.cavedroid.game.windows.inventory.CraftingInventoryWindow
+import ru.deadsoftware.cavedroid.game.windows.inventory.CreativeInventoryWindow
+import ru.deadsoftware.cavedroid.game.windows.inventory.SurvivalInventoryWindow
 import javax.inject.Inject
 
 @GameScope
@@ -15,22 +19,28 @@ class GameWindowsManager @Inject constructor(
 
     var creativeScrollAmount = 0
     var isDragging = false
-    var selectedItem: InventoryItem? = null
 
+    var currentWindow: AbstractInventoryWindow? = null
+
+    @JvmName("getCurrentWindowType")
     fun getCurrentWindow(): GameUiWindow {
-        return mainConfig.gameUiWindow
+        return currentWindow?.type ?: GameUiWindow.NONE
     }
 
     fun openInventory() {
         if (mobsController.player.gameMode == 1) {
-            mainConfig.gameUiWindow = GameUiWindow.CREATIVE_INVENTORY
+            currentWindow = CreativeInventoryWindow(GameUiWindow.CREATIVE_INVENTORY)
         } else {
-            mainConfig.gameUiWindow = GameUiWindow.SURVIVAL_INVENTORY
+            currentWindow = SurvivalInventoryWindow(GameUiWindow.SURVIVAL_INVENTORY)
         }
     }
 
+    fun openCrafting() {
+        currentWindow = CraftingInventoryWindow(GameUiWindow.CRAFTING_TABLE)
+    }
+
     fun closeWindow() {
-        mainConfig.gameUiWindow = GameUiWindow.NONE
+        currentWindow = null
     }
 
 }

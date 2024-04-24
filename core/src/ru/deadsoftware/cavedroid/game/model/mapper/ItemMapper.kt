@@ -22,6 +22,7 @@ class ItemMapper @Inject constructor(
         val params = mapCommonParams(key, dto)
 
         return when (dto.type) {
+            "normal" -> Normal(params, requireNotNull(loadSprite(dto)))
             "bucket" -> Bucket(params, requireNotNull(loadSprite(dto)), requireNotNull(dto.actionKey))
             "shovel" -> Shovel(params, requireNotNull(loadSprite(dto)), dto.mobDamageMultiplier, dto.blockDamageMultiplier, requireNotNull(dto.toolLevel))
             "sword" -> Sword(params, requireNotNull(loadSprite(dto)), dto.mobDamageMultiplier, dto.blockDamageMultiplier, requireNotNull(dto.toolLevel))

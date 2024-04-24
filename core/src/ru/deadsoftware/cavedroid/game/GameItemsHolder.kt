@@ -3,13 +3,18 @@ package ru.deadsoftware.cavedroid.game
 import com.badlogic.gdx.Gdx
 import kotlinx.serialization.json.Json
 import ru.deadsoftware.cavedroid.game.model.block.Block
+import ru.deadsoftware.cavedroid.game.model.craft.CraftingRecipe
+import ru.deadsoftware.cavedroid.game.model.craft.CraftingResult
 import ru.deadsoftware.cavedroid.game.model.dto.BlockDto
+import ru.deadsoftware.cavedroid.game.model.dto.CraftingDto
 import ru.deadsoftware.cavedroid.game.model.dto.GameItemsDto
 import ru.deadsoftware.cavedroid.game.model.dto.ItemDto
+import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
 import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.game.model.mapper.BlockMapper
 import ru.deadsoftware.cavedroid.game.model.mapper.ItemMapper
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader
+import java.util.LinkedList
 import javax.inject.Inject
 
 @GameScope
@@ -23,6 +28,7 @@ class GameItemsHolder @Inject constructor(
 
     private val blocksMap = LinkedHashMap<String, Block>()
     private val itemsMap = LinkedHashMap<String, Item>()
+    private val craftingRecipes = LinkedList<CraftingRecipe>()
 
     lateinit var fallbackBlock: Block
         private set
@@ -67,6 +73,22 @@ class GameItemsHolder @Inject constructor(
             ?: throw IllegalArgumentException("Fallback item key '$FALLBACK_ITEM_KEY' not found")
     }
 
+    private fun loadCraftingRecipes() {
+        val jsonString = assetLoader.getAssetHandle("json/crafting.json").readString()
+        val jsonMap = JsonFormat.decodeFromString<Map<String, CraftingDto>>(jsonString)
+
+        if (jsonMap.isNotEmpty() && itemsMap.isEmpty()) {
+            throw IllegalStateException("items should be loaded before crafting")
+        }
+
+        jsonMap.forEach { (key, value) ->
+            craftingRecipes += CraftingRecipe(
+                input = value.input.map(::getItem),
+                output = CraftingResult(getItem(key), value.count)
+            )
+        }
+    }
+
     fun initialize() {
         if (_initialized) {
             Gdx.app.debug(TAG, "Attempted to init when already initialized")
@@ -80,6 +102,8 @@ class GameItemsHolder @Inject constructor(
         loadItems(gameItemsDto.items)
 
         _initialized = true
+
+        loadCraftingRecipes()
     }
 
     private fun <T> Map<String, T>.getOrFallback(key: String, fallback: T, lazyErrorMessage: () -> String): T {
@@ -103,6 +127,14 @@ class GameItemsHolder @Inject constructor(
     fun getItem(key: String): Item {
         return itemsMap.getOrFallback(key, fallbackItem) {
             "No item with key '$key' found. Returning $FALLBACK_BLOCK_KEY"
+        }
+    }
+
+    fun craftItem(input: List<Item>): InventoryItem? {
+        return  try {
+            craftingRecipes.first { rec -> rec.input == input}.output.toInventoryItem()
+        } catch (e: NoSuchElementException) {
+            null
         }
     }
 

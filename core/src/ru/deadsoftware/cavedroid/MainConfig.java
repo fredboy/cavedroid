@@ -53,10 +53,6 @@ public class MainConfig {
         return mGameUiWindow == gameUiWindow;
     }
 
-    public GameUiWindow getGameUiWindow() {
-        return mGameUiWindow;
-    }
-
     public void setGameUiWindow(GameUiWindow gameUiWindow) {
         mGameUiWindow = gameUiWindow;
     }

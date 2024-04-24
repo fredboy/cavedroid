@@ -65,4 +65,11 @@ object MouseInputHandlersModule {
     fun bindSelectSurvivalInventoryItemMouseInputHandler(handler: SelectSurvivalInventoryItemMouseInputHandler): IGameInputHandler<MouseInputAction> {
         return handler
     }
+
+    @Binds
+    @IntoSet
+    @GameScope
+    fun bindSelectCraftingInventoryItemMouseInputHandler(handler: SelectCraftingInventoryItemMouseInputHandler): IGameInputHandler<MouseInputAction> {
+        return handler
+    }
 }

@@ -42,11 +42,14 @@ class InventoryItem @JvmOverloads constructor(
         }
 
         val sprite = item.sprite
-        sprite.setOriginCenter()
-        sprite.setPosition(x, y)
-        sprite.setScale(1.25f)
-        sprite.draw(spriteBatch)
-        sprite.setScale(1f)
+        val amountString = amount.toString()
+        spriteBatch.drawSprite(sprite, x - 10f, y - 10f, rotation = 0f, width = 20f, height = 20f)
+        drawAmountText(
+            spriteBatch = spriteBatch,
+            text = amountString,
+            x = x + 10f - Assets.getStringWidth(amountString) + 1f,
+            y = y + 10f - Assets.getStringHeight(amountString) + 1f
+        )
     }
 
     fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, x: Float, y: Float) {

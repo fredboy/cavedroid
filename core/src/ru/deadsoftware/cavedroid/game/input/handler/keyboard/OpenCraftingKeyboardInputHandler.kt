@@ -11,16 +11,16 @@ import ru.deadsoftware.cavedroid.game.windows.GameWindowsManager
 import javax.inject.Inject
 
 @GameScope
-class OpenInventoryKeyboardInputHandler @Inject constructor(
+class OpenCraftingKeyboardInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
 ) : IGameInputHandler<KeyboardInputAction> {
 
     override fun checkConditions(action: KeyboardInputAction): Boolean {
-        return action.actionKey is KeyboardInputActionKey.OpenInventory &&
+        return action.actionKey is KeyboardInputActionKey.OpenCraft &&
                 action.isKeyDown && gameWindowsManager.getCurrentWindow() == GameUiWindow.NONE
     }
 
     override fun handle(action: KeyboardInputAction) {
-        gameWindowsManager.openInventory()
+        gameWindowsManager.openCrafting()
     }
 }
