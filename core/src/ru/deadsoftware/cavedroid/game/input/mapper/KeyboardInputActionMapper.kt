@@ -13,7 +13,7 @@ class KeyboardInputActionMapper @Inject constructor() {
         val actionKey = when (key) {
             Input.Keys.A, Input.Keys.LEFT -> KeyboardInputActionKey.Left
             Input.Keys.D, Input.Keys.RIGHT -> KeyboardInputActionKey.Right
-            Input.Keys.W, Input.Keys.SPACE -> KeyboardInputActionKey.Jump
+            Input.Keys.W, Input.Keys.SPACE -> KeyboardInputActionKey.Up
             Input.Keys.S -> KeyboardInputActionKey.Down
 
             Input.Keys.E -> KeyboardInputActionKey.OpenInventory

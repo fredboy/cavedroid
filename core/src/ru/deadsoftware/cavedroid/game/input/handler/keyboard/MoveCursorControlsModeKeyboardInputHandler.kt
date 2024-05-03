@@ -23,7 +23,7 @@ class MoveCursorControlsModeKeyboardInputHandler @Inject constructor(
                 mobsController.player.controlMode == Player.ControlMode.CURSOR && action.isKeyDown &&
                 (action.actionKey is KeyboardInputActionKey.Left ||
                 action.actionKey is KeyboardInputActionKey.Right ||
-                        action.actionKey is KeyboardInputActionKey.Jump ||
+                        action.actionKey is KeyboardInputActionKey.Up ||
                         action.actionKey is KeyboardInputActionKey.Down)
     }
 
@@ -48,7 +48,7 @@ class MoveCursorControlsModeKeyboardInputHandler @Inject constructor(
         when (action.actionKey) {
             KeyboardInputActionKey.Left -> player.cursorX--
             KeyboardInputActionKey.Right -> player.cursorX++
-            KeyboardInputActionKey.Jump -> player.cursorY--
+            KeyboardInputActionKey.Up -> player.cursorY--
             KeyboardInputActionKey.Down -> player.cursorY++
             else -> return
         }

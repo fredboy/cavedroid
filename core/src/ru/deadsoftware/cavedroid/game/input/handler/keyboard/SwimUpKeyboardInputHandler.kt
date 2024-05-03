@@ -7,24 +7,30 @@ import ru.deadsoftware.cavedroid.game.input.action.KeyboardInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.KeyboardInputActionKey
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.mobs.Player
+import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
-class TurnOnFlyModeKeyboardInputHandler @Inject constructor(
+class SwimUpKeyboardInputHandler @Inject constructor(
     private val mainConfig: MainConfig,
     private val mobsController: MobsController,
+    private val gameWorld: GameWorld,
 ) : IGameInputHandler<KeyboardInputAction> {
 
+    private fun checkSwim(): Boolean {
+        return gameWorld.getForeMap(mobsController.player.mapX, mobsController.player.lowerMapY).isFluid()
+    }
+
     override fun checkConditions(action: KeyboardInputAction): Boolean {
-        return mobsController.player.gameMode == 1 && action.actionKey is KeyboardInputActionKey.Up &&
+        return action.actionKey is KeyboardInputActionKey.Up && action.isKeyDown &&
                 !mobsController.player.swim &&
-                !mobsController.player.isFlyMode && !mobsController.player.canJump() && action.isKeyDown &&
+                !mobsController.player.canJump() &&
+                checkSwim() && !mobsController.player.isFlyMode &&
                 (mobsController.player.controlMode == Player.ControlMode.WALK || !mainConfig.isTouch)
     }
 
     override fun handle(action: KeyboardInputAction) {
-        mobsController.player.isFlyMode = true
-        mobsController.player.velocity.y = 0f
+        mobsController.player.swim = true
     }
 
 }

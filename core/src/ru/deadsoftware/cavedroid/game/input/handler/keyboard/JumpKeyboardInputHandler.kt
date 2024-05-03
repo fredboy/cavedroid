@@ -16,7 +16,7 @@ class JumpKeyboardInputHandler @Inject constructor(
 ) : IGameInputHandler<KeyboardInputAction> {
 
     override fun checkConditions(action: KeyboardInputAction): Boolean {
-        return action.actionKey is KeyboardInputActionKey.Jump &&
+        return action.actionKey is KeyboardInputActionKey.Up &&
                 mobsController.player.canJump() && !mobsController.player.isFlyMode &&
                 action.isKeyDown &&
                 (mobsController.player.controlMode == Player.ControlMode.WALK || !mainConfig.isTouch)

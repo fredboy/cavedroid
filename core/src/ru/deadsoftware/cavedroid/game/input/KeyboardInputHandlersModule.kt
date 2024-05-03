@@ -115,4 +115,18 @@ object KeyboardInputHandlersModule {
         return handler
     }
 
+    @Binds
+    @IntoSet
+    @GameScope
+    fun bindSwimUpKeyboardInputHandler(handler: SwimUpKeyboardInputHandler): IGameInputHandler<KeyboardInputAction> {
+        return handler
+    }
+
+    @Binds
+    @IntoSet
+    @GameScope
+    fun bindStopSwimKeyboardInputHandler(handler: StopSwimKeyboardInputHandler): IGameInputHandler<KeyboardInputAction> {
+        return handler
+    }
+
 }

@@ -5,8 +5,7 @@ sealed interface KeyboardInputActionKey {
     data object Left : KeyboardInputActionKey
     data object Right : KeyboardInputActionKey
     data object Down : KeyboardInputActionKey
-
-    data object Jump : KeyboardInputActionKey
+    data object Up : KeyboardInputActionKey
 
     data object Crouch : KeyboardInputActionKey
 

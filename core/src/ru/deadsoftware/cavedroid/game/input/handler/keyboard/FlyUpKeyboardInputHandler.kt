@@ -16,7 +16,8 @@ class FlyUpKeyboardInputHandler @Inject constructor(
 ) : IGameInputHandler<KeyboardInputAction> {
 
     override fun checkConditions(action: KeyboardInputAction): Boolean {
-        return action.actionKey is KeyboardInputActionKey.Jump &&
+        return action.actionKey is KeyboardInputActionKey.Up &&
+                !mobsController.player.swim &&
                 mobsController.player.isFlyMode &&
                 (mobsController.player.controlMode == Player.ControlMode.WALK || !mainConfig.isTouch)
     }
