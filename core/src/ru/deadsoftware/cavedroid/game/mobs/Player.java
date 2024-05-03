@@ -157,6 +157,10 @@ public class Player extends Mob {
         mVelocity.y = JUMP_VELOCITY;
     }
 
+    private boolean checkBlockCanBeHit(Block block) {
+        return !block.isNone() && block.getParams().getHitPoints() >= 0;
+    }
+
     private void hitBlock(GameWorld gameWorld, GameItemsHolder gameItemsHolder) {
         if (!hitting || !hittingWithDamage) {
             return;
@@ -165,15 +169,20 @@ public class Player extends Mob {
         final Block foregroundBlock = gameWorld.getForeMap(cursorX, cursorY);
         final Block backgroundBlock = gameWorld.getBackMap(cursorX, cursorY);
 
-        if ((!foregroundBlock.isNone() && foregroundBlock.getParams().getHitPoints() >= 0) ||
-                (foregroundBlock.isNone() && !backgroundBlock.isNone() && backgroundBlock.getParams().getHitPoints() >= 0)) {
+
+        if ((checkBlockCanBeHit(foregroundBlock)) ||
+                (foregroundBlock.isNone() && checkBlockCanBeHit(backgroundBlock))) {
             if (gameMode == 0) {
-                if (!foregroundBlock.isNone() && blockDamage >= foregroundBlock.getParams().getHitPoints()) {
-                    gameWorld.destroyForeMap(cursorX, cursorY);
-                    blockDamage = 0;
-                } else if (!backgroundBlock.isNone() && blockDamage >= backgroundBlock.getParams().getHitPoints()) {
-                    gameWorld.destroyBackMap(cursorX, cursorY);
-                    blockDamage = 0;
+                if (!foregroundBlock.isNone()) {
+                    if (blockDamage >= foregroundBlock.getParams().getHitPoints()) {
+                        gameWorld.destroyForeMap(cursorX, cursorY);
+                        blockDamage = 0;
+                    }
+                } else if (!backgroundBlock.isNone()) {
+                    if (blockDamage >= backgroundBlock.getParams().getHitPoints()) {
+                        gameWorld.destroyBackMap(cursorX, cursorY);
+                        blockDamage = 0;
+                    }
                 }
             } else {
                 if (!foregroundBlock.isNone()) {
@@ -201,9 +210,9 @@ public class Player extends Mob {
         final Block backgroundBlock = gameWorld.getBackMap(cursorX, cursorY);
         @CheckForNull final Block target;
 
-        if (!foregroundBlock.isNone() && foregroundBlock.getParams().getHitPoints() >= 0) {
+        if (checkBlockCanBeHit(foregroundBlock)) {
             target = foregroundBlock;
-        } else if (!backgroundBlock.isNone() && backgroundBlock.getParams().getHitPoints() >= 0) {
+        } else if (checkBlockCanBeHit(backgroundBlock)) {
             target = backgroundBlock;
         } else {
             target = null;
