@@ -3,6 +3,13 @@
 [![GitHub Tag](https://img.shields.io/github/v/tag/fredboy/cavedroid)](https://github.com/fredboy/cavedroid/tags) <br>
 2D Minecraft clone for Android and Desktop. <br>
 Written in Java using libGDX framework. <br>
+<details>
+  <summary>Screenshot</summary>
+
+![Screenshot](https://fredboy.ru/pub/cavedroid/screenshot.png)
+
+</details>
+
 ## Binary releases
 You can download apk and jar from here: <br>
 <https://fredboy.ru/pub/cavedroid/>
