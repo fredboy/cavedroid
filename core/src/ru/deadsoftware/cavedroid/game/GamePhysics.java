@@ -113,6 +113,10 @@ public class GamePhysics {
     private Rectangle getShiftedMagnetingPlayerRect(Drop drop) {
         final Player player = mMobsController.getPlayer();
 
+        if (player.canPickUpDrop(drop) < 0) {
+            return null;
+        }
+
         if (drop.canMagnetTo(player)) {
             return getShiftedPlayerRect(0);
         }

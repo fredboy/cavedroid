@@ -62,11 +62,6 @@ public class Player extends Mob {
         }
     }
 
-    @CheckForNull
-    public Item inventory(int i) {
-        return inventory.get(i).getItem();
-    }
-    
     public void respawn(GameWorld gameWorld, GameItemsHolder itemsHolder) {
         Vector2 pos = getSpawnPoint(gameWorld, itemsHolder);
         this.x = pos.x;
@@ -90,23 +85,42 @@ public class Player extends Mob {
         return inventory.get(slot);
     }
 
-    public void pickUpDrop(Drop drop) {
-        for (InventoryItem invItem : inventory) {
+    /**
+     * @return index of inventory where this drop could be placed or -1 if cant pick up
+     */
+    public int canPickUpDrop(Drop drop) {
+        for (int i = 0; i < 36; i++) {
+            final InventoryItem invItem = inventory.get(i);
+
             if (!invItem.getItem().isTool()
                     && invItem.getItem() == drop.getItem()
                     && invItem.getAmount() < invItem.getItem().getParams().getMaxStack()) {
-                invItem.setAmount(invItem.getAmount() + 1);
-                drop.setPickedUp(true);
-                return;
+                return i;
+            }
+
+            if (invItem.getItem().isNone()) {
+                return i;
             }
         }
 
-        for (int i = 0; i < inventory.size(); i++) {
-            if (inventory(i) == null || inventory(i).getParams().getKey().equals(GameItemsHolder.FALLBACK_ITEM_KEY)) {
-                inventory.set(i, drop.getItem().toInventoryItem());
-                drop.setPickedUp(true);
-                break;
-            }
+        return -1;
+    }
+
+    public void pickUpDrop(Drop drop) {
+        int index = canPickUpDrop(drop);
+
+        if (index < 0) {
+            return;
+        }
+
+        final InventoryItem invItem = inventory.get(index);
+
+        if (invItem.getItem().equals(drop.getItem())) {
+            invItem.setAmount(invItem.getAmount() + 1);
+            drop.setPickedUp(true);
+        } else if (invItem.getItem().isNone()) {
+            inventory.set(index, drop.getItem().toInventoryItem());
+            drop.setPickedUp(true);
         }
     }
 
@@ -263,7 +277,7 @@ public class Player extends Mob {
     }
 
     private void drawItem(SpriteBatch spriteBatch, float x, float y, float anim) {
-        final Item item = inventory(slot);
+        final Item item = inventory.get(slot).getItem();
 
         if (item == null || item.isNone()) {
             return;

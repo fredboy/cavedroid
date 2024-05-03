@@ -47,9 +47,9 @@ class Drop(
     }
 
     companion object {
-        private const val MAGNET_DISTANCE = 16f
+        private const val MAGNET_DISTANCE = 4f
 
-        const val MAGNET_VELOCITY = 128f
+        const val MAGNET_VELOCITY = 256f
         const val DROP_SIZE = 8f
 
         private fun getInitialVelocity(): Vector2 = Vector2(0f, -1f)
