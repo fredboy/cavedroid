@@ -69,7 +69,7 @@ class CreativeWindowRenderer @Inject constructor(
             shapeRenderer = shapeRenderer,
             gridX = windowX + GameWindowsConfigs.Creative.itemsGridMarginLeft,
             gridY = windowY + creativeWindow.regionHeight - GameWindowsConfigs.Creative.playerInventoryOffsetFromBottom,
-            items = mobsController.player.inventory.asSequence().take(GameWindowsConfigs.Creative.invItems).asIterable(),
+            items = mobsController.player.inventory.items.asSequence().take(GameWindowsConfigs.Creative.invItems).asIterable(),
             itemsInRow = GameWindowsConfigs.Creative.invItems,
             cellWidth = GameWindowsConfigs.Creative.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Creative.itemsGridRowHeight,

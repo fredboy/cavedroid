@@ -28,7 +28,7 @@ class DebugInfoStringsProvider @Inject constructor(
             "Mobs: ${mobsController.mobs.size}",
             "Drops: ${dropController.size}",
             "Block: ${gameWorld.getForeMap(player.cursorX, player.cursorY).params.key}",
-            "Hand: ${player.inventory[player.slot].item.params.key}",
+            "Hand: ${player.inventory.activeItem.item.params.key}",
             "Game mode: ${player.gameMode}",
             "Block damage: ${player.blockDamage}"
         )

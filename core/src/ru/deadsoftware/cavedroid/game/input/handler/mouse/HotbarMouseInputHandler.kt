@@ -9,6 +9,7 @@ import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideHotbar
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
+import ru.deadsoftware.cavedroid.game.mobs.player.Player
 import ru.deadsoftware.cavedroid.misc.Assets
 import javax.inject.Inject
 
@@ -51,7 +52,7 @@ class HotbarMouseInputHandler @Inject constructor(
     }
 
     private fun handleUp(action: MouseInputAction) {
-        mobsController.player.slot =
+        mobsController.player.inventory.activeSlot =
             ((action.screenX -
                     (action.cameraViewport.width / 2 - hotbarTexture.regionWidth / 2))
                     / HOTBAR_CELL_WIDTH).toInt()
@@ -61,11 +62,11 @@ class HotbarMouseInputHandler @Inject constructor(
         if (action.actionKey !is MouseInputActionKey.Scroll) {
             return
         }
-        mobsController.player.slot += action.actionKey.amountY.toInt()
-        if (mobsController.player.slot < 0) {
-            mobsController.player.slot = HOTBAR_ITEMS - 1
-        } else if (mobsController.player.slot >= HOTBAR_ITEMS){
-            mobsController.player.slot = 0
+        mobsController.player.inventory.activeSlot += action.actionKey.amountY.toInt()
+        if (mobsController.player.inventory.activeSlot < 0) {
+            mobsController.player.inventory.activeSlot = Player.HOTBAR_SIZE - 1
+        } else if (mobsController.player.inventory.activeSlot >= Player.HOTBAR_SIZE){
+            mobsController.player.inventory.activeSlot = 0
         }
     }
 
@@ -91,7 +92,6 @@ class HotbarMouseInputHandler @Inject constructor(
     companion object {
         private const val TOUCH_HOLD_TIME_SEC = 0.5f
         private const val HOTBAR_CELL_WIDTH = 20
-        private const val HOTBAR_ITEMS = 9
     }
 
 }

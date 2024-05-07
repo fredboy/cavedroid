@@ -78,7 +78,7 @@ class SurvivalWindowRenderer @Inject constructor(
             shapeRenderer = shapeRenderer,
             gridX = windowX + GameWindowsConfigs.Survival.itemsGridMarginLeft,
             gridY = windowY + GameWindowsConfigs.Survival.itemsGridMarginTop,
-            items = mobsController.player.inventory.asSequence()
+            items = mobsController.player.inventory.items.asSequence()
                 .drop(GameWindowsConfigs.Survival.hotbarCells)
                 .take(GameWindowsConfigs.Survival.itemsInCol * GameWindowsConfigs.Survival.itemsInRow)
                 .asIterable(),
@@ -92,7 +92,7 @@ class SurvivalWindowRenderer @Inject constructor(
             shapeRenderer = shapeRenderer,
             gridX = windowX + GameWindowsConfigs.Survival.itemsGridMarginLeft,
             gridY = windowY + windowTexture.regionHeight - GameWindowsConfigs.Survival.hotbarOffsetFromBottom,
-            items = mobsController.player.inventory.asSequence()
+            items = mobsController.player.inventory.items.asSequence()
                 .take(GameWindowsConfigs.Survival.hotbarCells)
                 .asIterable(),
             itemsInRow = GameWindowsConfigs.Survival.hotbarCells,

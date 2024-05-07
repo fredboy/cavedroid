@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.mobs.Player.ControlMode
+import ru.deadsoftware.cavedroid.game.mobs.player.Player.ControlMode
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.Assets
 import ru.deadsoftware.cavedroid.misc.utils.px
@@ -57,7 +57,7 @@ class HudRenderer @Inject constructor(
     }
 
     private fun drawHotbarItems(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer,  hotbarX: Float) {
-        mobsController.player.inventory.asSequence().take(HotbarConfig.hotbarCells)
+        mobsController.player.inventory.items.asSequence().take(HotbarConfig.hotbarCells)
             .forEachIndexed { index, item ->
                 if (item.item.isNone()) {
                     return@forEachIndexed
@@ -77,7 +77,7 @@ class HudRenderer @Inject constructor(
         spriteBatch.draw(
             /* region = */ hotbarSelectorTexture,
             /* x = */ hotbarX - HotbarSelectorConfig.horizontalPadding
-                    + mobsController.player.slot * (HotbarConfig.itemSeparatorWidth + HotbarConfig.itemSlotSpace),
+                    + mobsController.player.inventory.activeSlot * (HotbarConfig.itemSeparatorWidth + HotbarConfig.itemSlotSpace),
             /* y = */ -HotbarSelectorConfig.verticalPadding
         )
     }

@@ -13,7 +13,7 @@ import ru.deadsoftware.cavedroid.game.input.handler.mouse.CursorMouseInputHandle
 import ru.deadsoftware.cavedroid.game.input.mapper.KeyboardInputActionMapper;
 import ru.deadsoftware.cavedroid.game.input.mapper.MouseInputActionMapper;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
-import ru.deadsoftware.cavedroid.game.mobs.Player;
+import ru.deadsoftware.cavedroid.game.mobs.player.Player;
 import ru.deadsoftware.cavedroid.game.objects.TouchButton;
 import ru.deadsoftware.cavedroid.game.render.IGameRenderer;
 import ru.deadsoftware.cavedroid.game.windows.GameWindowsManager;

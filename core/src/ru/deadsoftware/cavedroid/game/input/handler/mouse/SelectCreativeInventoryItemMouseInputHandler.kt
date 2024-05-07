@@ -46,13 +46,7 @@ class SelectCreativeInventoryItemMouseInputHandler @Inject constructor(
         val itemIndex = (gameWindowsManager.creativeScrollAmount * GameWindowsConfigs.Creative.itemsInRow +
                 (xOnGrid.toInt() + yOnGrid.toInt() * GameWindowsConfigs.Creative.itemsInRow))
         val item = gameItemsHolder.getItemFromCreativeInventory(itemIndex)
-        mobsController.player.inventory.reverse()
-        mobsController.player.inventory.add(item.toInventoryItem(amount = item.params.maxStack))
-        mobsController.player.inventory.reverse()
-
-        if (mobsController.player.inventory.size > 36) {
-            mobsController.player.inventory.dropLast(mobsController.player.inventory.size - 36)
-        }
+        mobsController.player.inventory.addItem(item)
     }
 
 }

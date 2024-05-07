@@ -43,13 +43,13 @@ class UseItemMouseInputHandler @Inject constructor(
         cancelHold()
 
         val player = mobsController.player
-        val item = player.currentItem.item
+        val item = player.inventory.activeItem.item
         player.startHitting(false)
         player.stopHitting()
 
         if (item is Item.Placeable) {
             placeBlockActionMap.placeToBackgroundAction(
-                item = player.currentItem.item as Item.Placeable,
+                item = item,
                 x = player.cursorX,
                 y = player.cursorY
             )
@@ -69,7 +69,7 @@ class UseItemMouseInputHandler @Inject constructor(
 
     private fun handleUp(action: MouseInputAction) {
         val player = mobsController.player
-        val item = player.currentItem.item
+        val item = player.inventory.activeItem.item
         cancelHold()
 
         player.startHitting(false)

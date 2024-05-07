@@ -74,9 +74,9 @@ class SelectCraftingInventoryItemMouseInputHandler @Inject constructor(
         }
 
         if (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Touch) {
-            onLeftCLick(mobsController.player.inventory, window, itemIndex)
+            onLeftCLick(mobsController.player.inventory.items as MutableList<InventoryItem?>, window, itemIndex)
         } else {
-            onRightClick(mobsController.player.inventory, window, itemIndex)
+            onRightClick(mobsController.player.inventory.items as MutableList<InventoryItem?>, window, itemIndex)
         }
 
         Gdx.app.debug(

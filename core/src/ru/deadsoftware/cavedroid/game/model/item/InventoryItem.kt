@@ -31,6 +31,21 @@ class InventoryItem @JvmOverloads constructor(
         item = gameItemsHolder.getItem(itemKey)
     }
 
+    @JvmOverloads
+    fun add(count: Int = 1) {
+        amount += count
+    }
+
+    @JvmOverloads
+    fun subtract(count: Int = 1) {
+        add(-count)
+    }
+
+    @JvmOverloads
+    fun canBeAdded(count: Int = 1): Boolean {
+        return !item.isTool() && amount + count <= item.params.maxStack
+    }
+
     private fun drawAmountText(spriteBatch: SpriteBatch, text: String,  x: Float, y: Float) {
         spriteBatch.drawString(text, x + 1, y + 1, Color.BLACK)
         spriteBatch.drawString(text, x, y, Color.WHITE)

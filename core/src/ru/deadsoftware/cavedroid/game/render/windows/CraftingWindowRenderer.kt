@@ -42,7 +42,7 @@ class CraftingWindowRenderer @Inject constructor(
             shapeRenderer = shapeRenderer,
             gridX = windowX + GameWindowsConfigs.Crafting.itemsGridMarginLeft,
             gridY = windowY + GameWindowsConfigs.Crafting.itemsGridMarginTop,
-            items = mobsController.player.inventory.asSequence()
+            items = mobsController.player.inventory.items.asSequence()
                 .drop(GameWindowsConfigs.Crafting.hotbarCells)
                 .take(GameWindowsConfigs.Crafting.itemsInCol * GameWindowsConfigs.Crafting.itemsInRow)
                 .asIterable(),
@@ -56,7 +56,7 @@ class CraftingWindowRenderer @Inject constructor(
             shapeRenderer = shapeRenderer,
             gridX = windowX + GameWindowsConfigs.Crafting.itemsGridMarginLeft,
             gridY = windowY + windowTexture.regionHeight - GameWindowsConfigs.Crafting.hotbarOffsetFromBottom,
-            items = mobsController.player.inventory.asSequence()
+            items = mobsController.player.inventory.items.asSequence()
                 .take(GameWindowsConfigs.Crafting.hotbarCells)
                 .asIterable(),
             itemsInRow = GameWindowsConfigs.Crafting.hotbarCells,

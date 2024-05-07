@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
-import ru.deadsoftware.cavedroid.game.mobs.Player;
+import ru.deadsoftware.cavedroid.game.mobs.player.Player;
 import ru.deadsoftware.cavedroid.game.model.block.Block;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
 import ru.deadsoftware.cavedroid.game.objects.DropController;
@@ -113,7 +113,7 @@ public class GamePhysics {
     private Rectangle getShiftedMagnetingPlayerRect(Drop drop) {
         final Player player = mMobsController.getPlayer();
 
-        if (player.canPickUpDrop(drop) < 0) {
+        if (!player.inventory.canPickItem(drop.getItem())) {
             return null;
         }
 
@@ -138,7 +138,7 @@ public class GamePhysics {
         final Player player = mMobsController.getPlayer();
 
         if (Intersector.overlaps(shiftedPlayerTarget, drop)) {
-            player.pickUpDrop(drop);
+            player.inventory.pickDrop(drop);
         }
     }
 

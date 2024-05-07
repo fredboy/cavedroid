@@ -175,14 +175,14 @@ public class GameWorld {
     }
 
     private void playerDurateTool() {
-        final InventoryItem playerCurrentItem = mMobsController.getPlayer().getCurrentItem();
-        if (mMobsController.getPlayer().getCurrentItem().getItem().isTool()) {
+        final InventoryItem playerCurrentItem = mMobsController.getPlayer().inventory.getActiveItem();
+        if (playerCurrentItem.getItem().isTool()) {
             mMobsController.getPlayer().decreaseCurrentItemCount(mGameItemsHolder);
         }
     }
 
     private boolean shouldDrop(Block block) {
-        final Item item = mMobsController.getPlayer().getCurrentItem().getItem();
+        final Item item = mMobsController.getPlayer().inventory.getActiveItem().getItem();
         int toolLevel = item.isTool() ? ((Item.Tool)item).getLevel() : 0;
         if (item.isTool() && block.getParams().getToolType() != item.getClass()) {
             toolLevel = 0;
