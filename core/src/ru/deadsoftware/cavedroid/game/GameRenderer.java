@@ -1,8 +1,12 @@
 package ru.deadsoftware.cavedroid.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ObjectMap;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.input.IGameInputHandler;
@@ -16,7 +20,8 @@ import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.mobs.player.Player;
 import ru.deadsoftware.cavedroid.game.objects.TouchButton;
 import ru.deadsoftware.cavedroid.game.render.IGameRenderer;
-import ru.deadsoftware.cavedroid.game.windows.GameWindowsManager;
+import ru.deadsoftware.cavedroid.game.ui.TooltipManager;
+import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.Renderer;
 
@@ -41,6 +46,7 @@ public class GameRenderer extends Renderer {
     private final Set<IGameInputHandler<MouseInputAction>> mMouseInputHandlers;
     private final Set<IGameInputHandler<KeyboardInputAction>> mKeyboardInputHandlers;
     private final GameWindowsManager mGameWindowsManager;
+    private final TooltipManager mTooltipManager;
 
     @Inject
     GameRenderer(MainConfig mainConfig,
@@ -51,7 +57,8 @@ public class GameRenderer extends Renderer {
                  KeyboardInputActionMapper keyboardInputActionMapper,
                  Set<IGameInputHandler<MouseInputAction>> mouseInputHandlers,
                  Set<IGameInputHandler<KeyboardInputAction>> keyboardInputHandlers,
-                 GameWindowsManager gameWindowsManager) {
+                 GameWindowsManager gameWindowsManager,
+                 TooltipManager tooltipManager) {
         super(mainConfig.getWidth(), mainConfig.getHeight());
 
         mMainConfig = mainConfig;
@@ -64,6 +71,7 @@ public class GameRenderer extends Renderer {
         mMouseInputHandlers = mouseInputHandlers;
         mKeyboardInputHandlers = keyboardInputHandlers;
         mGameWindowsManager = gameWindowsManager;
+        mTooltipManager = tooltipManager;
 
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f);
     }
@@ -86,13 +94,28 @@ public class GameRenderer extends Renderer {
 
     private void handleMousePosition() {
         final Rectangle viewport = getCameraViewport();
+
+        final float screenX = transformScreenX(Gdx.input.getX());
+        final float screenY = transformScreenY(Gdx.input.getY());
+
         final MouseInputAction action = new MouseInputAction(
-                Gdx.input.getX() * (viewport.width / Gdx.graphics.getWidth()),
-                Gdx.input.getY() * (viewport.height / Gdx.graphics.getHeight()),
+                screenX,
+                screenY,
                 MouseInputActionKey.None.INSTANCE,
                 viewport);
 
         mCursorMouseInputHandler.handle(action);
+
+        if (!mTooltipManager.getCurrentMouseTooltip().isEmpty()) {
+            final Label.LabelStyle style = new Label.LabelStyle(Assets.minecraftFont, Color.WHITE);
+            style.background = new TextureRegionDrawable(Assets.textureRegions.get("background"));
+            final Label label = new Label(mTooltipManager.getCurrentMouseTooltip(), style);
+            label.setX(screenX);
+            label.setY(screenY);
+//            label.setHeight(10f);
+//            label.setAlignment(Align.left, Align.top);
+            label.draw(spriter, 1f);
+        }
     }
 
     private boolean handleMouseAction(@CheckForNull  MouseInputAction action) {
@@ -226,14 +249,14 @@ public class GameRenderer extends Renderer {
     @Override
     public void render(float delta) {
         updateCameraPosition();
-        handleMousePosition();
-//        mGameInput.moveCursor(this);
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         spriter.begin();
         mRenderers.forEach(iGameRenderer -> iGameRenderer.draw(spriter, shaper, getCameraViewport(), delta));
+        handleMousePosition();
         spriter.end();
+
     }
 
 }

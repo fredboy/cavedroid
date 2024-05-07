@@ -129,4 +129,11 @@ object KeyboardInputHandlersModule {
         return handler
     }
 
+    @Binds
+    @IntoSet
+    @GameScope
+    fun bindSelectHotbarSlotKeyboardInputHandler(handler: SelectHotbarSlotKeyboardInputHandler): IGameInputHandler<KeyboardInputAction> {
+        return handler
+    }
+
 }

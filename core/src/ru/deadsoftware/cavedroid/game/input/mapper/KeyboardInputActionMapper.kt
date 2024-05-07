@@ -27,6 +27,16 @@ class KeyboardInputActionMapper @Inject constructor() {
 
             Input.Keys.Q -> KeyboardInputActionKey.DropItem
 
+            Input.Keys.NUM_1 -> KeyboardInputActionKey.SelectHotbarSlot(0)
+            Input.Keys.NUM_2 -> KeyboardInputActionKey.SelectHotbarSlot(1)
+            Input.Keys.NUM_3 -> KeyboardInputActionKey.SelectHotbarSlot(2)
+            Input.Keys.NUM_4 -> KeyboardInputActionKey.SelectHotbarSlot(3)
+            Input.Keys.NUM_5 -> KeyboardInputActionKey.SelectHotbarSlot(4)
+            Input.Keys.NUM_6 -> KeyboardInputActionKey.SelectHotbarSlot(5)
+            Input.Keys.NUM_7 -> KeyboardInputActionKey.SelectHotbarSlot(6)
+            Input.Keys.NUM_8 -> KeyboardInputActionKey.SelectHotbarSlot(7)
+            Input.Keys.NUM_9 -> KeyboardInputActionKey.SelectHotbarSlot(8)
+
             else -> null
         }
 

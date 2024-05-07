@@ -21,4 +21,8 @@ sealed interface KeyboardInputActionKey {
     data object SpawnPig : KeyboardInputActionKey
     data object SwitchGameMode : KeyboardInputActionKey
     data object ShowMap : KeyboardInputActionKey
+
+    data class SelectHotbarSlot(
+        val slot: Int
+    ) : KeyboardInputActionKey
 }

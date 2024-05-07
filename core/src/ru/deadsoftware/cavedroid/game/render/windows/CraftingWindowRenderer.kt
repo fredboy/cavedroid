@@ -10,9 +10,9 @@ import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.render.IGameRenderer
 import ru.deadsoftware.cavedroid.game.render.WindowsRenderer
-import ru.deadsoftware.cavedroid.game.windows.GameWindowsConfigs
-import ru.deadsoftware.cavedroid.game.windows.GameWindowsManager
-import ru.deadsoftware.cavedroid.game.windows.inventory.CraftingInventoryWindow
+import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
+import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
+import ru.deadsoftware.cavedroid.game.ui.windows.inventory.CraftingInventoryWindow
 import ru.deadsoftware.cavedroid.misc.Assets
 import javax.inject.Inject
 

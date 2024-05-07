@@ -6,6 +6,7 @@ import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.model.block.Block;
 import ru.deadsoftware.cavedroid.game.objects.DropController;
+import ru.deadsoftware.cavedroid.game.ui.TooltipManager;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 
 import javax.annotation.CheckForNull;
@@ -44,11 +45,15 @@ public class GameModule {
 
     @Provides
     @GameScope
-    public static MobsController provideMobsController(MainConfig mainConfig, GameItemsHolder gameItemsHolder) {
+    public static MobsController provideMobsController(MainConfig mainConfig,
+                                                       GameItemsHolder gameItemsHolder,
+                                                       TooltipManager tooltipManager) {
         load(mainConfig, gameItemsHolder);
-        MobsController controller = data != null ? data.retrieveMobsController() : new MobsController(gameItemsHolder);
+        MobsController controller = data != null
+                ? data.retrieveMobsController()
+                : new MobsController(gameItemsHolder, tooltipManager);
         makeDataNullIfEmpty();
-        controller.getPlayer().initInventory(gameItemsHolder);
+        controller.getPlayer().initInventory(gameItemsHolder, tooltipManager);
         return controller;
     }
 

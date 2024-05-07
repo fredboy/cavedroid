@@ -3,19 +3,21 @@ package ru.deadsoftware.cavedroid.game.mobs
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.mobs.player.Player
+import ru.deadsoftware.cavedroid.game.ui.TooltipManager
 import java.io.Serializable
 import java.util.*
 import javax.inject.Inject
 
 @GameScope
 class MobsController @Inject constructor(
-    gameItemsHolder: GameItemsHolder
+    gameItemsHolder: GameItemsHolder,
+    tooltipManager: TooltipManager,
 ) : Serializable {
 
     private val _mobs = LinkedList<Mob>()
 
     val player: Player =
-        Player(gameItemsHolder)
+        Player(gameItemsHolder, tooltipManager)
 
     val mobs: List<Mob>
         get() = _mobs

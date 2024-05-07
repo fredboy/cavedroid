@@ -33,6 +33,12 @@ public class DropController implements Serializable {
         mDrops.add(new Drop(x, y, item));
     }
 
+    public void addDrop(float x, float y, Item item, int count) {
+        for (int i = 0 ; i < count; i++) {
+            addDrop(x, y, item);
+        }
+    }
+
     public int getSize() {
         return mDrops.size();
     }

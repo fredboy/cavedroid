@@ -2,7 +2,7 @@ package ru.deadsoftware.cavedroid.game.actions.useblock
 
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.model.block.Block
-import ru.deadsoftware.cavedroid.game.windows.GameWindowsManager
+import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import javax.inject.Inject
 
 @GameScope

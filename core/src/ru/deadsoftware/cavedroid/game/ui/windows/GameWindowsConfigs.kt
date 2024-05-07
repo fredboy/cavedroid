@@ -1,4 +1,4 @@
-package ru.deadsoftware.cavedroid.game.windows
+package ru.deadsoftware.cavedroid.game.ui.windows
 
 object GameWindowsConfigs {
     data object Creative {

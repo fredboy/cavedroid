@@ -7,8 +7,10 @@ import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.mobs.player.Player
 import ru.deadsoftware.cavedroid.game.mobs.player.Player.ControlMode
+import ru.deadsoftware.cavedroid.game.ui.TooltipManager
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.Assets
+import ru.deadsoftware.cavedroid.misc.utils.drawString
 import ru.deadsoftware.cavedroid.misc.utils.px
 import javax.inject.Inject
 
@@ -16,6 +18,7 @@ import javax.inject.Inject
 class HudRenderer @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobsController: MobsController,
+    private val tooltipManager: TooltipManager,
 ) : IGameRenderer {
 
     override val renderLayer = RENDER_LAYER
@@ -102,6 +105,15 @@ class HudRenderer @Inject constructor(
         drawHealth(spriteBatch, hotbarX, hotbarTexture.regionHeight.toFloat())
         drawHotbarSelector(spriteBatch, hotbarX)
         drawHotbarItems(spriteBatch, shapeRenderer, hotbarX)
+
+        val tooltip = tooltipManager.currentHotbarTooltip
+        if (tooltip.isNotBlank()) {
+            spriteBatch.drawString(
+                str = tooltip,
+                x = viewport.width / 2 - Assets.getStringWidth(tooltip) / 2,
+                y = hotbarTexture.regionHeight.toFloat()
+            )
+        }
     }
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {

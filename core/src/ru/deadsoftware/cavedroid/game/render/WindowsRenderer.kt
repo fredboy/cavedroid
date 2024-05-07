@@ -9,7 +9,7 @@ import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.render.windows.CraftingWindowRenderer
 import ru.deadsoftware.cavedroid.game.render.windows.CreativeWindowRenderer
 import ru.deadsoftware.cavedroid.game.render.windows.SurvivalWindowRenderer
-import ru.deadsoftware.cavedroid.game.windows.GameWindowsManager
+import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import javax.inject.Inject
 
 @GameScope

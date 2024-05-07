@@ -7,7 +7,7 @@ import ru.deadsoftware.cavedroid.game.input.action.KeyboardInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.KeyboardInputActionKey
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.objects.DropController
-import ru.deadsoftware.cavedroid.game.windows.GameWindowsManager
+import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import javax.inject.Inject
 
 @GameScope

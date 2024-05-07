@@ -5,7 +5,7 @@ import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
-import ru.deadsoftware.cavedroid.game.windows.GameWindowsManager
+import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.input.IGameInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey

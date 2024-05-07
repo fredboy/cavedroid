@@ -4,19 +4,26 @@ import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
 import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.game.objects.Drop
+import ru.deadsoftware.cavedroid.game.ui.TooltipManager
 import java.io.Serializable
 
 class Inventory(
     val size: Int,
     val hotbarSize: Int,
-    gameItemsHolder: GameItemsHolder
+    gameItemsHolder: GameItemsHolder,
+    tooltipManager: TooltipManager,
 ) : Serializable {
+
+    @Transient
+    private lateinit var tooltipManager: TooltipManager
 
     @Transient
     private lateinit var fallbackItem: InventoryItem
 
     init {
         fallbackItem = gameItemsHolder.fallbackItem.toInventoryItem()
+        this.tooltipManager = tooltipManager
+
         if (size < 0 || hotbarSize < 0 || hotbarSize > size) {
             throw IllegalArgumentException("Invalid inventory sizes: hotbarSize=$hotbarSize; size=$size")
         }
@@ -32,12 +39,18 @@ class Inventory(
         set(value) {
             if (value in 0 ..< hotbarSize) {
                 field = value
+                showCurrentItemTooltip()
             }
         }
 
+    fun showCurrentItemTooltip() {
+        tooltipManager.showHotbarTooltip(activeItem.item.params.name)
+    }
+
     val activeItem get() = items[activeSlot]
 
-    fun initItems(gameItemsHolder: GameItemsHolder) {
+    fun initItems(gameItemsHolder: GameItemsHolder, tooltipManager: TooltipManager) {
+        this.tooltipManager = tooltipManager
         fallbackItem = gameItemsHolder.fallbackItem.toInventoryItem()
         items.forEach { item ->
             item.init(gameItemsHolder)
@@ -70,11 +83,14 @@ class Inventory(
 
         if (inventoryItem.item == drop.item) {
             inventoryItem.add()
-            drop.pickedUp = true
         } else {
             _items[slot] = drop.item.toInventoryItem()
-            drop.pickedUp = true
+            if (slot == activeSlot) {
+                showCurrentItemTooltip()
+            }
         }
+
+        drop.pickedUp = true
     }
 
     fun addItem(item: Item) {
@@ -86,6 +102,7 @@ class Inventory(
         )
 
         _items[0] = item.toInventoryItem(item.params.maxStack)
+        showCurrentItemTooltip()
     }
 
     @JvmOverloads

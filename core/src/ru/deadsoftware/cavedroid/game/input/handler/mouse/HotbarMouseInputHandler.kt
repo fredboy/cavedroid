@@ -3,7 +3,7 @@ package ru.deadsoftware.cavedroid.game.input.handler.mouse
 import com.badlogic.gdx.utils.Timer
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
-import ru.deadsoftware.cavedroid.game.windows.GameWindowsManager
+import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.input.IGameInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey

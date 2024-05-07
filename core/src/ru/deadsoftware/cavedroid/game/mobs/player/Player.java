@@ -10,6 +10,7 @@ import ru.deadsoftware.cavedroid.game.model.block.Block;
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem;
 import ru.deadsoftware.cavedroid.game.model.item.Item;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
+import ru.deadsoftware.cavedroid.game.ui.TooltipManager;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.utils.SpriteOrigin;
@@ -50,14 +51,14 @@ public class Player extends Mob {
         CURSOR
     }
 
-    public Player(GameItemsHolder gameItemsHolder) {
+    public Player(GameItemsHolder gameItemsHolder, TooltipManager tooltipManager) {
         super(0, 0, 4, 30, randomDir(), Type.MOB, MAX_HEALTH);
-        inventory = new Inventory(INVENTORY_SIZE, HOTBAR_SIZE, gameItemsHolder);
+        inventory = new Inventory(INVENTORY_SIZE, HOTBAR_SIZE, gameItemsHolder, tooltipManager);
         swim = false;
     }
 
-    public void initInventory(GameItemsHolder gameItemsHolder) {
-        inventory.initItems(gameItemsHolder);
+    public void initInventory(GameItemsHolder gameItemsHolder, TooltipManager tooltipManager) {
+        inventory.initItems(gameItemsHolder, tooltipManager);
     }
 
     public void respawn(GameWorld gameWorld, GameItemsHolder itemsHolder) {

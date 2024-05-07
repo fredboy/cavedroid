@@ -9,7 +9,7 @@ import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.game.objects.Drop
 import ru.deadsoftware.cavedroid.game.objects.DropController
-import ru.deadsoftware.cavedroid.game.windows.GameWindowsManager
+import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import javax.inject.Inject
 
 @GameScope

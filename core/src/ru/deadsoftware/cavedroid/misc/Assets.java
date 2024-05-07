@@ -199,6 +199,7 @@ public class Assets {
         setPlayerHeadOrigin();
         minecraftFont = new BitmapFont(assetLoader.getAssetHandle("font.fnt"), true);
         minecraftFont.getData().setScale(.375f);
+        minecraftFont.setUseIntegerPositions(false);
     }
 
     /**

@@ -20,7 +20,7 @@ class DebugInfoStringsProvider @Inject constructor(
         return listOf(
             "FPS: ${Gdx.graphics.framesPerSecond}",
             "X: ${player.mapX}",
-            "Y: ${gameWorld.height - player.upperMapY}",
+            "Y: ${player.upperMapY} (${gameWorld.height - player.upperMapY})",
             "CurX: ${player.cursorX}",
             "CurY: ${player.cursorY}",
             "Velocity: ${player.velocity}",
