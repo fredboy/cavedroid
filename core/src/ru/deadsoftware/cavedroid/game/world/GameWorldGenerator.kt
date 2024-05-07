@@ -72,11 +72,16 @@ class GameWorldGenerator(
         val bedrock = gameItemsHolder.getBlock("bedrock")
         val dirt = gameItemsHolder.getBlock("dirt")
         val stone = gameItemsHolder.getBlock("stone")
+        val snow = gameItemsHolder.getBlock("snow")
 
         foreMap[x][surfaceHeight] = grass
         foreMap[x][config.height - 1] = bedrock
         backMap[x][surfaceHeight] = grass
         backMap[x][config.height - 1] = bedrock
+
+        if (surfaceHeight - 1 < config.seaLevel) {
+            foreMap[x][surfaceHeight - 1] = snow
+        }
 
         for (y in min(surfaceHeight + 1, config.seaLevel) ..< config.height - 1) {
             if (y <= surfaceHeight) {
@@ -89,6 +94,13 @@ class GameWorldGenerator(
                 else -> stone
             }
             backMap[x][y] = foreMap[x][y]
+        }
+
+        val plant = random.nextInt(100)
+        if (surfaceHeight < config.seaLevel) {
+            if (plant < 10) {
+                generateSpruce(x)
+            }
         }
     }
 
@@ -214,6 +226,37 @@ class GameWorldGenerator(
             }
             if (random.nextInt(15) < 3) {
                 foreMap[x1][heights[x1] - 1] = gameItemsHolder.getBlock(mushrooms.random(random))
+            }
+        }
+
+        for (y in h downTo height) {
+            backMap[x][y] = log
+        }
+    }
+
+    private fun generateSpruce(x: Int) {
+        val log = gameItemsHolder.getBlock("log_spruce")
+        val leaves = gameItemsHolder.getBlock("leaves_spruce")
+        val h = heights[x] - 1
+        val treeH = random.nextInt(7, 9)
+        val height = max(0, h - treeH)
+
+        val top = height - 1
+        if (top >= 0) {
+            foreMap[x][top] = leaves
+            backMap[x][top] = leaves
+        }
+
+        for (x1 in max(0, x - 1) .. min(config.width - 1, x + 1)) {
+            val y = height
+            foreMap[x1][y] = leaves
+            backMap[x1][y] = leaves
+        }
+
+        for (y in 1..2) {
+            for (x1 in max(0, x - y) .. min(config.width - 1, x + y)) {
+                foreMap[x1][height + 1 + y] = leaves
+                backMap[x1][height + 1 + y] = leaves
             }
         }
 

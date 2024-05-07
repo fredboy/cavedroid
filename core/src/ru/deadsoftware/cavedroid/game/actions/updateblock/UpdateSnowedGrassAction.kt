@@ -13,8 +13,11 @@ class UpdateSnowedGrassAction @Inject constructor(
 
     override fun update(x: Int, y: Int) {
         val blockOnTop = gameWorld.getForeMap(x, y - 1)
-        if (blockOnTop.collision || blockOnTop.isFluid()) {
-            gameWorld.setForeMap(x, y, mGameItemsHolder.getBlock("dirt"))
+        val makesDirt = blockOnTop.params.hasCollision || blockOnTop.isFluid()
+
+        when {
+            makesDirt -> gameWorld.setForeMap(x, y, mGameItemsHolder.getBlock("dirt"))
+            blockOnTop.params.key != "snow" -> gameWorld.setForeMap(x, y, mGameItemsHolder.getBlock("grass"))
         }
     }
 

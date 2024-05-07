@@ -80,6 +80,6 @@ class Inventory(
             endIndex = size - 1
         )
 
-        _items[0] = item.toInventoryItem()
+        _items[0] = item.toInventoryItem(item.params.maxStack)
     }
 }

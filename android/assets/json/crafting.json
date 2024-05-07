@@ -38,5 +38,9 @@
   "stone_shovel": {
     "input": ["none", "cobblestone", "none", "none", "stick", "none", "none", "stick", "none"],
     "count": 131
+  },
+  "snow_block": {
+    "input": ["snowball", "snowball", "none", "snowball", "snowball", "none", "none", "none", "none"],
+    "count": 1
   }
 }

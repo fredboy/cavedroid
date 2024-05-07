@@ -49,12 +49,27 @@
       "tool_level": 0,
       "tool_type": "axe"
     },
+    "planks_spruce": {
+      "hp": 180,
+      "drop": "planks_spruce",
+      "texture": "planks_spruce",
+      "tool_level": 0,
+      "tool_type": "axe"
+    },
     "sapling_oak": {
       "collision": false,
       "transparent": true,
       "block_required": true,
       "drop": "sapling_oak",
       "texture": "sapling_oak",
+      "hp": 0
+    },
+    "sapling_spruce": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "drop": "sapling_spruce",
+      "texture": "sapling_spruce",
       "hp": 0
     },
     "bedrock": {
@@ -144,6 +159,21 @@
       "tool_level": 1,
       "tool_type": "shears",
       "tint": "#5AC557"
+    },
+    "log_spruce": {
+      "hp": 180,
+      "drop": "log_spruce",
+      "texture": "log_spruce",
+      "tool_level": 0,
+      "tool_type": "axe"
+    },
+    "leaves_spruce": {
+      "hp": 21,
+      "drop": "leaves_spruce",
+      "texture": "leaves_spruce",
+      "tool_level": 1,
+      "tool_type": "shears",
+      "tint": "#486D4E"
     },
     "sponge": {
       "hp": 54,
@@ -487,6 +517,32 @@
       "tool_level": 0,
       "tool_type": "axe"
     },
+    "spruce_slab_bottom": {
+      "top": 8,
+      "sprite_top": 8,
+      "hp": 180,
+      "transparent": true,
+      "drop": "spruce_slab",
+      "meta": "slab",
+      "texture": "planks_spruce",
+      "full_block": "planks_spruce",
+      "other_part": "spruce_slab_top",
+      "tool_level": 0,
+      "tool_type": "axe"
+    },
+    "spruce_slab_top": {
+      "bottom": 8,
+      "sprite_bottom": 8,
+      "hp": 180,
+      "transparent": true,
+      "drop": "spruce_slab",
+      "meta": "slab",
+      "texture": "planks_spruce",
+      "full_block": "planks_spruce",
+      "other_part": "spruce_slab_bottom",
+      "tool_level": 0,
+      "tool_type": "axe"
+    },
     "cobblestone_slab_bottom": {
       "top": 8,
       "sprite_top": 8,
@@ -683,6 +739,28 @@
       "texture": "obsidian",
       "tool_level": 4,
       "tool_type": "pickaxe"
+    },
+    "snow": {
+      "top": 14,
+      "sprite_top": 14,
+      "collision": false,
+      "transparent": true,
+      "drop": "snowball",
+      "texture": "snow",
+      "hp": 6,
+      "tool_level": 1,
+      "tool_type": "shovel",
+      "block_required": true
+    },
+    "snow_block": {
+      "collision": true,
+      "transparent": true,
+      "drop": "snowball",
+      "drop_count": 4,
+      "texture": "snow",
+      "hp": 60,
+      "tool_level": 1,
+      "tool_type": "shovel"
     }
   },
   "items": {
@@ -721,20 +799,20 @@
       "type": "block",
       "texture": "sapling_oak"
     },
+    "planks_spruce": {
+      "name": "Spruce Planks",
+      "type": "block",
+      "texture": "planks_spruce"
+    },
+    "sapling_spruce": {
+      "name": "Spruce Sapling",
+      "type": "block",
+      "texture": "sapling_spruce"
+    },
     "bedrock": {
       "name": "Bedrock",
       "type": "block",
       "texture": "bedrock"
-    },
-    "water": {
-      "name": "Water",
-      "type": "block",
-      "texture": "water"
-    },
-    "lava": {
-      "name": "Lava",
-      "type": "block",
-      "texture": "lava"
     },
     "sand": {
       "name": "Sand",
@@ -775,6 +853,16 @@
       "name": "Leaves",
       "type": "block",
       "texture": "leaves_oak"
+    },
+    "log_spruce": {
+      "name": "Spruce",
+      "type": "block",
+      "texture": "log_spruce"
+    },
+    "leaves_spruce": {
+      "name": "Spruce Leaves",
+      "type": "block",
+      "texture": "leaves_spruce"
     },
     "glass": {
       "name": "Glass",
@@ -958,6 +1046,13 @@
       "top_slab_block": "oak_slab_top",
       "bottom_slab_block": "oak_slab_bottom"
     },
+    "spruce_slab": {
+      "name": "Spruce Slab",
+      "type": "slab",
+      "texture": "spruce_slab",
+      "top_slab_block": "spruce_slab_top",
+      "bottom_slab_block": "spruce_slab_bottom"
+    },
     "cobblestone_slab": {
       "name": "Cobblestone Slab",
       "type": "slab",
@@ -993,6 +1088,11 @@
       "name": "Obsidian",
       "type": "block",
       "texture": "obsidian"
+    },
+    "snow_block": {
+      "name": "Snow Block",
+      "type": "block",
+      "texture": "snow"
     },
     "stick": {
       "name": "Stick",
@@ -1192,6 +1292,11 @@
       "origin_x": 0.25,
       "action_key": "use_lava_bucket",
       "max_stack": 1
+    },
+    "snowball": {
+      "name": "Snowball",
+      "texture": "snowball",
+      "max_stack": 16
     }
   }
 }
