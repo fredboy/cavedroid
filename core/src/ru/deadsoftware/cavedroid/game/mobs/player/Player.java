@@ -21,8 +21,8 @@ public class Player extends Mob {
 
     private static final float SPEED = 69.072f;
     private static final float JUMP_VELOCITY = -133.332f;
-    private static final int MAX_HEALTH = 20;
 
+    public static final int MAX_HEALTH = 20;
     public static final int INVENTORY_SIZE = 36;
     public static final int HOTBAR_SIZE = 9;
 

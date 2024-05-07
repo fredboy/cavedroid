@@ -47,7 +47,7 @@ class Drop(
     }
 
     companion object {
-        private const val MAGNET_DISTANCE = 4f
+        private const val MAGNET_DISTANCE = 8f
 
         const val MAGNET_VELOCITY = 256f
         const val DROP_SIZE = 8f

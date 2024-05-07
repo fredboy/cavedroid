@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
+import ru.deadsoftware.cavedroid.game.mobs.player.Player
 import ru.deadsoftware.cavedroid.game.mobs.player.Player.ControlMode
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.Assets
@@ -23,6 +24,7 @@ class HudRenderer @Inject constructor(
     private val hotbarTexture get() = requireNotNull(Assets.textureRegions[HOTBAR_KEY])
     private val hotbarSelectorTexture get() = requireNotNull(Assets.textureRegions[HOTBAR_SELECTOR_KEY])
     private val wholeHeartTexture get() = requireNotNull(Assets.textureRegions[WHOLE_HEART_KEY])
+    private val emptyHeartTexture get() = requireNotNull(Assets.textureRegions[EMPTY_HEART_KEY])
     private val halfHeartTexture get() = requireNotNull(Assets.textureRegions[HALF_HEART_KEY])
 
     private fun drawCursor(spriteBatch: SpriteBatch, viewport: Rectangle) {
@@ -45,15 +47,25 @@ class HudRenderer @Inject constructor(
         }
 
         val wholeHeart = wholeHeartTexture
+        val halfHeart = halfHeartTexture
+        val emptyHeart = emptyHeartTexture
+
+        val totalHearts = Player.MAX_HEALTH / 2
         val wholeHearts = player.health / 2
 
-        for (i in 0..<wholeHearts) {
-            spriteBatch.draw(wholeHeart, x + i * wholeHeart.regionWidth, y)
+        for (i in 0..< totalHearts) {
+            if (i < wholeHearts) {
+                spriteBatch.draw(wholeHeart, x + i * wholeHeart.regionWidth, y)
+            } else if (i == wholeHearts && player.health % 2 == 1) {
+                spriteBatch.draw(halfHeart, x + i * wholeHeart.regionWidth, y)
+            } else {
+                spriteBatch.draw(emptyHeart, x + i * wholeHeart.regionWidth, y)
+            }
         }
 
-        if (player.health % 2 == 1) {
-            spriteBatch.draw(halfHeartTexture, x + wholeHearts * wholeHeart.regionWidth, y)
-        }
+
+
+
     }
 
     private fun drawHotbarItems(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer,  hotbarX: Float) {
@@ -105,6 +117,7 @@ class HudRenderer @Inject constructor(
         private const val HOTBAR_SELECTOR_KEY = "hotbar_selector"
         private const val WHOLE_HEART_KEY = "heart_whole"
         private const val HALF_HEART_KEY = "heart_half"
+        private const val EMPTY_HEART_KEY = "heart_empty"
 
         private data object HotbarConfig {
             const val horizontalMargin = 3f

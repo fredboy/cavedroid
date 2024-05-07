@@ -12,7 +12,11 @@ class Inventory(
     gameItemsHolder: GameItemsHolder
 ) : Serializable {
 
+    @Transient
+    private lateinit var fallbackItem: InventoryItem
+
     init {
+        fallbackItem = gameItemsHolder.fallbackItem.toInventoryItem()
         if (size < 0 || hotbarSize < 0 || hotbarSize > size) {
             throw IllegalArgumentException("Invalid inventory sizes: hotbarSize=$hotbarSize; size=$size")
         }
@@ -34,6 +38,7 @@ class Inventory(
     val activeItem get() = items[activeSlot]
 
     fun initItems(gameItemsHolder: GameItemsHolder) {
+        fallbackItem = gameItemsHolder.fallbackItem.toInventoryItem()
         items.forEach { item ->
             item.init(gameItemsHolder)
         }
@@ -81,5 +86,13 @@ class Inventory(
         )
 
         _items[0] = item.toInventoryItem(item.params.maxStack)
+    }
+
+    @JvmOverloads
+    fun decreaseCurrentItemAmount(count: Int = 1) {
+        activeItem.subtract(count)
+        if (activeItem.amount <= 0) {
+            _items[activeSlot] = fallbackItem
+        }
     }
 }

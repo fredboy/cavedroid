@@ -9,6 +9,8 @@ sealed interface KeyboardInputActionKey {
 
     data object Crouch : KeyboardInputActionKey
 
+    data object DropItem : KeyboardInputActionKey
+
     data object SwitchControlsMode : KeyboardInputActionKey
 
     data object OpenInventory : KeyboardInputActionKey
@@ -19,5 +21,4 @@ sealed interface KeyboardInputActionKey {
     data object SpawnPig : KeyboardInputActionKey
     data object SwitchGameMode : KeyboardInputActionKey
     data object ShowMap : KeyboardInputActionKey
-    data object OpenCraft : KeyboardInputActionKey
 }

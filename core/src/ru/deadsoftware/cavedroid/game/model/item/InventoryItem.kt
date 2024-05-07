@@ -12,8 +12,17 @@ import java.io.Serializable
 
 class InventoryItem @JvmOverloads constructor(
     val itemKey: String,
-    var amount: Int = 1,
+    _amount: Int = 1,
 ) : Serializable {
+
+    var amount = _amount
+        set(value) {
+            field = if (value < 0) {
+                0
+            } else {
+                value
+            }
+        }
 
     @Transient
     lateinit var item: Item
@@ -33,11 +42,19 @@ class InventoryItem @JvmOverloads constructor(
 
     @JvmOverloads
     fun add(count: Int = 1) {
+        if (count > 0 && Int.MAX_VALUE - count < amount) {
+            throw IllegalArgumentException("$amount + $count exceeds Int.MAX_VALUE")
+        }
+
         amount += count
     }
 
     @JvmOverloads
     fun subtract(count: Int = 1) {
+        if (count < 0) {
+            throw IllegalArgumentException("Can't subtract negative amount")
+        }
+
         add(-count)
     }
 

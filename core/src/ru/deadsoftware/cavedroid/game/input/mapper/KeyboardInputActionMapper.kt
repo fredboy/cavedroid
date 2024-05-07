@@ -25,7 +25,7 @@ class KeyboardInputActionMapper @Inject constructor() {
             Input.Keys.GRAVE -> KeyboardInputActionKey.SwitchGameMode
             Input.Keys.M -> KeyboardInputActionKey.ShowMap
 
-            Input.Keys.T -> KeyboardInputActionKey.OpenCraft
+            Input.Keys.Q -> KeyboardInputActionKey.DropItem
 
             else -> null
         }

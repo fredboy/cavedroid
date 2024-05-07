@@ -111,7 +111,7 @@ object KeyboardInputHandlersModule {
     @Binds
     @IntoSet
     @GameScope
-    fun bindOpenCraftingKeyboardInputHandler(handler: OpenCraftingKeyboardInputHandler): IGameInputHandler<KeyboardInputAction> {
+    fun bindOpenCraftingKeyboardInputHandler(handler: DropItemKeyboardInputHandler): IGameInputHandler<KeyboardInputAction> {
         return handler
     }
 
