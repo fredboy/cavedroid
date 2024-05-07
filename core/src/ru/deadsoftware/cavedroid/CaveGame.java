@@ -13,7 +13,7 @@ public class CaveGame extends Game {
 
     private static final String TAG = "CaveGame";
 
-    public static final String VERSION = "alpha 0.7.0";
+    public static final String VERSION = "alpha 0.7.1";
 
     private final MainConfig mMainConfig;
     private final MainComponent mMainComponent;
