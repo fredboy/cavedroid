@@ -7,6 +7,7 @@ import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.actions.placeToBackgroundAction
 import ru.deadsoftware.cavedroid.game.actions.placeToForegroundAction
 import ru.deadsoftware.cavedroid.game.actions.placeblock.IPlaceBlockAction
+import ru.deadsoftware.cavedroid.game.actions.useblock.IUseBlockAction
 import ru.deadsoftware.cavedroid.game.actions.useitem.IUseItemAction
 import ru.deadsoftware.cavedroid.game.input.IGameInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
@@ -15,6 +16,7 @@ import ru.deadsoftware.cavedroid.game.input.isInsideHotbar
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.game.windows.GameWindowsManager
+import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
@@ -22,7 +24,9 @@ class UseItemMouseInputHandler @Inject constructor(
     private val mobsController: MobsController,
     private val useItemActionMap: Map<String, @JvmSuppressWildcards IUseItemAction>,
     private val placeBlockActionMap: Map<String, @JvmSuppressWildcards IPlaceBlockAction>,
+    private val useBlockActionMap: Map<String, @JvmSuppressWildcards IUseBlockAction>,
     private val gameWindowsManager: GameWindowsManager,
+    private val gameWorld: GameWorld,
 ) : IGameInputHandler<MouseInputAction> {
 
     private var buttonHoldTask: Timer.Task? = null
@@ -67,6 +71,20 @@ class UseItemMouseInputHandler @Inject constructor(
         Timer.schedule(buttonHoldTask, TOUCH_HOLD_TIME_SEC)
     }
 
+    private fun tryUseBlock() {
+        val block = gameWorld.getForeMap(mobsController.player.cursorX, mobsController.player.cursorY)
+            .takeIf { !it.isNone() }
+            ?: gameWorld.getBackMap(mobsController.player.cursorX, mobsController.player.cursorY)
+                .takeIf { !it.isNone() }
+            ?: return
+
+        useBlockActionMap[block.params.key]?.perform(
+            block = block,
+            x = mobsController.player.cursorX,
+            y = mobsController.player.cursorY
+        )
+    }
+
     private fun handleUp(action: MouseInputAction) {
         val player = mobsController.player
         val item = player.inventory.activeItem.item
@@ -84,6 +102,8 @@ class UseItemMouseInputHandler @Inject constructor(
         } else if (item is Item.Usable) {
             useItemActionMap[item.useActionKey]?.perform(item, player.cursorX, player.cursorY)
                 ?: Gdx.app.error(TAG, "use item action ${item.useActionKey} not found");
+        } else {
+            tryUseBlock()
         }
     }
 

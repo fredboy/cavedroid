@@ -56,6 +56,13 @@
       "tool_level": 0,
       "tool_type": "axe"
     },
+    "crafting_table": {
+      "hp": 180,
+      "drop": "crafting_table",
+      "texture": "crafting_table",
+      "tool_level": 0,
+      "tool_type": "axe"
+    },
     "sapling_oak": {
       "collision": false,
       "transparent": true,
@@ -803,6 +810,11 @@
       "name": "Spruce Planks",
       "type": "block",
       "texture": "planks_spruce"
+    },
+    "crafting_table": {
+      "name": "Crafting Table",
+      "type": "block",
+      "texture": "crafting_table"
     },
     "sapling_spruce": {
       "name": "Spruce Sapling",

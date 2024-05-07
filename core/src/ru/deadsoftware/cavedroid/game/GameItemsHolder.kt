@@ -83,7 +83,7 @@ class GameItemsHolder @Inject constructor(
 
         jsonMap.forEach { (key, value) ->
             craftingRecipes += CraftingRecipe(
-                input = value.input.map(::getItem),
+                input = value.input.map(::Regex),
                 output = CraftingResult(getItem(key), value.count)
             )
         }
@@ -131,8 +131,20 @@ class GameItemsHolder @Inject constructor(
     }
 
     fun craftItem(input: List<Item>): InventoryItem? {
+        val startIndex = input.indexOfFirst { !it.isNone() }.takeIf { it >= 0 } ?: return null
+
         return  try {
-            craftingRecipes.first { rec -> rec.input == input}.output.toInventoryItem()
+            craftingRecipes.first { rec ->
+                for (i in rec.input.indices) {
+                    if (startIndex + i >= input.size) {
+                        return@first rec.input.subList(i, rec.input.size).all { it.matches("none") }
+                    }
+                    if (!input[startIndex + i].params.key.matches(rec.input[i])) {
+                        return@first false
+                    }
+                }
+                return@first true
+            }.output.toInventoryItem()
         } catch (e: NoSuchElementException) {
             null
         }

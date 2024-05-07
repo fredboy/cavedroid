@@ -3,24 +3,28 @@
     "input": ["log_oak", "none", "none", "none", "none", "none", "none", "none", "none"],
     "count": 4
   },
+  "planks_spruce": {
+    "input": ["log_spruce", "none", "none", "none", "none", "none", "none", "none", "none"],
+    "count": 4
+  },
   "stick": {
-    "input": ["planks_oak", "none", "none", "planks_oak", "none", "none", "none", "none", "none"],
+    "input": ["planks.*", "none", "none", "planks.*", "none", "none", "none", "none", "none"],
     "count": 4
   },
   "wood_pickaxe": {
-    "input": ["planks_oak", "planks_oak", "planks_oak", "none", "stick", "none", "none", "stick", "none"],
+    "input": ["planks.*", "planks.*", "planks.*", "none", "stick", "none", "none", "stick", "none"],
     "count": 59
   },
   "wood_axe": {
-    "input": ["planks_oak", "planks_oak", "none", "planks_oak", "stick", "none", "none", "stick", "none"],
+    "input": ["planks.*", "planks.*", "none", "planks.*", "stick", "none", "none", "stick", "none"],
     "count": 60
   },
   "wood_sword": {
-    "input": ["none", "planks_oak", "none", "none", "planks_oak", "none", "none", "stick", "none"],
+    "input": ["planks.*", "none", "none", "planks.*", "none", "none", "stick", "none", "none"],
     "count": 60
   },
   "wood_shovel": {
-    "input": ["none", "planks_oak", "none", "none", "stick", "none", "none", "stick", "none"],
+    "input": ["planks.*", "none", "none", "stick", "none", "none", "stick", "none", "none"],
     "count": 59
   },
   "stone_pickaxe": {
@@ -32,15 +36,18 @@
     "count": 131
   },
   "stone_sword": {
-    "input": ["none", "cobblestone", "none", "none", "cobblestone", "none", "none", "stick", "none"],
+    "input": ["cobblestone", "none", "none", "cobblestone", "none", "none", "stick", "none", "none"],
     "count": 132
   },
   "stone_shovel": {
-    "input": ["none", "cobblestone", "none", "none", "stick", "none", "none", "stick", "none"],
+    "input": ["cobblestone", "none", "none", "stick", "none", "none", "stick", "none", "none"],
     "count": 131
   },
   "snow_block": {
     "input": ["snowball", "snowball", "none", "snowball", "snowball", "none", "none", "none", "none"],
     "count": 1
+  },
+  "crafting_table": {
+    "input": ["planks.*", "planks.*", "none", "planks.*", "planks.*", "none", "none", "none", "none"]
   }
 }

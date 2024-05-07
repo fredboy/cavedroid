@@ -43,7 +43,7 @@ class InventoryItem @JvmOverloads constructor(
 
     @JvmOverloads
     fun canBeAdded(count: Int = 1): Boolean {
-        return !item.isTool() && amount + count <= item.params.maxStack
+        return amount + count <= item.params.maxStack
     }
 
     private fun drawAmountText(spriteBatch: SpriteBatch, text: String,  x: Float, y: Float) {

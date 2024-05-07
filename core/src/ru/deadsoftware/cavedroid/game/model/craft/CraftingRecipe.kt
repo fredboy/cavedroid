@@ -4,7 +4,7 @@ import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
 import ru.deadsoftware.cavedroid.game.model.item.Item
 
 data class CraftingRecipe(
-    val input: List<Item>,
+    val input: List<Regex>,
     val output: CraftingResult
 )
 
