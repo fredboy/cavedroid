@@ -42,7 +42,6 @@ class Joystick(
         if (!active) {
             return Vector2.Zero
         }
-        println(stickVector)
         return Vector2(
             stickVector.x * value,
             stickVector.y * value

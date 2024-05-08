@@ -1,0 +1,8 @@
+{
+  "dyncam": {
+    "label": "Dynamic Camera: %%isUseDynamicCamera%%"
+  },
+  "back": {
+    "label": "Back"
+  }
+}

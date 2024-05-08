@@ -29,6 +29,8 @@ public class MainConfig {
     private float mWidth;
     private float mHeight;
 
+    private boolean mUseDynamicCamera = true;
+
     @Nullable
     private String mAssetsPackPath = null;
 
@@ -125,5 +127,13 @@ public class MainConfig {
 
     public void setJoystick(@CheckForNull Joystick joystick) {
         mJoystick = joystick;
+    }
+
+    public boolean isUseDynamicCamera() {
+        return mUseDynamicCamera;
+    }
+
+    public void setUseDynamicCamera(boolean useDynamicCamera) {
+        mUseDynamicCamera = useDynamicCamera;
     }
 }

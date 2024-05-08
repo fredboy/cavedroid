@@ -6,6 +6,9 @@
     "label": "Load Game",
     "type": 0
   },
+  "options": {
+    "label": "Settings"
+  },
   "quit": {
     "label": "Quit"
   }

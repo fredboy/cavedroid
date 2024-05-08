@@ -5,8 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.input.IGameInputHandler;
@@ -23,10 +22,11 @@ import ru.deadsoftware.cavedroid.game.objects.TouchButton;
 import ru.deadsoftware.cavedroid.game.render.IGameRenderer;
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager;
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager;
+import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.Renderer;
+import ru.deadsoftware.cavedroid.misc.utils.MeasureUnitsUtilsKt;
 import ru.deadsoftware.cavedroid.misc.utils.RenderingUtilsKt;
-import ru.deadsoftware.cavedroid.misc.utils.SpriteUtilsKt;
 
 import javax.annotation.CheckForNull;
 import javax.inject.Inject;
@@ -38,11 +38,14 @@ import java.util.Set;
 @GameScope
 public class GameRenderer extends Renderer {
 
+    private static final float CAMERA_SPEED = 72f;
+    private static final float MAX_CAM_DISTANCE_FROM_PLAYER = 64f;
     private static final float DRAG_THRESHOLD = 1f;
     private static final TouchButton nullButton = new TouchButton(null, -1, true);
 
     private final MainConfig mMainConfig;
     private final MobsController mMobsController;
+    private final GameWorld mGameWorld;
     private final List<IGameRenderer> mRenderers;
     private final CursorMouseInputHandler mCursorMouseInputHandler;
     private final MouseInputActionMapper mMouseInputActionMapper;
@@ -57,6 +60,7 @@ public class GameRenderer extends Renderer {
     @Inject
     GameRenderer(MainConfig mainConfig,
                  MobsController mobsController,
+                 GameWorld gameWorld,
                  Set<IGameRenderer> renderers,
                  CursorMouseInputHandler cursorMouseInputHandler,
                  MouseInputActionMapper mouseInputActionMapper,
@@ -69,6 +73,7 @@ public class GameRenderer extends Renderer {
 
         mMainConfig = mainConfig;
         mMobsController = mobsController;
+        mGameWorld = gameWorld;
         mRenderers = new ArrayList<>(renderers);
         mRenderers.sort(Comparator.comparingInt(IGameRenderer::getRenderLayer));
         mCursorMouseInputHandler = cursorMouseInputHandler;
@@ -89,10 +94,77 @@ public class GameRenderer extends Renderer {
 
     private float mTouchDownX, mTouchDownY;
 
-    private void updateCameraPosition() {
+    private void updateDynamicCameraPosition(float delta) {
         Player player = mMobsController.getPlayer();
+
+        float plTargetX = player.getX() + player.getWidth() / 2;
+        float plTargetY = player.getY() + player.getHeight() / 2;
+
+        float camTargetX, camTargetY;
+
+        if (player.controlMode == Player.ControlMode.WALK) {
+            camTargetX = plTargetX + Math.min(player.getVelocity().x * 2, getWidth() / 2);
+            camTargetY = plTargetY + player.getVelocity().y;
+        } else {
+            camTargetX = MeasureUnitsUtilsKt.getPx(player.cursorX) + MeasureUnitsUtilsKt.getPx(1) / 2;
+            camTargetY = MeasureUnitsUtilsKt.getPx(player.cursorY) + MeasureUnitsUtilsKt.getPx(1) / 2;
+        }
+
+        float camCenterX = getCamX() + getWidth() / 2;
+        float camCenterY = getCamY() + getHeight() / 2;
+
+        Vector2 moveVector = new Vector2(camTargetX - camCenterX, camTargetY - camCenterY);
+
+        float camX = getCamX();
+        float camY = getCamY();
+        float worldWidth = MeasureUnitsUtilsKt.getPx(mGameWorld.getWidth()) - getWidth() / 2;
+
+        if (moveVector.x >= worldWidth) {
+            camX += mGameWorld.getWidthPx();
+            moveVector.x -= mGameWorld.getWidthPx();
+        } else if (moveVector.x <= -worldWidth) {
+            camX -= mGameWorld.getWidthPx();
+            moveVector.x += mGameWorld.getWidthPx();
+        }
+
+        setCamPos(camX + moveVector.x * delta * 2, camY + moveVector.y * delta * 2);
+
+
+        camX = getCamX();
+        camY = getCamY();
+
+        if (camX + getWidth() / 2 > plTargetX + MAX_CAM_DISTANCE_FROM_PLAYER) {
+            camX = plTargetX + MAX_CAM_DISTANCE_FROM_PLAYER - getWidth() / 2;
+        }
+
+        if (camY + getHeight() / 2 > plTargetY + MAX_CAM_DISTANCE_FROM_PLAYER) {
+            camY = plTargetY + MAX_CAM_DISTANCE_FROM_PLAYER - getHeight() / 2;
+        }
+
+        if (camX + getWidth() / 2 < plTargetX - MAX_CAM_DISTANCE_FROM_PLAYER) {
+            camX = plTargetX - MAX_CAM_DISTANCE_FROM_PLAYER - getWidth() / 2;
+        }
+
+        if (camY + getHeight() / 2 < plTargetY - MAX_CAM_DISTANCE_FROM_PLAYER) {
+            camY = plTargetY - MAX_CAM_DISTANCE_FROM_PLAYER - getHeight() / 2;
+        }
+
+        setCamPos(camX, camY);
+    }
+
+    private void updateStaticCameraPosition() {
+        Player player = mMobsController.getPlayer();
+
         setCamPos(player.getX() + player.getWidth() / 2 - getWidth() / 2,
                 player.getY() + player.getHeight() / 2 - getHeight() / 2);
+    }
+
+    private void updateCameraPosition(float delta) {
+        if (mMainConfig.isUseDynamicCamera()) {
+            updateDynamicCameraPosition(delta);
+        } else {
+            updateStaticCameraPosition();
+        }
     }
 
     private float transformScreenX(int screenX) {
@@ -153,7 +225,13 @@ public class GameRenderer extends Renderer {
         float touchX = transformScreenX(screenX);
         float touchY = transformScreenY(screenY);
 
+        final Joystick joy = mMainConfig.getJoystick();
+
         if (mMainConfig.isTouch()) {
+            if (joy != null && joy.getActive() && joy.getPointer() == pointer) {
+                return onMouseActionEvent(screenX, screenY, nullButton.getCode(), true, pointer);
+            }
+
             TouchButton touchedKey = getTouchedKey(touchX, touchY);
             if (touchedKey.isMouse()) {
                 return onMouseActionEvent(screenX, screenY, touchedKey.getCode(), true, pointer);
@@ -262,7 +340,7 @@ public class GameRenderer extends Renderer {
 
     @Override
     public void render(float delta) {
-        updateCameraPosition();
+        updateCameraPosition(delta);
 
         if (mMainConfig.getJoystick() != null && mMainConfig.getJoystick().getActive()) {
             mMainConfig.getJoystick().updateState(

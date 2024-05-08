@@ -28,6 +28,7 @@ public class MenuMain extends Menu {
         HashMap<String, ButtonEventListener> map = new HashMap<>();
         map.put("new_game", mMenuInput::newGameClicked);
         map.put("load_game", mMenuInput::loadGameClicked);
+        map.put("options", mMenuInput::optionsClicked);
         map.put("quit", mMenuInput::quitClicked);
         return map;
     }
