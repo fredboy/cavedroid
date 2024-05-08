@@ -1,15 +1,16 @@
 package ru.deadsoftware.cavedroid.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ObjectMap;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.input.IGameInputHandler;
+import ru.deadsoftware.cavedroid.game.input.Joystick;
 import ru.deadsoftware.cavedroid.game.input.action.KeyboardInputAction;
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction;
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey;
@@ -24,6 +25,8 @@ import ru.deadsoftware.cavedroid.game.ui.TooltipManager;
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.Renderer;
+import ru.deadsoftware.cavedroid.misc.utils.RenderingUtilsKt;
+import ru.deadsoftware.cavedroid.misc.utils.SpriteUtilsKt;
 
 import javax.annotation.CheckForNull;
 import javax.inject.Inject;
@@ -35,6 +38,7 @@ import java.util.Set;
 @GameScope
 public class GameRenderer extends Renderer {
 
+    private static final float DRAG_THRESHOLD = 1f;
     private static final TouchButton nullButton = new TouchButton(null, -1, true);
 
     private final MainConfig mMainConfig;
@@ -47,6 +51,8 @@ public class GameRenderer extends Renderer {
     private final Set<IGameInputHandler<KeyboardInputAction>> mKeyboardInputHandlers;
     private final GameWindowsManager mGameWindowsManager;
     private final TooltipManager mTooltipManager;
+
+    private final TouchButton mouseLeftTouchButton, mouseRightTouchButton;
 
     @Inject
     GameRenderer(MainConfig mainConfig,
@@ -72,6 +78,11 @@ public class GameRenderer extends Renderer {
         mKeyboardInputHandlers = keyboardInputHandlers;
         mGameWindowsManager = gameWindowsManager;
         mTooltipManager = tooltipManager;
+
+        mouseLeftTouchButton = new TouchButton(new Rectangle(getWidth() / 2, 0f, getWidth() / 2, getHeight() / 2), Input.Buttons.LEFT, true);
+        mouseRightTouchButton = new TouchButton(new Rectangle(getWidth() / 2, getHeight() / 2, getWidth() / 2, getHeight() / 2), Input.Buttons.RIGHT, true);
+
+        mMainConfig.setJoystick(new Joystick(mMobsController.getPlayer().getSpeed()));
 
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f);
     }
@@ -107,14 +118,8 @@ public class GameRenderer extends Renderer {
         mCursorMouseInputHandler.handle(action);
 
         if (!mTooltipManager.getCurrentMouseTooltip().isEmpty()) {
-            final Label.LabelStyle style = new Label.LabelStyle(Assets.minecraftFont, Color.WHITE);
-            style.background = new TextureRegionDrawable(Assets.textureRegions.get("background"));
-            final Label label = new Label(mTooltipManager.getCurrentMouseTooltip(), style);
-            label.setX(screenX);
-            label.setY(screenY);
-//            label.setHeight(10f);
-//            label.setAlignment(Align.left, Align.top);
-            label.draw(spriter, 1f);
+            RenderingUtilsKt.drawString(spriter, mTooltipManager.getCurrentMouseTooltip(), screenX + 1, screenY + 1, Color.BLACK);
+            RenderingUtilsKt.drawString(spriter, mTooltipManager.getCurrentMouseTooltip(), screenX, screenY, Color.WHITE);
         }
     }
 
@@ -137,9 +142,9 @@ public class GameRenderer extends Renderer {
         return anyProcessed;
     }
 
-    private boolean onMouseActionEvent(int mouseX, int mouseY, int button, boolean touchUp) {
+    private boolean onMouseActionEvent(int mouseX, int mouseY, int button, boolean touchUp, int pointer) {
         @CheckForNull MouseInputAction action = mMouseInputActionMapper
-                .map((float) mouseX, (float) mouseY, getCameraViewport(), button, touchUp);
+                .map((float) mouseX, (float) mouseY, getCameraViewport(), button, touchUp, pointer);
         return handleMouseAction(action);
     }
 
@@ -151,13 +156,13 @@ public class GameRenderer extends Renderer {
         if (mMainConfig.isTouch()) {
             TouchButton touchedKey = getTouchedKey(touchX, touchY);
             if (touchedKey.isMouse()) {
-                return onMouseActionEvent(screenX, screenY, touchedKey.getCode(), true);
+                return onMouseActionEvent(screenX, screenY, touchedKey.getCode(), true, pointer);
             } else {
                 return keyUp(touchedKey.getCode());
             }
         }
 
-        return onMouseActionEvent(screenX, screenY, button, true);
+        return onMouseActionEvent(screenX, screenY, button, true, pointer);
     }
 
     private TouchButton getTouchedKey(float touchX, float touchY) {
@@ -170,6 +175,15 @@ public class GameRenderer extends Renderer {
                 return button;
             }
         }
+
+        if (mouseLeftTouchButton.getRect().contains(touchX, touchY)) {
+            return mouseLeftTouchButton;
+        }
+
+        if (mouseRightTouchButton.getRect().contains(touchX, touchY)) {
+            return mouseRightTouchButton;
+        }
+
         return nullButton;
     }
 
@@ -184,13 +198,13 @@ public class GameRenderer extends Renderer {
         if (mMainConfig.isTouch()) {
             TouchButton touchedKey = getTouchedKey(touchX, touchY);
             if (touchedKey.isMouse()) {
-                return onMouseActionEvent(screenX, screenY, touchedKey.getCode(), false);
+                return onMouseActionEvent(screenX, screenY, touchedKey.getCode(), false, pointer);
             } else {
                 return keyDown(touchedKey.getCode());
             }
         }
 
-        return onMouseActionEvent(screenX, screenY, button, false);
+        return onMouseActionEvent(screenX, screenY, button, false, pointer);
     }
 
     @Override
@@ -198,12 +212,12 @@ public class GameRenderer extends Renderer {
         float touchX = transformScreenX(screenX);
         float touchY = transformScreenY(screenY);
 
-        if (Math.abs(touchX - mTouchDownX) < 16 && Math.abs(touchY - mTouchDownY) < 16) {
+        if (Math.abs(touchX - mTouchDownX) < 16 && Math.abs(touchY - mTouchDownY) < DRAG_THRESHOLD) {
             return false;
         }
 
         @CheckForNull MouseInputAction action =
-                mMouseInputActionMapper.mapDragged(screenX, screenY, getCameraViewport());
+                mMouseInputActionMapper.mapDragged(screenX, screenY, getCameraViewport(), pointer);
         return handleMouseAction(action);
     }
 
@@ -249,6 +263,13 @@ public class GameRenderer extends Renderer {
     @Override
     public void render(float delta) {
         updateCameraPosition();
+
+        if (mMainConfig.getJoystick() != null && mMainConfig.getJoystick().getActive()) {
+            mMainConfig.getJoystick().updateState(
+                    transformScreenX(Gdx.input.getX(mMainConfig.getJoystick().getPointer())),
+                    transformScreenY(Gdx.input.getY(mMainConfig.getJoystick().getPointer()))
+            );
+        }
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 

@@ -41,20 +41,6 @@ class CursorMouseInputHandler @Inject constructor(
     private fun GameWorld.isCurrentBlockAutoselectable() =
         getForeMap(player.cursorX, player.cursorY).isAutoselectable
 
-    private fun checkCursorBounds() {
-        if (player.gameMode == 0) {
-            val minCursorX = player.mapX - SURVIVAL_CURSOR_RANGE
-            val maxCursorX = player.mapX + SURVIVAL_CURSOR_RANGE
-            val minCursorY = player.middleMapY - SURVIVAL_CURSOR_RANGE
-            val maxCursorY = player.middleMapY + SURVIVAL_CURSOR_RANGE
-
-            player.cursorX = MathUtils.clamp(player.cursorX, minCursorX, maxCursorX)
-            player.cursorY = MathUtils.clamp(player.cursorY, minCursorY, maxCursorY)
-        }
-
-        player.cursorY = MathUtils.clamp(player.cursorY, 0, gameWorld.height - 1)
-    }
-
     private fun setPlayerDirectionToCursor() {
         if (player.controlMode != Player.ControlMode.CURSOR) {
             return
@@ -137,7 +123,7 @@ class CursorMouseInputHandler @Inject constructor(
             !mainConfig.isTouch -> handleMouse(action)
         }
 
-        checkCursorBounds()
+        player.checkCursorBounds(gameWorld)
         setPlayerDirectionToCursor()
 
         if (player.cursorX != pastCursorX || player.cursorY != pastCursorY) {

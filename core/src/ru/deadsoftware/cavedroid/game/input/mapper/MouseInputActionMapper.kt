@@ -19,9 +19,10 @@ class MouseInputActionMapper @Inject constructor(
         mouseY: Float,
         cameraViewport: Rectangle,
         button: Int,
-        touchUp: Boolean
+        touchUp: Boolean,
+        pointer: Int,
     ): MouseInputAction? {
-        val actionKey = mapActionKey(button, touchUp) ?: return null
+        val actionKey = mapActionKey(button, touchUp, pointer) ?: return null
 
         return MouseInputAction(
             screenX = getScreenX(mouseX),
@@ -35,11 +36,12 @@ class MouseInputActionMapper @Inject constructor(
         mouseX: Float,
         mouseY: Float,
         cameraViewport: Rectangle,
+        pointer: Int,
     ): MouseInputAction {
         return MouseInputAction(
             screenX = getScreenX(mouseX),
             screenY = getScreenY(mouseY),
-            actionKey = MouseInputActionKey.Dragged,
+            actionKey = MouseInputActionKey.Dragged(pointer),
             cameraViewport = cameraViewport,
         )
     }
@@ -59,12 +61,12 @@ class MouseInputActionMapper @Inject constructor(
         )
     }
 
-    private fun mapActionKey(button: Int, touchUp: Boolean): MouseInputActionKey? {
+    private fun mapActionKey(button: Int, touchUp: Boolean, pointer: Int): MouseInputActionKey? {
         return when (button) {
             Input.Buttons.LEFT -> MouseInputActionKey.Left(touchUp)
             Input.Buttons.RIGHT -> MouseInputActionKey.Right(touchUp)
             Input.Buttons.MIDDLE -> MouseInputActionKey.Middle(touchUp)
-            -1 -> MouseInputActionKey.Touch(touchUp)
+            -1 -> MouseInputActionKey.Screen(touchUp, pointer)
             else -> null
         }
     }

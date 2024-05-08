@@ -34,12 +34,12 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
     }
 
     private fun checkStartDragConditions(action: MouseInputAction): Boolean {
-        return (action.actionKey is MouseInputActionKey.Touch) &&
+        return (action.actionKey is MouseInputActionKey.Screen) &&
                 !action.actionKey.touchUp && !gameWindowsManager.isDragging
     }
 
     private fun checkEndDragConditions(action: MouseInputAction): Boolean {
-        return action.actionKey is MouseInputActionKey.Touch &&
+        return action.actionKey is MouseInputActionKey.Screen &&
                 action.actionKey.touchUp && gameWindowsManager.isDragging
     }
 
@@ -75,7 +75,7 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
 
     override fun handle(action: MouseInputAction) {
         when (action.actionKey) {
-            is MouseInputActionKey.Touch -> handleStartOrEndDrag(action)
+            is MouseInputActionKey.Screen -> handleStartOrEndDrag(action)
             is MouseInputActionKey.Dragged -> handleDrag(action)
             is MouseInputActionKey.Scroll -> handleScroll(action)
             else -> return

@@ -25,7 +25,7 @@ class HotbarMouseInputHandler @Inject constructor(
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return buttonHoldTask?.isScheduled == true ||
-                ((action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Touch)
+                ((action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen)
                         && isInsideHotbar(action)
                         || action.actionKey is MouseInputActionKey.Scroll) &&
                 gameWindowsManager.getCurrentWindow() == GameUiWindow.NONE
@@ -75,7 +75,7 @@ class HotbarMouseInputHandler @Inject constructor(
             cancelHold()
         }
 
-        if (action.actionKey !is MouseInputActionKey.Left && action.actionKey !is MouseInputActionKey.Touch ) {
+        if (action.actionKey !is MouseInputActionKey.Left && action.actionKey !is MouseInputActionKey.Screen ) {
             if (action.actionKey is MouseInputActionKey.Scroll) {
                 handleScroll(action)
             }

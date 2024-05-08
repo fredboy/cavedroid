@@ -22,6 +22,7 @@ public class Player extends Mob {
 
     private static final float SPEED = 69.072f;
     private static final float JUMP_VELOCITY = -133.332f;
+    private static final int SURVIVAL_CURSOR_RANGE = 4;
 
     public static final int MAX_HEALTH = 20;
     public static final int INVENTORY_SIZE = 36;
@@ -126,6 +127,17 @@ public class Player extends Mob {
 
     @Override
     public void jump() {
+        if (!canJump()) {
+            if (gameMode == 1) {
+                if (isFlyMode()) {
+                    setFlyMode(false);
+                } else {
+                    getVelocity().y = 0f;
+                    setFlyMode(true);
+                }
+            }
+            return;
+        }
         mVelocity.y = JUMP_VELOCITY;
     }
 
@@ -232,6 +244,20 @@ public class Player extends Mob {
             return;
         }
         super.heal(heal);
+    }
+
+    public void checkCursorBounds(GameWorld gameWorld) {
+        if (gameMode == 0) {
+            int minCursorX = getMapX() - SURVIVAL_CURSOR_RANGE;
+            int maxCursorX = getMapX() + SURVIVAL_CURSOR_RANGE;
+            int minCursorY = getMiddleMapY() - SURVIVAL_CURSOR_RANGE;
+            int maxCursorY = getMiddleMapY() + SURVIVAL_CURSOR_RANGE;
+
+            cursorX = MathUtils.clamp(cursorX, minCursorX, maxCursorX);
+            cursorY = MathUtils.clamp(cursorY, minCursorY, maxCursorY);
+        }
+
+        cursorY = MathUtils.clamp(cursorY, 0, gameWorld.getHeight() - 1);
     }
 
     private void drawItem(SpriteBatch spriteBatch, float x, float y, float anim) {

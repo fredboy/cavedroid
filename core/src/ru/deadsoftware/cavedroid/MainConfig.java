@@ -1,6 +1,7 @@
 package ru.deadsoftware.cavedroid;
 
 import ru.deadsoftware.cavedroid.game.GameUiWindow;
+import ru.deadsoftware.cavedroid.game.input.Joystick;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
@@ -14,6 +15,9 @@ public class MainConfig {
 
     @CheckForNull
     private MainComponent mMainComponent;
+
+    @CheckForNull
+    private Joystick mJoystick;
 
     private GameUiWindow mGameUiWindow;
     private String mGameFolder;
@@ -112,5 +116,14 @@ public class MainConfig {
 
     public void setAssetsPackPath(@Nullable String assetsPackPath) {
         mAssetsPackPath = assetsPackPath;
+    }
+
+    @CheckForNull
+    public Joystick getJoystick() {
+        return mJoystick;
+    }
+
+    public void setJoystick(@CheckForNull Joystick joystick) {
+        mJoystick = joystick;
     }
 }

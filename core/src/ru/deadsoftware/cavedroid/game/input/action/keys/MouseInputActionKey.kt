@@ -4,12 +4,18 @@ sealed interface MouseInputActionKey {
 
     val touchUp: Boolean
 
+    sealed interface Touch : MouseInputActionKey {
+        val pointer: Int
+    }
+
     data object None : MouseInputActionKey {
         override val touchUp: Boolean
             get() = throw IllegalAccessException("not applicable for mouse move action")
     }
 
-    data object Dragged : MouseInputActionKey {
+    data class Dragged(
+        override val pointer: Int
+    ) : Touch {
         override val touchUp: Boolean
             get() = throw IllegalAccessException("not applicable for mouse dragged action")
     }
@@ -26,9 +32,10 @@ sealed interface MouseInputActionKey {
         override val touchUp: Boolean
     ) : MouseInputActionKey
 
-    data class Touch(
-        override val touchUp: Boolean
-    ) : MouseInputActionKey
+    data class Screen(
+        override val touchUp: Boolean,
+        override val pointer: Int,
+    ) : Touch
 
     data class Scroll(
         val amountX: Float,

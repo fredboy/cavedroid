@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.multibindings.IntoSet
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
+import ru.deadsoftware.cavedroid.game.input.handler.touch.JoystickInputHandler
 import ru.deadsoftware.cavedroid.game.input.handler.mouse.*
 
 @Module
@@ -70,6 +71,13 @@ object MouseInputHandlersModule {
     @IntoSet
     @GameScope
     fun bindSelectCraftingInventoryItemMouseInputHandler(handler: SelectCraftingInventoryItemMouseInputHandler): IGameInputHandler<MouseInputAction> {
+        return handler
+    }
+
+    @Binds
+    @IntoSet
+    @GameScope
+    fun bindJoystickInputHandler(handler: JoystickInputHandler): IGameInputHandler<MouseInputAction> {
         return handler
     }
 }

@@ -28,7 +28,7 @@ class SelectCraftingInventoryItemMouseInputHandler @Inject constructor(
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.getCurrentWindow() == GameUiWindow.CRAFTING_TABLE &&
                 isInsideWindow(action, survivalWindowTexture) &&
-                (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Right || action.actionKey is MouseInputActionKey.Touch)
+                (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Right || action.actionKey is MouseInputActionKey.Screen)
                 && action.actionKey.touchUp
     }
 
@@ -73,7 +73,7 @@ class SelectCraftingInventoryItemMouseInputHandler @Inject constructor(
             itemIndex -= 36
         }
 
-        if (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Touch) {
+        if (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) {
             onLeftCLick(mobsController.player.inventory.items as MutableList<InventoryItem?>, window, itemIndex)
         } else {
             onRightClick(mobsController.player.inventory.items as MutableList<InventoryItem?>, window, itemIndex)
@@ -89,7 +89,7 @@ class SelectCraftingInventoryItemMouseInputHandler @Inject constructor(
         val window = gameWindowsManager.currentWindow as CraftingInventoryWindow
         val index = xOnCraft + yOnCraft * GameWindowsConfigs.Crafting.craftGridSize
 
-        if (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Touch) {
+        if (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) {
             onLeftCLick(window.craftingItems, window, index)
         } else {
             onRightClick(window.craftingItems, window, index)

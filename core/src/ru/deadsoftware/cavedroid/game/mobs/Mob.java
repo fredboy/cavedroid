@@ -99,17 +99,21 @@ public abstract class Mob extends Rectangle implements Serializable {
     }
 
     protected final void updateAnimation(float delta) {
-        if (mVelocity.x != 0f || Math.abs(mAnim) > mAnimDelta * delta) {
-            mAnim += mAnimDelta * delta;
+        final float velocityMultiplier = (Math.abs(getVelocity().x) / getSpeed());
+        final float animMultiplier = (velocityMultiplier == 0f ? 1f : velocityMultiplier) * delta;
+        final float maxAnim = 60f * (velocityMultiplier == 0f ? 1f : velocityMultiplier);
+
+        if (mVelocity.x != 0f || Math.abs(mAnim) > mAnimDelta * animMultiplier) {
+            mAnim += mAnimDelta * animMultiplier;
         } else {
             mAnim = 0;
         }
 
-        if (mAnim > 60f) {
-            mAnim = 60f;
+        if (mAnim > maxAnim) {
+            mAnim = maxAnim;
             mAnimDelta = -ANIMATION_SPEED;
-        } else if (mAnim < -60f) {
-            mAnim = -60f;
+        } else if (mAnim < -maxAnim) {
+            mAnim = -maxAnim;
             mAnimDelta = ANIMATION_SPEED;
         }
 

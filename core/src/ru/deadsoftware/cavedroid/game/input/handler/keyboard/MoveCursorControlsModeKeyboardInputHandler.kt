@@ -1,6 +1,5 @@
 package ru.deadsoftware.cavedroid.game.input.handler.keyboard
 
-import com.badlogic.gdx.math.MathUtils
 import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.input.IGameInputHandler
@@ -27,21 +26,6 @@ class MoveCursorControlsModeKeyboardInputHandler @Inject constructor(
                         action.actionKey is KeyboardInputActionKey.Down)
     }
 
-    private fun checkCursorBounds() {
-        val player = mobsController.player
-        if (player.gameMode == 0) {
-            val minCursorX = player.mapX - SURVIVAL_CURSOR_RANGE
-            val maxCursorX = player.mapX + SURVIVAL_CURSOR_RANGE
-            val minCursorY = player.middleMapY - SURVIVAL_CURSOR_RANGE
-            val maxCursorY = player.middleMapY + SURVIVAL_CURSOR_RANGE
-
-            player.cursorX = MathUtils.clamp(player.cursorX, minCursorX, maxCursorX)
-            player.cursorY = MathUtils.clamp(player.cursorY, minCursorY, maxCursorY)
-        }
-
-        player.cursorY = MathUtils.clamp(player.cursorY, 0, gameWorld.height - 1)
-    }
-
     override fun handle(action: KeyboardInputAction) {
         val player = mobsController.player
 
@@ -53,7 +37,7 @@ class MoveCursorControlsModeKeyboardInputHandler @Inject constructor(
             else -> return
         }
 
-        checkCursorBounds()
+        player.checkCursorBounds(gameWorld);
     }
 
     companion object {

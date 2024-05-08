@@ -41,6 +41,9 @@ public class Assets {
     public static Map<String, Texture> blockTextures = new HashMap<>();
     public static Map<String, Texture> itemTextures = new HashMap<>();
 
+    public static Sprite joyBackground;
+    public static Sprite joyStick;
+
     public static void dispose() {
         minecraftFont.dispose();
         loadedTextures.forEach(Texture::dispose);
@@ -188,6 +191,11 @@ public class Assets {
         loadAllPngsFromDirInto(blocksDir, blockTextures);
     }
 
+    private static void loadJoystick(AssetLoader assetLoader) {
+        joyStick = new Sprite(loadTexture(assetLoader.getAssetHandle("joy_stick.png")));
+        joyBackground = new Sprite(loadTexture(assetLoader.getAssetHandle("joy_background.png")));
+    }
+
     public static void load(final AssetLoader assetLoader) {
         loadMob(assetLoader, playerSprite, "char");
         loadMob(assetLoader, pigSprite, "pig");
@@ -196,6 +204,7 @@ public class Assets {
         loadBlocks(assetLoader);
         loadItems(assetLoader);
         loadTouchButtonsFromJSON(assetLoader);
+        loadJoystick(assetLoader);
         setPlayerHeadOrigin();
         minecraftFont = new BitmapFont(assetLoader.getAssetHandle("font.fnt"), true);
         minecraftFont.getData().setScale(.375f);
