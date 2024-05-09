@@ -5,7 +5,7 @@ if [[ ! $1 ]]; then
   exit
 fi
 
-./require_clean_work_tree "$0"
+./require-clean-work-tree.sh "$0" || exit 1
 
 release_dir="release-$1"
 
