@@ -22,6 +22,7 @@ class UseEmptyBucketAction @Inject constructor(
         }
         gameWorld.resetForeMap(x, y)
 
+        @Suppress("REDUNDANT_ELSE_IN_WHEN")
         val filled = when (foregroundBlock) {
             is Block.Lava -> gameItemsHolder.getItem("bucket_lava")
             is Block.Water -> gameItemsHolder.getItem("bucket_water")

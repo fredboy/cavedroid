@@ -38,7 +38,6 @@ class ItemMapper @Inject constructor(
 
     private fun mapCommonParams(key: String, dto: ItemDto): CommonItemParams {
         return CommonItemParams(
-            id = dto.id,
             key = key,
             name = dto.name,
             inHandSpriteOrigin = SpriteOrigin(

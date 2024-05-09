@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ItemDto(
-    @Deprecated("numeric ids will be removed") @SerialName("id") val id: Int? = null,
     @SerialName("name") val name: String,
     @SerialName("type") val type: String = "normal",
     @SerialName("texture") val texture: String,

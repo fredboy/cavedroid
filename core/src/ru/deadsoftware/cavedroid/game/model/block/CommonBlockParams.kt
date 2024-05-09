@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture
 import ru.deadsoftware.cavedroid.game.model.item.Item
 
 data class CommonBlockParams(
-    @Deprecated("numeric id's will be removed") val id: Int?,
     val key: String,
     val collisionMargins: BlockMargins,
     val hitPoints: Int,

@@ -17,6 +17,7 @@ class Drop @JvmOverloads constructor(
     val velocity = getInitialVelocity()
     var pickedUp = false
 
+    @Suppress("UNNECESSARY_LATEINIT")
     @Transient
     lateinit var item: Item
         private set

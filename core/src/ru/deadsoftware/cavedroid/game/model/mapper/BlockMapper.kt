@@ -30,7 +30,6 @@ class BlockMapper @Inject constructor(
 
     private fun mapCommonParams(key: String, dto: BlockDto): CommonBlockParams {
         return CommonBlockParams(
-            id = dto.id,
             key = key,
             collisionMargins = BlockMargins(
                 left = dto.left,

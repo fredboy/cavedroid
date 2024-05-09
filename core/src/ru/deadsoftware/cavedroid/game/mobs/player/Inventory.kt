@@ -14,9 +14,11 @@ class Inventory(
     tooltipManager: TooltipManager,
 ) : Serializable {
 
+    @Suppress("UNNECESSARY_LATEINIT")
     @Transient
     private lateinit var tooltipManager: TooltipManager
 
+    @Suppress("UNNECESSARY_LATEINIT")
     @Transient
     private lateinit var fallbackItem: InventoryItem
 
