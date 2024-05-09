@@ -16,7 +16,7 @@ class ToggleControlsModeKeyboardInputHandler @Inject constructor(
 ) : IGameInputHandler<KeyboardInputAction> {
 
     override fun checkConditions(action: KeyboardInputAction): Boolean {
-        return action.actionKey is KeyboardInputActionKey.SwitchControlsMode && action.isKeyDown
+        return action.actionKey is KeyboardInputActionKey.SwitchControlsMode && !action.isKeyDown
                 && mainConfig.isTouch
     }
 

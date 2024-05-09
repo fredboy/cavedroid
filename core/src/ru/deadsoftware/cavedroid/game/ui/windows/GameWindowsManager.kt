@@ -30,14 +30,14 @@ class GameWindowsManager @Inject constructor(
 
     fun openInventory() {
         if (mobsController.player.gameMode == 1) {
-            currentWindow = CreativeInventoryWindow(GameUiWindow.CREATIVE_INVENTORY)
+            currentWindow = CreativeInventoryWindow()
         } else {
-            currentWindow = SurvivalInventoryWindow(GameUiWindow.SURVIVAL_INVENTORY)
+            currentWindow = SurvivalInventoryWindow()
         }
     }
 
     fun openCrafting() {
-        currentWindow = CraftingInventoryWindow(GameUiWindow.CRAFTING_TABLE)
+        currentWindow = CraftingInventoryWindow()
     }
 
     fun closeWindow() {

@@ -1,6 +1,5 @@
 package ru.deadsoftware.cavedroid.game.input.handler.touch
 
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.TimeUtils
 import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.GameScope
@@ -95,6 +94,10 @@ class JoystickInputHandler @Inject constructor(
     }
 
     private fun handleDragged() {
+        if (!active) {
+            return
+        }
+
         if (mobsController.player.controlMode == Player.ControlMode.CURSOR) {
             handleCursor()
             return

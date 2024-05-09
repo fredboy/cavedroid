@@ -27,7 +27,7 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.getCurrentWindow() != GameUiWindow.NONE &&
                 (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
-                !action.actionKey.touchUp &&
+                action.actionKey.touchUp &&
                 !isInsideWindow(action, getCurrentWindowTexture())
     }
 
@@ -43,13 +43,12 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
     override fun handle(action: MouseInputAction) {
         val selectedItem = gameWindowsManager.currentWindow?.selectedItem
         if (selectedItem != null) {
-            for (i in 1 .. selectedItem.amount) {
                 dropController.addDrop(
                     /* x = */ mobsController.player.x + (32f * mobsController.player.direction.basis),
                     /* y = */ mobsController.player.y,
-                    /* item = */ selectedItem.item
+                    /* item = */ selectedItem.item,
+                    /* count = */ selectedItem.amount,
                 )
-            }
             gameWindowsManager.currentWindow?.selectedItem = null
         }
         gameWindowsManager.closeWindow()

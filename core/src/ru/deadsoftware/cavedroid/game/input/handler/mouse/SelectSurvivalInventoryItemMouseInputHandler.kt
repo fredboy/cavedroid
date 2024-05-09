@@ -10,6 +10,7 @@ import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideWindow
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
+import ru.deadsoftware.cavedroid.game.objects.DropController
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.SurvivalInventoryWindow
@@ -21,6 +22,7 @@ class SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val mobsController: MobsController,
     private val gameItemsHolder: GameItemsHolder,
+    private val dropController: DropController,
 ) : IGameInputHandler<MouseInputAction> {
 
     private val survivalWindowTexture get() = requireNotNull(Assets.textureRegions["survival"])
@@ -29,38 +31,7 @@ class SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
         return gameWindowsManager.getCurrentWindow() == GameUiWindow.SURVIVAL_INVENTORY &&
                 isInsideWindow(action, survivalWindowTexture) &&
                 (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Right || action.actionKey is MouseInputActionKey.Screen)
-                && action.actionKey.touchUp
-    }
-
-    private fun onLeftCLick(items: MutableList<InventoryItem?>, window: SurvivalInventoryWindow, index: Int) {
-        val selectedItem = window.selectedItem
-        val clickedItem = items[index]
-
-        if (clickedItem != null && selectedItem != null && items[index]!!.item == selectedItem.item &&
-            items[index]!!.amount + selectedItem.amount <= selectedItem.item.params.maxStack) {
-            items[index]!!.amount += selectedItem.amount
-            window.selectedItem = null
-            return
-        }
-
-        val item = items[index]
-        items[index] = selectedItem ?: gameItemsHolder.fallbackItem.toInventoryItem()
-        window.selectedItem = item
-    }
-
-    private fun onRightClick(items: MutableList<InventoryItem?>, window: SurvivalInventoryWindow, index: Int) {
-        val clickedItem = items[index]
-        val selectedItem = window.selectedItem
-            ?.takeIf { clickedItem == null || clickedItem.item.isNone() || it.item == items[index]!!.item && items[index]!!.amount + 1 < it.item.params.maxStack }
-            ?: return
-
-        val newItem = selectedItem.item.toInventoryItem((clickedItem?.takeIf { !it.item.isNone() }?.amount ?: 0) + 1)
-        items[index] = newItem
-        selectedItem.amount --
-
-        if (selectedItem.amount <= 0) {
-            window.selectedItem = null
-        }
+                && (action.actionKey.touchUp || action.actionKey is MouseInputActionKey.Screen)
     }
 
     private fun handleInsideInventoryGrid(action: MouseInputAction, xOnGrid: Int, yOnGrid: Int) {
@@ -69,14 +40,24 @@ class SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
         var itemIndex = ((xOnGrid.toInt() + yOnGrid.toInt() * GameWindowsConfigs.Survival.itemsInRow))
         itemIndex += GameWindowsConfigs.Survival.hotbarCells
 
-        if (itemIndex >= 36) {
-            itemIndex -= 36
+        if (itemIndex >= mobsController.player.inventory.size) {
+            itemIndex -= mobsController.player.inventory.size
         }
 
-        if (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) {
-            onLeftCLick(mobsController.player.inventory.items as MutableList<InventoryItem?>, window, itemIndex)
+        if (action.actionKey is MouseInputActionKey.Screen) {
+            if (!action.actionKey.touchUp) {
+                window.onLeftCLick(mobsController.player.inventory.items as MutableList<InventoryItem?>, gameItemsHolder, itemIndex, action.actionKey.pointer)
+            } else {
+                if (action.actionKey.pointer == window.selectItemPointer) {
+                    window.onLeftCLick(mobsController.player.inventory.items as MutableList<InventoryItem?>, gameItemsHolder, itemIndex, action.actionKey.pointer)
+                } else {
+                    window.onRightClick(mobsController.player.inventory.items as MutableList<InventoryItem?>, itemIndex)
+                }
+            }
+        } else if (action.actionKey is MouseInputActionKey.Left) {
+            window.onLeftCLick(mobsController.player.inventory.items as MutableList<InventoryItem?>, gameItemsHolder, itemIndex)
         } else {
-            onRightClick(mobsController.player.inventory.items as MutableList<InventoryItem?>, window, itemIndex)
+            window.onRightClick(mobsController.player.inventory.items as MutableList<InventoryItem?>, itemIndex)
         }
 
         Gdx.app.debug(
@@ -89,10 +70,20 @@ class SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
         val window = gameWindowsManager.currentWindow as SurvivalInventoryWindow
         val index = xOnCraft + yOnCraft * GameWindowsConfigs.Crafting.craftGridSize // this is crafting on purpose!!
 
-        if (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) {
-            onLeftCLick(window.craftingItems, window, index)
+        if (action.actionKey is MouseInputActionKey.Screen) {
+            if (!action.actionKey.touchUp) {
+                window.onLeftCLick(window.craftingItems, gameItemsHolder, index, action.actionKey.pointer)
+            } else {
+                if (action.actionKey.pointer == window.selectItemPointer) {
+                    window.onLeftCLick(window.craftingItems, gameItemsHolder, index, action.actionKey.pointer)
+                } else {
+                    window.onRightClick(window.craftingItems, index)
+                }
+            }
+        } else if (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) {
+            window.onLeftCLick(window.craftingItems, gameItemsHolder, index)
         } else {
-            onRightClick(window.craftingItems, window, index)
+            window.onRightClick(window.craftingItems, index)
         }
 
         window.craftResult =
@@ -131,7 +122,7 @@ class SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
             handleInsideInventoryGrid(action, xOnGrid.toInt(), yOnGrid.toInt())
         } else if (isInsideCraftGrid) {
             handleInsideCraft(action, xOnCraft.toInt(), yOnCraft.toInt())
-        } else if (isInsideCraftResult) {
+        } else if (isInsideCraftResult && action.actionKey.touchUp) {
             val selectedItem = window.selectedItem
             if (selectedItem == null || selectedItem.item.isNone() ||
                 (selectedItem.item == window.craftResult?.item && selectedItem.amount + (window.craftResult?.amount ?: 0) <= selectedItem.item.params.maxStack)) {
@@ -149,6 +140,16 @@ class SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
                 }
                 window.craftResult = gameItemsHolder.craftItem(window.craftingItems
                     .map { it?.item ?: gameItemsHolder.fallbackItem })
+            }
+        } else if (action.actionKey.touchUp) {
+            window.selectedItem?.let { selectedItem ->
+                dropController.addDrop(
+                    /* x = */ mobsController.player.x + (32f * mobsController.player.direction.basis),
+                    /* y = */ mobsController.player.y,
+                    /* item = */ selectedItem.item,
+                    /* count = */ selectedItem.amount,
+                )
+                window.selectedItem = null
             }
         }
 
