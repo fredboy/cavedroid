@@ -26,7 +26,7 @@ public class GameWorld {
     private final Block[][] mForeMap;
     private final Block[][] mBackMap;
 
-    private final WorldGeneratorConfig mWorldConfig =  WorldGeneratorConfig.Companion.getDefault();
+    private final WorldGeneratorConfig mWorldConfig = WorldGeneratorConfig.Companion.getDefault();
 
     @Inject
     public GameWorld(DropController dropController,
@@ -97,23 +97,37 @@ public class GameWorld {
 
     private Block getMap(int x, int y, int layer) {
         Block map = mGameItemsHolder.getFallbackBlock();
-        try {
-            x = transformX(x);
-            map = (layer == 0) ? mForeMap[x][y] : mBackMap[x][y];
-        } catch (ArrayIndexOutOfBoundsException ignored) {
+
+        if (y < 0 || y >= getHeight()) {
+            return map;
         }
+
+        x = transformX(x);
+
+        if (x < 0 || x >= getWidth()) {
+            return map;
+        }
+
+        map = (layer == 0) ? mForeMap[x][y] : mBackMap[x][y];
+
         return map;
     }
 
     private void setMap(int x, int y, int layer, Block value) {
-        try {
-            x = transformX(x);
-            if (layer == 0) {
-                mForeMap[x][y] = value;
-            } else {
-                mBackMap[x][y] = value;
-            }
-        } catch (ArrayIndexOutOfBoundsException ignored) {
+        if (y < 0 || y >= getHeight()) {
+            return;
+        }
+
+        x = transformX(x);
+
+        if (x < 0 || x >= getWidth()) {
+            return;
+        }
+
+        if (layer == 0) {
+            mForeMap[x][y] = value;
+        } else {
+            mBackMap[x][y] = value;
         }
     }
 
@@ -183,7 +197,7 @@ public class GameWorld {
 
     private boolean shouldDrop(Block block) {
         final Item item = mMobsController.getPlayer().inventory.getActiveItem().getItem();
-        int toolLevel = item.isTool() ? ((Item.Tool)item).getLevel() : 0;
+        int toolLevel = item.isTool() ? ((Item.Tool) item).getLevel() : 0;
         if (item.isTool() && block.getParams().getToolType() != item.getClass()) {
             toolLevel = 0;
         }

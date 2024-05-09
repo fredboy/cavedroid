@@ -141,16 +141,6 @@ class SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
                 window.craftResult = gameItemsHolder.craftItem(window.craftingItems
                     .map { it?.item ?: gameItemsHolder.fallbackItem })
             }
-        } else if (action.actionKey.touchUp) {
-            window.selectedItem?.let { selectedItem ->
-                dropController.addDrop(
-                    /* x = */ mobsController.player.x + (32f * mobsController.player.direction.basis),
-                    /* y = */ mobsController.player.y,
-                    /* item = */ selectedItem.item,
-                    /* count = */ selectedItem.amount,
-                )
-                window.selectedItem = null
-            }
         }
 
     }

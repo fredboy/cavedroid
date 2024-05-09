@@ -31,7 +31,7 @@ class JoystickInputHandler @Inject constructor(
         set(value) {
             if (!value) {
                 resetVelocity()
-                if (TimeUtils.timeSinceMillis(activateTimeMs) < 100L &&
+                if (TimeUtils.timeSinceMillis(activateTimeMs) < 200L &&
                     mobsController.player.controlMode != Player.ControlMode.CURSOR) {
                     mobsController.player.jump()
                 }
@@ -76,9 +76,12 @@ class JoystickInputHandler @Inject constructor(
     private fun handleCursor() {
         val joystick = mainConfig.joystick ?: return
 
-        if (TimeUtils.timeSinceMillis(cursorTimeoutMs) < 200L) {
+        if (TimeUtils.timeSinceMillis(cursorTimeoutMs) < 150L) {
             return
         }
+
+        val pastCursorX = mobsController.player.cursorX
+        val pastCursorY = mobsController.player.cursorY
 
         if (Math.abs(joystick.activeX - joystick.centerX) >= Joystick.RADIUS / 2) {
             mobsController.player.cursorX += if (joystick.activeX > joystick.centerX) 1 else -1
@@ -91,6 +94,10 @@ class JoystickInputHandler @Inject constructor(
         }
 
         mobsController.player.checkCursorBounds(gameWorld)
+
+        if (mobsController.player.cursorX != pastCursorX || mobsController.player.cursorY != pastCursorY) {
+            mobsController.player.blockDamage = 0f
+        }
     }
 
     private fun handleDragged() {
@@ -105,6 +112,10 @@ class JoystickInputHandler @Inject constructor(
 
         val joystick = mainConfig.joystick ?: return
         val joyVector = joystick.getVelocityVector()
+
+        if (mobsController.player.isFlyMode) {
+            joyVector.scl(2f);
+        }
 
         mobsController.player.velocity.x = joyVector.x
 

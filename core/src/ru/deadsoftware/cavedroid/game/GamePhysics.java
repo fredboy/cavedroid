@@ -56,7 +56,7 @@ public class GamePhysics {
         int blY = (int) (mob.getY() + mob.getHeight() - 8);
         Block block = mGameWorld.getForeMap(blX / 16, blY / 16);
 
-        if (checkColl(new Rectangle(blX, mob.getY() - 18, mob.getWidth(), mob.getHeight()))) {
+        if (checkColl(new Rectangle(blX, mob.getY() - 18, mob.getWidth(), mob.getHeight())) != null) {
             return false;
         }
 
@@ -64,7 +64,11 @@ public class GamePhysics {
                 (mob.getY() + mob.getHeight()) - block.getRectangle(blX / 16, blY / 16).y > 8);
     }
 
-    private boolean checkColl(Rectangle rect) {
+    /**
+     * @return colliding rect or null if no collision
+     */
+    @CheckForNull
+    private Rectangle checkColl(Rectangle rect) {
         int minX = (int) ((rect.x + rect.width / 2) / 16) - 4;
         int minY = (int) ((rect.y + rect.height / 2) / 16) - 4;
         int maxX = (int) ((rect.x + rect.width / 2) / 16) + 4;
@@ -86,14 +90,15 @@ public class GamePhysics {
                 }
                 block = mGameWorld.getForeMap(x, y);
                 if (block.hasCollision()) {
-                    if (Intersector.overlaps(rect, block.getRectangle(x, y))) {
-                        return true;
+                    final Rectangle blockRect = block.getRectangle(x, y);
+                    if (Intersector.overlaps(rect, blockRect)) {
+                        return blockRect;
                     }
                 }
             }
         }
 
-        return false;
+        return null;
     }
 
     private Block getBlock(Rectangle rect) {
@@ -162,11 +167,11 @@ public class GamePhysics {
         drop.x += dropVelocity.x * delta;
         drop.y += dropVelocity.y * delta;
 
-        if (checkColl(drop)) {
+        if (checkColl(drop) != null) {
             dropVelocity.setZero();
             do {
                 drop.y--;
-            } while (checkColl(drop));
+            } while (checkColl(drop) != null);
         }
 
         if (playerMagnetTarget != null) {
@@ -175,16 +180,21 @@ public class GamePhysics {
     }
 
     private void mobXColl(Mob mob) {
-        if (checkColl(mob)) {
-            if (mob.canJump() && !mob.isFlyMode()) {
-                mob.y -= 8;
+        if (mob.getVelocity().x == 0f) {
+            return;
+        }
+
+        @CheckForNull Rectangle collidingRect = checkColl(mob);
+
+        if (collidingRect != null) {
+            if (mob.canJump() && !mob.isFlyMode() && collidingRect.y >= mob.y + mob.height - 8) {
+                mob.y = collidingRect.y - mob.height;
+                return;
             }
 
-            if (checkColl(mob)) {
-                if (mob.canJump() && !mob.isFlyMode()) {
-                    mob.y += 8;
-                }
+            collidingRect = checkColl(mob);
 
+            if (collidingRect != null) {
                 int d = 0;
 
                 if (mob.getVelocity().x < 0) {
@@ -193,11 +203,16 @@ public class GamePhysics {
                     d = -1;
                 }
 
-                mob.x = MathUtils.round(mob.getX());
-
-                while (checkColl(mob)) {
-                    mob.x += d;
+                if (d < 0) {
+                    mob.x = collidingRect.x - mob.width;
+                } else {
+                    mob.x = collidingRect.x + collidingRect.width;
                 }
+
+//                mob.x = MathUtils.round(mob.getX());
+//                while (checkColl(mob) != null) {
+//                    mob.x += d;
+//                }
 
                 if (mob.canJump()) {
                     mob.changeDir();
@@ -209,7 +224,8 @@ public class GamePhysics {
     }
 
     private void mobYColl(Mob mob) {
-        if (checkColl(mob)) {
+        @CheckForNull final Rectangle collidingRect = checkColl(mob);
+        if (collidingRect != null) {
             int d = -1;
 
             if (mob.getVelocity().y < 0) {
@@ -226,17 +242,24 @@ public class GamePhysics {
                 }
             }
 
-            mob.y = MathUtils.round(mob.getY());
-
-            while (checkColl(mob)) {
-                mob.y += d;
+            if (d < 0) {
+                mob.y = collidingRect.y - mob.height;
+            } else {
+                mob.y = collidingRect.y + collidingRect.height;
             }
+
+
+//            mob.y = MathUtils.round(mob.getY());
+//
+//            while (checkColl(mob)) {
+//                mob.y += d;
+//            }
 
             mob.getVelocity().y = 0;
 
         } else {
             mob.y += 1;
-            mob.setCanJump(checkColl(mob));
+            mob.setCanJump(checkColl(mob) != null);
             mob.y -= 1;
         }
 

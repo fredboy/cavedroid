@@ -47,23 +47,27 @@ class Inventory(
         tooltipManager.showHotbarTooltip(activeItem.item.params.name)
     }
 
-    val activeItem get() = items[activeSlot]
+    val activeItem get() = _items[activeSlot]
 
     fun initItems(gameItemsHolder: GameItemsHolder, tooltipManager: TooltipManager) {
         this.tooltipManager = tooltipManager
         fallbackItem = gameItemsHolder.fallbackItem.toInventoryItem()
-        items.forEach { item ->
+        _items.forEach { item ->
             item.init(gameItemsHolder)
         }
     }
 
     private fun getItemPickSlot(item: Item): Int {
-        for (i in items.indices) {
-            val inventoryItem = items[i]
+        for (i in _items.indices) {
+            val inventoryItem = _items[i]
 
             if (item == inventoryItem.item && inventoryItem.canBeAdded()) {
                 return i
             }
+        }
+
+        for (i in _items.indices) {
+            val inventoryItem = _items[i]
 
             if (inventoryItem.item.isNone()) {
                 return i
@@ -79,7 +83,7 @@ class Inventory(
 
     fun pickDrop(drop: Drop) {
         val slot = getItemPickSlot(drop.item).takeIf { it >= 0 } ?: return
-        val inventoryItem = items[slot]
+        val inventoryItem = _items[slot]
 
         if (inventoryItem.item == drop.item) {
             inventoryItem.add(drop.amount)

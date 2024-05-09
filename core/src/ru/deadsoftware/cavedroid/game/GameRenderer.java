@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.input.IGameInputHandler;
 import ru.deadsoftware.cavedroid.game.input.Joystick;
@@ -57,6 +58,11 @@ public class GameRenderer extends Renderer {
 
     private final TouchButton mouseLeftTouchButton, mouseRightTouchButton;
 
+    private final Vector2 mCamCenterToPlayer = new Vector2();
+
+    private float mTouchDownX, mTouchDownY;
+    private long mCameraDelayMs = 0L;
+
     @Inject
     GameRenderer(MainConfig mainConfig,
                  MobsController mobsController,
@@ -92,13 +98,14 @@ public class GameRenderer extends Renderer {
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f);
     }
 
-    private float mTouchDownX, mTouchDownY;
-
     private void updateDynamicCameraPosition(float delta) {
         Player player = mMobsController.getPlayer();
 
         float plTargetX = player.getX() + player.getWidth() / 2;
         float plTargetY = player.getY() + player.getHeight() / 2;
+
+        float camCenterX = getCamX() + getWidth() / 2;
+        float camCenterY = getCamY() + getHeight() / 2;
 
         float camTargetX, camTargetY;
 
@@ -110,10 +117,19 @@ public class GameRenderer extends Renderer {
             camTargetY = MeasureUnitsUtilsKt.getPx(player.cursorY) + MeasureUnitsUtilsKt.getPx(1) / 2;
         }
 
-        float camCenterX = getCamX() + getWidth() / 2;
-        float camCenterY = getCamY() + getHeight() / 2;
-
         Vector2 moveVector = new Vector2(camTargetX - camCenterX, camTargetY - camCenterY);
+
+        if (player.controlMode == Player.ControlMode.WALK && player.getVelocity().isZero()) {
+            mCameraDelayMs = TimeUtils.millis();
+            mCamCenterToPlayer.x = plTargetX - camCenterX;
+            mCamCenterToPlayer.y = plTargetY - camCenterY;
+        }
+
+        if (TimeUtils.timeSinceMillis(mCameraDelayMs) < 500L && !player.getVelocity().isZero()) {
+            updateStaticCameraPosition(plTargetX - mCamCenterToPlayer.x,
+                    camCenterY + moveVector.y * delta * 2);
+            return;
+        }
 
         float camX = getCamX();
         float camY = getCamY();
@@ -152,11 +168,15 @@ public class GameRenderer extends Renderer {
         setCamPos(camX, camY);
     }
 
+    private void updateStaticCameraPosition(float targetX, float targetY) {
+        setCamPos(targetX - getWidth() / 2, targetY - getHeight() / 2);
+    }
+
     private void updateStaticCameraPosition() {
         Player player = mMobsController.getPlayer();
 
-        setCamPos(player.getX() + player.getWidth() / 2 - getWidth() / 2,
-                player.getY() + player.getHeight() / 2 - getHeight() / 2);
+        updateStaticCameraPosition(player.getX() + player.getWidth() / 2,
+                player.getY() + player.getHeight() / 2);
     }
 
     private void updateCameraPosition(float delta) {
