@@ -10,6 +10,7 @@ import ru.deadsoftware.cavedroid.game.model.block.Block;
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem;
 import ru.deadsoftware.cavedroid.game.model.item.Item;
 import ru.deadsoftware.cavedroid.game.objects.Drop;
+import ru.deadsoftware.cavedroid.game.objects.DropController;
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Assets;
@@ -81,6 +82,11 @@ public class Player extends Mob {
         if (item.getAmount() <= 0) {
             setCurrentInventorySlotItem(gameItemsHolder.getFallbackItem());
         }
+    }
+
+    public void dropCurrentItem(DropController dropController) {
+        final InventoryItem activeItem = inventory.getActiveItem();
+
     }
 
     private Vector2 getSpawnPoint(GameWorld gameWorld, GameItemsHolder itemsHolder) {

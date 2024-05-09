@@ -82,9 +82,9 @@ class Inventory(
         val inventoryItem = items[slot]
 
         if (inventoryItem.item == drop.item) {
-            inventoryItem.add()
+            inventoryItem.add(drop.amount)
         } else {
-            _items[slot] = drop.item.toInventoryItem()
+            _items[slot] = drop.item.toInventoryItem(drop.amount)
             if (slot == activeSlot) {
                 showCurrentItemTooltip()
             }
@@ -106,10 +106,16 @@ class Inventory(
     }
 
     @JvmOverloads
-    fun decreaseCurrentItemAmount(count: Int = 1) {
-        activeItem.subtract(count)
-        if (activeItem.amount <= 0) {
-            _items[activeSlot] = fallbackItem
+    fun decreaseItemAmount(slot: Int, count: Int = 1) {
+        val item = _items[slot]
+        item.subtract(count)
+        if (item.amount <= 0) {
+            _items[slot] = fallbackItem
         }
+    }
+
+    @JvmOverloads
+    fun decreaseCurrentItemAmount(count: Int = 1) {
+        decreaseItemAmount(activeSlot, count)
     }
 }

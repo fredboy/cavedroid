@@ -25,32 +25,25 @@ class DropItemKeyboardInputHandler @Inject constructor(
                 !mobsController.player.inventory.activeItem.item.isNone()
     }
 
-    private fun createDrop(item: Item, playerX: Float, playerY: Float) {
-        dropController.addDrop(playerX + ((DROP_DISTANCE - Drop.DROP_SIZE / 2) * mobsController.player.direction.basis), playerY, item)
+    private fun createDrop(item: Item, playerX: Float, playerY: Float, amount: Int) {
+        dropController.addDrop(
+            /* x = */ playerX + ((DROP_DISTANCE - Drop.DROP_SIZE / 2) * mobsController.player.direction.basis),
+            /* y = */ playerY,
+            /* item = */ item,
+            /* count = */ amount
+        )
     }
 
     override fun handle(action: KeyboardInputAction) {
         val player = mobsController.player
         val currentItem = player.inventory.activeItem
+        val dropAmount =  if (currentItem.item.isTool()) currentItem.amount else 1
 
-        if (!currentItem.item.isTool()) {
-            createDrop(currentItem.item, player.x, player.y)
-        } else {
-            for (i in 1..currentItem.amount) {
-                createDrop(currentItem.item, player.x, player.y)
-            }
-        }
-
-        player.inventory.decreaseCurrentItemAmount(
-            if (currentItem.item.isTool()) {
-                currentItem.amount
-            } else {
-                1
-            }
-        )
+        createDrop(currentItem.item, player.x, player.y, dropAmount)
+        player.inventory.decreaseCurrentItemAmount(dropAmount)
     }
 
     companion object {
-        private const val DROP_DISTANCE = 20f
+        const val DROP_DISTANCE = 20f
     }
 }

@@ -7,9 +7,13 @@ import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.input.IGameInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
+import ru.deadsoftware.cavedroid.game.input.handler.keyboard.DropItemKeyboardInputHandler.Companion.DROP_DISTANCE
 import ru.deadsoftware.cavedroid.game.input.isInsideHotbar
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.mobs.player.Player
+import ru.deadsoftware.cavedroid.game.model.item.Item
+import ru.deadsoftware.cavedroid.game.objects.Drop
+import ru.deadsoftware.cavedroid.game.objects.DropController
 import ru.deadsoftware.cavedroid.misc.Assets
 import javax.inject.Inject
 
@@ -17,6 +21,7 @@ import javax.inject.Inject
 class HotbarMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val mobsController: MobsController,
+    private val dropController: DropController,
 ) : IGameInputHandler<MouseInputAction> {
 
     private val hotbarTexture get() = requireNotNull(Assets.textureRegions["hotbar"])
@@ -36,15 +41,37 @@ class HotbarMouseInputHandler @Inject constructor(
         buttonHoldTask = null
     }
 
-    private fun handleHold() {
-        buttonHoldTask = null
-        gameWindowsManager.openInventory()
+    private fun createDrop(item: Item, playerX: Float, playerY: Float, amount: Int) {
+        dropController.addDrop(
+            /* x = */ playerX + ((DROP_DISTANCE - Drop.DROP_SIZE / 2) * mobsController.player.direction.basis),
+            /* y = */ playerY,
+            /* item = */ item,
+            /* count = */ amount
+        )
+    }
+
+    private fun getActionSlot(action: MouseInputAction): Int {
+        return ((action.screenX -
+                (action.cameraViewport.width / 2 - hotbarTexture.regionWidth / 2))
+                / HOTBAR_CELL_WIDTH).toInt()
+    }
+
+    private fun handleHold(action: MouseInputAction) {
+//        buttonHoldTask = null
+//        gameWindowsManager.openInventory()
+        val player = mobsController.player
+        val actionSlot = getActionSlot(action)
+        val currentItem = player.inventory.items[actionSlot]
+        val dropAmount = if (currentItem.item.isTool()) currentItem.amount else 1
+
+        createDrop(currentItem.item, player.x, player.y, dropAmount)
+        player.inventory.decreaseItemAmount(actionSlot, dropAmount)
     }
 
     private fun handleDown(action: MouseInputAction) {
         buttonHoldTask = object : Timer.Task() {
             override fun run() {
-                handleHold()
+                handleHold(action)
             }
         }
 
@@ -52,10 +79,7 @@ class HotbarMouseInputHandler @Inject constructor(
     }
 
     private fun handleUp(action: MouseInputAction) {
-        mobsController.player.inventory.activeSlot =
-            ((action.screenX -
-                    (action.cameraViewport.width / 2 - hotbarTexture.regionWidth / 2))
-                    / HOTBAR_CELL_WIDTH).toInt()
+        mobsController.player.inventory.activeSlot = getActionSlot(action)
     }
 
     private fun handleScroll(action: MouseInputAction) {
@@ -65,7 +89,7 @@ class HotbarMouseInputHandler @Inject constructor(
         mobsController.player.inventory.activeSlot += action.actionKey.amountY.toInt()
         if (mobsController.player.inventory.activeSlot < 0) {
             mobsController.player.inventory.activeSlot = Player.HOTBAR_SIZE - 1
-        } else if (mobsController.player.inventory.activeSlot >= Player.HOTBAR_SIZE){
+        } else if (mobsController.player.inventory.activeSlot >= Player.HOTBAR_SIZE) {
             mobsController.player.inventory.activeSlot = 0
         }
     }
@@ -75,7 +99,12 @@ class HotbarMouseInputHandler @Inject constructor(
             cancelHold()
         }
 
-        if (action.actionKey !is MouseInputActionKey.Left && action.actionKey !is MouseInputActionKey.Screen ) {
+        if (buttonHoldTask != null && buttonHoldTask?.isScheduled != true) {
+            buttonHoldTask = null
+            return
+        }
+
+        if (action.actionKey !is MouseInputActionKey.Left && action.actionKey !is MouseInputActionKey.Screen) {
             if (action.actionKey is MouseInputActionKey.Scroll) {
                 handleScroll(action)
             }

@@ -6,10 +6,11 @@ import com.badlogic.gdx.math.Vector2
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.model.item.Item
 
-class Drop(
+class Drop @JvmOverloads constructor(
     x: Float,
     y: Float,
     _item: Item,
+    val amount: Int = 1,
 ) : Rectangle(x, y, DROP_SIZE, DROP_SIZE) {
 
     val itemKey = _item.params.key

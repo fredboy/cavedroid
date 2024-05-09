@@ -27,16 +27,14 @@ public class DropController implements Serializable {
     }
 
     public void addDrop(float x, float y, Item item) {
-        if (item.isNone()) {
-            return;
-        }
-        mDrops.add(new Drop(x, y, item));
+        addDrop(x, y, item, 1);
     }
 
     public void addDrop(float x, float y, Item item, int count) {
-        for (int i = 0 ; i < count; i++) {
-            addDrop(x, y, item);
+        if (item.isNone()) {
+            return;
         }
+        mDrops.add(new Drop(x, y, item, count));
     }
 
     public int getSize() {
