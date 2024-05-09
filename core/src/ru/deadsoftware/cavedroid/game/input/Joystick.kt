@@ -65,9 +65,9 @@ class Joystick(
     }
 
     companion object {
-        const val RADIUS = 24f
+        const val RADIUS = 48f
         const val SIZE = RADIUS * 2
-        const val STICK_SIZE = 16f
+        const val STICK_SIZE = 32f
     }
 
 }

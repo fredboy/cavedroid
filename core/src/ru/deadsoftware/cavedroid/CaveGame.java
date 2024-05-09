@@ -42,7 +42,7 @@ public class CaveGame extends Game {
     }
 
     private void initConfig() {
-        int width = mTouch ? 320 : 480;
+        int width = 480;
         int height = (int) (width * ((float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth()));
 
         mMainConfig.setMainComponent(mMainComponent);
