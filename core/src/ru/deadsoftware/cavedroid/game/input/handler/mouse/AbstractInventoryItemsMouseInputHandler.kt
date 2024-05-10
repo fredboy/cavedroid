@@ -9,7 +9,6 @@ import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideWindow
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem.Companion.isNoneOrNull
-import ru.deadsoftware.cavedroid.game.objects.container.Furnace
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.AbstractInventoryWindow
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.AbstractInventoryWindowWithCraftGrid
@@ -88,7 +87,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         } else {
             if (action.actionKey is MouseInputActionKey.Screen) {
                 if (!action.actionKey.touchUp) {
-                    window.onLeftCLick(items, gameItemsHolder, Furnace.RESULT_INDEX, action.actionKey.pointer)
+                    window.onLeftCLick(items, gameItemsHolder, index, action.actionKey.pointer)
                 }
             } else if (action.actionKey is MouseInputActionKey.Left) {
                 window.onLeftCLick(items, gameItemsHolder, index)
