@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.mobs.player.Inventory
 import ru.deadsoftware.cavedroid.misc.Assets
 import ru.deadsoftware.cavedroid.misc.utils.drawSprite
 import ru.deadsoftware.cavedroid.misc.utils.drawString
@@ -28,19 +27,27 @@ class InventoryItem @JvmOverloads constructor(
         }
 
     @Transient
-    lateinit var item: Item
-        private set
+    private var _item: Item? = null
+
+    var item: Item
+        get() {
+            requireNotNull(_item) { "_item is null" }
+            return _item.takeIf { amount > 0 } ?: throw IllegalArgumentException("Accessing item with zero amount")
+        }
+        private set (value) {
+            _item = value
+        }
 
     @JvmOverloads
-    constructor(_item: Item, amount: Int = 1) : this(_item.params.key, amount) {
-        item = _item
+    constructor(item: Item, amount: Int = 1) : this(item.params.key, amount) {
+        _item = item
     }
 
     fun init(gameItemsHolder: GameItemsHolder) {
-        if (this::item.isInitialized) {
+        if (_item != null) {
             return
         }
-        item = gameItemsHolder.getItem(itemKey)
+        _item = gameItemsHolder.getItem(itemKey)
     }
 
     @JvmOverloads

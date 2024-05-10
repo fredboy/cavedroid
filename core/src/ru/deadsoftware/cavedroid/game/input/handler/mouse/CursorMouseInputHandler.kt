@@ -56,6 +56,7 @@ class CursorMouseInputHandler @Inject constructor(
     private fun handleWalkTouch() {
         player.cursorX = player.mapX + player.direction.basis
         player.cursorY = player.upperMapY
+        player.headRotation = 0f
 
         for (i in 1..2) {
             if (gameWorld.isCurrentBlockAutoselectable()) {

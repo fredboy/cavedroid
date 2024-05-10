@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavedroid.game.ui.windows.inventory
 
+import com.badlogic.gdx.math.MathUtils
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
@@ -46,14 +47,25 @@ abstract class AbstractInventoryWindow {
         selectItemPointer = pointer
     }
 
-    fun onRightClick(items: MutableList<InventoryItem>, index: Int) {
+    fun onRightClick(items: MutableList<InventoryItem>, gameItemsHolder: GameItemsHolder, index: Int) {
         val clickedItem = items[index]
         val selectedItem = selectedItem
-            ?.takeIf {
-                !clickedItem.isNoneOrNull() || clickedItem.item.isNone() ||
-                        it.item == items[index].item && items[index].amount + 1 < it.item.params.maxStack
+
+        if (selectedItem.isNoneOrNull() && !clickedItem.isNoneOrNull()) {
+            val half = InventoryItem(clickedItem.item, MathUtils.ceil(clickedItem.amount.toFloat() / 2f))
+            this.selectedItem = half
+            clickedItem.subtract(half.amount)
+            if (clickedItem.amount == 0) {
+                items[index] = gameItemsHolder.fallbackItem.toInventoryItem()
             }
-            ?: return
+            return
+        }
+
+        if (selectedItem == null ||
+            (!clickedItem.isNoneOrNull() && selectedItem.item != clickedItem.item) ||
+            !clickedItem.canBeAdded()) {
+            return
+        }
 
         val newItem = selectedItem.item.toInventoryItem(
             (clickedItem.takeIf { !it.item.isNone() }?.amount ?: 0) + 1

@@ -59,13 +59,13 @@ abstract class AbstractInventoryItemsMouseInputHandler(
                 if (action.actionKey.pointer == window.selectItemPointer) {
                     window.onLeftCLick(items, gameItemsHolder, index, action.actionKey.pointer)
                 } else {
-                    window.onRightClick(items, index)
+                    window.onRightClick(items, gameItemsHolder, index)
                 }
             }
         } else if (action.actionKey is MouseInputActionKey.Left) {
             window.onLeftCLick(items, gameItemsHolder, index)
         } else {
-            window.onRightClick(items, index)
+            window.onRightClick(items, gameItemsHolder, index)
         }
     }
 
