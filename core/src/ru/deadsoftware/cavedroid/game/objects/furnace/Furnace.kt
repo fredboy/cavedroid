@@ -94,7 +94,7 @@ class Furnace : Serializable {
 
         }
 
-        if (currentFuel != null && burnProgress >= 1f) {
+        if (currentFuel?.isNone() == false && burnProgress >= 1f) {
             if (canSmelt()) {
                 startBurning()
             } else {

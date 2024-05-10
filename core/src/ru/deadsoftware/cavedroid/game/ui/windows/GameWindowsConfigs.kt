@@ -67,7 +67,7 @@ object GameWindowsConfigs {
         const val craftOffsetX = 30f
         const val craftOffsetY = 18f
 
-        const val craftResultOffsetX = 128f
+        const val craftResultOffsetX = 124f
         const val craftResultOffsetY = 36f
     }
 
@@ -90,7 +90,7 @@ object GameWindowsConfigs {
         const val smeltFuelMarginLeft = 56f
         const val smeltFuelMarginTop = 54f
 
-        const val smeltResultOffsetX = 128f
+        const val smeltResultOffsetX = 116f
         const val smeltResultOffsetY = 36f
 
         const val fuelBurnMarginLeft = 56f
