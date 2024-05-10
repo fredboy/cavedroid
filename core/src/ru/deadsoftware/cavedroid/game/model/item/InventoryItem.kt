@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
+import ru.deadsoftware.cavedroid.game.mobs.player.Inventory
 import ru.deadsoftware.cavedroid.misc.Assets
 import ru.deadsoftware.cavedroid.misc.utils.drawSprite
 import ru.deadsoftware.cavedroid.misc.utils.drawString
@@ -119,4 +120,7 @@ class InventoryItem @JvmOverloads constructor(
         }
     }
 
+    companion object {
+        fun InventoryItem?.isNoneOrNull() = this?.item == null || this.item.isNone()
+    }
 }

@@ -10,7 +10,7 @@ import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideWindow
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
-import ru.deadsoftware.cavedroid.game.objects.DropController
+import ru.deadsoftware.cavedroid.game.objects.drop.DropController
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.CraftingInventoryWindow

@@ -7,7 +7,8 @@ import ru.deadsoftware.cavedroid.game.input.IGameInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.KeyboardInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.KeyboardInputActionKey
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.objects.DropController
+import ru.deadsoftware.cavedroid.game.objects.drop.DropController
+import ru.deadsoftware.cavedroid.game.objects.furnace.FurnaceController
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
@@ -17,6 +18,7 @@ class PauseGameKeyboardInputHandler @Inject constructor(
     private val dropController: DropController,
     private val mobsController: MobsController,
     private val gameWorld: GameWorld,
+    private val furnaceController: FurnaceController,
 ) : IGameInputHandler<KeyboardInputAction> {
 
     override fun checkConditions(action: KeyboardInputAction): Boolean {
@@ -24,7 +26,7 @@ class PauseGameKeyboardInputHandler @Inject constructor(
     }
 
     override fun handle(action: KeyboardInputAction) {
-        GameSaver.save(mainConfig, dropController, mobsController, gameWorld)
+        GameSaver.save(mainConfig, dropController, mobsController, furnaceController, gameWorld)
         mainConfig.caveGame.quitGame()
     }
 }

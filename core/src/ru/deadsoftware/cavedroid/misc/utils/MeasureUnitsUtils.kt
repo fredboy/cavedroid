@@ -15,4 +15,4 @@ val Int.px get() = this * 16f
 /**
  * Converts this value in PIXELS into blocks
  */
-val Float.bl get() = MathUtils.floor(this / 16)
+val Float.bl get() = MathUtils.floor(this / 16f)

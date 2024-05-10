@@ -3,7 +3,7 @@ package ru.deadsoftware.cavedroid.game.mobs.player
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
 import ru.deadsoftware.cavedroid.game.model.item.Item
-import ru.deadsoftware.cavedroid.game.objects.Drop
+import ru.deadsoftware.cavedroid.game.objects.drop.Drop
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager
 import java.io.Serializable
 

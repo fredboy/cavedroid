@@ -70,4 +70,35 @@ object GameWindowsConfigs {
         const val craftResultOffsetX = 128f
         const val craftResultOffsetY = 36f
     }
+
+    data object Furnace {
+        const val itemsGridMarginLeft = 8f
+        const val itemsGridMarginTop = 84f
+
+        const val itemsGridRowHeight = 18f
+        const val itemsGridColWidth = 18f
+
+        const val itemsInRow = 9
+        const val itemsInCol = 5
+
+        const val hotbarOffsetFromBottom = 24f
+        const val hotbarCells = 9
+
+        const val smeltInputMarginLeft = 56f
+        const val smeltInputMarginTop = 18f
+
+        const val smeltFuelMarginLeft = 56f
+        const val smeltFuelMarginTop = 54f
+
+        const val smeltResultOffsetX = 128f
+        const val smeltResultOffsetY = 36f
+
+        const val fuelBurnMarginLeft = 56f
+        const val fuelBurnMarginTop = 36f
+        const val fuelBurnHeight = 14f
+
+        const val progressMarginLeft = 79f
+        const val progressMarginTop = 34f
+        const val progressWidth = 24f
+    }
 }

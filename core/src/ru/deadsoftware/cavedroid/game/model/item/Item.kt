@@ -46,8 +46,8 @@ sealed class Item {
     }
 
     fun isUsable(): Boolean {
-        contract { returns(true) implies (this@Item is Placeable) }
-        return this is Placeable
+        contract { returns(true) implies (this@Item is Usable) }
+        return this is Usable
     }
 
     @JvmOverloads
@@ -66,10 +66,6 @@ sealed class Item {
         abstract val level: Int
     }
 
-    sealed class Usable : Item() {
-        abstract val useActionKey: String
-    }
-
     sealed class Placeable : Item() {
         abstract val block: BlockModel
         override val sprite: Sprite get() = block.sprite
@@ -81,6 +77,12 @@ sealed class Item {
         override val sprite: Sprite
             get() = throw IllegalAccessException("Trying to get sprite of None")
     }
+
+    data class Usable(
+        override val params: CommonItemParams,
+        override val sprite: Sprite,
+        val useActionKey: String
+    ) : Item()
 
     data class Block(
         override val params: CommonItemParams,
@@ -134,11 +136,5 @@ sealed class Item {
         override val blockDamageMultiplier: Float,
         override val level: Int,
     ) : Tool()
-    
-    data class Bucket(
-        override val params: CommonItemParams,
-        override val sprite: Sprite,
-        override val useActionKey: String
-    ) : Usable()
 
 }

@@ -44,6 +44,9 @@ public class Assets {
     public static Sprite joyBackground;
     public static Sprite joyStick;
 
+    public static Sprite furnaceBurn;
+    public static Sprite furnaceProgress;
+
     public static void dispose() {
         minecraftFont.dispose();
         loadedTextures.forEach(Texture::dispose);
@@ -196,6 +199,11 @@ public class Assets {
         joyBackground = new Sprite(loadTexture(assetLoader.getAssetHandle("joy_background.png")));
     }
 
+    private static void loadFurnace(AssetLoader assetLoader) {
+        furnaceBurn = new Sprite(textureRegions.get("furnace_burn"));
+        furnaceProgress = new Sprite(textureRegions.get("furnace_progress"));
+    }
+
     public static void load(final AssetLoader assetLoader) {
         loadMob(assetLoader, playerSprite, "char");
         loadMob(assetLoader, pigSprite, "pig");
@@ -205,6 +213,7 @@ public class Assets {
         loadItems(assetLoader);
         loadTouchButtonsFromJSON(assetLoader);
         loadJoystick(assetLoader);
+        loadFurnace(assetLoader);
         setPlayerHeadOrigin();
         minecraftFont = new BitmapFont(assetLoader.getAssetHandle("font.fnt"), true);
         minecraftFont.getData().setScale(.375f);

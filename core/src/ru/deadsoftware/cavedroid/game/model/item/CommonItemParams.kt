@@ -7,4 +7,6 @@ data class CommonItemParams(
     val name: String,
     val inHandSpriteOrigin: SpriteOrigin,
     val maxStack: Int,
+    val burningTimeMs: Long?,
+    val smeltProductKey: String?,
 )

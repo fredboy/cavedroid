@@ -3,7 +3,7 @@ package ru.deadsoftware.cavedroid.game.debug
 import com.badlogic.gdx.Gdx
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.objects.DropController
+import ru.deadsoftware.cavedroid.game.objects.drop.DropController
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 

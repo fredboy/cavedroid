@@ -768,6 +768,18 @@
       "hp": 60,
       "tool_level": 1,
       "tool_type": "shovel"
+    },
+    "furnace": {
+      "hp": 1050,
+      "collision": true,
+      "transparent": false,
+      "drop": "furnace",
+      "texture": "furnace",
+      "animated": true,
+      "frames": 2,
+      "tool_level": 1,
+      "tool_type": "pickaxe",
+      "meta": "furnace"
     }
   },
   "items": {
@@ -794,32 +806,43 @@
     "cobblestone": {
       "name": "Cobblestone",
       "type": "block",
-      "texture": "cobblestone"
+      "texture": "cobblestone",
+      "smelt_product": "stone"
     },
     "planks_oak": {
       "name": "Oak Planks",
       "type": "block",
-      "texture": "planks_oak"
+      "texture": "planks_oak",
+      "burning_time": 15000
     },
     "sapling_oak": {
       "name": "Oak Sapling",
       "type": "block",
-      "texture": "sapling_oak"
+      "texture": "sapling_oak",
+      "burning_time": 5000
     },
     "planks_spruce": {
       "name": "Spruce Planks",
       "type": "block",
-      "texture": "planks_spruce"
+      "texture": "planks_spruce",
+      "burning_time": 15000
     },
     "crafting_table": {
       "name": "Crafting Table",
       "type": "block",
-      "texture": "crafting_table"
+      "texture": "crafting_table",
+      "burning_time": 15000
+    },
+    "furnace": {
+      "name": "Furnace",
+      "type": "block",
+      "texture": "furnace_off"
     },
     "sapling_spruce": {
       "name": "Spruce Sapling",
       "type": "block",
-      "texture": "sapling_spruce"
+      "texture": "sapling_spruce",
+      "burning_time": 5000
     },
     "bedrock": {
       "name": "Bedrock",
@@ -829,7 +852,8 @@
     "sand": {
       "name": "Sand",
       "type": "block",
-      "texture": "sand"
+      "texture": "sand",
+      "smelt_product": "glass"
     },
     "gravel": {
       "name": "Gravel",
@@ -839,27 +863,33 @@
     "gold_ore": {
       "name": "Golden Ore",
       "type": "block",
-      "texture": "gold_ore"
+      "texture": "gold_ore",
+      "smelt_product": "gold_ingot"
     },
     "iron_ore": {
       "name": "Iron Ore",
       "type": "block",
-      "texture": "iron_ore"
+      "texture": "iron_ore",
+      "smelt_product": "iron_ingot"
     },
     "coal_ore": {
       "name": "Coal Ore",
       "type": "block",
-      "texture": "coal_ore"
+      "texture": "coal_ore",
+      "smelt_product": "coal"
     },
     "diamond_ore": {
       "name": "Diamond Ore",
       "type": "block",
-      "texture": "diamond_ore"
+      "texture": "diamond_ore",
+      "smelt_product": "diamond"
     },
     "log_oak": {
       "name": "Wood",
       "type": "block",
-      "texture": "log_oak"
+      "texture": "log_oak",
+      "burning_time": 15000,
+      "smelt_product": "charcoal"
     },
     "leaves_oak": {
       "name": "Leaves",
@@ -869,7 +899,9 @@
     "log_spruce": {
       "name": "Spruce",
       "type": "block",
-      "texture": "log_spruce"
+      "texture": "log_spruce",
+      "burning_time": 15000,
+      "smelt_product": "charcoal"
     },
     "leaves_spruce": {
       "name": "Spruce Leaves",
@@ -884,7 +916,8 @@
     "lapis_ore": {
       "name": "Lapis Ore",
       "type": "block",
-      "texture": "lapis_ore"
+      "texture": "lapis_ore",
+      "smelt_product": "lapis_lazuli"
     },
     "lapis_block": {
       "name": "Lapis Block",
@@ -911,7 +944,8 @@
       "name": "Dead Bush",
       "type": "block",
       "texture": "deadbush",
-      "origin_x": 0.5
+      "origin_x": 0.5,
+      "burning_time": 5000
     },
     "bricks": {
       "name": "Bricks",
@@ -1056,14 +1090,16 @@
       "type": "slab",
       "texture": "oak_slab",
       "top_slab_block": "oak_slab_top",
-      "bottom_slab_block": "oak_slab_bottom"
+      "bottom_slab_block": "oak_slab_bottom",
+      "burn_time": 7500
     },
     "spruce_slab": {
       "name": "Spruce Slab",
       "type": "slab",
       "texture": "spruce_slab",
       "top_slab_block": "spruce_slab_top",
-      "bottom_slab_block": "spruce_slab_bottom"
+      "bottom_slab_block": "spruce_slab_bottom",
+      "burn_time": 7500
     },
     "cobblestone_slab": {
       "name": "Cobblestone Slab",
@@ -1108,7 +1144,8 @@
     },
     "stick": {
       "name": "Stick",
-      "texture": "stick"
+      "texture": "stick",
+      "burning_time": 5000
     },
     "wood_sword": {
       "name": "Wooden Sword",
@@ -1116,7 +1153,8 @@
       "texture": "wood_sword",
       "origin_x": 0.125,
       "tool_level": 1,
-      "max_stack": 60
+      "max_stack": 60,
+      "burning_time": 10000
     },
     "stone_sword": {
       "name": "Stone Sword",
@@ -1197,7 +1235,8 @@
       "texture": "wood_pickaxe",
       "origin_x": 0.125,
       "tool_level" : 1,
-      "max_stack": 59
+      "max_stack": 59,
+      "burning_time": 10000
     },
     "stone_pickaxe": {
       "name": "Stone Pickaxe",
@@ -1238,7 +1277,8 @@
       "texture": "wood_axe",
       "origin_x": 0.125,
       "tool_level" : 1,
-      "max_stack": 60
+      "max_stack": 60,
+      "burning_time": 10000
     },
     "stone_axe": {
       "name": "Stone Axe",
@@ -1283,7 +1323,7 @@
     },
     "bucket_empty": {
       "name": "Empty Bucket",
-      "type": "bucket",
+      "type": "usable",
       "texture": "bucket_empty",
       "origin_x": 0.25,
       "action_key": "use_empty_bucket",
@@ -1291,7 +1331,7 @@
     },
     "bucket_water": {
       "name": "Water Bucket",
-      "type": "bucket",
+      "type": "usable",
       "texture": "bucket_water",
       "origin_x": 0.25,
       "action_key": "use_water_bucket",
@@ -1299,16 +1339,65 @@
     },
     "bucket_lava": {
       "name": "Lava Bucket",
-      "type": "bucket",
+      "type": "usable",
       "texture": "bucket_lava",
       "origin_x": 0.25,
       "action_key": "use_lava_bucket",
-      "max_stack": 1
+      "max_stack": 1,
+      "burning_time": 1000000
     },
     "snowball": {
       "name": "Snowball",
+      "type": "usable",
       "texture": "snowball",
+      "action_key": "use_snow_ball_action",
       "max_stack": 16
+    },
+    "coal": {
+      "name": "Coal",
+      "texture": "coal",
+      "burning_time": 80000,
+      "origin_x": 0.25
+    },
+    "charcoal": {
+      "name": "Charcoal",
+      "texture": "charcoal",
+      "burning_time": 80000,
+      "origin_x": 0.25
+    },
+    "iron_ingot": {
+      "name": "Iron Ingot",
+      "texture": "iron_ingot",
+      "origin_x": 0.5
+    },
+    "gold_ingot": {
+      "name": "Gold Ingot",
+      "texture": "gold_ingot",
+      "origin_x": 0.5
+    },
+    "diamond": {
+      "name": "Diamond",
+      "texture": "diamond",
+      "origin_x": 0.5
+    },
+    "lapis_lazuli": {
+      "name": "Lapis Lazuli",
+      "texture": "lapis_lazuli",
+      "origin_x": 0.5
+    },
+    "bed": {
+      "name": "Bed",
+      "type": "usable",
+      "texture": "bed",
+      "action_key": "use_bed_action"
+    },
+    "spawn_egg_pig": {
+      "name": "Pig Spawn Egg",
+      "type": "usable",
+      "texture": "spawn_egg",
+      "tint": "#EDBFB4",
+      "action_key": "use_spawn_egg_pig",
+      "origin_x": 0.5
     }
   }
 }

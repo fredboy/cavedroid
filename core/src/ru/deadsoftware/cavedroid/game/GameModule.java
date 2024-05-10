@@ -5,7 +5,8 @@ import dagger.Provides;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.model.block.Block;
-import ru.deadsoftware.cavedroid.game.objects.DropController;
+import ru.deadsoftware.cavedroid.game.objects.drop.DropController;
+import ru.deadsoftware.cavedroid.game.objects.furnace.FurnaceController;
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 
@@ -45,6 +46,16 @@ public class GameModule {
 
     @Provides
     @GameScope
+    public static FurnaceController provideFurnaceController(MainConfig mainConfig, GameItemsHolder gameItemsHolder) {
+        load(mainConfig, gameItemsHolder);
+        FurnaceController controller = data != null ? data.retrueveFurnaceController() : new FurnaceController();
+        makeDataNullIfEmpty();
+        controller.init(gameItemsHolder);
+        return controller;
+    }
+
+    @Provides
+    @GameScope
     public static MobsController provideMobsController(MainConfig mainConfig,
                                                        GameItemsHolder gameItemsHolder,
                                                        TooltipManager tooltipManager) {
@@ -62,12 +73,13 @@ public class GameModule {
     public static GameWorld provideGameWorld(MainConfig mainConfig,
                                              DropController dropController,
                                              MobsController mobsController,
-                                             GameItemsHolder gameItemsHolder) {
+                                             GameItemsHolder gameItemsHolder,
+                                             FurnaceController furnaceController) {
         load(mainConfig, gameItemsHolder);
         Block[][] fm = data != null ? data.retrieveForeMap() : null;
         Block[][] bm = data != null ? data.retrieveBackMap() : null;
         makeDataNullIfEmpty();
-        return new GameWorld(dropController, mobsController, gameItemsHolder, fm, bm);
+        return new GameWorld(dropController, mobsController, gameItemsHolder, furnaceController, fm, bm);
     }
 
 }

@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.objects.DropController
+import ru.deadsoftware.cavedroid.game.objects.drop.DropController
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.utils.cycledInsideWorld
 import ru.deadsoftware.cavedroid.misc.utils.drawSprite

@@ -2,7 +2,6 @@ package ru.deadsoftware.cavedroid.game.render
 
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
@@ -87,7 +86,11 @@ abstract class BlocksRenderer(
         if (foregroundBlock.canSeeThrough && !backgroundBlock.isNone()) {
             val drawX = x.px - viewport.x
             val drawY = y.px - viewport.y
-            backgroundBlock.draw(spriteBatch, drawX, drawY)
+            if (backgroundBlock.isFurnace()) {
+                backgroundBlock.draw(spriteBatch, drawX, drawY, gameWorld.getBackgroundFurnace(x, y)?.isActive ?: false)
+            } else {
+                backgroundBlock.draw(spriteBatch, drawX, drawY)
+            }
         }
     }
 
@@ -97,7 +100,12 @@ abstract class BlocksRenderer(
         if (!foregroundBlock.isNone() && foregroundBlock.params.isBackground == background) {
             val drawX = x.px - viewport.x
             val drawY = y.px - viewport.y
-            foregroundBlock.draw(spriteBatch, drawX, drawY)
+
+            if (foregroundBlock.isFurnace()) {
+                foregroundBlock.draw(spriteBatch, drawX, drawY, gameWorld.getForegroundFurnace(x, y)?.isActive ?: false)
+            } else {
+                foregroundBlock.draw(spriteBatch, drawX, drawY)
+            }
         }
     }
 

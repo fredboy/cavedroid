@@ -109,7 +109,9 @@ public class GameRenderer extends Renderer {
 
         float camTargetX, camTargetY;
 
-        if (player.controlMode == Player.ControlMode.WALK) {
+        boolean followPlayer = player.controlMode == Player.ControlMode.WALK || !mMainConfig.isTouch();
+
+        if (followPlayer) {
             camTargetX = plTargetX + Math.min(player.getVelocity().x * 2, getWidth() / 2);
             camTargetY = plTargetY + player.getVelocity().y;
         } else {
@@ -119,7 +121,7 @@ public class GameRenderer extends Renderer {
 
         Vector2 moveVector = new Vector2(camTargetX - camCenterX, camTargetY - camCenterY);
 
-        if (player.controlMode == Player.ControlMode.WALK && player.getVelocity().isZero()) {
+        if (followPlayer && player.getVelocity().isZero()) {
             mCameraDelayMs = TimeUtils.millis();
             mCamCenterToPlayer.x = plTargetX - camCenterX;
             mCamCenterToPlayer.y = plTargetY - camCenterY;

@@ -8,7 +8,9 @@ import ru.deadsoftware.cavedroid.game.model.block.Block;
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem;
 import ru.deadsoftware.cavedroid.game.model.item.Item;
 import ru.deadsoftware.cavedroid.game.model.world.generator.WorldGeneratorConfig;
-import ru.deadsoftware.cavedroid.game.objects.DropController;
+import ru.deadsoftware.cavedroid.game.objects.drop.DropController;
+import ru.deadsoftware.cavedroid.game.objects.furnace.Furnace;
+import ru.deadsoftware.cavedroid.game.objects.furnace.FurnaceController;
 import ru.deadsoftware.cavedroid.misc.utils.MeasureUnitsUtilsKt;
 
 import javax.annotation.CheckForNull;
@@ -20,6 +22,7 @@ public class GameWorld {
     private final DropController mDropController;
     private final MobsController mMobsController;
     private final GameItemsHolder mGameItemsHolder;
+    private final FurnaceController mFurnaceController;
 
     private final int mWidth;
     private final int mHeight;
@@ -32,11 +35,13 @@ public class GameWorld {
     public GameWorld(DropController dropController,
                      MobsController mobsController,
                      GameItemsHolder gameItemsHolder,
+                     FurnaceController furnaceController,
                      @CheckForNull Block[][] foreMap,
                      @CheckForNull Block[][] backMap) {
         mDropController = dropController;
         mMobsController = mobsController;
         mGameItemsHolder = gameItemsHolder;
+        mFurnaceController = furnaceController;
 
         boolean isNewGame = foreMap == null || backMap == null;
 
@@ -170,6 +175,11 @@ public class GameWorld {
 
     public boolean placeToForeground(int x, int y, Block value) {
         if (!hasForeAt(x, y) || value == mGameItemsHolder.getFallbackBlock() || !getForeMap(x, y).hasCollision()) {
+
+            if (value.isFurnace()) {
+                mFurnaceController.addFurnace(x, y, 0);
+            }
+
             setForeMap(x, y, value);
             return true;
         } else if (value instanceof Block.Slab && isSameSlab(value, getForeMap(x, y))) {
@@ -182,6 +192,9 @@ public class GameWorld {
     public boolean placeToBackground(int x, int y, Block value) {
         if (value == mGameItemsHolder.getFallbackBlock() || (getBackMap(x, y) == mGameItemsHolder.getFallbackBlock() && value.hasCollision()) &&
                 (!value.isTransparent() || value == mGameItemsHolder.getBlock("glass"))) {
+            if (value.isFurnace()) {
+                mFurnaceController.addFurnace(x, y, 1);
+            }
             setBackMap(x, y, value);
             return true;
         }
@@ -206,6 +219,9 @@ public class GameWorld {
 
     public void destroyForeMap(int x, int y) {
         Block block = getForeMap(x, y);
+        if (block.isFurnace()) {
+            mFurnaceController.destroyFurnace(x, y, 0, mDropController);
+        }
         if (block.hasDrop() && shouldDrop(block)) {
             for (int i = 0; i < block.getParams().getDropInfo().getCount(); i++) {
                 mDropController.addDrop(transformX(x) * 16 + 4, y * 16 + 4, mGameItemsHolder.getItem(block.getDrop()));
@@ -221,6 +237,9 @@ public class GameWorld {
 
     public void destroyBackMap(int x, int y) {
         Block block = getBackMap(x, y);
+        if (block.isFurnace()) {
+            mFurnaceController.destroyFurnace(x, y, 0, mDropController);
+        }
         if (block.hasDrop() && shouldDrop(block)) {
             for (int i = 0; i < block.getParams().getDropInfo().getCount(); i++) {
                 mDropController.addDrop(transformX(x) * 16 + 4, y * 16 + 4, mGameItemsHolder.getItem(block.getDrop()));
@@ -228,5 +247,15 @@ public class GameWorld {
         }
         playerDurateTool();
         placeToBackground(x, y, mGameItemsHolder.getFallbackBlock());
+    }
+
+    @CheckForNull
+    public Furnace getForegroundFurnace(int x, int y) {
+        return mFurnaceController.getFurnace(x, y, 0);
+    }
+
+    @CheckForNull
+    public Furnace getBackgroundFurnace(int x, int y) {
+        return mFurnaceController.getFurnace(x, y, 1);
     }
 }

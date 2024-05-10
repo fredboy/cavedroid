@@ -72,6 +72,23 @@
       "h": 166
     }
   },
+  "furnace": {
+    "furnace": {
+      "w": 176,
+      "h": 166
+    },
+    "furnace_burn": {
+      "x": 176,
+      "w": 14,
+      "h": 14
+    },
+    "furnace_progress": {
+      "x": 176,
+      "y": 14,
+      "w": 24,
+      "h": 14
+    }
+  },
   "buttons": {
     "button_0": {
       "w": 200,

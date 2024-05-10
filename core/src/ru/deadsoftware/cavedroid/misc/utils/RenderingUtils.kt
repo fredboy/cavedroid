@@ -1,9 +1,12 @@
 package ru.deadsoftware.cavedroid.misc.utils
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
+import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.misc.Assets
 
 private fun Rectangle.shifted(shift: Float) = Rectangle(x + shift, y, width, height)
@@ -68,4 +71,28 @@ fun colorFromHexString(hex: String): Color {
 
     rgba = (rgba shl 8) or 0xFF
     return Color(rgba)
+}
+
+fun SpriteBatch.withScissors(
+    mainConfig: MainConfig,
+    x: Float,
+    y: Float,
+    width: Float,
+    height: Float,
+    block: () -> Unit
+) {
+    val scaleX = Gdx.graphics.width / mainConfig.width
+    val scaleY = Gdx.graphics.height / mainConfig.height
+
+    flush()
+    Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST)
+    Gdx.gl.glScissor(
+        /* x = */ (x * scaleX).toInt(),
+        /* y = */ ((mainConfig.height - y - height) * scaleY).toInt(),
+        /* width = */ (width * scaleX).toInt(),
+        /* height = */ (height * scaleY).toInt()
+    )
+    block.invoke()
+    flush()
+    Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST)
 }

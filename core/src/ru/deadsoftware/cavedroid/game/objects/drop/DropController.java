@@ -1,7 +1,9 @@
-package ru.deadsoftware.cavedroid.game.objects;
+package ru.deadsoftware.cavedroid.game.objects.drop;
 
+import org.jetbrains.annotations.NotNull;
 import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.GameScope;
+import ru.deadsoftware.cavedroid.game.model.item.InventoryItem;
 import ru.deadsoftware.cavedroid.game.model.item.Item;
 
 import javax.inject.Inject;
@@ -35,6 +37,10 @@ public class DropController implements Serializable {
             return;
         }
         mDrops.add(new Drop(x, y, item, count));
+    }
+
+    public void addDrop(float x, float y, @NotNull InventoryItem invItem) {
+        addDrop(x, y, invItem.getItem(), invItem.getAmount());
     }
 
     public int getSize() {

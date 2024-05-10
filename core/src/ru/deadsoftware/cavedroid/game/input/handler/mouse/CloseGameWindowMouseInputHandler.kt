@@ -9,7 +9,7 @@ import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideWindow
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.objects.DropController
+import ru.deadsoftware.cavedroid.game.objects.drop.DropController
 import ru.deadsoftware.cavedroid.misc.Assets
 import javax.inject.Inject
 
@@ -23,6 +23,7 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
     private val creativeInventoryTexture get() = requireNotNull(Assets.textureRegions["creative"])
     private val survivalInventoryTexture get() = requireNotNull(Assets.textureRegions["survival"])
     private val craftingInventoryTexture get() = requireNotNull(Assets.textureRegions["crafting_table"])
+    private val furnaceInventoryTexture get() = requireNotNull(Assets.textureRegions["furnace"])
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.getCurrentWindow() != GameUiWindow.NONE &&
@@ -36,6 +37,7 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
             GameUiWindow.CREATIVE_INVENTORY -> creativeInventoryTexture
             GameUiWindow.SURVIVAL_INVENTORY -> survivalInventoryTexture
             GameUiWindow.CRAFTING_TABLE -> craftingInventoryTexture
+            GameUiWindow.FURNACE -> furnaceInventoryTexture
             else -> throw UnsupportedOperationException("Cant close window ${window.name}")
         }
     }

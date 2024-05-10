@@ -20,14 +20,14 @@ sealed class Block {
     val spriteWidth: Float get() = 16f - params.spriteMargins.left - params.spriteMargins.right
     val spriteHeight: Float get() = 16f - params.spriteMargins.top - params.spriteMargins.bottom
 
-    private var animation: Array<Sprite>? = null
+    protected var animation: Array<Sprite>? = null
 
     private var _sprite: Sprite? = null
         get() {
             return animation?.get(currentAnimationFrame) ?: field
         }
 
-    val sprite: Sprite
+    open val sprite: Sprite
         get() = requireNotNull(_sprite) { "null sprite for block '${params.key}'" }
 
     private val currentAnimationFrame: Int
@@ -111,6 +111,11 @@ sealed class Block {
         return this is Slab
     }
 
+    fun isFurnace(): Boolean {
+        contract { returns(true) implies (this@Block is Furnace) }
+        return this is Furnace
+    }
+
     fun isNone(): Boolean {
         contract { returns(true) implies (this@Block is None) }
         return this is None
@@ -132,6 +137,37 @@ sealed class Block {
     data class Normal(
         override val params: CommonBlockParams,
     ) : Block()
+
+    data class Furnace(
+        override val params: CommonBlockParams,
+    ): Block() {
+
+        override val sprite: Sprite
+            get() = getSprite(false)
+
+        private fun getSprite(isActive: Boolean): Sprite {
+            return animation?.let { animation ->
+                if (isActive) {
+                    animation[1]
+                } else {
+                    animation[0]
+                }
+            } ?: sprite
+        }
+
+        fun draw(spriter: SpriteBatch, x: Float, y: Float, isActive: Boolean) {
+            getSprite(isActive).apply {
+                setBounds(
+                    /* x = */ x + params.spriteMargins.left,
+                    /* y = */ y + params.spriteMargins.top,
+                    /* width = */ spriteWidth,
+                    /* height = */ spriteHeight
+                )
+                draw(spriter)
+            }
+        }
+
+    }
 
     data class Slab(
         override val params: CommonBlockParams,

@@ -34,4 +34,12 @@ class UseItemActionsModule {
         return action
     }
 
+    @Binds
+    @IntoMap
+    @StringKey(UsePigSpawnEggAction.ACTION_KEY)
+    @GameScope
+    fun bindUsePigSpawnEgg(action: UsePigSpawnEggAction): IUseItemAction {
+        return action
+    }
+
 }

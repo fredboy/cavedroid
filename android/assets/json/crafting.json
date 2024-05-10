@@ -43,11 +43,62 @@
     "input": ["cobblestone", "none", "none", "stick", "none", "none", "stick", "none", "none"],
     "count": 131
   },
+  "iron_pickaxe": {
+    "input": ["iron_ingot", "iron_ingot", "iron_ingot", "none", "stick", "none", "none", "stick", "none"],
+    "count": 251
+  },
+  "iron_axe": {
+    "input": ["iron_ingot", "iron_ingot", "none", "iron_ingot", "stick", "none", "none", "stick", "none"],
+    "count": 250
+  },
+  "iron_sword": {
+    "input": ["iron_ingot", "none", "none", "iron_ingot", "none", "none", "stick", "none", "none"],
+    "count": 251
+  },
+  "iron_shovel": {
+    "input": ["iron_ingot", "none", "none", "stick", "none", "none", "stick", "none", "none"],
+    "count": 250
+  },
+  "gold_pickaxe": {
+    "input": ["gold_ingot", "gold_ingot", "gold_ingot", "none", "stick", "none", "none", "stick", "none"],
+    "count": 33
+  },
+  "gold_axe": {
+    "input": ["gold_ingot", "gold_ingot", "none", "gold_ingot", "stick", "none", "none", "stick", "none"],
+    "count": 32
+  },
+  "gold_sword": {
+    "input": ["gold_ingot", "none", "none", "gold_ingot", "none", "none", "stick", "none", "none"],
+    "count": 33
+  },
+  "gold_shovel": {
+    "input": ["gold_ingot", "none", "none", "stick", "none", "none", "stick", "none", "none"],
+    "count": 32
+  },
+  "diamond_pickaxe": {
+    "input": ["diamond", "diamond", "diamond", "none", "stick", "none", "none", "stick", "none"],
+    "count": 1562
+  },
+  "diamond_axe": {
+    "input": ["diamond", "diamond", "none", "diamond", "stick", "none", "none", "stick", "none"],
+    "count": 1561
+  },
+  "diamond_sword": {
+    "input": ["diamond", "none", "none", "diamond", "none", "none", "stick", "none", "none"],
+    "count": 1562
+  },
+  "diamond_shovel": {
+    "input": ["diamond", "none", "none", "stick", "none", "none", "stick", "none", "none"],
+    "count": 1561
+  },
   "snow_block": {
     "input": ["snowball", "snowball", "none", "snowball", "snowball", "none", "none", "none", "none"],
     "count": 1
   },
   "crafting_table": {
     "input": ["planks.*", "planks.*", "none", "planks.*", "planks.*", "none", "none", "none", "none"]
+  },
+  "furnace": {
+    "input": ["cobblestone", "cobblestone", "cobblestone", "cobblestone", "none", "cobblestone", "cobblestone", "cobblestone", "cobblestone"]
   }
 }

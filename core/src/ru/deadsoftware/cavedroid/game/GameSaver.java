@@ -5,7 +5,8 @@ import com.badlogic.gdx.files.FileHandle;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.model.block.Block;
-import ru.deadsoftware.cavedroid.game.objects.DropController;
+import ru.deadsoftware.cavedroid.game.objects.drop.DropController;
+import ru.deadsoftware.cavedroid.game.objects.furnace.FurnaceController;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 
 import javax.annotation.CheckForNull;
@@ -24,11 +25,18 @@ public class GameSaver {
         @CheckForNull
         private DropController mDropController;
         @CheckForNull
+        private FurnaceController mFurnaceController;
+        @CheckForNull
         private Block[][] mForeMap, mBackMap;
 
-        public Data(MobsController mobsController, DropController dropController, Block[][] foreMap, Block[][] backMap) {
+        public Data(MobsController mobsController,
+                    DropController dropController,
+                    FurnaceController furnaceController,
+                    Block[][] foreMap,
+                    Block[][] backMap) {
             mMobsController = mobsController;
             mDropController = dropController;
+            mFurnaceController = furnaceController;
             mForeMap = foreMap;
             mBackMap = backMap;
         }
@@ -45,6 +53,13 @@ public class GameSaver {
             DropController dropController = mDropController;
             mDropController = null;
             return dropController;
+        }
+
+        public FurnaceController retrueveFurnaceController() {
+            assert mFurnaceController != null;
+            FurnaceController furnaceController = mFurnaceController;
+            mFurnaceController = null;
+            return furnaceController;
         }
 
         public Block[][] retrieveForeMap() {
@@ -183,10 +198,12 @@ public class GameSaver {
             int version = in.readInt();
             DropController dropController;
             MobsController mobsController;
+            FurnaceController furnaceController;
 
             if (SAVE_VERSION == version) {
                 dropController = (DropController) in.readObject();
                 mobsController = (MobsController) in.readObject();
+                furnaceController = (FurnaceController) in.readObject();
             } else {
                 throw new Exception("version mismatch");
             }
@@ -201,7 +218,7 @@ public class GameSaver {
                 throw new Exception("couldn't load");
             }
 
-            return new Data(mobsController, dropController, foreMap, backMap);
+            return new Data(mobsController, dropController, furnaceController, foreMap, backMap);
         } catch (Exception e) {
             Gdx.app.error("GameSaver", e.getMessage());
         }
@@ -212,6 +229,7 @@ public class GameSaver {
     public static void save(MainConfig mainConfig,
                             DropController dropController,
                             MobsController mobsController,
+                            FurnaceController furnaceController,
                             GameWorld gameWorld) {
         String folder = mainConfig.getGameFolder();
         FileHandle file = Gdx.files.absolute(folder + "/saves/");
@@ -229,6 +247,7 @@ public class GameSaver {
             out.writeInt(SAVE_VERSION);
             out.writeObject(dropController);
             out.writeObject(mobsController);
+            out.writeObject(furnaceController);
             out.close();
 
             saveDict(Gdx.files.absolute(folder + "/saves/dict"), dict);

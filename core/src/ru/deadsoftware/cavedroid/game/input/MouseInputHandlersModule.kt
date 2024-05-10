@@ -77,6 +77,13 @@ object MouseInputHandlersModule {
     @Binds
     @IntoSet
     @GameScope
+    fun bindSelectFurnaceInventoryItemMouseInputHandler(handler: SelectFurnaceInventoryItemMouseInputHandler): IGameInputHandler<MouseInputAction> {
+        return handler
+    }
+
+    @Binds
+    @IntoSet
+    @GameScope
     fun bindJoystickInputHandler(handler: JoystickInputHandler): IGameInputHandler<MouseInputAction> {
         return handler
     }

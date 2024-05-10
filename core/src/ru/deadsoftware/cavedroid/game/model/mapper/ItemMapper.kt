@@ -11,6 +11,7 @@ import ru.deadsoftware.cavedroid.game.model.item.Item.*
 import ru.deadsoftware.cavedroid.misc.Assets
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader
 import ru.deadsoftware.cavedroid.misc.utils.SpriteOrigin
+import ru.deadsoftware.cavedroid.misc.utils.colorFromHexString
 import javax.inject.Inject
 
 @Reusable
@@ -23,7 +24,7 @@ class ItemMapper @Inject constructor(
 
         return when (dto.type) {
             "normal" -> Normal(params, requireNotNull(loadSprite(dto)))
-            "bucket" -> Bucket(params, requireNotNull(loadSprite(dto)), requireNotNull(dto.actionKey))
+            "usable" -> Usable(params, requireNotNull(loadSprite(dto)), requireNotNull(dto.actionKey))
             "shovel" -> Shovel(params, requireNotNull(loadSprite(dto)), dto.mobDamageMultiplier, dto.blockDamageMultiplier, requireNotNull(dto.toolLevel))
             "sword" -> Sword(params, requireNotNull(loadSprite(dto)), dto.mobDamageMultiplier, dto.blockDamageMultiplier, requireNotNull(dto.toolLevel))
             "pickaxe" -> Pickaxe(params, requireNotNull(loadSprite(dto)), dto.mobDamageMultiplier, dto.blockDamageMultiplier, requireNotNull(dto.toolLevel))
@@ -45,6 +46,8 @@ class ItemMapper @Inject constructor(
                 y = dto.origin_y,
             ),
             maxStack = dto.maxStack,
+            burningTimeMs = dto.burningTime,
+            smeltProductKey = dto.smeltProduct,
         )
     }
 
@@ -55,7 +58,12 @@ class ItemMapper @Inject constructor(
 
         val texture = Assets.resolveItemTexture(assetLoader, dto.texture)
         return Sprite(texture)
-            .apply { flip(false, true) }
+            .apply {
+                flip(false, true)
+                dto.tint?.let {
+                    color = colorFromHexString(it)
+                }
+            }
     }
 
 }
