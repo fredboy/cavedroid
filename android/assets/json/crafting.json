@@ -100,5 +100,8 @@
   },
   "furnace": {
     "input": ["cobblestone", "cobblestone", "cobblestone", "cobblestone", "none", "cobblestone", "cobblestone", "cobblestone", "cobblestone"]
+  },
+  "chest": {
+    "input": ["planks_.*", "planks_.*", "planks_.*", "planks_.*", "none", "planks_.*", "planks_.*", "planks_.*", "planks_.*"]
   }
 }
