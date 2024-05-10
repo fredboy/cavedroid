@@ -42,4 +42,12 @@ class UseItemActionsModule {
         return action
     }
 
+    @Binds
+    @IntoMap
+    @StringKey(UseBedAction.ACTION_KEY)
+    @GameScope
+    fun bindUseBedAction(action: UseBedAction): IUseItemAction {
+        return action
+    }
+
 }

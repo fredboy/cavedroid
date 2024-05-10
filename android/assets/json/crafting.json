@@ -103,5 +103,8 @@
   },
   "chest": {
     "input": ["planks_.*", "planks_.*", "planks_.*", "planks_.*", "none", "planks_.*", "planks_.*", "planks_.*", "planks_.*"]
+  },
+  "bed": {
+    "input": ["wool_.*", "wool_.*", "wool_.*", "planks_.*", "planks_.*", "planks_.*", "none", "none", "none"]
   }
 }

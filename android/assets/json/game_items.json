@@ -228,7 +228,7 @@
       "collision": false,
       "background": true,
       "transparent": true,
-      "drop": "none",
+      "drop": "bed",
       "texture": "bed_l",
       "tool_level": 0,
       "tool_type": "axe"
@@ -238,7 +238,7 @@
       "collision": false,
       "background": true,
       "transparent": true,
-      "drop": "none",
+      "drop": "bed",
       "texture": "bed_r",
       "tool_level": 0,
       "tool_type": "axe"

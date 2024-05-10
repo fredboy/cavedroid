@@ -183,8 +183,12 @@ public class GameWorld {
         setMap(x, y, BACKGROUND_Z, block);
     }
 
+    public boolean canPlaceToForeground(int x, int y, Block value) {
+        return !hasForeAt(x, y) || value == mGameItemsHolder.getFallbackBlock() || !getForeMap(x, y).hasCollision();
+    }
+
     public boolean placeToForeground(int x, int y, Block value) {
-        if (!hasForeAt(x, y) || value == mGameItemsHolder.getFallbackBlock() || !getForeMap(x, y).hasCollision()) {
+        if (canPlaceToForeground(x, y, value)) {
             setForeMap(x, y, value);
             return true;
         } else if (value instanceof Block.Slab && isSameSlab(value, getForeMap(x, y))) {
