@@ -1,7 +1,6 @@
 package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.utils.TimeUtils
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
@@ -13,7 +12,7 @@ import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem.Companion.isNoneOrNull
 import ru.deadsoftware.cavedroid.game.objects.drop.DropController
-import ru.deadsoftware.cavedroid.game.objects.furnace.Furnace
+import ru.deadsoftware.cavedroid.game.objects.container.Furnace
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.FurnaceInventoryWindow
@@ -78,18 +77,18 @@ class SelectFurnaceInventoryItemMouseInputHandler @Inject constructor(
 
         if (action.actionKey is MouseInputActionKey.Screen) {
             if (!action.actionKey.touchUp) {
-                window.onLeftCLick(window.furnace.items, gameItemsHolder, Furnace.FUEL_INDEX, action.actionKey.pointer)
+                window.onLeftCLick(window.furnace.items as MutableList<InventoryItem?>, gameItemsHolder, Furnace.FUEL_INDEX, action.actionKey.pointer)
             } else {
                 if (action.actionKey.pointer == window.selectItemPointer) {
-                    window.onLeftCLick(window.furnace.items, gameItemsHolder, Furnace.FUEL_INDEX, action.actionKey.pointer)
+                    window.onLeftCLick(window.furnace.items as MutableList<InventoryItem?>, gameItemsHolder, Furnace.FUEL_INDEX, action.actionKey.pointer)
                 } else {
-                    window.onRightClick(window.furnace.items, Furnace.FUEL_INDEX)
+                    window.onRightClick(window.furnace.items as MutableList<InventoryItem?>, Furnace.FUEL_INDEX)
                 }
             }
         } else if (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) {
-            window.onLeftCLick(window.furnace.items, gameItemsHolder, Furnace.FUEL_INDEX)
+            window.onLeftCLick(window.furnace.items as MutableList<InventoryItem?>, gameItemsHolder, Furnace.FUEL_INDEX)
         } else {
-            window.onRightClick(window.furnace.items, Furnace.FUEL_INDEX)
+            window.onRightClick(window.furnace.items as MutableList<InventoryItem?>, Furnace.FUEL_INDEX)
         }
     }
 
@@ -98,18 +97,18 @@ class SelectFurnaceInventoryItemMouseInputHandler @Inject constructor(
 
         if (action.actionKey is MouseInputActionKey.Screen) {
             if (!action.actionKey.touchUp) {
-                window.onLeftCLick(window.furnace.items, gameItemsHolder, Furnace.INPUT_INDEX, action.actionKey.pointer)
+                window.onLeftCLick(window.furnace.items as MutableList<InventoryItem?>, gameItemsHolder, Furnace.INPUT_INDEX, action.actionKey.pointer)
             } else {
                 if (action.actionKey.pointer == window.selectItemPointer) {
-                    window.onLeftCLick(window.furnace.items, gameItemsHolder, Furnace.INPUT_INDEX, action.actionKey.pointer)
+                    window.onLeftCLick(window.furnace.items as MutableList<InventoryItem?>, gameItemsHolder, Furnace.INPUT_INDEX, action.actionKey.pointer)
                 } else {
-                    window.onRightClick(window.furnace.items, Furnace.INPUT_INDEX)
+                    window.onRightClick(window.furnace.items as MutableList<InventoryItem?>, Furnace.INPUT_INDEX)
                 }
             }
         } else if (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) {
-            window.onLeftCLick(window.furnace.items, gameItemsHolder, Furnace.INPUT_INDEX)
+            window.onLeftCLick(window.furnace.items as MutableList<InventoryItem?>, gameItemsHolder, Furnace.INPUT_INDEX)
         } else {
-            window.onRightClick(window.furnace.items, Furnace.INPUT_INDEX)
+            window.onRightClick(window.furnace.items as MutableList<InventoryItem?>, Furnace.INPUT_INDEX)
         }
     }
 
@@ -159,7 +158,7 @@ class SelectFurnaceInventoryItemMouseInputHandler @Inject constructor(
                 } else {
                     window.selectedItem = window.furnace.result
                 }
-                window.furnace.items[Furnace.RESULT_INDEX] = null
+                window.furnace.items[Furnace.RESULT_INDEX] = gameItemsHolder.fallbackItem.toInventoryItem()
             }
         }
 

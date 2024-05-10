@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Timer;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.mobs.player.Player;
-import ru.deadsoftware.cavedroid.game.objects.furnace.FurnaceController;
+import ru.deadsoftware.cavedroid.game.objects.container.ContainerController;
 import ru.deadsoftware.cavedroid.game.world.GameWorldBlocksLogicControllerTask;
 import ru.deadsoftware.cavedroid.game.world.GameWorldFluidsLogicControllerTask;
 import ru.deadsoftware.cavedroid.game.world.GameWorldMobDamageControllerTask;
@@ -19,7 +19,7 @@ public class GameProc implements Disposable {
     private final GamePhysics mGamePhysics;
     private final GameRenderer mGameRenderer;
     private final MobsController mMobsController;
-    private final FurnaceController mFurnaceController;
+    private final ContainerController mContainerController;
     private final GameItemsHolder mGameItemsHolder;
     private final GameWorldFluidsLogicControllerTask mGameWorldFluidsLogicControllerTask;
     private final GameWorldBlocksLogicControllerTask mGameWorldBlocksLogicControllerTask;
@@ -32,7 +32,7 @@ public class GameProc implements Disposable {
                     GamePhysics gamePhysics,
                     GameRenderer gameRenderer,
                     MobsController mobsController,
-                    FurnaceController furnaceController,
+                    ContainerController containerController,
                     GameItemsHolder gameItemsHolder,
                     GameWorldFluidsLogicControllerTask gameWorldFluidsLogicControllerTask,
                     GameWorldBlocksLogicControllerTask gameWorldBlocksLogicControllerTask,
@@ -41,7 +41,7 @@ public class GameProc implements Disposable {
         mGamePhysics = gamePhysics;
         mGameRenderer = gameRenderer;
         mMobsController = mobsController;
-        mFurnaceController = furnaceController;
+        mContainerController = containerController;
         mGameItemsHolder = gameItemsHolder;
         mGameWorldFluidsLogicControllerTask = gameWorldFluidsLogicControllerTask;
         mGameWorldBlocksLogicControllerTask = gameWorldBlocksLogicControllerTask;
@@ -64,7 +64,7 @@ public class GameProc implements Disposable {
     public void update(float delta) {
         mGamePhysics.update(delta);
         mGameRenderer.render(delta);
-        mFurnaceController.update(mGameItemsHolder);
+        mContainerController.update();
     }
 
     public void show() {

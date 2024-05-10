@@ -24,6 +24,7 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
     private val survivalInventoryTexture get() = requireNotNull(Assets.textureRegions["survival"])
     private val craftingInventoryTexture get() = requireNotNull(Assets.textureRegions["crafting_table"])
     private val furnaceInventoryTexture get() = requireNotNull(Assets.textureRegions["furnace"])
+    private val chestInventoryTexture get() = requireNotNull(Assets.textureRegions["chest"])
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.getCurrentWindow() != GameUiWindow.NONE &&
@@ -38,6 +39,7 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
             GameUiWindow.SURVIVAL_INVENTORY -> survivalInventoryTexture
             GameUiWindow.CRAFTING_TABLE -> craftingInventoryTexture
             GameUiWindow.FURNACE -> furnaceInventoryTexture
+            GameUiWindow.CHEST -> chestInventoryTexture
             else -> throw UnsupportedOperationException("Cant close window ${window.name}")
         }
     }

@@ -2,13 +2,11 @@ package ru.deadsoftware.cavedroid.game.ui.windows.inventory
 
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
-import ru.deadsoftware.cavedroid.game.objects.container.Furnace
+import ru.deadsoftware.cavedroid.game.objects.container.Chest
 
-class FurnaceInventoryWindow(
-    val furnace: Furnace,
-) : AbstractInventoryWindow() {
+class ChestInventoryWindow(val chest: Chest) : AbstractInventoryWindow() {
 
-    override val type = GameUiWindow.FURNACE
+    override val type = GameUiWindow.CHEST
 
     override var selectedItem: InventoryItem? = null
 

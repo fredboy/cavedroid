@@ -101,4 +101,24 @@ object GameWindowsConfigs {
         const val progressMarginTop = 34f
         const val progressWidth = 24f
     }
+
+    data object Chest {
+        const val itemsGridMarginLeft = 8f
+        const val itemsGridMarginTop = 86f
+
+        const val itemsGridRowHeight = 18f
+        const val itemsGridColWidth = 18f
+
+        const val hotbarCells = 9
+        const val hotbarOffsetFromBottom = 24f
+
+        const val itemsInRow = 9
+        const val itemsInCol = 5
+
+        const val contentsMarginLeft = 8f
+        const val contentsMarginTop = 18f
+
+        const val contentsInRow = 9
+        const val contentsInCol = 3
+    }
 }

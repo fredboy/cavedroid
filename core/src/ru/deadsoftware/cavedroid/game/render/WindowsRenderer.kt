@@ -6,10 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
-import ru.deadsoftware.cavedroid.game.render.windows.CraftingWindowRenderer
-import ru.deadsoftware.cavedroid.game.render.windows.CreativeWindowRenderer
-import ru.deadsoftware.cavedroid.game.render.windows.FurnaceWindowRenderer
-import ru.deadsoftware.cavedroid.game.render.windows.SurvivalWindowRenderer
+import ru.deadsoftware.cavedroid.game.render.windows.*
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import javax.inject.Inject
 
@@ -20,6 +17,7 @@ class WindowsRenderer @Inject constructor(
     private val craftingWindowRenderer: CraftingWindowRenderer,
     private val gameWindowsManager: GameWindowsManager,
     private val furnaceWindowRenderer: FurnaceWindowRenderer,
+    private val chestWindowRenderer: ChestWindowRenderer,
 ) : IGameRenderer {
 
     override val renderLayer get() = RENDER_LAYER
@@ -30,6 +28,7 @@ class WindowsRenderer @Inject constructor(
             GameUiWindow.SURVIVAL_INVENTORY -> survivalWindowRenderer.draw(spriteBatch, shapeRenderer, viewport, delta)
             GameUiWindow.CRAFTING_TABLE -> craftingWindowRenderer.draw(spriteBatch, shapeRenderer, viewport, delta)
             GameUiWindow.FURNACE -> furnaceWindowRenderer.draw(spriteBatch, shapeRenderer, viewport, delta)
+            GameUiWindow.CHEST -> chestWindowRenderer.draw(spriteBatch, shapeRenderer, viewport, delta)
             GameUiWindow.NONE -> return
             else -> Gdx.app.error(TAG, "Cannot draw window: ${windowType.name}")
         }

@@ -111,9 +111,19 @@ sealed class Block {
         return this is Slab
     }
 
+    fun isContainer(): Boolean {
+        contract { returns(true) implies (this@Block is Container) }
+        return this is Container
+    }
+
     fun isFurnace(): Boolean {
         contract { returns(true) implies (this@Block is Furnace) }
         return this is Furnace
+    }
+
+    fun isChest(): Boolean {
+        contract { returns(true) implies (this@Block is Chest) }
+        return this is Chest
     }
 
     fun isNone(): Boolean {
@@ -130,6 +140,8 @@ sealed class Block {
         )
     }
 
+    sealed class Container() : Block()
+
     data class None(
         override val params: CommonBlockParams
     ) : Block()
@@ -140,7 +152,7 @@ sealed class Block {
 
     data class Furnace(
         override val params: CommonBlockParams,
-    ): Block() {
+    ): Container() {
 
         override val sprite: Sprite
             get() = getSprite(false)
@@ -168,6 +180,10 @@ sealed class Block {
         }
 
     }
+
+    data class Chest(
+        override val params: CommonBlockParams
+    ): Container()
 
     data class Slab(
         override val params: CommonBlockParams,

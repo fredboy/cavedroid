@@ -91,7 +91,9 @@ class InventoryItem @JvmOverloads constructor(
         }
 
         val sprite = item.sprite
-        spriteBatch.drawSprite(sprite, x, y)
+        val placeableMarginTop = (item as? Item.Placeable)?.block?.params?.spriteMargins?.top ?: 0
+        val placeableMarginLeft = (item as? Item.Placeable)?.block?.params?.spriteMargins?.left ?: 0
+        spriteBatch.drawSprite(sprite, x + placeableMarginLeft, y + placeableMarginTop)
 
         if (amount < 2) {
             return

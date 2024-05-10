@@ -6,6 +6,7 @@ import dagger.multibindings.IntoMap
 import dagger.multibindings.StringKey
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.actions.useblock.IUseBlockAction
+import ru.deadsoftware.cavedroid.game.actions.useblock.UseChestAction
 import ru.deadsoftware.cavedroid.game.actions.useblock.UseCraftingTableAction
 import ru.deadsoftware.cavedroid.game.actions.useblock.UseFurnaceAction
 
@@ -25,6 +26,14 @@ class UseBlockActionsModule {
     @StringKey(UseFurnaceAction.KEY)
     @GameScope
     fun bindUseFurnaceTableAction(action: UseFurnaceAction): IUseBlockAction {
+        return action
+    }
+
+    @Binds
+    @IntoMap
+    @StringKey(UseChestAction.KEY)
+    @GameScope
+    fun bindUseChestAction(action: UseChestAction): IUseBlockAction {
         return action
     }
 }

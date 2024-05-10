@@ -780,6 +780,22 @@
       "tool_level": 1,
       "tool_type": "pickaxe",
       "meta": "furnace"
+    },
+    "chest": {
+      "hp": 180,
+      "collision": true,
+      "transparent": true,
+      "drop": "chest",
+      "texture": "chest",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "meta": "chest",
+      "top": 2,
+      "left": 1,
+      "right": 1,
+      "sprite_top": 2,
+      "sprite_left": 1,
+      "sprite_right": 1
     }
   },
   "items": {
@@ -837,6 +853,11 @@
       "name": "Furnace",
       "type": "block",
       "texture": "furnace_off"
+    },
+    "chest": {
+      "name": "Chest",
+      "type": "block",
+      "texture": "chest"
     },
     "sapling_spruce": {
       "name": "Spruce Sapling",

@@ -3,8 +3,9 @@ package ru.deadsoftware.cavedroid.game.ui.windows
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
+import ru.deadsoftware.cavedroid.game.objects.container.Chest
 import ru.deadsoftware.cavedroid.game.objects.drop.DropController
-import ru.deadsoftware.cavedroid.game.objects.furnace.Furnace
+import ru.deadsoftware.cavedroid.game.objects.container.Furnace
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.*
 import javax.inject.Inject
@@ -36,6 +37,10 @@ class GameWindowsManager @Inject constructor(
 
     fun openFurnace(furnace: Furnace) {
         currentWindow = FurnaceInventoryWindow(furnace)
+    }
+
+    fun openChest(chest: Chest) {
+        currentWindow = ChestInventoryWindow(chest)
     }
 
     fun openCrafting() {

@@ -1,4 +1,4 @@
-package ru.deadsoftware.cavedroid.game.objects.furnace
+package ru.deadsoftware.cavedroid.game.objects.container
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
@@ -7,25 +7,22 @@ import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem.Companion.isNoneOrNull
 import ru.deadsoftware.cavedroid.game.model.item.Item
-import java.io.Serializable
 
-class Furnace : Serializable {
-
-    val items = MutableList<InventoryItem?>(3) { null }
-
-    var fuel: InventoryItem?
+class Furnace(gameItemsHolder: GameItemsHolder) : Container(SIZE, gameItemsHolder) {
+    
+    var fuel: InventoryItem
         get() = items[FUEL_INDEX]
         set(value) {
             items[FUEL_INDEX] = value
         }
 
-    var input: InventoryItem?
+    var input: InventoryItem
         get() = items[INPUT_INDEX]
         set(value) {
             items[INPUT_INDEX] = value
         }
 
-    var result: InventoryItem?
+    var result: InventoryItem
         get() = items[RESULT_INDEX]
         set(value) {
             items[RESULT_INDEX] = value
@@ -56,27 +53,27 @@ class Furnace : Serializable {
 
     fun init(gameItemsHolder: GameItemsHolder) {
         currentFuel = currentFuelKey?.let { gameItemsHolder.getItem(it) }
-        items.forEach { it?.init(gameItemsHolder) }
+        items.forEach { it.init(gameItemsHolder) }
     }
 
     fun canSmelt(): Boolean {
-        return (result.isNoneOrNull() || (result?.item?.params?.key == input?.item?.params?.smeltProductKey) )&&
-                !input.isNoneOrNull() && input?.item?.params?.smeltProductKey != null &&
+        return (result.isNoneOrNull() || (result.item.params.key == input.item.params.smeltProductKey) )&&
+                !input.isNoneOrNull() && input.item.params.smeltProductKey != null &&
                 (!fuel.isNoneOrNull() || burnProgress > 0f)
     }
 
-    private fun startBurning() {
-        requireNotNull(fuel?.item?.params?.burningTimeMs) { "Cant start burning without fuel" }
-        currentFuel = fuel!!.item
-        fuel!!.subtract()
-        if (fuel!!.amount <= 0) {
-            fuel = null
+    private fun startBurning(gameItemsHolder: GameItemsHolder) {
+        requireNotNull(fuel.item.params.burningTimeMs) { "Cant start burning without fuel" }
+        currentFuel = fuel.item
+        fuel.subtract()
+        if (fuel.amount <= 0) {
+            fuel = gameItemsHolder.fallbackItem.toInventoryItem()
         }
         startBurnTimeMs = TimeUtils.millis()
         burnProgress = 0f
     }
 
-    fun update(gameItemsHolder: GameItemsHolder) {
+    override fun update(gameItemsHolder: GameItemsHolder) {
         if (currentFuel?.isNone() == true) {
             currentFuel = null
         }
@@ -96,7 +93,7 @@ class Furnace : Serializable {
 
         if (currentFuel?.isNone() == false && burnProgress >= 1f) {
             if (canSmelt()) {
-                startBurning()
+                startBurning(gameItemsHolder)
             } else {
                 currentFuel = null
                 burnProgress = 0f
@@ -108,7 +105,7 @@ class Furnace : Serializable {
             return
         }
         if (currentFuel == null && !fuel.isNoneOrNull()) {
-            startBurning()
+            startBurning(gameItemsHolder)
             smeltStarTimeMs = startBurnTimeMs
             smeltProgress = 0f
         }
@@ -119,15 +116,16 @@ class Furnace : Serializable {
         }
 
         if (isActive && smeltProgress >= 1f) {
-            val res = gameItemsHolder.getItem(input!!.item.params.smeltProductKey!!)
+            val productKey = requireNotNull(input.item.params.smeltProductKey)
+            val res = gameItemsHolder.getItem(productKey)
             if (result.isNoneOrNull())  {
                 result = res.toInventoryItem()
             } else {
-                result!!.add()
+                result.add()
             }
-            input!!.subtract()
-            if (input!!.amount <= 0) {
-                input = null
+            input.subtract()
+            if (input.amount <= 0) {
+                input = gameItemsHolder.fallbackItem.toInventoryItem()
             }
             smeltStarTimeMs = TimeUtils.millis()
             smeltProgress = 0f
@@ -135,6 +133,7 @@ class Furnace : Serializable {
     }
 
     companion object {
+        private const val SIZE = 3
         private const val TAG = "Furnace"
 
         const val FUEL_INDEX = 0

@@ -86,7 +86,7 @@ abstract class BlocksRenderer(
         if (foregroundBlock.canSeeThrough && !backgroundBlock.isNone()) {
             val drawX = x.px - viewport.x
             val drawY = y.px - viewport.y
-            if (backgroundBlock.isFurnace()) {
+            if (backgroundBlock is Block.Furnace) {
                 backgroundBlock.draw(spriteBatch, drawX, drawY, gameWorld.getBackgroundFurnace(x, y)?.isActive ?: false)
             } else {
                 backgroundBlock.draw(spriteBatch, drawX, drawY)
@@ -101,7 +101,7 @@ abstract class BlocksRenderer(
             val drawX = x.px - viewport.x
             val drawY = y.px - viewport.y
 
-            if (foregroundBlock.isFurnace()) {
+            if (foregroundBlock is Block.Furnace) {
                 foregroundBlock.draw(spriteBatch, drawX, drawY, gameWorld.getForegroundFurnace(x, y)?.isActive ?: false)
             } else {
                 foregroundBlock.draw(spriteBatch, drawX, drawY)

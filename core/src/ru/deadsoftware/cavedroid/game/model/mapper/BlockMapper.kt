@@ -24,6 +24,7 @@ class BlockMapper @Inject constructor(
             "lava" -> Lava(commonBlockParams, requireNotNull(dto.state))
             "slab" -> Slab(commonBlockParams, requireNotNull(dto.fullBlock), requireNotNull(dto.otherPart))
             "furnace" -> Furnace(commonBlockParams)
+            "chest" -> Chest(commonBlockParams)
             "none" -> None(commonBlockParams)
             else -> Normal(commonBlockParams)
         }
