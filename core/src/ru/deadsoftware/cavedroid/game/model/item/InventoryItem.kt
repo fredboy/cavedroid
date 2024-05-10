@@ -10,6 +10,8 @@ import ru.deadsoftware.cavedroid.misc.utils.drawSprite
 import ru.deadsoftware.cavedroid.misc.utils.drawString
 import ru.deadsoftware.cavedroid.misc.utils.px
 import java.io.Serializable
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 class InventoryItem @JvmOverloads constructor(
     val itemKey: String,
@@ -123,6 +125,11 @@ class InventoryItem @JvmOverloads constructor(
     }
 
     companion object {
-        fun InventoryItem?.isNoneOrNull() = this?.item == null || this.item.isNone()
+
+        @OptIn(ExperimentalContracts::class)
+        fun InventoryItem?.isNoneOrNull(): Boolean {
+            contract { returns(false) implies(this@isNoneOrNull != null) }
+            return this?.item == null || this.item.isNone()
+        }
     }
 }

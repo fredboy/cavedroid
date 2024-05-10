@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavedroid.game.ui.windows
 
+import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
@@ -15,6 +16,7 @@ class GameWindowsManager @Inject constructor(
     private val tooltipManager: TooltipManager,
     private val mobsController: MobsController,
     private val dropController: DropController,
+    private val gameItemsHolder: GameItemsHolder,
 ) {
 
     var creativeScrollAmount = 0
@@ -31,7 +33,7 @@ class GameWindowsManager @Inject constructor(
         if (mobsController.player.gameMode == 1) {
             currentWindow = CreativeInventoryWindow()
         } else {
-            currentWindow = SurvivalInventoryWindow()
+            currentWindow = SurvivalInventoryWindow(gameItemsHolder)
         }
     }
 
@@ -44,23 +46,13 @@ class GameWindowsManager @Inject constructor(
     }
 
     fun openCrafting() {
-        currentWindow = CraftingInventoryWindow()
+        currentWindow = CraftingInventoryWindow(gameItemsHolder)
     }
 
     fun closeWindow() {
-        (currentWindow as? SurvivalInventoryWindow)?.let { window ->
+        (currentWindow as? AbstractInventoryWindowWithCraftGrid)?.let { window ->
             window.craftingItems.forEach { item ->
-                item?.item?.let {
-                    dropController.addDrop(mobsController.player.x, mobsController.player.y, it, item.amount)
-                }
-            }
-        }
-
-        (currentWindow as? CraftingInventoryWindow)?.let { window ->
-            window.craftingItems.forEach { item ->
-                item?.item?.let {
-                    dropController.addDrop(mobsController.player.x, mobsController.player.y, it, item.amount)
-                }
+                dropController.addDrop(mobsController.player.x, mobsController.player.y, item)
             }
         }
 

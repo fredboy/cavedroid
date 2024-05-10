@@ -3,6 +3,7 @@ package ru.deadsoftware.cavedroid.game.ui.windows.inventory
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
+import ru.deadsoftware.cavedroid.game.model.item.InventoryItem.Companion.isNoneOrNull
 
 abstract class AbstractInventoryWindow {
 
@@ -12,17 +13,27 @@ abstract class AbstractInventoryWindow {
 
     var selectItemPointer: Int = -1
 
-    fun onLeftCLick(items: MutableList<InventoryItem?>, gameItemsHolder: GameItemsHolder, index: Int, pointer: Int = -1) {
-        if (selectedItem != null && selectedItem?.item?.isNone() != true && pointer >= 0 && selectItemPointer >= 0 && pointer != selectItemPointer) {
+    fun onLeftCLick(
+        items: MutableList<InventoryItem>,
+        gameItemsHolder: GameItemsHolder,
+        index: Int,
+        pointer: Int = -1
+    ) {
+        if (selectedItem != null &&
+            selectedItem?.item?.isNone() != true &&
+            pointer >= 0 && selectItemPointer >= 0 &&
+            pointer != selectItemPointer
+        ) {
             return
         }
 
         val clickedItem = items[index]
 
         selectedItem?.let { selectedItem ->
-            if (clickedItem != null && items[index]!!.item == selectedItem.item &&
-                items[index]!!.amount + selectedItem.amount <= selectedItem.item.params.maxStack) {
-                items[index]!!.amount += selectedItem.amount
+            if (!clickedItem.isNoneOrNull() && items[index].item == selectedItem.item &&
+                items[index].amount + selectedItem.amount <= selectedItem.item.params.maxStack
+            ) {
+                items[index].amount += selectedItem.amount
                 this@AbstractInventoryWindow.selectedItem = null
                 selectItemPointer = -1
                 return
@@ -35,15 +46,20 @@ abstract class AbstractInventoryWindow {
         selectItemPointer = pointer
     }
 
-    fun onRightClick(items: MutableList<InventoryItem?>, index: Int) {
+    fun onRightClick(items: MutableList<InventoryItem>, index: Int) {
         val clickedItem = items[index]
         val selectedItem = selectedItem
-            ?.takeIf { clickedItem == null || clickedItem.item.isNone() || it.item == items[index]!!.item && items[index]!!.amount + 1 < it.item.params.maxStack }
+            ?.takeIf {
+                !clickedItem.isNoneOrNull() || clickedItem.item.isNone() ||
+                        it.item == items[index].item && items[index].amount + 1 < it.item.params.maxStack
+            }
             ?: return
 
-        val newItem = selectedItem.item.toInventoryItem((clickedItem?.takeIf { !it.item.isNone() }?.amount ?: 0) + 1)
+        val newItem = selectedItem.item.toInventoryItem(
+            (clickedItem.takeIf { !it.item.isNone() }?.amount ?: 0) + 1
+        )
         items[index] = newItem
-        selectedItem.amount --
+        selectedItem.amount--
 
         if (selectedItem.amount <= 0) {
             this@AbstractInventoryWindow.selectedItem = null

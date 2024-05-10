@@ -118,7 +118,7 @@ public class GamePhysics {
     private Rectangle getShiftedMagnetingPlayerRect(Drop drop) {
         final Player player = mMobsController.getPlayer();
 
-        if (!player.inventory.canPickItem(drop.getItem())) {
+        if (!player.inventory.canPickItem(drop)) {
             return null;
         }
 
