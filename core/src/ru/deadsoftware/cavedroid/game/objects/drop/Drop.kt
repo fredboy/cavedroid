@@ -10,8 +10,11 @@ class Drop @JvmOverloads constructor(
     x: Float,
     y: Float,
     _item: Item,
-    val amount: Int = 1,
+    _amount: Int = 1,
 ) : Rectangle(x, y, DROP_SIZE, DROP_SIZE) {
+
+    var amount: Int = _amount
+        private set
 
     val itemKey = _item.params.key
     val velocity = getInitialVelocity()
@@ -37,6 +40,15 @@ class Drop @JvmOverloads constructor(
     fun canMagnetTo(rectangle: Rectangle): Boolean {
         val magnetArea = getMagnetArea()
         return Intersector.overlaps(magnetArea, rectangle)
+    }
+
+    @JvmOverloads
+    fun subtract(count: Int = 1) {
+        if (count < 0) {
+            throw IllegalArgumentException("Can't subtract negative amount")
+        }
+
+        amount -= count
     }
 
     private fun getMagnetArea(): Rectangle {

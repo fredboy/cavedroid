@@ -65,7 +65,7 @@ class Inventory(
         for (i in _items.indices) {
             val inventoryItem = _items[i]
 
-            if (item == inventoryItem.item && inventoryItem.canBeAdded(drop.amount)) {
+            if (item == inventoryItem.item && inventoryItem.canBeAdded()) {
                 return i
             }
         }
@@ -90,15 +90,22 @@ class Inventory(
         val inventoryItem = _items[slot]
 
         if (inventoryItem.item == drop.item) {
-            inventoryItem.add(drop.amount)
+            if (inventoryItem.canBeAdded(drop.amount)) {
+                inventoryItem.add(drop.amount)
+                drop.pickedUp = true
+            } else {
+                val addCount = inventoryItem.item.params.maxStack - inventoryItem.amount
+                inventoryItem.add(addCount)
+                drop.subtract(addCount)
+                pickDrop(drop)
+            }
         } else {
             _items[slot] = drop.item.toInventoryItem(drop.amount)
             if (slot == activeSlot) {
                 showCurrentItemTooltip()
             }
+            drop.pickedUp = true
         }
-
-        drop.pickedUp = true
     }
 
     fun addItem(item: Item) {
