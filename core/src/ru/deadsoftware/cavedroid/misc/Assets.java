@@ -79,14 +79,14 @@ public class Assets {
         for (int i = 0; i < sprite.length; i++) {
             for (int j = 0; j < sprite[i].length; j++) {
                 sprite[i][j] = flippedSprite(loadTexture(
-                        assetLoader.getAssetHandle("mobs/" + mob + "/" + i + "_" + j + ".png")));
+                        assetLoader.getAssetHandle("pp/mobs/" + mob + "/" + i + "_" + j + ".png")));
                 sprite[i][j].setOrigin(sprite[i][j].getWidth() / 2, 0);
             }
         }
     }
 
     private static void loadBlockDamage(AssetLoader assetLoader) {
-        final Texture blockDamageTexture = loadTexture(assetLoader.getAssetHandle("break.png"));
+        final Texture blockDamageTexture = loadTexture(assetLoader.getAssetHandle("pp/break.png"));
         for (int i = 0; i < BLOCK_DAMAGE_STAGES; i++) {
             blockDamageSprites[i] = new Sprite(flippedRegion(blockDamageTexture, i * 16, 0, 16, 16));
         }
@@ -106,9 +106,10 @@ public class Assets {
         JsonValue json = jsonReader.parse(assetLoader.getAssetHandle("json/texture_regions.json"));
         for (JsonValue file = json.child(); file != null; file = file.next()) {
             Texture texture = loadTexture(assetLoader.getAssetHandle(file.name() + ".png"));
+            final String[] pathSegments = file.name().split("/");
+            final String name = pathSegments[pathSegments.length - 1];
             if (file.size == 0) {
-                textureRegions.put(file.name(),
-                        flippedRegion(texture, 0, 0, texture.getWidth(), texture.getHeight()));
+                textureRegions.put(name, flippedRegion(texture, 0, 0, texture.getWidth(), texture.getHeight()));
             } else {
                 for (JsonValue key = file.child(); key != null; key = key.next()) {
                     int x = getIntFromJson(key, "x", 0);
@@ -171,11 +172,11 @@ public class Assets {
     }
 
     public static Texture resolveItemTexture(AssetLoader assetLoader, String textureName) {
-        return resolveTexture(assetLoader, textureName, "textures/items", itemTextures);
+        return resolveTexture(assetLoader, textureName, "pp/textures/items", itemTextures);
     }
 
     public static Texture resolveBlockTexture(AssetLoader assetLoader, String textureName) {
-        return resolveTexture(assetLoader, textureName, "textures/blocks", blockTextures);
+        return resolveTexture(assetLoader, textureName, "pp/textures/blocks", blockTextures);
     }
 
     private static void loadAllPngsFromDirInto(FileHandle dir, Map<String, Texture> loadInto) {
@@ -185,12 +186,12 @@ public class Assets {
     }
 
     private static void loadItems(AssetLoader assetLoader) {
-        final FileHandle itemsDir = assetLoader.getAssetHandle("textures/items");
+        final FileHandle itemsDir = assetLoader.getAssetHandle("pp/textures/items");
         loadAllPngsFromDirInto(itemsDir, itemTextures);
     }
 
     private static void loadBlocks(AssetLoader assetLoader) {
-        final FileHandle blocksDir = assetLoader.getAssetHandle("textures/blocks");
+        final FileHandle blocksDir = assetLoader.getAssetHandle("pp/textures/blocks");
         loadAllPngsFromDirInto(blocksDir, blockTextures);
     }
 
