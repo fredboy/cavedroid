@@ -1,19 +1,27 @@
 package ru.deadsoftware.cavedroid.game.mobs;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 
+import javax.annotation.CheckForNull;
 import java.io.Serializable;
 
 /**
  * Mob class.
  */
 public abstract class Mob extends Rectangle implements Serializable {
+
+    private static final float DAMAGE_TINT_TIMEOUT_S = 0.5f;
+    private static final Color DAMAGE_TINT_COLOR = new Color(0xff8080ff);
+
+    private static final float HIT_RANGE = 8f;
 
     protected static int ANIMATION_SPEED = 360;
 
@@ -51,6 +59,14 @@ public abstract class Mob extends Rectangle implements Serializable {
         }
     }
 
+    private class ResetTakeDamageTask extends Timer.Task {
+
+        @Override
+        public void run() {
+            mTakingDamage = false;
+        }
+    }
+
     protected Vector2 mVelocity;
     protected Type mType;
     protected int mAnimDelta = ANIMATION_SPEED;
@@ -63,6 +79,9 @@ public abstract class Mob extends Rectangle implements Serializable {
 
     private final int mMaxHealth;
     private int mHealth;
+
+    private transient boolean mTakingDamage = false;
+    @CheckForNull private transient ResetTakeDamageTask mResetTakeDamageTask = null;
 
     /**
      * @param x          in pixels
@@ -261,6 +280,8 @@ public abstract class Mob extends Rectangle implements Serializable {
 
         mHealth -= damage;
         checkHealth();
+
+        setTakingDamage(true);
     }
 
     public void heal(int heal) {
@@ -277,9 +298,35 @@ public abstract class Mob extends Rectangle implements Serializable {
         checkHealth();
     }
 
+    public Rectangle getHitBox() {
+        return new Rectangle(x - HIT_RANGE, y - HIT_RANGE, width + HIT_RANGE, height + HIT_RANGE);
+    }
+
+    public boolean isTakingDamage() {
+        return mTakingDamage;
+    }
+
+    public void setTakingDamage(boolean takingDamage) {
+        mTakingDamage = takingDamage;
+
+        if (takingDamage) {
+            if (mResetTakeDamageTask != null && mResetTakeDamageTask.isScheduled()) {
+                mResetTakeDamageTask.cancel();
+            } else if (mResetTakeDamageTask == null) {
+                mResetTakeDamageTask = new ResetTakeDamageTask();
+            }
+
+            Timer.schedule(mResetTakeDamageTask, DAMAGE_TINT_TIMEOUT_S);
+        }
+    }
+
+    protected Color getTintColor() {
+        return isTakingDamage() ? DAMAGE_TINT_COLOR : Color.WHITE;
+    }
+
     public abstract void draw(SpriteBatch spriteBatch, float x, float y, float delta);
 
-    public abstract void ai(GameWorld gameWorld, GameItemsHolder gameItemsHolder, float delta);
+    public abstract void ai(GameWorld gameWorld, GameItemsHolder gameItemsHolder, MobsController mobsController, float delta);
 
     public abstract void changeDir();
 

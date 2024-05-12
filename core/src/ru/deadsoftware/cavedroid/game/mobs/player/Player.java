@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
+import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.model.block.Block;
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem;
 import ru.deadsoftware.cavedroid.game.model.item.Item;
@@ -151,6 +152,29 @@ public class Player extends Mob {
         return !block.isNone() && block.getParams().getHitPoints() >= 0;
     }
 
+    /**
+     * @return true if any mob fas hit
+     */
+    private boolean hitMobs(GameItemsHolder gameItemsHolder, MobsController mobsController) {
+        if (!hitting || !hittingWithDamage) {
+            return false;
+        }
+
+        boolean result = false;
+        for (Mob mob : mobsController.getMobs()) {
+            if (overlaps(mob.getHitBox())) {
+                final Item activeItem = inventory.getActiveItem().getItem();
+                final Item.Tool tool = activeItem.isTool() ? (Item.Tool) activeItem : null;
+                if (tool != null) {
+                    decreaseCurrentItemCount(gameItemsHolder);
+                }
+                result = true;
+                mob.damage(MathUtils.floor(tool != null ? tool.getMobDamageMultiplier() : 1));
+            }
+        }
+        return result;
+    }
+
     private void hitBlock(GameWorld gameWorld, GameItemsHolder gameItemsHolder) {
         if (!hitting || !hittingWithDamage) {
             return;
@@ -188,9 +212,14 @@ public class Player extends Mob {
     }
 
     @Override
-    public void ai(GameWorld gameWorld, GameItemsHolder gameItemsHolder, float delta) {
+    public void ai(GameWorld gameWorld, GameItemsHolder gameItemsHolder, MobsController mobsController, float delta) {
         updateAnimation(delta);
-        hitBlock(gameWorld, gameItemsHolder);
+
+        if (!hitMobs(gameItemsHolder, mobsController)) {
+            hitBlock(gameWorld, gameItemsHolder);
+        } else {
+            stopHitting();
+        }
 
         if (gameMode == 1) {
             return;
@@ -384,6 +413,13 @@ public class Player extends Mob {
             backHandAnim = -mAnim;
             frontHandAnim = -rightHandAnim;
         }
+
+        backHand.setColor(getTintColor());
+        backLeg.setColor(getTintColor());
+        frontLeg.setColor(getTintColor());
+        head.setColor(getTintColor());
+        body.setColor(getTintColor());
+        frontHand.setColor(getTintColor());
 
         SpriteUtilsKt.drawSprite(spriteBatch, backHand, x + 2, y + 8, backHandAnim);
 

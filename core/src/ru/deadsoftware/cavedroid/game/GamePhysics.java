@@ -354,7 +354,7 @@ public class GamePhysics {
 
         for (Iterator<Mob> it = mMobsController.getMobs().iterator(); it.hasNext(); ) {
             Mob mob = it.next();
-            mob.ai(mGameWorld, mGameItemsHolder, delta);
+            mob.ai(mGameWorld, mGameItemsHolder, mMobsController, delta);
             mobPhy(mob, delta);
             if (mob.isDead()) {
                 it.remove();
@@ -362,7 +362,7 @@ public class GamePhysics {
         }
 
         playerPhy(player, delta);
-        player.ai(mGameWorld, mGameItemsHolder, delta);
+        player.ai(mGameWorld, mGameItemsHolder, mMobsController, delta);
         if (player.isDead()) {
             player.respawn(mGameWorld, mGameItemsHolder);
         }

@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavedroid.game.actions.useitem
 
+import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.mobs.Pig
@@ -10,6 +11,7 @@ import javax.inject.Inject
 @GameScope
 class UsePigSpawnEggAction @Inject constructor(
     private val mobsController: MobsController,
+    private val gameItemsHolder: GameItemsHolder,
 ) : IUseItemAction {
 
     override fun perform(item: Item.Usable, x: Int, y: Int) {
@@ -18,7 +20,7 @@ class UsePigSpawnEggAction @Inject constructor(
                 attachToController(mobsController)
             }
 
-        mobsController.player.inventory.decreaseCurrentItemAmount()
+        mobsController.player.decreaseCurrentItemCount(gameItemsHolder)
     }
 
     companion object {

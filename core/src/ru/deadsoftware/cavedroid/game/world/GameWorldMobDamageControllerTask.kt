@@ -24,7 +24,10 @@ class GameWorldMobDamageControllerTask @Inject constructor(
                 val foregroundBlock = gameWorld.getForeMap(x, y)
                 val backgroundBlock = gameWorld.getBackMap(x, y)
 
-                mob.damage(max(foregroundBlock.params.damage, backgroundBlock.params.damage))
+                val damage = max(foregroundBlock.params.damage, backgroundBlock.params.damage)
+                if (damage > 0) {
+                    mob.damage(damage)
+                }
             }
         }
 

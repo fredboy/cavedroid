@@ -27,8 +27,18 @@ class Pig(x: Float, y: Float) : Mob(x, y, WIDTH, HEIGHT, randomDir(), Type.MOB, 
     override fun jump() {
         velocity.y = JUMP_VELOCITY
     }
-    
-    override fun ai(world: GameWorld, gameItemsHolder: GameItemsHolder, delta: Float) {
+
+    override fun damage(damage: Int) {
+        super.damage(damage)
+
+        if (damage > 0) {
+            if (canJump()) {
+                jump()
+            }
+        }
+    }
+
+    override fun ai(world: GameWorld, gameItemsHolder: GameItemsHolder, mobsController: MobsController, delta: Float) {
         if (MathUtils.randomBoolean(delta)) {
             if (velocity.x != 0f) {
                 velocity.x = 0f
@@ -45,19 +55,19 @@ class Pig(x: Float, y: Float) : Mob(x, y, WIDTH, HEIGHT, randomDir(), Type.MOB, 
         val rightLegX = x + getRightLegRelativeX(direction)
         val legY = y + getLegsRelativeY()
 
-        spriteBatch.drawSprite(getBackgroundLeg(), leftLegX, legY, -anim)
-        spriteBatch.drawSprite(getBackgroundLeg(), rightLegX, legY, -anim)
-        spriteBatch.drawSprite(getBody(direction), x, y)
-        spriteBatch.drawSprite(getForegroundLeg(), leftLegX, legY, anim)
-        spriteBatch.drawSprite(getForegroundLeg(), rightLegX, legY, anim)
+        spriteBatch.drawSprite(getBackgroundLeg(), leftLegX, legY, -anim, tint = tintColor)
+        spriteBatch.drawSprite(getBackgroundLeg(), rightLegX, legY, -anim, tint = tintColor)
+        spriteBatch.drawSprite(getBody(direction), x, y, tint = tintColor)
+        spriteBatch.drawSprite(getForegroundLeg(), leftLegX, legY, anim, tint = tintColor)
+        spriteBatch.drawSprite(getForegroundLeg(), rightLegX, legY, anim, tint = tintColor)
     }
     
     
     private companion object {
         private const val WIDTH = 25f
         private const val HEIGHT = 18f
-        private const val SPEED =  69.072f
+        private const val SPEED =  48f
         private const val JUMP_VELOCITY = -133.332f
-        private const val MAX_HEALTH = 10;
+        private const val MAX_HEALTH = 10
     }
 }

@@ -40,7 +40,7 @@ public class FallingGravel extends Mob {
     }
 
     @Override
-    public void ai(GameWorld gameWorld, GameItemsHolder gameItemsHolder, float delta) {
+    public void ai(GameWorld gameWorld, GameItemsHolder gameItemsHolder, MobsController mobsController, float delta) {
         if (mVelocity.isZero()) {
             gameWorld.setForeMap(getMapX(), getUpperMapY(), gameItemsHolder.getBlock("gravel"));
             kill();
@@ -49,6 +49,11 @@ public class FallingGravel extends Mob {
 
     @Override
     public void changeDir() {
+    }
+
+    @Override
+    public void damage(int damage) {
+        // no-op
     }
 
     @Override

@@ -1,9 +1,11 @@
 package ru.deadsoftware.cavedroid.game.world;
 
+import com.badlogic.gdx.math.MathUtils;
 import kotlin.Pair;
 import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.GameScope;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
+import ru.deadsoftware.cavedroid.game.mobs.Pig;
 import ru.deadsoftware.cavedroid.game.model.block.Block;
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem;
 import ru.deadsoftware.cavedroid.game.model.item.Item;
@@ -55,6 +57,7 @@ public class GameWorld {
             Pair<Block[][], Block[][]> maps = new GameWorldGenerator(mWorldConfig, mGameItemsHolder).generate();
             mForeMap = maps.getFirst();
             mBackMap = maps.getSecond();
+            spawnInitialMobs();
             mMobsController.getPlayer().respawn(this, mGameItemsHolder);
         } else {
             mForeMap = foreMap;
@@ -223,10 +226,25 @@ public class GameWorld {
         return toolLevel >= block.getParams().getToolLevel();
     }
 
+    private void spawnInitialMobs() {
+        for (int x = 0; x < getWidth(); x++) {
+            int y = 0;
+            while (y < getWorldConfig().getSeaLevel()) {
+                if (getForeMap(x, y) == mGameItemsHolder.getBlock("grass")) {
+                    if (MathUtils.randomBoolean(.125f)) {
+                        mMobsController.addMob(new Pig(MeasureUnitsUtilsKt.getPx(x), MeasureUnitsUtilsKt.getPx(y)));
+                    }
+                    break;
+                }
+                y++;
+            }
+        }
+    }
+
     public void destroyForeMap(int x, int y) {
         Block block = getForeMap(x, y);
         if (block.isContainer()) {
-            mContainerController.destroyContainer(x, y, FOREGROUND_Z);
+            mContainerController.destroyContainer(x, y, FOREGROUND_Z, true);
         }
         if (block.hasDrop() && shouldDrop(block)) {
             for (int i = 0; i < block.getParams().getDropInfo().getCount(); i++) {
@@ -243,6 +261,9 @@ public class GameWorld {
 
     public void destroyBackMap(int x, int y) {
         Block block = getBackMap(x, y);
+        if (block.isContainer()) {
+            mContainerController.destroyContainer(x, y, BACKGROUND_Z, true);
+        }
         if (block.hasDrop() && shouldDrop(block)) {
             for (int i = 0; i < block.getParams().getDropInfo().getCount(); i++) {
                 mDropController.addDrop(transformX(x) * 16 + 4, y * 16 + 4, mGameItemsHolder.getItem(block.getDrop()));
