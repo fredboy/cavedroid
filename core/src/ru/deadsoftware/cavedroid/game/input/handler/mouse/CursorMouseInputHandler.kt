@@ -71,7 +71,7 @@ class CursorMouseInputHandler @Inject constructor(
     }
 
     private fun getPlayerHeadRotation(mouseWorldX: Float, mouseWorldY: Float): Float {
-        val h = mouseWorldX - player.x
+        val h = mouseWorldX - (player.x + player.width / 2)
         val v = mouseWorldY - player.y
 
         return MathUtils.atan(v / h) * MathUtils.radDeg
@@ -88,6 +88,12 @@ class CursorMouseInputHandler @Inject constructor(
         player.cursorY = worldY.bl
 
         player.headRotation = getPlayerHeadRotation(worldX, worldY)
+
+        if (worldX < player.x + player.width / 2) {
+            player.setDir(Mob.Direction.LEFT)
+        } else {
+            player.setDir(Mob.Direction.RIGHT)
+        }
     }
 
     private fun getCreativeTooltip(action: MouseInputAction): String? {
@@ -125,7 +131,10 @@ class CursorMouseInputHandler @Inject constructor(
         }
 
         player.checkCursorBounds(gameWorld)
-        setPlayerDirectionToCursor()
+
+        if (player.controlMode == Player.ControlMode.WALK && mainConfig.isTouch) {
+            setPlayerDirectionToCursor()
+        }
 
         if (player.cursorX != pastCursorX || player.cursorY != pastCursorY) {
             player.blockDamage = 0f

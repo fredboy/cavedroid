@@ -17,7 +17,6 @@ class MenuOptions(
 
     override fun getButtonEventListeners(): HashMap<String, ButtonEventListener> {
         val map = HashMap<String, ButtonEventListener>()
-        map["dyncam"] = ButtonEventListener { mMenuInput.toggleDynamicCamera() }
         map["back"] = ButtonEventListener { mMenuInput.backClicked() }
         return map
     }

@@ -1,6 +1,12 @@
 {
   "dyncam": {
-    "label": "Dynamic Camera: %%isUseDynamicCamera%%"
+    "option_type": "boolean",
+    "label": "Dynamic Camera: %%value%%"
+  },
+  "fullscreen": {
+    "option_type": "boolean",
+    "label": "Fullscreen: %%value%%",
+    "visible_on_android": false
   },
   "back": {
     "label": "Back"

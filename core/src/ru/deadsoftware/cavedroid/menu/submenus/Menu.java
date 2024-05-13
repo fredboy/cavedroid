@@ -1,13 +1,16 @@
 package ru.deadsoftware.cavedroid.menu.submenus;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.JsonValue;
+import kotlin.text.StringsKt;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.menu.MenuProc;
+import ru.deadsoftware.cavedroid.menu.objects.BooleanOptionButton;
 import ru.deadsoftware.cavedroid.menu.objects.Button;
 import ru.deadsoftware.cavedroid.menu.objects.ButtonEventListener;
 import ru.deadsoftware.cavedroid.menu.objects.ButtonRenderer;
@@ -76,13 +79,27 @@ public abstract class Menu {
         JsonValue json = Assets.jsonReader.parse(jsonFile);
         int y = (int) mHeight / 4;
         for (JsonValue key = json.child(); key != null; key = key.next(), y += Button.HEIGHT + 10) {
-            buttons.put(key.name(),
-                    new Button(Assets.getStringFromJson(key, "label", ""),
-                            (int) mWidth / 2 - Button.WIDTH / 2,
-                            Assets.getIntFromJson(key, "y", y),
-                            Assets.getIntFromJson(key, "type", Button.NORMAL),
-                            eventListeners.containsKey(key.name()) ? eventListeners.get(key.name()) : () -> {
-                            }));
+
+            if (Gdx.app.getType() == Application.ApplicationType.Android &&
+                    !Assets.getBooleanFromJson(key, "visible_on_android", true)) {
+                continue;
+            }
+
+            String optionType = Assets.getStringFromJson(key, "option_type", "");
+            String label = Assets.getStringFromJson(key, "label", "");
+            int x = (int) mWidth / 2 - Button.WIDTH / 2;
+            int type = Assets.getIntFromJson(key, "type", Button.NORMAL);
+            String defaultValue = Assets.getStringFromJson(key, "default_value", "");
+
+
+            Button button = switch (optionType) {
+                case "boolean" ->
+                    new BooleanOptionButton(mMainConfig, key.name(), Boolean.parseBoolean(defaultValue), label, x, y, type);
+                default ->
+                    new Button(label, x, y, type, eventListeners.containsKey(key.name()) ? eventListeners.get(key.name()) : () -> {});
+            };
+
+            buttons.put(key.name(), button);
         }
     }
 

@@ -10,9 +10,7 @@ import ru.deadsoftware.cavedroid.misc.Renderer;
 
 import javax.inject.Inject;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,8 +52,8 @@ public class MenuProc extends Renderer {
             mCurrentMenu = mMenuMain;
         }
 
-        public void toggleDynamicCamera() {
-            mMainConfig.setUseDynamicCamera(!mMainConfig.isUseDynamicCamera());
+        public void setPreference(String key, Object value) {
+            mMainConfig.setPreference(key, value.toString());
         }
     }
 

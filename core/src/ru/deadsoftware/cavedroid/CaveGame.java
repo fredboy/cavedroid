@@ -3,9 +3,11 @@ package ru.deadsoftware.cavedroid;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import ru.deadsoftware.cavedroid.game.GameScreen;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
+import ru.deadsoftware.cavedroid.prefs.PreferencesStore;
 
 import javax.annotation.Nullable;
 
@@ -26,12 +28,19 @@ public class CaveGame extends Game {
     @Nullable
     private final String mAssetsPackPath;
 
-    public CaveGame(String gameFolder, boolean touch, @Nullable String assetsPackPath) {
+    public CaveGame(String gameFolder,
+                    boolean touch,
+                    PreferencesStore preferencesStore,
+                    @Nullable String assetsPackPath) {
         mGameFolder = gameFolder;
         mTouch = touch;
         mAssetsPackPath = assetsPackPath;
 
-        mMainComponent = DaggerMainComponent.builder().caveGame(this).build();
+        mMainComponent = DaggerMainComponent
+                .builder()
+                .caveGame(this)
+                .preferencesStore(preferencesStore)
+                .build();
 
         mMainConfig = mMainComponent.getMainConfig();
         mAssetLoader = mMainComponent.getAssetLoader();
@@ -58,6 +67,14 @@ public class CaveGame extends Game {
         } else {
             Gdx.app.setLogLevel(Application.LOG_ERROR);
         }
+
+        mMainConfig.setFullscreenToggleListener((value) -> {
+            if (value) {
+                Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+            } else {
+                Gdx.graphics.setWindowedMode(width, height);
+            }
+        });
     }
 
     public void newGame(int gameMode) {

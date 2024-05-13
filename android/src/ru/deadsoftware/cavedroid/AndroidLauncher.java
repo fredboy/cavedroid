@@ -18,7 +18,8 @@ public class AndroidLauncher extends AndroidApplication {
             e.printStackTrace();
             exit();
         }
-        CaveGame caveGame = new CaveGame(gameFolder, true, null);
+        CaveGame caveGame = new CaveGame(gameFolder, true,
+                new AndroidPreferencesStore(getApplicationContext()), null);
         caveGame.setDebug(BuildConfig.DEBUG);
         initialize(caveGame, config);
     }
