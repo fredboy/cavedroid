@@ -6,10 +6,11 @@ import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.block.Block
 import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindUseItemAction
 import javax.inject.Inject
 
 @GameScope
-@UseItemAction(UseEmptyBucketAction.ACTION_KEY)
+@BindUseItemAction(UseEmptyBucketAction.ACTION_KEY)
 class UseEmptyBucketAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobsController: MobsController,

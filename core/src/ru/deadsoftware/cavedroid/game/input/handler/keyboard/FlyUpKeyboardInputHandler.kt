@@ -3,15 +3,15 @@ package ru.deadsoftware.cavedroid.game.input.handler.keyboard
 import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.input.IKeyboardInputHandler
-import ru.deadsoftware.cavedroid.game.input.KeyboardInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.KeyboardInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.KeyboardInputActionKey
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.mobs.player.Player
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindKeyboardInputHandler
 import javax.inject.Inject
 
 @GameScope
-@KeyboardInputHandler
+@BindKeyboardInputHandler
 class FlyUpKeyboardInputHandler @Inject constructor(
     private val mainConfig: MainConfig,
     private val mobsController: MobsController,

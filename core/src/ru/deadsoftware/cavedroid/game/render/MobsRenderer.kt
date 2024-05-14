@@ -7,12 +7,13 @@ import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.mobs.Mob
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
 import ru.deadsoftware.cavedroid.misc.utils.cycledInsideWorld
 import ru.deadsoftware.cavedroid.misc.utils.px
 import javax.inject.Inject
 
 @GameScope
-@GameRenderer
+@BindRenderer
 class MobsRenderer @Inject constructor(
     private val mobsController: MobsController,
     private val gameWorld: GameWorld,

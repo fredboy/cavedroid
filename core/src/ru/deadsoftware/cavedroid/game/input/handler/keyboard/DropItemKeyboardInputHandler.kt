@@ -3,7 +3,6 @@ package ru.deadsoftware.cavedroid.game.input.handler.keyboard
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.input.IKeyboardInputHandler
-import ru.deadsoftware.cavedroid.game.input.KeyboardInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.KeyboardInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.KeyboardInputActionKey
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
@@ -11,10 +10,11 @@ import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.game.objects.drop.Drop
 import ru.deadsoftware.cavedroid.game.objects.drop.DropController
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindKeyboardInputHandler
 import javax.inject.Inject
 
 @GameScope
-@KeyboardInputHandler
+@BindKeyboardInputHandler
 class DropItemKeyboardInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val mobsController: MobsController,

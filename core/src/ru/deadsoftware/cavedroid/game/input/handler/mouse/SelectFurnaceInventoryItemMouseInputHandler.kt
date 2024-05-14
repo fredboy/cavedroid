@@ -1,9 +1,9 @@
 package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
-import ru.deadsoftware.cavedroid.game.input.MouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem.Companion.isNoneOrNull
@@ -15,7 +15,7 @@ import ru.deadsoftware.cavedroid.misc.Assets
 import javax.inject.Inject
 
 @GameScope
-@MouseInputHandler
+@BindMouseInputHandler
 class SelectFurnaceInventoryItemMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val mobsController: MobsController,

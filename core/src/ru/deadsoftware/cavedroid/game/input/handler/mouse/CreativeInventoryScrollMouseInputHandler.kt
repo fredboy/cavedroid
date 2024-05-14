@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
 import com.badlogic.gdx.math.MathUtils
 import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
@@ -7,7 +8,6 @@ import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
-import ru.deadsoftware.cavedroid.game.input.MouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideWindow
@@ -16,7 +16,7 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 @GameScope
-@MouseInputHandler
+@BindMouseInputHandler
 class CreativeInventoryScrollMouseInputHandler @Inject constructor(
     private val mainConfig: MainConfig,
     private val gameWindowsManager: GameWindowsManager,

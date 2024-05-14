@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavedroid.game.input.handler.touch
 
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
 import com.badlogic.gdx.utils.TimeUtils
 import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.GameScope
@@ -15,7 +16,7 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
-@MouseInputHandler
+@BindMouseInputHandler
 class JoystickInputHandler @Inject constructor(
     private val mainConfig: MainConfig,
     private val mobsController: MobsController,

@@ -1,11 +1,11 @@
 package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
-import ru.deadsoftware.cavedroid.game.input.MouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideWindow
@@ -15,7 +15,7 @@ import ru.deadsoftware.cavedroid.misc.Assets
 import javax.inject.Inject
 
 @GameScope
-@MouseInputHandler
+@BindMouseInputHandler
 class SelectCreativeInventoryItemMouseInputHandler @Inject constructor(
     private val gameItemsHolder: GameItemsHolder,
     private val gameWindowsManager: GameWindowsManager,

@@ -1,9 +1,9 @@
 package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
-import ru.deadsoftware.cavedroid.game.input.MouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideHotbar
@@ -13,7 +13,7 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
-@MouseInputHandler
+@BindMouseInputHandler
 class AttackMouseInputHandler @Inject constructor(
     private val mobsController: MobsController,
     private val gameWorld: GameWorld,

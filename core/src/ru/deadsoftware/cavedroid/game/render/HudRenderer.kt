@@ -10,12 +10,13 @@ import ru.deadsoftware.cavedroid.game.mobs.player.Player.ControlMode
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.Assets
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
 import ru.deadsoftware.cavedroid.misc.utils.drawString
 import ru.deadsoftware.cavedroid.misc.utils.px
 import javax.inject.Inject
 
 @GameScope
-@GameRenderer
+@BindRenderer
 class HudRenderer @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobsController: MobsController,

@@ -1,11 +1,11 @@
 package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
 import com.badlogic.gdx.utils.Timer
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
-import ru.deadsoftware.cavedroid.game.input.MouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.handler.keyboard.DropItemKeyboardInputHandler.Companion.DROP_DISTANCE
@@ -19,7 +19,7 @@ import ru.deadsoftware.cavedroid.misc.Assets
 import javax.inject.Inject
 
 @GameScope
-@MouseInputHandler
+@BindMouseInputHandler
 class HotbarMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val mobsController: MobsController,

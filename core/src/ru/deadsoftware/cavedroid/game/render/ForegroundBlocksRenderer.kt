@@ -6,11 +6,12 @@ import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
 import ru.deadsoftware.cavedroid.misc.utils.forEachBlockInArea
 import javax.inject.Inject
 
 @GameScope
-@GameRenderer
+@BindRenderer
 class ForegroundBlocksRenderer @Inject constructor(
     gameWorld: GameWorld,
     mobsController: MobsController

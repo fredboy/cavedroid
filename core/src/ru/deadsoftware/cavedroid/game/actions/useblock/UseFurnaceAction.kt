@@ -4,10 +4,11 @@ import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.model.block.Block
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindUseBlockAction
 import javax.inject.Inject
 
 @GameScope
-@UseBlockAction(stringKey = UseFurnaceAction.KEY)
+@BindUseBlockAction(stringKey = UseFurnaceAction.KEY)
 class UseFurnaceAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val gameWindowsManager: GameWindowsManager,

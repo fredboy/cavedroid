@@ -5,10 +5,11 @@ import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.mobs.FallingGravel
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindUpdateBlockAction
 import javax.inject.Inject
 
 @GameScope
-@UpdateBlockAction(stringKey = UpdateBedLeftAction.BLOCK_KEY)
+@BindUpdateBlockAction(stringKey = UpdateBedLeftAction.BLOCK_KEY)
 class UpdateBedLeftAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val gameItemsHolder: GameItemsHolder,

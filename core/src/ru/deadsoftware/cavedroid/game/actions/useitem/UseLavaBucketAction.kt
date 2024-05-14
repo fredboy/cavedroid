@@ -5,10 +5,11 @@ import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindUseItemAction
 import javax.inject.Inject
 
 @GameScope
-@UseItemAction(UseLavaBucketAction.ACTION_KEY)
+@BindUseItemAction(UseLavaBucketAction.ACTION_KEY)
 class UseLavaBucketAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobsController: MobsController,

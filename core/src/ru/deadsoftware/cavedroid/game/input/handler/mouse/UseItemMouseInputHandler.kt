@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Timer
 import ru.deadsoftware.cavedroid.game.GameScope
@@ -10,7 +11,6 @@ import ru.deadsoftware.cavedroid.game.actions.placeblock.IPlaceBlockAction
 import ru.deadsoftware.cavedroid.game.actions.useblock.IUseBlockAction
 import ru.deadsoftware.cavedroid.game.actions.useitem.IUseItemAction
 import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
-import ru.deadsoftware.cavedroid.game.input.MouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideHotbar
@@ -21,7 +21,7 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
-@MouseInputHandler
+@BindMouseInputHandler
 class UseItemMouseInputHandler @Inject constructor(
     private val mobsController: MobsController,
     private val useItemActionMap: Map<String, @JvmSuppressWildcards IUseItemAction>,

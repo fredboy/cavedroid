@@ -11,13 +11,14 @@ import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.mobs.player.Player.ControlMode
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.misc.Assets
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
 import ru.deadsoftware.cavedroid.misc.utils.ArrayMapExtensions.component1
 import ru.deadsoftware.cavedroid.misc.utils.ArrayMapExtensions.component2
 import ru.deadsoftware.cavedroid.misc.utils.drawSprite
 import javax.inject.Inject
 
 @GameScope
-@GameRenderer
+@BindRenderer
 class TouchControlsRenderer @Inject constructor(
     private val mainConfig: MainConfig,
     private val mobsController: MobsController,

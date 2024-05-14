@@ -5,11 +5,12 @@ import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.mobs.Pig
 import ru.deadsoftware.cavedroid.game.model.item.Item
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindUseItemAction
 import ru.deadsoftware.cavedroid.misc.utils.px
 import javax.inject.Inject
 
 @GameScope
-@UseItemAction(UsePigSpawnEggAction.ACTION_KEY)
+@BindUseItemAction(UsePigSpawnEggAction.ACTION_KEY)
 class UsePigSpawnEggAction @Inject constructor(
     private val mobsController: MobsController,
     private val gameItemsHolder: GameItemsHolder,

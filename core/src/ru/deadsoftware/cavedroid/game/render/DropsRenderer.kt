@@ -6,13 +6,14 @@ import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.objects.drop.DropController
 import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
 import ru.deadsoftware.cavedroid.misc.utils.cycledInsideWorld
 import ru.deadsoftware.cavedroid.misc.utils.drawSprite
 import ru.deadsoftware.cavedroid.misc.utils.px
 import javax.inject.Inject
 
 @GameScope
-@GameRenderer
+@BindRenderer
 class DropsRenderer @Inject constructor(
     private val dropController: DropController,
     private val gameWorld: GameWorld,

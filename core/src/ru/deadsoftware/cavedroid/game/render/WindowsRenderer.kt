@@ -8,10 +8,11 @@ import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.render.windows.*
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
 import javax.inject.Inject
 
 @GameScope
-@GameRenderer
+@BindRenderer
 class WindowsRenderer @Inject constructor(
     private val creativeWindowRenderer: CreativeWindowRenderer,
     private val survivalWindowRenderer: SurvivalWindowRenderer,

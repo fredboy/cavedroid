@@ -5,10 +5,11 @@ import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindPlaceBlockAction
 import javax.inject.Inject
 
 @GameScope
-@PlaceBlockAction(stringKey = PlaceBlockItemToBackgroundAction.ACTION_KEY)
+@BindPlaceBlockAction(stringKey = PlaceBlockItemToBackgroundAction.ACTION_KEY)
 class PlaceBlockItemToBackgroundAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val gameItemsHolder: GameItemsHolder,

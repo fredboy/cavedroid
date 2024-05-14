@@ -2,10 +2,11 @@ package ru.deadsoftware.cavedroid.game.actions.updateblock
 
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindUpdateBlockAction
 import javax.inject.Inject
 
 @GameScope
-@UpdateBlockAction(stringKey = UpdateRequiresBlockAction.ACTION_KEY)
+@BindUpdateBlockAction(stringKey = UpdateRequiresBlockAction.ACTION_KEY)
 class UpdateRequiresBlockAction @Inject constructor(
     private val gameWorld: GameWorld,
 ) : IUpdateBlockAction {

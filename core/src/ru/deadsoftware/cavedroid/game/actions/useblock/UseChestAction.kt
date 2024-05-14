@@ -5,10 +5,11 @@ import ru.deadsoftware.cavedroid.game.model.block.Block
 import ru.deadsoftware.cavedroid.game.objects.container.Chest
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindUseBlockAction
 import javax.inject.Inject
 
 @GameScope
-@UseBlockAction(stringKey = UseChestAction.KEY)
+@BindUseBlockAction(stringKey = UseChestAction.KEY)
 class UseChestAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val gameWindowsManager: GameWindowsManager,
