@@ -1,9 +1,9 @@
 package ru.deadsoftware.cavedroid.misc.annotations.multibinding
 
 import ru.deadsoftware.cavedroid.game.actions.useblock.IUseBlockAction
-import ru.fredboy.cavedroid.ksp.annotations.GenerateMapMultibindingsModule
+import ru.fredboy.automultibind.annotations.BindsIntoMapStringKey
 
-@GenerateMapMultibindingsModule(
+@BindsIntoMapStringKey(
     interfaceClass = IUseBlockAction::class,
     modulePackage = MultibindingConfig.GENERATED_MODULES_PACKAGE,
     moduleName = "UseBlockActionsModule"

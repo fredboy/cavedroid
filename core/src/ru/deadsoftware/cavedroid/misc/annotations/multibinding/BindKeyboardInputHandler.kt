@@ -1,9 +1,9 @@
 package ru.deadsoftware.cavedroid.misc.annotations.multibinding
 
 import ru.deadsoftware.cavedroid.game.input.IKeyboardInputHandler
-import ru.fredboy.cavedroid.ksp.annotations.GenerateSetMultibindingsModule
+import ru.fredboy.automultibind.annotations.BindsIntoSet
 
-@GenerateSetMultibindingsModule(
+@BindsIntoSet(
     interfaceClass = IKeyboardInputHandler::class,
     modulePackage = MultibindingConfig.GENERATED_MODULES_PACKAGE,
     moduleName = "KeyboardInputHandlersModule"
