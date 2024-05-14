@@ -13,6 +13,9 @@ java.sourceCompatibility = JavaVersion.VERSION_17
 sourceSets.main.java.srcDirs = ["src/"]
 
 dependencies {
+    implementation project(':dagger-multibind-annotations')
+    ksp project(':dagger-multibind-ksp')
+
     api "com.badlogicgames.gdx:gdx:$gdxVersion"
     api "com.google.guava:guava:$guavaVersion-android"
     api "com.google.dagger:dagger:$daggerVersion"
@@ -20,5 +23,4 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
-    ksp project(':dagger-multibind-ksp')
 }

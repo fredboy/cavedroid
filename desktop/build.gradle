@@ -46,12 +46,12 @@ task dist(type: Jar) {
         attributes 'Main-Class': project.mainClassName
     }
     from {
-        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
     with jar
 }
 
-dist.dependsOn classes
+dist.dependsOn build
 
 dependencies {
     implementation project(":core")

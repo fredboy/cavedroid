@@ -12,6 +12,7 @@ import ru.deadsoftware.cavedroid.misc.utils.forEachBlockInArea
 import javax.inject.Inject
 
 @GameScope
+@GameRenderer
 class BackgroundBlocksRenderer @Inject constructor(
     gameWorld: GameWorld,
     mobsController: MobsController

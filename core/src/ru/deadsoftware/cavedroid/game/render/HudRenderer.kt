@@ -15,6 +15,7 @@ import ru.deadsoftware.cavedroid.misc.utils.px
 import javax.inject.Inject
 
 @GameScope
+@GameRenderer
 class HudRenderer @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobsController: MobsController,

@@ -11,6 +11,7 @@ import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import javax.inject.Inject
 
 @GameScope
+@GameRenderer
 class WindowsRenderer @Inject constructor(
     private val creativeWindowRenderer: CreativeWindowRenderer,
     private val survivalWindowRenderer: SurvivalWindowRenderer,

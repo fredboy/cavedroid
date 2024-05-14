@@ -10,13 +10,13 @@ import ru.deadsoftware.cavedroid.game.debug.DebugInfoStringsProvider
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.block.Block
 import ru.deadsoftware.cavedroid.game.world.GameWorld
-import ru.deadsoftware.cavedroid.misc.Assets
 import ru.deadsoftware.cavedroid.misc.utils.bl
 import ru.deadsoftware.cavedroid.misc.utils.drawString
 import ru.deadsoftware.cavedroid.misc.utils.forEachBlockInArea
 import ru.deadsoftware.cavedroid.misc.utils.px
 import javax.inject.Inject
 
+@GameRenderer
 @GameScope
 class DebugRenderer @Inject constructor(
     private val mainConfig: MainConfig,

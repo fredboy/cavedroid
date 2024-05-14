@@ -17,6 +17,7 @@ import ru.deadsoftware.cavedroid.misc.utils.drawSprite
 import javax.inject.Inject
 
 @GameScope
+@GameRenderer
 class TouchControlsRenderer @Inject constructor(
     private val mainConfig: MainConfig,
     private val mobsController: MobsController,
