@@ -5,7 +5,8 @@ import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
-import ru.deadsoftware.cavedroid.game.input.IGameInputHandler
+import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
+import ru.deadsoftware.cavedroid.game.input.MouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.mobs.Mob
@@ -22,6 +23,7 @@ import ru.deadsoftware.cavedroid.misc.utils.px
 import javax.inject.Inject
 
 @GameScope
+@MouseInputHandler
 class CursorMouseInputHandler @Inject constructor(
     private val mainConfig: MainConfig,
     private val mobsController: MobsController,
@@ -29,7 +31,7 @@ class CursorMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val gameItemsHolder: GameItemsHolder,
     private val tooltipManager: TooltipManager,
-) : IGameInputHandler<MouseInputAction> {
+) : IMouseInputHandler {
 
     private val player get() = mobsController.player
 

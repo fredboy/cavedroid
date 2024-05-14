@@ -4,7 +4,8 @@ import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.GameSaver
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
-import ru.deadsoftware.cavedroid.game.input.IGameInputHandler
+import ru.deadsoftware.cavedroid.game.input.IKeyboardInputHandler
+import ru.deadsoftware.cavedroid.game.input.KeyboardInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.KeyboardInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.KeyboardInputActionKey
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
@@ -15,6 +16,7 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
+@KeyboardInputHandler
 class PauseGameKeyboardInputHandler @Inject constructor(
     private val mainConfig: MainConfig,
     private val dropController: DropController,
@@ -22,7 +24,7 @@ class PauseGameKeyboardInputHandler @Inject constructor(
     private val gameWorld: GameWorld,
     private val containerController: ContainerController,
     private val gameWindowsManager: GameWindowsManager,
-) : IGameInputHandler<KeyboardInputAction> {
+) : IKeyboardInputHandler {
 
     override fun checkConditions(action: KeyboardInputAction): Boolean {
         return action.actionKey is KeyboardInputActionKey.Pause && action.isKeyDown

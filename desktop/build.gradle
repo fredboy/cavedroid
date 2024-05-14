@@ -13,7 +13,7 @@ sourceSets.main.resources.srcDirs = ["../android/assets"]
 project.ext.mainClassName = "ru.deadsoftware.cavedroid.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../android/assets")
 
-task run(dependsOn: classes, type: JavaExec) {
+task run(dependsOn: build, type: JavaExec) {
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
@@ -22,7 +22,7 @@ task run(dependsOn: classes, type: JavaExec) {
     args "--debug"
 }
 
-task runTouch(dependsOn: classes, type: JavaExec) {
+task runTouch(dependsOn: build, type: JavaExec) {
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
@@ -31,16 +31,7 @@ task runTouch(dependsOn: classes, type: JavaExec) {
     args "--touch", "--debug"
 }
 
-task debug(dependsOn: classes, type: JavaExec) {
-    main = project.mainClassName
-    classpath = sourceSets.main.runtimeClasspath
-    standardInput = System.in
-    workingDir = project.assetsDir
-    ignoreExitValue = true as JavaExecSpec
-    debug = true
-}
-
-task dist(type: Jar) {
+task dist(dependsOn: build, type: Jar) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes 'Main-Class': project.mainClassName
@@ -50,8 +41,6 @@ task dist(type: Jar) {
     }
     with jar
 }
-
-dist.dependsOn build
 
 dependencies {
     implementation project(":core")

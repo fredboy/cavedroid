@@ -9,7 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.TimeUtils;
 import ru.deadsoftware.cavedroid.MainConfig;
-import ru.deadsoftware.cavedroid.game.input.IGameInputHandler;
+import ru.deadsoftware.cavedroid.game.input.IKeyboardInputHandler;
+import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler;
 import ru.deadsoftware.cavedroid.game.input.Joystick;
 import ru.deadsoftware.cavedroid.game.input.action.KeyboardInputAction;
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction;
@@ -51,8 +52,8 @@ public class GameRenderer extends Renderer {
     private final CursorMouseInputHandler mCursorMouseInputHandler;
     private final MouseInputActionMapper mMouseInputActionMapper;
     private final KeyboardInputActionMapper mKeyboardInputActionMapper;
-    private final Set<IGameInputHandler<MouseInputAction>> mMouseInputHandlers;
-    private final Set<IGameInputHandler<KeyboardInputAction>> mKeyboardInputHandlers;
+    private final Set<IMouseInputHandler> mMouseInputHandlers;
+    private final Set<IKeyboardInputHandler> mKeyboardInputHandlers;
     private final GameWindowsManager mGameWindowsManager;
     private final TooltipManager mTooltipManager;
 
@@ -71,8 +72,8 @@ public class GameRenderer extends Renderer {
                  CursorMouseInputHandler cursorMouseInputHandler,
                  MouseInputActionMapper mouseInputActionMapper,
                  KeyboardInputActionMapper keyboardInputActionMapper,
-                 Set<IGameInputHandler<MouseInputAction>> mouseInputHandlers,
-                 Set<IGameInputHandler<KeyboardInputAction>> keyboardInputHandlers,
+                 Set<IMouseInputHandler> mouseInputHandlers,
+                 Set<IKeyboardInputHandler> keyboardInputHandlers,
                  GameWindowsManager gameWindowsManager,
                  TooltipManager tooltipManager) {
         super(mainConfig.getWidth(), mainConfig.getHeight());
@@ -224,7 +225,7 @@ public class GameRenderer extends Renderer {
 
         boolean anyProcessed = false;
 
-        for (IGameInputHandler<MouseInputAction> handler : mMouseInputHandlers) {
+        for (IMouseInputHandler handler : mMouseInputHandlers) {
             final boolean conditions = handler.checkConditions(action);
             if (conditions) {
                 anyProcessed = true;
@@ -338,7 +339,7 @@ public class GameRenderer extends Renderer {
 
         boolean anyProcessed = false;
 
-        for (IGameInputHandler<KeyboardInputAction> handler : mKeyboardInputHandlers) {
+        for (IKeyboardInputHandler handler : mKeyboardInputHandlers) {
             final boolean conditions = handler.checkConditions(action);
             if (conditions) {
                 anyProcessed = true;

@@ -9,7 +9,8 @@ import ru.deadsoftware.cavedroid.game.actions.placeToForegroundAction
 import ru.deadsoftware.cavedroid.game.actions.placeblock.IPlaceBlockAction
 import ru.deadsoftware.cavedroid.game.actions.useblock.IUseBlockAction
 import ru.deadsoftware.cavedroid.game.actions.useitem.IUseItemAction
-import ru.deadsoftware.cavedroid.game.input.IGameInputHandler
+import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
+import ru.deadsoftware.cavedroid.game.input.MouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideHotbar
@@ -20,6 +21,7 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
+@MouseInputHandler
 class UseItemMouseInputHandler @Inject constructor(
     private val mobsController: MobsController,
     private val useItemActionMap: Map<String, @JvmSuppressWildcards IUseItemAction>,
@@ -27,7 +29,7 @@ class UseItemMouseInputHandler @Inject constructor(
     private val useBlockActionMap: Map<String, @JvmSuppressWildcards IUseBlockAction>,
     private val gameWindowsManager: GameWindowsManager,
     private val gameWorld: GameWorld,
-) : IGameInputHandler<MouseInputAction> {
+) : IMouseInputHandler {
 
     private var buttonHoldTask: Timer.Task? = null
 

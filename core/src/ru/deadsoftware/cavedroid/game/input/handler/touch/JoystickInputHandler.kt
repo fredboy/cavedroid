@@ -4,11 +4,9 @@ import com.badlogic.gdx.utils.TimeUtils
 import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
-import ru.deadsoftware.cavedroid.game.input.IGameInputHandler
-import ru.deadsoftware.cavedroid.game.input.Joystick
+import ru.deadsoftware.cavedroid.game.input.*
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
-import ru.deadsoftware.cavedroid.game.input.isInsideHotbar
 import ru.deadsoftware.cavedroid.game.mobs.Mob
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.mobs.player.Player
@@ -17,12 +15,13 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
+@MouseInputHandler
 class JoystickInputHandler @Inject constructor(
     private val mainConfig: MainConfig,
     private val mobsController: MobsController,
     private val gameWindowsManager: GameWindowsManager,
     private val gameWorld: GameWorld,
-) : IGameInputHandler<MouseInputAction> {
+) : IMouseInputHandler {
 
     private var activateTimeMs = 0L
     private var cursorTimeoutMs = 100L

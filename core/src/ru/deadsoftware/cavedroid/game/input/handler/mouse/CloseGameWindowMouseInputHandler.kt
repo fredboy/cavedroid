@@ -4,7 +4,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
-import ru.deadsoftware.cavedroid.game.input.IGameInputHandler
+import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
+import ru.deadsoftware.cavedroid.game.input.MouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideWindow
@@ -14,11 +15,12 @@ import ru.deadsoftware.cavedroid.misc.Assets
 import javax.inject.Inject
 
 @GameScope
+@MouseInputHandler
 class CloseGameWindowMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val mobsController: MobsController,
     private val dropController: DropController,
-) : IGameInputHandler<MouseInputAction> {
+) : IMouseInputHandler {
 
     private val creativeInventoryTexture get() = requireNotNull(Assets.textureRegions["creative"])
     private val survivalInventoryTexture get() = requireNotNull(Assets.textureRegions["survival"])

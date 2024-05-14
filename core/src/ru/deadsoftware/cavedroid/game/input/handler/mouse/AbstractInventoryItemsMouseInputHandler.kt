@@ -3,7 +3,7 @@ package ru.deadsoftware.cavedroid.game.input.handler.mouse
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameUiWindow
-import ru.deadsoftware.cavedroid.game.input.IGameInputHandler
+import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideWindow
@@ -17,7 +17,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
     private val gameItemsHolder: GameItemsHolder,
     private val gameWindowsManager: GameWindowsManager,
     private val windowType: GameUiWindow,
-) : IGameInputHandler<MouseInputAction> {
+) : IMouseInputHandler {
 
     protected abstract val windowTexture: TextureRegion
 

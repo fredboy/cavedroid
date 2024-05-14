@@ -6,7 +6,8 @@ import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
-import ru.deadsoftware.cavedroid.game.input.IGameInputHandler
+import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
+import ru.deadsoftware.cavedroid.game.input.MouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideWindow
@@ -15,11 +16,12 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 @GameScope
+@MouseInputHandler
 class CreativeInventoryScrollMouseInputHandler @Inject constructor(
     private val mainConfig: MainConfig,
     private val gameWindowsManager: GameWindowsManager,
     private val gameItemsHolder: GameItemsHolder,
-) : IGameInputHandler<MouseInputAction> {
+) : IMouseInputHandler {
 
     private val creativeInventoryTexture get() = requireNotNull(Assets.textureRegions["creative"])
 
