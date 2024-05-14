@@ -1,4 +1,9 @@
+buildscript {
+    configurations { natives }
+}
+
 plugins {
+    id "com.android.application"
     id "kotlin-android"
 }
 
@@ -123,4 +128,18 @@ task run(type: Exec) {
 
     def adb = path + "/platform-tools/adb"
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'ru.deadsoftware.cavedroid/ru.deadsoftware.cavedroid.AndroidLauncher'
+}
+
+dependencies {
+    implementation project(":core")
+    implementation platform("org.jetbrains.kotlin:kotlin-bom:$kotlinVersion")
+    api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
+
+    configurations.implementation {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+    }
 }

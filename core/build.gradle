@@ -1,12 +1,22 @@
 plugins {
+    id "java-library"
     id "org.jetbrains.kotlin.jvm"
     id "kotlin"
     id "idea"
     id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlinVersion"
 }
 
-sourceCompatibility = 17
-
-sourceSets.main.java.srcDirs = [ "src/" ]
-
 java.targetCompatibility = JavaVersion.VERSION_17
+java.sourceCompatibility = JavaVersion.VERSION_17
+
+sourceSets.main.java.srcDirs = ["src/"]
+
+dependencies {
+    api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    api "com.google.guava:guava:$guavaVersion-android"
+    api "com.google.dagger:dagger:$daggerVersion"
+    implementation 'org.jetbrains:annotations:23.1.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+}
