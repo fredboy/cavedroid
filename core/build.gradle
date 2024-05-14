@@ -4,6 +4,7 @@ plugins {
     id "kotlin"
     id "idea"
     id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlinVersion"
+    id 'com.google.devtools.ksp' version "$kspVersion"
 }
 
 java.targetCompatibility = JavaVersion.VERSION_17
@@ -19,4 +20,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    ksp project(':dagger-multibind-ksp')
 }

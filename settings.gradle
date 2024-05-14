@@ -3,5 +3,6 @@ plugins {
 }
 
 include 'desktop', 'android', 'core'
+include 'dagger-multibind-annotations'
 include 'dagger-multibind-ksp'
 
