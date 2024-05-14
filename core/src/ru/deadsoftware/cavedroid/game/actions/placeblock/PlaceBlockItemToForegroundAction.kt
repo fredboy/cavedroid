@@ -8,6 +8,7 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
+@PlaceBlockAction(stringKey = PlaceBlockItemToForegroundAction.ACTION_KEY)
 class PlaceBlockItemToForegroundAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val placeSlabAction: PlaceSlabAction,

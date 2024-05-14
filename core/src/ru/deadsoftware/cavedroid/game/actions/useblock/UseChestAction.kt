@@ -8,6 +8,7 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
+@UseBlockAction(stringKey = UseChestAction.KEY)
 class UseChestAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val gameWindowsManager: GameWindowsManager,

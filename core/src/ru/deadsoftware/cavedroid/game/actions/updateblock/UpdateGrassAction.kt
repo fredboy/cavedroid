@@ -6,6 +6,7 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
+@UpdateBlockAction(stringKey = UpdateGrassAction.BLOCK_KEY)
 class UpdateGrassAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val mGameItemsHolder: GameItemsHolder,

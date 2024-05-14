@@ -6,6 +6,7 @@ import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import javax.inject.Inject
 
 @GameScope
+@UseBlockAction(stringKey = UseCraftingTableAction.KEY)
 class UseCraftingTableAction @Inject constructor(
     private val gameWindowsManager: GameWindowsManager
 ) : IUseBlockAction {

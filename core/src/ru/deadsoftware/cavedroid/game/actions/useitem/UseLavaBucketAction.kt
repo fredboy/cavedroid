@@ -8,6 +8,7 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
+@UseItemAction(UseLavaBucketAction.ACTION_KEY)
 class UseLavaBucketAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobsController: MobsController,

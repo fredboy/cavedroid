@@ -8,6 +8,7 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
+@UseItemAction(UseBedAction.ACTION_KEY)
 class UseBedAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobsController: MobsController,

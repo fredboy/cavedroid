@@ -8,6 +8,7 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
+@UpdateBlockAction(stringKey = UpdateBedLeftAction.BLOCK_KEY)
 class UpdateBedLeftAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val gameItemsHolder: GameItemsHolder,

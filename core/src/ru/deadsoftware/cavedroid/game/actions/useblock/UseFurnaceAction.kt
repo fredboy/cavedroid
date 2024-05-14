@@ -7,6 +7,7 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
+@UseBlockAction(stringKey = UseFurnaceAction.KEY)
 class UseFurnaceAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val gameWindowsManager: GameWindowsManager,

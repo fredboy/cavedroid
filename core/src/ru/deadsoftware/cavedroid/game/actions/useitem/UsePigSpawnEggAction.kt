@@ -9,6 +9,7 @@ import ru.deadsoftware.cavedroid.misc.utils.px
 import javax.inject.Inject
 
 @GameScope
+@UseItemAction(UsePigSpawnEggAction.ACTION_KEY)
 class UsePigSpawnEggAction @Inject constructor(
     private val mobsController: MobsController,
     private val gameItemsHolder: GameItemsHolder,

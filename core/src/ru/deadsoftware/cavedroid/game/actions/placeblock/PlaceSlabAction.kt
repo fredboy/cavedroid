@@ -9,6 +9,7 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
+@PlaceBlockAction(stringKey = PlaceSlabAction.ACTION_KEY)
 class PlaceSlabAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobsController: MobsController,
