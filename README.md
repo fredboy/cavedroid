@@ -14,6 +14,7 @@ Written in Java using libGDX framework. <br>
 You can download apk and jar from here: <br>
 <https://fredboy.ru/pub/cavedroid/>
 ## Build instructions
+You need to publish [my ksp processor](https://github.com/fredboy/automultibind) to mavenLocal repository first.
 ### Android
 To build for Android use <br>
 `./gradlew android:assemble` <br>
