@@ -52,6 +52,11 @@ class GenerateMapMultibindingsSymbolProcessor(
 
         val moduleObject = TypeSpec.objectBuilder(moduleName)
             .addAnnotation(ClassName("dagger", "Module"))
+            .addAnnotation(
+                AnnotationSpec.builder(ClassName("javax.annotation.processing", "Generated"))
+                    .addMember("value = [%S]", this::class.qualifiedName!!)
+                    .build()
+            )
             .addFunctions(bindings)
             .build()
 
