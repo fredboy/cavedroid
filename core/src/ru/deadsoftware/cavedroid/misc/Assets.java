@@ -49,7 +49,9 @@ public class Assets {
 
     public static void dispose() {
         minecraftFont.dispose();
-        loadedTextures.forEach(Texture::dispose);
+        for (Texture texture : loadedTextures) {
+            texture.dispose();
+        }
         loadedTextures.clear();
     }
     

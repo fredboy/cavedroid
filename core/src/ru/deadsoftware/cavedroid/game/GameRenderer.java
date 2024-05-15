@@ -82,7 +82,12 @@ public class GameRenderer extends Renderer {
         mMobsController = mobsController;
         mGameWorld = gameWorld;
         mRenderers = new ArrayList<>(renderers);
-        mRenderers.sort(Comparator.comparingInt(IGameRenderer::getRenderLayer));
+        kotlin.collections.CollectionsKt.sortWith(mRenderers, new Comparator<IGameRenderer>() {
+            @Override
+            public int compare(IGameRenderer o1, IGameRenderer o2) {
+                return o1.getRenderLayer() - o2.getRenderLayer();
+            }
+        });
         mCursorMouseInputHandler = cursorMouseInputHandler;
         mMouseInputActionMapper = mouseInputActionMapper;
         mKeyboardInputActionMapper = keyboardInputActionMapper;
@@ -375,7 +380,9 @@ public class GameRenderer extends Renderer {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         spriter.begin();
-        mRenderers.forEach(iGameRenderer -> iGameRenderer.draw(spriter, shaper, getCameraViewport(), delta));
+        for (IGameRenderer iGameRenderer : mRenderers) {
+            iGameRenderer.draw(spriter, shaper, getCameraViewport(), delta);
+        }
         handleMousePosition();
         spriter.end();
 

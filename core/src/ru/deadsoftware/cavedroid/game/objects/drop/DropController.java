@@ -25,7 +25,9 @@ public class DropController implements Serializable {
     }
 
     public void initDrops(GameItemsHolder gameItemsHolder) {
-        mDrops.forEach((drop) -> drop.initItem(gameItemsHolder));
+        for (Drop drop : mDrops) {
+            drop.initItem(gameItemsHolder);
+        }
     }
 
     public void addDrop(float x, float y, Item item) {
@@ -48,7 +50,9 @@ public class DropController implements Serializable {
     }
 
     public void forEach(Callback callback) {
-        mDrops.forEach(callback::run);
+        for (Drop drop : mDrops) {
+            callback.run(drop);
+        }
     }
 
     public Iterator<Drop> getIterator() {
