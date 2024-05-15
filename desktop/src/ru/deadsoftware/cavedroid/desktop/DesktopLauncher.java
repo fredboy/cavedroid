@@ -8,7 +8,8 @@ import ru.deadsoftware.cavedroid.CaveGame;
 class DesktopLauncher {
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setWindowIcon(Files.FileType.Internal, "icons/icon256.png", "icons/icon128.png");
+        config.setWindowIcon(Files.FileType.Internal,
+                "icons/icon512.png", "icons/icon256.png", "icons/icon128.png");
         config.setTitle("CaveDroid");
         config.setWindowedMode(960, 540);
         config.useVsync(true);
