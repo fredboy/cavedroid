@@ -2,8 +2,6 @@ package ru.deadsoftware.cavedroid.game.actions.updateblock
 
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.mobs.FallingGravel
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindUpdateBlockAction
 import javax.inject.Inject

@@ -57,6 +57,7 @@ class BlockMapper @Inject constructor(
             toolType = mapToolType(dto),
             damage = dto.damage,
             tint = dto.tint,
+            isFallable = dto.fallable,
         )
     }
 

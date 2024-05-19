@@ -31,4 +31,5 @@ data class BlockDto(
     @SerialName("tool_type") val toolType: String? = null,
     @SerialName("damage") val damage: Int = 0,
     @SerialName("tint") val tint: String? = null,
+    @SerialName("fallable") val fallable: Boolean = false,
 )

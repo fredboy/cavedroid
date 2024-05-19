@@ -19,4 +19,5 @@ data class CommonBlockParams(
     val toolType: Class<out Item.Tool>?,
     val damage: Int,
     val tint: String?,
+    val isFallable: Boolean,
 )

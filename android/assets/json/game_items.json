@@ -108,14 +108,16 @@
       "drop": "sand",
       "texture": "sand",
       "tool_level": 0,
-      "tool_type": "shovel"
+      "tool_type": "shovel",
+      "fallable": true
     },
     "gravel": {
       "hp": 54,
       "drop": "gravel",
       "texture": "gravel",
       "tool_level": 0,
-      "tool_type": "shovel"
+      "tool_type": "shovel",
+      "fallable": true
     },
     "gold_ore": {
       "hp": 900,

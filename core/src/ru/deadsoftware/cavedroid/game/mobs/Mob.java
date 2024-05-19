@@ -27,8 +27,7 @@ public abstract class Mob extends Rectangle implements Serializable {
 
     public enum Type {
         MOB,
-        SAND,
-        GRAVEL
+        FALLING_BLOCK
     }
 
     public enum Direction {

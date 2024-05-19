@@ -33,7 +33,7 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
 
         val blockKey = block.params.key
         val action = updateBlockActions[blockKey]
-            ?: updateBlockActions.getRequiresBlockAction().takeIf { block.params.requiresBlock }
+            ?: updateBlockActions.getRequiresBlockAction().takeIf { block.params.run { requiresBlock || isFallable } }
 
         action?.update(x, y)
     }
