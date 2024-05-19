@@ -32,6 +32,7 @@ class ItemMapper @Inject constructor(
             "shears" -> Shears(params, requireNotNull(loadSprite(dto)), dto.mobDamageMultiplier, dto.blockDamageMultiplier, requireNotNull(dto.toolLevel))
             "block" -> Block(params, requireNotNull(block))
             "slab" -> Slab(params, requireNotNull(slabTopBlock), requireNotNull(slabBottomBlock))
+            "food" -> Food(params, requireNotNull(loadSprite(dto)), requireNotNull(dto.heal))
             "none" -> None(params)
             else -> throw IllegalArgumentException("Unknown item type ${dto.type}")
         }

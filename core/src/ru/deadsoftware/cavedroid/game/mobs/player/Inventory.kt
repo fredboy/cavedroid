@@ -133,4 +133,10 @@ class Inventory(
     fun decreaseCurrentItemAmount(count: Int = 1) {
         decreaseItemAmount(activeSlot, count)
     }
+
+    fun clear() {
+        for (i in _items.indices) {
+            _items[i] = fallbackItem
+        }
+    }
 }

@@ -8,10 +8,14 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import ru.deadsoftware.cavedroid.game.GameItemsHolder;
+import ru.deadsoftware.cavedroid.game.model.item.InventoryItem;
+import ru.deadsoftware.cavedroid.game.model.item.Item;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 
 import javax.annotation.CheckForNull;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Mob class.
@@ -209,7 +213,7 @@ public abstract class Mob extends Rectangle implements Serializable {
     /**
      * Set's mob's dead variable to true and nothing else. It doesn't delete the
      */
-    public final void kill() {
+    public void kill() {
         mDead = true;
     }
 
@@ -257,6 +261,10 @@ public abstract class Mob extends Rectangle implements Serializable {
 
     public final int getHealth() {
         return mHealth;
+    }
+
+    public final int getMaxHealth() {
+        return mMaxHealth;
     }
 
     public final void attachToController(MobsController controller) {
@@ -321,6 +329,10 @@ public abstract class Mob extends Rectangle implements Serializable {
 
     protected Color getTintColor() {
         return isTakingDamage() ? DAMAGE_TINT_COLOR : Color.WHITE;
+    }
+
+    public List<InventoryItem> getDrop(GameItemsHolder gameItemsHolder) {
+        return Collections.emptyList();
     }
 
     public abstract void draw(SpriteBatch spriteBatch, float x, float y, float delta);

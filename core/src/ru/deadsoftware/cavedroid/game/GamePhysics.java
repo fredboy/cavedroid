@@ -9,6 +9,7 @@ import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.mobs.player.Player;
 import ru.deadsoftware.cavedroid.game.model.block.Block;
+import ru.deadsoftware.cavedroid.game.model.item.InventoryItem;
 import ru.deadsoftware.cavedroid.game.objects.drop.Drop;
 import ru.deadsoftware.cavedroid.game.objects.drop.DropController;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
@@ -357,6 +358,10 @@ public class GamePhysics {
             mob.ai(mGameWorld, mGameItemsHolder, mMobsController, delta);
             mobPhy(mob, delta);
             if (mob.isDead()) {
+                for (InventoryItem invItem : mob.getDrop(mGameItemsHolder)) {
+                    mDropController.addDrop(mob.x, mob.y, invItem);
+                }
+
                 it.remove();
             }
         }
@@ -364,6 +369,10 @@ public class GamePhysics {
         playerPhy(player, delta);
         player.ai(mGameWorld, mGameItemsHolder, mMobsController, delta);
         if (player.isDead()) {
+            for (InventoryItem invItem : player.inventory.getItems()) {
+                mDropController.addDrop(player.x, player.y, invItem);
+            }
+            player.inventory.clear();
             player.respawn(mGameWorld, mGameItemsHolder);
         }
     }

@@ -1,10 +1,9 @@
 package ru.deadsoftware.cavedroid.game.mobs
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
 import ru.deadsoftware.cavedroid.misc.utils.drawSprite
 import ru.deadsoftware.cavedroid.misc.utils.mobs.MobSprites.Pig.getBackgroundLeg
 import ru.deadsoftware.cavedroid.misc.utils.mobs.MobSprites.Pig.getBody
@@ -13,7 +12,7 @@ import ru.deadsoftware.cavedroid.misc.utils.mobs.MobSprites.Pig.getLeftLegRelati
 import ru.deadsoftware.cavedroid.misc.utils.mobs.MobSprites.Pig.getLegsRelativeY
 import ru.deadsoftware.cavedroid.misc.utils.mobs.MobSprites.Pig.getRightLegRelativeX
 
-class Pig(x: Float, y: Float) : Mob(x, y, WIDTH, HEIGHT, randomDir(), Type.MOB, MAX_HEALTH) {
+class Pig(x: Float, y: Float) : PeacefulMob(x, y, WIDTH, HEIGHT, randomDir(), MAX_HEALTH) {
 
     override fun getSpeed(): Float {
         return SPEED
@@ -38,14 +37,8 @@ class Pig(x: Float, y: Float) : Mob(x, y, WIDTH, HEIGHT, randomDir(), Type.MOB, 
         }
     }
 
-    override fun ai(world: GameWorld, gameItemsHolder: GameItemsHolder, mobsController: MobsController, delta: Float) {
-        if (MathUtils.randomBoolean(delta)) {
-            if (velocity.x != 0f) {
-                velocity.x = 0f
-            } else {
-                changeDir()
-            }
-        }
+    override fun getDrop(gameItemsHolder: GameItemsHolder): List<InventoryItem> {
+        return listOf(gameItemsHolder.getItem("porkchop_raw").toInventoryItem())
     }
 
     override fun draw(spriteBatch: SpriteBatch, x: Float, y: Float, delta: Float) {

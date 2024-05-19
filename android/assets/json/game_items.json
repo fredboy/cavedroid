@@ -1421,6 +1421,19 @@
       "tint": "#EDBFB4",
       "action_key": "use_spawn_egg_pig",
       "origin_x": 0.5
+    },
+    "porkchop_raw": {
+      "name": "Raw Porkchop",
+      "type": "food",
+      "texture": "porkchop_raw",
+      "heal": 3,
+      "smelt_product": "porkchop_cooked"
+    },
+    "porkchop_cooked": {
+      "name": "Raw Porkchop",
+      "type": "food",
+      "texture": "porkchop_cooked",
+      "heal": 8
     }
   }
 }

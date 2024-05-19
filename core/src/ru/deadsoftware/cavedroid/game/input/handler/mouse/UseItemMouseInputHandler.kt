@@ -3,6 +3,7 @@ package ru.deadsoftware.cavedroid.game.input.handler.mouse
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Timer
+import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.actions.placeToBackgroundAction
@@ -29,6 +30,7 @@ class UseItemMouseInputHandler @Inject constructor(
     private val useBlockActionMap: Map<String, @JvmSuppressWildcards IUseBlockAction>,
     private val gameWindowsManager: GameWindowsManager,
     private val gameWorld: GameWorld,
+    private val gameItemsHolder: GameItemsHolder,
 ) : IMouseInputHandler {
 
     private var buttonHoldTask: Timer.Task? = null
@@ -104,6 +106,9 @@ class UseItemMouseInputHandler @Inject constructor(
         } else if (item is Item.Usable) {
             useItemActionMap[item.useActionKey]?.perform(item, player.cursorX, player.cursorY)
                 ?: Gdx.app.error(TAG, "use item action ${item.useActionKey} not found");
+        } else if (item is Item.Food && player.health < player.maxHealth) {
+            player.heal(item.heal)
+            player.decreaseCurrentItemCount(gameItemsHolder)
         } else {
             tryUseBlock()
         }

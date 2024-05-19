@@ -50,6 +50,11 @@ sealed class Item {
         return this is Usable
     }
 
+    fun isFood(): Boolean {
+        contract { returns(true) implies (this@Item is Food) }
+        return this is Food
+    }
+
     @JvmOverloads
     fun toInventoryItem(amount: Int = 1): InventoryItem {
         return InventoryItem(this, amount)
@@ -136,5 +141,11 @@ sealed class Item {
         override val blockDamageMultiplier: Float,
         override val level: Int,
     ) : Tool()
+
+    data class Food(
+        override val params: CommonItemParams,
+        override val sprite: Sprite,
+        val heal: Int,
+    ) : Item()
 
 }
