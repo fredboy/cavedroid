@@ -10,19 +10,17 @@ import com.badlogic.gdx.utils.Timer;
 import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.model.dto.SaveDataDto;
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem;
-import ru.deadsoftware.cavedroid.game.model.item.Item;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Saveable;
 
 import javax.annotation.CheckForNull;
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * Mob class.
  */
-public abstract class Mob extends Rectangle implements Serializable, Saveable {
+public abstract class Mob extends Rectangle implements  Saveable {
 
     private static final float DAMAGE_TINT_TIMEOUT_S = 0.5f;
     private static final Color DAMAGE_TINT_COLOR = new Color(0xff8080ff);
@@ -85,8 +83,8 @@ public abstract class Mob extends Rectangle implements Serializable, Saveable {
     protected int mMaxHealth;
     protected int mHealth;
 
-    private transient boolean mTakingDamage = false;
-    @CheckForNull private transient ResetTakeDamageTask mResetTakeDamageTask = null;
+    private boolean mTakingDamage = false;
+    @CheckForNull private ResetTakeDamageTask mResetTakeDamageTask = null;
 
     /**
      * @param x          in pixels

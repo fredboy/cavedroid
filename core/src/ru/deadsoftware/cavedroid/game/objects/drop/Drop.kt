@@ -23,7 +23,6 @@ class Drop @JvmOverloads constructor(
     var pickedUp = false
 
     @Suppress("UNNECESSARY_LATEINIT")
-    @Transient
     lateinit var item: Item
         private set
 

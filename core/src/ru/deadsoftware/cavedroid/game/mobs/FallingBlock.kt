@@ -14,7 +14,6 @@ class FallingBlock(
     y: Float,
 ) : Mob(x, y, 1.px, 1.px, Direction.RIGHT, Type.FALLING_BLOCK, Int.MAX_VALUE) {
 
-    @Transient
     private var _block: Block? = null
 
     init {

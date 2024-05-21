@@ -35,7 +35,6 @@ class Furnace @JvmOverloads constructor(
 
     val isActive: Boolean get() = currentFuel != null
 
-    @Transient
     var currentFuel: Item? = null
         set(value) {
             currentFuelKey = value?.params?.key

@@ -9,12 +9,11 @@ import ru.deadsoftware.cavedroid.game.model.item.Item;
 import ru.deadsoftware.cavedroid.misc.Saveable;
 
 import javax.inject.Inject;
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 @GameScope
-public class DropController implements Serializable, Saveable {
+public class DropController implements Saveable {
 
     private static final int SAVE_DATA_VERSION = 1;
 

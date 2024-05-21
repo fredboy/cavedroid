@@ -6,7 +6,6 @@ import ru.deadsoftware.cavedroid.game.mobs.player.Player
 import ru.deadsoftware.cavedroid.game.model.dto.SaveDataDto
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager
 import ru.deadsoftware.cavedroid.misc.Saveable
-import java.io.Serializable
 import java.util.*
 import javax.inject.Inject
 
@@ -14,7 +13,7 @@ import javax.inject.Inject
 class MobsController @Inject constructor(
     gameItemsHolder: GameItemsHolder,
     tooltipManager: TooltipManager,
-) : Serializable, Saveable {
+) : Saveable {
 
     private val _mobs = LinkedList<Mob>()
 

@@ -9,21 +9,18 @@ import ru.deadsoftware.cavedroid.game.model.item.InventoryItem.Companion.isNoneO
 import ru.deadsoftware.cavedroid.game.objects.drop.DropController
 import ru.deadsoftware.cavedroid.misc.Saveable
 import ru.deadsoftware.cavedroid.misc.utils.px
-import java.io.Serializable
 import javax.inject.Inject
 
 @GameScope
 class ContainerController @Inject constructor(
     _dropController: DropController,
     _gameItemsHolder: GameItemsHolder
-) : Serializable, Saveable {
+) : Saveable {
 
     @Suppress("UNNECESSARY_LATEINIT")
-    @Transient
     private lateinit var dropController: DropController
 
     @Suppress("UNNECESSARY_LATEINIT")
-    @Transient
     private lateinit var gameItemsHolder: GameItemsHolder
 
     private val containerMap = mutableMapOf<String, Container>()

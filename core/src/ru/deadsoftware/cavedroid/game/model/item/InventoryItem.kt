@@ -10,14 +10,13 @@ import ru.deadsoftware.cavedroid.misc.Saveable
 import ru.deadsoftware.cavedroid.misc.utils.drawSprite
 import ru.deadsoftware.cavedroid.misc.utils.drawString
 import ru.deadsoftware.cavedroid.misc.utils.px
-import java.io.Serializable
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
 class InventoryItem @JvmOverloads constructor(
     val itemKey: String,
     _amount: Int = 1,
-) : Serializable, Saveable {
+) :  Saveable {
 
     var amount = _amount
         set(value) {
@@ -28,7 +27,6 @@ class InventoryItem @JvmOverloads constructor(
             }
         }
 
-    @Transient
     private var _item: Item? = null
 
     var item: Item

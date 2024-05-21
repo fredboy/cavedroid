@@ -4,14 +4,13 @@ import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.model.dto.SaveDataDto
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
 import ru.deadsoftware.cavedroid.misc.Saveable
-import java.io.Serializable
 import javax.annotation.OverridingMethodsMustInvokeSuper
 
 abstract class Container @JvmOverloads constructor(
     val size: Int,
     gameItemsHolder: GameItemsHolder,
     initialItems: List<InventoryItem>? = null,
-) : Serializable, Saveable {
+) : Saveable {
 
     private val _items = Array(size) { index ->
         initialItems?.getOrNull(index) ?: gameItemsHolder.fallbackItem.toInventoryItem()

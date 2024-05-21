@@ -7,7 +7,6 @@ import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.game.objects.drop.Drop
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager
 import ru.deadsoftware.cavedroid.misc.Saveable
-import java.io.Serializable
 
 class Inventory @JvmOverloads constructor(
     val size: Int,
@@ -15,14 +14,12 @@ class Inventory @JvmOverloads constructor(
     gameItemsHolder: GameItemsHolder,
     tooltipManager: TooltipManager,
     initialItems: List<InventoryItem>? = null
-) : Serializable, Saveable {
+) : Saveable {
 
     @Suppress("UNNECESSARY_LATEINIT")
-    @Transient
     private lateinit var tooltipManager: TooltipManager
 
     @Suppress("UNNECESSARY_LATEINIT")
-    @Transient
     private lateinit var fallbackItem: InventoryItem
 
     private val _items: Array<InventoryItem>
