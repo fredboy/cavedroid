@@ -4,14 +4,16 @@ import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
+import ru.deadsoftware.cavedroid.game.model.dto.SaveDataDto
 import ru.deadsoftware.cavedroid.game.model.item.Item
+import ru.deadsoftware.cavedroid.misc.Saveable
 
 class Drop @JvmOverloads constructor(
     x: Float,
     y: Float,
     _item: Item,
     _amount: Int = 1,
-) : Rectangle(x, y, DROP_SIZE, DROP_SIZE) {
+) : Rectangle(x, y, DROP_SIZE, DROP_SIZE), Saveable {
 
     var amount: Int = _amount
         private set
@@ -60,12 +62,44 @@ class Drop @JvmOverloads constructor(
         )
     }
 
+    override fun getSaveData(): SaveDataDto.DropSaveData {
+        return SaveDataDto.DropSaveData(
+            version = SAVE_DATA_VERSION,
+            x = x,
+            y = y,
+            width = width,
+            height = height,
+            velocityX = velocity.x,
+            velocityY = velocity.y,
+            itemKey = itemKey,
+            amount = amount,
+            pickedUp = pickedUp
+        )
+    }
+
     companion object {
+        private const val SAVE_DATA_VERSION = 1
+
         private const val MAGNET_DISTANCE = 8f
 
         const val MAGNET_VELOCITY = 256f
         const val DROP_SIZE = 8f
 
         private fun getInitialVelocity(): Vector2 = Vector2(0f, -1f)
+
+        fun fromSaveData(saveData: SaveDataDto.DropSaveData, gameItemsHolder: GameItemsHolder): Drop {
+            saveData.verifyVersion(SAVE_DATA_VERSION)
+
+            return Drop(
+                x = saveData.x,
+                y = saveData.y,
+                _item = gameItemsHolder.getItem(saveData.itemKey),
+                _amount = saveData.amount,
+            ).apply {
+                velocity.x = saveData.velocityX
+                velocity.y = saveData.velocityY
+                pickedUp = saveData.pickedUp
+            }
+        }
     }
 }

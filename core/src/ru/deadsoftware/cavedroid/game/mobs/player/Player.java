@@ -4,10 +4,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import org.jetbrains.annotations.NotNull;
 import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.model.block.Block;
+import ru.deadsoftware.cavedroid.game.model.dto.SaveDataDto;
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem;
 import ru.deadsoftware.cavedroid.game.model.item.Item;
 import ru.deadsoftware.cavedroid.game.objects.drop.Drop;
@@ -22,6 +24,8 @@ import javax.annotation.CheckForNull;
 
 public class Player extends Mob {
 
+    private static final int SAVE_DATA_VERSION = 1;
+
     private static final float SPEED = 69.072f;
     private static final float JUMP_VELOCITY = -133.332f;
     private static final int SURVIVAL_CURSOR_RANGE = 4;
@@ -34,7 +38,7 @@ public class Player extends Mob {
     private float hitAnim = 0f;
     private float hitAnimDelta = ANIMATION_SPEED;
 
-    public final Inventory inventory;
+    public Inventory inventory;
 
     public int gameMode;
     public boolean swim;
@@ -439,4 +443,79 @@ public class Player extends Mob {
         SpriteUtilsKt.drawSprite(spriteBatch, frontHand, x + 2, y + 8, frontHandAnim);
     }
 
+    @NotNull
+    @Override
+    public SaveDataDto.PlayerSaveData getSaveData() {
+        return new SaveDataDto.PlayerSaveData(
+                SAVE_DATA_VERSION,
+                mType,
+                mAnimDelta,
+                mAnim,
+                mDirection,
+                mDead,
+                mCanJump,
+                mFlyMode,
+                mMaxHealth,
+                mHealth,
+                x,
+                y,
+                width,
+                height,
+                getVelocity().x,
+                getVelocity().y,
+                hitting,
+                hittingWithDamage,
+                hitAnim,
+                hitAnimDelta,
+                inventory.getSaveData(),
+                gameMode,
+                swim,
+                headRotation,
+                blockDamage,
+                cursorX,
+                cursorY,
+                spawnPoint != null ? spawnPoint.x : 0f,
+                spawnPoint != null ? spawnPoint.y : 0f,
+                controlMode
+        );
+    }
+
+    public static Player fromSaveData(
+            SaveDataDto.PlayerSaveData saveData,
+            GameItemsHolder gameItemsHolder,
+            TooltipManager tooltipManager
+    ) {
+        saveData.verifyVersion(SAVE_DATA_VERSION);
+
+        Player player = new Player(gameItemsHolder, tooltipManager);
+
+        player.mType = saveData.getType();
+        player.mAnimDelta = saveData.getAnimDelta();
+        player.mAnim = saveData.getAnim();
+        player.mDirection = saveData.getDirection();
+        player.mDead = saveData.getDead();
+        player.mCanJump = saveData.getCanJump();
+        player.mFlyMode = saveData.getFlyMode();
+        player.mMaxHealth = saveData.getMaxHealth();
+        player.mHealth = saveData.getHealth();
+        player.x = saveData.getX();
+        player.y = saveData.getY();
+        player.width = saveData.getWidth();
+        player.height = saveData.getHeight();
+        player.hitting = saveData.getHitting();
+        player.hittingWithDamage = saveData.getHittingWithDamage();
+        player.hitAnim = saveData.getHitAnim();
+        player.hitAnimDelta = saveData.getHitAnimDelta();
+        player.inventory = Inventory.Companion.fromSaveData(saveData.getInventory(), gameItemsHolder, tooltipManager);
+        player.gameMode = saveData.getGameMode();
+        player.swim = saveData.getSwim();
+        player.headRotation = saveData.getHeadRotation();
+        player.blockDamage = saveData.getBlockDamage();
+        player.cursorX = saveData.getCursorX();
+        player.cursorY = saveData.getCursorY();
+        player.spawnPoint = new Vector2(saveData.getSpawnPointX(), saveData.getSpawnPointY());
+        player.controlMode = saveData.getControlMode();
+
+        return player;
+    }
 }

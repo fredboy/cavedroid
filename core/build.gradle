@@ -22,5 +22,6 @@ dependencies {
     implementation 'org.jetbrains:annotations:23.1.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializationVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$kotlinSerializationVersion"
     ksp "com.google.dagger:dagger-compiler:$daggerVersion"
 }

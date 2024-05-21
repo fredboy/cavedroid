@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.model.block.Block
+import ru.deadsoftware.cavedroid.game.model.dto.SaveDataDto
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem.Companion.isNoneOrNull
 import ru.deadsoftware.cavedroid.game.objects.drop.DropController
+import ru.deadsoftware.cavedroid.misc.Saveable
 import ru.deadsoftware.cavedroid.misc.utils.px
 import java.io.Serializable
 import javax.inject.Inject
@@ -14,7 +16,7 @@ import javax.inject.Inject
 class ContainerController @Inject constructor(
     _dropController: DropController,
     _gameItemsHolder: GameItemsHolder
-) : Serializable {
+) : Serializable, Saveable {
 
     @Suppress("UNNECESSARY_LATEINIT")
     @Transient
@@ -79,8 +81,35 @@ class ContainerController @Inject constructor(
         }
     }
 
+    override fun getSaveData(): SaveDataDto.ContainerControllerSaveData {
+        return SaveDataDto.ContainerControllerSaveData(
+            version = SAVE_DATA_VERSION,
+            containerMap = containerMap.mapValues { (_, container) -> container.getSaveData() },
+        )
+    }
+
     companion object {
+        private const val SAVE_DATA_VERSION = 1
         private const val TAG = "ContainerController"
+
+        fun fromSaveData(
+            saveData: SaveDataDto.ContainerControllerSaveData,
+            dropController: DropController,
+            gameItemsHolder: GameItemsHolder
+        ): ContainerController {
+            saveData.verifyVersion(SAVE_DATA_VERSION)
+
+            return ContainerController(
+                dropController,
+                gameItemsHolder
+            ).apply {
+                containerMap.putAll(
+                    saveData.containerMap.mapValues { (_, containerSaveData) ->
+                        Container.fromSaveData(containerSaveData, gameItemsHolder)
+                    }
+                )
+            }
+        }
     }
 
 }

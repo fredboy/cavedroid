@@ -4,7 +4,9 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
+import ru.deadsoftware.cavedroid.game.model.dto.SaveDataDto
 import ru.deadsoftware.cavedroid.misc.Assets
+import ru.deadsoftware.cavedroid.misc.Saveable
 import ru.deadsoftware.cavedroid.misc.utils.drawSprite
 import ru.deadsoftware.cavedroid.misc.utils.drawString
 import ru.deadsoftware.cavedroid.misc.utils.px
@@ -15,7 +17,7 @@ import kotlin.contracts.contract
 class InventoryItem @JvmOverloads constructor(
     val itemKey: String,
     _amount: Int = 1,
-) : Serializable {
+) : Serializable, Saveable {
 
     var amount = _amount
         set(value) {
@@ -131,12 +133,35 @@ class InventoryItem @JvmOverloads constructor(
         }
     }
 
+    override fun getSaveData(): SaveDataDto.InventoryItemSaveData {
+        return SaveDataDto.InventoryItemSaveData(
+            version = SAVE_DATA_VERSION,
+            itemKey = itemKey,
+            amount = amount,
+        )
+    }
+
     companion object {
+        private const val SAVE_DATA_VERSION = 1
 
         @OptIn(ExperimentalContracts::class)
         fun InventoryItem?.isNoneOrNull(): Boolean {
             contract { returns(false) implies(this@isNoneOrNull != null) }
             return this?.item == null || this.item.isNone()
         }
+
+
+        fun fromSaveData(
+            saveData: SaveDataDto.InventoryItemSaveData,
+            gameItemsHolder: GameItemsHolder? = null
+        ): InventoryItem {
+            saveData.verifyVersion(SAVE_DATA_VERSION)
+
+            val inventoryItem = InventoryItem(saveData.itemKey, saveData.amount)
+            gameItemsHolder?.let(inventoryItem::init)
+
+            return inventoryItem
+        }
     }
+
 }

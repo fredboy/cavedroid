@@ -4,12 +4,17 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.TimeUtils
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
+import ru.deadsoftware.cavedroid.game.model.dto.SaveDataDto
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem.Companion.isNoneOrNull
 import ru.deadsoftware.cavedroid.game.model.item.Item
+import ru.deadsoftware.cavedroid.misc.Saveable
 
-class Furnace(gameItemsHolder: GameItemsHolder) : Container(SIZE, gameItemsHolder) {
-    
+class Furnace @JvmOverloads constructor(
+    gameItemsHolder: GameItemsHolder,
+    initialItems: List<InventoryItem>? = null
+) : Container(SIZE, gameItemsHolder, initialItems), Saveable {
+
     var fuel: InventoryItem
         get() = items[FUEL_INDEX]
         set(value) {
@@ -57,7 +62,7 @@ class Furnace(gameItemsHolder: GameItemsHolder) : Container(SIZE, gameItemsHolde
     }
 
     fun canSmelt(): Boolean {
-        return (result.isNoneOrNull() || (result.item.params.key == input.item.params.smeltProductKey) )&&
+        return (result.isNoneOrNull() || (result.item.params.key == input.item.params.smeltProductKey)) &&
                 !input.isNoneOrNull() && input.item.params.smeltProductKey != null &&
                 (!fuel.isNoneOrNull() || burnProgress > 0f)
     }
@@ -118,7 +123,7 @@ class Furnace(gameItemsHolder: GameItemsHolder) : Container(SIZE, gameItemsHolde
         if (isActive && smeltProgress >= 1f) {
             val productKey = requireNotNull(input.item.params.smeltProductKey)
             val res = gameItemsHolder.getItem(productKey)
-            if (result.isNoneOrNull())  {
+            if (result.isNoneOrNull()) {
                 result = res.toInventoryItem()
             } else {
                 result.add()
@@ -132,7 +137,21 @@ class Furnace(gameItemsHolder: GameItemsHolder) : Container(SIZE, gameItemsHolde
         }
     }
 
+    override fun getSaveData(): SaveDataDto.FurnaceSaveData {
+        return SaveDataDto.FurnaceSaveData(
+            version = SAVE_DATA_VERSION,
+            size = size,
+            currentFuelItemKey = currentFuelKey,
+            items = items.map(InventoryItem::getSaveData),
+            startBurnTimeMs = startBurnTimeMs,
+            startSmeltTimeMs = smeltStarTimeMs,
+            burnProgress = burnProgress,
+            smeltProgress = smeltProgress,
+        )
+    }
+
     companion object {
+        private const val SAVE_DATA_VERSION = 1
         private const val SIZE = 3
         private const val TAG = "Furnace"
 
@@ -141,6 +160,23 @@ class Furnace(gameItemsHolder: GameItemsHolder) : Container(SIZE, gameItemsHolde
         const val RESULT_INDEX = 2
 
         const val SMELTING_TIME_MS = 10000L
+
+        fun fromSaveData(saveData: SaveDataDto.FurnaceSaveData, gameItemsHolder: GameItemsHolder): Furnace {
+            saveData.verifyVersion(SAVE_DATA_VERSION)
+
+            return Furnace(
+                gameItemsHolder = gameItemsHolder,
+                initialItems = saveData.items.map { item ->
+                    InventoryItem.fromSaveData(item, gameItemsHolder)
+                }
+            ).apply {
+                currentFuelKey = saveData.currentFuelItemKey
+                startBurnTimeMs = saveData.startSmeltTimeMs
+                smeltStarTimeMs = saveData.startSmeltTimeMs
+                burnProgress = saveData.burnProgress
+                smeltProgress = saveData.smeltProgress
+            }
+        }
     }
 
 }

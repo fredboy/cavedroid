@@ -1,18 +1,21 @@
 package ru.deadsoftware.cavedroid.game.mobs.player
 
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
+import ru.deadsoftware.cavedroid.game.model.dto.SaveDataDto
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
 import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.game.objects.drop.Drop
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager
+import ru.deadsoftware.cavedroid.misc.Saveable
 import java.io.Serializable
 
-class Inventory(
+class Inventory @JvmOverloads constructor(
     val size: Int,
     val hotbarSize: Int,
     gameItemsHolder: GameItemsHolder,
     tooltipManager: TooltipManager,
-) : Serializable {
+    initialItems: List<InventoryItem>? = null
+) : Serializable, Saveable {
 
     @Suppress("UNNECESSARY_LATEINIT")
     @Transient
@@ -22,6 +25,8 @@ class Inventory(
     @Transient
     private lateinit var fallbackItem: InventoryItem
 
+    private val _items: Array<InventoryItem>
+
     init {
         fallbackItem = gameItemsHolder.fallbackItem.toInventoryItem()
         this.tooltipManager = tooltipManager
@@ -29,18 +34,21 @@ class Inventory(
         if (size < 0 || hotbarSize < 0 || hotbarSize > size) {
             throw IllegalArgumentException("Invalid inventory sizes: hotbarSize=$hotbarSize; size=$size")
         }
-    }
 
-    private val _items = Array(size) { InventoryItem(gameItemsHolder.fallbackItem) }
+        _items = Array(size) { index -> initialItems?.getOrNull(index) ?: InventoryItem(gameItemsHolder.fallbackItem) }
+    }
 
     val items get() = _items.asList() as MutableList<InventoryItem>
 
     val hotbarItems get() = items.subList(0, hotbarSize)
 
-    var activeSlot = 0
+    private var _activeSlot = 0
+
+    var activeSlot
+        get() = _activeSlot
         set(value) {
             if (value in 0 ..< hotbarSize) {
-                field = value
+                _activeSlot = value
                 showCurrentItemTooltip()
             }
         }
@@ -137,6 +145,38 @@ class Inventory(
     fun clear() {
         for (i in _items.indices) {
             _items[i] = fallbackItem
+        }
+    }
+
+    override fun getSaveData(): SaveDataDto.InventorySaveData {
+        return SaveDataDto.InventorySaveData(
+            version = SAVE_DATA_VERSION,
+            size = size,
+            hotbarSize = hotbarSize,
+            activeSlot = _activeSlot,
+            items = items.map(InventoryItem::getSaveData)
+        )
+    }
+
+    companion object {
+        private const val SAVE_DATA_VERSION = 1
+
+        fun fromSaveData(
+            saveData: SaveDataDto.InventorySaveData,
+            gameItemsHolder: GameItemsHolder,
+            tooltipManager: TooltipManager,
+        ): Inventory {
+            saveData.verifyVersion(SAVE_DATA_VERSION)
+
+            return Inventory(
+                size = saveData.size,
+                hotbarSize = saveData.hotbarSize,
+                gameItemsHolder = gameItemsHolder,
+                tooltipManager = tooltipManager,
+                initialItems = saveData.items.map { item -> InventoryItem.fromSaveData(item, gameItemsHolder) }
+            ).apply {
+                _activeSlot = saveData.activeSlot
+            }
         }
     }
 }

@@ -1,8 +1,7 @@
 package ru.deadsoftware.cavedroid.menu.submenus;
 
-import com.badlogic.gdx.Gdx;
 import ru.deadsoftware.cavedroid.MainConfig;
-import ru.deadsoftware.cavedroid.game.GameSaver;
+import ru.deadsoftware.cavedroid.game.save.GameSaveLoader;
 import ru.deadsoftware.cavedroid.menu.MenuProc;
 import ru.deadsoftware.cavedroid.menu.objects.Button;
 import ru.deadsoftware.cavedroid.menu.objects.ButtonEventListener;
@@ -36,7 +35,7 @@ public class MenuMain extends Menu {
     @Override
     protected void initButtons() {
         loadButtonsFromJson(mAssetLoader.getAssetHandle("json/menu_main_buttons.json"));
-        if (GameSaver.exists(mMainConfig)) {
+        if (GameSaveLoader.INSTANCE.exists(mMainConfig)) {
             getButtons().get("load_game").setType(Button.NORMAL);
         }
     }
