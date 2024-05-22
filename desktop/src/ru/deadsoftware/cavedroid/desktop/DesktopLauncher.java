@@ -35,9 +35,12 @@ class DesktopLauncher {
             }
         }
 
-        CaveGame caveGame = new CaveGame(System.getProperty("user.home") + "/.cavedroid", touch,
-                new DesktopPreferencesStore(), assetsPath);
-        caveGame.setDebug(debug);
+        CaveGame caveGame = new CaveGame(
+                System.getProperty("user.home") + "/.cavedroid",
+                touch,
+                debug,
+                new DesktopPreferencesStore()
+        );
 
         new Lwjgl3Application(caveGame, config);
     }
