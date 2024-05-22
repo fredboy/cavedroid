@@ -3,13 +3,11 @@ package ru.deadsoftware.cavedroid;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
+import org.jetbrains.annotations.Nullable;
 import ru.deadsoftware.cavedroid.game.GameScreen;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
 import ru.deadsoftware.cavedroid.prefs.PreferencesStore;
-
-import javax.annotation.Nullable;
 
 public class CaveGame extends Game {
 

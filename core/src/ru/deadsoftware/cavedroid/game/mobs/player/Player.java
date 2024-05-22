@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
@@ -19,8 +20,6 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.utils.SpriteOrigin;
 import ru.deadsoftware.cavedroid.misc.utils.SpriteUtilsKt;
-
-import javax.annotation.CheckForNull;
 
 public class Player extends Mob {
 
@@ -48,7 +47,7 @@ public class Player extends Mob {
     public int cursorX = 0;
     public int cursorY = 0;
 
-    @CheckForNull
+    @Nullable
     private Vector2 spawnPoint = null;
 
     public ControlMode controlMode = ControlMode.WALK;
@@ -231,7 +230,7 @@ public class Player extends Mob {
 
         final Block foregroundBlock = gameWorld.getForeMap(cursorX, cursorY);
         final Block backgroundBlock = gameWorld.getBackMap(cursorX, cursorY);
-        @CheckForNull final Block target;
+        @Nullable final Block target;
 
         if (checkBlockCanBeHit(foregroundBlock)) {
             target = foregroundBlock;

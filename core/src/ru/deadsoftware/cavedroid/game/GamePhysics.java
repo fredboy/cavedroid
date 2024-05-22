@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import org.jetbrains.annotations.Nullable;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.mobs.Mob;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
@@ -14,7 +15,6 @@ import ru.deadsoftware.cavedroid.game.objects.drop.Drop;
 import ru.deadsoftware.cavedroid.game.objects.drop.DropController;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 
-import javax.annotation.CheckForNull;
 import javax.inject.Inject;
 import java.util.Iterator;
 
@@ -68,7 +68,7 @@ public class GamePhysics {
     /**
      * @return colliding rect or null if no collision
      */
-    @CheckForNull
+    @Nullable
     private Rectangle checkColl(Rectangle rect) {
         int minX = (int) ((rect.x + rect.width / 2) / 16) - 4;
         int minY = (int) ((rect.y + rect.height / 2) / 16) - 4;
@@ -115,7 +115,7 @@ public class GamePhysics {
     /**
      * @return Rectangle representing magneting target for this drop
      */
-    @CheckForNull
+    @Nullable
     private Rectangle getShiftedMagnetingPlayerRect(Drop drop) {
         final Player player = mMobsController.getPlayer();
 
@@ -185,7 +185,7 @@ public class GamePhysics {
             return;
         }
 
-        @CheckForNull Rectangle collidingRect = checkColl(mob);
+        @Nullable Rectangle collidingRect = checkColl(mob);
 
         if (collidingRect != null) {
             if (mob.canJump() && !mob.isFlyMode() && collidingRect.y >= mob.y + mob.height - 8) {
@@ -225,7 +225,7 @@ public class GamePhysics {
     }
 
     private void mobYColl(Mob mob) {
-        @CheckForNull final Rectangle collidingRect = checkColl(mob);
+        @Nullable final Rectangle collidingRect = checkColl(mob);
         if (collidingRect != null) {
             int d = -1;
 

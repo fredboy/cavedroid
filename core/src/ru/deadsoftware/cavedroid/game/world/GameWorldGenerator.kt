@@ -1,12 +1,12 @@
 package ru.deadsoftware.cavedroid.game.world
 
-import com.google.common.primitives.Ints.min
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.model.block.Block
 import ru.deadsoftware.cavedroid.game.model.world.Biome
 import ru.deadsoftware.cavedroid.game.model.world.generator.WorldGeneratorConfig
 import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.random.Random
 
 class GameWorldGenerator(

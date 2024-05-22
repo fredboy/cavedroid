@@ -4,7 +4,6 @@ import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.model.dto.SaveDataDto
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
 import ru.deadsoftware.cavedroid.misc.Saveable
-import javax.annotation.OverridingMethodsMustInvokeSuper
 
 abstract class Container @JvmOverloads constructor(
     val size: Int,
@@ -18,7 +17,6 @@ abstract class Container @JvmOverloads constructor(
 
     val items get() = _items.asList() as MutableList<InventoryItem>
 
-    @OverridingMethodsMustInvokeSuper
     open fun initItems(gameItemsHolder: GameItemsHolder) {
         _items.forEach { it.init(gameItemsHolder) }
     }

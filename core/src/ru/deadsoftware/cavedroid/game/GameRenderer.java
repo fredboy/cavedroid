@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.TimeUtils;
+import org.jetbrains.annotations.Nullable;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.input.IKeyboardInputHandler;
 import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler;
@@ -30,7 +31,6 @@ import ru.deadsoftware.cavedroid.misc.Renderer;
 import ru.deadsoftware.cavedroid.misc.utils.MeasureUnitsUtilsKt;
 import ru.deadsoftware.cavedroid.misc.utils.RenderingUtilsKt;
 
-import javax.annotation.CheckForNull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -223,7 +223,7 @@ public class GameRenderer extends Renderer {
         }
     }
 
-    private boolean handleMouseAction(@CheckForNull  MouseInputAction action) {
+    private boolean handleMouseAction(@Nullable MouseInputAction action) {
         if (action == null) {
             return false;
         }
@@ -243,7 +243,7 @@ public class GameRenderer extends Renderer {
     }
 
     private boolean onMouseActionEvent(int mouseX, int mouseY, int button, boolean touchUp, int pointer) {
-        @CheckForNull MouseInputAction action = mMouseInputActionMapper
+        @Nullable MouseInputAction action = mMouseInputActionMapper
                 .map((float) mouseX, (float) mouseY, getCameraViewport(), button, touchUp, pointer);
         return handleMouseAction(action);
     }
@@ -322,20 +322,20 @@ public class GameRenderer extends Renderer {
             return false;
         }
 
-        @CheckForNull MouseInputAction action =
+        @Nullable MouseInputAction action =
                 mMouseInputActionMapper.mapDragged(screenX, screenY, getCameraViewport(), pointer);
         return handleMouseAction(action);
     }
 
     @Override
     public boolean scrolled(float amountX, float amountY) {
-        @CheckForNull MouseInputAction action = mMouseInputActionMapper
+        @Nullable MouseInputAction action = mMouseInputActionMapper
                 .mapScrolled(Gdx.input.getX(), Gdx.input.getY(), amountX, amountY, getCameraViewport());
         return handleMouseAction(action);
     }
 
     private boolean handleKeyboardAction(int keycode, boolean isKeyDown) {
-        @CheckForNull final KeyboardInputAction action = mKeyboardInputActionMapper
+        @Nullable final KeyboardInputAction action = mKeyboardInputActionMapper
                 .map(keycode, isKeyDown);
 
         if (action == null) {

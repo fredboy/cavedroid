@@ -2,6 +2,7 @@ package ru.deadsoftware.cavedroid.game.world;
 
 import com.badlogic.gdx.math.MathUtils;
 import kotlin.Pair;
+import org.jetbrains.annotations.Nullable;
 import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.GameScope;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
@@ -16,7 +17,6 @@ import ru.deadsoftware.cavedroid.game.objects.container.Furnace;
 import ru.deadsoftware.cavedroid.game.objects.container.ContainerController;
 import ru.deadsoftware.cavedroid.misc.utils.MeasureUnitsUtilsKt;
 
-import javax.annotation.CheckForNull;
 import javax.inject.Inject;
 
 @GameScope
@@ -42,8 +42,8 @@ public class GameWorld {
                      MobsController mobsController,
                      GameItemsHolder gameItemsHolder,
                      ContainerController containerController,
-                     @CheckForNull Block[][] foreMap,
-                     @CheckForNull Block[][] backMap) {
+                     @Nullable Block[][] foreMap,
+                     @Nullable Block[][] backMap) {
         mDropController = dropController;
         mMobsController = mobsController;
         mGameItemsHolder = gameItemsHolder;
@@ -273,24 +273,24 @@ public class GameWorld {
         placeToBackground(x, y, mGameItemsHolder.getFallbackBlock());
     }
 
-    @CheckForNull
+    @Nullable
     private Container getContainerAt(int x, int y, int z) {
         return mContainerController.getContainer(transformX(x), y, z);
     }
 
-    @CheckForNull
+    @Nullable
     public Container getForegroundContainer(int x, int y) {
         return getContainerAt(x, y, FOREGROUND_Z);
     }
 
-    @CheckForNull
+    @Nullable
     public Container getBackgroundContainer(int x, int y) {
         return getContainerAt(x, y, BACKGROUND_Z);
     }
 
-    @CheckForNull
+    @Nullable
     public Furnace getForegroundFurnace(int x, int y) {
-        @CheckForNull
+        @Nullable
         final Container container = getForegroundContainer(x, y);
 
         if (container instanceof Furnace) {
@@ -300,9 +300,9 @@ public class GameWorld {
         return null;
     }
 
-    @CheckForNull
+    @Nullable
     public Furnace getBackgroundFurnace(int x, int y) {
-        @CheckForNull
+        @Nullable
         final Container container = getBackgroundContainer(x, y);
 
         if (container instanceof Furnace) {

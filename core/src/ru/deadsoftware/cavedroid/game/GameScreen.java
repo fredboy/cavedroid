@@ -1,10 +1,9 @@
 package ru.deadsoftware.cavedroid.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import org.jetbrains.annotations.Nullable;
 import ru.deadsoftware.cavedroid.MainConfig;
 
-import javax.annotation.CheckForNull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -13,9 +12,9 @@ public class GameScreen implements Screen {
 
     private final MainConfig mMainConfig;
 
-    @CheckForNull
+    @Nullable
     private GameProc mGameProc;
-    @CheckForNull
+    @Nullable
     private GameItemsHolder mGameItemsHolder;
 
     @Inject

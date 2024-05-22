@@ -7,13 +7,13 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
+import org.jetbrains.annotations.Nullable;
 import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.model.dto.SaveDataDto;
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Saveable;
 
-import javax.annotation.CheckForNull;
 import java.util.Collections;
 import java.util.List;
 
@@ -84,7 +84,9 @@ public abstract class Mob extends Rectangle implements  Saveable {
     protected int mHealth;
 
     private boolean mTakingDamage = false;
-    @CheckForNull private ResetTakeDamageTask mResetTakeDamageTask = null;
+
+    @Nullable
+    private ResetTakeDamageTask mResetTakeDamageTask = null;
 
     /**
      * @param x          in pixels

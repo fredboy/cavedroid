@@ -1,11 +1,10 @@
 package ru.deadsoftware.cavedroid;
 
+import org.jetbrains.annotations.Nullable;
 import ru.deadsoftware.cavedroid.game.GameUiWindow;
 import ru.deadsoftware.cavedroid.game.input.Joystick;
 import ru.deadsoftware.cavedroid.prefs.PreferencesStore;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashMap;
@@ -15,16 +14,16 @@ public class MainConfig {
 
     private final HashMap<String, String> mPreferencesCache = new HashMap<>();
 
-    @CheckForNull
+    @Nullable
     private FullscreenToggleListener mFullscreenToggleListener = null;
 
     private final CaveGame mCaveGame;
     private final PreferencesStore mPreferencesStore;
 
-    @CheckForNull
+    @Nullable
     private MainComponent mMainComponent;
 
-    @CheckForNull
+    @Nullable
     private Joystick mJoystick;
 
     private GameUiWindow mGameUiWindow;
@@ -127,16 +126,16 @@ public class MainConfig {
         mAssetsPackPath = assetsPackPath;
     }
 
-    @CheckForNull
+    @Nullable
     public Joystick getJoystick() {
         return mJoystick;
     }
 
-    public void setJoystick(@CheckForNull Joystick joystick) {
+    public void setJoystick(@Nullable Joystick joystick) {
         mJoystick = joystick;
     }
 
-    @CheckForNull
+    @Nullable
     public String getPreference(String key) {
         if (mPreferencesCache.containsKey(key)) {
             return mPreferencesCache.get(key);

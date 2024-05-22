@@ -2,6 +2,7 @@ package ru.deadsoftware.cavedroid.game;
 
 import dagger.Module;
 import dagger.Provides;
+import org.jetbrains.annotations.Nullable;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.model.block.Block;
@@ -12,12 +13,10 @@ import ru.deadsoftware.cavedroid.game.save.GameSaveLoader;
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 
-import javax.annotation.CheckForNull;
-
 @Module
 public class GameModule {
 
-    @CheckForNull
+    @Nullable
     private static GameSaveData data;
 
     public static boolean loaded = false;
