@@ -8,10 +8,10 @@ java.targetCompatibility = JavaVersion.VERSION_17
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 sourceSets.main.java.srcDirs = ["src/"]
-sourceSets.main.resources.srcDirs = ["../android/assets"]
+sourceSets.main.resources.srcDirs = ["assets/"]
 
 project.ext.mainClassName = "ru.deadsoftware.cavedroid.desktop.DesktopLauncher"
-project.ext.assetsDir = new File("../android/assets")
+project.ext.assetsDir = new File("assets/")
 
 task run(dependsOn: build, type: JavaExec) {
     main = project.mainClassName
