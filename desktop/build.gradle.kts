@@ -29,7 +29,12 @@ tasks.register<Jar>("dist") {
     manifest {
         attributes["Main-Class"] = desktopLauncherClassName
     }
-    from(configurations.runtimeClasspath.get().resolve().map { it.takeIf(File::isDirectory) ?: zipTree(it) })
+    from(files(configurations.runtimeClasspath.map { classpath ->
+        classpath.map { file ->
+            file.takeIf(File::isDirectory) ?: zipTree(file)
+        }
+    }))
+    with(tasks.jar.get())
 }
 
 dependencies {
