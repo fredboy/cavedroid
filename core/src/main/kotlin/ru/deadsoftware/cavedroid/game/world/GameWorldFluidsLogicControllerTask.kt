@@ -5,7 +5,7 @@ import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.block.Block
-import ru.deadsoftware.cavedroid.misc.utils.bl
+import ru.fredboy.cavedroid.utils.bl
 import java.util.PriorityQueue
 import javax.inject.Inject
 import kotlin.math.min

@@ -5,7 +5,7 @@ import ru.deadsoftware.cavedroid.game.mobs.FallingBlock
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindUpdateBlockAction
-import ru.deadsoftware.cavedroid.misc.utils.px
+import ru.fredboy.cavedroid.utils.px
 import javax.inject.Inject
 
 @GameScope

@@ -5,8 +5,8 @@ import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.model.block.Block
 import ru.deadsoftware.cavedroid.game.model.dto.SaveDataDto
 import ru.deadsoftware.cavedroid.game.world.GameWorld
-import ru.deadsoftware.cavedroid.misc.utils.bl
-import ru.deadsoftware.cavedroid.misc.utils.px
+import ru.fredboy.cavedroid.utils.bl
+import ru.fredboy.cavedroid.utils.px
 
 class FallingBlock(
     private val blockKey: String,

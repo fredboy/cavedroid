@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.TimeUtils;
 import org.jetbrains.annotations.Nullable;
 import ru.deadsoftware.cavedroid.MainConfig;
@@ -21,21 +20,19 @@ import ru.deadsoftware.cavedroid.game.input.mapper.KeyboardInputActionMapper;
 import ru.deadsoftware.cavedroid.game.input.mapper.MouseInputActionMapper;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
 import ru.deadsoftware.cavedroid.game.mobs.player.Player;
-import ru.deadsoftware.cavedroid.game.objects.TouchButton;
 import ru.deadsoftware.cavedroid.game.render.IGameRenderer;
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager;
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
-import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.Renderer;
-import ru.deadsoftware.cavedroid.misc.utils.MeasureUnitsUtilsKt;
 import ru.deadsoftware.cavedroid.misc.utils.RenderingUtilsKt;
+import ru.fredboy.cavedroid.domain.assets.model.TouchButton;
+import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase;
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase;
+import ru.fredboy.cavedroid.utils.MeasureUnitsUtilsKt;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @GameScope
 public class GameRenderer extends Renderer {
@@ -43,7 +40,7 @@ public class GameRenderer extends Renderer {
     private static final float CAMERA_SPEED = 72f;
     private static final float MAX_CAM_DISTANCE_FROM_PLAYER = 64f;
     private static final float DRAG_THRESHOLD = 1f;
-    private static final TouchButton nullButton = new TouchButton(null, -1, true);
+    private static final TouchButton nullButton = new TouchButton(new Rectangle(), -1, true);
 
     private final MainConfig mMainConfig;
     private final MobsController mMobsController;
@@ -56,6 +53,8 @@ public class GameRenderer extends Renderer {
     private final Set<IKeyboardInputHandler> mKeyboardInputHandlers;
     private final GameWindowsManager mGameWindowsManager;
     private final TooltipManager mTooltipManager;
+    private final GetFontUseCase mGetFontUseCase;
+    private final GetTouchButtonsUseCase mGetTouchButtonsUseCase;
 
     private final TouchButton mouseLeftTouchButton, mouseRightTouchButton;
 
@@ -75,7 +74,9 @@ public class GameRenderer extends Renderer {
                  Set<IMouseInputHandler> mouseInputHandlers,
                  Set<IKeyboardInputHandler> keyboardInputHandlers,
                  GameWindowsManager gameWindowsManager,
-                 TooltipManager tooltipManager) {
+                 TooltipManager tooltipManager,
+                 GetFontUseCase getFontUseCase,
+                 GetTouchButtonsUseCase getTouchButtonsUseCase) {
         super(mainConfig.getWidth(), mainConfig.getHeight());
 
         mMainConfig = mainConfig;
@@ -95,6 +96,8 @@ public class GameRenderer extends Renderer {
         mKeyboardInputHandlers = keyboardInputHandlers;
         mGameWindowsManager = gameWindowsManager;
         mTooltipManager = tooltipManager;
+        mGetFontUseCase = getFontUseCase;
+        mGetTouchButtonsUseCase = getTouchButtonsUseCase;
 
         mouseLeftTouchButton = new TouchButton(new Rectangle(getWidth() / 2, 0f, getWidth() / 2, getHeight() / 2), Input.Buttons.LEFT, true);
         mouseRightTouchButton = new TouchButton(new Rectangle(getWidth() / 2, getHeight() / 2, getWidth() / 2, getHeight() / 2), Input.Buttons.RIGHT, true);
@@ -218,8 +221,10 @@ public class GameRenderer extends Renderer {
         mCursorMouseInputHandler.handle(action);
 
         if (!mTooltipManager.getCurrentMouseTooltip().isEmpty()) {
-            RenderingUtilsKt.drawString(spriter, mTooltipManager.getCurrentMouseTooltip(), screenX + 1, screenY + 1, Color.BLACK);
-            RenderingUtilsKt.drawString(spriter, mTooltipManager.getCurrentMouseTooltip(), screenX, screenY, Color.WHITE);
+            RenderingUtilsKt.drawString(spriter, mGetFontUseCase.invoke(),
+                    mTooltipManager.getCurrentMouseTooltip(), screenX + 1, screenY + 1, Color.BLACK);
+            RenderingUtilsKt.drawString(spriter, mGetFontUseCase.invoke(),
+                    mTooltipManager.getCurrentMouseTooltip(), screenX, screenY, Color.WHITE);
         }
     }
 
@@ -275,18 +280,18 @@ public class GameRenderer extends Renderer {
         if (mGameWindowsManager.getCurrentWindowType() != GameUiWindow.NONE) {
             return nullButton;
         }
-        for (ObjectMap.Entry<String, TouchButton> entry : Assets.guiMap) {
-            TouchButton button = entry.value;
-            if (button.getRect().contains(touchX, touchY)) {
+        for (Map.Entry<String, TouchButton> entry : mGetTouchButtonsUseCase.invoke().entrySet()) {
+            TouchButton button = entry.getValue();
+            if (button.getRectangle().contains(touchX, touchY)) {
                 return button;
             }
         }
 
-        if (mouseLeftTouchButton.getRect().contains(touchX, touchY)) {
+        if (mouseLeftTouchButton.getRectangle().contains(touchX, touchY)) {
             return mouseLeftTouchButton;
         }
 
-        if (mouseRightTouchButton.getRect().contains(touchX, touchY)) {
+        if (mouseRightTouchButton.getRectangle().contains(touchX, touchY)) {
             return mouseRightTouchButton;
         }
 

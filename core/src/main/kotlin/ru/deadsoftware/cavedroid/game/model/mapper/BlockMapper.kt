@@ -9,11 +9,13 @@ import ru.deadsoftware.cavedroid.game.model.dto.BlockDto
 import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.misc.Assets
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader
+import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockTextureUseCase
 import javax.inject.Inject
 
 @Reusable
 class BlockMapper @Inject constructor(
     private val assetLoader: AssetLoader,
+    private val getBlockTexture: GetBlockTextureUseCase,
 ) {
 
     fun map(key: String, dto: BlockDto): Block {
@@ -102,7 +104,7 @@ class BlockMapper @Inject constructor(
             return null
         }
 
-        return Assets.resolveBlockTexture(assetLoader, textureName)
+        return getBlockTexture[textureName]
     }
 
 }

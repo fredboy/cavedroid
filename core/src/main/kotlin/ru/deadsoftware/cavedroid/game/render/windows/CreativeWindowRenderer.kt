@@ -3,30 +3,35 @@ package ru.deadsoftware.cavedroid.game.render.windows
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
-import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.render.IGameRenderer
 import ru.deadsoftware.cavedroid.game.render.WindowsRenderer
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
-import ru.deadsoftware.cavedroid.misc.Assets
+import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
+import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
+import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
+import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import javax.inject.Inject
 import kotlin.math.min
 
 @GameScope
 class CreativeWindowRenderer @Inject constructor(
-    private val mainConfig: MainConfig,
     private val gameWindowsManager: GameWindowsManager,
     private val gameItemsHolder: GameItemsHolder,
     private val mobsController: MobsController,
+    private val textureRegions: GetTextureRegionByNameUseCase,
+    private val getStringWidth: GetStringWidthUseCase,
+    private val getStringHeight: GetStringHeightUseCase,
+    private val getFont: GetFontUseCase,
 ) : AbstractWindowRenderer(), IGameRenderer {
 
     override val renderLayer get() = WindowsRenderer.RENDER_LAYER
 
-    private val creativeWindowTexture get() = requireNotNull(Assets.textureRegions[CREATIVE_WINDOW_KEY])
-    private val scrollIndicatorTexture get() = requireNotNull(Assets.textureRegions[SCROLL_INDICATOR_KEY])
+    private val creativeWindowTexture get() = requireNotNull(textureRegions[CREATIVE_WINDOW_KEY])
+    private val scrollIndicatorTexture get() = requireNotNull(textureRegions[SCROLL_INDICATOR_KEY])
 
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
@@ -56,23 +61,29 @@ class CreativeWindowRenderer @Inject constructor(
         drawItemsGrid(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
+            font = getFont(),
             gridX = windowX + GameWindowsConfigs.Creative.itemsGridMarginLeft,
             gridY = windowY + GameWindowsConfigs.Creative.itemsGridMarginTop,
             items = items.asIterable(),
             itemsInRow = GameWindowsConfigs.Creative.itemsInRow,
             cellWidth = GameWindowsConfigs.Creative.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Creative.itemsGridRowHeight,
+            getStringWidth = getStringWidth,
+            getStringHeight = getStringHeight
         )
 
         drawItemsGrid(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
+            font = getFont(),
             gridX = windowX + GameWindowsConfigs.Creative.itemsGridMarginLeft,
             gridY = windowY + creativeWindow.regionHeight - GameWindowsConfigs.Creative.playerInventoryOffsetFromBottom,
             items = mobsController.player.inventory.items.asSequence().take(GameWindowsConfigs.Creative.invItems).asIterable(),
             itemsInRow = GameWindowsConfigs.Creative.invItems,
             cellWidth = GameWindowsConfigs.Creative.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Creative.itemsGridRowHeight,
+            getStringWidth = getStringWidth,
+            getStringHeight = getStringHeight
         )
     }
 

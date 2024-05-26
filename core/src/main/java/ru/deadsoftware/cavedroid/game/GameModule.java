@@ -12,6 +12,8 @@ import ru.deadsoftware.cavedroid.game.save.GameSaveData;
 import ru.deadsoftware.cavedroid.game.save.GameSaveLoader;
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
+import ru.fredboy.cavedroid.domain.assets.usecase.GetPigSpritesUseCase;
+import ru.fredboy.cavedroid.domain.assets.usecase.GetPlayerSpritesUseCase;
 
 @Module
 public class GameModule {
@@ -21,11 +23,21 @@ public class GameModule {
 
     public static boolean loaded = false;
 
-    private static void load(MainConfig mainConfig, GameItemsHolder gameItemsHolder, TooltipManager tooltipManager) {
+    private static void load(MainConfig mainConfig,
+                             GameItemsHolder gameItemsHolder,
+                             TooltipManager tooltipManager,
+                             GetPlayerSpritesUseCase getPlayerSpritesUseCase,
+                             GetPigSpritesUseCase getPigSpritesUseCase) {
         if (loaded) {
             return;
         }
-        data = GameSaveLoader.INSTANCE.load(mainConfig, gameItemsHolder, tooltipManager);
+
+        data = GameSaveLoader.INSTANCE.load(mainConfig,
+                gameItemsHolder,
+                tooltipManager,
+                getPlayerSpritesUseCase,
+                getPigSpritesUseCase);
+
         loaded = true;
     }
 
@@ -39,8 +51,10 @@ public class GameModule {
     @GameScope
     public static DropController provideDropController(MainConfig mainConfig,
                                                        GameItemsHolder gameItemsHolder,
-                                                       TooltipManager tooltipManager) {
-        load(mainConfig, gameItemsHolder, tooltipManager);
+                                                       TooltipManager tooltipManager,
+                                                       GetPlayerSpritesUseCase getPlayerSpritesUseCase,
+                                                       GetPigSpritesUseCase getPigSpritesUseCase) {
+        load(mainConfig, gameItemsHolder, tooltipManager, getPlayerSpritesUseCase, getPigSpritesUseCase);
         DropController controller = data != null ? data.retrieveDropController() : new DropController();
         makeDataNullIfEmpty();
         controller.initDrops(gameItemsHolder);
@@ -52,8 +66,10 @@ public class GameModule {
     public static ContainerController provideFurnaceController(MainConfig mainConfig,
                                                                DropController dropController,
                                                                GameItemsHolder gameItemsHolder,
-                                                               TooltipManager tooltipManager) {
-        load(mainConfig, gameItemsHolder, tooltipManager);
+                                                               TooltipManager tooltipManager,
+                                                               GetPlayerSpritesUseCase getPlayerSpritesUseCase,
+                                                               GetPigSpritesUseCase getPigSpritesUseCase) {
+        load(mainConfig, gameItemsHolder, tooltipManager, getPlayerSpritesUseCase, getPigSpritesUseCase);
         ContainerController controller = data != null
                 ? data.retrieveContainerController()
                 : new ContainerController(dropController, gameItemsHolder);
@@ -66,11 +82,13 @@ public class GameModule {
     @GameScope
     public static MobsController provideMobsController(MainConfig mainConfig,
                                                        GameItemsHolder gameItemsHolder,
-                                                       TooltipManager tooltipManager) {
-        load(mainConfig, gameItemsHolder, tooltipManager);
+                                                       TooltipManager tooltipManager,
+                                                       GetPlayerSpritesUseCase getPlayerSpritesUseCase,
+                                                       GetPigSpritesUseCase getPigSpritesUseCase) {
+        load(mainConfig, gameItemsHolder, tooltipManager, getPlayerSpritesUseCase, getPigSpritesUseCase);
         MobsController controller = data != null
                 ? data.retrieveMobsController()
-                : new MobsController(gameItemsHolder, tooltipManager);
+                : new MobsController(gameItemsHolder, tooltipManager, getPlayerSpritesUseCase);
         makeDataNullIfEmpty();
         controller.getPlayer().initInventory(gameItemsHolder, tooltipManager);
         return controller;
@@ -83,8 +101,10 @@ public class GameModule {
                                              MobsController mobsController,
                                              GameItemsHolder gameItemsHolder,
                                              ContainerController containerController,
-                                             TooltipManager tooltipManager) {
-        load(mainConfig, gameItemsHolder, tooltipManager);
+                                             TooltipManager tooltipManager,
+                                             GetPlayerSpritesUseCase getPlayerSpritesUseCase,
+                                             GetPigSpritesUseCase getPigSpritesUseCase) {
+        load(mainConfig, gameItemsHolder, tooltipManager, getPlayerSpritesUseCase, getPigSpritesUseCase);
         Block[][] fm = data != null ? data.retrieveForeMap() : null;
         Block[][] bm = data != null ? data.retrieveBackMap() : null;
         makeDataNullIfEmpty();

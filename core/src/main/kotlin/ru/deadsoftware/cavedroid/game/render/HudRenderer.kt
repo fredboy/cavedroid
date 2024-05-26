@@ -9,10 +9,13 @@ import ru.deadsoftware.cavedroid.game.mobs.player.Player
 import ru.deadsoftware.cavedroid.game.mobs.player.Player.ControlMode
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager
 import ru.deadsoftware.cavedroid.game.world.GameWorld
-import ru.deadsoftware.cavedroid.misc.Assets
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
 import ru.deadsoftware.cavedroid.misc.utils.drawString
-import ru.deadsoftware.cavedroid.misc.utils.px
+import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
+import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
+import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.utils.px
 import javax.inject.Inject
 
 @GameScope
@@ -21,16 +24,20 @@ class HudRenderer @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobsController: MobsController,
     private val tooltipManager: TooltipManager,
+    private val textureRegions: GetTextureRegionByNameUseCase,
+    private val getStringWidth: GetStringWidthUseCase,
+    private val getStringHeight: GetStringHeightUseCase,
+    private val getFont: GetFontUseCase,
 ) : IGameRenderer {
 
     override val renderLayer = RENDER_LAYER
 
-    private val cursorTexture get() = requireNotNull(Assets.textureRegions[CURSOR_KEY])
-    private val hotbarTexture get() = requireNotNull(Assets.textureRegions[HOTBAR_KEY])
-    private val hotbarSelectorTexture get() = requireNotNull(Assets.textureRegions[HOTBAR_SELECTOR_KEY])
-    private val wholeHeartTexture get() = requireNotNull(Assets.textureRegions[WHOLE_HEART_KEY])
-    private val emptyHeartTexture get() = requireNotNull(Assets.textureRegions[EMPTY_HEART_KEY])
-    private val halfHeartTexture get() = requireNotNull(Assets.textureRegions[HALF_HEART_KEY])
+    private val cursorTexture get() = requireNotNull(textureRegions[CURSOR_KEY])
+    private val hotbarTexture get() = requireNotNull(textureRegions[HOTBAR_KEY])
+    private val hotbarSelectorTexture get() = requireNotNull(textureRegions[HOTBAR_SELECTOR_KEY])
+    private val wholeHeartTexture get() = requireNotNull(textureRegions[WHOLE_HEART_KEY])
+    private val emptyHeartTexture get() = requireNotNull(textureRegions[EMPTY_HEART_KEY])
+    private val halfHeartTexture get() = requireNotNull(textureRegions[HALF_HEART_KEY])
 
     private fun drawCursor(spriteBatch: SpriteBatch, viewport: Rectangle) {
         val cursorX = mobsController.player.cursorX
@@ -83,9 +90,12 @@ class HudRenderer @Inject constructor(
                 item.draw(
                     spriteBatch = spriteBatch,
                     shapeRenderer = shapeRenderer,
+                    font = getFont(),
                     x = hotbarX + HotbarConfig.horizontalMargin +
                             index * (HotbarConfig.itemSeparatorWidth + HotbarConfig.itemSlotSpace),
                     y = HotbarConfig.verticalMargin,
+                    getStringWidth = getStringWidth,
+                    getStringHeight = getStringHeight,
                 )
             }
     }
@@ -111,8 +121,9 @@ class HudRenderer @Inject constructor(
         val tooltip = tooltipManager.currentHotbarTooltip
         if (tooltip.isNotBlank()) {
             spriteBatch.drawString(
+                font = getFont(),
                 str = tooltip,
-                x = viewport.width / 2 - Assets.getStringWidth(tooltip) / 2,
+                x = viewport.width / 2 - getStringWidth(tooltip) / 2,
                 y = hotbarTexture.regionHeight.toFloat()
             )
         }

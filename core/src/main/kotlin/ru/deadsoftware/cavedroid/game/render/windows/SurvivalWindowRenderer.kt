@@ -16,6 +16,10 @@ import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.SurvivalInventoryWindow
 import ru.deadsoftware.cavedroid.misc.Assets
+import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
+import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
+import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import javax.inject.Inject
 import kotlin.math.atan
 
@@ -25,11 +29,15 @@ class SurvivalWindowRenderer @Inject constructor(
     private val mobsController: MobsController,
     private val gameWindowsManager: GameWindowsManager,
     private val gameItemsHolder: GameItemsHolder,
+    private val textureRegions: GetTextureRegionByNameUseCase,
+    private val getStringWidth: GetStringWidthUseCase,
+    private val getStringHeight: GetStringHeightUseCase,
+    private val getFont: GetFontUseCase,
 ) : AbstractWindowRenderer(), IGameRenderer {
 
     override val renderLayer get() = WindowsRenderer.RENDER_LAYER
 
-    private val survivalWindowTexture get() = requireNotNull(Assets.textureRegions[SURVIVAL_WINDOW_KEY])
+    private val survivalWindowTexture get() = requireNotNull(textureRegions[SURVIVAL_WINDOW_KEY])
 
     private fun setPortraitHeadRotation(portraitX: Float, portraitY: Float) {
         if (mainConfig.isTouch) {
@@ -76,6 +84,7 @@ class SurvivalWindowRenderer @Inject constructor(
         drawItemsGrid(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
+            font = getFont(),
             gridX = windowX + GameWindowsConfigs.Survival.itemsGridMarginLeft,
             gridY = windowY + GameWindowsConfigs.Survival.itemsGridMarginTop,
             items = mobsController.player.inventory.items.asSequence()
@@ -85,11 +94,14 @@ class SurvivalWindowRenderer @Inject constructor(
             itemsInRow = GameWindowsConfigs.Survival.itemsInRow,
             cellWidth = GameWindowsConfigs.Survival.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Survival.itemsGridRowHeight,
+            getStringWidth = getStringWidth,
+            getStringHeight = getStringHeight
         )
 
         drawItemsGrid(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
+            font = getFont(),
             gridX = windowX + GameWindowsConfigs.Survival.itemsGridMarginLeft,
             gridY = windowY + windowTexture.regionHeight - GameWindowsConfigs.Survival.hotbarOffsetFromBottom,
             items = mobsController.player.inventory.items.asSequence()
@@ -98,11 +110,14 @@ class SurvivalWindowRenderer @Inject constructor(
             itemsInRow = GameWindowsConfigs.Survival.hotbarCells,
             cellWidth = GameWindowsConfigs.Survival.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Survival.itemsGridRowHeight,
+            getStringWidth = getStringWidth,
+            getStringHeight = getStringHeight
         )
 
         drawItemsGrid(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
+            font = getFont(),
             gridX = windowX + GameWindowsConfigs.Survival.craftOffsetX,
             gridY = windowY + GameWindowsConfigs.Survival.craftOffsetY,
             items = window.craftingItems.asSequence().mapIndexedNotNull { index, it ->
@@ -115,19 +130,27 @@ class SurvivalWindowRenderer @Inject constructor(
             itemsInRow = GameWindowsConfigs.Survival.craftGridSize,
             cellWidth = GameWindowsConfigs.Survival.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Survival.itemsGridRowHeight,
+            getStringWidth = getStringWidth,
+            getStringHeight = getStringHeight
         )
 
         window.craftResult?.draw(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
+            font = getFont(),
             x = windowX + GameWindowsConfigs.Survival.craftResultOffsetX,
-            y = windowY + GameWindowsConfigs.Survival.craftResultOffsetY
+            y = windowY + GameWindowsConfigs.Survival.craftResultOffsetY,
+            getStringWidth = getStringWidth,
+            getStringHeight = getStringHeight,
         )
 
         window.selectedItem?.drawSelected(
             spriteBatch = spriteBatch,
+            font = getFont(),
             x = Gdx.input.x * (viewport.width / Gdx.graphics.width),
-            y = Gdx.input.y * (viewport.height / Gdx.graphics.height)
+            y = Gdx.input.y * (viewport.height / Gdx.graphics.height),
+            getStringWidth = getStringWidth,
+            getStringHeight = getStringHeight,
         )
     }
 

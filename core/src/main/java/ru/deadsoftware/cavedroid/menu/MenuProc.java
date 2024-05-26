@@ -1,12 +1,18 @@
 package ru.deadsoftware.cavedroid.menu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ObjectMap;
 import ru.deadsoftware.cavedroid.CaveGame;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.menu.objects.Button;
 import ru.deadsoftware.cavedroid.menu.submenus.*;
 import ru.deadsoftware.cavedroid.misc.Renderer;
+import ru.deadsoftware.cavedroid.misc.utils.RenderingUtilsKt;
+import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase;
+import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase;
+import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase;
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase;
 
 import javax.inject.Inject;
 
@@ -63,16 +69,30 @@ public class MenuProc extends Renderer {
     private final MenuNewGame mMenuNewGame;
     private final MenuOptions mMenuOptions;
 
+    private final GetFontUseCase mGetFontUseCase;
+    private final GetStringWidthUseCase mGetStringWidthUseCase;
+    private final GetStringHeightUseCase mGetStringHeightUseCase;
+
+    private final GetTextureRegionByNameUseCase mGetTextureRegionByNameUseCase;
+
     private Menu mCurrentMenu;
 
     @Inject
     public MenuProc(
             MainConfig mainConfig,
-            MenusFactory menusFactory
+            MenusFactory menusFactory,
+            GetFontUseCase getFontUseCase,
+            GetStringWidthUseCase getStringWidthUseCase,
+            GetStringHeightUseCase getStringHeightUseCase,
+            GetTextureRegionByNameUseCase getTextureRegionByNameUseCase
     ) {
         super(mainConfig.getWidth(), mainConfig.getHeight());
 
         mMainConfig = mainConfig;
+        mGetFontUseCase = getFontUseCase;
+        mGetStringWidthUseCase = getStringWidthUseCase;
+        mGetStringHeightUseCase = getStringHeightUseCase;
+        mGetTextureRegionByNameUseCase = getTextureRegionByNameUseCase;
 
         Input menuInput = new Input();
 
@@ -104,14 +124,13 @@ public class MenuProc extends Renderer {
     }
 
     private void drawButton(Button button) {
-        spriter.draw(textureRegions.get("button_" + button.getType()), button.getX(), button.getY());
-        setFontColor(255, 255, 255);
+        spriter.draw(mGetTextureRegionByNameUseCase.get("button_" + button.getType()), button.getX(), button.getY());
 
         String label = processVariables(button.getLabel());
 
-        drawString(label,
-                (button.getX() + button.getWidth() / 2) - (float) getStringWidth(label) / 2,
-                (button.getY() + button.getHeight() / 2) - (float) getStringHeight(label) / 2);
+        RenderingUtilsKt.drawString(spriter, mGetFontUseCase.invoke(), label,
+                (button.getX() + button.getWidth() / 2) - mGetStringWidthUseCase.invoke(label) / 2,
+                (button.getY() + button.getHeight() / 2) - mGetStringHeightUseCase.invoke(label) / 2);
     }
 
     @Override
@@ -134,8 +153,8 @@ public class MenuProc extends Renderer {
     public void render(float delta) {
         spriter.begin();
         mCurrentMenu.draw(spriter);
-        drawString("CaveDroid " + CaveGame.VERSION, 0,
-                getHeight() - getStringHeight("CaveDroid " + CaveGame.VERSION) * 1.5f);
+        RenderingUtilsKt.drawString(spriter, mGetFontUseCase.invoke(), "CaveDroid " + CaveGame.VERSION, 0,
+                getHeight() - mGetStringHeightUseCase.invoke("CaveDroid " + CaveGame.VERSION) * 1.5f);
         spriter.end();
     }
 

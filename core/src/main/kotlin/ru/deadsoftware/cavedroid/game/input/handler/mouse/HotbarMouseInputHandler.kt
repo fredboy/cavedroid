@@ -16,6 +16,7 @@ import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.game.objects.drop.Drop
 import ru.deadsoftware.cavedroid.game.objects.drop.DropController
 import ru.deadsoftware.cavedroid.misc.Assets
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import javax.inject.Inject
 
 @GameScope
@@ -24,16 +25,17 @@ class HotbarMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val mobsController: MobsController,
     private val dropController: DropController,
+    private val textureRegions: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
 
-    private val hotbarTexture get() = requireNotNull(Assets.textureRegions["hotbar"])
+    private val hotbarTexture get() = requireNotNull(textureRegions["hotbar"])
 
     private var buttonHoldTask: Timer.Task? = null
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return buttonHoldTask?.isScheduled == true ||
                 ((action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen)
-                        && isInsideHotbar(action)
+                        && action.isInsideHotbar(textureRegions)
                         || action.actionKey is MouseInputActionKey.Scroll) &&
                 gameWindowsManager.getCurrentWindow() == GameUiWindow.NONE
     }

@@ -12,6 +12,7 @@ import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideWindow
 import ru.deadsoftware.cavedroid.misc.Assets
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -21,9 +22,10 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
     private val mainConfig: MainConfig,
     private val gameWindowsManager: GameWindowsManager,
     private val gameItemsHolder: GameItemsHolder,
+    private val textureRegions: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
 
-    private val creativeInventoryTexture get() = requireNotNull(Assets.textureRegions["creative"])
+    private val creativeInventoryTexture get() = requireNotNull(textureRegions["creative"])
 
     private var dragStartY = 0f
 

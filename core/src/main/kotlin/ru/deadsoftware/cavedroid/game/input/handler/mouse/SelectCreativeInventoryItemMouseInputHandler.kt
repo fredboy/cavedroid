@@ -12,6 +12,7 @@ import ru.deadsoftware.cavedroid.game.input.isInsideWindow
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.misc.Assets
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import javax.inject.Inject
 
 @GameScope
@@ -20,9 +21,10 @@ class SelectCreativeInventoryItemMouseInputHandler @Inject constructor(
     private val gameItemsHolder: GameItemsHolder,
     private val gameWindowsManager: GameWindowsManager,
     private val mobsController: MobsController,
+    private val textureRegions: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
 
-    private val creativeInventoryTexture get() = requireNotNull(Assets.textureRegions["creative"])
+    private val creativeInventoryTexture get() = requireNotNull(textureRegions["creative"])
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.getCurrentWindow() == GameUiWindow.CREATIVE_INVENTORY &&

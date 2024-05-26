@@ -6,7 +6,8 @@ import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.mobs.Pig
 import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindUseItemAction
-import ru.deadsoftware.cavedroid.misc.utils.px
+import ru.fredboy.cavedroid.domain.assets.usecase.GetPigSpritesUseCase
+import ru.fredboy.cavedroid.utils.px
 import javax.inject.Inject
 
 @GameScope
@@ -14,10 +15,11 @@ import javax.inject.Inject
 class UsePigSpawnEggAction @Inject constructor(
     private val mobsController: MobsController,
     private val gameItemsHolder: GameItemsHolder,
+    private val getPigSprites: GetPigSpritesUseCase,
 ) : IUseItemAction {
 
     override fun perform(item: Item.Usable, x: Int, y: Int) {
-        Pig(mobsController.player.cursorX.px, mobsController.player.cursorY.px)
+        Pig(getPigSprites(), mobsController.player.cursorX.px, mobsController.player.cursorY.px)
             .apply {
                 attachToController(mobsController)
             }

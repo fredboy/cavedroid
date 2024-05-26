@@ -7,6 +7,7 @@ import ru.deadsoftware.cavedroid.menu.objects.Button;
 import ru.deadsoftware.cavedroid.menu.objects.ButtonEventListener;
 import ru.deadsoftware.cavedroid.menu.objects.ButtonRenderer;
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -18,8 +19,9 @@ public class MenuMain extends Menu {
                     ButtonRenderer buttonRenderer,
                     MainConfig mainConfig,
                     MenuProc.Input menuInput,
-                    AssetLoader assetLoader) {
-        super(width, height, buttonRenderer, mainConfig, menuInput, assetLoader);
+                    AssetLoader assetLoader,
+                    GetTextureRegionByNameUseCase getTextureRegionByNameUseCase) {
+        super(width, height, buttonRenderer, mainConfig, menuInput, assetLoader, getTextureRegionByNameUseCase);
     }
 
     @Override
@@ -38,23 +40,6 @@ public class MenuMain extends Menu {
         if (GameSaveLoader.INSTANCE.exists(mMainConfig)) {
             getButtons().get("load_game").setType(Button.NORMAL);
         }
-    }
-
-    public static class Factory {
-
-        private final MainConfig mMainConfig;
-        private final AssetLoader mAssetLoader;
-
-        @Inject
-        public Factory(MainConfig mainConfig, AssetLoader assetLoader) {
-            mMainConfig = mainConfig;
-            mAssetLoader = assetLoader;
-        }
-
-        public MenuMain get(float width, float height, ButtonRenderer buttonRenderer, MenuProc.Input menuInput) {
-            return new MenuMain(width, height, buttonRenderer, mMainConfig, menuInput, mAssetLoader);
-        }
-
     }
 
 }

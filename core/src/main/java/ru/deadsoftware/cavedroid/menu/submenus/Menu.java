@@ -16,6 +16,7 @@ import ru.deadsoftware.cavedroid.menu.objects.ButtonEventListener;
 import ru.deadsoftware.cavedroid.menu.objects.ButtonRenderer;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase;
 
 import java.util.HashMap;
 
@@ -24,6 +25,8 @@ public abstract class Menu {
     protected final MainConfig mMainConfig;
     protected final MenuProc.Input mMenuInput;
     protected final AssetLoader mAssetLoader;
+
+    protected final GetTextureRegionByNameUseCase mGetTextureRegionByNameUseCase;
 
     private final ButtonRenderer mButtonRenderer;
 
@@ -45,13 +48,15 @@ public abstract class Menu {
          ButtonRenderer buttonRenderer,
          MainConfig mainConfig,
          MenuProc.Input menuInput,
-         AssetLoader assetLoader) {
+         AssetLoader assetLoader,
+         GetTextureRegionByNameUseCase getTextureRegionByNameUseCase) {
         mWidth = width;
         mHeight = height;
         mButtonRenderer = buttonRenderer;
         mMainConfig = mainConfig;
         mMenuInput = menuInput;
         mAssetLoader = assetLoader;
+        mGetTextureRegionByNameUseCase = getTextureRegionByNameUseCase;
         initButtons();
     }
 
@@ -109,8 +114,8 @@ public abstract class Menu {
      * @param spriter {@link SpriteBatch} that will draw it. Should be already started.
      */
     public void draw(SpriteBatch spriter) {
-        TextureRegion background = Assets.textureRegions.get("background");
-        TextureRegion gamelogo = Assets.textureRegions.get("gamelogo");
+        TextureRegion background = mGetTextureRegionByNameUseCase.get("background");
+        TextureRegion gamelogo = mGetTextureRegionByNameUseCase.get("gamelogo");
 
         for (int x = 0; x <= mWidth / 16; x++) {
             for (int y = 0; y <= mHeight / 16; y++) {

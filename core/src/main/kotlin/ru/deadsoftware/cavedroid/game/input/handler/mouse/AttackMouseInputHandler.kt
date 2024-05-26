@@ -10,6 +10,7 @@ import ru.deadsoftware.cavedroid.game.input.isInsideHotbar
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import javax.inject.Inject
 
 @GameScope
@@ -17,12 +18,13 @@ import javax.inject.Inject
 class AttackMouseInputHandler @Inject constructor(
     private val mobsController: MobsController,
     private val gameWorld: GameWorld,
-    private val gameWindowsManager: GameWindowsManager
+    private val gameWindowsManager: GameWindowsManager,
+    private val textureRegions: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.getCurrentWindow() == GameUiWindow.NONE &&
-                !isInsideHotbar(action) &&
+                !action.isInsideHotbar(textureRegions) &&
                 action.actionKey is MouseInputActionKey.Left
 
     }

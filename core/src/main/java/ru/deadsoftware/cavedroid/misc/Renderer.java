@@ -56,24 +56,6 @@ public abstract class Renderer implements InputProcessor {
         return mCameraViewport;
     }
 
-    public void setFontScale(float scale) {
-        Assets.minecraftFont.getData().setScale(scale);
-    }
-
-    protected void setFontColor(int r, int g, int b) {
-        Assets.minecraftFont.setColor(r / 255f, g / 255f, b / 255f, 1f);
-    }
-
-    protected void drawString(String str, float x, float y) {
-        Assets.minecraftFont.draw(spriter, str, x, y);
-    }
-
-    protected void drawString(String str) {
-        Assets.minecraftFont.draw(spriter, str,
-                getWidth() / 2 - (float) Assets.getStringWidth(str) / 2,
-                getHeight() / 2 - (float) Assets.getStringHeight(str) / 2);
-    }
-
     public abstract void render(float delta);
 
     @Override

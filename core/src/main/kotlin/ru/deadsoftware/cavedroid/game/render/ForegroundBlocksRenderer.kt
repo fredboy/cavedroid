@@ -8,14 +8,18 @@ import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
 import ru.deadsoftware.cavedroid.misc.utils.forEachBlockInArea
+import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageFrameCountUseCase
+import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageSpriteUseCase
 import javax.inject.Inject
 
 @GameScope
 @BindRenderer
 class ForegroundBlocksRenderer @Inject constructor(
     gameWorld: GameWorld,
-    mobsController: MobsController
-) : BlocksRenderer(gameWorld, mobsController) {
+    mobsController: MobsController,
+    getBlockDamageFrameCount: GetBlockDamageFrameCountUseCase,
+    getBlockDamageSprite: GetBlockDamageSpriteUseCase
+) : BlocksRenderer(gameWorld, mobsController, getBlockDamageFrameCount, getBlockDamageSprite) {
 
     override val renderLayer get() = RENDER_LAYER
 

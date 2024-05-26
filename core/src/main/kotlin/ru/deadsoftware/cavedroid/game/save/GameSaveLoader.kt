@@ -15,6 +15,8 @@ import ru.deadsoftware.cavedroid.game.objects.container.ContainerController
 import ru.deadsoftware.cavedroid.game.objects.drop.DropController
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager
 import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.domain.assets.usecase.GetPigSpritesUseCase
+import ru.fredboy.cavedroid.domain.assets.usecase.GetPlayerSpritesUseCase
 import java.nio.ByteBuffer
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
@@ -187,7 +189,9 @@ object GameSaveLoader {
     fun load(
         mainConfig: MainConfig,
         gameItemsHolder: GameItemsHolder,
-        tooltipManager: TooltipManager
+        tooltipManager: TooltipManager,
+        getPlayerSprites: GetPlayerSpritesUseCase,
+        getPigSprites: GetPigSpritesUseCase,
     ): GameSaveData {
         val gameFolder = mainConfig.gameFolder
         val savesPath = "$gameFolder$SAVES_DIR"
@@ -201,11 +205,32 @@ object GameSaveLoader {
         val containersBytes = containersFile.readBytes()
 
         val dropController = ProtoBuf.decodeFromByteArray<SaveDataDto.DropControllerSaveData>(dropBytes)
-            .let { saveData -> DropController.fromSaveData(saveData, gameItemsHolder) }
+            .let { saveData ->
+                DropController.fromSaveData(
+                    /* saveData = */ saveData,
+                    /* gameItemsHolder = */ gameItemsHolder
+                )
+            }
+
         val mobsController = ProtoBuf.decodeFromByteArray<SaveDataDto.MobsControllerSaveData>(mobsBytes)
-            .let { saveData -> MobsController.fromSaveData(saveData, gameItemsHolder, tooltipManager) }
+            .let { saveData ->
+                MobsController.fromSaveData(
+                    saveData = saveData,
+                    gameItemsHolder = gameItemsHolder,
+                    tooltipManager = tooltipManager,
+                    getPigSprites = getPigSprites,
+                    getPlayerSprites = getPlayerSprites
+                )
+            }
+
         val containerController = ProtoBuf.decodeFromByteArray<SaveDataDto.ContainerControllerSaveData>(containersBytes)
-            .let { saveData -> ContainerController.fromSaveData(saveData, dropController, gameItemsHolder) }
+            .let { saveData ->
+                ContainerController.fromSaveData(
+                    saveData = saveData,
+                    dropController = dropController,
+                    gameItemsHolder = gameItemsHolder
+                )
+            }
 
         val (foreMap, backMap) = loadMap(gameItemsHolder, savesPath)
 

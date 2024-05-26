@@ -10,17 +10,24 @@ plugins {
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
-dependencies {
-    implementation(Dependencies.Automultibind.annotations)
-    ksp(Dependencies.Automultibind.ksp)
+sourceSets {
+    buildDir = file("_build")
+}
 
-    implementation(Dependencies.LibGDX.gdx)
-    implementation(Dependencies.Dagger.dagger)
+dependencies {
+    useAutomultibind()
+    useDagger()
+    useLibgdx()
+    useKotlinxSerializationJson()
+    useKotlinxSerializationProtobuf()
+
+    useBaseModule()
+
+    // data
+    useModule(":core:data:assets")
+
+    //domain
+    useModule(":core:domain:assets")
 
     implementation(Dependencies.jetbrainsAnnotations)
-    implementation(Dependencies.Kotlin.stdlib)
-    implementation(Dependencies.Kotlin.Serialization.json)
-    implementation(Dependencies.Kotlin.Serialization.protobuf)
-
-    ksp(Dependencies.Dagger.compiler)
 }

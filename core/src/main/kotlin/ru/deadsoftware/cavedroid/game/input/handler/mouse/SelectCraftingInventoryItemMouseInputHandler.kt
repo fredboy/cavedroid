@@ -10,6 +10,7 @@ import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.CraftingInventoryWindow
 import ru.deadsoftware.cavedroid.misc.Assets
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import javax.inject.Inject
 
 @GameScope
@@ -18,9 +19,10 @@ class SelectCraftingInventoryItemMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val mobsController: MobsController,
     private val gameItemsHolder: GameItemsHolder,
+    private val textureRegions: GetTextureRegionByNameUseCase,
 ) : AbstractInventoryItemsMouseInputHandler(gameItemsHolder, gameWindowsManager, GameUiWindow.CRAFTING_TABLE) {
 
-    override val windowTexture get() = requireNotNull(Assets.textureRegions["crafting_table"])
+    override val windowTexture get() = requireNotNull(textureRegions["crafting_table"])
 
     private fun handleInsideInventoryGrid(action: MouseInputAction, xOnGrid: Int, yOnGrid: Int) {
         val window = gameWindowsManager.currentWindow as CraftingInventoryWindow

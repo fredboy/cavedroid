@@ -17,20 +17,26 @@ import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.ChestInventoryWindow
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.SurvivalInventoryWindow
 import ru.deadsoftware.cavedroid.misc.Assets
+import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
+import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
+import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import javax.inject.Inject
 import kotlin.math.atan
 
 @GameScope
 class ChestWindowRenderer @Inject constructor(
-    private val mainConfig: MainConfig,
     private val mobsController: MobsController,
     private val gameWindowsManager: GameWindowsManager,
-    private val gameItemsHolder: GameItemsHolder,
+    private val textureRegions: GetTextureRegionByNameUseCase,
+    private val getStringWidth: GetStringWidthUseCase,
+    private val getStringHeight: GetStringHeightUseCase,
+    private val getFont: GetFontUseCase,
 ) : AbstractWindowRenderer(), IGameRenderer {
 
     override val renderLayer get() = WindowsRenderer.RENDER_LAYER
 
-    private val chestWindowTexture get() = requireNotNull(Assets.textureRegions[CHEST_WINDOW_KEY])
+    private val chestWindowTexture get() = requireNotNull(textureRegions[CHEST_WINDOW_KEY])
     
     
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
@@ -45,17 +51,21 @@ class ChestWindowRenderer @Inject constructor(
         drawItemsGrid(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
+            font = getFont(),
             gridX = windowX + GameWindowsConfigs.Chest.contentsMarginLeft,
             gridY = windowY + GameWindowsConfigs.Chest.contentsMarginTop,
             items = window.chest.items,
             itemsInRow = GameWindowsConfigs.Chest.itemsInRow,
             cellWidth = GameWindowsConfigs.Chest.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Chest.itemsGridRowHeight,
+            getStringWidth = getStringWidth,
+            getStringHeight = getStringHeight
         )
         
         drawItemsGrid(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
+            font = getFont(),
             gridX = windowX + GameWindowsConfigs.Chest.itemsGridMarginLeft,
             gridY = windowY + GameWindowsConfigs.Chest.itemsGridMarginTop,
             items = mobsController.player.inventory.items.asSequence()
@@ -65,11 +75,14 @@ class ChestWindowRenderer @Inject constructor(
             itemsInRow = GameWindowsConfigs.Chest.itemsInRow,
             cellWidth = GameWindowsConfigs.Chest.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Chest.itemsGridRowHeight,
+            getStringWidth = getStringWidth,
+            getStringHeight = getStringHeight
         )
 
         drawItemsGrid(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
+            font = getFont(),
             gridX = windowX + GameWindowsConfigs.Chest.itemsGridMarginLeft,
             gridY = windowY + windowTexture.regionHeight - GameWindowsConfigs.Chest.hotbarOffsetFromBottom,
             items = mobsController.player.inventory.items.asSequence()
@@ -78,12 +91,17 @@ class ChestWindowRenderer @Inject constructor(
             itemsInRow = GameWindowsConfigs.Chest.hotbarCells,
             cellWidth = GameWindowsConfigs.Chest.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Chest.itemsGridRowHeight,
+            getStringWidth = getStringWidth,
+            getStringHeight = getStringHeight
         )
 
         window.selectedItem?.drawSelected(
             spriteBatch = spriteBatch,
+            font = getFont(),
             x = Gdx.input.x * (viewport.width / Gdx.graphics.width),
-            y = Gdx.input.y * (viewport.height / Gdx.graphics.height)
+            y = Gdx.input.y * (viewport.height / Gdx.graphics.height),
+            getStringWidth = getStringWidth,
+            getStringHeight = getStringHeight,
         )
     }
 

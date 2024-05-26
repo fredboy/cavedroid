@@ -10,6 +10,7 @@ import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.ChestInventoryWindow
 import ru.deadsoftware.cavedroid.misc.Assets
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import javax.inject.Inject
 
 @GameScope
@@ -18,9 +19,10 @@ class SelectChestInventoryItemMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val mobsController: MobsController,
     private val gameItemsHolder: GameItemsHolder,
+    private val textureRegions: GetTextureRegionByNameUseCase,
 ) : AbstractInventoryItemsMouseInputHandler(gameItemsHolder, gameWindowsManager, GameUiWindow.CHEST) {
 
-    override val windowTexture get() = requireNotNull(Assets.textureRegions["chest"])
+    override val windowTexture get() = requireNotNull(textureRegions["chest"])
 
     private fun handleInsideContentGrid(action: MouseInputAction, xOnGrid: Int, yOnGrid: Int) {
         val window = gameWindowsManager.currentWindow as ChestInventoryWindow

@@ -12,6 +12,7 @@ import ru.deadsoftware.cavedroid.game.input.isInsideWindow
 import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.objects.drop.DropController
 import ru.deadsoftware.cavedroid.misc.Assets
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import javax.inject.Inject
 
 @GameScope
@@ -20,13 +21,14 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val mobsController: MobsController,
     private val dropController: DropController,
+    private val textureRegions: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
 
-    private val creativeInventoryTexture get() = requireNotNull(Assets.textureRegions["creative"])
-    private val survivalInventoryTexture get() = requireNotNull(Assets.textureRegions["survival"])
-    private val craftingInventoryTexture get() = requireNotNull(Assets.textureRegions["crafting_table"])
-    private val furnaceInventoryTexture get() = requireNotNull(Assets.textureRegions["furnace"])
-    private val chestInventoryTexture get() = requireNotNull(Assets.textureRegions["chest"])
+    private val creativeInventoryTexture get() = requireNotNull(textureRegions["creative"])
+    private val survivalInventoryTexture get() = requireNotNull(textureRegions["survival"])
+    private val craftingInventoryTexture get() = requireNotNull(textureRegions["crafting_table"])
+    private val furnaceInventoryTexture get() = requireNotNull(textureRegions["furnace"])
+    private val chestInventoryTexture get() = requireNotNull(textureRegions["chest"])
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.getCurrentWindow() != GameUiWindow.NONE &&

@@ -1,19 +1,21 @@
 package ru.deadsoftware.cavedroid.game.mobs
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.model.dto.SaveDataDto
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
+import ru.deadsoftware.cavedroid.misc.utils.colorFromHexString
 import ru.deadsoftware.cavedroid.misc.utils.drawSprite
-import ru.deadsoftware.cavedroid.misc.utils.mobs.MobSprites.Pig.getBackgroundLeg
-import ru.deadsoftware.cavedroid.misc.utils.mobs.MobSprites.Pig.getBody
-import ru.deadsoftware.cavedroid.misc.utils.mobs.MobSprites.Pig.getForegroundLeg
-import ru.deadsoftware.cavedroid.misc.utils.mobs.MobSprites.Pig.getLeftLegRelativeX
-import ru.deadsoftware.cavedroid.misc.utils.mobs.MobSprites.Pig.getLegsRelativeY
-import ru.deadsoftware.cavedroid.misc.utils.mobs.MobSprites.Pig.getRightLegRelativeX
+import ru.fredboy.cavedroid.domain.assets.model.MobSprite
+import ru.fredboy.cavedroid.domain.assets.usecase.GetPigSpritesUseCase
 
-class Pig(x: Float, y: Float) : PeacefulMob(x, y, WIDTH, HEIGHT, randomDir(), MAX_HEALTH) {
+class Pig(
+    private val sprite: MobSprite.Pig,
+    x: Float,
+    y: Float
+) : PeacefulMob(x, y, WIDTH, HEIGHT, randomDir(), MAX_HEALTH) {
 
     override fun getSpeed(): Float {
         return SPEED
@@ -42,18 +44,29 @@ class Pig(x: Float, y: Float) : PeacefulMob(x, y, WIDTH, HEIGHT, randomDir(), MA
         return listOf(gameItemsHolder.getItem("porkchop_raw").toInventoryItem())
     }
 
-    override fun draw(spriteBatch: SpriteBatch, x: Float, y: Float, delta: Float) {
+    override fun draw(
+        spriteBatch: SpriteBatch,
+        x: Float,
+        y: Float,
+        delta: Float
+    ) {
         updateAnimation(delta)
 
-        val leftLegX = x + getLeftLegRelativeX(direction)
-        val rightLegX = x + getRightLegRelativeX(direction)
-        val legY = y + getLegsRelativeY()
+        val leftLegX = x + sprite.getLeftLegRelativeX(direction.index)
+        val rightLegX = x + sprite.getRightLegRelativeX(direction.index)
+        val legY = y + sprite.getLegsRelativeY()
 
-        spriteBatch.drawSprite(getBackgroundLeg(), leftLegX, legY, -anim, tint = tintColor)
-        spriteBatch.drawSprite(getBackgroundLeg(), rightLegX, legY, -anim, tint = tintColor)
-        spriteBatch.drawSprite(getBody(direction), x, y, tint = tintColor)
-        spriteBatch.drawSprite(getForegroundLeg(), leftLegX, legY, anim, tint = tintColor)
-        spriteBatch.drawSprite(getForegroundLeg(), rightLegX, legY, anim, tint = tintColor)
+        sprite.leg.setOrigin(sprite.leg.width / 2, 0f)
+        sprite.leg.setFlip(looksRight(), sprite.leg.isFlipY)
+        sprite.headAndBody.setFlip(looksRight(), sprite.leg.isFlipY)
+
+        val backgroundTintColor = tintColor.cpy().sub(Color(0xAAAAAA shl 8))
+
+        spriteBatch.drawSprite(sprite.leg, leftLegX, legY, -anim, tint = backgroundTintColor)
+        spriteBatch.drawSprite(sprite.leg, rightLegX, legY, -anim, tint = backgroundTintColor)
+        spriteBatch.drawSprite(sprite.headAndBody, x, y, tint = tintColor)
+        spriteBatch.drawSprite(sprite.leg, leftLegX, legY, anim, tint = tintColor)
+        spriteBatch.drawSprite(sprite.leg, rightLegX, legY, anim, tint = tintColor)
     }
 
     override fun getSaveData(): SaveDataDto.PigSaveData {
@@ -86,10 +99,13 @@ class Pig(x: Float, y: Float) : PeacefulMob(x, y, WIDTH, HEIGHT, randomDir(), MA
         private const val JUMP_VELOCITY = -133.332f
         private const val MAX_HEALTH = 10
 
-        fun fromSaveData(saveData: SaveDataDto.PigSaveData): Pig {
+        fun fromSaveData(
+            getPigSprite: GetPigSpritesUseCase,
+            saveData: SaveDataDto.PigSaveData
+        ): Pig {
             saveData.verifyVersion(SAVE_DATA_VERSION)
 
-            return Pig(saveData.x, saveData.y).apply {
+            return Pig(getPigSprite(), saveData.x, saveData.y).apply {
                 velocity.x = saveData.velocityX
                 velocity.y = saveData.velocityY
                 mAnimDelta = saveData.animDelta

@@ -9,7 +9,7 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
 import ru.deadsoftware.cavedroid.misc.utils.cycledInsideWorld
 import ru.deadsoftware.cavedroid.misc.utils.drawSprite
-import ru.deadsoftware.cavedroid.misc.utils.px
+import ru.fredboy.cavedroid.utils.px
 import javax.inject.Inject
 
 @GameScope

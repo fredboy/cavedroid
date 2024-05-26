@@ -13,6 +13,7 @@ import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.mobs.player.Player
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import javax.inject.Inject
 
 @GameScope
@@ -22,6 +23,7 @@ class JoystickInputHandler @Inject constructor(
     private val mobsController: MobsController,
     private val gameWindowsManager: GameWindowsManager,
     private val gameWorld: GameWorld,
+    private val textureRegions: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
 
     private var activateTimeMs = 0L
@@ -58,7 +60,7 @@ class JoystickInputHandler @Inject constructor(
                 (action.actionKey.pointer == mainConfig.joystick?.pointer || !active) &&
                 ((action.actionKey is MouseInputActionKey.Dragged) ||
                         (action.screenX < action.cameraViewport.width / 2 && !action.actionKey.touchUp || active)) &&
-                !(action.actionKey is MouseInputActionKey.Screen && isInsideHotbar(action))
+                !(action.actionKey is MouseInputActionKey.Screen && action.isInsideHotbar(textureRegions))
 
     }
 

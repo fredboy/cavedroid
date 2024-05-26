@@ -8,7 +8,7 @@ import ru.deadsoftware.cavedroid.game.model.dto.SaveDataDto
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem.Companion.isNoneOrNull
 import ru.deadsoftware.cavedroid.game.objects.drop.DropController
 import ru.deadsoftware.cavedroid.misc.Saveable
-import ru.deadsoftware.cavedroid.misc.utils.px
+import ru.fredboy.cavedroid.utils.px
 import javax.inject.Inject
 
 @GameScope

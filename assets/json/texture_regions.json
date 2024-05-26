@@ -48,7 +48,7 @@
       "h": 26
     }
   },
-  "pp/allitems": {
+  "textures/allitems": {
     "creative": {
       "w": 176,
       "h": 136
@@ -60,19 +60,19 @@
       "h": 15
     }
   },
-  "pp/inventory": {
+  "textures/inventory": {
     "survival": {
       "w": 176,
       "h": 166
     }
   },
-  "pp/crafting_table": {
+  "textures/crafting_table": {
     "crafting_table": {
       "w": 176,
       "h": 166
     }
   },
-  "pp/furnace": {
+  "textures/furnace": {
     "furnace": {
       "w": 176,
       "h": 166
@@ -89,13 +89,13 @@
       "h": 14
     }
   },
-  "pp/chest": {
+  "textures/chest": {
     "chest": {
       "w": 176,
       "h": 168
     }
   },
-  "pp/buttons": {
+  "textures/buttons": {
     "button_0": {
       "w": 200,
       "h": 20
@@ -111,7 +111,7 @@
       "h": 20
     }
   },
-  "pp/gui": {
+  "textures/gui": {
     "hotbar": {
       "y": 16,
       "w": 182,
@@ -127,10 +127,10 @@
       "h": 16
     }
   },
-  "pp/shade": {},
+  "shade": {},
   "gamelogo": {},
-  "pp/background": {},
-  "pp/health":{
+  "textures/background": {},
+  "textures/health":{
     "heart_whole": {
       "w": 9
     },
@@ -142,5 +142,7 @@
       "x": 18,
       "w": 9
     }
-  }
+  },
+  "joy_stick": {},
+  "joy_background": {}
 }

@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavedroid.game.mobs.player;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -20,6 +21,8 @@ import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Assets;
 import ru.deadsoftware.cavedroid.misc.utils.SpriteOrigin;
 import ru.deadsoftware.cavedroid.misc.utils.SpriteUtilsKt;
+import ru.fredboy.cavedroid.domain.assets.model.MobSprite;
+import ru.fredboy.cavedroid.domain.assets.usecase.GetPlayerSpritesUseCase;
 
 public class Player extends Mob {
 
@@ -36,6 +39,8 @@ public class Player extends Mob {
     private boolean hitting = false, hittingWithDamage = false;
     private float hitAnim = 0f;
     private float hitAnimDelta = ANIMATION_SPEED;
+
+    private MobSprite.Player playerSprite;
 
     public Inventory inventory;
 
@@ -57,8 +62,9 @@ public class Player extends Mob {
         CURSOR
     }
 
-    public Player(GameItemsHolder gameItemsHolder, TooltipManager tooltipManager) {
+    public Player(GameItemsHolder gameItemsHolder, TooltipManager tooltipManager, MobSprite.Player playerSprite) {
         super(0, 0, 4, 30, randomDir(), Type.MOB, MAX_HEALTH);
+        this.playerSprite = playerSprite;
         inventory = new Inventory(INVENTORY_SIZE, HOTBAR_SIZE, gameItemsHolder, tooltipManager);
         swim = false;
     }
@@ -315,7 +321,7 @@ public class Player extends Mob {
             sprite.setSize(Drop.DROP_SIZE, Drop.DROP_SIZE);
         }
 
-        final float handLength = Assets.playerSprite[0][2].getHeight();
+        final float handLength = playerSprite.getHand().getHeight();
 
         final SpriteOrigin spriteOrigin = item.getParams().getInHandSpriteOrigin();
         final int handMultiplier = -getDirection().getBasis();
@@ -398,12 +404,19 @@ public class Player extends Mob {
 
     @Override
     public void draw(SpriteBatch spriteBatch, float x, float y, float delta) {
-        final Sprite backHand = Assets.playerSprite[1][2];
-        final Sprite backLeg = Assets.playerSprite[1][3];
-        final Sprite frontLeg = Assets.playerSprite[0][3];
-        final Sprite head = Assets.playerSprite[getDirection().getIndex()][0];
-        final Sprite body = Assets.playerSprite[getDirection().getIndex()][1];
-        final Sprite frontHand = Assets.playerSprite[0][2];
+        final Sprite hand = playerSprite.getHand();
+        final Sprite leg = playerSprite.getLeg();
+        final Sprite head = playerSprite.getHead();
+        final Sprite body = playerSprite.getBody();
+
+        hand.setFlip(looksRight(), hand.isFlipY());
+        leg.setFlip(looksRight(), leg.isFlipY());
+        head.setFlip(looksRight(), head.isFlipY());
+        body.setFlip(looksRight(), body.isFlipY());
+
+        hand.setOrigin(hand.getWidth() / 2, 0);
+        leg.setOrigin(leg.getWidth() / 2, 0);
+        head.setOrigin(head.getWidth() / 2, head.getHeight());
 
         float backHandAnim, frontHandAnim;
 
@@ -417,29 +430,33 @@ public class Player extends Mob {
             frontHandAnim = -rightHandAnim;
         }
 
-        backHand.setColor(getTintColor());
-        backLeg.setColor(getTintColor());
-        frontLeg.setColor(getTintColor());
-        head.setColor(getTintColor());
-        body.setColor(getTintColor());
-        frontHand.setColor(getTintColor());
+        final Color backgroundTintColor = getTintColor().cpy().sub(new Color(0xAAAAAA00));
 
-        SpriteUtilsKt.drawSprite(spriteBatch, backHand, x + 2, y + 8, backHandAnim);
+        hand.setColor(backgroundTintColor);
+        SpriteUtilsKt.drawSprite(spriteBatch, hand, x + 2, y + 8, backHandAnim);
 
         if (looksLeft()) {
             drawItem(spriteBatch, x, y, -backHandAnim);
         }
 
-        SpriteUtilsKt.drawSprite(spriteBatch, backLeg, x + 2, y + 20, mAnim);
-        SpriteUtilsKt.drawSprite(spriteBatch, frontLeg, x + 2, y + 20, -mAnim);
+        leg.setColor(backgroundTintColor);
+        SpriteUtilsKt.drawSprite(spriteBatch, leg, x + 2, y + 20, mAnim);
+
+        leg.setColor(getTintColor());
+        SpriteUtilsKt.drawSprite(spriteBatch, leg, x + 2, y + 20, -mAnim);
+
+        head.setColor(getTintColor());
         SpriteUtilsKt.drawSprite(spriteBatch, head, x, y, headRotation);
+
+        body.setColor(getTintColor());
         SpriteUtilsKt.drawSprite(spriteBatch, body, x + 2, y + 8);
 
         if (looksRight()) {
             drawItem(spriteBatch, x, y, frontHandAnim);
         }
 
-        SpriteUtilsKt.drawSprite(spriteBatch, frontHand, x + 2, y + 8, frontHandAnim);
+        hand.setColor(getTintColor());
+        SpriteUtilsKt.drawSprite(spriteBatch, hand, x + 2, y + 8, frontHandAnim);
     }
 
     @NotNull
@@ -482,11 +499,12 @@ public class Player extends Mob {
     public static Player fromSaveData(
             SaveDataDto.PlayerSaveData saveData,
             GameItemsHolder gameItemsHolder,
-            TooltipManager tooltipManager
+            TooltipManager tooltipManager,
+            GetPlayerSpritesUseCase getPlayerSpritesUseCase
     ) {
         saveData.verifyVersion(SAVE_DATA_VERSION);
 
-        Player player = new Player(gameItemsHolder, tooltipManager);
+        Player player = new Player(gameItemsHolder, tooltipManager, getPlayerSpritesUseCase.invoke());
 
         player.mType = saveData.getType();
         player.mAnimDelta = saveData.getAnimDelta();

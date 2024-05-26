@@ -1,6 +1,5 @@
 package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
 import com.badlogic.gdx.math.MathUtils
 import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
@@ -17,9 +16,10 @@ import ru.deadsoftware.cavedroid.game.ui.TooltipManager
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.world.GameWorld
-import ru.deadsoftware.cavedroid.misc.Assets
-import ru.deadsoftware.cavedroid.misc.utils.bl
-import ru.deadsoftware.cavedroid.misc.utils.px
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.utils.bl
+import ru.fredboy.cavedroid.utils.px
 import javax.inject.Inject
 
 @GameScope
@@ -31,11 +31,12 @@ class CursorMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val gameItemsHolder: GameItemsHolder,
     private val tooltipManager: TooltipManager,
+    private val textureRegions: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
 
     private val player get() = mobsController.player
 
-    private val creativeInventoryTexture get() = requireNotNull(Assets.textureRegions["creative"])
+    private val creativeInventoryTexture get() = requireNotNull(textureRegions["creative"])
 
     private val Block.isAutoselectable
         get() = !isNone() && params.hasCollision

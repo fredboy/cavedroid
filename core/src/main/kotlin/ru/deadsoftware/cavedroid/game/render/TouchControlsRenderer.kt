@@ -1,5 +1,6 @@
 package ru.deadsoftware.cavedroid.game.render
 
+import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
@@ -15,6 +16,8 @@ import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
 import ru.deadsoftware.cavedroid.misc.utils.ArrayMapExtensions.component1
 import ru.deadsoftware.cavedroid.misc.utils.ArrayMapExtensions.component2
 import ru.deadsoftware.cavedroid.misc.utils.drawSprite
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
 import javax.inject.Inject
 
 @GameScope
@@ -23,17 +26,22 @@ class TouchControlsRenderer @Inject constructor(
     private val mainConfig: MainConfig,
     private val mobsController: MobsController,
     private val gameWindowsManager: GameWindowsManager,
+    private val textureRegions: GetTextureRegionByNameUseCase,
+    private val getTouchButtons: GetTouchButtonsUseCase,
 ) : IGameRenderer {
 
     override val renderLayer get() = RENDER_LAYER
 
-    private val shadeTexture get() = Assets.textureRegions[SHADE_KEY]
+    private val shadeTexture get() = textureRegions[SHADE_KEY]
+
+    private val joyBackground = Sprite(textureRegions["joy_background"])
+    private val joyStick = Sprite(textureRegions["joy_stick"])
 
     private fun drawJoystick(spriteBatch: SpriteBatch) {
         val joystick = mainConfig.joystick?.takeIf { it.active } ?: return
 
         spriteBatch.drawSprite(
-            sprite = Assets.joyBackground,
+            sprite = joyBackground,
             x = joystick.centerX - Joystick.RADIUS,
             y = joystick.centerY - Joystick.RADIUS,
             width = Joystick.SIZE,
@@ -41,7 +49,7 @@ class TouchControlsRenderer @Inject constructor(
         )
 
         spriteBatch.drawSprite(
-            sprite = Assets.joyStick,
+            sprite = joyStick,
             x = joystick.activeX - Joystick.STICK_SIZE / 2,
             y = joystick.activeY - Joystick.STICK_SIZE / 2,
             width = Joystick.STICK_SIZE,
@@ -54,12 +62,12 @@ class TouchControlsRenderer @Inject constructor(
             return
         }
 
-        val touchControlsMap = Assets.guiMap
+        val touchControlsMap = getTouchButtons()
 
         touchControlsMap.forEach { (key, value) ->
-            val touchKey = value.rect
+            val touchKey = value.rectangle
             spriteBatch.draw(
-                /* region = */ Assets.textureRegions[key],
+                /* region = */ textureRegions[key],
                 /* x = */ touchKey.x,
                 /* y = */ touchKey.y,
                 /* width = */ touchKey.width,
@@ -69,7 +77,7 @@ class TouchControlsRenderer @Inject constructor(
 
         // FIXME: Add pressed state for buttons
         if (mobsController.player.controlMode == ControlMode.CURSOR) {
-            val altKeyRect = touchControlsMap.get("alt").rect
+            val altKeyRect = touchControlsMap["alt"]?.rectangle ?: return
             spriteBatch.draw(shadeTexture, altKeyRect.x, altKeyRect.y, altKeyRect.width, altKeyRect.height)
         }
 

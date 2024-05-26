@@ -3,11 +3,13 @@ package ru.deadsoftware.cavedroid.misc.utils
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.misc.Assets
+import ru.fredboy.cavedroid.utils.bl
 
 private fun Rectangle.shifted(shift: Float) = Rectangle(x + shift, y, width, height)
 
@@ -49,9 +51,15 @@ fun forEachBlockInArea(
 }
 
 @JvmOverloads
-fun SpriteBatch.drawString(str: String, x: Float, y: Float, color: Color = Color.WHITE): GlyphLayout {
-    Assets.minecraftFont.color = color
-    return Assets.minecraftFont.draw(this, str, x, y)
+fun SpriteBatch.drawString(
+    font: BitmapFont,
+    str: String,
+    x: Float,
+    y: Float,
+    color: Color = Color.WHITE
+): GlyphLayout {
+    font.color = color
+    return font.draw(this, str, x, y)
 }
 
 /**

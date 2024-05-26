@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.version
+
 object Dependencies {
 
     object LibGDX {
@@ -27,6 +29,7 @@ object Dependencies {
 
     object Kotlin {
         const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
+        const val kspPlugin = "com.google.devtools.ksp:${Versions.ksp}"
         const val bom = "org.jetbrains.kotlin:kotlin-bom:${Versions.kotlin}"
         const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
 

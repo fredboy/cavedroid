@@ -5,7 +5,9 @@ import ru.deadsoftware.cavedroid.MainComponent;
 import ru.deadsoftware.cavedroid.generated.module.*;
 
 @GameScope
-@Component(dependencies = MainComponent.class,
+@Component(dependencies = {
+            MainComponent.class
+        },
         modules = {GameModule.class,
                 UseItemActionsModule.class,
                 UpdateBlockActionsModule.class,

@@ -5,6 +5,7 @@ import ru.deadsoftware.cavedroid.menu.MenuProc
 import ru.deadsoftware.cavedroid.menu.objects.ButtonEventListener
 import ru.deadsoftware.cavedroid.menu.objects.ButtonRenderer
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 
 class MenuOptions(
     width: Float,
@@ -13,7 +14,8 @@ class MenuOptions(
     mainConfig: MainConfig,
     menuInput: MenuProc.Input,
     assetLoader: AssetLoader,
-) : Menu(width, height, buttonRenderer, mainConfig, menuInput, assetLoader) {
+    getTextureRegionByName: GetTextureRegionByNameUseCase,
+) : Menu(width, height, buttonRenderer, mainConfig, menuInput, assetLoader, getTextureRegionByName) {
 
     override fun getButtonEventListeners(): HashMap<String, ButtonEventListener> {
         val map = HashMap<String, ButtonEventListener>()

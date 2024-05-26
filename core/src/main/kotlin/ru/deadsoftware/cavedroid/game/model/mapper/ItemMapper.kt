@@ -12,11 +12,13 @@ import ru.deadsoftware.cavedroid.misc.Assets
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader
 import ru.deadsoftware.cavedroid.misc.utils.SpriteOrigin
 import ru.deadsoftware.cavedroid.misc.utils.colorFromHexString
+import ru.fredboy.cavedroid.domain.assets.usecase.GetItemTextureUseCase
 import javax.inject.Inject
 
 @Reusable
 class ItemMapper @Inject constructor(
     private val assetLoader: AssetLoader,
+    private val getItemTexture: GetItemTextureUseCase,
 ) {
 
     fun map(key: String, dto: ItemDto, block: Block?, slabTopBlock: Block.Slab?, slabBottomBlock: Block.Slab?): Item {
@@ -57,7 +59,7 @@ class ItemMapper @Inject constructor(
             return null
         }
 
-        val texture = Assets.resolveItemTexture(assetLoader, dto.texture)
+        val texture = getItemTexture[dto.texture]
         return Sprite(texture)
             .apply {
                 flip(false, true)

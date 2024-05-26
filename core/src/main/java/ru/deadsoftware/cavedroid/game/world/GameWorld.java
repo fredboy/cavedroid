@@ -1,21 +1,19 @@
 package ru.deadsoftware.cavedroid.game.world;
 
-import com.badlogic.gdx.math.MathUtils;
 import kotlin.Pair;
 import org.jetbrains.annotations.Nullable;
 import ru.deadsoftware.cavedroid.game.GameItemsHolder;
 import ru.deadsoftware.cavedroid.game.GameScope;
 import ru.deadsoftware.cavedroid.game.mobs.MobsController;
-import ru.deadsoftware.cavedroid.game.mobs.Pig;
 import ru.deadsoftware.cavedroid.game.model.block.Block;
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem;
 import ru.deadsoftware.cavedroid.game.model.item.Item;
 import ru.deadsoftware.cavedroid.game.model.world.generator.WorldGeneratorConfig;
 import ru.deadsoftware.cavedroid.game.objects.container.Container;
-import ru.deadsoftware.cavedroid.game.objects.drop.DropController;
-import ru.deadsoftware.cavedroid.game.objects.container.Furnace;
 import ru.deadsoftware.cavedroid.game.objects.container.ContainerController;
-import ru.deadsoftware.cavedroid.misc.utils.MeasureUnitsUtilsKt;
+import ru.deadsoftware.cavedroid.game.objects.container.Furnace;
+import ru.deadsoftware.cavedroid.game.objects.drop.DropController;
+import ru.fredboy.cavedroid.utils.MeasureUnitsUtilsKt;
 
 import javax.inject.Inject;
 
@@ -227,18 +225,18 @@ public class GameWorld {
     }
 
     private void spawnInitialMobs() {
-        for (int x = 0; x < getWidth(); x++) {
-            int y = 0;
-            while (y < getWorldConfig().getSeaLevel()) {
-                if (getForeMap(x, y) == mGameItemsHolder.getBlock("grass")) {
-                    if (MathUtils.randomBoolean(.125f)) {
-                        mMobsController.addMob(new Pig(MeasureUnitsUtilsKt.getPx(x), MeasureUnitsUtilsKt.getPx(y)));
-                    }
-                    break;
-                }
-                y++;
-            }
-        }
+//        for (int x = 0; x < getWidth(); x++) {
+//            int y = 0;
+//            while (y < getWorldConfig().getSeaLevel()) {
+//                if (getForeMap(x, y) == mGameItemsHolder.getBlock("grass")) {
+//                    if (MathUtils.randomBoolean(.125f)) {
+//                        mMobsController.addMob(new Pig(MeasureUnitsUtilsKt.getPx(x), MeasureUnitsUtilsKt.getPx(y)));
+//                    }
+//                    break;
+//                }
+//                y++;
+//            }
+//        }
     }
 
     public void destroyForeMap(int x, int y) {

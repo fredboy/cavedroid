@@ -19,6 +19,7 @@ import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import javax.inject.Inject
 
 @GameScope
@@ -31,13 +32,14 @@ class UseItemMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val gameWorld: GameWorld,
     private val gameItemsHolder: GameItemsHolder,
+    private val textureRegions: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
 
     private var buttonHoldTask: Timer.Task? = null
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return buttonHoldTask?.isScheduled == true ||
-                !isInsideHotbar(action) &&
+                !action.isInsideHotbar(textureRegions) &&
                 gameWindowsManager.getCurrentWindow() == GameUiWindow.NONE &&
                 action.actionKey is MouseInputActionKey.Right
     }

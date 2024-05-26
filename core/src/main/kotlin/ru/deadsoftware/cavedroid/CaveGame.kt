@@ -69,13 +69,13 @@ class CaveGame(
         Gdx.files.absolute(gameDataDirectoryPath).mkdirs()
         initMainConfig()
 
-        Assets.load(assetLoader)
+        mainComponent.initializeAssetsUseCase()
         setScreen(mainComponent.menuScreen)
     }
 
     override fun dispose() {
         screen?.dispose()
-        Assets.dispose()
+        mainComponent.disposeAssetsUseCase()
     }
 
 

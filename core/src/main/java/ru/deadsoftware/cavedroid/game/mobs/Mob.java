@@ -13,6 +13,7 @@ import ru.deadsoftware.cavedroid.game.model.dto.SaveDataDto;
 import ru.deadsoftware.cavedroid.game.model.item.InventoryItem;
 import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Saveable;
+import ru.fredboy.cavedroid.domain.assets.usecase.GetPigSpritesUseCase;
 
 import java.util.Collections;
 import java.util.List;
@@ -350,7 +351,8 @@ public abstract class Mob extends Rectangle implements  Saveable {
     @Override
     public abstract SaveDataDto.MobSaveDataDto getSaveData();
 
-    public static Mob fromSaveData(SaveDataDto.MobSaveDataDto saveData) {
-        return MobSaveDataMapperKt.fromSaveData(saveData);
+    public static Mob fromSaveData(SaveDataDto.MobSaveDataDto saveData,
+                                   GetPigSpritesUseCase getPigSpritesUseCase) {
+        return MobSaveDataMapperKt.fromSaveData(saveData, getPigSpritesUseCase);
     }
 }

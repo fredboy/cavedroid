@@ -1,6 +1,7 @@
 package ru.deadsoftware.cavedroid.game.model.item
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import ru.deadsoftware.cavedroid.game.GameItemsHolder
@@ -9,7 +10,9 @@ import ru.deadsoftware.cavedroid.misc.Assets
 import ru.deadsoftware.cavedroid.misc.Saveable
 import ru.deadsoftware.cavedroid.misc.utils.drawSprite
 import ru.deadsoftware.cavedroid.misc.utils.drawString
-import ru.deadsoftware.cavedroid.misc.utils.px
+import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
+import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
+import ru.fredboy.cavedroid.utils.px
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
@@ -73,12 +76,19 @@ class InventoryItem @JvmOverloads constructor(
         return amount + count <= item.params.maxStack
     }
 
-    private fun drawAmountText(spriteBatch: SpriteBatch, text: String,  x: Float, y: Float) {
-        spriteBatch.drawString(text, x + 1, y + 1, Color.BLACK)
-        spriteBatch.drawString(text, x, y, Color.WHITE)
+    private fun drawAmountText(spriteBatch: SpriteBatch, font: BitmapFont, text: String,  x: Float, y: Float) {
+        spriteBatch.drawString(font, text, x + 1, y + 1, Color.BLACK)
+        spriteBatch.drawString(font, text, x, y, Color.WHITE)
     }
 
-    fun drawSelected(spriteBatch: SpriteBatch, x: Float, y: Float) {
+    fun drawSelected(
+        spriteBatch: SpriteBatch,
+        font: BitmapFont,
+        x: Float,
+        y: Float,
+        getStringWidth: GetStringWidthUseCase,
+        getStringHeight: GetStringHeightUseCase,
+    ) {
         if (item.isNone()) {
             return
         }
@@ -88,13 +98,22 @@ class InventoryItem @JvmOverloads constructor(
         spriteBatch.drawSprite(sprite, x - 10f, y - 10f, rotation = 0f, width = 20f, height = 20f)
         drawAmountText(
             spriteBatch = spriteBatch,
+            font = font,
             text = amountString,
-            x = x + 10f - Assets.getStringWidth(amountString) + 1f,
-            y = y + 10f - Assets.getStringHeight(amountString) + 1f
+            x = x + 10f - getStringWidth(amountString) + 1f,
+            y = y + 10f - getStringHeight(amountString) + 1f
         )
     }
 
-    fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, x: Float, y: Float) {
+    fun draw(
+        spriteBatch: SpriteBatch,
+        shapeRenderer: ShapeRenderer,
+        font: BitmapFont,
+        x: Float,
+        y: Float,
+        getStringWidth: GetStringWidthUseCase,
+        getStringHeight: GetStringHeightUseCase,
+    ) {
         if (item.isNone()) {
             return
         }
@@ -124,9 +143,10 @@ class InventoryItem @JvmOverloads constructor(
             val amountString = amount.toString()
             drawAmountText(
                 spriteBatch = spriteBatch,
+                font = font,
                 text = amountString,
-                x = x + 1.px - Assets.getStringWidth(amountString),
-                y = y + 1.px - Assets.getStringHeight(amountString)
+                x = x + 1.px - getStringWidth(amountString),
+                y = y + 1.px - getStringHeight(amountString)
             )
         }
     }

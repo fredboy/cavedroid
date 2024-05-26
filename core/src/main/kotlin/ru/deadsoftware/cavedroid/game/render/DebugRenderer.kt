@@ -11,10 +11,11 @@ import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.block.Block
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
-import ru.deadsoftware.cavedroid.misc.utils.bl
 import ru.deadsoftware.cavedroid.misc.utils.drawString
 import ru.deadsoftware.cavedroid.misc.utils.forEachBlockInArea
-import ru.deadsoftware.cavedroid.misc.utils.px
+import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
+import ru.fredboy.cavedroid.utils.bl
+import ru.fredboy.cavedroid.utils.px
 import javax.inject.Inject
 
 @GameScope
@@ -24,6 +25,7 @@ class DebugRenderer @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobsController: MobsController,
     private val debugInfoStringsProvider: DebugInfoStringsProvider,
+    private val getFont: GetFontUseCase,
 ) : IGameRenderer {
 
     override val renderLayer get() = RENDER_LAYER
@@ -83,7 +85,7 @@ class DebugRenderer @Inject constructor(
 
     private fun drawDebugInfo(spriteBatch: SpriteBatch) {
         debugInfoStringsProvider.getDebugStrings().forEachIndexed { index, str ->
-            spriteBatch.drawString(str, 0f, index * 10f)
+            spriteBatch.drawString(getFont(), str, 0f, index * 10f)
         }
     }
 

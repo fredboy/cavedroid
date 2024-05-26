@@ -9,11 +9,15 @@ import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.model.block.Block
 import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.Assets
-import ru.deadsoftware.cavedroid.misc.utils.px
+import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageFrameCountUseCase
+import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageSpriteUseCase
+import ru.fredboy.cavedroid.utils.px
 
 abstract class BlocksRenderer(
     protected val gameWorld: GameWorld,
     protected val mobsController: MobsController,
+    protected val getBlockDamageFrameCount: GetBlockDamageFrameCountUseCase,
+    protected val getBlockDamageSprite: GetBlockDamageSpriteUseCase,
 ) : IGameRenderer {
 
     protected abstract val background: Boolean
@@ -22,10 +26,10 @@ abstract class BlocksRenderer(
         get() = isNone() || params.isTransparent
 
     private fun blockDamageSprite(index: Int): Sprite? {
-        if (index !in 0..< MAX_BLOCK_DAMAGE_INDEX) {
+        if (index !in 0..< getBlockDamageFrameCount()) {
             return null
         }
-        return Assets.blockDamageSprites[index]
+        return getBlockDamageSprite[index]
     }
 
     protected fun drawBlockDamage(spriteBatch: SpriteBatch, viewport: Rectangle) {
