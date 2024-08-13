@@ -1,22 +1,22 @@
 package ru.deadsoftware.cavedroid.game.ui.windows
 
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.objects.container.Chest
-import ru.deadsoftware.cavedroid.game.objects.drop.DropController
-import ru.deadsoftware.cavedroid.game.objects.container.Furnace
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.*
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.game.controller.container.model.Chest
+import ru.fredboy.cavedroid.game.controller.container.model.Furnace
+import ru.fredboy.cavedroid.game.controller.drop.DropController
+import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
 
 @GameScope
 class GameWindowsManager @Inject constructor(
     private val tooltipManager: TooltipManager,
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val dropController: DropController,
-    private val gameItemsHolder: GameItemsHolder,
+    private val itemsRepository: ItemsRepository,
 ) {
 
     var creativeScrollAmount = 0
@@ -30,10 +30,10 @@ class GameWindowsManager @Inject constructor(
     }
 
     fun openInventory() {
-        if (mobsController.player.gameMode == 1) {
+        if (mobController.player.gameMode == 1) {
             currentWindow = CreativeInventoryWindow()
         } else {
-            currentWindow = SurvivalInventoryWindow(gameItemsHolder)
+            currentWindow = SurvivalInventoryWindow(itemsRepository)
         }
     }
 
@@ -46,13 +46,13 @@ class GameWindowsManager @Inject constructor(
     }
 
     fun openCrafting() {
-        currentWindow = CraftingInventoryWindow(gameItemsHolder)
+        currentWindow = CraftingInventoryWindow(itemsRepository)
     }
 
     fun closeWindow() {
         (currentWindow as? AbstractInventoryWindowWithCraftGrid)?.let { window ->
             window.craftingItems.forEach { item ->
-                dropController.addDrop(mobsController.player.x, mobsController.player.y, item)
+                dropController.addDrop(mobController.player.x, mobController.player.y, item)
             }
         }
 

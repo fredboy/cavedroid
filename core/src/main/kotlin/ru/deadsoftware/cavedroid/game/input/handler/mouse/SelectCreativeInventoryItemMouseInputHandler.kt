@@ -1,27 +1,26 @@
 package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
-import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideWindow
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
-import ru.deadsoftware.cavedroid.misc.Assets
+import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
+import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.items.usecase.GetItemByIndexUseCase
+import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
 
 @GameScope
 @BindMouseInputHandler
 class SelectCreativeInventoryItemMouseInputHandler @Inject constructor(
-    private val gameItemsHolder: GameItemsHolder,
     private val gameWindowsManager: GameWindowsManager,
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val textureRegions: GetTextureRegionByNameUseCase,
+    private val getItemByIndexUseCase: GetItemByIndexUseCase,
 ) : IMouseInputHandler {
 
     private val creativeInventoryTexture get() = requireNotNull(textureRegions["creative"])
@@ -49,8 +48,8 @@ class SelectCreativeInventoryItemMouseInputHandler @Inject constructor(
 
         val itemIndex = (gameWindowsManager.creativeScrollAmount * GameWindowsConfigs.Creative.itemsInRow +
                 (xOnGrid.toInt() + yOnGrid.toInt() * GameWindowsConfigs.Creative.itemsInRow))
-        val item = gameItemsHolder.getItemFromCreativeInventory(itemIndex)
-        mobsController.player.inventory.addItem(item)
+        val item = getItemByIndexUseCase[itemIndex]
+        mobController.player.inventory.addItem(item)
     }
 
 }

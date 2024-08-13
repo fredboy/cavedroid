@@ -1,29 +1,29 @@
 package ru.deadsoftware.cavedroid.game.actions.useitem
 
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.model.item.Item
-import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindUseItemAction
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.domain.items.usecase.GetBlockByKeyUseCase
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
 @BindUseItemAction(UseBedAction.ACTION_KEY)
 class UseBedAction @Inject constructor(
     private val gameWorld: GameWorld,
-    private val mobsController: MobsController,
-    private val gameItemsHolder: GameItemsHolder,
+    private val mobController: MobController,
+    private val getBlockByKeyUseCase: GetBlockByKeyUseCase
 ) : IUseItemAction {
 
     override fun perform(item: Item.Usable, x: Int, y: Int) {
-        val bedLeft = gameItemsHolder.getBlock("bed_l")
-        val bedRight = gameItemsHolder.getBlock("bed_r")
+        val bedLeft = getBlockByKeyUseCase["bed_l"]
+        val bedRight = getBlockByKeyUseCase["bed_r"]
 
         if (gameWorld.canPlaceToForeground(x, y, bedLeft) && gameWorld.canPlaceToForeground(x + 1, y, bedRight)) {
             gameWorld.placeToForeground(x, y, bedLeft)
             gameWorld.placeToForeground(x + 1, y, bedRight)
-            mobsController.player.inventory.decreaseCurrentItemAmount()
+            mobController.player.inventory.decreaseCurrentItemAmount()
         }
     }
 

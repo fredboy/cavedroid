@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.JsonValue;
-import kotlin.text.StringsKt;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.menu.MenuProc;
 import ru.deadsoftware.cavedroid.menu.objects.BooleanOptionButton;
@@ -57,6 +56,9 @@ public abstract class Menu {
         mMenuInput = menuInput;
         mAssetLoader = assetLoader;
         mGetTextureRegionByNameUseCase = getTextureRegionByNameUseCase;
+    }
+
+    final void init() {
         initButtons();
     }
 

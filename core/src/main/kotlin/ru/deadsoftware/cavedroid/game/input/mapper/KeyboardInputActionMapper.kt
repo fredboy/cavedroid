@@ -1,9 +1,9 @@
 package ru.deadsoftware.cavedroid.game.input.mapper
 
 import com.badlogic.gdx.Input
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.input.action.KeyboardInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.KeyboardInputActionKey
+import ru.fredboy.cavedroid.common.di.GameScope
 import javax.inject.Inject
 
 @GameScope

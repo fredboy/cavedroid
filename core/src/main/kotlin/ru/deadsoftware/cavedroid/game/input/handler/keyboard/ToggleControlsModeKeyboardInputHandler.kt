@@ -1,20 +1,20 @@
 package ru.deadsoftware.cavedroid.game.input.handler.keyboard
 
 import ru.deadsoftware.cavedroid.MainConfig
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.input.IKeyboardInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.KeyboardInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.KeyboardInputActionKey
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.mobs.player.Player
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindKeyboardInputHandler
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.mob.model.Player
 import javax.inject.Inject
 
 @GameScope
 @BindKeyboardInputHandler
 class ToggleControlsModeKeyboardInputHandler @Inject constructor(
     private val mainConfig: MainConfig,
-    private val mobsController: MobsController,
+    private val mobController: MobController,
 ) : IKeyboardInputHandler {
 
     override fun checkConditions(action: KeyboardInputAction): Boolean {
@@ -23,10 +23,10 @@ class ToggleControlsModeKeyboardInputHandler @Inject constructor(
     }
 
     override fun handle(action: KeyboardInputAction) {
-        if (mobsController.player.controlMode == Player.ControlMode.WALK) {
-            mobsController.player.controlMode = Player.ControlMode.CURSOR
+        if (mobController.player.controlMode == Player.ControlMode.WALK) {
+            mobController.player.controlMode = Player.ControlMode.CURSOR
         } else {
-            mobsController.player.controlMode = Player.ControlMode.WALK
+            mobController.player.controlMode = Player.ControlMode.WALK
         }
     }
 

@@ -21,13 +21,25 @@ dependencies {
     useKotlinxSerializationJson()
     useKotlinxSerializationProtobuf()
 
-    useBaseModule()
+    useCommonModule()
 
     // data
     useModule(":core:data:assets")
+    useModule(":core:data:items")
+    useModule(":core:data:save")
 
-    //domain
+    // domain
     useModule(":core:domain:assets")
+    useModule(":core:domain:items")
+    useModule(":core:domain:save")
+
+    // controller
+    useModule(":core:game:controller:drop")
+    useModule(":core:game:controller:container")
+    useModule(":core:game:controller:mob")
+
+    // world
+    useModule(":core:game:world")
 
     implementation(Dependencies.jetbrainsAnnotations)
 }

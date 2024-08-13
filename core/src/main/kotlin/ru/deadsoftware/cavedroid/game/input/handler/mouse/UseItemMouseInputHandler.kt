@@ -3,8 +3,6 @@ package ru.deadsoftware.cavedroid.game.input.handler.mouse
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Timer
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.actions.placeToBackgroundAction
 import ru.deadsoftware.cavedroid.game.actions.placeToForegroundAction
@@ -15,23 +13,23 @@ import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideHotbar
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.model.item.Item
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
-import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
 @BindMouseInputHandler
 class UseItemMouseInputHandler @Inject constructor(
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val useItemActionMap: Map<String, @JvmSuppressWildcards IUseItemAction>,
     private val placeBlockActionMap: Map<String, @JvmSuppressWildcards IPlaceBlockAction>,
     private val useBlockActionMap: Map<String, @JvmSuppressWildcards IUseBlockAction>,
     private val gameWindowsManager: GameWindowsManager,
     private val gameWorld: GameWorld,
-    private val gameItemsHolder: GameItemsHolder,
     private val textureRegions: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
 
@@ -52,7 +50,7 @@ class UseItemMouseInputHandler @Inject constructor(
     private fun handleHold(action: MouseInputAction) {
         cancelHold()
 
-        val player = mobsController.player
+        val player = mobController.player
         val item = player.inventory.activeItem.item
         player.startHitting(false)
         player.stopHitting()
@@ -78,21 +76,21 @@ class UseItemMouseInputHandler @Inject constructor(
     }
 
     private fun tryUseBlock() {
-        val block = gameWorld.getForeMap(mobsController.player.cursorX, mobsController.player.cursorY)
+        val block = gameWorld.getForeMap(mobController.player.cursorX, mobController.player.cursorY)
             .takeIf { !it.isNone() }
-            ?: gameWorld.getBackMap(mobsController.player.cursorX, mobsController.player.cursorY)
+            ?: gameWorld.getBackMap(mobController.player.cursorX, mobController.player.cursorY)
                 .takeIf { !it.isNone() }
             ?: return
 
         useBlockActionMap[block.params.key]?.perform(
             block = block,
-            x = mobsController.player.cursorX,
-            y = mobsController.player.cursorY
+            x = mobController.player.cursorX,
+            y = mobController.player.cursorY
         )
     }
 
     private fun handleUp(action: MouseInputAction) {
-        val player = mobsController.player
+        val player = mobController.player
         val item = player.inventory.activeItem.item
         cancelHold()
 
@@ -110,7 +108,7 @@ class UseItemMouseInputHandler @Inject constructor(
                 ?: Gdx.app.error(TAG, "use item action ${item.useActionKey} not found");
         } else if (item is Item.Food && player.health < player.maxHealth) {
             player.heal(item.heal)
-            player.decreaseCurrentItemCount(gameItemsHolder)
+            player.decreaseCurrentItemCount()
         } else {
             tryUseBlock()
         }

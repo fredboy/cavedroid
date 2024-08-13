@@ -6,29 +6,28 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.MainConfig
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.mobs.Mob
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.render.IGameRenderer
 import ru.deadsoftware.cavedroid.game.render.WindowsRenderer
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.SurvivalInventoryWindow
-import ru.deadsoftware.cavedroid.misc.Assets
+import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.mob.model.Direction
 import javax.inject.Inject
 import kotlin.math.atan
 
 @GameScope
 class SurvivalWindowRenderer @Inject constructor(
     private val mainConfig: MainConfig,
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val gameWindowsManager: GameWindowsManager,
-    private val gameItemsHolder: GameItemsHolder,
+    private val itemsRepository: ItemsRepository,
     private val textureRegions: GetTextureRegionByNameUseCase,
     private val getStringWidth: GetStringWidthUseCase,
     private val getStringHeight: GetStringHeightUseCase,
@@ -50,24 +49,23 @@ class SurvivalWindowRenderer @Inject constructor(
         val h = mouseX.toDouble() - portraitX.toDouble()
         val v = mouseY.toDouble() - portraitY.toDouble()
 
-        mobsController.player.setDir(
-            if (mouseX < portraitX + mobsController.player.width / 2)
-                Mob.Direction.LEFT
-            else
-                Mob.Direction.RIGHT
-        )
+        mobController.player.direction = if (mouseX < portraitX + mobController.player.width / 2) {
+            Direction.LEFT
+        } else {
+            Direction.RIGHT
+        }
 
-        mobsController.player.headRotation = atan(v / h).toFloat() * MathUtils.radDeg
+        mobController.player.headRotation = atan(v / h).toFloat() * MathUtils.radDeg
     }
 
     private fun drawPlayerPortrait(spriteBatch: SpriteBatch, windowX: Float, windowY: Float, delta: Float) {
         val portraitX = windowX + GameWindowsConfigs.Survival.portraitMarginLeft +
-                (GameWindowsConfigs.Survival.portraitWidth / 2 - mobsController.player.width / 2)
+                (GameWindowsConfigs.Survival.portraitWidth / 2 - mobController.player.width / 2)
         val portraitY = windowY + GameWindowsConfigs.Survival.portraitMarginTop +
-                (GameWindowsConfigs.Survival.portraitHeight / 2 - mobsController.player.height / 2)
+                (GameWindowsConfigs.Survival.portraitHeight / 2 - mobController.player.height / 2)
 
         setPortraitHeadRotation(portraitX, portraitY)
-        mobsController.player.draw(spriteBatch, portraitX, portraitY, delta)
+        mobController.player.draw(spriteBatch, portraitX, portraitY, delta)
     }
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
@@ -87,7 +85,7 @@ class SurvivalWindowRenderer @Inject constructor(
             font = getFont(),
             gridX = windowX + GameWindowsConfigs.Survival.itemsGridMarginLeft,
             gridY = windowY + GameWindowsConfigs.Survival.itemsGridMarginTop,
-            items = mobsController.player.inventory.items.asSequence()
+            items = mobController.player.inventory.items.asSequence()
                 .drop(GameWindowsConfigs.Survival.hotbarCells)
                 .take(GameWindowsConfigs.Survival.itemsInCol * GameWindowsConfigs.Survival.itemsInRow)
                 .asIterable(),
@@ -104,7 +102,7 @@ class SurvivalWindowRenderer @Inject constructor(
             font = getFont(),
             gridX = windowX + GameWindowsConfigs.Survival.itemsGridMarginLeft,
             gridY = windowY + windowTexture.regionHeight - GameWindowsConfigs.Survival.hotbarOffsetFromBottom,
-            items = mobsController.player.inventory.items.asSequence()
+            items = mobController.player.inventory.items.asSequence()
                 .take(GameWindowsConfigs.Survival.hotbarCells)
                 .asIterable(),
             itemsInRow = GameWindowsConfigs.Survival.hotbarCells,
@@ -124,7 +122,7 @@ class SurvivalWindowRenderer @Inject constructor(
                 if (index % 3 > 1 || index / 3 > 1) {
                     null
                 } else {
-                    it ?: gameItemsHolder.fallbackItem.toInventoryItem()
+                    it
                 }
             }.asIterable(),
             itemsInRow = GameWindowsConfigs.Survival.craftGridSize,
@@ -134,14 +132,14 @@ class SurvivalWindowRenderer @Inject constructor(
             getStringHeight = getStringHeight
         )
 
-        window.craftResult?.draw(
+        window.craftResult.draw(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
             font = getFont(),
             x = windowX + GameWindowsConfigs.Survival.craftResultOffsetX,
             y = windowY + GameWindowsConfigs.Survival.craftResultOffsetY,
-            getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight,
+            getStringWidth = getStringWidth::invoke,
+            getStringHeight = getStringHeight::invoke,
         )
 
         window.selectedItem?.drawSelected(
@@ -149,8 +147,8 @@ class SurvivalWindowRenderer @Inject constructor(
             font = getFont(),
             x = Gdx.input.x * (viewport.width / Gdx.graphics.width),
             y = Gdx.input.y * (viewport.height / Gdx.graphics.height),
-            getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight,
+            getStringWidth = getStringWidth::invoke,
+            getStringHeight = getStringHeight::invoke,
         )
     }
 

@@ -4,11 +4,11 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
-import ru.deadsoftware.cavedroid.game.model.item.Item
-import ru.deadsoftware.cavedroid.misc.utils.drawSprite
+import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
+import ru.fredboy.cavedroid.domain.items.model.item.InventoryItem
+import ru.fredboy.cavedroid.domain.items.model.item.Item
 
 abstract class AbstractWindowRenderer {
 
@@ -45,8 +45,15 @@ abstract class AbstractWindowRenderer {
             val itemX = gridX + (index % itemsInRow) * cellWidth
             val itemY = gridY + (index / itemsInRow) * cellHeight
 
-            inventoryItem?.draw(spriteBatch, shapeRenderer, font, itemX, itemY, getStringWidth, getStringHeight)
-                ?: item?.let { spriteBatch.drawSprite(it.sprite, itemX, itemY) }
+            inventoryItem?.draw(
+                spriteBatch = spriteBatch,
+                shapeRenderer = shapeRenderer,
+                font = font,
+                x = itemX,
+                y = itemY,
+                getStringWidth = getStringWidth::invoke,
+                getStringHeight = getStringHeight::invoke
+            ) ?: item?.let { spriteBatch.drawSprite(it.sprite, itemX, itemY) }
         }
     }
 

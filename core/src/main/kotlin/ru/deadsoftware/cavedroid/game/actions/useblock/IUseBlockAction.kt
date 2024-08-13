@@ -1,6 +1,6 @@
 package ru.deadsoftware.cavedroid.game.actions.useblock
 
-import ru.deadsoftware.cavedroid.game.model.block.Block
+import ru.fredboy.cavedroid.domain.items.model.block.Block
 
 interface IUseBlockAction {
 

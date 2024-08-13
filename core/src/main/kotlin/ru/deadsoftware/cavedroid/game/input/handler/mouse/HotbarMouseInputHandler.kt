@@ -2,7 +2,6 @@ package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
 import com.badlogic.gdx.utils.Timer
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
@@ -10,20 +9,20 @@ import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.handler.keyboard.DropItemKeyboardInputHandler.Companion.DROP_DISTANCE
 import ru.deadsoftware.cavedroid.game.input.isInsideHotbar
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.mobs.player.Player
-import ru.deadsoftware.cavedroid.game.model.item.Item
-import ru.deadsoftware.cavedroid.game.objects.drop.Drop
-import ru.deadsoftware.cavedroid.game.objects.drop.DropController
-import ru.deadsoftware.cavedroid.misc.Assets
+import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.game.controller.drop.DropController
+import ru.fredboy.cavedroid.game.controller.drop.model.Drop
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.mob.model.Player
 import javax.inject.Inject
 
 @GameScope
 @BindMouseInputHandler
 class HotbarMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val dropController: DropController,
     private val textureRegions: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
@@ -47,7 +46,7 @@ class HotbarMouseInputHandler @Inject constructor(
 
     private fun createDrop(item: Item, playerX: Float, playerY: Float, amount: Int) {
         dropController.addDrop(
-            /* x = */ playerX + ((DROP_DISTANCE - Drop.DROP_SIZE / 2) * mobsController.player.direction.basis),
+            /* x = */ playerX + ((DROP_DISTANCE - Drop.DROP_SIZE / 2) * mobController.player.direction.basis),
             /* y = */ playerY,
             /* item = */ item,
             /* count = */ amount
@@ -63,7 +62,7 @@ class HotbarMouseInputHandler @Inject constructor(
     private fun handleHold(action: MouseInputAction) {
 //        buttonHoldTask = null
 //        gameWindowsManager.openInventory()
-        val player = mobsController.player
+        val player = mobController.player
         val actionSlot = getActionSlot(action)
         val currentItem = player.inventory.items[actionSlot]
         val dropAmount = if (currentItem.item.isTool()) currentItem.amount else 1
@@ -83,18 +82,18 @@ class HotbarMouseInputHandler @Inject constructor(
     }
 
     private fun handleUp(action: MouseInputAction) {
-        mobsController.player.inventory.activeSlot = getActionSlot(action)
+        mobController.player.inventory.activeSlot = getActionSlot(action)
     }
 
     private fun handleScroll(action: MouseInputAction) {
         if (action.actionKey !is MouseInputActionKey.Scroll) {
             return
         }
-        mobsController.player.inventory.activeSlot += action.actionKey.amountY.toInt()
-        if (mobsController.player.inventory.activeSlot < 0) {
-            mobsController.player.inventory.activeSlot = Player.HOTBAR_SIZE - 1
-        } else if (mobsController.player.inventory.activeSlot >= Player.HOTBAR_SIZE) {
-            mobsController.player.inventory.activeSlot = 0
+        mobController.player.inventory.activeSlot += action.actionKey.amountY.toInt()
+        if (mobController.player.inventory.activeSlot < 0) {
+            mobController.player.inventory.activeSlot = Player.HOTBAR_SIZE - 1
+        } else if (mobController.player.inventory.activeSlot >= Player.HOTBAR_SIZE) {
+            mobController.player.inventory.activeSlot = 0
         }
     }
 

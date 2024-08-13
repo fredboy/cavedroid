@@ -4,27 +4,25 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
-import ru.deadsoftware.cavedroid.MainConfig
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.render.IGameRenderer
 import ru.deadsoftware.cavedroid.game.render.WindowsRenderer
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.CraftingInventoryWindow
-import ru.deadsoftware.cavedroid.misc.Assets
+import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
 
 @GameScope
 class CraftingWindowRenderer @Inject constructor(
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val gameWindowsManager: GameWindowsManager,
-    private val gameItemsHolder: GameItemsHolder,
+    private val itemsRepository: ItemsRepository,
     private val textureRegions: GetTextureRegionByNameUseCase,
     private val getStringWidth: GetStringWidthUseCase,
     private val getStringHeight: GetStringHeightUseCase,
@@ -50,7 +48,7 @@ class CraftingWindowRenderer @Inject constructor(
             font = getFont(),
             gridX = windowX + GameWindowsConfigs.Crafting.itemsGridMarginLeft,
             gridY = windowY + GameWindowsConfigs.Crafting.itemsGridMarginTop,
-            items = mobsController.player.inventory.items.asSequence()
+            items = mobController.player.inventory.items.asSequence()
                 .drop(GameWindowsConfigs.Crafting.hotbarCells)
                 .take(GameWindowsConfigs.Crafting.itemsInCol * GameWindowsConfigs.Crafting.itemsInRow)
                 .asIterable(),
@@ -67,7 +65,7 @@ class CraftingWindowRenderer @Inject constructor(
             font = getFont(),
             gridX = windowX + GameWindowsConfigs.Crafting.itemsGridMarginLeft,
             gridY = windowY + windowTexture.regionHeight - GameWindowsConfigs.Crafting.hotbarOffsetFromBottom,
-            items = mobsController.player.inventory.items.asSequence()
+            items = mobController.player.inventory.items.asSequence()
                 .take(GameWindowsConfigs.Crafting.hotbarCells)
                 .asIterable(),
             itemsInRow = GameWindowsConfigs.Crafting.hotbarCells,
@@ -83,7 +81,7 @@ class CraftingWindowRenderer @Inject constructor(
             font = getFont(),
             gridX = windowX + GameWindowsConfigs.Crafting.craftOffsetX,
             gridY = windowY + GameWindowsConfigs.Crafting.craftOffsetY,
-            items = window.craftingItems.asSequence().map {  it ?: gameItemsHolder.fallbackItem.toInventoryItem()}.asIterable(),
+            items = window.craftingItems,
             itemsInRow = GameWindowsConfigs.Crafting.craftGridSize,
             cellWidth = GameWindowsConfigs.Crafting.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Crafting.itemsGridRowHeight,
@@ -91,14 +89,14 @@ class CraftingWindowRenderer @Inject constructor(
             getStringHeight = getStringHeight
         )
 
-        window.craftResult?.draw(
+        window.craftResult.draw(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
             font = getFont(),
             x = windowX + GameWindowsConfigs.Crafting.craftResultOffsetX,
             y = windowY + GameWindowsConfigs.Crafting.craftResultOffsetY,
-            getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight,
+            getStringWidth = getStringWidth::invoke,
+            getStringHeight = getStringHeight::invoke,
         )
 
         window.selectedItem?.drawSelected(
@@ -106,8 +104,8 @@ class CraftingWindowRenderer @Inject constructor(
             font = getFont(),
             x = Gdx.input.x * (viewport.width / Gdx.graphics.width),
             y = Gdx.input.y * (viewport.height / Gdx.graphics.height),
-            getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight,
+            getStringWidth = getStringWidth::invoke,
+            getStringHeight = getStringHeight::invoke,
         )
     }
 

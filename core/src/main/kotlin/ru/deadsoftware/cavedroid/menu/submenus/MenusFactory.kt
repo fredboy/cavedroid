@@ -6,6 +6,7 @@ import ru.deadsoftware.cavedroid.menu.MenuScope
 import ru.deadsoftware.cavedroid.menu.objects.ButtonRenderer
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import javax.inject.Inject
 
 @MenuScope
@@ -13,6 +14,7 @@ class MenusFactory @Inject constructor(
     private val mainConfig: MainConfig,
     private val assetLoader: AssetLoader,
     private val getTextureRegionByName: GetTextureRegionByNameUseCase,
+    private val saveDataRepository: SaveDataRepository,
 ) {
 
     fun getMainMenu(
@@ -21,7 +23,16 @@ class MenusFactory @Inject constructor(
         buttonRenderer: ButtonRenderer,
         menuInput: MenuProc.Input,
     ): MenuMain {
-        return MenuMain(width, height, buttonRenderer, mainConfig, menuInput, assetLoader, getTextureRegionByName)
+        return MenuMain(
+            width,
+            height,
+            buttonRenderer,
+            mainConfig,
+            menuInput,
+            assetLoader,
+            getTextureRegionByName,
+            saveDataRepository
+        ).apply { init() }
     }
 
     fun getMenuNewGame(
@@ -30,7 +41,15 @@ class MenusFactory @Inject constructor(
         buttonRenderer: ButtonRenderer,
         menuInput: MenuProc.Input,
     ): MenuNewGame {
-        return MenuNewGame(width, height, buttonRenderer, mainConfig, menuInput, assetLoader, getTextureRegionByName)
+        return MenuNewGame(
+            width,
+            height,
+            buttonRenderer,
+            mainConfig,
+            menuInput,
+            assetLoader,
+            getTextureRegionByName
+        ).apply { init() }
     }
 
     fun getMenuOptions(
@@ -39,7 +58,15 @@ class MenusFactory @Inject constructor(
         buttonRenderer: ButtonRenderer,
         menuInput: MenuProc.Input,
     ): MenuOptions {
-        return MenuOptions(width, height, buttonRenderer, mainConfig, menuInput, assetLoader, getTextureRegionByName)
+        return MenuOptions(
+            width,
+            height,
+            buttonRenderer,
+            mainConfig,
+            menuInput,
+            assetLoader,
+            getTextureRegionByName
+        ).apply { init() }
     }
 
 }

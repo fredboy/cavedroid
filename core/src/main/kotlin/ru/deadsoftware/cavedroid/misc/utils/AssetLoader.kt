@@ -3,7 +3,6 @@ package ru.deadsoftware.cavedroid.misc.utils
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
 import ru.deadsoftware.cavedroid.MainConfig
-import ru.deadsoftware.cavedroid.game.GameScope
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton

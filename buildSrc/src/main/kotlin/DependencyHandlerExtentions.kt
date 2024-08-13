@@ -11,8 +11,8 @@ fun DependencyHandler.useModule(moduleName: String) {
     add("implementation", project(moduleName))
 }
 
-fun DependencyHandler.useBaseModule() {
-    useModule(":core:base")
+fun DependencyHandler.useCommonModule() {
+    useModule(":core:common")
 }
 
 fun DependencyHandler.useAutomultibind() {

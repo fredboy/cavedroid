@@ -5,26 +5,24 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
-import ru.deadsoftware.cavedroid.MainConfig
-import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.render.IGameRenderer
 import ru.deadsoftware.cavedroid.game.render.WindowsRenderer
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.FurnaceInventoryWindow
-import ru.deadsoftware.cavedroid.misc.utils.drawSprite
-import ru.deadsoftware.cavedroid.misc.utils.withScissors
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.drawSprite
+import ru.fredboy.cavedroid.common.utils.withScissors
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
 
 @GameScope
 class FurnaceWindowRenderer @Inject constructor(
-    private val mainConfig: MainConfig,
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val gameWindowsManager: GameWindowsManager,
     private val textureRegions: GetTextureRegionByNameUseCase,
     private val getStringWidth: GetStringWidthUseCase,
@@ -54,7 +52,7 @@ class FurnaceWindowRenderer @Inject constructor(
             font = getFont(),
             gridX = windowX + GameWindowsConfigs.Furnace.itemsGridMarginLeft,
             gridY = windowY + GameWindowsConfigs.Furnace.itemsGridMarginTop,
-            items = mobsController.player.inventory.items.asSequence()
+            items = mobController.player.inventory.items.asSequence()
                 .drop(GameWindowsConfigs.Furnace.hotbarCells)
                 .take(GameWindowsConfigs.Furnace.itemsInCol * GameWindowsConfigs.Furnace.itemsInRow)
                 .asIterable(),
@@ -71,7 +69,7 @@ class FurnaceWindowRenderer @Inject constructor(
             font = getFont(),
             gridX = windowX + GameWindowsConfigs.Furnace.itemsGridMarginLeft,
             gridY = windowY + windowTexture.regionHeight - GameWindowsConfigs.Furnace.hotbarOffsetFromBottom,
-            items = mobsController.player.inventory.items.asSequence()
+            items = mobController.player.inventory.items.asSequence()
                 .take(GameWindowsConfigs.Furnace.hotbarCells)
                 .asIterable(),
             itemsInRow = GameWindowsConfigs.Furnace.hotbarCells,
@@ -81,45 +79,46 @@ class FurnaceWindowRenderer @Inject constructor(
             getStringHeight = getStringHeight
         )
 
-        window.furnace.fuel?.draw(
+        window.furnace.fuel.draw(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
             font = getFont(),
             x = windowX + GameWindowsConfigs.Furnace.smeltFuelMarginLeft,
             y = windowY + GameWindowsConfigs.Furnace.smeltFuelMarginTop,
-            getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight,
+            getStringWidth = getStringWidth::invoke,
+            getStringHeight = getStringHeight::invoke,
         )
 
-        window.furnace.input?.draw(
+        window.furnace.input.draw(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
             font = getFont(),
             x = windowX + GameWindowsConfigs.Furnace.smeltInputMarginLeft,
             y = windowY + GameWindowsConfigs.Furnace.smeltInputMarginTop,
-            getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight,
+            getStringWidth = getStringWidth::invoke,
+            getStringHeight = getStringHeight::invoke,
         )
 
-        window.furnace.result?.draw(
+        window.furnace.result.draw(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
             font = getFont(),
             x = windowX + GameWindowsConfigs.Furnace.smeltResultOffsetX,
             y = windowY + GameWindowsConfigs.Furnace.smeltResultOffsetY,
-            getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight,
+            getStringWidth = getStringWidth::invoke,
+            getStringHeight = getStringHeight::invoke,
         )
 
         if (window.furnace.isActive) {
             val burn = GameWindowsConfigs.Furnace.fuelBurnHeight * window.furnace.burnProgress
 
             spriteBatch.withScissors(
-                mainConfig = mainConfig,
                 x = windowX + GameWindowsConfigs.Furnace.fuelBurnMarginLeft,
                 y = windowY + GameWindowsConfigs.Furnace.fuelBurnMarginTop + burn,
                 width = furnaceBurn.width,
                 height = GameWindowsConfigs.Furnace.fuelBurnHeight,
+                viewportWidth = viewport.width,
+                viewportHeight = viewport.height,
             ) {
                 spriteBatch.drawSprite(
                     sprite = furnaceBurn,
@@ -132,11 +131,12 @@ class FurnaceWindowRenderer @Inject constructor(
                 val progress = GameWindowsConfigs.Furnace.progressWidth * window.furnace.smeltProgress
 
                 spriteBatch.withScissors(
-                    mainConfig = mainConfig,
                     x = windowX + GameWindowsConfigs.Furnace.progressMarginLeft,
                     y = windowY + GameWindowsConfigs.Furnace.progressMarginTop,
                     width = progress,
-                    height = furnaceProgress.height
+                    height = furnaceProgress.height,
+                    viewportWidth = viewport.width,
+                    viewportHeight = viewport.height,
                 ) {
                     spriteBatch.drawSprite(
                         sprite = furnaceProgress,
@@ -152,8 +152,8 @@ class FurnaceWindowRenderer @Inject constructor(
             font = getFont(),
             x = Gdx.input.x * (viewport.width / Gdx.graphics.width),
             y = Gdx.input.y * (viewport.height / Gdx.graphics.height),
-            getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight,
+            getStringWidth = getStringWidth::invoke,
+            getStringHeight = getStringHeight::invoke,
         )
     }
 

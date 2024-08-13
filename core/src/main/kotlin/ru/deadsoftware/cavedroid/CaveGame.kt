@@ -3,10 +3,9 @@ package ru.deadsoftware.cavedroid
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
-import ru.deadsoftware.cavedroid.misc.Assets
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader
-import ru.deadsoftware.cavedroid.misc.utils.ratio
 import ru.deadsoftware.cavedroid.prefs.PreferencesStore
+import ru.fredboy.cavedroid.common.utils.ratio
 
 class CaveGame(
     private val gameDataDirectoryPath: String,

@@ -1,11 +1,12 @@
 package ru.deadsoftware.cavedroid.game.world
 
 import com.badlogic.gdx.utils.Timer
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.model.block.Block
-import ru.fredboy.cavedroid.utils.bl
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.bl
+import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.world.GameWorld
 import java.util.PriorityQueue
 import javax.inject.Inject
 import kotlin.math.min
@@ -14,8 +15,8 @@ import kotlin.reflect.KClass
 @GameScope
 class GameWorldFluidsLogicControllerTask @Inject constructor(
     private val gameWorld: GameWorld,
-    private val mobsController: MobsController,
-    private val gameItemsHolder: GameItemsHolder,
+    private val mobController: MobController,
+    private val itemsRepository: ItemsRepository,
 ) : Timer.Task() {
 
     private var updateTick: Short = 0;
@@ -27,9 +28,9 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
     }
 
     init {
-        val waters = gameItemsHolder.getBlocksByType(Block.Water::class.java)
+        val waters = itemsRepository.getBlocksByType(Block.Water::class.java)
             .sortedBy(Block.Water::state)
-        val lavas = gameItemsHolder.getBlocksByType(Block.Lava::class.java)
+        val lavas = itemsRepository.getBlocksByType(Block.Lava::class.java)
             .sortedBy(Block.Lava::state)
 
         fluidStatesMap[Block.Water::class] = waters
@@ -101,13 +102,13 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
             fluidCanFlowThere(currentFluid, targetBlock) -> UpdateCommand(nextStateFluid, x, y)
 
             currentFluid.isWater() && targetBlock is Block.Lava && targetBlock.state > 0 ->
-                UpdateCommand(100) { gameWorld.setForeMap(x, y, gameItemsHolder.getBlock("cobblestone")) }
+                UpdateCommand(100) { gameWorld.setForeMap(x, y, itemsRepository.getBlockByKey("cobblestone")) }
 
             currentFluid.isWater() && targetBlock.isLava() ->
-                UpdateCommand(100) { gameWorld.setForeMap(x, y, gameItemsHolder.getBlock("obsidian")) }
+                UpdateCommand(100) { gameWorld.setForeMap(x, y, itemsRepository.getBlockByKey("obsidian")) }
 
             currentFluid.isLava() && targetBlock.isWater() ->
-                UpdateCommand(200) { gameWorld.setForeMap(x, y, gameItemsHolder.getBlock("stone")) }
+                UpdateCommand(200) { gameWorld.setForeMap(x, y, itemsRepository.getBlockByKey("stone")) }
 
             else -> null
         }
@@ -143,7 +144,7 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
     }
 
     private fun fluidUpdater() {
-        val midScreen = mobsController.player.x.bl
+        val midScreen = mobController.player.x.bl
 
         for (y in gameWorld.height - 1 downTo 0) {
             for (x in 0 ..< min(gameWorld.width / 2, 32)) {

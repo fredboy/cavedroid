@@ -1,23 +1,21 @@
 package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideHotbar
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
-import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
+import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
 
 @GameScope
 @BindMouseInputHandler
 class AttackMouseInputHandler @Inject constructor(
-    private val mobsController: MobsController,
-    private val gameWorld: GameWorld,
+    private val mobController: MobController,
     private val gameWindowsManager: GameWindowsManager,
     private val textureRegions: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
@@ -31,9 +29,9 @@ class AttackMouseInputHandler @Inject constructor(
 
     override fun handle(action: MouseInputAction) {
         if (action.actionKey.touchUp) {
-            mobsController.player.stopHitting()
+            mobController.player.stopHitting()
         } else {
-            mobsController.player.startHitting()
+            mobController.player.startHitting()
         };
     }
 }

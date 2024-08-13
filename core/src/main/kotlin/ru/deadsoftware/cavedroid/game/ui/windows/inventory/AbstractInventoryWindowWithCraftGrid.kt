@@ -1,13 +1,13 @@
 package ru.deadsoftware.cavedroid.game.ui.windows.inventory
 
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
+import ru.fredboy.cavedroid.domain.items.model.item.InventoryItem
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 
 abstract class AbstractInventoryWindowWithCraftGrid(
-    gameItemsHolder: GameItemsHolder,
+    itemsRepository: ItemsRepository,
 ) : AbstractInventoryWindow() {
 
-    private val _items = Array(10) { gameItemsHolder.fallbackItem.toInventoryItem() }
+    private val _items = Array(10) { itemsRepository.fallbackItem.toInventoryItem() }
 
     val items get() = _items.asList()
 

@@ -4,16 +4,24 @@ import dagger.Module;
 import dagger.Provides;
 import org.jetbrains.annotations.Nullable;
 import ru.deadsoftware.cavedroid.MainConfig;
-import ru.deadsoftware.cavedroid.game.mobs.MobsController;
-import ru.deadsoftware.cavedroid.game.model.block.Block;
-import ru.deadsoftware.cavedroid.game.objects.drop.DropController;
-import ru.deadsoftware.cavedroid.game.objects.container.ContainerController;
-import ru.deadsoftware.cavedroid.game.save.GameSaveData;
-import ru.deadsoftware.cavedroid.game.save.GameSaveLoader;
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager;
-import ru.deadsoftware.cavedroid.game.world.GameWorld;
+import ru.fredboy.cavedroid.common.di.GameScope;
+import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository;
 import ru.fredboy.cavedroid.domain.assets.usecase.GetPigSpritesUseCase;
 import ru.fredboy.cavedroid.domain.assets.usecase.GetPlayerSpritesUseCase;
+import ru.fredboy.cavedroid.domain.items.model.block.Block;
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository;
+import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase;
+import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase;
+import ru.fredboy.cavedroid.domain.save.model.GameSaveData;
+import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository;
+import ru.fredboy.cavedroid.game.controller.container.ContainerController;
+import ru.fredboy.cavedroid.game.controller.container.impl.ContainerControllerImpl;
+import ru.fredboy.cavedroid.game.controller.drop.DropController;
+import ru.fredboy.cavedroid.game.controller.drop.impl.DropControllerImpl;
+import ru.fredboy.cavedroid.game.controller.mob.MobController;
+import ru.fredboy.cavedroid.game.controller.mob.impl.MobControllerImpl;
+import ru.fredboy.cavedroid.game.world.GameWorld;
 
 @Module
 public class GameModule {
@@ -23,20 +31,12 @@ public class GameModule {
 
     public static boolean loaded = false;
 
-    private static void load(MainConfig mainConfig,
-                             GameItemsHolder gameItemsHolder,
-                             TooltipManager tooltipManager,
-                             GetPlayerSpritesUseCase getPlayerSpritesUseCase,
-                             GetPigSpritesUseCase getPigSpritesUseCase) {
+    private static void load(MainConfig mainConfig, SaveDataRepository saveDataRepository) {
         if (loaded) {
             return;
         }
 
-        data = GameSaveLoader.INSTANCE.load(mainConfig,
-                gameItemsHolder,
-                tooltipManager,
-                getPlayerSpritesUseCase,
-                getPigSpritesUseCase);
+        data = saveDataRepository.load(mainConfig.getGameFolder());
 
         loaded = true;
     }
@@ -50,65 +50,55 @@ public class GameModule {
     @Provides
     @GameScope
     public static DropController provideDropController(MainConfig mainConfig,
-                                                       GameItemsHolder gameItemsHolder,
-                                                       TooltipManager tooltipManager,
-                                                       GetPlayerSpritesUseCase getPlayerSpritesUseCase,
-                                                       GetPigSpritesUseCase getPigSpritesUseCase) {
-        load(mainConfig, gameItemsHolder, tooltipManager, getPlayerSpritesUseCase, getPigSpritesUseCase);
-        DropController controller = data != null ? data.retrieveDropController() : new DropController();
+                                                       SaveDataRepository saveDataRepository) {
+        load(mainConfig, saveDataRepository);
+        DropController controller = data != null ? data.retrieveDropController() : new DropControllerImpl();
         makeDataNullIfEmpty();
-        controller.initDrops(gameItemsHolder);
         return controller;
     }
 
     @Provides
     @GameScope
     public static ContainerController provideFurnaceController(MainConfig mainConfig,
-                                                               DropController dropController,
-                                                               GameItemsHolder gameItemsHolder,
-                                                               TooltipManager tooltipManager,
-                                                               GetPlayerSpritesUseCase getPlayerSpritesUseCase,
-                                                               GetPigSpritesUseCase getPigSpritesUseCase) {
-        load(mainConfig, gameItemsHolder, tooltipManager, getPlayerSpritesUseCase, getPigSpritesUseCase);
+                                                               SaveDataRepository saveDataRepository,
+                                                               GetItemByKeyUseCase getItemByKeyUseCase
+                                                               ) {
+        load(mainConfig, saveDataRepository);
         ContainerController controller = data != null
                 ? data.retrieveContainerController()
-                : new ContainerController(dropController, gameItemsHolder);
+                : new ContainerControllerImpl(getItemByKeyUseCase);
         makeDataNullIfEmpty();
-        controller.init(dropController, gameItemsHolder);
         return controller;
     }
 
     @Provides
     @GameScope
-    public static MobsController provideMobsController(MainConfig mainConfig,
-                                                       GameItemsHolder gameItemsHolder,
-                                                       TooltipManager tooltipManager,
-                                                       GetPlayerSpritesUseCase getPlayerSpritesUseCase,
-                                                       GetPigSpritesUseCase getPigSpritesUseCase) {
-        load(mainConfig, gameItemsHolder, tooltipManager, getPlayerSpritesUseCase, getPigSpritesUseCase);
-        MobsController controller = data != null
+    public static MobController provideMobsController(MainConfig mainConfig,
+                                                      SaveDataRepository saveDataRepository,
+                                                      MobAssetsRepository mobAssetsRepository,
+                                                      GetFallbackItemUseCase getFallbackItemUseCase) {
+        load(mainConfig, saveDataRepository);
+        MobController controller = data != null
                 ? data.retrieveMobsController()
-                : new MobsController(gameItemsHolder, tooltipManager, getPlayerSpritesUseCase);
+                : new MobControllerImpl(mobAssetsRepository, getFallbackItemUseCase);
         makeDataNullIfEmpty();
-        controller.getPlayer().initInventory(gameItemsHolder, tooltipManager);
         return controller;
     }
 
     @Provides
     @GameScope
     public static GameWorld provideGameWorld(MainConfig mainConfig,
-                                             DropController dropController,
-                                             MobsController mobsController,
-                                             GameItemsHolder gameItemsHolder,
+                                             SaveDataRepository saveDataRepository,
+                                             ItemsRepository itemsRepository,
                                              ContainerController containerController,
-                                             TooltipManager tooltipManager,
-                                             GetPlayerSpritesUseCase getPlayerSpritesUseCase,
-                                             GetPigSpritesUseCase getPigSpritesUseCase) {
-        load(mainConfig, gameItemsHolder, tooltipManager, getPlayerSpritesUseCase, getPigSpritesUseCase);
+                                             MobController mobController,
+                                             DropController dropController
+                                             ) {
+        load(mainConfig, saveDataRepository);
         Block[][] fm = data != null ? data.retrieveForeMap() : null;
         Block[][] bm = data != null ? data.retrieveBackMap() : null;
         makeDataNullIfEmpty();
-        return new GameWorld(dropController, mobsController, gameItemsHolder, containerController, fm, bm);
+        return new GameWorld(itemsRepository, containerController, mobController, dropController, fm, bm);
     }
 
 }

@@ -14,8 +14,6 @@ public class GameScreen implements Screen {
 
     @Nullable
     private GameProc mGameProc;
-    @Nullable
-    private GameItemsHolder mGameItemsHolder;
 
     @Inject
     public GameScreen(MainConfig mainConfig) {

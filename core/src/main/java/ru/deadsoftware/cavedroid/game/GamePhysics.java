@@ -6,18 +6,21 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.jetbrains.annotations.Nullable;
 import ru.deadsoftware.cavedroid.MainConfig;
-import ru.deadsoftware.cavedroid.game.mobs.Mob;
-import ru.deadsoftware.cavedroid.game.mobs.MobsController;
-import ru.deadsoftware.cavedroid.game.mobs.player.Player;
-import ru.deadsoftware.cavedroid.game.model.block.Block;
-import ru.deadsoftware.cavedroid.game.model.item.InventoryItem;
-import ru.deadsoftware.cavedroid.game.objects.drop.Drop;
-import ru.deadsoftware.cavedroid.game.objects.drop.DropController;
-import ru.deadsoftware.cavedroid.game.world.GameWorld;
+import ru.fredboy.cavedroid.common.di.GameScope;
+import ru.fredboy.cavedroid.common.utils.MeasureUnitsUtilsKt;
+import ru.fredboy.cavedroid.domain.items.model.block.Block;
+import ru.fredboy.cavedroid.domain.items.model.item.InventoryItem;
+import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase;
+import ru.fredboy.cavedroid.game.controller.drop.DropController;
+import ru.fredboy.cavedroid.game.controller.drop.model.Drop;
+import ru.fredboy.cavedroid.game.controller.mob.MobController;
+import ru.fredboy.cavedroid.game.controller.mob.model.FallingBlock;
+import ru.fredboy.cavedroid.game.controller.mob.model.Mob;
+import ru.fredboy.cavedroid.game.controller.mob.model.Player;
+import ru.fredboy.cavedroid.game.world.GameWorld;
 
 import javax.inject.Inject;
 import java.util.Iterator;
-
 
 @GameScope
 public class GamePhysics {
@@ -29,21 +32,21 @@ public class GamePhysics {
 
     private final GameWorld mGameWorld;
     private final MainConfig mMainConfig;
-    private final MobsController mMobsController;
+    private final MobController mMobController;
     private final DropController mDropController;
-    private final GameItemsHolder mGameItemsHolder;
+    private final GetItemByKeyUseCase mGetItemByKeyUseCase;
 
     @Inject
     public GamePhysics(GameWorld gameWorld,
                        MainConfig mainConfig,
-                       MobsController mobsController,
+                       MobController mobController,
                        DropController dropController,
-                       GameItemsHolder gameItemsHolder) {
+                       GetItemByKeyUseCase getItemByKeyUseCase) {
         mGameWorld = gameWorld;
         mMainConfig = mainConfig;
-        mMobsController = mobsController;
+        mMobController = mobController;
         mDropController = dropController;
-        mGameItemsHolder = gameItemsHolder;
+        mGetItemByKeyUseCase = getItemByKeyUseCase;
     }
 
     /**
@@ -61,7 +64,7 @@ public class GamePhysics {
             return false;
         }
 
-        return (block.toJump() &&
+        return (block.getParams().getHasCollision() && block.getParams().getCollisionMargins().getTop() < 8 &&
                 (mob.getY() + mob.getHeight()) - block.getRectangle(blX / 16, blY / 16).y > 8);
     }
 
@@ -90,7 +93,7 @@ public class GamePhysics {
                     continue;
                 }
                 block = mGameWorld.getForeMap(x, y);
-                if (block.hasCollision()) {
+                if (block.getParams().getHasCollision()) {
                     final Rectangle blockRect = block.getRectangle(x, y);
                     if (Intersector.overlaps(rect, blockRect)) {
                         return blockRect;
@@ -102,13 +105,17 @@ public class GamePhysics {
         return null;
     }
 
+    private boolean isBlockToJump(Block block) {
+        return block.getParams().getHasCollision() && block.getParams().getCollisionMargins().getTop() < 8;
+    }
+
     private Block getBlock(Rectangle rect) {
         return mGameWorld.getForeMap((int) (rect.x + rect.width / 2) / 16,
                 (int) (rect.y + rect.height / 8 * 7) / 16);
     }
 
     private Rectangle getShiftedPlayerRect(float shift) {
-        final Player player = mMobsController.getPlayer();
+        final Player player = mMobController.getPlayer();
         return new Rectangle(player.x + shift, player.y, player.width, player.height);
     }
 
@@ -117,9 +124,9 @@ public class GamePhysics {
      */
     @Nullable
     private Rectangle getShiftedMagnetingPlayerRect(Drop drop) {
-        final Player player = mMobsController.getPlayer();
+        final Player player = mMobController.getPlayer();
 
-        if (!player.inventory.canPickItem(drop)) {
+        if (!player.getInventory().canPickItem(drop.getItem())) {
             return null;
         }
 
@@ -127,12 +134,14 @@ public class GamePhysics {
             return getShiftedPlayerRect(0);
         }
 
-        final Rectangle shiftedLeft = getShiftedPlayerRect(-mGameWorld.getWidthPx());
+        final float fullWorldPx = MeasureUnitsUtilsKt.getPx(mGameWorld.getWidth());
+
+        final Rectangle shiftedLeft = getShiftedPlayerRect(-fullWorldPx);
         if (drop.canMagnetTo(shiftedLeft)) {
             return shiftedLeft;
         }
 
-        final Rectangle shiftedRight = getShiftedPlayerRect(mGameWorld.getWidthPx());
+        final Rectangle shiftedRight = getShiftedPlayerRect(fullWorldPx);
         if (drop.canMagnetTo(shiftedRight)) {
             return shiftedRight;
         }
@@ -141,10 +150,11 @@ public class GamePhysics {
     }
 
     private void pickUpDropIfPossible(Rectangle shiftedPlayerTarget, Drop drop) {
-        final Player player = mMobsController.getPlayer();
+        final Player player = mMobController.getPlayer();
 
         if (Intersector.overlaps(shiftedPlayerTarget, drop)) {
-            player.inventory.pickDrop(drop);
+            // TODO: Pick up drop
+//            player.getInventory().pickDrop(drop);
         }
     }
 
@@ -188,7 +198,7 @@ public class GamePhysics {
         @Nullable Rectangle collidingRect = checkColl(mob);
 
         if (collidingRect != null) {
-            if (mob.canJump() && !mob.isFlyMode() && collidingRect.y >= mob.y + mob.height - 8) {
+            if (mob.getCanJump() && !mob.isFlyMode() && collidingRect.y >= mob.y + mob.height - 8) {
                 mob.y = collidingRect.y - mob.height;
                 return;
             }
@@ -215,13 +225,14 @@ public class GamePhysics {
 //                    mob.x += d;
 //                }
 
-                if (mob.canJump()) {
+                if (mob.getCanJump()) {
                     mob.changeDir();
                 }
             }
         }
 
-        mob.checkWorldBounds(mGameWorld);
+        // TODO: Check World Bounds
+//        mob.checkWorldBounds(mGameWorld);
     }
 
     private void mobYColl(Mob mob) {
@@ -264,7 +275,7 @@ public class GamePhysics {
             mob.y -= 1;
         }
 
-        if (mob.getY() > mGameWorld.getHeightPx()) {
+        if (mob.getY() > MeasureUnitsUtilsKt.getPx(mGameWorld.getHeight())) {
             mob.kill();
         }
     }
@@ -275,10 +286,10 @@ public class GamePhysics {
         }
 
         if (getBlock(player).isFluid()) {
-            if (mMainConfig.isTouch() && player.getVelocity().x != 0 && !player.swim && !player.isFlyMode()) {
-                player.swim = true;
+            if (mMainConfig.isTouch() && player.getVelocity().x != 0 && !player.getSwim() && !player.isFlyMode()) {
+                player.setSwim(true);
             }
-            if (!player.swim) {
+            if (!player.getSwim()) {
                 if (!player.isFlyMode() && player.getVelocity().y < 32f) {
                     player.getVelocity().y += gravity.y * delta;
                 }
@@ -305,14 +316,14 @@ public class GamePhysics {
 
         mobXColl(player);
 
-        if (mMainConfig.isTouch() && !player.isFlyMode() && player.canJump() && player.getVelocity().x != 0 && checkJump(player)) {
+        if (mMainConfig.isTouch() && !player.isFlyMode() && player.getCanJump() && player.getVelocity().x != 0 && checkJump(player)) {
             player.jump();
             player.setCanJump(false);
         }
     }
 
     private void mobPhy(Mob mob, float delta) {
-        if (mob.getType() == Mob.Type.MOB && getBlock(mob).isFluid()) {
+        if (!(mob instanceof FallingBlock) && getBlock(mob).isFluid()) {
             if (mob.getVelocity().y > 32f) {
                 mob.getVelocity().y -= mob.getVelocity().y * 32f * delta;
             }
@@ -336,29 +347,30 @@ public class GamePhysics {
         mob.x += mob.getVelocity().x * delta;
         mobXColl(mob);
 
-        if (mob.canJump() && mob.getVelocity().x != 0 && checkJump(mob)) {
+        if (mob.getCanJump() && mob.getVelocity().x != 0 && checkJump(mob)) {
             mob.jump();
             mob.setCanJump(false);
         }
     }
 
     void update(float delta) {
-        Player player = mMobsController.getPlayer();
+        Player player = mMobController.getPlayer();
 
-        for (Iterator<Drop> it = mDropController.getIterator(); it.hasNext(); ) {
+        for (Iterator<Drop> it = mDropController.getAllDrop().iterator(); it.hasNext(); ) {
             Drop drop = it.next();
             dropPhy(drop, delta);
-            if (drop.getPickedUp()) {
+            if (drop.isPickedUp()) {
                 it.remove();
             }
         }
 
-        for (Iterator<Mob> it = mMobsController.getMobs().iterator(); it.hasNext(); ) {
+        for (Iterator<Mob> it = mMobController.getMobs().iterator(); it.hasNext(); ) {
             Mob mob = it.next();
-            mob.ai(mGameWorld, mGameItemsHolder, mMobsController, delta);
+            //todo: Mob ai
+//            mob.ai(mGameWorld, mGameItemsHolder, mMobController, delta);
             mobPhy(mob, delta);
             if (mob.isDead()) {
-                for (InventoryItem invItem : mob.getDrop(mGameItemsHolder)) {
+                for (InventoryItem invItem : mob.getDropItems(mGetItemByKeyUseCase)) {
                     mDropController.addDrop(mob.x, mob.y, invItem);
                 }
 
@@ -367,13 +379,15 @@ public class GamePhysics {
         }
 
         playerPhy(player, delta);
-        player.ai(mGameWorld, mGameItemsHolder, mMobsController, delta);
+        //todo : Update player
+//        player.ai(mGameWorld, mGameItemsHolder, mMobController, delta);
         if (player.isDead()) {
-            for (InventoryItem invItem : player.inventory.getItems()) {
+            for (InventoryItem invItem : player.getInventory().getItems()) {
                 mDropController.addDrop(player.x, player.y, invItem);
             }
-            player.inventory.clear();
-            player.respawn(mGameWorld, mGameItemsHolder);
+            player.getInventory().clear();
+            //todo: Respawn player
+//            player.respawn(mGameWorld, mGameItemsHolder);
         }
     }
 

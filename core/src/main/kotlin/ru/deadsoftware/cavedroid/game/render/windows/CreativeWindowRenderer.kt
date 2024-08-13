@@ -3,25 +3,26 @@ package ru.deadsoftware.cavedroid.game.render.windows
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.render.IGameRenderer
 import ru.deadsoftware.cavedroid.game.render.WindowsRenderer
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
+import ru.deadsoftware.cavedroid.game.ui.windows.inventory.CreativeInventoryWindow
+import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
 import kotlin.math.min
 
 @GameScope
 class CreativeWindowRenderer @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
-    private val gameItemsHolder: GameItemsHolder,
-    private val mobsController: MobsController,
+    private val itemsRepository: ItemsRepository,
+    private val mobController: MobController,
     private val textureRegions: GetTextureRegionByNameUseCase,
     private val getStringWidth: GetStringWidthUseCase,
     private val getStringHeight: GetStringHeightUseCase,
@@ -39,7 +40,8 @@ class CreativeWindowRenderer @Inject constructor(
 
         val windowX = viewport.width / 2 - creativeWindow.regionWidth / 2
         val windowY = viewport.height / 2 - creativeWindow.regionHeight / 2
-        val oneScrollAmount = GameWindowsConfigs.Creative.scrollIndicatorFullHeight / gameItemsHolder.getMaxCreativeScrollAmount()
+        val oneScrollAmount = GameWindowsConfigs.Creative.scrollIndicatorFullHeight /
+                (gameWindowsManager.currentWindow as CreativeInventoryWindow).getMaxScroll(itemsRepository)
 
         spriteBatch.draw(creativeWindow, windowX, windowY)
         spriteBatch.draw(
@@ -49,7 +51,7 @@ class CreativeWindowRenderer @Inject constructor(
                     + (gameWindowsManager.creativeScrollAmount * oneScrollAmount)
         )
 
-        val allItems = gameItemsHolder.getAllItems()
+        val allItems = itemsRepository.getAllItems()
         val startIndex = gameWindowsManager.creativeScrollAmount * GameWindowsConfigs.Creative.itemsInRow
         val endIndex = min(startIndex + GameWindowsConfigs.Creative.itemsOnPage, allItems.size)
         val items = sequence {
@@ -78,7 +80,7 @@ class CreativeWindowRenderer @Inject constructor(
             font = getFont(),
             gridX = windowX + GameWindowsConfigs.Creative.itemsGridMarginLeft,
             gridY = windowY + creativeWindow.regionHeight - GameWindowsConfigs.Creative.playerInventoryOffsetFromBottom,
-            items = mobsController.player.inventory.items.asSequence().take(GameWindowsConfigs.Creative.invItems).asIterable(),
+            items = mobController.player.inventory.items.asSequence().take(GameWindowsConfigs.Creative.invItems).asIterable(),
             itemsInRow = GameWindowsConfigs.Creative.invItems,
             cellWidth = GameWindowsConfigs.Creative.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Creative.itemsGridRowHeight,

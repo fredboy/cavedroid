@@ -18,18 +18,19 @@ import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey;
 import ru.deadsoftware.cavedroid.game.input.handler.mouse.CursorMouseInputHandler;
 import ru.deadsoftware.cavedroid.game.input.mapper.KeyboardInputActionMapper;
 import ru.deadsoftware.cavedroid.game.input.mapper.MouseInputActionMapper;
-import ru.deadsoftware.cavedroid.game.mobs.MobsController;
-import ru.deadsoftware.cavedroid.game.mobs.player.Player;
 import ru.deadsoftware.cavedroid.game.render.IGameRenderer;
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager;
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager;
-import ru.deadsoftware.cavedroid.game.world.GameWorld;
 import ru.deadsoftware.cavedroid.misc.Renderer;
-import ru.deadsoftware.cavedroid.misc.utils.RenderingUtilsKt;
+import ru.fredboy.cavedroid.common.di.GameScope;
+import ru.fredboy.cavedroid.common.utils.MeasureUnitsUtilsKt;
+import ru.fredboy.cavedroid.common.utils.RenderingUtilsKt;
 import ru.fredboy.cavedroid.domain.assets.model.TouchButton;
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase;
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase;
-import ru.fredboy.cavedroid.utils.MeasureUnitsUtilsKt;
+import ru.fredboy.cavedroid.game.controller.mob.MobController;
+import ru.fredboy.cavedroid.game.controller.mob.model.Player;
+import ru.fredboy.cavedroid.game.world.GameWorld;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -43,7 +44,7 @@ public class GameRenderer extends Renderer {
     private static final TouchButton nullButton = new TouchButton(new Rectangle(), -1, true);
 
     private final MainConfig mMainConfig;
-    private final MobsController mMobsController;
+    private final MobController mMobsController;
     private final GameWorld mGameWorld;
     private final List<IGameRenderer> mRenderers;
     private final CursorMouseInputHandler mCursorMouseInputHandler;
@@ -65,7 +66,7 @@ public class GameRenderer extends Renderer {
 
     @Inject
     GameRenderer(MainConfig mainConfig,
-                 MobsController mobsController,
+                 MobController mobsController,
                  GameWorld gameWorld,
                  Set<IGameRenderer> renderers,
                  CursorMouseInputHandler cursorMouseInputHandler,
@@ -118,14 +119,14 @@ public class GameRenderer extends Renderer {
 
         float camTargetX, camTargetY;
 
-        boolean followPlayer = player.controlMode == Player.ControlMode.WALK || !mMainConfig.isTouch();
+        boolean followPlayer = player.getControlMode() == Player.ControlMode.WALK || !mMainConfig.isTouch();
 
         if (followPlayer) {
             camTargetX = plTargetX + Math.min(player.getVelocity().x * 2, getWidth() / 2);
             camTargetY = plTargetY + player.getVelocity().y;
         } else {
-            camTargetX = MeasureUnitsUtilsKt.getPx(player.cursorX) + MeasureUnitsUtilsKt.getPx(1) / 2;
-            camTargetY = MeasureUnitsUtilsKt.getPx(player.cursorY) + MeasureUnitsUtilsKt.getPx(1) / 2;
+            camTargetX = MeasureUnitsUtilsKt.getPx(player.getCursorX()) + MeasureUnitsUtilsKt.getPx(1) / 2;
+            camTargetY = MeasureUnitsUtilsKt.getPx(player.getCursorY()) + MeasureUnitsUtilsKt.getPx(1) / 2;
         }
 
         Vector2 moveVector = new Vector2(camTargetX - camCenterX, camTargetY - camCenterY);
@@ -144,14 +145,15 @@ public class GameRenderer extends Renderer {
 
         float camX = getCamX();
         float camY = getCamY();
-        float worldWidth = MeasureUnitsUtilsKt.getPx(mGameWorld.getWidth()) - getWidth() / 2;
+        float fullWorldPx = MeasureUnitsUtilsKt.getPx(mGameWorld.getWidth());
+        float worldWidthScreenOffset = fullWorldPx - getWidth() / 2;
 
-        if (moveVector.x >= worldWidth) {
-            camX += mGameWorld.getWidthPx();
-            moveVector.x -= mGameWorld.getWidthPx();
-        } else if (moveVector.x <= -worldWidth) {
-            camX -= mGameWorld.getWidthPx();
-            moveVector.x += mGameWorld.getWidthPx();
+        if (moveVector.x >= worldWidthScreenOffset) {
+            camX += fullWorldPx;
+            moveVector.x -= fullWorldPx;
+        } else if (moveVector.x <= -worldWidthScreenOffset) {
+            camX -= fullWorldPx;
+            moveVector.x += fullWorldPx;
         }
 
         setCamPos(camX + moveVector.x * delta * 2, camY + moveVector.y * delta * 2);

@@ -1,10 +1,10 @@
 package ru.deadsoftware.cavedroid.game.ui.windows.inventory
 
 import com.badlogic.gdx.math.MathUtils
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameUiWindow
-import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
-import ru.deadsoftware.cavedroid.game.model.item.InventoryItem.Companion.isNoneOrNull
+import ru.fredboy.cavedroid.domain.items.model.item.InventoryItem
+import ru.fredboy.cavedroid.domain.items.model.item.InventoryItem.Companion.isNoneOrNull
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 
 abstract class AbstractInventoryWindow {
 
@@ -16,7 +16,7 @@ abstract class AbstractInventoryWindow {
 
     fun onLeftCLick(
         items: MutableList<InventoryItem>,
-        gameItemsHolder: GameItemsHolder,
+        itemsRepository: ItemsRepository,
         index: Int,
         pointer: Int = -1
     ) {
@@ -42,12 +42,12 @@ abstract class AbstractInventoryWindow {
         }
 
         val item = items[index]
-        items[index] = selectedItem ?: gameItemsHolder.fallbackItem.toInventoryItem()
+        items[index] = selectedItem ?: itemsRepository.fallbackItem.toInventoryItem()
         selectedItem = item
         selectItemPointer = pointer
     }
 
-    fun onRightClick(items: MutableList<InventoryItem>, gameItemsHolder: GameItemsHolder, index: Int) {
+    fun onRightClick(items: MutableList<InventoryItem>, itemsRepository: ItemsRepository, index: Int) {
         val clickedItem = items[index]
         val selectedItem = selectedItem
 
@@ -56,7 +56,7 @@ abstract class AbstractInventoryWindow {
             this.selectedItem = half
             clickedItem.subtract(half.amount)
             if (clickedItem.amount == 0) {
-                items[index] = gameItemsHolder.fallbackItem.toInventoryItem()
+                items[index] = itemsRepository.fallbackItem.toInventoryItem()
             }
             return
         }

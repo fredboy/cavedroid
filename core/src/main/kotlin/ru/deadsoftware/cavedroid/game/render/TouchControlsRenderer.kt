@@ -5,26 +5,23 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.MainConfig
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.input.Joystick
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.mobs.player.Player.ControlMode
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
-import ru.deadsoftware.cavedroid.misc.Assets
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
-import ru.deadsoftware.cavedroid.misc.utils.ArrayMapExtensions.component1
-import ru.deadsoftware.cavedroid.misc.utils.ArrayMapExtensions.component2
-import ru.deadsoftware.cavedroid.misc.utils.drawSprite
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.mob.model.Player
 import javax.inject.Inject
 
 @GameScope
 @BindRenderer
 class TouchControlsRenderer @Inject constructor(
     private val mainConfig: MainConfig,
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val gameWindowsManager: GameWindowsManager,
     private val textureRegions: GetTextureRegionByNameUseCase,
     private val getTouchButtons: GetTouchButtonsUseCase,
@@ -76,7 +73,7 @@ class TouchControlsRenderer @Inject constructor(
         }
 
         // FIXME: Add pressed state for buttons
-        if (mobsController.player.controlMode == ControlMode.CURSOR) {
+        if (mobController.player.controlMode == Player.ControlMode.CURSOR) {
             val altKeyRect = touchControlsMap["alt"]?.rectangle ?: return
             spriteBatch.draw(shadeTexture, altKeyRect.x, altKeyRect.y, altKeyRect.width, altKeyRect.height)
         }

@@ -3,24 +3,24 @@ package ru.deadsoftware.cavedroid.game.input.handler.touch
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
 import com.badlogic.gdx.utils.TimeUtils
 import ru.deadsoftware.cavedroid.MainConfig
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.input.*
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
-import ru.deadsoftware.cavedroid.game.mobs.Mob
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.mobs.player.Player
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
-import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.mob.model.Direction
+import ru.fredboy.cavedroid.game.controller.mob.model.Player
+import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
 @BindMouseInputHandler
 class JoystickInputHandler @Inject constructor(
     private val mainConfig: MainConfig,
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val gameWindowsManager: GameWindowsManager,
     private val gameWorld: GameWorld,
     private val textureRegions: GetTextureRegionByNameUseCase,
@@ -34,8 +34,8 @@ class JoystickInputHandler @Inject constructor(
             if (!value) {
                 resetVelocity()
                 if (TimeUtils.timeSinceMillis(activateTimeMs) < 200L &&
-                    mobsController.player.controlMode != Player.ControlMode.CURSOR) {
-                    mobsController.player.jump()
+                    mobController.player.controlMode != Player.ControlMode.CURSOR) {
+                    mobController.player.jump()
                 }
             } else {
                 activateTimeMs = TimeUtils.millis()
@@ -44,10 +44,10 @@ class JoystickInputHandler @Inject constructor(
         }
 
     private fun resetVelocity() {
-        mobsController.player.velocity.x = 0f
+        mobController.player.velocity.x = 0f
 
-        if (mobsController.player.isFlyMode) {
-            mobsController.player.velocity.y = 0f
+        if (mobController.player.isFlyMode) {
+            mobController.player.velocity.y = 0f
         }
     }
 
@@ -82,23 +82,23 @@ class JoystickInputHandler @Inject constructor(
             return
         }
 
-        val pastCursorX = mobsController.player.cursorX
-        val pastCursorY = mobsController.player.cursorY
+        val pastCursorX = mobController.player.cursorX
+        val pastCursorY = mobController.player.cursorY
 
         if (Math.abs(joystick.activeX - joystick.centerX) >= Joystick.RADIUS / 2) {
-            mobsController.player.cursorX += if (joystick.activeX > joystick.centerX) 1 else -1
+            mobController.player.cursorX += if (joystick.activeX > joystick.centerX) 1 else -1
             cursorTimeoutMs = TimeUtils.millis()
         }
 
         if (Math.abs(joystick.activeY - joystick.centerY) >= Joystick.RADIUS / 2) {
-            mobsController.player.cursorY += if (joystick.activeY > joystick.centerY) 1 else -1
+            mobController.player.cursorY += if (joystick.activeY > joystick.centerY) 1 else -1
             cursorTimeoutMs = TimeUtils.millis()
         }
 
-        mobsController.player.checkCursorBounds(gameWorld)
+        gameWorld.checkPlayerCursorBounds()
 
-        if (mobsController.player.cursorX != pastCursorX || mobsController.player.cursorY != pastCursorY) {
-            mobsController.player.blockDamage = 0f
+        if (mobController.player.cursorX != pastCursorX || mobController.player.cursorY != pastCursorY) {
+            mobController.player.blockDamage = 0f
         }
     }
 
@@ -107,7 +107,7 @@ class JoystickInputHandler @Inject constructor(
             return
         }
 
-        if (mobsController.player.controlMode == Player.ControlMode.CURSOR) {
+        if (mobController.player.controlMode == Player.ControlMode.CURSOR) {
             handleCursor()
             return
         }
@@ -115,22 +115,20 @@ class JoystickInputHandler @Inject constructor(
         val joystick = mainConfig.joystick ?: return
         val joyVector = joystick.getVelocityVector()
 
-        if (mobsController.player.isFlyMode) {
+        if (mobController.player.isFlyMode) {
             joyVector.scl(2f);
         }
 
-        mobsController.player.velocity.x = joyVector.x
+        mobController.player.velocity.x = joyVector.x
 
-        mobsController.player.setDir(
-            if (joyVector.x < 0) {
-                Mob.Direction.LEFT
-            } else {
-                Mob.Direction.RIGHT
-            }
-        )
+        mobController.player.direction = if (joyVector.x < 0) {
+            Direction.LEFT
+        } else {
+            Direction.RIGHT
+        }
 
-        if (mobsController.player.isFlyMode) {
-            mobsController.player.velocity.y = joyVector.y
+        if (mobController.player.isFlyMode) {
+            mobController.player.velocity.y = joyVector.y
         }
     }
 

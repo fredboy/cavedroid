@@ -8,7 +8,7 @@ java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
-    useBaseModule()
+    useCommonModule()
     useModule(":core:domain:assets")
     useLibgdx()
     useKotlinxSerializationJson()

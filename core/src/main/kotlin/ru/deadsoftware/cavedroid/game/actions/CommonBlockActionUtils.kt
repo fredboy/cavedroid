@@ -6,7 +6,7 @@ import ru.deadsoftware.cavedroid.game.actions.updateblock.IUpdateBlockAction
 import ru.deadsoftware.cavedroid.game.actions.updateblock.UpdateRequiresBlockAction
 import ru.deadsoftware.cavedroid.game.actions.placeblock.PlaceBlockItemToBackgroundAction
 import ru.deadsoftware.cavedroid.game.actions.placeblock.PlaceBlockItemToForegroundAction
-import ru.deadsoftware.cavedroid.game.model.item.Item
+import ru.fredboy.cavedroid.domain.items.model.item.Item
 
 private const val TAG = "PlaceBlockActionUtils"
 

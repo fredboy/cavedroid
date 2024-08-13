@@ -1,26 +1,25 @@
 package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.CraftingInventoryWindow
-import ru.deadsoftware.cavedroid.misc.Assets
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
+import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
 
 @GameScope
 @BindMouseInputHandler
 class SelectCraftingInventoryItemMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
-    private val mobsController: MobsController,
-    private val gameItemsHolder: GameItemsHolder,
+    private val mobController: MobController,
     private val textureRegions: GetTextureRegionByNameUseCase,
-) : AbstractInventoryItemsMouseInputHandler(gameItemsHolder, gameWindowsManager, GameUiWindow.CRAFTING_TABLE) {
+    itemsRepository: ItemsRepository,
+) : AbstractInventoryItemsMouseInputHandler(itemsRepository, gameWindowsManager, GameUiWindow.CRAFTING_TABLE) {
 
     override val windowTexture get() = requireNotNull(textureRegions["crafting_table"])
 
@@ -30,11 +29,11 @@ class SelectCraftingInventoryItemMouseInputHandler @Inject constructor(
         var itemIndex = xOnGrid + yOnGrid * GameWindowsConfigs.Crafting.itemsInRow
         itemIndex += GameWindowsConfigs.Crafting.hotbarCells
 
-        if (itemIndex >= mobsController.player.inventory.size) {
-            itemIndex -= mobsController.player.inventory.size
+        if (itemIndex >= mobController.player.inventory.size) {
+            itemIndex -= mobController.player.inventory.size
         }
 
-        handleInsidePlaceableCell(action, mobsController.player.inventory.items, window, itemIndex)
+        handleInsidePlaceableCell(action, mobController.player.inventory.items, window, itemIndex)
     }
 
     private fun handleInsideCraft(action: MouseInputAction, xOnCraft: Int, yOnCraft: Int) {

@@ -1,23 +1,24 @@
 package ru.deadsoftware.cavedroid.game.world
 
 import com.badlogic.gdx.utils.Timer.Task
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.actions.getRequiresBlockAction
 import ru.deadsoftware.cavedroid.game.actions.updateblock.IUpdateBlockAction
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
 class GameWorldBlocksLogicControllerTask @Inject constructor(
     private val gameWorld: GameWorld,
     private val updateBlockActions: Map<String, @JvmSuppressWildcards IUpdateBlockAction>,
-    private val mobsController: MobsController,
+    private val mobController: MobController,
 ) : Task() {
 
     private var currentRelativeChunk = 0
 
     private fun getChunkStart(): Int {
-        val playerX = mobsController.player.mapX
+        val playerX = mobController.player.mapX
         val playerChunk = playerX / CHUNK_WIDTH
         val currentChunk = playerChunk - CHUNKS / 2 + currentRelativeChunk
 

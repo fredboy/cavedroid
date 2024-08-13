@@ -3,26 +3,25 @@ package ru.deadsoftware.cavedroid.game.render
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
-import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.mobs.player.Player
-import ru.deadsoftware.cavedroid.game.mobs.player.Player.ControlMode
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager
-import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
-import ru.deadsoftware.cavedroid.misc.utils.drawString
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.drawString
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
-import ru.fredboy.cavedroid.utils.px
+import ru.fredboy.cavedroid.common.utils.px
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.mob.model.Player
+import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
 @BindRenderer
 class HudRenderer @Inject constructor(
     private val gameWorld: GameWorld,
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val tooltipManager: TooltipManager,
     private val textureRegions: GetTextureRegionByNameUseCase,
     private val getStringWidth: GetStringWidthUseCase,
@@ -40,19 +39,19 @@ class HudRenderer @Inject constructor(
     private val halfHeartTexture get() = requireNotNull(textureRegions[HALF_HEART_KEY])
 
     private fun drawCursor(spriteBatch: SpriteBatch, viewport: Rectangle) {
-        val cursorX = mobsController.player.cursorX
-        val cursorY = mobsController.player.cursorY
+        val cursorX = mobController.player.cursorX
+        val cursorY = mobController.player.cursorY
 
         if (gameWorld.hasForeAt(cursorX, cursorY) ||
             gameWorld.hasBackAt(cursorX, cursorY) ||
-            mobsController.player.controlMode == ControlMode.CURSOR
+            mobController.player.controlMode == Player.ControlMode.CURSOR
         ) {
             spriteBatch.draw(cursorTexture, cursorX.px - viewport.x, cursorY.px - viewport.y)
         }
     }
 
     private fun drawHealth(spriteBatch: SpriteBatch, x: Float, y: Float) {
-        val player = mobsController.player
+        val player = mobController.player
 
         if (player.gameMode == 1) {
             return
@@ -81,7 +80,7 @@ class HudRenderer @Inject constructor(
     }
 
     private fun drawHotbarItems(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer,  hotbarX: Float) {
-        mobsController.player.inventory.items.asSequence().take(HotbarConfig.hotbarCells)
+        mobController.player.inventory.items.asSequence().take(HotbarConfig.hotbarCells)
             .forEachIndexed { index, item ->
                 if (item.item.isNone()) {
                     return@forEachIndexed
@@ -94,8 +93,8 @@ class HudRenderer @Inject constructor(
                     x = hotbarX + HotbarConfig.horizontalMargin +
                             index * (HotbarConfig.itemSeparatorWidth + HotbarConfig.itemSlotSpace),
                     y = HotbarConfig.verticalMargin,
-                    getStringWidth = getStringWidth,
-                    getStringHeight = getStringHeight,
+                    getStringWidth = getStringWidth::invoke,
+                    getStringHeight = getStringHeight::invoke,
                 )
             }
     }
@@ -104,7 +103,7 @@ class HudRenderer @Inject constructor(
         spriteBatch.draw(
             /* region = */ hotbarSelectorTexture,
             /* x = */ hotbarX - HotbarSelectorConfig.horizontalPadding
-                    + mobsController.player.inventory.activeSlot * (HotbarConfig.itemSeparatorWidth + HotbarConfig.itemSlotSpace),
+                    + mobController.player.inventory.activeSlot * (HotbarConfig.itemSeparatorWidth + HotbarConfig.itemSlotSpace),
             /* y = */ -HotbarSelectorConfig.verticalPadding
         )
     }

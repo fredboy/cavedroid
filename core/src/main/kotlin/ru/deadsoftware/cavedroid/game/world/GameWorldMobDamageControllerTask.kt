@@ -1,24 +1,25 @@
 package ru.deadsoftware.cavedroid.game.world
 
 import com.badlogic.gdx.utils.Timer
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.misc.utils.forEachBlockInArea
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 import kotlin.math.max
 
 @GameScope
 class GameWorldMobDamageControllerTask @Inject constructor(
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val gameWorld: GameWorld,
-    private val gameItemsHolder: GameItemsHolder,
+    private val itemsRepository: ItemsRepository,
 ) : Timer.Task() {
 
     override fun run() {
         sequence {
-            yield(mobsController.player)
-            yieldAll(mobsController.mobs)
+            yield(mobController.player)
+            yieldAll(mobController.mobs)
         }.forEach { mob ->
             forEachBlockInArea(mob) { x, y ->
                 val foregroundBlock = gameWorld.getForeMap(x, y)

@@ -1,16 +1,16 @@
 package ru.deadsoftware.cavedroid.game.actions.updateblock
 
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindUpdateBlockAction
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.items.usecase.GetBlockByKeyUseCase
+import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
 @BindUpdateBlockAction(stringKey = UpdateSnowedGrassAction.BLOCK_KEY)
 class UpdateSnowedGrassAction @Inject constructor(
     private val gameWorld: GameWorld,
-    private val mGameItemsHolder: GameItemsHolder,
+    private val getBlockByKeyUseCase: GetBlockByKeyUseCase,
 ) : IUpdateBlockAction {
 
     override fun update(x: Int, y: Int) {
@@ -18,8 +18,8 @@ class UpdateSnowedGrassAction @Inject constructor(
         val makesDirt = blockOnTop.params.hasCollision || blockOnTop.isFluid()
 
         when {
-            makesDirt -> gameWorld.setForeMap(x, y, mGameItemsHolder.getBlock("dirt"))
-            blockOnTop.params.key != "snow" -> gameWorld.setForeMap(x, y, mGameItemsHolder.getBlock("grass"))
+            makesDirt -> gameWorld.setForeMap(x, y, getBlockByKeyUseCase["dirt"])
+            blockOnTop.params.key != "snow" -> gameWorld.setForeMap(x, y, getBlockByKeyUseCase["grass"])
         }
     }
 

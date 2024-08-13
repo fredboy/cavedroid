@@ -1,14 +1,13 @@
 package ru.deadsoftware.cavedroid.menu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ObjectMap;
 import ru.deadsoftware.cavedroid.CaveGame;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.deadsoftware.cavedroid.menu.objects.Button;
 import ru.deadsoftware.cavedroid.menu.submenus.*;
 import ru.deadsoftware.cavedroid.misc.Renderer;
-import ru.deadsoftware.cavedroid.misc.utils.RenderingUtilsKt;
+import ru.fredboy.cavedroid.common.utils.RenderingUtilsKt;
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase;
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase;
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase;
@@ -19,8 +18,6 @@ import javax.inject.Inject;
 import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static ru.deadsoftware.cavedroid.misc.Assets.*;
 
 @MenuScope
 public class MenuProc extends Renderer {

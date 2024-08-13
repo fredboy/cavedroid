@@ -1,14 +1,11 @@
 package ru.deadsoftware.cavedroid.game.ui
 
 import com.badlogic.gdx.utils.Timer
-import ru.deadsoftware.cavedroid.MainConfig
-import ru.deadsoftware.cavedroid.game.GameScope
+import ru.fredboy.cavedroid.common.di.GameScope
 import javax.inject.Inject
 
 @GameScope
-class TooltipManager @Inject constructor(
-    private val mainConfig: MainConfig
-) {
+class TooltipManager @Inject constructor() {
 
     private val resetTask = object : Timer.Task() {
         override fun run() {

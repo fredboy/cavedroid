@@ -2,24 +2,23 @@ package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideWindow
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.objects.drop.DropController
-import ru.deadsoftware.cavedroid.misc.Assets
+import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.game.controller.drop.DropController
+import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
 
 @GameScope
 @BindMouseInputHandler
 class CloseGameWindowMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val dropController: DropController,
     private val textureRegions: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
@@ -52,8 +51,8 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
         val selectedItem = gameWindowsManager.currentWindow?.selectedItem
         if (selectedItem != null) {
                 dropController.addDrop(
-                    /* x = */ mobsController.player.x + (32f * mobsController.player.direction.basis),
-                    /* y = */ mobsController.player.y,
+                    /* x = */ mobController.player.x + (32f * mobController.player.direction.basis),
+                    /* y = */ mobController.player.y,
                     /* item = */ selectedItem.item,
                     /* count = */ selectedItem.amount,
                 )

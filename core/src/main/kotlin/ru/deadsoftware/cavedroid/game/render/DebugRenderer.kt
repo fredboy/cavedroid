@@ -5,17 +5,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.MainConfig
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.debug.DebugInfoStringsProvider
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.model.block.Block
-import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
-import ru.deadsoftware.cavedroid.misc.utils.drawString
-import ru.deadsoftware.cavedroid.misc.utils.forEachBlockInArea
+import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
-import ru.fredboy.cavedroid.utils.bl
-import ru.fredboy.cavedroid.utils.px
+import ru.fredboy.cavedroid.common.utils.bl
+import ru.fredboy.cavedroid.common.utils.drawString
+import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
+import ru.fredboy.cavedroid.common.utils.px
+import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class DebugRenderer @Inject constructor(
     private val mainConfig: MainConfig,
     private val gameWorld: GameWorld,
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val debugInfoStringsProvider: DebugInfoStringsProvider,
     private val getFont: GetFontUseCase,
 ) : IGameRenderer {
@@ -54,8 +54,8 @@ class DebugRenderer @Inject constructor(
         minimapSize: Float
     ) {
         val mapArea = Rectangle(
-            /* x = */ mobsController.player.x - (minimapSize.px / 2),
-            /* y = */ mobsController.player.y - (minimapSize.px / 2),
+            /* x = */ mobController.player.x - (minimapSize.px / 2),
+            /* y = */ mobController.player.y - (minimapSize.px / 2),
             /* width = */ minimapSize.px,
             /* height = */ minimapSize.px
         )
@@ -67,7 +67,7 @@ class DebugRenderer @Inject constructor(
 
         forEachBlockInArea(mapArea) { x, y ->
             getMinimapColor(x, y)?.let { color ->
-                shapeRenderer.setColor(color)
+                shapeRenderer.color = color
                 shapeRenderer.rect(
                     /* x = */ minimapX + (x - mapArea.x.bl),
                     /* y = */ minimapY + (y - mapArea.y.bl),

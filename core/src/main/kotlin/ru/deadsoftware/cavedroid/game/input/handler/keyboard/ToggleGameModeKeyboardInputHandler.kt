@@ -1,17 +1,17 @@
 package ru.deadsoftware.cavedroid.game.input.handler.keyboard
 
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.input.IKeyboardInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.KeyboardInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.KeyboardInputActionKey
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindKeyboardInputHandler
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
 
 @GameScope
 @BindKeyboardInputHandler
 class ToggleGameModeKeyboardInputHandler @Inject constructor(
-    private val mobsController: MobsController
+    private val mobController: MobController
 ) : IKeyboardInputHandler {
 
 
@@ -20,10 +20,10 @@ class ToggleGameModeKeyboardInputHandler @Inject constructor(
     }
 
     override fun handle(action: KeyboardInputAction) {
-        if (mobsController.player.gameMode == 1) {
-            mobsController.player.gameMode = 0
-        } else if (mobsController.player.gameMode == 0) {
-            mobsController.player.gameMode = 1
+        if (mobController.player.gameMode == 1) {
+            mobController.player.gameMode = 0
+        } else if (mobController.player.gameMode == 0) {
+            mobController.player.gameMode = 1
         }
     }
 

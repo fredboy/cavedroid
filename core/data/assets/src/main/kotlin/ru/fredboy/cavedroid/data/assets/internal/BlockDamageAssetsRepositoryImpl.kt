@@ -2,9 +2,9 @@ package ru.fredboy.cavedroid.data.assets.internal
 
 import com.badlogic.gdx.graphics.g2d.Sprite
 import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageAssetsRepository
-import ru.fredboy.cavedroid.utils.BLOCK_SIZE_PX
-import ru.fredboy.cavedroid.utils.bl
-import ru.fredboy.cavedroid.utils.px
+import ru.fredboy.cavedroid.common.utils.BLOCK_SIZE_PX
+import ru.fredboy.cavedroid.common.utils.bl
+import ru.fredboy.cavedroid.common.utils.px
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -1,20 +1,20 @@
 package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideWindow
-import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
-import ru.deadsoftware.cavedroid.game.model.item.InventoryItem.Companion.isNoneOrNull
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.AbstractInventoryWindow
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.AbstractInventoryWindowWithCraftGrid
+import ru.fredboy.cavedroid.domain.items.model.item.InventoryItem
+import ru.fredboy.cavedroid.domain.items.model.item.InventoryItem.Companion.isNoneOrNull
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 
 abstract class AbstractInventoryItemsMouseInputHandler(
-    private val gameItemsHolder: GameItemsHolder,
+    private val itemsRepository: ItemsRepository,
     private val gameWindowsManager: GameWindowsManager,
     private val windowType: GameUiWindow,
 ) : IMouseInputHandler {
@@ -31,8 +31,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
     }
 
     protected fun updateCraftResult(window: AbstractInventoryWindowWithCraftGrid) {
-        window.craftResult = gameItemsHolder.craftItem(window.craftingItems.map(InventoryItem::item))
-            ?: gameItemsHolder.fallbackItem.toInventoryItem()
+        window.craftResult = itemsRepository.getCraftingResult(window.craftingItems.map(InventoryItem::item))
     }
 
     private fun reduceCraftItems(window: AbstractInventoryWindowWithCraftGrid) {
@@ -40,7 +39,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
             if (window.craftingItems[i].amount > 1) {
                 window.craftingItems[i].amount--
             } else {
-                window.craftingItems[i] = gameItemsHolder.fallbackItem.toInventoryItem()
+                window.craftingItems[i] = itemsRepository.fallbackItem.toInventoryItem()
             }
         }
     }
@@ -53,18 +52,18 @@ abstract class AbstractInventoryItemsMouseInputHandler(
     ) {
         if (action.actionKey is MouseInputActionKey.Screen) {
             if (!action.actionKey.touchUp) {
-                window.onLeftCLick(items, gameItemsHolder, index, action.actionKey.pointer)
+                window.onLeftCLick(items, itemsRepository, index, action.actionKey.pointer)
             } else {
                 if (action.actionKey.pointer == window.selectItemPointer) {
-                    window.onLeftCLick(items, gameItemsHolder, index, action.actionKey.pointer)
+                    window.onLeftCLick(items, itemsRepository, index, action.actionKey.pointer)
                 } else {
-                    window.onRightClick(items, gameItemsHolder, index)
+                    window.onRightClick(items, itemsRepository, index)
                 }
             }
         } else if (action.actionKey is MouseInputActionKey.Left) {
-            window.onLeftCLick(items, gameItemsHolder, index)
+            window.onLeftCLick(items, itemsRepository, index)
         } else {
-            window.onRightClick(items, gameItemsHolder, index)
+            window.onRightClick(items, itemsRepository, index)
         }
     }
 
@@ -83,14 +82,14 @@ abstract class AbstractInventoryItemsMouseInputHandler(
 
         if (!selectedItem.isNoneOrNull()) {
             selectedItem.amount += items[index].amount
-            items[index] = gameItemsHolder.fallbackItem.toInventoryItem()
+            items[index] = itemsRepository.fallbackItem.toInventoryItem()
         } else {
             if (action.actionKey is MouseInputActionKey.Screen) {
                 if (!action.actionKey.touchUp) {
-                    window.onLeftCLick(items, gameItemsHolder, index, action.actionKey.pointer)
+                    window.onLeftCLick(items, itemsRepository, index, action.actionKey.pointer)
                 }
             } else if (action.actionKey is MouseInputActionKey.Left) {
-                window.onLeftCLick(items, gameItemsHolder, index)
+                window.onLeftCLick(items, itemsRepository, index)
             }
         }
 

@@ -1,17 +1,17 @@
 package ru.deadsoftware.cavedroid.game.input.handler.keyboard
 
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.input.IKeyboardInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.KeyboardInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.KeyboardInputActionKey
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindKeyboardInputHandler
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
 
 @GameScope
 @BindKeyboardInputHandler
 class SelectHotbarSlotKeyboardInputHandler @Inject constructor(
-    private val mobsController: MobsController,
+    private val mobController: MobController,
 ) : IKeyboardInputHandler {
 
     override fun checkConditions(action: KeyboardInputAction): Boolean {
@@ -20,7 +20,7 @@ class SelectHotbarSlotKeyboardInputHandler @Inject constructor(
     }
 
     override fun handle(action: KeyboardInputAction) {
-        mobsController.player.inventory.activeSlot = (action.actionKey as KeyboardInputActionKey.SelectHotbarSlot).slot
+        mobController.player.inventory.activeSlot = (action.actionKey as KeyboardInputActionKey.SelectHotbarSlot).slot
     }
 
 }

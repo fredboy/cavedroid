@@ -3,16 +3,16 @@ package ru.deadsoftware.cavedroid.game.input.handler.mouse
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
 import com.badlogic.gdx.math.MathUtils
 import ru.deadsoftware.cavedroid.MainConfig
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideWindow
-import ru.deadsoftware.cavedroid.misc.Assets
+import ru.deadsoftware.cavedroid.game.ui.windows.inventory.CreativeInventoryWindow
+import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -21,7 +21,7 @@ import kotlin.math.abs
 class CreativeInventoryScrollMouseInputHandler @Inject constructor(
     private val mainConfig: MainConfig,
     private val gameWindowsManager: GameWindowsManager,
-    private val gameItemsHolder: GameItemsHolder,
+    private val itemsRepository: ItemsRepository,
     private val textureRegions: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
 
@@ -54,7 +54,11 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
 
     private fun clampScrollAmount() {
         gameWindowsManager.creativeScrollAmount =
-            MathUtils.clamp(gameWindowsManager.creativeScrollAmount, 0, gameItemsHolder.getMaxCreativeScrollAmount())
+            MathUtils.clamp(
+                /* value = */ gameWindowsManager.creativeScrollAmount,
+                /* min = */ 0,
+                /* max = */ (gameWindowsManager.currentWindow as CreativeInventoryWindow).getMaxScroll(itemsRepository)
+            )
     }
 
     private fun handleStartOrEndDrag(action: MouseInputAction) {

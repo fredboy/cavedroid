@@ -3,30 +3,23 @@ package ru.deadsoftware.cavedroid.game.render.windows
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
-import ru.deadsoftware.cavedroid.MainConfig
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.mobs.Mob
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
 import ru.deadsoftware.cavedroid.game.render.IGameRenderer
 import ru.deadsoftware.cavedroid.game.render.WindowsRenderer
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.ChestInventoryWindow
-import ru.deadsoftware.cavedroid.game.ui.windows.inventory.SurvivalInventoryWindow
-import ru.deadsoftware.cavedroid.misc.Assets
+import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
-import kotlin.math.atan
 
 @GameScope
 class ChestWindowRenderer @Inject constructor(
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val gameWindowsManager: GameWindowsManager,
     private val textureRegions: GetTextureRegionByNameUseCase,
     private val getStringWidth: GetStringWidthUseCase,
@@ -68,7 +61,7 @@ class ChestWindowRenderer @Inject constructor(
             font = getFont(),
             gridX = windowX + GameWindowsConfigs.Chest.itemsGridMarginLeft,
             gridY = windowY + GameWindowsConfigs.Chest.itemsGridMarginTop,
-            items = mobsController.player.inventory.items.asSequence()
+            items = mobController.player.inventory.items.asSequence()
                 .drop(GameWindowsConfigs.Chest.hotbarCells)
                 .take(GameWindowsConfigs.Chest.itemsInCol * GameWindowsConfigs.Chest.itemsInRow)
                 .asIterable(),
@@ -85,7 +78,7 @@ class ChestWindowRenderer @Inject constructor(
             font = getFont(),
             gridX = windowX + GameWindowsConfigs.Chest.itemsGridMarginLeft,
             gridY = windowY + windowTexture.regionHeight - GameWindowsConfigs.Chest.hotbarOffsetFromBottom,
-            items = mobsController.player.inventory.items.asSequence()
+            items = mobController.player.inventory.items.asSequence()
                 .take(GameWindowsConfigs.Chest.hotbarCells)
                 .asIterable(),
             itemsInRow = GameWindowsConfigs.Chest.hotbarCells,
@@ -100,8 +93,8 @@ class ChestWindowRenderer @Inject constructor(
             font = getFont(),
             x = Gdx.input.x * (viewport.width / Gdx.graphics.width),
             y = Gdx.input.y * (viewport.height / Gdx.graphics.height),
-            getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight,
+            getStringWidth = getStringWidth::invoke,
+            getStringHeight = getStringHeight::invoke,
         )
     }
 

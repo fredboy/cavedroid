@@ -1,6 +1,7 @@
 package ru.deadsoftware.cavedroid.misc.annotations.multibinding
 
 import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.MultibindingConfig
 import ru.fredboy.automultibind.annotations.BindsIntoSet
 
 @BindsIntoSet(

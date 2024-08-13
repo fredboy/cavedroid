@@ -1,28 +1,27 @@
 package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.model.item.InventoryItem.Companion.isNoneOrNull
-import ru.deadsoftware.cavedroid.game.objects.container.Furnace
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.FurnaceInventoryWindow
-import ru.deadsoftware.cavedroid.misc.Assets
+import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
+import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.items.model.item.InventoryItem.Companion.isNoneOrNull
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.game.controller.container.model.Furnace
+import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
 
 @GameScope
 @BindMouseInputHandler
 class SelectFurnaceInventoryItemMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
-    private val mobsController: MobsController,
-    private val gameItemsHolder: GameItemsHolder,
+    private val mobController: MobController,
     private val textureRegions: GetTextureRegionByNameUseCase,
-) : AbstractInventoryItemsMouseInputHandler(gameItemsHolder, gameWindowsManager, GameUiWindow.FURNACE) {
+    itemsRepository: ItemsRepository
+) : AbstractInventoryItemsMouseInputHandler(itemsRepository, gameWindowsManager, GameUiWindow.FURNACE) {
 
     override val windowTexture get() = requireNotNull(textureRegions["furnace"])
 
@@ -32,11 +31,11 @@ class SelectFurnaceInventoryItemMouseInputHandler @Inject constructor(
         var itemIndex = xOnGrid + yOnGrid * GameWindowsConfigs.Furnace.itemsInRow
         itemIndex += GameWindowsConfigs.Furnace.hotbarCells
 
-        if (itemIndex >= mobsController.player.inventory.size) {
-            itemIndex -= mobsController.player.inventory.size
+        if (itemIndex >= mobController.player.inventory.size) {
+            itemIndex -= mobController.player.inventory.size
         }
 
-        handleInsidePlaceableCell(action, mobsController.player.inventory.items, window, itemIndex)
+        handleInsidePlaceableCell(action, mobController.player.inventory.items, window, itemIndex)
     }
 
     private fun handleInsideFuel(action: MouseInputAction) {

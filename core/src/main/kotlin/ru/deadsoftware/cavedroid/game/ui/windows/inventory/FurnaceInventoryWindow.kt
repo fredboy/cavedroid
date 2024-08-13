@@ -1,8 +1,8 @@
 package ru.deadsoftware.cavedroid.game.ui.windows.inventory
 
 import ru.deadsoftware.cavedroid.game.GameUiWindow
-import ru.deadsoftware.cavedroid.game.model.item.InventoryItem
-import ru.deadsoftware.cavedroid.game.objects.container.Furnace
+import ru.fredboy.cavedroid.domain.items.model.item.InventoryItem
+import ru.fredboy.cavedroid.game.controller.container.model.Furnace
 
 class FurnaceInventoryWindow(
     val furnace: Furnace,

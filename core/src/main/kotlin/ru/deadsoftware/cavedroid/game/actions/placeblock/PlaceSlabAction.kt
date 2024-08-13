@@ -1,20 +1,18 @@
 package ru.deadsoftware.cavedroid.game.actions.placeblock
 
 import com.badlogic.gdx.Gdx
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.model.item.Item
-import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindPlaceBlockAction
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
 @BindPlaceBlockAction(stringKey = PlaceSlabAction.ACTION_KEY)
 class PlaceSlabAction @Inject constructor(
     private val gameWorld: GameWorld,
-    private val mobsController: MobsController,
-    private val gameItemsHolder: GameItemsHolder,
+    private val mobController: MobController,
 ) : IPlaceBlockAction {
 
     override fun place(placeable: Item.Placeable, x: Int, y: Int) {
@@ -33,7 +31,7 @@ class PlaceSlabAction @Inject constructor(
         }
 
         if (gameWorld.placeToForeground(x, y, slabPart)) {
-            mobsController.player.decreaseCurrentItemCount(gameItemsHolder)
+            mobController.player.decreaseCurrentItemCount()
         }
     }
 

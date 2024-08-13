@@ -1,23 +1,23 @@
 package ru.deadsoftware.cavedroid.game.debug
 
 import com.badlogic.gdx.Gdx
-import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.objects.container.ContainerController
-import ru.deadsoftware.cavedroid.game.objects.drop.DropController
-import ru.deadsoftware.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.game.controller.container.ContainerController
+import ru.fredboy.cavedroid.game.controller.drop.DropController
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
 class DebugInfoStringsProvider @Inject constructor(
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val dropController: DropController,
     private val containerController: ContainerController,
     private val gameWorld: GameWorld,
 ) {
 
     fun getDebugStrings(): List<String> {
-        val player = mobsController.player
+        val player = mobController.player
 
         return listOf(
             "FPS: ${Gdx.graphics.framesPerSecond}",
@@ -27,7 +27,7 @@ class DebugInfoStringsProvider @Inject constructor(
             "CurY: ${player.cursorY}",
             "Velocity: ${player.velocity}",
             "Swim: ${player.swim}",
-            "Mobs: ${mobsController.mobs.size}",
+            "Mobs: ${mobController.mobs.size}",
             "Drops: ${dropController.size}",
             "Containers: ${containerController.size}",
             "Block: ${gameWorld.getForeMap(player.cursorX, player.cursorY).params.key}",

@@ -1,21 +1,21 @@
 package ru.deadsoftware.cavedroid.game.input.handler.keyboard
 
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.input.IKeyboardInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.KeyboardInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.KeyboardInputActionKey
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.objects.drop.DropController
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindKeyboardInputHandler
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.game.controller.drop.DropController
+import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
 
 @GameScope
 @BindKeyboardInputHandler
 class CloseGameWindowKeyboardInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val dropController: DropController,
 ) : IKeyboardInputHandler {
 
@@ -29,9 +29,9 @@ class CloseGameWindowKeyboardInputHandler @Inject constructor(
         if (selectedItem != null) {
             for (i in 1 .. selectedItem.amount) {
                 dropController.addDrop(
-                    /* x = */ mobsController.player.x + (32f * mobsController.player.direction.basis),
-                    /* y = */ mobsController.player.y,
-                    /* item = */ selectedItem.item
+                    /* x = */ mobController.player.x + (32f * mobController.player.direction.basis),
+                    /* y = */ mobController.player.y,
+                    /* item = */ selectedItem
                 )
             }
             gameWindowsManager.currentWindow?.selectedItem = null

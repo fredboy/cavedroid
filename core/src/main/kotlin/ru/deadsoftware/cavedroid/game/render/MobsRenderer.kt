@@ -3,19 +3,19 @@ package ru.deadsoftware.cavedroid.game.render
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
-import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.mobs.Mob
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
-import ru.deadsoftware.cavedroid.misc.utils.cycledInsideWorld
-import ru.fredboy.cavedroid.utils.px
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.cycledInsideWorld
+import ru.fredboy.cavedroid.common.utils.px
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.mob.model.Mob
+import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
 @BindRenderer
 class MobsRenderer @Inject constructor(
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val gameWorld: GameWorld,
 ) : IGameRenderer {
 
@@ -28,7 +28,7 @@ class MobsRenderer @Inject constructor(
     }
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
-        val player = mobsController.player
+        val player = mobController.player
         player.draw(
             /* spriteBatch = */ spriteBatch,
             /* x = */ player.x - viewport.x - player.width / 2,
@@ -36,7 +36,7 @@ class MobsRenderer @Inject constructor(
             /* delta = */ delta
         )
 
-        mobsController.mobs.forEach { mob ->
+        mobController.mobs.forEach { mob ->
             drawMob(spriteBatch, viewport, mob, delta)
         }
     }

@@ -5,23 +5,23 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
-import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
-import ru.deadsoftware.cavedroid.misc.utils.forEachBlockInArea
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageFrameCountUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageSpriteUseCase
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
 @BindRenderer
 class BackgroundBlocksRenderer @Inject constructor(
     gameWorld: GameWorld,
-    mobsController: MobsController,
+    mobController: MobController,
     getBlockDamageFrameCount: GetBlockDamageFrameCountUseCase,
     getBlockDamageSprite: GetBlockDamageSpriteUseCase
-) : BlocksRenderer(gameWorld, mobsController, getBlockDamageFrameCount, getBlockDamageSprite) {
+) : BlocksRenderer(gameWorld, mobController, getBlockDamageFrameCount, getBlockDamageSprite) {
 
     override val renderLayer get() = RENDER_LAYER
 

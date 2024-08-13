@@ -3,13 +3,13 @@ package ru.deadsoftware.cavedroid.game.render
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
-import ru.deadsoftware.cavedroid.game.GameScope
-import ru.deadsoftware.cavedroid.game.objects.drop.DropController
-import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
-import ru.deadsoftware.cavedroid.misc.utils.cycledInsideWorld
-import ru.deadsoftware.cavedroid.misc.utils.drawSprite
-import ru.fredboy.cavedroid.utils.px
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.cycledInsideWorld
+import ru.fredboy.cavedroid.common.utils.drawSprite
+import ru.fredboy.cavedroid.common.utils.px
+import ru.fredboy.cavedroid.game.controller.drop.DropController
+import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope

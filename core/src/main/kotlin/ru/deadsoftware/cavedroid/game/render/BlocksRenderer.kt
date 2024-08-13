@@ -5,17 +5,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.model.block.Block
-import ru.deadsoftware.cavedroid.game.world.GameWorld
-import ru.deadsoftware.cavedroid.misc.Assets
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageFrameCountUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageSpriteUseCase
-import ru.fredboy.cavedroid.utils.px
+import ru.fredboy.cavedroid.common.utils.px
+import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.world.GameWorld
 
 abstract class BlocksRenderer(
     protected val gameWorld: GameWorld,
-    protected val mobsController: MobsController,
+    protected val mobsController: MobController,
     protected val getBlockDamageFrameCount: GetBlockDamageFrameCountUseCase,
     protected val getBlockDamageSprite: GetBlockDamageSpriteUseCase,
 ) : IGameRenderer {

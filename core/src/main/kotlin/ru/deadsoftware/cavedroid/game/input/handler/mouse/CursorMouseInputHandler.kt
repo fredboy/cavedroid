@@ -2,39 +2,39 @@ package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
 import com.badlogic.gdx.math.MathUtils
 import ru.deadsoftware.cavedroid.MainConfig
-import ru.deadsoftware.cavedroid.game.GameItemsHolder
-import ru.deadsoftware.cavedroid.game.GameScope
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
-import ru.deadsoftware.cavedroid.game.mobs.Mob
-import ru.deadsoftware.cavedroid.game.mobs.MobsController
-import ru.deadsoftware.cavedroid.game.mobs.player.Player
-import ru.deadsoftware.cavedroid.game.model.block.Block
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
-import ru.deadsoftware.cavedroid.game.world.GameWorld
 import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
+import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
-import ru.fredboy.cavedroid.utils.bl
-import ru.fredboy.cavedroid.utils.px
+import ru.fredboy.cavedroid.common.utils.bl
+import ru.fredboy.cavedroid.common.utils.px
+import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.items.usecase.GetItemByIndexUseCase
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.mob.model.Direction
+import ru.fredboy.cavedroid.game.controller.mob.model.Player
+import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
 @BindMouseInputHandler
 class CursorMouseInputHandler @Inject constructor(
     private val mainConfig: MainConfig,
-    private val mobsController: MobsController,
+    private val mobController: MobController,
     private val gameWorld: GameWorld,
     private val gameWindowsManager: GameWindowsManager,
-    private val gameItemsHolder: GameItemsHolder,
     private val tooltipManager: TooltipManager,
     private val textureRegions: GetTextureRegionByNameUseCase,
+    private val getItemByIndexUseCase: GetItemByIndexUseCase,
 ) : IMouseInputHandler {
 
-    private val player get() = mobsController.player
+    private val player get() = mobController.player
 
     private val creativeInventoryTexture get() = requireNotNull(textureRegions["creative"])
 
@@ -50,9 +50,9 @@ class CursorMouseInputHandler @Inject constructor(
         }
 
         if (player.cursorX.px + 8 < player.x + player.width / 2) {
-            player.setDir(Mob.Direction.LEFT)
+            player.direction = Direction.LEFT
         } else {
-            player.setDir(Mob.Direction.RIGHT)
+            player.direction = Direction.RIGHT
         }
     }
 
@@ -93,9 +93,9 @@ class CursorMouseInputHandler @Inject constructor(
         player.headRotation = getPlayerHeadRotation(worldX, worldY)
 
         if (worldX < player.x + player.width / 2) {
-            player.setDir(Mob.Direction.LEFT)
+            player.direction = Direction.LEFT
         } else {
-            player.setDir(Mob.Direction.RIGHT)
+            player.direction = Direction.RIGHT
         }
     }
 
@@ -115,7 +115,7 @@ class CursorMouseInputHandler @Inject constructor(
 
         val itemIndex = (gameWindowsManager.creativeScrollAmount * GameWindowsConfigs.Creative.itemsInRow +
                 (xOnGrid.toInt() + yOnGrid.toInt() * GameWindowsConfigs.Creative.itemsInRow))
-        val item = gameItemsHolder.getItemFromCreativeInventory(itemIndex)
+        val item = getItemByIndexUseCase[itemIndex]
 
         return item.params.name
     }
@@ -133,7 +133,7 @@ class CursorMouseInputHandler @Inject constructor(
             !mainConfig.isTouch -> handleMouse(action)
         }
 
-        player.checkCursorBounds(gameWorld)
+        gameWorld.checkPlayerCursorBounds()
 
         if (player.controlMode == Player.ControlMode.WALK && mainConfig.isTouch) {
             setPlayerDirectionToCursor()
@@ -146,10 +146,6 @@ class CursorMouseInputHandler @Inject constructor(
         if (gameWindowsManager.getCurrentWindow() == GameUiWindow.CREATIVE_INVENTORY) {
             tooltipManager.showMouseTooltip(getCreativeTooltip(action).orEmpty())
         }
-    }
-
-    companion object {
-        private const val SURVIVAL_CURSOR_RANGE = 4
     }
 
 }

@@ -1,6 +1,6 @@
 package ru.deadsoftware.cavedroid.game.actions.useitem
 
-import ru.deadsoftware.cavedroid.game.model.item.Item
+import ru.fredboy.cavedroid.domain.items.model.item.Item
 
 interface IUseItemAction {
 
