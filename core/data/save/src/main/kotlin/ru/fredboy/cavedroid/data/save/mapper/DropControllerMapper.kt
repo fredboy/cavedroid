@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.data.save.mapper
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import javax.inject.Inject
 
@@ -19,12 +20,15 @@ class DropControllerMapper @Inject constructor(
         )
     }
 
-    fun mapDropController(saveDataDto: SaveDataDto.DropControllerSaveDataDto): DropController {
+    fun mapDropController(
+        saveDataDto: SaveDataDto.DropControllerSaveDataDto,
+        dropWorldAdapter: DropWorldAdapter,
+    ): DropController {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
         return DropController(
             initialDrop = saveDataDto.drops.map(dropMapper::mapDrop),
-            dropWorldAdapter = TODO("dropWorldAdapter"),
+            dropWorldAdapter = dropWorldAdapter,
             itemsRepository = itemsRepository,
         )
     }

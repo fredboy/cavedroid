@@ -25,7 +25,7 @@ public class GameScreen implements Screen {
             mGameProc.dispose();
         }
 
-        GameModule.loaded = true;
+        GameModule.setNeedLoad(false);
 
         GameComponent gameComponent = DaggerGameComponent.builder()
                 .mainComponent(mMainConfig.getMainComponent()).build();
@@ -40,7 +40,7 @@ public class GameScreen implements Screen {
             mGameProc.dispose();
         }
 
-        GameModule.loaded = false;
+        GameModule.setNeedLoad(true);
 
         GameComponent gameComponent = DaggerGameComponent.builder()
                 .mainComponent(mMainConfig.getMainComponent()).build();

@@ -4,6 +4,7 @@ import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.FallingBlock
 import ru.fredboy.cavedroid.entity.mob.model.Pig
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -32,13 +33,16 @@ class MobControllerMapper @Inject constructor(
         )
     }
 
-    fun mapMobController(saveDataDto: SaveDataDto.MobControllerSaveDataDto): MobController {
+    fun mapMobController(
+        saveDataDto: SaveDataDto.MobControllerSaveDataDto,
+        mobWorldAdapter: MobWorldAdapter,
+    ): MobController {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
         return MobController(
             mobAssetsRepository = mobAssetsRepository,
             getFallbackItemUseCase = getFallbackItemUseCase,
-            mobWorldAdapter = TODO("mobWorldAdapter"),
+            mobWorldAdapter = mobWorldAdapter,
         ).apply {
             (mobs as MutableList).addAll(saveDataDto.mobs.mapNotNull { mob ->
                 when (mob) {

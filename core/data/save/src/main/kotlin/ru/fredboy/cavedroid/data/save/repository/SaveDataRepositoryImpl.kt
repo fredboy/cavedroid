@@ -11,8 +11,13 @@ import ru.fredboy.cavedroid.data.save.mapper.MobControllerMapper
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
-import ru.fredboy.cavedroid.domain.save.model.GameSaveData
+import ru.fredboy.cavedroid.domain.save.model.GameMapSaveData
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
+import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
+import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
+import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter
+import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -73,8 +78,8 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         val height = map[0].size
 
         val blocks = sequence {
-            for (y in 0 ..< height) {
-                for (x in 0 ..< width) {
+            for (y in 0..<height) {
+                for (x in 0..<width) {
                     yield(map[x][y])
                 }
             }
@@ -125,11 +130,11 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         val height = ByteBuffer.wrap(bytes, 1 + Int.SIZE_BYTES, Int.SIZE_BYTES).getInt()
 
         val blocks = buildList {
-            for (i in 1 + (Int.SIZE_BYTES shl 1) .. bytes.lastIndex step Int.SIZE_BYTES + 1) {
+            for (i in 1 + (Int.SIZE_BYTES shl 1)..bytes.lastIndex step Int.SIZE_BYTES + 1) {
                 val run = ByteBuffer.wrap(bytes, i, Int.SIZE_BYTES).getInt()
                 val blockId = bytes[i + Int.SIZE_BYTES].toUByte().toInt()
 
-                for (j in 0 ..< run) {
+                for (j in 0..<run) {
                     add(itemsRepository.getBlockByKey(dict[blockId]))
                 }
             }
@@ -143,8 +148,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     }
 
 
-    private fun loadMap(
-        itemsRepository: ItemsRepository,
+    private fun internalLoadMap(
         savesPath: String
     ): Pair<Array<Array<Block>>, Array<Array<Block>>> {
         val dict = Gdx.files.absolute("$savesPath$DICT_FILE").readString().split("\n")
@@ -200,7 +204,8 @@ internal class SaveDataRepositoryImpl @Inject constructor(
 
         val dropBytes = ProtoBuf.encodeToByteArray(dropControllerMapper.mapSaveData(dropController as DropController))
         val mobsBytes = ProtoBuf.encodeToByteArray(mobControllerMapper.mapSaveData(mobController as MobController))
-        val containersBytes = ProtoBuf.encodeToByteArray(containerControllerMapper.mapSaveData(containerController as ContainerController))
+        val containersBytes =
+            ProtoBuf.encodeToByteArray(containerControllerMapper.mapSaveData(containerController as ContainerController))
 
         dropFile.writeBytes(dropBytes, false)
         mobsFile.writeBytes(mobsBytes, false)
@@ -209,38 +214,63 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         saveMap(gameWorld, savesPath)
     }
 
-    override fun load(gameDataFolder: String): GameSaveData {
+    override fun loadMap(gameDataFolder: String): GameMapSaveData {
         val savesPath = "$gameDataFolder$SAVES_DIR"
-
-        val dropFile = Gdx.files.absolute("$savesPath$DROP_FILE")
-        val mobsFile = Gdx.files.absolute("$savesPath$MOBS_FILE")
-        val containersFile = Gdx.files.absolute("$savesPath$CONTAINERS_FILE")
-
-        val dropBytes = dropFile.readBytes()
-        val mobsBytes = mobsFile.readBytes()
-        val containersBytes = containersFile.readBytes()
-
-        val dropController = ProtoBuf.decodeFromByteArray<SaveDataDto.DropControllerSaveDataDto>(dropBytes)
-            .let { saveData ->
-                dropControllerMapper.mapDropController(saveData)
-            }
-
-        val mobController = ProtoBuf.decodeFromByteArray<SaveDataDto.MobControllerSaveDataDto>(mobsBytes)
-            .let { saveData ->
-                mobControllerMapper.mapMobController(saveData)
-            }
-
-        val containerController = ProtoBuf.decodeFromByteArray<SaveDataDto.ContainerControllerSaveDataDto>(containersBytes)
-            .let { saveData ->
-                containerControllerMapper.mapContainerController(saveData)
-            }
-
-        val (foreMap, backMap) = loadMap(itemsRepository, savesPath)
-
-        return GameSaveData(mobController, dropController, containerController, foreMap, backMap)
+        val (foreMap, backMap) = internalLoadMap(savesPath)
+        return GameMapSaveData(foreMap, backMap)
     }
 
-    override fun exists(gameDataFolder: String,): Boolean {
+    override fun loadContainerController(
+        gameDataFolder: String,
+        containerWorldAdapter: ContainerWorldAdapter,
+        containerFactory: ContainerFactory,
+        dropAdapter: DropAdapter
+    ): ContainerController {
+        val savesPath = "$gameDataFolder$SAVES_DIR"
+        val containersFile = Gdx.files.absolute("$savesPath$CONTAINERS_FILE")
+        val containersBytes = containersFile.readBytes()
+
+        return ProtoBuf.decodeFromByteArray<SaveDataDto.ContainerControllerSaveDataDto>(
+            containersBytes
+        ).let { saveData ->
+            containerControllerMapper.mapContainerController(
+                saveDataDto = saveData,
+                containerWorldAdapter = containerWorldAdapter,
+                containerFactory = containerFactory,
+                dropAdapter = dropAdapter
+            )
+        }
+    }
+
+    override fun loadDropController(gameDataFolder: String, dropWorldAdapter: DropWorldAdapter): DropController {
+        val savesPath = "$gameDataFolder$SAVES_DIR"
+        val dropFile = Gdx.files.absolute("$savesPath$DROP_FILE")
+        val dropBytes = dropFile.readBytes()
+
+        return ProtoBuf.decodeFromByteArray<SaveDataDto.DropControllerSaveDataDto>(dropBytes)
+            .let { saveData ->
+                dropControllerMapper.mapDropController(
+                    saveDataDto = saveData,
+                    dropWorldAdapter = dropWorldAdapter
+                )
+            }
+    }
+
+    override fun loadMobController(gameDataFolder: String, mobWorldAdapter: MobWorldAdapter): MobController {
+        val savesPath = "$gameDataFolder$SAVES_DIR"
+        val mobsFile = Gdx.files.absolute("$savesPath$MOBS_FILE")
+        val mobsBytes = mobsFile.readBytes()
+
+        return ProtoBuf.decodeFromByteArray<SaveDataDto.MobControllerSaveDataDto>(mobsBytes)
+            .let { saveData ->
+                mobControllerMapper.mapMobController(
+                    saveDataDto = saveData,
+                    mobWorldAdapter = mobWorldAdapter
+                )
+            }
+    }
+
+    override fun exists(gameDataFolder: String): Boolean {
         val savesPath = "$gameDataFolder$SAVES_DIR"
 
         return Gdx.files.absolute("$savesPath$DROP_FILE").exists() &&

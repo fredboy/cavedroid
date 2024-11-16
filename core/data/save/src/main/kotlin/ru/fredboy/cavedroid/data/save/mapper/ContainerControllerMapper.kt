@@ -3,9 +3,12 @@ package ru.fredboy.cavedroid.data.save.mapper
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
+import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
+import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
 import ru.fredboy.cavedroid.entity.container.model.Chest
 import ru.fredboy.cavedroid.entity.container.model.ContainerCoordinates
 import ru.fredboy.cavedroid.entity.container.model.Furnace
+import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import javax.inject.Inject
 
@@ -29,14 +32,19 @@ class ContainerControllerMapper @Inject constructor(
         )
     }
 
-    fun mapContainerController(saveDataDto: SaveDataDto.ContainerControllerSaveDataDto): ContainerController {
+    fun mapContainerController(
+        saveDataDto: SaveDataDto.ContainerControllerSaveDataDto,
+        containerWorldAdapter: ContainerWorldAdapter,
+        containerFactory: ContainerFactory,
+        dropAdapter: DropAdapter,
+    ): ContainerController {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
         return ContainerController(
             getItemByKeyUseCase = getItemByKeyUseCase,
-            containerWorldAdapter = TODO("containerWorldAdapter"),
-            containerFactory = TODO("ContainerFactory"),
-            dropAdapter = TODO("DropAdapter")
+            containerWorldAdapter = containerWorldAdapter,
+            containerFactory = containerFactory,
+            dropAdapter = dropAdapter
         ).apply {
             saveDataDto.containerMap.forEach { (key, value) ->
                 val container = when (value) {
