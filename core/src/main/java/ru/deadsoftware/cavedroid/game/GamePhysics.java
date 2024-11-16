@@ -4,19 +4,20 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.fredboy.cavedroid.common.di.GameScope;
 import ru.fredboy.cavedroid.common.utils.MeasureUnitsUtilsKt;
 import ru.fredboy.cavedroid.domain.items.model.block.Block;
-import ru.fredboy.cavedroid.domain.items.model.item.InventoryItem;
+import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem;
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase;
+import ru.fredboy.cavedroid.entity.drop.model.Drop;
+import ru.fredboy.cavedroid.entity.mob.model.FallingBlock;
+import ru.fredboy.cavedroid.entity.mob.model.Mob;
+import ru.fredboy.cavedroid.entity.mob.model.Player;
 import ru.fredboy.cavedroid.game.controller.drop.DropController;
-import ru.fredboy.cavedroid.game.controller.drop.model.Drop;
 import ru.fredboy.cavedroid.game.controller.mob.MobController;
-import ru.fredboy.cavedroid.game.controller.mob.model.FallingBlock;
-import ru.fredboy.cavedroid.game.controller.mob.model.Mob;
-import ru.fredboy.cavedroid.game.controller.mob.model.Player;
 import ru.fredboy.cavedroid.game.world.GameWorld;
 
 import javax.inject.Inject;
@@ -153,8 +154,7 @@ public class GamePhysics {
         final Player player = mMobController.getPlayer();
 
         if (Intersector.overlaps(shiftedPlayerTarget, drop)) {
-            // TODO: Pick up drop
-//            player.getInventory().pickDrop(drop);
+            drop.setPickedUp(player.getInventory().pickUpItem(drop.getInventoryItem()));
         }
     }
 
@@ -220,19 +220,20 @@ public class GamePhysics {
                     mob.x = collidingRect.x + collidingRect.width;
                 }
 
-//                mob.x = MathUtils.round(mob.getX());
-//                while (checkColl(mob) != null) {
-//                    mob.x += d;
-//                }
-
                 if (mob.getCanJump()) {
                     mob.changeDir();
                 }
             }
         }
 
-        // TODO: Check World Bounds
-//        mob.checkWorldBounds(mGameWorld);
+        // Check world bounds
+        final float worldWidthPx = MeasureUnitsUtilsKt.getPx(mGameWorld.getWidth());
+        if (mob.getX() + mob.getWidth() / 2 < 0) {
+            mob.x += worldWidthPx;
+        }
+        if (mob.getX() + mob.getWidth() / 2 > worldWidthPx) {
+            mob.x -= worldWidthPx;
+        }
     }
 
     private void mobYColl(Mob mob) {
@@ -260,13 +261,6 @@ public class GamePhysics {
                 mob.y = collidingRect.y + collidingRect.height;
             }
 
-
-//            mob.y = MathUtils.round(mob.getY());
-//
-//            while (checkColl(mob)) {
-//                mob.y += d;
-//            }
-
             mob.getVelocity().y = 0;
 
         } else {
@@ -280,7 +274,7 @@ public class GamePhysics {
         }
     }
 
-    private void playerPhy(Player player, float delta) {
+    private void playerPhy(@NotNull Player player, float delta) {
         if (player.isDead()) {
             return;
         }
@@ -382,12 +376,11 @@ public class GamePhysics {
         //todo : Update player
 //        player.ai(mGameWorld, mGameItemsHolder, mMobController, delta);
         if (player.isDead()) {
-            for (InventoryItem invItem : player.getInventory().getItems()) {
-                mDropController.addDrop(player.x, player.y, invItem);
-            }
+//            for (InventoryItem invItem : player.getInventory().getItems()) {
+//                mDropController.addDrop(player.x, player.y, invItem);
+//            }
             player.getInventory().clear();
-            //todo: Respawn player
-//            player.respawn(mGameWorld, mGameItemsHolder);
+            mMobController.respawnPlayer();
         }
     }
 

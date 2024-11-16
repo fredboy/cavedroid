@@ -4,7 +4,7 @@ import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
-import ru.fredboy.cavedroid.game.controller.container.model.Furnace
+import ru.fredboy.cavedroid.entity.container.model.Furnace
 import javax.inject.Inject
 
 @Reusable

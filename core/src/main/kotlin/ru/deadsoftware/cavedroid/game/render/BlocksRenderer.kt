@@ -9,12 +9,16 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageFrameCountUseCas
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageSpriteUseCase
 import ru.fredboy.cavedroid.common.utils.px
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.world.model.Layer
+import ru.fredboy.cavedroid.entity.container.model.Furnace
+import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
 
 abstract class BlocksRenderer(
     protected val gameWorld: GameWorld,
     protected val mobsController: MobController,
+    protected val containerController: ContainerController,
     protected val getBlockDamageFrameCount: GetBlockDamageFrameCountUseCase,
     protected val getBlockDamageSprite: GetBlockDamageSpriteUseCase,
 ) : IGameRenderer {
@@ -90,7 +94,8 @@ abstract class BlocksRenderer(
             val drawX = x.px - viewport.x
             val drawY = y.px - viewport.y
             if (backgroundBlock is Block.Furnace) {
-                backgroundBlock.draw(spriteBatch, drawX, drawY, gameWorld.getBackgroundFurnace(x, y)?.isActive ?: false)
+                val furnace = containerController.getContainer(x, y, Layer.BACKGROUND.z) as? Furnace
+                backgroundBlock.draw(spriteBatch, drawX, drawY, furnace?.isActive ?: false)
             } else {
                 backgroundBlock.draw(spriteBatch, drawX, drawY)
             }
@@ -105,7 +110,8 @@ abstract class BlocksRenderer(
             val drawY = y.px - viewport.y
 
             if (foregroundBlock is Block.Furnace) {
-                foregroundBlock.draw(spriteBatch, drawX, drawY, gameWorld.getForegroundFurnace(x, y)?.isActive ?: false)
+                val furnace = containerController.getContainer(x, y, Layer.FOREGROUND.z) as? Furnace
+                foregroundBlock.draw(spriteBatch, drawX, drawY, furnace?.isActive ?: false)
             } else {
                 foregroundBlock.draw(spriteBatch, drawX, drawY)
             }

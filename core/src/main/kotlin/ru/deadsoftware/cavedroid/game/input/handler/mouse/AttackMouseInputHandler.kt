@@ -6,7 +6,7 @@ import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.isInsideHotbar
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindMouseInputHandler
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -32,6 +32,6 @@ class AttackMouseInputHandler @Inject constructor(
             mobController.player.stopHitting()
         } else {
             mobController.player.startHitting()
-        };
+        }
     }
 }

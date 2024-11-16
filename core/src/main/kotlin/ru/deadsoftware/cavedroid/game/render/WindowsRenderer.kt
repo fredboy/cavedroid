@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.render.windows.*
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindRenderer
 import ru.fredboy.cavedroid.common.di.GameScope
 import javax.inject.Inject
 

@@ -8,9 +8,9 @@ import ru.deadsoftware.cavedroid.game.world.GameWorldBlocksLogicControllerTask;
 import ru.deadsoftware.cavedroid.game.world.GameWorldFluidsLogicControllerTask;
 import ru.deadsoftware.cavedroid.game.world.GameWorldMobDamageControllerTask;
 import ru.fredboy.cavedroid.common.di.GameScope;
+import ru.fredboy.cavedroid.entity.mob.model.Player;
 import ru.fredboy.cavedroid.game.controller.container.ContainerController;
 import ru.fredboy.cavedroid.game.controller.mob.MobController;
-import ru.fredboy.cavedroid.game.controller.mob.model.Player;
 
 import javax.inject.Inject;
 
@@ -60,6 +60,7 @@ public class GameProc implements Disposable {
     }
 
     public void update(float delta) {
+        mMobsController.update(delta);
         mGamePhysics.update(delta);
         mGameRenderer.render(delta);
         mContainerController.update(delta);

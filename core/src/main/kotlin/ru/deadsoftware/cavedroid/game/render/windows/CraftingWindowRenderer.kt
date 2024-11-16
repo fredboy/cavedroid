@@ -14,7 +14,6 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
-import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
 
@@ -22,7 +21,6 @@ import javax.inject.Inject
 class CraftingWindowRenderer @Inject constructor(
     private val mobController: MobController,
     private val gameWindowsManager: GameWindowsManager,
-    private val itemsRepository: ItemsRepository,
     private val textureRegions: GetTextureRegionByNameUseCase,
     private val getStringWidth: GetStringWidthUseCase,
     private val getStringHeight: GetStringHeightUseCase,

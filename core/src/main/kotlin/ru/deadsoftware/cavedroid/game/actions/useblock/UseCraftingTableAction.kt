@@ -1,7 +1,7 @@
 package ru.deadsoftware.cavedroid.game.actions.useblock
 
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindUseBlockAction
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindUseBlockAction
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import javax.inject.Inject

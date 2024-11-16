@@ -11,7 +11,7 @@ import ru.fredboy.cavedroid.data.items.model.ItemDto
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.craft.CraftingRecipe
 import ru.fredboy.cavedroid.domain.items.model.craft.CraftingResult
-import ru.fredboy.cavedroid.domain.items.model.item.InventoryItem
+import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import java.util.*

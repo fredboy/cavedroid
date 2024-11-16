@@ -3,7 +3,7 @@ package ru.fredboy.cavedroid.data.save.mapper
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
-import ru.fredboy.cavedroid.game.controller.drop.model.Drop
+import ru.fredboy.cavedroid.entity.drop.model.Drop
 import javax.inject.Inject
 
 @Reusable
@@ -33,7 +33,7 @@ class DropMapper @Inject constructor(
             x = saveDataDto.x,
             y = saveDataDto.y,
             item = getItemByKeyUseCase[saveDataDto.itemKey],
-            _amount = saveDataDto.amount
+            amount = saveDataDto.amount
         ).apply {
             width = saveDataDto.width
             height = saveDataDto.height

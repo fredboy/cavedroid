@@ -1,6 +1,6 @@
 package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindMouseInputHandler
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Timer
 import ru.deadsoftware.cavedroid.game.GameUiWindow
@@ -51,7 +51,7 @@ class UseItemMouseInputHandler @Inject constructor(
         cancelHold()
 
         val player = mobController.player
-        val item = player.inventory.activeItem.item
+        val item = player.activeItem.item
         player.startHitting(false)
         player.stopHitting()
 
@@ -91,7 +91,7 @@ class UseItemMouseInputHandler @Inject constructor(
 
     private fun handleUp(action: MouseInputAction) {
         val player = mobController.player
-        val item = player.inventory.activeItem.item
+        val item = player.activeItem.item
         cancelHold()
 
         player.startHitting(false)

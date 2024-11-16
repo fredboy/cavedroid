@@ -2,8 +2,8 @@ package ru.fredboy.cavedroid.data.save.mapper
 
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
+import ru.fredboy.cavedroid.domain.items.model.inventory.Inventory
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
-import ru.fredboy.cavedroid.game.controller.mob.model.Inventory
 import javax.inject.Inject
 
 @Reusable
@@ -16,8 +16,6 @@ class InventoryMapper @Inject constructor(
         return SaveDataDto.InventorySaveDataDto(
             version = SAVE_DATA_VERSION,
             size = inventory.size,
-            hotbarSize = inventory.hotbarSize,
-            activeSlot = inventory.activeSlot,
             items = inventory.items.map(inventoryItemMapper::mapSaveData)
         )
     }
@@ -27,12 +25,9 @@ class InventoryMapper @Inject constructor(
 
         return Inventory(
             size = saveDataDto.size,
-            hotbarSize = saveDataDto.hotbarSize,
             fallbackItem = getFallbackItem(),
             initialItems = saveDataDto.items.map(inventoryItemMapper::mapInventoryItem)
-        ).apply {
-            activeSlot = saveDataDto.activeSlot
-        }
+        )
     }
 
     companion object {

@@ -3,9 +3,10 @@ package ru.fredboy.cavedroid.data.save.mapper
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
-import ru.fredboy.cavedroid.game.controller.container.impl.ContainerControllerImpl
-import ru.fredboy.cavedroid.game.controller.container.model.Chest
-import ru.fredboy.cavedroid.game.controller.container.model.Furnace
+import ru.fredboy.cavedroid.entity.container.model.Chest
+import ru.fredboy.cavedroid.entity.container.model.ContainerCoordinates
+import ru.fredboy.cavedroid.entity.container.model.Furnace
+import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import javax.inject.Inject
 
 @Reusable
@@ -15,7 +16,7 @@ class ContainerControllerMapper @Inject constructor(
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
 ) {
 
-    fun mapSaveData(containerController: ContainerControllerImpl): SaveDataDto.ContainerControllerSaveDataDto {
+    fun mapSaveData(containerController: ContainerController): SaveDataDto.ContainerControllerSaveDataDto {
         return SaveDataDto.ContainerControllerSaveDataDto(
             version = SAVE_DATA_VERSION,
             containerMap = containerController.containerMap.mapNotNull { (key, container) ->
@@ -23,15 +24,20 @@ class ContainerControllerMapper @Inject constructor(
                     is Furnace -> furnaceMapper.mapSaveData(container)
                     is Chest -> chestMapper.mapSaveData(container)
                     else -> null
-                }?.let { value -> key to value }
+                }?.let { value -> key.toString() to value }
             }.toMap()
         )
     }
 
-    fun mapContainerController(saveDataDto: SaveDataDto.ContainerControllerSaveDataDto): ContainerControllerImpl {
+    fun mapContainerController(saveDataDto: SaveDataDto.ContainerControllerSaveDataDto): ContainerController {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
-        return ContainerControllerImpl(getItemByKeyUseCase).apply {
+        return ContainerController(
+            getItemByKeyUseCase = getItemByKeyUseCase,
+            containerWorldAdapter = TODO("containerWorldAdapter"),
+            containerFactory = TODO("ContainerFactory"),
+            dropAdapter = TODO("DropAdapter")
+        ).apply {
             saveDataDto.containerMap.forEach { (key, value) ->
                 val container = when (value) {
                     is SaveDataDto.FurnaceSaveDataDto -> furnaceMapper.mapFurnace(value)
@@ -40,7 +46,7 @@ class ContainerControllerMapper @Inject constructor(
                 }
 
                 if (container != null) {
-                    containerMap.put(key, container)
+                    containerMap.put(ContainerCoordinates.fromString(key), container)
                 }
             }
         }

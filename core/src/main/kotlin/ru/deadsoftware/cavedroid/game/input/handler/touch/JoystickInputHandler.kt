@@ -1,6 +1,5 @@
 package ru.deadsoftware.cavedroid.game.input.handler.touch
 
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
 import com.badlogic.gdx.utils.TimeUtils
 import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.GameUiWindow
@@ -8,11 +7,12 @@ import ru.deadsoftware.cavedroid.game.input.*
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindMouseInputHandler
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.entity.mob.model.Direction
+import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
-import ru.fredboy.cavedroid.game.controller.mob.model.Direction
-import ru.fredboy.cavedroid.game.controller.mob.model.Player
 import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
@@ -95,7 +95,7 @@ class JoystickInputHandler @Inject constructor(
             cursorTimeoutMs = TimeUtils.millis()
         }
 
-        gameWorld.checkPlayerCursorBounds()
+        mobController.checkPlayerCursorBounds()
 
         if (mobController.player.cursorX != pastCursorX || mobController.player.cursorY != pastCursorY) {
             mobController.player.blockDamage = 0f

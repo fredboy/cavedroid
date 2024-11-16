@@ -1,6 +1,6 @@
 package ru.deadsoftware.cavedroid.game.actions.updateblock
 
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindUpdateBlockAction
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindUpdateBlockAction
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.usecase.GetBlockByKeyUseCase
 import ru.fredboy.cavedroid.game.world.GameWorld

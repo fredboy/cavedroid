@@ -9,8 +9,8 @@ import ru.deadsoftware.cavedroid.game.input.isInsideWindow
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.AbstractInventoryWindow
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.AbstractInventoryWindowWithCraftGrid
-import ru.fredboy.cavedroid.domain.items.model.item.InventoryItem
-import ru.fredboy.cavedroid.domain.items.model.item.InventoryItem.Companion.isNoneOrNull
+import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
+import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem.Companion.isNoneOrNull
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 
 abstract class AbstractInventoryItemsMouseInputHandler(

@@ -65,8 +65,6 @@ sealed class SaveDataDto {
     data class InventorySaveDataDto(
         override val version: Int,
         override val size: Int,
-        val hotbarSize: Int,
-        val activeSlot: Int,
         override val items: List<InventoryItemSaveDataDto>,
     ) : ContainerSaveDataDto()
 
@@ -185,6 +183,7 @@ sealed class SaveDataDto {
         val spawnPointX: Float,
         val spawnPointY: Float,
         val controlMode: ControlModeSaveDataDto,
+        val activeSlot: Int,
     ) : MobSaveDataDto()
 
     @Serializable

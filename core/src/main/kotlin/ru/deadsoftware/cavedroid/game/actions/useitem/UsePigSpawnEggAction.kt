@@ -1,25 +1,22 @@
 package ru.deadsoftware.cavedroid.game.actions.useitem
 
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindUseItemAction
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindUseItemAction
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.domain.assets.usecase.GetPigSpritesUseCase
 import ru.fredboy.cavedroid.common.utils.px
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.game.controller.mob.MobController
-import ru.fredboy.cavedroid.game.controller.mob.model.Pig
+import ru.fredboy.cavedroid.game.controller.mob.factory.PigFactory
 import javax.inject.Inject
 
 @GameScope
 @BindUseItemAction(UsePigSpawnEggAction.ACTION_KEY)
 class UsePigSpawnEggAction @Inject constructor(
     private val mobController: MobController,
-    private val getPigSprites: GetPigSpritesUseCase,
+    private val pigFactory: PigFactory,
 ) : IUseItemAction {
 
     override fun perform(item: Item.Usable, x: Int, y: Int) {
-        Pig(getPigSprites(), mobController.player.cursorX.px, mobController.player.cursorY.px)
-            .apply { attachToController(mobController) }
-
+        pigFactory.create(mobController.player.cursorX.px, mobController.player.cursorY.px)
         mobController.player.decreaseCurrentItemCount()
     }
 

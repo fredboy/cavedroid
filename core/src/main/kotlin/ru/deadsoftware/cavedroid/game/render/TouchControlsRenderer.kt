@@ -8,13 +8,13 @@ import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.input.Joystick
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindRenderer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
+import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
-import ru.fredboy.cavedroid.game.controller.mob.model.Player
 import javax.inject.Inject
 
 @GameScope

@@ -31,7 +31,13 @@ dependencies {
     // domain
     useModule(":core:domain:assets")
     useModule(":core:domain:items")
+    useModule(":core:domain:world")
     useModule(":core:domain:save")
+
+    //entity
+    useModule(":core:entity:container")
+    useModule(":core:entity:drop")
+    useModule(":core:entity:mob")
 
     // controller
     useModule(":core:game:controller:drop")

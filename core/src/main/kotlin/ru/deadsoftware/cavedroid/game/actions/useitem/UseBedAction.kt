@@ -1,6 +1,6 @@
 package ru.deadsoftware.cavedroid.game.actions.useitem
 
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindUseItemAction
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindUseItemAction
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.usecase.GetBlockByKeyUseCase
@@ -23,7 +23,7 @@ class UseBedAction @Inject constructor(
         if (gameWorld.canPlaceToForeground(x, y, bedLeft) && gameWorld.canPlaceToForeground(x + 1, y, bedRight)) {
             gameWorld.placeToForeground(x, y, bedLeft)
             gameWorld.placeToForeground(x + 1, y, bedRight)
-            mobController.player.inventory.decreaseCurrentItemAmount()
+            mobController.player.decreaseCurrentItemCount()
         }
     }
 

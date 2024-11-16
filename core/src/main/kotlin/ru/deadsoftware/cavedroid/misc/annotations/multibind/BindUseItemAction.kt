@@ -1,4 +1,4 @@
-package ru.deadsoftware.cavedroid.misc.annotations.multibinding
+package ru.deadsoftware.cavedroid.misc.annotations.multibind
 
 import ru.deadsoftware.cavedroid.game.actions.useitem.IUseItemAction
 import ru.deadsoftware.cavedroid.misc.annotations.multibind.MultibindingConfig

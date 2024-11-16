@@ -5,11 +5,11 @@ import ru.deadsoftware.cavedroid.game.input.IKeyboardInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.KeyboardInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.KeyboardInputActionKey
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindKeyboardInputHandler
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindKeyboardInputHandler
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.entity.drop.model.Drop
 import ru.fredboy.cavedroid.game.controller.drop.DropController
-import ru.fredboy.cavedroid.game.controller.drop.model.Drop
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ class DropItemKeyboardInputHandler @Inject constructor(
     override fun checkConditions(action: KeyboardInputAction): Boolean {
         return action.actionKey is KeyboardInputActionKey.DropItem &&
                 action.isKeyDown && gameWindowsManager.getCurrentWindow() == GameUiWindow.NONE &&
-                !mobController.player.inventory.activeItem.item.isNone()
+                !mobController.player.activeItem.item.isNone()
     }
 
     private fun createDrop(item: Item, playerX: Float, playerY: Float, amount: Int) {
@@ -38,11 +38,11 @@ class DropItemKeyboardInputHandler @Inject constructor(
 
     override fun handle(action: KeyboardInputAction) {
         val player = mobController.player
-        val currentItem = player.inventory.activeItem
+        val currentItem = player.activeItem
         val dropAmount =  if (currentItem.item.isTool()) currentItem.amount else 1
 
         createDrop(currentItem.item, player.x, player.y, dropAmount)
-        player.inventory.decreaseCurrentItemAmount(dropAmount)
+        player.decreaseCurrentItemCount(dropAmount)
     }
 
     companion object {

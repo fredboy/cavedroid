@@ -1,6 +1,6 @@
 package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindMouseInputHandler
 import com.badlogic.gdx.math.MathUtils
 import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.GameUiWindow

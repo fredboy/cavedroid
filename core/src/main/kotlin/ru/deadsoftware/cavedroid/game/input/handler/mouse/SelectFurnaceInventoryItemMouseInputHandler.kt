@@ -5,12 +5,12 @@ import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.ui.windows.inventory.FurnaceInventoryWindow
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindMouseInputHandler
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
-import ru.fredboy.cavedroid.domain.items.model.item.InventoryItem.Companion.isNoneOrNull
+import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem.Companion.isNoneOrNull
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
-import ru.fredboy.cavedroid.game.controller.container.model.Furnace
+import ru.fredboy.cavedroid.entity.container.model.Furnace
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
 

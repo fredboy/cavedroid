@@ -3,7 +3,7 @@ package ru.deadsoftware.cavedroid.game.render
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindRenderer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.cycledInsideWorld
 import ru.fredboy.cavedroid.common.utils.drawSprite

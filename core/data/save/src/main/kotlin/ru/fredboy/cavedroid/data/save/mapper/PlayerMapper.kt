@@ -1,10 +1,12 @@
 package ru.fredboy.cavedroid.data.save.mapper
 
+import com.badlogic.gdx.math.Vector2
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.assets.usecase.GetPlayerSpritesUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
-import ru.fredboy.cavedroid.game.controller.mob.model.Player
+import ru.fredboy.cavedroid.entity.mob.model.Player
+import ru.fredboy.cavedroid.game.controller.mob.behavior.PlayerMobBehavior
 import javax.inject.Inject
 
 @Reusable
@@ -44,9 +46,10 @@ class PlayerMapper @Inject constructor(
             blockDamage = player.blockDamage,
             cursorX = player.cursorX,
             cursorY = player.cursorY,
-            spawnPointX = 0f,
-            spawnPointY = 0f,
-            controlMode = controlModeMapper.mapSaveData(player.controlMode)
+            spawnPointX = player.spawnPoint?.x ?: 0f,
+            spawnPointY = player.spawnPoint?.y ?: 0f,
+            controlMode = controlModeMapper.mapSaveData(player.controlMode),
+            activeSlot = player.activeSlot,
         )
     }
 
@@ -57,7 +60,8 @@ class PlayerMapper @Inject constructor(
             sprite = getPlayerSpritesUseCase(),
             getFallbackItem = getFallbackItemUseCase,
             x = saveDataDto.x,
-            y = saveDataDto.y
+            y = saveDataDto.y,
+            behavior = PlayerMobBehavior()
         ).apply {
             width = saveDataDto.width
             height = saveDataDto.height
@@ -81,6 +85,8 @@ class PlayerMapper @Inject constructor(
             cursorX = saveDataDto.cursorX
             cursorY = saveDataDto.cursorY
             controlMode = controlModeMapper.mapControlMode(saveDataDto.controlMode)
+            spawnPoint = Vector2(saveDataDto.spawnPointX, saveDataDto.spawnPointY)
+            activeSlot = saveDataDto.activeSlot
         }
     }
 

@@ -1,35 +1,93 @@
 package ru.fredboy.cavedroid.game.controller.drop
 
-import ru.fredboy.cavedroid.game.controller.drop.listener.DropAddedListener
-import ru.fredboy.cavedroid.game.controller.drop.listener.DropRemovedListener
-import ru.fredboy.cavedroid.game.controller.drop.model.Drop
-import ru.fredboy.cavedroid.domain.items.model.item.InventoryItem
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.blockCenterPx
+import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
+import ru.fredboy.cavedroid.domain.world.model.Layer
+import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
+import ru.fredboy.cavedroid.entity.drop.model.Drop
+import java.util.*
+import javax.inject.Inject
 
-interface DropController {
+@GameScope
+class DropController @Inject constructor(
+    private val itemsRepository: ItemsRepository,
+    private val dropWorldAdapter: DropWorldAdapter,
+) : OnBlockDestroyedListener {
 
-    val size: Int
+    private val drops = LinkedList<Drop>()
 
-    fun getAllDrop(): Collection<Drop>
+    constructor(
+        itemsRepository: ItemsRepository,
+        dropWorldAdapter: DropWorldAdapter,
+        initialDrop: Collection<Drop>
+    ) : this(itemsRepository, dropWorldAdapter) {
+        drops.addAll(initialDrop.filterNot { drop -> drop.item.isNone() })
+    }
 
-    fun addDrop(drop: Drop)
+    val size get() = drops.size
 
-    fun addDrop(x: Float, y: Float, item: Item, count: Int)
+    init {
+        dropWorldAdapter.addOnBlockDestroyedListener(this)
+    }
 
-    fun addDrop(x: Float, y: Float, inventoryItem: InventoryItem)
+    fun getAllDrop(): Collection<Drop> {
+        return drops
+    }
 
-    fun forEach(action: (Drop) -> Unit)
+    fun addDrop(drop: Drop) {
+        if (drop.item.isNone()) {
+            return
+        }
 
-    fun update(delta: Float)
+        drops.add(drop)
+    }
 
-    fun addDropAddedListener(listener: DropAddedListener)
+    fun addDrop(x: Float, y: Float, item: Item, count: Int) {
+        addDrop(Drop(x, y, item, count))
+    }
 
-    fun removeDropAddedListener(listener: DropAddedListener)
+    fun addDrop(x: Float, y: Float, inventoryItem: InventoryItem) {
+        addDrop(x, y, inventoryItem.item, inventoryItem.amount)
+    }
 
-    fun addDropRemovedListener(listener: DropRemovedListener)
+    fun forEach(action: (Drop) -> Unit) {
+        drops.forEach(action)
+    }
 
-    fun removeDropRemovedListener(listener: DropRemovedListener)
+    fun update(delta: Float) {
+        val iterator = drops.iterator()
 
-    fun dispose()
+        while (iterator.hasNext()) {
+            val drop = iterator.next();
+            if (drop.isPickedUp) {
+                iterator.remove()
+            }
+        }
+    }
+
+    fun dispose() {
+        drops.clear()
+    }
+
+    override fun onBlockDestroyed(block: Block, x: Int, y: Int, layer: Layer, withDrop: Boolean) {
+        if (!withDrop) {
+            return
+        }
+
+        val dropInfo = block.params.dropInfo ?: return
+        val item = itemsRepository.getItemByKey(dropInfo.itemKey).takeIf { !it.isNone() } ?: return
+
+        addDrop(
+            x = x.blockCenterPx() - Drop.DROP_SIZE / 2,
+            y = y.blockCenterPx() - Drop.DROP_SIZE / 2,
+            item = item,
+            count = dropInfo.count
+        )
+    }
 
 }

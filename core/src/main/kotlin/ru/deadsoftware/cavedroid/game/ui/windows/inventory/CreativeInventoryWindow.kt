@@ -2,7 +2,7 @@ package ru.deadsoftware.cavedroid.game.ui.windows.inventory
 
 import ru.deadsoftware.cavedroid.game.GameUiWindow
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
-import ru.fredboy.cavedroid.domain.items.model.item.InventoryItem
+import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 
 class CreativeInventoryWindow() : AbstractInventoryWindow() {

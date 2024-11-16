@@ -3,7 +3,7 @@ package ru.fredboy.cavedroid.data.save.mapper
 import com.badlogic.gdx.Gdx
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
-import ru.fredboy.cavedroid.game.controller.mob.model.Direction
+import ru.fredboy.cavedroid.entity.mob.model.Direction
 import javax.inject.Inject
 
 @Reusable

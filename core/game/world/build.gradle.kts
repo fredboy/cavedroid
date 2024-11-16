@@ -12,8 +12,8 @@ dependencies {
 
     useCommonModule()
     useModule(":core:domain:items")
-
-    useModule(":core:game:controller:container")
-    useModule(":core:game:controller:drop")
-    useModule(":core:game:controller:mob")
+    useModule(":core:domain:world")
+    useModule(":core:entity:container")
+    useModule(":core:entity:drop")
+    useModule(":core:entity:mob")
 }

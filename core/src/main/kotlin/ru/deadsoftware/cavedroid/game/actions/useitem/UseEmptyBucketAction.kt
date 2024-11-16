@@ -1,6 +1,6 @@
 package ru.deadsoftware.cavedroid.game.actions.useitem
 
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindUseItemAction
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindUseItemAction
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.item.Item

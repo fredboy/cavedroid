@@ -28,8 +28,8 @@ import ru.fredboy.cavedroid.common.utils.RenderingUtilsKt;
 import ru.fredboy.cavedroid.domain.assets.model.TouchButton;
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase;
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase;
+import ru.fredboy.cavedroid.entity.mob.model.Player;
 import ru.fredboy.cavedroid.game.controller.mob.MobController;
-import ru.fredboy.cavedroid.game.controller.mob.model.Player;
 import ru.fredboy.cavedroid.game.world.GameWorld;
 
 import javax.inject.Inject;

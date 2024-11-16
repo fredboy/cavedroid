@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.domain.items.model.item
 
 import com.badlogic.gdx.graphics.g2d.Sprite
+import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import ru.fredboy.cavedroid.domain.items.model.block.Block as DomainBlockModel

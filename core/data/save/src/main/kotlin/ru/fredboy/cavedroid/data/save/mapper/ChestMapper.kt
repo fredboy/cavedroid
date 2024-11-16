@@ -3,7 +3,7 @@ package ru.fredboy.cavedroid.data.save.mapper
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
-import ru.fredboy.cavedroid.game.controller.container.model.Chest
+import ru.fredboy.cavedroid.entity.container.model.Chest
 import javax.inject.Inject
 
 @Reusable

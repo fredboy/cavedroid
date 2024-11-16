@@ -3,7 +3,6 @@ package ru.deadsoftware.cavedroid.game.world
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
-import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
@@ -13,7 +12,6 @@ import kotlin.math.max
 class GameWorldMobDamageControllerTask @Inject constructor(
     private val mobController: MobController,
     private val gameWorld: GameWorld,
-    private val itemsRepository: ItemsRepository,
 ) : Timer.Task() {
 
     override fun run() {

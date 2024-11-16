@@ -1,6 +1,6 @@
 package ru.deadsoftware.cavedroid.game.actions.placeblock
 
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindPlaceBlockAction
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindPlaceBlockAction
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.game.controller.mob.MobController

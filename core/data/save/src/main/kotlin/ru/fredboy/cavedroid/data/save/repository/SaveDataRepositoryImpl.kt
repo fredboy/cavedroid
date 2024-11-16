@@ -9,18 +9,13 @@ import ru.fredboy.cavedroid.data.save.mapper.ContainerControllerMapper
 import ru.fredboy.cavedroid.data.save.mapper.DropControllerMapper
 import ru.fredboy.cavedroid.data.save.mapper.MobControllerMapper
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
-import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
-import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
-import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.domain.save.model.GameSaveData
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
-import ru.fredboy.cavedroid.game.controller.container.impl.ContainerControllerImpl
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
-import ru.fredboy.cavedroid.game.controller.mob.impl.MobControllerImpl
 import ru.fredboy.cavedroid.game.world.GameWorld
 import java.nio.ByteBuffer
 import java.util.zip.GZIPInputStream
@@ -203,9 +198,9 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         val mobsFile = Gdx.files.absolute("$savesPath$MOBS_FILE")
         val containersFile = Gdx.files.absolute("$savesPath$CONTAINERS_FILE")
 
-        val dropBytes = ProtoBuf.encodeToByteArray(dropControllerMapper.mapSaveData(dropController))
-        val mobsBytes = ProtoBuf.encodeToByteArray(mobControllerMapper.mapSaveData(mobController as MobControllerImpl))
-        val containersBytes = ProtoBuf.encodeToByteArray(containerControllerMapper.mapSaveData(containerController as ContainerControllerImpl))
+        val dropBytes = ProtoBuf.encodeToByteArray(dropControllerMapper.mapSaveData(dropController as DropController))
+        val mobsBytes = ProtoBuf.encodeToByteArray(mobControllerMapper.mapSaveData(mobController as MobController))
+        val containersBytes = ProtoBuf.encodeToByteArray(containerControllerMapper.mapSaveData(containerController as ContainerController))
 
         dropFile.writeBytes(dropBytes, false)
         mobsFile.writeBytes(mobsBytes, false)

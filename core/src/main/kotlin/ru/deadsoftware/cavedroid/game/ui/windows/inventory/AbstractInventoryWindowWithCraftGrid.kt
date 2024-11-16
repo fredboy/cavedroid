@@ -1,6 +1,6 @@
 package ru.deadsoftware.cavedroid.game.ui.windows.inventory
 
-import ru.fredboy.cavedroid.domain.items.model.item.InventoryItem
+import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 
 abstract class AbstractInventoryWindowWithCraftGrid(

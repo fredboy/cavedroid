@@ -7,15 +7,27 @@ include("core")
  */
 include("core:common")
 
-// data modules
+/**
+ * Data modules
+ */
 include("core:data:assets")
 include("core:data:items")
 include("core:data:save")
 
-// domain modules
+/**
+ * First level domain models
+ */
 include("core:domain:assets")
 include("core:domain:items")
+include("core:domain:world")
 include("core:domain:save")
+
+/**
+ * Second level domain models
+ */
+include("core:entity:container")
+include("core:entity:drop")
+include("core:entity:mob")
 
 /**
  * Game scope modules

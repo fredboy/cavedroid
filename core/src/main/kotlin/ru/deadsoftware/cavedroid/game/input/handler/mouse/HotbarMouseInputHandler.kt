@@ -1,21 +1,21 @@
 package ru.deadsoftware.cavedroid.game.input.handler.mouse
 
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
 import com.badlogic.gdx.utils.Timer
 import ru.deadsoftware.cavedroid.game.GameUiWindow
-import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
 import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler
 import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction
 import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.input.handler.keyboard.DropItemKeyboardInputHandler.Companion.DROP_DISTANCE
 import ru.deadsoftware.cavedroid.game.input.isInsideHotbar
+import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindMouseInputHandler
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.entity.drop.model.Drop
+import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.drop.DropController
-import ru.fredboy.cavedroid.game.controller.drop.model.Drop
 import ru.fredboy.cavedroid.game.controller.mob.MobController
-import ru.fredboy.cavedroid.game.controller.mob.model.Player
 import javax.inject.Inject
 
 @GameScope
@@ -82,18 +82,18 @@ class HotbarMouseInputHandler @Inject constructor(
     }
 
     private fun handleUp(action: MouseInputAction) {
-        mobController.player.inventory.activeSlot = getActionSlot(action)
+        mobController.player.activeSlot = getActionSlot(action)
     }
 
     private fun handleScroll(action: MouseInputAction) {
         if (action.actionKey !is MouseInputActionKey.Scroll) {
             return
         }
-        mobController.player.inventory.activeSlot += action.actionKey.amountY.toInt()
-        if (mobController.player.inventory.activeSlot < 0) {
-            mobController.player.inventory.activeSlot = Player.HOTBAR_SIZE - 1
-        } else if (mobController.player.inventory.activeSlot >= Player.HOTBAR_SIZE) {
-            mobController.player.inventory.activeSlot = 0
+        mobController.player.activeSlot += action.actionKey.amountY.toInt()
+        if (mobController.player.activeSlot < 0) {
+            mobController.player.activeSlot = Player.HOTBAR_SIZE - 1
+        } else if (mobController.player.activeSlot >= Player.HOTBAR_SIZE) {
+            mobController.player.activeSlot = 0
         }
     }
 

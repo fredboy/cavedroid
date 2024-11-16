@@ -9,16 +9,16 @@ import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsConfigs
 import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindMouseInputHandler
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindMouseInputHandler
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.common.utils.bl
 import ru.fredboy.cavedroid.common.utils.px
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByIndexUseCase
+import ru.fredboy.cavedroid.entity.mob.model.Direction
+import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
-import ru.fredboy.cavedroid.game.controller.mob.model.Direction
-import ru.fredboy.cavedroid.game.controller.mob.model.Player
 import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
@@ -133,7 +133,7 @@ class CursorMouseInputHandler @Inject constructor(
             !mainConfig.isTouch -> handleMouse(action)
         }
 
-        gameWorld.checkPlayerCursorBounds()
+        mobController.checkPlayerCursorBounds()
 
         if (player.controlMode == Player.ControlMode.WALK && mainConfig.isTouch) {
             setPlayerDirectionToCursor()

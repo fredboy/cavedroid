@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.MainConfig
 import ru.deadsoftware.cavedroid.game.debug.DebugInfoStringsProvider
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindRenderer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.common.utils.bl

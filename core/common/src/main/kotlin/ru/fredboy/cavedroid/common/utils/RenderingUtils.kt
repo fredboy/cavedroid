@@ -102,3 +102,5 @@ fun SpriteBatch.withScissors(
     flush()
     Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST)
 }
+
+fun Int.blockCenterPx() = (toFloat() + .5f).px

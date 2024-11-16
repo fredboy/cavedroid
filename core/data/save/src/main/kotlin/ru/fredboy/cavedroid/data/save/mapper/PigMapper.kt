@@ -3,7 +3,8 @@ package ru.fredboy.cavedroid.data.save.mapper
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.assets.usecase.GetPigSpritesUseCase
-import ru.fredboy.cavedroid.game.controller.mob.model.Pig
+import ru.fredboy.cavedroid.entity.mob.model.Pig
+import ru.fredboy.cavedroid.game.controller.mob.behavior.PigMobBehavior
 import javax.inject.Inject
 
 @Reusable
@@ -38,7 +39,8 @@ class PigMapper @Inject constructor(
         return Pig(
             sprite = getPigSpriteUseCase(),
             x = saveDataDto.x,
-            y = saveDataDto.y
+            y = saveDataDto.y,
+            behavior = PigMobBehavior(),
         ).apply {
             width = saveDataDto.width
             height = saveDataDto.height

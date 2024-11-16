@@ -4,16 +4,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.game.ui.TooltipManager
-import ru.deadsoftware.cavedroid.misc.annotations.multibinding.BindRenderer
+import ru.deadsoftware.cavedroid.misc.annotations.multibind.BindRenderer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.drawString
+import ru.fredboy.cavedroid.common.utils.px
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
-import ru.fredboy.cavedroid.common.utils.px
+import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
-import ru.fredboy.cavedroid.game.controller.mob.model.Player
 import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
@@ -103,7 +103,7 @@ class HudRenderer @Inject constructor(
         spriteBatch.draw(
             /* region = */ hotbarSelectorTexture,
             /* x = */ hotbarX - HotbarSelectorConfig.horizontalPadding
-                    + mobController.player.inventory.activeSlot * (HotbarConfig.itemSeparatorWidth + HotbarConfig.itemSlotSpace),
+                    + mobController.player.activeSlot * (HotbarConfig.itemSeparatorWidth + HotbarConfig.itemSlotSpace),
             /* y = */ -HotbarSelectorConfig.verticalPadding
         )
     }
