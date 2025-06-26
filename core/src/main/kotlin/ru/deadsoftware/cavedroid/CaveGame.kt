@@ -1,21 +1,23 @@
 package ru.deadsoftware.cavedroid
 
 import com.badlogic.gdx.Application
-import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader
 import ru.deadsoftware.cavedroid.prefs.PreferencesStore
 import ru.fredboy.cavedroid.common.utils.ratio
+import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository
 
 class CaveGame(
     private val gameDataDirectoryPath: String,
     private val isTouchScreen: Boolean,
     private val isDebug: Boolean,
     private val preferencesStore: PreferencesStore,
-) : Game() {
+) : BaseGame() {
 
     private val mainComponent: MainComponent
     private val mainConfig: MainConfig
+
+    private val gameConfigurationRepository: GameConfigurationRepository
 
     private val assetLoader: AssetLoader
 
@@ -27,6 +29,7 @@ class CaveGame(
 
         mainConfig = mainComponent.mainConfig
         assetLoader = mainComponent.assetLoader
+        gameConfigurationRepository = mainComponent.gameConfigurationRepository
     }
 
     private fun initMainConfig() {
@@ -34,11 +37,14 @@ class CaveGame(
         val height = width / Gdx.graphics.ratio
 
         mainConfig.mainComponent = mainComponent
-        mainConfig.gameFolder = gameDataDirectoryPath
-        mainConfig.isTouch = isTouchScreen
-        mainConfig.width = width
-        mainConfig.height = height
-        mainConfig.isShowInfo = isDebug
+
+        gameConfigurationRepository.apply {
+            setGameDirectory(gameDataDirectoryPath)
+            setTouch(isTouchScreen)
+            setWidth(width)
+            setHeight(height)
+            setShowInfo(isDebug)
+        }
 
         Gdx.app.logLevel = if (isDebug) Application.LOG_DEBUG else Application.LOG_ERROR
 
@@ -59,7 +65,7 @@ class CaveGame(
         setScreen(mainComponent.gameScreen.apply { loadGame() })
     }
 
-    fun quitGame() {
+    override fun quitGame() {
         screen?.dispose()
         setScreen(mainComponent.menuScreen)
     }

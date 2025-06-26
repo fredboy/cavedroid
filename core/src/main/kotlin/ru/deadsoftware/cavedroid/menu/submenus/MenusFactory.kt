@@ -6,6 +6,7 @@ import ru.deadsoftware.cavedroid.menu.MenuScope
 import ru.deadsoftware.cavedroid.menu.objects.ButtonRenderer
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import javax.inject.Inject
 
@@ -15,6 +16,7 @@ class MenusFactory @Inject constructor(
     private val assetLoader: AssetLoader,
     private val getTextureRegionByName: GetTextureRegionByNameUseCase,
     private val saveDataRepository: SaveDataRepository,
+    private val gameConfigurationRepository: GameConfigurationRepository,
 ) {
 
     fun getMainMenu(
@@ -31,7 +33,8 @@ class MenusFactory @Inject constructor(
             menuInput,
             assetLoader,
             getTextureRegionByName,
-            saveDataRepository
+            saveDataRepository,
+            gameConfigurationRepository,
         ).apply { init() }
     }
 

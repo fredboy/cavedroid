@@ -38,6 +38,7 @@ tasks.register<Jar>("dist") {
 }
 
 dependencies {
+    useCommonModule()
     implementation(project(":core"))
 
     implementation(Dependencies.LibGDX.gdx)

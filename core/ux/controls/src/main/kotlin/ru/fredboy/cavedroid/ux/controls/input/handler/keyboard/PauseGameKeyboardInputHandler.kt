@@ -1,0 +1,52 @@
+package ru.fredboy.cavedroid.ux.controls.input.handler.keyboard
+
+import ru.fredboy.cavedroid.common.api.GameController
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository
+import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
+import ru.fredboy.cavedroid.game.controller.container.ContainerController
+import ru.fredboy.cavedroid.game.controller.drop.DropController
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.window.GameWindowType
+import ru.fredboy.cavedroid.game.window.GameWindowsManager
+import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.ux.controls.input.IKeyboardInputHandler
+import ru.fredboy.cavedroid.ux.controls.input.action.KeyboardInputAction
+import ru.fredboy.cavedroid.ux.controls.input.action.keys.KeyboardInputActionKey
+import ru.fredboy.cavedroid.ux.controls.input.annotation.BindKeyboardInputHandler
+import javax.inject.Inject
+
+@GameScope
+@BindKeyboardInputHandler
+class PauseGameKeyboardInputHandler @Inject constructor(
+    private val gameConfigurationRepository: GameConfigurationRepository,
+    private val gameController: GameController,
+    private val dropController: DropController,
+    private val mobController: MobController,
+    private val gameWorld: GameWorld,
+    private val containerController: ContainerController,
+    private val gameWindowsManager: GameWindowsManager,
+    private val saveDataRepository: SaveDataRepository,
+) : IKeyboardInputHandler {
+
+    override fun checkConditions(action: KeyboardInputAction): Boolean {
+        return action.actionKey is KeyboardInputActionKey.Pause && action.isKeyDown
+    }
+
+    override fun handle(action: KeyboardInputAction) {
+        if (gameWindowsManager.currentWindowType != GameWindowType.NONE) {
+            gameWindowsManager.closeWindow()
+            return
+        }
+
+        saveDataRepository.save(
+            gameDataFolder = gameConfigurationRepository.getGameDirectory(),
+            dropController = dropController,
+            mobController = mobController,
+            containerController = containerController,
+            gameWorld = gameWorld,
+        )
+
+        gameController.quitGame()
+    }
+}

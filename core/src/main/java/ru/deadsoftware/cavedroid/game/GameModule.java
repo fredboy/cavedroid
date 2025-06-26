@@ -5,6 +5,7 @@ import dagger.Provides;
 import ru.deadsoftware.cavedroid.MainConfig;
 import ru.fredboy.cavedroid.common.di.GameScope;
 import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository;
+import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository;
 import ru.fredboy.cavedroid.domain.items.model.block.Block;
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository;
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase;
@@ -32,13 +33,13 @@ public class GameModule {
 
     @Provides
     @GameScope
-    public static DropController provideDropController(MainConfig mainConfig,
+    public static DropController provideDropController(GameConfigurationRepository gameConfigurationRepository,
                                                        SaveDataRepository saveDataRepository,
                                                        ItemsRepository itemsRepository,
                                                        DropWorldAdapter dropWorldAdapter) {
 
         DropController controller = needLoad
-                ? saveDataRepository.loadDropController(mainConfig.getGameFolder(), dropWorldAdapter)
+                ? saveDataRepository.loadDropController(gameConfigurationRepository.getGameDirectory(), dropWorldAdapter)
                 : new DropController(itemsRepository, dropWorldAdapter);
 
         return controller;
@@ -46,14 +47,14 @@ public class GameModule {
 
     @Provides
     @GameScope
-    public static ContainerController provideFurnaceController(MainConfig mainConfig,
+    public static ContainerController provideFurnaceController(GameConfigurationRepository gameConfigurationRepository,
                                                                SaveDataRepository saveDataRepository,
                                                                GetItemByKeyUseCase getItemByKeyUseCase,
                                                                ContainerWorldAdapter containerWorldAdapter,
                                                                ContainerFactory containerFactory,
                                                                DropAdapter dropAdapter) {
         ContainerController controller = needLoad
-                ? saveDataRepository.loadContainerController(mainConfig.getGameFolder(), containerWorldAdapter, containerFactory, dropAdapter)
+                ? saveDataRepository.loadContainerController(gameConfigurationRepository.getGameDirectory(), containerWorldAdapter, containerFactory, dropAdapter)
                 : new ContainerController(getItemByKeyUseCase, containerWorldAdapter, containerFactory, dropAdapter);
 
         return controller;
@@ -61,24 +62,24 @@ public class GameModule {
 
     @Provides
     @GameScope
-    public static MobController provideMobsController(MainConfig mainConfig,
+    public static MobController provideMobsController(GameConfigurationRepository gameConfigurationRepository,
                                                       SaveDataRepository saveDataRepository,
                                                       MobAssetsRepository mobAssetsRepository,
                                                       GetFallbackItemUseCase getFallbackItemUseCase,
                                                       MobWorldAdapter mobWorldAdapter) {
 
         return needLoad
-                ? saveDataRepository.loadMobController(mainConfig.getGameFolder(), mobWorldAdapter)
+                ? saveDataRepository.loadMobController(gameConfigurationRepository.getGameDirectory(), mobWorldAdapter)
                 : new MobController(mobAssetsRepository, getFallbackItemUseCase, mobWorldAdapter);
     }
 
     @Provides
     @GameScope
-    public static GameWorld provideGameWorld(MainConfig mainConfig,
+    public static GameWorld provideGameWorld(GameConfigurationRepository gameConfigurationRepository,
                                              SaveDataRepository saveDataRepository,
                                              ItemsRepository itemsRepository) {
 
-        final GameMapSaveData mapData = needLoad ? saveDataRepository.loadMap(mainConfig.getGameFolder()) : null;
+        final GameMapSaveData mapData = needLoad ? saveDataRepository.loadMap(gameConfigurationRepository.getGameDirectory()) : null;
 
         Block[][] fm = mapData != null ? mapData.retrieveForeMap() : null;
         Block[][] bm = mapData != null ? mapData.retrieveBackMap() : null;

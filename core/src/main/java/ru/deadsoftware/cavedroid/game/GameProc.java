@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Timer;
 import ru.deadsoftware.cavedroid.MainConfig;
-import ru.deadsoftware.cavedroid.game.world.GameWorldBlocksLogicControllerTask;
-import ru.deadsoftware.cavedroid.game.world.GameWorldFluidsLogicControllerTask;
-import ru.deadsoftware.cavedroid.game.world.GameWorldMobDamageControllerTask;
+import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository;
+import ru.fredboy.cavedroid.ux.physics.GamePhysics;
+import ru.fredboy.cavedroid.ux.physics.task.GameWorldBlocksLogicControllerTask;
+import ru.fredboy.cavedroid.ux.physics.task.GameWorldFluidsLogicControllerTask;
+import ru.fredboy.cavedroid.ux.physics.task.GameWorldMobDamageControllerTask;
 import ru.fredboy.cavedroid.common.di.GameScope;
 import ru.fredboy.cavedroid.entity.mob.model.Player;
 import ru.fredboy.cavedroid.game.controller.container.ContainerController;
@@ -28,7 +30,7 @@ public class GameProc implements Disposable {
     private final Timer mWorldLogicTimer = new Timer();
 
     @Inject
-    public GameProc(MainConfig mainConfig,
+    public GameProc(GameConfigurationRepository gameConfigurationRepository,
                     GamePhysics gamePhysics,
                     GameRenderer gameRenderer,
                     MobController mobsController,
@@ -45,7 +47,7 @@ public class GameProc implements Disposable {
         mGameWorldBlocksLogicControllerTask = gameWorldBlocksLogicControllerTask;
         mGameWorldMobDamageControllerTask = gameWorldMobDamageControllerTask;
 
-        mobsController.getPlayer().setControlMode(mainConfig.isTouch() ? Player.ControlMode.WALK : Player.ControlMode.CURSOR);
+        mobsController.getPlayer().setControlMode(gameConfigurationRepository.isTouch() ? Player.ControlMode.WALK : Player.ControlMode.CURSOR);
 
         mWorldLogicTimer.scheduleTask(gameWorldFluidsLogicControllerTask, 0,
                 GameWorldFluidsLogicControllerTask.FLUID_UPDATE_INTERVAL_SEC);

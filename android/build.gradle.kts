@@ -116,6 +116,7 @@ tasks.whenTaskAdded {
 }
 
 dependencies {
+    useCommonModule()
     implementation((project(":core")))
     implementation(platform(Dependencies.Kotlin.bom))
 

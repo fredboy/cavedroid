@@ -7,6 +7,7 @@ import ru.deadsoftware.cavedroid.menu.objects.ButtonEventListener;
 import ru.deadsoftware.cavedroid.menu.objects.ButtonRenderer;
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase;
+import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository;
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository;
 
 import java.util.HashMap;
@@ -15,6 +16,8 @@ public class MenuMain extends Menu {
 
     private final SaveDataRepository mSaveDataRepository;
 
+    private final GameConfigurationRepository mGameConfigurationRepository;
+
     public MenuMain(float width,
                     float height,
                     ButtonRenderer buttonRenderer,
@@ -22,9 +25,11 @@ public class MenuMain extends Menu {
                     MenuProc.Input menuInput,
                     AssetLoader assetLoader,
                     GetTextureRegionByNameUseCase getTextureRegionByNameUseCase,
-                    SaveDataRepository saveDataRepository) {
+                    SaveDataRepository saveDataRepository,
+                    GameConfigurationRepository gameConfigurationRepository) {
         super(width, height, buttonRenderer, mainConfig, menuInput, assetLoader, getTextureRegionByNameUseCase);
         mSaveDataRepository = saveDataRepository;
+        mGameConfigurationRepository = gameConfigurationRepository;
     }
 
     @Override
@@ -40,7 +45,7 @@ public class MenuMain extends Menu {
     @Override
     protected void initButtons() {
         loadButtonsFromJson(mAssetLoader.getAssetHandle("json/menu_main_buttons.json"));
-        if (mSaveDataRepository.exists(mMainConfig.getGameFolder())) {
+        if (mSaveDataRepository.exists(mGameConfigurationRepository.getGameDirectory())) {
             getButtons().get("load_game").setType(Button.NORMAL);
         }
     }

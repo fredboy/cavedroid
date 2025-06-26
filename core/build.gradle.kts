@@ -23,29 +23,11 @@ dependencies {
 
     useCommonModule()
 
-    // data
-    useModule(":core:data:assets")
-    useModule(":core:data:items")
-    useModule(":core:data:save")
-
-    // domain
-    useModule(":core:domain:assets")
-    useModule(":core:domain:items")
-    useModule(":core:domain:world")
-    useModule(":core:domain:save")
-
-    //entity
-    useModule(":core:entity:container")
-    useModule(":core:entity:drop")
-    useModule(":core:entity:mob")
-
-    // controller
-    useModule(":core:game:controller:drop")
-    useModule(":core:game:controller:container")
-    useModule(":core:game:controller:mob")
-
-    // world
-    useModule(":core:game:world")
+    useDataModules()
+    useDomainModules()
+    useEntityModules()
+    useGameModules()
+    useUxModules()
 
     implementation(Dependencies.jetbrainsAnnotations)
 }

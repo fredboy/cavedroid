@@ -9,18 +9,20 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
 import org.jetbrains.annotations.Nullable;
 import ru.deadsoftware.cavedroid.MainConfig;
-import ru.deadsoftware.cavedroid.game.input.IKeyboardInputHandler;
-import ru.deadsoftware.cavedroid.game.input.IMouseInputHandler;
-import ru.deadsoftware.cavedroid.game.input.Joystick;
-import ru.deadsoftware.cavedroid.game.input.action.KeyboardInputAction;
-import ru.deadsoftware.cavedroid.game.input.action.MouseInputAction;
-import ru.deadsoftware.cavedroid.game.input.action.keys.MouseInputActionKey;
-import ru.deadsoftware.cavedroid.game.input.handler.mouse.CursorMouseInputHandler;
-import ru.deadsoftware.cavedroid.game.input.mapper.KeyboardInputActionMapper;
-import ru.deadsoftware.cavedroid.game.input.mapper.MouseInputActionMapper;
-import ru.deadsoftware.cavedroid.game.render.IGameRenderer;
-import ru.deadsoftware.cavedroid.game.ui.TooltipManager;
-import ru.deadsoftware.cavedroid.game.ui.windows.GameWindowsManager;
+import ru.fredboy.cavedroid.common.model.Joystick;
+import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository;
+import ru.fredboy.cavedroid.game.window.GameWindowType;
+import ru.fredboy.cavedroid.game.window.GameWindowsManager;
+import ru.fredboy.cavedroid.game.window.TooltipManager;
+import ru.fredboy.cavedroid.ux.controls.input.IKeyboardInputHandler;
+import ru.fredboy.cavedroid.ux.controls.input.IMouseInputHandler;
+import ru.fredboy.cavedroid.ux.controls.input.action.KeyboardInputAction;
+import ru.fredboy.cavedroid.ux.controls.input.action.MouseInputAction;
+import ru.fredboy.cavedroid.ux.controls.input.action.keys.MouseInputActionKey;
+import ru.fredboy.cavedroid.ux.controls.input.handler.mouse.CursorMouseInputHandler;
+import ru.fredboy.cavedroid.ux.controls.input.mapper.KeyboardInputActionMapper;
+import ru.fredboy.cavedroid.ux.controls.input.mapper.MouseInputActionMapper;
+import ru.fredboy.cavedroid.ux.rendering.IGameRenderer;
 import ru.deadsoftware.cavedroid.misc.Renderer;
 import ru.fredboy.cavedroid.common.di.GameScope;
 import ru.fredboy.cavedroid.common.utils.MeasureUnitsUtilsKt;
@@ -43,7 +45,7 @@ public class GameRenderer extends Renderer {
     private static final float DRAG_THRESHOLD = 1f;
     private static final TouchButton nullButton = new TouchButton(new Rectangle(), -1, true);
 
-    private final MainConfig mMainConfig;
+    private final GameConfigurationRepository mGameConfigurationRepository;
     private final MobController mMobsController;
     private final GameWorld mGameWorld;
     private final List<IGameRenderer> mRenderers;
@@ -65,7 +67,7 @@ public class GameRenderer extends Renderer {
     private long mCameraDelayMs = 0L;
 
     @Inject
-    GameRenderer(MainConfig mainConfig,
+    GameRenderer(GameConfigurationRepository gameConfigurationRepository,
                  MobController mobsController,
                  GameWorld gameWorld,
                  Set<IGameRenderer> renderers,
@@ -78,9 +80,9 @@ public class GameRenderer extends Renderer {
                  TooltipManager tooltipManager,
                  GetFontUseCase getFontUseCase,
                  GetTouchButtonsUseCase getTouchButtonsUseCase) {
-        super(mainConfig.getWidth(), mainConfig.getHeight());
+        super(gameConfigurationRepository.getWidth(), gameConfigurationRepository.getHeight());
 
-        mMainConfig = mainConfig;
+        mGameConfigurationRepository = gameConfigurationRepository;
         mMobsController = mobsController;
         mGameWorld = gameWorld;
         mRenderers = new ArrayList<>(renderers);
@@ -103,7 +105,7 @@ public class GameRenderer extends Renderer {
         mouseLeftTouchButton = new TouchButton(new Rectangle(getWidth() / 2, 0f, getWidth() / 2, getHeight() / 2), Input.Buttons.LEFT, true);
         mouseRightTouchButton = new TouchButton(new Rectangle(getWidth() / 2, getHeight() / 2, getWidth() / 2, getHeight() / 2), Input.Buttons.RIGHT, true);
 
-        mMainConfig.setJoystick(new Joystick(mMobsController.getPlayer().getSpeed()));
+        mGameConfigurationRepository.setJoystick(new Joystick(mMobsController.getPlayer().getSpeed()));
 
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f);
     }
@@ -119,7 +121,7 @@ public class GameRenderer extends Renderer {
 
         float camTargetX, camTargetY;
 
-        boolean followPlayer = player.getControlMode() == Player.ControlMode.WALK || !mMainConfig.isTouch();
+        boolean followPlayer = player.getControlMode() == Player.ControlMode.WALK || !mGameConfigurationRepository.isTouch();
 
         if (followPlayer) {
             camTargetX = plTargetX + Math.min(player.getVelocity().x * 2, getWidth() / 2);
@@ -193,7 +195,7 @@ public class GameRenderer extends Renderer {
     }
 
     private void updateCameraPosition(float delta) {
-        if (mMainConfig.isUseDynamicCamera()) {
+        if (mGameConfigurationRepository.useDynamicCamera()) {
             updateDynamicCameraPosition(delta);
         } else {
             updateStaticCameraPosition();
@@ -260,9 +262,9 @@ public class GameRenderer extends Renderer {
         float touchX = transformScreenX(screenX);
         float touchY = transformScreenY(screenY);
 
-        final Joystick joy = mMainConfig.getJoystick();
+        final Joystick joy = mGameConfigurationRepository.getJoystick();
 
-        if (mMainConfig.isTouch()) {
+        if (mGameConfigurationRepository.isTouch()) {
             if (joy != null && joy.getActive() && joy.getPointer() == pointer) {
                 return onMouseActionEvent(screenX, screenY, nullButton.getCode(), true, pointer);
             }
@@ -279,7 +281,7 @@ public class GameRenderer extends Renderer {
     }
 
     private TouchButton getTouchedKey(float touchX, float touchY) {
-        if (mGameWindowsManager.getCurrentWindowType() != GameUiWindow.NONE) {
+        if (mGameWindowsManager.getCurrentWindowType() != GameWindowType.NONE) {
             return nullButton;
         }
         for (Map.Entry<String, TouchButton> entry : mGetTouchButtonsUseCase.invoke().entrySet()) {
@@ -308,7 +310,7 @@ public class GameRenderer extends Renderer {
         mTouchDownX = touchX;
         mTouchDownY = touchY;
 
-        if (mMainConfig.isTouch()) {
+        if (mGameConfigurationRepository.isTouch()) {
             TouchButton touchedKey = getTouchedKey(touchX, touchY);
             if (touchedKey.isMouse()) {
                 return onMouseActionEvent(screenX, screenY, touchedKey.getCode(), false, pointer);
@@ -377,10 +379,10 @@ public class GameRenderer extends Renderer {
     public void render(float delta) {
         updateCameraPosition(delta);
 
-        if (mMainConfig.getJoystick() != null && mMainConfig.getJoystick().getActive()) {
-            mMainConfig.getJoystick().updateState(
-                    transformScreenX(Gdx.input.getX(mMainConfig.getJoystick().getPointer())),
-                    transformScreenY(Gdx.input.getY(mMainConfig.getJoystick().getPointer()))
+        if (mGameConfigurationRepository.getJoystick() != null && mGameConfigurationRepository.getJoystick().getActive()) {
+            mGameConfigurationRepository.getJoystick().updateState(
+                    transformScreenX(Gdx.input.getX(mGameConfigurationRepository.getJoystick().getPointer())),
+                    transformScreenY(Gdx.input.getY(mGameConfigurationRepository.getJoystick().getPointer()))
             );
         }
 

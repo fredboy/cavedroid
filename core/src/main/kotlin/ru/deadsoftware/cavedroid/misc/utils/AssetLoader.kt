@@ -23,12 +23,4 @@ class AssetLoader @Inject constructor(
         }
     }
 
-    fun getGameRendererWidth(): Float {
-        return mainConfig.width
-    }
-
-    fun getGameRendererHeight(): Float {
-        return mainConfig.height
-    }
-
 }

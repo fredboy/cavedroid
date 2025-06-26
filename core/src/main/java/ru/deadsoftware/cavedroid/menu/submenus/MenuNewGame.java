@@ -7,7 +7,6 @@ import ru.deadsoftware.cavedroid.menu.objects.ButtonRenderer;
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase;
 
-import javax.inject.Inject;
 import java.util.HashMap;
 
 public class MenuNewGame extends Menu {
