@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader
 import ru.deadsoftware.cavedroid.prefs.PreferencesStore
 import ru.fredboy.cavedroid.common.utils.ratio
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 
 class CaveGame(
     private val gameDataDirectoryPath: String,
@@ -17,7 +17,7 @@ class CaveGame(
     private val mainComponent: MainComponent
     private val mainConfig: MainConfig
 
-    private val gameConfigurationRepository: GameConfigurationRepository
+    private val mGameContextRepository: GameContextRepository
 
     private val assetLoader: AssetLoader
 
@@ -29,7 +29,7 @@ class CaveGame(
 
         mainConfig = mainComponent.mainConfig
         assetLoader = mainComponent.assetLoader
-        gameConfigurationRepository = mainComponent.gameConfigurationRepository
+        mGameContextRepository = mainComponent.gameContextRepository
     }
 
     private fun initMainConfig() {
@@ -38,7 +38,7 @@ class CaveGame(
 
         mainConfig.mainComponent = mainComponent
 
-        gameConfigurationRepository.apply {
+        mGameContextRepository.apply {
             setGameDirectory(gameDataDirectoryPath)
             setTouch(isTouchScreen)
             setWidth(width)

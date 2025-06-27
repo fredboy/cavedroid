@@ -12,7 +12,7 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase;
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase;
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase;
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase;
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository;
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository;
 
 import javax.inject.Inject;
 
@@ -63,7 +63,7 @@ public class MenuProc extends Renderer {
 
     private final MainConfig mMainConfig;
 
-    private final GameConfigurationRepository mGameConfigurationRepository;
+    private final GameContextRepository mGameContextRepository;
 
     private final MenuMain mMenuMain;
     private final MenuNewGame mMenuNewGame;
@@ -80,17 +80,17 @@ public class MenuProc extends Renderer {
     @Inject
     public MenuProc(
             MainConfig mainConfig,
-            GameConfigurationRepository gameConfigurationRepository,
+            GameContextRepository gameContextRepository,
             MenusFactory menusFactory,
             GetFontUseCase getFontUseCase,
             GetStringWidthUseCase getStringWidthUseCase,
             GetStringHeightUseCase getStringHeightUseCase,
             GetTextureRegionByNameUseCase getTextureRegionByNameUseCase
     ) {
-        super(gameConfigurationRepository.getWidth(), gameConfigurationRepository.getHeight());
+        super(gameContextRepository.getWidth(), gameContextRepository.getHeight());
 
         mMainConfig = mainConfig;
-        mGameConfigurationRepository = gameConfigurationRepository;
+        mGameContextRepository = gameContextRepository;
         mGetFontUseCase = getFontUseCase;
         mGetStringWidthUseCase = getStringWidthUseCase;
         mGetStringHeightUseCase = getStringHeightUseCase;

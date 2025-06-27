@@ -52,6 +52,10 @@ public abstract class Renderer implements InputProcessor {
         mCameraViewport.y = y;
     }
 
+    public OrthographicCamera getCamera() {
+        return camera;
+    }
+
     public Rectangle getCameraViewport() {
         return mCameraViewport;
     }

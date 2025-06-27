@@ -13,7 +13,7 @@ import ru.fredboy.cavedroid.data.save.di.DataSaveModule
 import ru.fredboy.cavedroid.domain.assets.repository.*
 import ru.fredboy.cavedroid.domain.assets.usecase.DisposeAssetsUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.InitializeAssetsUseCase
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import javax.inject.Singleton
@@ -55,7 +55,7 @@ interface MainComponent {
 
     val saveDataRepository: SaveDataRepository
 
-    val gameConfigurationRepository: GameConfigurationRepository
+    val gameContextRepository: GameContextRepository
 
     val gameController: GameController
 

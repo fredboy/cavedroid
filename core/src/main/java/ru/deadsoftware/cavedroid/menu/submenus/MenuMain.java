@@ -7,7 +7,7 @@ import ru.deadsoftware.cavedroid.menu.objects.ButtonEventListener;
 import ru.deadsoftware.cavedroid.menu.objects.ButtonRenderer;
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader;
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase;
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository;
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository;
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository;
 
 import java.util.HashMap;
@@ -16,7 +16,7 @@ public class MenuMain extends Menu {
 
     private final SaveDataRepository mSaveDataRepository;
 
-    private final GameConfigurationRepository mGameConfigurationRepository;
+    private final GameContextRepository mGameContextRepository;
 
     public MenuMain(float width,
                     float height,
@@ -26,10 +26,10 @@ public class MenuMain extends Menu {
                     AssetLoader assetLoader,
                     GetTextureRegionByNameUseCase getTextureRegionByNameUseCase,
                     SaveDataRepository saveDataRepository,
-                    GameConfigurationRepository gameConfigurationRepository) {
+                    GameContextRepository gameContextRepository) {
         super(width, height, buttonRenderer, mainConfig, menuInput, assetLoader, getTextureRegionByNameUseCase);
         mSaveDataRepository = saveDataRepository;
-        mGameConfigurationRepository = gameConfigurationRepository;
+        mGameContextRepository = gameContextRepository;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class MenuMain extends Menu {
     @Override
     protected void initButtons() {
         loadButtonsFromJson(mAssetLoader.getAssetHandle("json/menu_main_buttons.json"));
-        if (mSaveDataRepository.exists(mGameConfigurationRepository.getGameDirectory())) {
+        if (mSaveDataRepository.exists(mGameContextRepository.getGameDirectory())) {
             getButtons().get("load_game").setType(Button.NORMAL);
         }
     }

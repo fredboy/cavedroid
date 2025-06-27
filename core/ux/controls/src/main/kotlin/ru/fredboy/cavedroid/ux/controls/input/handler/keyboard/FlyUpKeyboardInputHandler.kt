@@ -1,7 +1,7 @@
 package ru.fredboy.cavedroid.ux.controls.input.handler.keyboard
 
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.ux.controls.input.IKeyboardInputHandler
@@ -13,7 +13,7 @@ import javax.inject.Inject
 @GameScope
 @BindKeyboardInputHandler
 class FlyUpKeyboardInputHandler @Inject constructor(
-    private val gameConfigurationRepository: GameConfigurationRepository,
+    private val gameContextRepository: GameContextRepository,
     private val mobController: MobController,
 ) : IKeyboardInputHandler {
 
@@ -21,7 +21,7 @@ class FlyUpKeyboardInputHandler @Inject constructor(
         return action.actionKey is KeyboardInputActionKey.Up &&
                 !mobController.player.swim &&
                 mobController.player.isFlyMode &&
-                (mobController.player.controlMode == Player.ControlMode.WALK || !gameConfigurationRepository.isTouch())
+                (mobController.player.controlMode == Player.ControlMode.WALK || !gameContextRepository.isTouch())
     }
 
     override fun handle(action: KeyboardInputAction) {

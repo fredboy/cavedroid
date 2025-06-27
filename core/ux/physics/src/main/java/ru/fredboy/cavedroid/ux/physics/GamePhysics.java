@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.fredboy.cavedroid.common.di.GameScope;
 import ru.fredboy.cavedroid.common.utils.MeasureUnitsUtilsKt;
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository;
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository;
 import ru.fredboy.cavedroid.domain.items.model.block.Block;
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem;
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase;
@@ -32,19 +32,19 @@ public class GamePhysics {
     private final Vector2 gravity = new Vector2(0, 444.44f);
 
     private final GameWorld mGameWorld;
-    private final GameConfigurationRepository mGameConfigurationRepository;
+    private final GameContextRepository mGameContextRepository;
     private final MobController mMobController;
     private final DropController mDropController;
     private final GetItemByKeyUseCase mGetItemByKeyUseCase;
 
     @Inject
     public GamePhysics(GameWorld gameWorld,
-                       GameConfigurationRepository gameConfigurationRepository,
+                       GameContextRepository gameContextRepository,
                        MobController mobController,
                        DropController dropController,
                        GetItemByKeyUseCase getItemByKeyUseCase) {
         mGameWorld = gameWorld;
-        mGameConfigurationRepository = gameConfigurationRepository;
+        mGameContextRepository = gameContextRepository;
         mMobController = mobController;
         mDropController = dropController;
         mGetItemByKeyUseCase = getItemByKeyUseCase;
@@ -280,7 +280,7 @@ public class GamePhysics {
         }
 
         if (getBlock(player).isFluid()) {
-            if (mGameConfigurationRepository.isTouch() && player.getVelocity().x != 0 && !player.getSwim() && !player.isFlyMode()) {
+            if (mGameContextRepository.isTouch() && player.getVelocity().x != 0 && !player.getSwim() && !player.isFlyMode()) {
                 player.setSwim(true);
             }
             if (!player.getSwim()) {
@@ -310,7 +310,7 @@ public class GamePhysics {
 
         mobXColl(player);
 
-        if (mGameConfigurationRepository.isTouch() && !player.isFlyMode() && player.getCanJump() && player.getVelocity().x != 0 && checkJump(player)) {
+        if (mGameContextRepository.isTouch() && !player.isFlyMode() && player.getCanJump() && player.getVelocity().x != 0 && checkJump(player)) {
             player.jump();
             player.setCanJump(false);
         }

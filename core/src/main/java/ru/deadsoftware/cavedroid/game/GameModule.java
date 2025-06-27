@@ -2,10 +2,9 @@ package ru.deadsoftware.cavedroid.game;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.deadsoftware.cavedroid.MainConfig;
 import ru.fredboy.cavedroid.common.di.GameScope;
 import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository;
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository;
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository;
 import ru.fredboy.cavedroid.domain.items.model.block.Block;
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository;
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase;
@@ -33,13 +32,13 @@ public class GameModule {
 
     @Provides
     @GameScope
-    public static DropController provideDropController(GameConfigurationRepository gameConfigurationRepository,
+    public static DropController provideDropController(GameContextRepository gameContextRepository,
                                                        SaveDataRepository saveDataRepository,
                                                        ItemsRepository itemsRepository,
                                                        DropWorldAdapter dropWorldAdapter) {
 
         DropController controller = needLoad
-                ? saveDataRepository.loadDropController(gameConfigurationRepository.getGameDirectory(), dropWorldAdapter)
+                ? saveDataRepository.loadDropController(gameContextRepository.getGameDirectory(), dropWorldAdapter)
                 : new DropController(itemsRepository, dropWorldAdapter);
 
         return controller;
@@ -47,14 +46,14 @@ public class GameModule {
 
     @Provides
     @GameScope
-    public static ContainerController provideFurnaceController(GameConfigurationRepository gameConfigurationRepository,
+    public static ContainerController provideFurnaceController(GameContextRepository gameContextRepository,
                                                                SaveDataRepository saveDataRepository,
                                                                GetItemByKeyUseCase getItemByKeyUseCase,
                                                                ContainerWorldAdapter containerWorldAdapter,
                                                                ContainerFactory containerFactory,
                                                                DropAdapter dropAdapter) {
         ContainerController controller = needLoad
-                ? saveDataRepository.loadContainerController(gameConfigurationRepository.getGameDirectory(), containerWorldAdapter, containerFactory, dropAdapter)
+                ? saveDataRepository.loadContainerController(gameContextRepository.getGameDirectory(), containerWorldAdapter, containerFactory, dropAdapter)
                 : new ContainerController(getItemByKeyUseCase, containerWorldAdapter, containerFactory, dropAdapter);
 
         return controller;
@@ -62,24 +61,24 @@ public class GameModule {
 
     @Provides
     @GameScope
-    public static MobController provideMobsController(GameConfigurationRepository gameConfigurationRepository,
+    public static MobController provideMobsController(GameContextRepository gameContextRepository,
                                                       SaveDataRepository saveDataRepository,
                                                       MobAssetsRepository mobAssetsRepository,
                                                       GetFallbackItemUseCase getFallbackItemUseCase,
                                                       MobWorldAdapter mobWorldAdapter) {
 
         return needLoad
-                ? saveDataRepository.loadMobController(gameConfigurationRepository.getGameDirectory(), mobWorldAdapter)
+                ? saveDataRepository.loadMobController(gameContextRepository.getGameDirectory(), mobWorldAdapter)
                 : new MobController(mobAssetsRepository, getFallbackItemUseCase, mobWorldAdapter);
     }
 
     @Provides
     @GameScope
-    public static GameWorld provideGameWorld(GameConfigurationRepository gameConfigurationRepository,
+    public static GameWorld provideGameWorld(GameContextRepository gameContextRepository,
                                              SaveDataRepository saveDataRepository,
                                              ItemsRepository itemsRepository) {
 
-        final GameMapSaveData mapData = needLoad ? saveDataRepository.loadMap(gameConfigurationRepository.getGameDirectory()) : null;
+        final GameMapSaveData mapData = needLoad ? saveDataRepository.loadMap(gameContextRepository.getGameDirectory()) : null;
 
         Block[][] fm = mapData != null ? mapData.retrieveForeMap() : null;
         Block[][] bm = mapData != null ? mapData.retrieveBackMap() : null;

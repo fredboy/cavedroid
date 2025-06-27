@@ -4,14 +4,14 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.ux.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.ux.controls.input.action.keys.MouseInputActionKey
 import javax.inject.Inject
 
 @GameScope
 class MouseInputActionMapper @Inject constructor(
-    val gameConfigurationRepository: GameConfigurationRepository,
+    val gameContextRepository: GameContextRepository,
 ) {
 
     fun map(
@@ -72,11 +72,11 @@ class MouseInputActionMapper @Inject constructor(
     }
 
     private fun getScreenX(mouseX: Float): Float {
-        return mouseX * (gameConfigurationRepository.getWidth() / Gdx.graphics.width)
+        return mouseX * (gameContextRepository.getWidth() / Gdx.graphics.width)
     }
 
     private fun getScreenY(mouseY: Float): Float {
-        return mouseY * (gameConfigurationRepository.getHeight() / Gdx.graphics.height)
+        return mouseY * (gameContextRepository.getHeight() / Gdx.graphics.height)
     }
 
 }

@@ -1,65 +1,40 @@
 package ru.deadsoftware.cavedroid.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
-import org.jetbrains.annotations.Nullable;
-import ru.deadsoftware.cavedroid.MainConfig;
-import ru.fredboy.cavedroid.common.model.Joystick;
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository;
-import ru.fredboy.cavedroid.game.window.GameWindowType;
-import ru.fredboy.cavedroid.game.window.GameWindowsManager;
-import ru.fredboy.cavedroid.game.window.TooltipManager;
-import ru.fredboy.cavedroid.ux.controls.input.IKeyboardInputHandler;
-import ru.fredboy.cavedroid.ux.controls.input.IMouseInputHandler;
-import ru.fredboy.cavedroid.ux.controls.input.action.KeyboardInputAction;
-import ru.fredboy.cavedroid.ux.controls.input.action.MouseInputAction;
-import ru.fredboy.cavedroid.ux.controls.input.action.keys.MouseInputActionKey;
-import ru.fredboy.cavedroid.ux.controls.input.handler.mouse.CursorMouseInputHandler;
-import ru.fredboy.cavedroid.ux.controls.input.mapper.KeyboardInputActionMapper;
-import ru.fredboy.cavedroid.ux.controls.input.mapper.MouseInputActionMapper;
-import ru.fredboy.cavedroid.ux.rendering.IGameRenderer;
 import ru.deadsoftware.cavedroid.misc.Renderer;
 import ru.fredboy.cavedroid.common.di.GameScope;
 import ru.fredboy.cavedroid.common.utils.MeasureUnitsUtilsKt;
 import ru.fredboy.cavedroid.common.utils.RenderingUtilsKt;
-import ru.fredboy.cavedroid.domain.assets.model.TouchButton;
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase;
-import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase;
+import ru.fredboy.cavedroid.domain.configuration.model.CameraContext;
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository;
 import ru.fredboy.cavedroid.entity.mob.model.Player;
 import ru.fredboy.cavedroid.game.controller.mob.MobController;
+import ru.fredboy.cavedroid.game.window.TooltipManager;
 import ru.fredboy.cavedroid.game.world.GameWorld;
+import ru.fredboy.cavedroid.ux.rendering.IGameRenderer;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 @GameScope
 public class GameRenderer extends Renderer {
 
     private static final float CAMERA_SPEED = 72f;
     private static final float MAX_CAM_DISTANCE_FROM_PLAYER = 64f;
-    private static final float DRAG_THRESHOLD = 1f;
-    private static final TouchButton nullButton = new TouchButton(new Rectangle(), -1, true);
-
-    private final GameConfigurationRepository mGameConfigurationRepository;
+    private final GameContextRepository mGameContextRepository;
     private final MobController mMobsController;
     private final GameWorld mGameWorld;
     private final List<IGameRenderer> mRenderers;
-    private final CursorMouseInputHandler mCursorMouseInputHandler;
-    private final MouseInputActionMapper mMouseInputActionMapper;
-    private final KeyboardInputActionMapper mKeyboardInputActionMapper;
-    private final Set<IMouseInputHandler> mMouseInputHandlers;
-    private final Set<IKeyboardInputHandler> mKeyboardInputHandlers;
-    private final GameWindowsManager mGameWindowsManager;
     private final TooltipManager mTooltipManager;
     private final GetFontUseCase mGetFontUseCase;
-    private final GetTouchButtonsUseCase mGetTouchButtonsUseCase;
-
-    private final TouchButton mouseLeftTouchButton, mouseRightTouchButton;
 
     private final Vector2 mCamCenterToPlayer = new Vector2();
 
@@ -67,22 +42,15 @@ public class GameRenderer extends Renderer {
     private long mCameraDelayMs = 0L;
 
     @Inject
-    GameRenderer(GameConfigurationRepository gameConfigurationRepository,
+    GameRenderer(GameContextRepository gameContextRepository,
                  MobController mobsController,
                  GameWorld gameWorld,
                  Set<IGameRenderer> renderers,
-                 CursorMouseInputHandler cursorMouseInputHandler,
-                 MouseInputActionMapper mouseInputActionMapper,
-                 KeyboardInputActionMapper keyboardInputActionMapper,
-                 Set<IMouseInputHandler> mouseInputHandlers,
-                 Set<IKeyboardInputHandler> keyboardInputHandlers,
-                 GameWindowsManager gameWindowsManager,
                  TooltipManager tooltipManager,
-                 GetFontUseCase getFontUseCase,
-                 GetTouchButtonsUseCase getTouchButtonsUseCase) {
-        super(gameConfigurationRepository.getWidth(), gameConfigurationRepository.getHeight());
+                 GetFontUseCase getFontUseCase) {
+        super(gameContextRepository.getWidth(), gameContextRepository.getHeight());
 
-        mGameConfigurationRepository = gameConfigurationRepository;
+        mGameContextRepository = gameContextRepository;
         mMobsController = mobsController;
         mGameWorld = gameWorld;
         mRenderers = new ArrayList<>(renderers);
@@ -92,20 +60,10 @@ public class GameRenderer extends Renderer {
                 return o1.getRenderLayer() - o2.getRenderLayer();
             }
         });
-        mCursorMouseInputHandler = cursorMouseInputHandler;
-        mMouseInputActionMapper = mouseInputActionMapper;
-        mKeyboardInputActionMapper = keyboardInputActionMapper;
-        mMouseInputHandlers = mouseInputHandlers;
-        mKeyboardInputHandlers = keyboardInputHandlers;
-        mGameWindowsManager = gameWindowsManager;
         mTooltipManager = tooltipManager;
         mGetFontUseCase = getFontUseCase;
-        mGetTouchButtonsUseCase = getTouchButtonsUseCase;
 
-        mouseLeftTouchButton = new TouchButton(new Rectangle(getWidth() / 2, 0f, getWidth() / 2, getHeight() / 2), Input.Buttons.LEFT, true);
-        mouseRightTouchButton = new TouchButton(new Rectangle(getWidth() / 2, getHeight() / 2, getWidth() / 2, getHeight() / 2), Input.Buttons.RIGHT, true);
-
-        mGameConfigurationRepository.setJoystick(new Joystick(mMobsController.getPlayer().getSpeed()));
+        mGameContextRepository.setCameraContext(new CameraContext(getCameraViewport(), getCamera()));
 
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f);
     }
@@ -121,7 +79,7 @@ public class GameRenderer extends Renderer {
 
         float camTargetX, camTargetY;
 
-        boolean followPlayer = player.getControlMode() == Player.ControlMode.WALK || !mGameConfigurationRepository.isTouch();
+        boolean followPlayer = player.getControlMode() == Player.ControlMode.WALK || !mGameContextRepository.isTouch();
 
         if (followPlayer) {
             camTargetX = plTargetX + Math.min(player.getVelocity().x * 2, getWidth() / 2);
@@ -195,7 +153,7 @@ public class GameRenderer extends Renderer {
     }
 
     private void updateCameraPosition(float delta) {
-        if (mGameConfigurationRepository.useDynamicCamera()) {
+        if (mGameContextRepository.useDynamicCamera()) {
             updateDynamicCameraPosition(delta);
         } else {
             updateStaticCameraPosition();
@@ -211,18 +169,8 @@ public class GameRenderer extends Renderer {
     }
 
     private void handleMousePosition() {
-        final Rectangle viewport = getCameraViewport();
-
         final float screenX = transformScreenX(Gdx.input.getX());
         final float screenY = transformScreenY(Gdx.input.getY());
-
-        final MouseInputAction action = new MouseInputAction(
-                screenX,
-                screenY,
-                MouseInputActionKey.None.INSTANCE,
-                viewport);
-
-        mCursorMouseInputHandler.handle(action);
 
         if (!mTooltipManager.getCurrentMouseTooltip().isEmpty()) {
             RenderingUtilsKt.drawString(spriter, mGetFontUseCase.invoke(),
@@ -232,157 +180,14 @@ public class GameRenderer extends Renderer {
         }
     }
 
-    private boolean handleMouseAction(@Nullable MouseInputAction action) {
-        if (action == null) {
-            return false;
-        }
-
-        boolean anyProcessed = false;
-
-        for (IMouseInputHandler handler : mMouseInputHandlers) {
-            final boolean conditions = handler.checkConditions(action);
-            if (conditions) {
-                anyProcessed = true;
-                handler.handle(action);
-                break;
-            }
-//            anyProcessed = anyProcessed || conditions;
-        }
-        return anyProcessed;
-    }
-
-    private boolean onMouseActionEvent(int mouseX, int mouseY, int button, boolean touchUp, int pointer) {
-        @Nullable MouseInputAction action = mMouseInputActionMapper
-                .map((float) mouseX, (float) mouseY, getCameraViewport(), button, touchUp, pointer);
-        return handleMouseAction(action);
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        float touchX = transformScreenX(screenX);
-        float touchY = transformScreenY(screenY);
-
-        final Joystick joy = mGameConfigurationRepository.getJoystick();
-
-        if (mGameConfigurationRepository.isTouch()) {
-            if (joy != null && joy.getActive() && joy.getPointer() == pointer) {
-                return onMouseActionEvent(screenX, screenY, nullButton.getCode(), true, pointer);
-            }
-
-            TouchButton touchedKey = getTouchedKey(touchX, touchY);
-            if (touchedKey.isMouse()) {
-                return onMouseActionEvent(screenX, screenY, touchedKey.getCode(), true, pointer);
-            } else {
-                return keyUp(touchedKey.getCode());
-            }
-        }
-
-        return onMouseActionEvent(screenX, screenY, button, true, pointer);
-    }
-
-    private TouchButton getTouchedKey(float touchX, float touchY) {
-        if (mGameWindowsManager.getCurrentWindowType() != GameWindowType.NONE) {
-            return nullButton;
-        }
-        for (Map.Entry<String, TouchButton> entry : mGetTouchButtonsUseCase.invoke().entrySet()) {
-            TouchButton button = entry.getValue();
-            if (button.getRectangle().contains(touchX, touchY)) {
-                return button;
-            }
-        }
-
-        if (mouseLeftTouchButton.getRectangle().contains(touchX, touchY)) {
-            return mouseLeftTouchButton;
-        }
-
-        if (mouseRightTouchButton.getRectangle().contains(touchX, touchY)) {
-            return mouseRightTouchButton;
-        }
-
-        return nullButton;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        float touchX = transformScreenX(screenX);
-        float touchY = transformScreenY(screenY);
-
-        mTouchDownX = touchX;
-        mTouchDownY = touchY;
-
-        if (mGameConfigurationRepository.isTouch()) {
-            TouchButton touchedKey = getTouchedKey(touchX, touchY);
-            if (touchedKey.isMouse()) {
-                return onMouseActionEvent(screenX, screenY, touchedKey.getCode(), false, pointer);
-            } else {
-                return keyDown(touchedKey.getCode());
-            }
-        }
-
-        return onMouseActionEvent(screenX, screenY, button, false, pointer);
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        float touchX = transformScreenX(screenX);
-        float touchY = transformScreenY(screenY);
-
-        if (Math.abs(touchX - mTouchDownX) < 16 && Math.abs(touchY - mTouchDownY) < DRAG_THRESHOLD) {
-            return false;
-        }
-
-        @Nullable MouseInputAction action =
-                mMouseInputActionMapper.mapDragged(screenX, screenY, getCameraViewport(), pointer);
-        return handleMouseAction(action);
-    }
-
-    @Override
-    public boolean scrolled(float amountX, float amountY) {
-        @Nullable MouseInputAction action = mMouseInputActionMapper
-                .mapScrolled(Gdx.input.getX(), Gdx.input.getY(), amountX, amountY, getCameraViewport());
-        return handleMouseAction(action);
-    }
-
-    private boolean handleKeyboardAction(int keycode, boolean isKeyDown) {
-        @Nullable final KeyboardInputAction action = mKeyboardInputActionMapper
-                .map(keycode, isKeyDown);
-
-        if (action == null) {
-            return false;
-        }
-
-        boolean anyProcessed = false;
-
-        for (IKeyboardInputHandler handler : mKeyboardInputHandlers) {
-            final boolean conditions = handler.checkConditions(action);
-            if (conditions) {
-                anyProcessed = true;
-                handler.handle(action);
-                break;
-            }
-        }
-
-        return anyProcessed;
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        return handleKeyboardAction(keycode, true);
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return handleKeyboardAction(keycode, false);
-    }
-
     @Override
     public void render(float delta) {
         updateCameraPosition(delta);
 
-        if (mGameConfigurationRepository.getJoystick() != null && mGameConfigurationRepository.getJoystick().getActive()) {
-            mGameConfigurationRepository.getJoystick().updateState(
-                    transformScreenX(Gdx.input.getX(mGameConfigurationRepository.getJoystick().getPointer())),
-                    transformScreenY(Gdx.input.getY(mGameConfigurationRepository.getJoystick().getPointer()))
+        if (mGameContextRepository.getJoystick() != null && mGameContextRepository.getJoystick().getActive()) {
+            mGameContextRepository.getJoystick().updateState(
+                    transformScreenX(Gdx.input.getX(mGameContextRepository.getJoystick().getPointer())),
+                    transformScreenY(Gdx.input.getY(mGameContextRepository.getJoystick().getPointer()))
             );
         }
 

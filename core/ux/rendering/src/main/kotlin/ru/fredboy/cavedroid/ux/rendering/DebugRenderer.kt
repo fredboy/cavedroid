@@ -10,7 +10,7 @@ import ru.fredboy.cavedroid.common.utils.bl
 import ru.fredboy.cavedroid.common.utils.drawString
 import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.common.utils.px
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
@@ -20,7 +20,7 @@ import javax.inject.Inject
 @GameScope
 @BindRenderer
 class DebugRenderer @Inject constructor(
-    private val gameConfigurationRepository: GameConfigurationRepository,
+    private val gameContextRepository: GameContextRepository,
     private val gameWorld: GameWorld,
     private val mobController: MobController,
     private val debugInfoStringsProvider: DebugInfoStringsProvider,
@@ -89,11 +89,11 @@ class DebugRenderer @Inject constructor(
     }
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
-        if (gameConfigurationRepository.shouldShowInfo()) {
+        if (gameContextRepository.shouldShowInfo()) {
             drawDebugInfo(spriteBatch)
         }
 
-        if (gameConfigurationRepository.shouldShowMap()) {
+        if (gameContextRepository.shouldShowMap()) {
             drawMinimap(
                 spriteBatch = spriteBatch,
                 shapeRenderer = shapeRenderer,

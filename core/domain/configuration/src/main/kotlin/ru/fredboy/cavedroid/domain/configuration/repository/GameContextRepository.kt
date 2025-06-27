@@ -1,8 +1,9 @@
 package ru.fredboy.cavedroid.domain.configuration.repository
 
 import ru.fredboy.cavedroid.common.model.Joystick
+import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 
-interface GameConfigurationRepository {
+interface GameContextRepository {
 
     fun isTouch(): Boolean
 
@@ -22,6 +23,8 @@ interface GameConfigurationRepository {
 
     fun useDynamicCamera(): Boolean
 
+    fun getCameraContext(): CameraContext?
+
     fun setTouch(isTouch: Boolean)
 
     fun setGameDirectory(path: String)
@@ -39,5 +42,7 @@ interface GameConfigurationRepository {
     fun setFullscreen(fullscreen: Boolean)
 
     fun setUseDynamicCamera(use: Boolean)
+
+    fun setCameraContext(cameraContext: CameraContext?)
 
 }

@@ -3,8 +3,8 @@ package ru.deadsoftware.cavedroid.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Timer;
-import ru.deadsoftware.cavedroid.MainConfig;
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository;
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository;
+import ru.fredboy.cavedroid.ux.controls.GameInputProcessor;
 import ru.fredboy.cavedroid.ux.physics.GamePhysics;
 import ru.fredboy.cavedroid.ux.physics.task.GameWorldBlocksLogicControllerTask;
 import ru.fredboy.cavedroid.ux.physics.task.GameWorldFluidsLogicControllerTask;
@@ -26,18 +26,20 @@ public class GameProc implements Disposable {
     private final GameWorldFluidsLogicControllerTask mGameWorldFluidsLogicControllerTask;
     private final GameWorldBlocksLogicControllerTask mGameWorldBlocksLogicControllerTask;
     private final GameWorldMobDamageControllerTask mGameWorldMobDamageControllerTask;
+    private final GameInputProcessor mGameInputProcessor;
 
     private final Timer mWorldLogicTimer = new Timer();
 
     @Inject
-    public GameProc(GameConfigurationRepository gameConfigurationRepository,
+    public GameProc(GameContextRepository gameContextRepository,
                     GamePhysics gamePhysics,
                     GameRenderer gameRenderer,
                     MobController mobsController,
                     ContainerController containerController,
                     GameWorldFluidsLogicControllerTask gameWorldFluidsLogicControllerTask,
                     GameWorldBlocksLogicControllerTask gameWorldBlocksLogicControllerTask,
-                    GameWorldMobDamageControllerTask gameWorldMobDamageControllerTask
+                    GameWorldMobDamageControllerTask gameWorldMobDamageControllerTask,
+                    GameInputProcessor gameInputProcessor
     ) {
         mGamePhysics = gamePhysics;
         mGameRenderer = gameRenderer;
@@ -46,8 +48,9 @@ public class GameProc implements Disposable {
         mGameWorldFluidsLogicControllerTask = gameWorldFluidsLogicControllerTask;
         mGameWorldBlocksLogicControllerTask = gameWorldBlocksLogicControllerTask;
         mGameWorldMobDamageControllerTask = gameWorldMobDamageControllerTask;
+        mGameInputProcessor = gameInputProcessor;
 
-        mobsController.getPlayer().setControlMode(gameConfigurationRepository.isTouch() ? Player.ControlMode.WALK : Player.ControlMode.CURSOR);
+        mobsController.getPlayer().setControlMode(gameContextRepository.isTouch() ? Player.ControlMode.WALK : Player.ControlMode.CURSOR);
 
         mWorldLogicTimer.scheduleTask(gameWorldFluidsLogicControllerTask, 0,
                 GameWorldFluidsLogicControllerTask.FLUID_UPDATE_INTERVAL_SEC);
@@ -64,12 +67,13 @@ public class GameProc implements Disposable {
     public void update(float delta) {
         mMobsController.update(delta);
         mGamePhysics.update(delta);
+        mGameInputProcessor.update(delta);
         mGameRenderer.render(delta);
         mContainerController.update(delta);
     }
 
     public void show() {
-        Gdx.input.setInputProcessor(mGameRenderer);
+        Gdx.input.setInputProcessor(mGameInputProcessor);
     }
 
     @Override

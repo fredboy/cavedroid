@@ -1,7 +1,7 @@
 package ru.fredboy.cavedroid.ux.controls.input.handler.keyboard
 
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.entity.mob.model.Direction
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -14,12 +14,12 @@ import javax.inject.Inject
 @GameScope
 @BindKeyboardInputHandler
 class GoLeftKeyboardInputHandler @Inject constructor(
-    private val gameConfigurationRepository: GameConfigurationRepository,
+    private val gameContextRepository: GameContextRepository,
     private val mobController: MobController,
 ) : IKeyboardInputHandler {
 
     override fun checkConditions(action: KeyboardInputAction): Boolean {
-        val isTouch = gameConfigurationRepository.isTouch()
+        val isTouch = gameContextRepository.isTouch()
         return action.actionKey is KeyboardInputActionKey.Left &&
                 (mobController.player.controlMode == Player.ControlMode.WALK || !isTouch) &&
                 (mobController.player.controlMode == Player.ControlMode.WALK || !isTouch)

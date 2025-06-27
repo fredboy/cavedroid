@@ -1,7 +1,7 @@
 package ru.fredboy.cavedroid.ux.controls.input.handler.keyboard
 
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.ux.controls.input.IKeyboardInputHandler
 import ru.fredboy.cavedroid.ux.controls.input.action.KeyboardInputAction
 import ru.fredboy.cavedroid.ux.controls.input.action.keys.KeyboardInputActionKey
@@ -11,7 +11,7 @@ import javax.inject.Inject
 @GameScope
 @BindKeyboardInputHandler
 class ToggleDebugInfoKeyboardInputHandler @Inject constructor(
-    private val gameConfigurationRepository: GameConfigurationRepository,
+    private val gameContextRepository: GameContextRepository,
 ) : IKeyboardInputHandler {
 
     override fun checkConditions(action: KeyboardInputAction): Boolean {
@@ -19,6 +19,6 @@ class ToggleDebugInfoKeyboardInputHandler @Inject constructor(
     }
 
     override fun handle(action: KeyboardInputAction) {
-        gameConfigurationRepository.setShowInfo(!gameConfigurationRepository.shouldShowInfo())
+        gameContextRepository.setShowInfo(!gameContextRepository.shouldShowInfo())
     }
 }

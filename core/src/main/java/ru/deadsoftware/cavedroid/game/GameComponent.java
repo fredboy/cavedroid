@@ -5,8 +5,7 @@ import ru.deadsoftware.cavedroid.MainComponent;
 import ru.deadsoftware.cavedroid.generated.module.*;
 import ru.fredboy.cavedroid.common.api.GameController;
 import ru.fredboy.cavedroid.common.di.GameScope;
-import ru.fredboy.cavedroid.data.configuration.di.DataConfigurationModule;
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository;
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository;
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository;
 import ru.fredboy.cavedroid.game.controller.container.di.ControllerContainerModule;
 import ru.fredboy.cavedroid.game.controller.drop.di.ControllerDropModule;
@@ -33,7 +32,7 @@ public interface GameComponent {
 
     ItemsRepository getItemsRepository();
 
-    GameConfigurationRepository getGameConfigurationRepository();
+    GameContextRepository getGameConfigurationRepository();
 
     GameController getGameController();
 }

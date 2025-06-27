@@ -5,7 +5,7 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.common.utils.bl
 import ru.fredboy.cavedroid.common.utils.px
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByIndexUseCase
 import ru.fredboy.cavedroid.entity.mob.model.Direction
@@ -25,7 +25,7 @@ import javax.inject.Inject
 @GameScope
 @BindMouseInputHandler
 class CursorMouseInputHandler @Inject constructor(
-    private val gameConfigurationRepository: GameConfigurationRepository,
+    private val gameContextRepository: GameContextRepository,
     private val mobController: MobController,
     private val gameWorld: GameWorld,
     private val gameWindowsManager: GameWindowsManager,
@@ -129,13 +129,13 @@ class CursorMouseInputHandler @Inject constructor(
         val pastCursorY = player.cursorY
 
         when {
-            player.controlMode == Player.ControlMode.WALK && gameConfigurationRepository.isTouch() -> handleWalkTouch()
-            !gameConfigurationRepository.isTouch() -> handleMouse(action)
+            player.controlMode == Player.ControlMode.WALK && gameContextRepository.isTouch() -> handleWalkTouch()
+            !gameContextRepository.isTouch() -> handleMouse(action)
         }
 
         mobController.checkPlayerCursorBounds()
 
-        if (player.controlMode == Player.ControlMode.WALK && gameConfigurationRepository.isTouch()) {
+        if (player.controlMode == Player.ControlMode.WALK && gameContextRepository.isTouch()) {
             setPlayerDirectionToCursor()
         }
 

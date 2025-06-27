@@ -12,7 +12,7 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.entity.mob.model.Direction
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowsConfigs
@@ -23,7 +23,7 @@ import kotlin.math.atan
 
 @GameScope
 class SurvivalWindowRenderer @Inject constructor(
-    private val gameConfigurationRepository: GameConfigurationRepository,
+    private val gameContextRepository: GameContextRepository,
     private val mobController: MobController,
     private val gameWindowsManager: GameWindowsManager,
     private val textureRegions: GetTextureRegionByNameUseCase,
@@ -37,12 +37,12 @@ class SurvivalWindowRenderer @Inject constructor(
     private val survivalWindowTexture get() = requireNotNull(textureRegions[SURVIVAL_WINDOW_KEY])
 
     private fun setPortraitHeadRotation(portraitX: Float, portraitY: Float) {
-        if (gameConfigurationRepository.isTouch()) {
+        if (gameContextRepository.isTouch()) {
             return
         }
 
-        val mouseX = Gdx.input.x * (gameConfigurationRepository.getWidth() / Gdx.graphics.width)
-        val mouseY = Gdx.input.y * (gameConfigurationRepository.getHeight() / Gdx.graphics.height)
+        val mouseX = Gdx.input.x * (gameContextRepository.getWidth() / Gdx.graphics.width)
+        val mouseY = Gdx.input.y * (gameContextRepository.getHeight() / Gdx.graphics.height)
 
         val h = mouseX.toDouble() - portraitX.toDouble()
         val v = mouseY.toDouble() - portraitY.toDouble()

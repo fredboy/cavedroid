@@ -9,7 +9,7 @@ import ru.fredboy.cavedroid.common.model.Joystick
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
@@ -20,7 +20,7 @@ import javax.inject.Inject
 @GameScope
 @BindRenderer
 class TouchControlsRenderer @Inject constructor(
-    private val gameConfigurationRepository: GameConfigurationRepository,
+    private val gameContextRepository: GameContextRepository,
     private val mobController: MobController,
     private val gameWindowsManager: GameWindowsManager,
     private val textureRegions: GetTextureRegionByNameUseCase,
@@ -35,7 +35,7 @@ class TouchControlsRenderer @Inject constructor(
     private val joyStick = Sprite(textureRegions["joy_stick"])
 
     private fun drawJoystick(spriteBatch: SpriteBatch) {
-        val joystick = gameConfigurationRepository.getJoystick()?.takeIf { it.active } ?: return
+        val joystick = gameContextRepository.getJoystick()?.takeIf { it.active } ?: return
 
         spriteBatch.drawSprite(
             sprite = joyBackground,
@@ -55,7 +55,7 @@ class TouchControlsRenderer @Inject constructor(
     }
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
-        if (!gameConfigurationRepository.isTouch() || gameWindowsManager.currentWindowType != GameWindowType.NONE) {
+        if (!gameContextRepository.isTouch() || gameWindowsManager.currentWindowType != GameWindowType.NONE) {
             return
         }
 

@@ -3,7 +3,7 @@ package ru.fredboy.cavedroid.ux.controls.input.handler.mouse
 import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
-import ru.fredboy.cavedroid.domain.configuration.repository.GameConfigurationRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
@@ -19,7 +19,7 @@ import kotlin.math.abs
 @GameScope
 @BindMouseInputHandler
 class CreativeInventoryScrollMouseInputHandler @Inject constructor(
-    private val gameConfigurationRepository: GameConfigurationRepository,
+    private val gameContextRepository: GameContextRepository,
     private val gameWindowsManager: GameWindowsManager,
     private val itemsRepository: ItemsRepository,
     private val textureRegions: GetTextureRegionByNameUseCase,
@@ -48,7 +48,7 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
     }
 
     private fun checkDragConditions(action: MouseInputAction): Boolean {
-        return gameConfigurationRepository.isTouch() && action.actionKey is MouseInputActionKey.Dragged &&
+        return gameContextRepository.isTouch() && action.actionKey is MouseInputActionKey.Dragged &&
                 abs(action.screenY - dragStartY) >= DRAG_SENSITIVITY
     }
 

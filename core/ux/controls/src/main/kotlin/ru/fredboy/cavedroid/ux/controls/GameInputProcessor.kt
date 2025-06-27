@@ -1,0 +1,291 @@
+package ru.fredboy.cavedroid.ux.controls
+
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
+import com.badlogic.gdx.InputProcessor
+import com.badlogic.gdx.math.Rectangle
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.model.Joystick
+import ru.fredboy.cavedroid.domain.assets.model.TouchButton
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
+import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.window.GameWindowType
+import ru.fredboy.cavedroid.game.window.GameWindowsManager
+import ru.fredboy.cavedroid.ux.controls.input.IKeyboardInputHandler
+import ru.fredboy.cavedroid.ux.controls.input.IMouseInputHandler
+import ru.fredboy.cavedroid.ux.controls.input.action.MouseInputAction
+import ru.fredboy.cavedroid.ux.controls.input.action.keys.MouseInputActionKey
+import ru.fredboy.cavedroid.ux.controls.input.handler.mouse.CursorMouseInputHandler
+import ru.fredboy.cavedroid.ux.controls.input.mapper.KeyboardInputActionMapper
+import ru.fredboy.cavedroid.ux.controls.input.mapper.MouseInputActionMapper
+import javax.inject.Inject
+import kotlin.math.abs
+
+@GameScope
+class GameInputProcessor @Inject constructor(
+    private val gameContextRepository: GameContextRepository,
+    private val mobController: MobController,
+    private val getTouchButtonsUseCase: GetTouchButtonsUseCase,
+    private val cursorMouseInputHandler: CursorMouseInputHandler,
+    private val mouseInputActionMapper: MouseInputActionMapper,
+    private val keyboardInputActionMapper: KeyboardInputActionMapper,
+    private val mouseInputHandlers: Set<@JvmSuppressWildcards IMouseInputHandler>,
+    private val keyboardInputHandlers: Set<@JvmSuppressWildcards IKeyboardInputHandler>,
+    private val gameWindowsManager: GameWindowsManager,
+) : InputProcessor {
+
+    private val mouseLeftTouchButton = TouchButton(
+        Rectangle(
+            /* x = */ gameContextRepository.getWidth() / 2,
+            /* y = */ 0f,
+            /* width = */ gameContextRepository.getWidth() / 2,
+            /* height = */ gameContextRepository.getHeight() / 2
+        ),
+        Input.Buttons.LEFT,
+        true
+    )
+
+    private val mouseRightTouchButton = TouchButton(
+        Rectangle(
+            /* x = */ gameContextRepository.getWidth() / 2,
+            /* y = */ gameContextRepository.getHeight() / 2,
+            /* width = */ gameContextRepository.getWidth() / 2,
+            /* height = */ gameContextRepository.getHeight() / 2
+        ),
+        Input.Buttons.RIGHT,
+        true
+    )
+
+    private var touchDownX = 0f
+    private var touchDownY = 0f
+
+    init {
+        gameContextRepository.setJoystick(Joystick(mobController.player.speed))
+    }
+
+    override fun keyDown(keycode: Int): Boolean {
+        return handleKeyboardAction(keycode, true)
+    }
+
+    override fun keyUp(keycode: Int): Boolean {
+        return handleKeyboardAction(keycode, false)
+    }
+
+    override fun keyTyped(p0: Char): Boolean {
+        return false;
+    }
+
+    override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+        val (touchX, touchY) = requireCameraContext().getViewportCoordinates(screenX, screenY)
+
+        touchDownX = touchX
+        touchDownY = touchY
+
+        if (gameContextRepository.isTouch()) {
+            val touchedKey = getTouchedKey(touchX, touchY)
+            return if (touchedKey.isMouse) {
+                onMouseActionEvent(
+                    mouseX = screenX,
+                    mouseY = screenY,
+                    button = touchedKey.code,
+                    touchUp = false,
+                    pointer = pointer,
+                )
+            } else {
+                keyDown(touchedKey.code)
+            }
+        }
+
+        return onMouseActionEvent(screenX, screenY, button, false, pointer)
+    }
+
+    override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+        val (touchX, touchY) = requireCameraContext().getViewportCoordinates(screenX, screenY)
+
+        val joy: Joystick? = gameContextRepository.getJoystick()
+
+        if (gameContextRepository.isTouch()) {
+            if (joy != null && joy.active && joy.pointer == pointer) {
+                return onMouseActionEvent(
+                    mouseX = screenX,
+                    mouseY = screenY,
+                    button = nullButton.code,
+                    touchUp = true,
+                    pointer = pointer,
+                )
+            }
+
+            val touchedKey: TouchButton = getTouchedKey(touchX, touchY)
+
+            return if (touchedKey.isMouse) {
+                onMouseActionEvent(
+                    mouseX = screenX,
+                    mouseY = screenY,
+                    button = touchedKey.code,
+                    touchUp = true,
+                    pointer = pointer
+                )
+            } else {
+                keyUp(touchedKey.code)
+            }
+        }
+
+        return onMouseActionEvent(
+            mouseX = screenX,
+            mouseY = screenY,
+            button = button,
+            touchUp = true,
+            pointer = pointer,
+        )
+    }
+
+    override fun touchCancelled(p0: Int, p1: Int, p2: Int, p3: Int): Boolean {
+        return false
+    }
+
+    override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
+        val (touchX, touchY) = requireCameraContext().getViewportCoordinates(screenX, screenY)
+
+        if (abs(touchX - touchDownX) < 16 && abs(touchY - touchDownY) < DRAG_THRESHOLD) {
+            return false
+        }
+
+        val action = mouseInputActionMapper.mapDragged(
+            mouseX = screenX.toFloat(),
+            mouseY = screenY.toFloat(),
+            cameraViewport = requireCameraContext().viewport,
+            pointer = pointer,
+        )
+
+        return handleMouseAction(action)
+    }
+
+    override fun mouseMoved(p0: Int, p1: Int): Boolean {
+        return false
+    }
+
+    override fun scrolled(amountX: Float, amountY: Float): Boolean {
+        val action: MouseInputAction? = mouseInputActionMapper
+            .mapScrolled(
+                mouseX = Gdx.input.x.toFloat(),
+                mouseY = Gdx.input.y.toFloat(),
+                amountX = amountX,
+                amountY = amountY,
+                cameraViewport = requireCameraContext().viewport,
+            )
+        return handleMouseAction(action)
+    }
+
+
+    fun update(delta: Float) {
+        handleMousePosition()
+    }
+
+    private fun getTouchedKey(touchX: Float, touchY: Float): TouchButton {
+        if (gameWindowsManager.currentWindowType != GameWindowType.NONE) {
+            return nullButton
+        }
+
+        for (entry in getTouchButtonsUseCase().entries) {
+            val button = entry.value
+            if (button.rectangle.contains(touchX, touchY)) {
+                return button
+            }
+        }
+
+        if (mouseLeftTouchButton.rectangle.contains(touchX, touchY)) {
+            return mouseLeftTouchButton
+        }
+
+        if (mouseRightTouchButton.rectangle.contains(touchX, touchY)) {
+            return mouseRightTouchButton
+        }
+
+        return nullButton
+    }
+
+    private fun handleMouseAction(action: MouseInputAction?): Boolean {
+        if (action == null) {
+            return false
+        }
+
+        var anyProcessed = false
+
+        for (handler in mouseInputHandlers) {
+            val conditions: Boolean = handler.checkConditions(action)
+            if (conditions) {
+                anyProcessed = true
+                handler.handle(action)
+                break
+            }
+        }
+
+        return anyProcessed
+    }
+
+    private fun handleKeyboardAction(keycode: Int, isKeyDown: Boolean): Boolean {
+        val action = keyboardInputActionMapper.map(keycode, isKeyDown)
+
+        if (action == null) {
+            return false
+        }
+
+        var anyProcessed = false
+
+        for (handler in keyboardInputHandlers) {
+            val conditions: Boolean = handler.checkConditions(action)
+            if (conditions) {
+                anyProcessed = true
+                handler.handle(action)
+                break
+            }
+        }
+
+        return anyProcessed
+    }
+
+    private fun onMouseActionEvent(mouseX: Int, mouseY: Int, button: Int, touchUp: Boolean, pointer: Int): Boolean {
+        val action: MouseInputAction? = mouseInputActionMapper.map(
+            mouseX = mouseX.toFloat(),
+            mouseY = mouseY.toFloat(),
+            cameraViewport = requireNotNull(gameContextRepository.getCameraContext()?.viewport),
+            button = button,
+            touchUp = touchUp,
+            pointer = pointer,
+        )
+        return handleMouseAction(action)
+    }
+
+    private fun handleMousePosition() {
+        val cameraContext = gameContextRepository.getCameraContext() ?: run {
+            Gdx.app.error(TAG, "CameraContext was not set")
+            return
+        }
+
+        val screenX = cameraContext.xOnViewport(Gdx.input.x)
+        val screenY = cameraContext.yOnViewport(Gdx.input.y)
+
+        val action = MouseInputAction(
+            screenX = screenX,
+            screenY = screenY,
+            actionKey = MouseInputActionKey.None,
+            cameraViewport = cameraContext.viewport,
+        )
+
+        cursorMouseInputHandler.handle(action)
+    }
+
+    private fun requireCameraContext(): CameraContext {
+        return requireNotNull(gameContextRepository.getCameraContext()) { "CameraContext was not set" }
+    }
+
+    companion object {
+        private const val TAG = "GameInputProcessor"
+
+        private const val DRAG_THRESHOLD = 1f
+
+        private val nullButton = TouchButton(Rectangle(), -1, true)
+    }
+}
