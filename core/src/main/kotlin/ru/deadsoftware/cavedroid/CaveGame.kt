@@ -2,9 +2,12 @@ package ru.deadsoftware.cavedroid
 
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.math.Rectangle
 import ru.deadsoftware.cavedroid.misc.utils.AssetLoader
 import ru.deadsoftware.cavedroid.prefs.PreferencesStore
 import ru.fredboy.cavedroid.common.utils.ratio
+import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 
 class CaveGame(
@@ -44,6 +47,15 @@ class CaveGame(
             setWidth(width)
             setHeight(height)
             setShowInfo(isDebug)
+
+            setCameraContext(
+                CameraContext(
+                    viewport = Rectangle(0f, 0f, width, height),
+                    camera = OrthographicCamera().apply {
+                        setToOrtho(true, width, height)
+                    }
+                )
+            )
         }
 
         Gdx.app.logLevel = if (isDebug) Application.LOG_DEBUG else Application.LOG_ERROR

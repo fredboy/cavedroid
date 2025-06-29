@@ -13,6 +13,7 @@ import ru.fredboy.cavedroid.common.di.GameScope;
 import ru.fredboy.cavedroid.entity.mob.model.Player;
 import ru.fredboy.cavedroid.game.controller.container.ContainerController;
 import ru.fredboy.cavedroid.game.controller.mob.MobController;
+import ru.fredboy.cavedroid.ux.rendering.GameRenderer;
 
 import javax.inject.Inject;
 

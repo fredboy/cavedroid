@@ -1,11 +1,14 @@
-package ru.deadsoftware.cavedroid.game;
+package ru.fredboy.cavedroid.ux.rendering;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.TimeUtils;
-import ru.deadsoftware.cavedroid.misc.Renderer;
+import org.jetbrains.annotations.Nullable;
 import ru.fredboy.cavedroid.common.di.GameScope;
 import ru.fredboy.cavedroid.common.utils.MeasureUnitsUtilsKt;
 import ru.fredboy.cavedroid.common.utils.RenderingUtilsKt;
@@ -16,7 +19,6 @@ import ru.fredboy.cavedroid.entity.mob.model.Player;
 import ru.fredboy.cavedroid.game.controller.mob.MobController;
 import ru.fredboy.cavedroid.game.window.TooltipManager;
 import ru.fredboy.cavedroid.game.world.GameWorld;
-import ru.fredboy.cavedroid.ux.rendering.IGameRenderer;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 @GameScope
-public class GameRenderer extends Renderer {
+public class GameRenderer {
 
     private static final float CAMERA_SPEED = 72f;
     private static final float MAX_CAM_DISTANCE_FROM_PLAYER = 64f;
@@ -35,20 +37,30 @@ public class GameRenderer extends Renderer {
     private final List<IGameRenderer> mRenderers;
     private final TooltipManager mTooltipManager;
     private final GetFontUseCase mGetFontUseCase;
-
     private final Vector2 mCamCenterToPlayer = new Vector2();
-
-    private float mTouchDownX, mTouchDownY;
     private long mCameraDelayMs = 0L;
 
+    private final ShapeRenderer shaper;
+    private final SpriteBatch spriter;
+
     @Inject
-    GameRenderer(GameContextRepository gameContextRepository,
+    public GameRenderer(GameContextRepository gameContextRepository,
                  MobController mobsController,
                  GameWorld gameWorld,
                  Set<IGameRenderer> renderers,
                  TooltipManager tooltipManager,
                  GetFontUseCase getFontUseCase) {
-        super(gameContextRepository.getWidth(), gameContextRepository.getHeight());
+        @Nullable final CameraContext cameraContext = gameContextRepository.getCameraContext();
+
+        shaper = new ShapeRenderer();
+        spriter = new SpriteBatch();
+
+        if (cameraContext != null) {
+            shaper.setProjectionMatrix(cameraContext.getCamera().combined);
+            spriter.setProjectionMatrix(cameraContext.getCamera().combined);
+        } else {
+            Gdx.app.error("GameRenderer", "Camera context was not set");
+        }
 
         mGameContextRepository = gameContextRepository;
         mMobsController = mobsController;
@@ -63,9 +75,51 @@ public class GameRenderer extends Renderer {
         mTooltipManager = tooltipManager;
         mGetFontUseCase = getFontUseCase;
 
-        mGameContextRepository.setCameraContext(new CameraContext(getCameraViewport(), getCamera()));
-
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f);
+    }
+
+    private float getCamX() {
+        @Nullable final CameraContext cameraContext = mGameContextRepository.getCameraContext();
+        if (cameraContext != null) {
+            return cameraContext.getViewport().x;
+        } else {
+            Gdx.app.error("GameRenderer", "Camera context was not set");
+            return 0;
+        }
+    }
+
+    private float getCamY() {
+        @Nullable final CameraContext cameraContext = mGameContextRepository.getCameraContext();
+        if (cameraContext != null) {
+            return cameraContext.getViewport().y;
+        } else {
+            Gdx.app.error("GameRenderer", "Camera context was not set");
+            return 0;
+        }
+    }
+
+    private float getWidth() {
+        return mGameContextRepository.getWidth();
+    }
+    private float getHeight() {
+        return mGameContextRepository.getHeight();
+    }
+
+    private void setCamPos(float x, float y) {
+        @Nullable final CameraContext cameraContext = mGameContextRepository.getCameraContext();
+
+        if (cameraContext != null) {
+            cameraContext.getCamera().position.set(x, y, 0);
+            cameraContext.getViewport().x = x;
+            cameraContext.getViewport().y = y;
+        } else {
+            Gdx.app.error("GameRenderer", "Camera context was not set");
+        }
+    }
+
+    private Rectangle getCameraViewport() {
+        @Nullable final CameraContext cameraContext = mGameContextRepository.getCameraContext();
+        return cameraContext != null ? cameraContext.getViewport() : new Rectangle();
     }
 
     private void updateDynamicCameraPosition(float delta) {
@@ -180,7 +234,6 @@ public class GameRenderer extends Renderer {
         }
     }
 
-    @Override
     public void render(float delta) {
         updateCameraPosition(delta);
 
