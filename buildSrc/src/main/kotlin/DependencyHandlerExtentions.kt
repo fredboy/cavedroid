@@ -19,6 +19,7 @@ fun DependencyHandler.useDataModules() {
     useModule(":core:data:assets")
     useModule(":core:data:configuration")
     useModule(":core:data:items")
+    useModule(":core:data:menu")
     useModule(":core:data:save")
 }
 
@@ -27,6 +28,7 @@ fun DependencyHandler.useDomainModules() {
     useModule(":core:domain:configuration")
     useModule(":core:domain:items")
     useModule(":core:domain:save")
+    useModule(":core:domain:menu")
     useModule(":core:domain:world")
 }
 
@@ -48,6 +50,10 @@ fun DependencyHandler.useUxModules() {
     useModule(":core:ux:controls")
     useModule(":core:ux:physics")
     useModule(":core:ux:rendering")
+}
+
+fun DependencyHandler.useZygoteModule() {
+    useModule(":core:zygote")
 }
 
 fun DependencyHandler.useAutomultibind() {

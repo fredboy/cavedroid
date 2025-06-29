@@ -1,7 +1,7 @@
 package ru.deadsoftware.cavedroid
 
 import android.content.Context
-import ru.deadsoftware.cavedroid.prefs.PreferencesStore
+import ru.fredboy.cavedroid.common.api.PreferencesStore
 
 class AndroidPreferencesStore(
     private val context: Context

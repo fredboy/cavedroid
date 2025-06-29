@@ -1,0 +1,55 @@
+{
+  "main": {
+    "new_game": {
+      "label": "New Game",
+      "actionKey": "new_game_action"
+    },
+    "load_game": {
+      "label": "Load Game",
+      "actionKey": "load_game_action"
+    },
+    "options": {
+      "label": "Settings",
+      "actionKey": "options_action"
+    },
+    "quit": {
+      "label": "Quit",
+      "actionKey": "exit_game_action"
+    }
+  },
+  "new_game": {
+    "creative": {
+      "label": "Creative",
+      "actionKey": "new_game_creative_action"
+    },
+    "survival": {
+      "label": "Survival",
+      "actionKey": "new_game_survival_action"
+    },
+    "back": {
+      "label": "Back",
+      "actionKey": "menu_main_action"
+    }
+  },
+  "options": {
+    "dyncam": {
+      "type": "boolean_option",
+      "label": "Dynamic Camera: %s",
+      "actionKey": "toggle_dyncam_action",
+      "options": ["dyncam"]
+    },
+    "fullscreen": {
+      "type": "boolean_option",
+      "label": "Fullscreen: %s",
+      "actionKey": "toggle_fullscreen_action",
+      "options": ["fullscreen"],
+      "visibility": {
+        "android": false
+      }
+    },
+    "back": {
+      "label": "Back",
+      "actionKey": "menu_main_action"
+    }
+  }
+}

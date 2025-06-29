@@ -1,6 +1,6 @@
 package ru.deadsoftware.cavedroid.desktop
 
-import ru.deadsoftware.cavedroid.prefs.PreferencesStore
+import ru.fredboy.cavedroid.common.api.PreferencesStore
 import java.util.prefs.Preferences
 
 class DesktopPreferencesStore : PreferencesStore {

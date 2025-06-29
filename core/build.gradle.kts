@@ -28,6 +28,7 @@ dependencies {
     useEntityModules()
     useGameModules()
     useUxModules()
+    useZygoteModule()
 
     implementation(Dependencies.jetbrainsAnnotations)
 }

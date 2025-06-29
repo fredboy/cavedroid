@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.data.configuration.repository
 
+import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.common.model.Joystick
 import ru.fredboy.cavedroid.data.configuration.store.GameContextStore
 import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
@@ -61,6 +62,11 @@ class GameContextRepositoryImpl @Inject constructor(
     }
 
     override fun setFullscreen(fullscreen: Boolean) {
+        if (fullscreen) {
+            Gdx.graphics.setFullscreenMode(Gdx.graphics.displayMode);
+        } else {
+            Gdx.graphics.setWindowedMode(getWidth().toInt(), getHeight().toInt());
+        }
         gameContextStore.isFullscreen = fullscreen
     }
 

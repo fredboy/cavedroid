@@ -3,8 +3,7 @@ package ru.deadsoftware.cavedroid
 import dagger.Component
 import ru.deadsoftware.cavedroid.game.GameScreen
 import ru.deadsoftware.cavedroid.menu.MenuScreen
-import ru.deadsoftware.cavedroid.misc.utils.AssetLoader
-import ru.deadsoftware.cavedroid.prefs.PreferencesStore
+import ru.fredboy.cavedroid.common.api.PreferencesStore
 import ru.fredboy.cavedroid.common.api.GameController
 import ru.fredboy.cavedroid.data.assets.di.DataAssetsModule
 import ru.fredboy.cavedroid.data.configuration.di.DataConfigurationModule
@@ -30,8 +29,6 @@ interface MainComponent {
     val menuScreen: MenuScreen
 
     val mainConfig: MainConfig
-
-    val assetLoader: AssetLoader
 
     val initializeAssetsUseCase: InitializeAssetsUseCase
 

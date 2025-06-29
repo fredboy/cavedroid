@@ -4,8 +4,7 @@ import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Rectangle
-import ru.deadsoftware.cavedroid.misc.utils.AssetLoader
-import ru.deadsoftware.cavedroid.prefs.PreferencesStore
+import ru.fredboy.cavedroid.common.api.PreferencesStore
 import ru.fredboy.cavedroid.common.utils.ratio
 import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -22,8 +21,6 @@ class CaveGame(
 
     private val mGameContextRepository: GameContextRepository
 
-    private val assetLoader: AssetLoader
-
     init {
         mainComponent = DaggerMainComponent.builder()
             .caveGame(this)
@@ -31,7 +28,6 @@ class CaveGame(
             .build()
 
         mainConfig = mainComponent.mainConfig
-        assetLoader = mainComponent.assetLoader
         mGameContextRepository = mainComponent.gameContextRepository
     }
 
@@ -59,27 +55,31 @@ class CaveGame(
         }
 
         Gdx.app.logLevel = if (isDebug) Application.LOG_DEBUG else Application.LOG_ERROR
-
-        mainConfig.setFullscreenToggleListener { isFullscreen ->
-            if (isFullscreen) {
-                Gdx.graphics.setFullscreenMode(Gdx.graphics.displayMode);
-            } else {
-                Gdx.graphics.setWindowedMode(width.toInt(), height.toInt());
-            }
-        }
     }
 
     fun newGame(gameMode: Int) {
         setScreen(mainComponent.gameScreen.apply { newGame(gameMode) })
     }
 
-    fun loadGame() {
+    override fun newGameCreative() {
+        newGame(1)
+    }
+
+    override fun newGameSurvival() {
+        newGame(0)
+    }
+
+    override fun loadGame() {
         setScreen(mainComponent.gameScreen.apply { loadGame() })
     }
 
     override fun quitGame() {
         screen?.dispose()
-        setScreen(mainComponent.menuScreen)
+        setScreen(mainComponent.menuScreen.apply { resetMenu() })
+    }
+
+    override fun exitGame() {
+        Gdx.app.exit()
     }
 
     override fun create() {
@@ -99,8 +99,6 @@ class CaveGame(
     companion object {
         private const val TAG = "CaveGame"
         private const val DEFAULT_VIEWPORT_WIDTH = 480f
-
-        const val VERSION = "alpha 0.9.2"
     }
 
 }
