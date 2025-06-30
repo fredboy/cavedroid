@@ -1,9 +1,9 @@
-package ru.deadsoftware.cavedroid.game;
+package ru.fredboy.cavedroid.zygote.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Timer;
-import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository;
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository;
 import ru.fredboy.cavedroid.ux.controls.GameInputProcessor;
 import ru.fredboy.cavedroid.ux.physics.GamePhysics;
 import ru.fredboy.cavedroid.ux.physics.task.GameWorldBlocksLogicControllerTask;
@@ -32,7 +32,7 @@ public class GameProc implements Disposable {
     private final Timer mWorldLogicTimer = new Timer();
 
     @Inject
-    public GameProc(GameContextRepository gameContextRepository,
+    public GameProc(ApplicationContextRepository gameContextRepository,
                     GamePhysics gamePhysics,
                     GameRenderer gameRenderer,
                     MobController mobsController,

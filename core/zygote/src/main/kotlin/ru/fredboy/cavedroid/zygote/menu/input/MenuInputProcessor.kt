@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.MenuScope
-import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.menu.model.MenuButton
 import ru.fredboy.cavedroid.domain.menu.repository.MenuButtonRepository
 import ru.fredboy.cavedroid.zygote.menu.action.IMenuAction
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @MenuScope
 class MenuInputProcessor @Inject constructor(
-    private val gameContextRepository: GameContextRepository,
+    private val applicationContextRepository: ApplicationContextRepository,
     private val menuButtonRepository: MenuButtonRepository,
     private val menuButtonActions: Map<String, @JvmSuppressWildcards IMenuAction>,
     private val menuButtonBooleanOption: Map<String, @JvmSuppressWildcards IMenuBooleanOption>,
@@ -25,9 +25,8 @@ class MenuInputProcessor @Inject constructor(
         pointer: Int,
         button: Int
     ): Boolean {
-        val cameraContext = gameContextRepository.getCameraContext() ?: return false
-
-        val (touchX, touchY) = cameraContext.getViewportCoordinates(screenX, screenY)
+        val touchX = applicationContextRepository.getWidth() / Gdx.graphics.width * screenX.toFloat()
+        val touchY = applicationContextRepository.getHeight() / Gdx.graphics.height * screenY.toFloat()
 
         menuButtonRepository.getCurrentMenuButtons()?.values?.forEachIndexed { index, button ->
             if (!button.isEnabled) {
@@ -36,8 +35,8 @@ class MenuInputProcessor @Inject constructor(
 
             // TODO: Fix magic numbers
             val rect = Rectangle(
-                /* x = */ gameContextRepository.getWidth() / 2 - 100,
-                /* y = */ gameContextRepository.getHeight() / 4 + index * 30,
+                /* x = */ applicationContextRepository.getWidth() / 2 - 100,
+                /* y = */ applicationContextRepository.getHeight() / 4 + index * 30,
                 /* width = */ 200f,
                 /* height = */ 20f
             )

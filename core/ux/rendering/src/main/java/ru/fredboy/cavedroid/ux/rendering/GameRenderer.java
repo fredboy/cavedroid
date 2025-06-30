@@ -14,6 +14,7 @@ import ru.fredboy.cavedroid.common.utils.MeasureUnitsUtilsKt;
 import ru.fredboy.cavedroid.common.utils.RenderingUtilsKt;
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase;
 import ru.fredboy.cavedroid.domain.configuration.model.CameraContext;
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository;
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository;
 import ru.fredboy.cavedroid.entity.mob.model.Player;
 import ru.fredboy.cavedroid.game.controller.mob.MobController;
@@ -31,6 +32,7 @@ public class GameRenderer {
 
     private static final float CAMERA_SPEED = 72f;
     private static final float MAX_CAM_DISTANCE_FROM_PLAYER = 64f;
+    private final ApplicationContextRepository mApplicationContextRepository;
     private final GameContextRepository mGameContextRepository;
     private final MobController mMobsController;
     private final GameWorld mGameWorld;
@@ -44,7 +46,8 @@ public class GameRenderer {
     private final SpriteBatch spriter;
 
     @Inject
-    public GameRenderer(GameContextRepository gameContextRepository,
+    public GameRenderer(ApplicationContextRepository applicationContextRepository,
+                GameContextRepository gameContextRepository,
                  MobController mobsController,
                  GameWorld gameWorld,
                  Set<IGameRenderer> renderers,
@@ -62,6 +65,7 @@ public class GameRenderer {
             Gdx.app.error("GameRenderer", "Camera context was not set");
         }
 
+        mApplicationContextRepository = applicationContextRepository;
         mGameContextRepository = gameContextRepository;
         mMobsController = mobsController;
         mGameWorld = gameWorld;
@@ -99,10 +103,10 @@ public class GameRenderer {
     }
 
     private float getWidth() {
-        return mGameContextRepository.getWidth();
+        return mApplicationContextRepository.getWidth();
     }
     private float getHeight() {
-        return mGameContextRepository.getHeight();
+        return mApplicationContextRepository.getHeight();
     }
 
     private void setCamPos(float x, float y) {
@@ -133,7 +137,7 @@ public class GameRenderer {
 
         float camTargetX, camTargetY;
 
-        boolean followPlayer = player.getControlMode() == Player.ControlMode.WALK || !mGameContextRepository.isTouch();
+        boolean followPlayer = player.getControlMode() == Player.ControlMode.WALK || !mApplicationContextRepository.isTouch();
 
         if (followPlayer) {
             camTargetX = plTargetX + Math.min(player.getVelocity().x * 2, getWidth() / 2);

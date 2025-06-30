@@ -6,9 +6,8 @@ import ru.fredboy.cavedroid.data.configuration.repository.GameContextRepositoryI
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 
 @Module
-abstract class DataConfigurationModule {
+abstract class GameContextModule {
 
     @Binds
-    internal abstract fun bindGameConfigurationRepository(impl: GameContextRepositoryImpl): GameContextRepository
-
+    internal abstract fun bindGameContextRepository(impl: GameContextRepositoryImpl): GameContextRepository
 }

@@ -39,7 +39,7 @@ tasks.register<Jar>("dist") {
 
 dependencies {
     useCommonModule()
-    implementation(project(":core"))
+    useZygoteModule()
 
     implementation(Dependencies.LibGDX.gdx)
     implementation(Dependencies.LibGDX.Desktop.backend)

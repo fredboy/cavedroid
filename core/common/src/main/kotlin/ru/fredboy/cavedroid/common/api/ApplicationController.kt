@@ -1,6 +1,6 @@
 package ru.fredboy.cavedroid.common.api
 
-interface GameController {
+interface ApplicationController {
 
     fun quitGame()
 

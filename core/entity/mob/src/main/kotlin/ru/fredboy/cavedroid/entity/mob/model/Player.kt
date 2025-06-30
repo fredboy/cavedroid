@@ -266,7 +266,7 @@ class Player(
         const val WIDTH = 4f
         const val HEIGHT = 30f
 
-        private const val SPEED = 69.072f
+        const val SPEED = 69.072f
         private const val JUMP_VELOCITY = -133.332f
 
         private val HIT_ANIMATION_RANGE = 30f..90f

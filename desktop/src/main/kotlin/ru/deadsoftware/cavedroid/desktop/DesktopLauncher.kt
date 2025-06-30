@@ -3,7 +3,7 @@ package ru.deadsoftware.cavedroid.desktop
 import com.badlogic.gdx.Files
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
-import ru.deadsoftware.cavedroid.CaveGame
+import ru.fredboy.cavedroid.zygote.CaveDroidApplication
 
 internal object DesktopLauncher {
 
@@ -42,7 +42,7 @@ internal object DesktopLauncher {
             }
         }
 
-        val caveGame = CaveGame(
+        val caveGame = CaveDroidApplication(
             gameDataDirectoryPath = System.getProperty("user.home") + "/.cavedroid",
             isTouchScreen = touch,
             isDebug = debug,

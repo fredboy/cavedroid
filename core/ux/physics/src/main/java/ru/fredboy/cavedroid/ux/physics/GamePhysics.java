@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.fredboy.cavedroid.common.di.GameScope;
 import ru.fredboy.cavedroid.common.utils.MeasureUnitsUtilsKt;
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository;
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository;
 import ru.fredboy.cavedroid.domain.items.model.block.Block;
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem;
@@ -32,14 +33,14 @@ public class GamePhysics {
     private final Vector2 gravity = new Vector2(0, 444.44f);
 
     private final GameWorld mGameWorld;
-    private final GameContextRepository mGameContextRepository;
+    private final ApplicationContextRepository mGameContextRepository;
     private final MobController mMobController;
     private final DropController mDropController;
     private final GetItemByKeyUseCase mGetItemByKeyUseCase;
 
     @Inject
     public GamePhysics(GameWorld gameWorld,
-                       GameContextRepository gameContextRepository,
+                       ApplicationContextRepository gameContextRepository,
                        MobController mobController,
                        DropController dropController,
                        GetItemByKeyUseCase getItemByKeyUseCase) {

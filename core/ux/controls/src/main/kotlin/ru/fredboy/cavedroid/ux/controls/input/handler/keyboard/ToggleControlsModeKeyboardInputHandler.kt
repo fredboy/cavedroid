@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.ux.controls.input.handler.keyboard
 
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -13,13 +14,13 @@ import javax.inject.Inject
 @GameScope
 @BindKeyboardInputHandler
 class ToggleControlsModeKeyboardInputHandler @Inject constructor(
-    private val gameContextRepository: GameContextRepository,
+    private val applicationContextRepository: ApplicationContextRepository,
     private val mobController: MobController,
 ) : IKeyboardInputHandler {
 
     override fun checkConditions(action: KeyboardInputAction): Boolean {
         return action.actionKey is KeyboardInputActionKey.SwitchControlsMode && !action.isKeyDown
-                && gameContextRepository.isTouch()
+                && applicationContextRepository.isTouch()
     }
 
     override fun handle(action: KeyboardInputAction) {

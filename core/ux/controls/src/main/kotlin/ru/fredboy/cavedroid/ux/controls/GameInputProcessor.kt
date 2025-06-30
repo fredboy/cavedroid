@@ -9,6 +9,7 @@ import ru.fredboy.cavedroid.common.model.Joystick
 import ru.fredboy.cavedroid.domain.assets.model.TouchButton
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
 import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
@@ -25,6 +26,7 @@ import kotlin.math.abs
 
 @GameScope
 class GameInputProcessor @Inject constructor(
+    private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
     private val mobController: MobController,
     private val getTouchButtonsUseCase: GetTouchButtonsUseCase,
@@ -38,10 +40,10 @@ class GameInputProcessor @Inject constructor(
 
     private val mouseLeftTouchButton = TouchButton(
         Rectangle(
-            /* x = */ gameContextRepository.getWidth() / 2,
+            /* x = */ applicationContextRepository.getWidth() / 2,
             /* y = */ 0f,
-            /* width = */ gameContextRepository.getWidth() / 2,
-            /* height = */ gameContextRepository.getHeight() / 2
+            /* width = */ applicationContextRepository.getWidth() / 2,
+            /* height = */ applicationContextRepository.getHeight() / 2
         ),
         Input.Buttons.LEFT,
         true
@@ -49,10 +51,10 @@ class GameInputProcessor @Inject constructor(
 
     private val mouseRightTouchButton = TouchButton(
         Rectangle(
-            /* x = */ gameContextRepository.getWidth() / 2,
-            /* y = */ gameContextRepository.getHeight() / 2,
-            /* width = */ gameContextRepository.getWidth() / 2,
-            /* height = */ gameContextRepository.getHeight() / 2
+            /* x = */ applicationContextRepository.getWidth() / 2,
+            /* y = */ applicationContextRepository.getHeight() / 2,
+            /* width = */ applicationContextRepository.getWidth() / 2,
+            /* height = */ applicationContextRepository.getHeight() / 2
         ),
         Input.Buttons.RIGHT,
         true
@@ -83,7 +85,7 @@ class GameInputProcessor @Inject constructor(
         touchDownX = touchX
         touchDownY = touchY
 
-        if (gameContextRepository.isTouch()) {
+        if (applicationContextRepository.isTouch()) {
             val touchedKey = getTouchedKey(touchX, touchY)
             return if (touchedKey.isMouse) {
                 onMouseActionEvent(
@@ -106,7 +108,7 @@ class GameInputProcessor @Inject constructor(
 
         val joy: Joystick? = gameContextRepository.getJoystick()
 
-        if (gameContextRepository.isTouch()) {
+        if (applicationContextRepository.isTouch()) {
             if (joy != null && joy.active && joy.pointer == pointer) {
                 return onMouseActionEvent(
                     mouseX = screenX,

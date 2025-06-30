@@ -5,44 +5,30 @@ import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 
 interface GameContextRepository {
 
-    fun isTouch(): Boolean
-
-    fun getGameDirectory(): String
-
-    fun getWidth(): Float
-
-    fun getHeight(): Float
+    fun isLoadGame(): Boolean
 
     fun shouldShowInfo(): Boolean
 
     fun shouldShowMap(): Boolean
 
-    fun getJoystick(): Joystick?
+    fun getJoystick(): Joystick
 
     fun isFullscreen(): Boolean
 
     fun useDynamicCamera(): Boolean
 
-    fun getCameraContext(): CameraContext?
-
-    fun setTouch(isTouch: Boolean)
-
-    fun setGameDirectory(path: String)
-
-    fun setWidth(width: Float)
-
-    fun setHeight(height: Float)
+    fun getCameraContext(): CameraContext
 
     fun setShowInfo(show: Boolean)
 
     fun setShowMap(show: Boolean)
 
-    fun setJoystick(joystick: Joystick?)
+    fun setJoystick(joystick: Joystick)
 
     fun setFullscreen(fullscreen: Boolean)
 
     fun setUseDynamicCamera(use: Boolean)
 
-    fun setCameraContext(cameraContext: CameraContext?)
+    fun setCameraContext(cameraContext: CameraContext)
 
 }

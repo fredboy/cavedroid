@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.model.Joystick
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.entity.mob.model.Direction
 import ru.fredboy.cavedroid.entity.mob.model.Player
@@ -21,6 +22,7 @@ import javax.inject.Inject
 @GameScope
 @BindMouseInputHandler
 class JoystickInputHandler @Inject constructor(
+    private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
     private val mobController: MobController,
     private val gameWindowsManager: GameWindowsManager,
@@ -55,11 +57,11 @@ class JoystickInputHandler @Inject constructor(
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-                gameContextRepository.isTouch() &&
+                applicationContextRepository.isTouch() &&
 //                mobsController.player.controlMode == Player.ControlMode.WALK &&
                 gameContextRepository.getJoystick() != null &&
                 (action.actionKey is MouseInputActionKey.Touch) &&
-                (action.actionKey.pointer == gameContextRepository.getJoystick()?.pointer || !active) &&
+                (action.actionKey.pointer == gameContextRepository.getJoystick().pointer || !active) &&
                 ((action.actionKey is MouseInputActionKey.Dragged) ||
                         (action.screenX < action.cameraViewport.width / 2 && !action.actionKey.touchUp || active)) &&
                 !(action.actionKey is MouseInputActionKey.Screen && action.isInsideHotbar(textureRegions))
@@ -68,7 +70,7 @@ class JoystickInputHandler @Inject constructor(
 
     private fun handleTouchDown(action: MouseInputAction) {
         val key = action.actionKey as MouseInputActionKey.Screen
-        gameContextRepository.getJoystick()?.activate(action.screenX, action.screenY, key.pointer) ?: return
+        gameContextRepository.getJoystick().activate(action.screenX, action.screenY, key.pointer)
         active = true
     }
 
@@ -78,7 +80,7 @@ class JoystickInputHandler @Inject constructor(
     }
 
     private fun handleCursor() {
-        val joystick = gameContextRepository.getJoystick() ?: return
+        val joystick = gameContextRepository.getJoystick()
 
         if (TimeUtils.timeSinceMillis(cursorTimeoutMs) < 150L) {
             return
@@ -114,7 +116,7 @@ class JoystickInputHandler @Inject constructor(
             return
         }
 
-        val joystick = gameContextRepository.getJoystick() ?: return
+        val joystick = gameContextRepository.getJoystick()
         val joyVector = joystick.getVelocityVector()
 
         if (mobController.player.isFlyMode) {

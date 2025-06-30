@@ -1,7 +1,8 @@
 package ru.fredboy.cavedroid.ux.controls.input.handler.keyboard
 
-import ru.fredboy.cavedroid.common.api.GameController
+import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
@@ -19,8 +20,8 @@ import javax.inject.Inject
 @GameScope
 @BindKeyboardInputHandler
 class PauseGameKeyboardInputHandler @Inject constructor(
-    private val gameContextRepository: GameContextRepository,
-    private val gameController: GameController,
+    private val applicationContextRepository: ApplicationContextRepository,
+    private val gameController: ApplicationController,
     private val dropController: DropController,
     private val mobController: MobController,
     private val gameWorld: GameWorld,
@@ -40,7 +41,7 @@ class PauseGameKeyboardInputHandler @Inject constructor(
         }
 
         saveDataRepository.save(
-            gameDataFolder = gameContextRepository.getGameDirectory(),
+            gameDataFolder = applicationContextRepository.getGameDirectory(),
             dropController = dropController,
             mobController = mobController,
             containerController = containerController,

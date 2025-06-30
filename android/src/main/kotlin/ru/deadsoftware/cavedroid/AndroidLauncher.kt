@@ -3,6 +3,7 @@ package ru.deadsoftware.cavedroid
 import android.os.Bundle
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
+import ru.fredboy.cavedroid.zygote.CaveDroidApplication
 
 class AndroidLauncher : AndroidApplication() {
 
@@ -16,7 +17,7 @@ class AndroidLauncher : AndroidApplication() {
         config.useImmersiveMode = true
 
         initialize(
-            /* listener = */ CaveGame(
+            /* listener = */ CaveDroidApplication(
                 gameDataDirectoryPath = gameDataDirectoryPath,
                 isTouchScreen = true,
                 isDebug = BuildConfig.DEBUG,

@@ -1,6 +1,5 @@
 include("android")
 include("desktop")
-include("core")
 
 /**
  * Global modules

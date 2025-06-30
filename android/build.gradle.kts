@@ -117,7 +117,8 @@ tasks.whenTaskAdded {
 
 dependencies {
     useCommonModule()
-    implementation((project(":core")))
+    useZygoteModule()
+
     implementation(platform(Dependencies.Kotlin.bom))
 
     implementation(Dependencies.LibGDX.gdx)

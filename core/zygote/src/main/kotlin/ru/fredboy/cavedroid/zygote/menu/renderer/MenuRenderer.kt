@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.zygote.menu.renderer
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.CaveDroidConstants
@@ -10,7 +11,7 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
-import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.menu.model.MenuButton
 import ru.fredboy.cavedroid.domain.menu.repository.MenuButtonRepository
 import ru.fredboy.cavedroid.zygote.menu.action.IMenuAction
@@ -19,8 +20,8 @@ import javax.inject.Inject
 
 @MenuScope
 class MenuRenderer @Inject constructor(
+    private val applicationContextRepository: ApplicationContextRepository,
     private val menuButtonRepository: MenuButtonRepository,
-    private val gameContextRepository: GameContextRepository,
     private val getTextureRegionByName: GetTextureRegionByNameUseCase,
     private val menuButtonActions: Map<String, @JvmSuppressWildcards IMenuAction>,
     private val buttonBooleanOptions: Map<String, @JvmSuppressWildcards IMenuBooleanOption>,
@@ -28,14 +29,19 @@ class MenuRenderer @Inject constructor(
     private val getStringWidth: GetStringWidthUseCase,
     private val getStringHeight: GetStringHeightUseCase,
 ) {
+
+    private val camera = OrthographicCamera()
+
     private val spriter = SpriteBatch()
 
     init {
-        val cameraContext = requireNotNull(gameContextRepository.getCameraContext()) {
-            "$TAG: CameraContext was not set"
-        }
+        camera.setToOrtho(
+            /* yDown = */ true,
+            /* viewportWidth = */ applicationContextRepository.getWidth(),
+            /* viewportHeight = */ applicationContextRepository.getHeight(),
+        )
 
-        spriter.projectionMatrix = cameraContext.camera.combined
+        spriter.projectionMatrix = camera.combined
     }
 
     private fun getButtonTextureRegionKey(button: MenuButton): String {
@@ -62,8 +68,8 @@ class MenuRenderer @Inject constructor(
             )
         }
 
-        val buttonX = gameContextRepository.getWidth() / 2 - textureRegion.regionWidth / 2
-        val buttonY = gameContextRepository.getHeight() / 4 + position.toFloat() * 30
+        val buttonX = applicationContextRepository.getWidth() / 2 - textureRegion.regionWidth / 2
+        val buttonY = applicationContextRepository.getHeight() / 4 + position.toFloat() * 30
 
         val buttonRect = Rectangle(
             /* x = */ buttonX,
@@ -72,17 +78,11 @@ class MenuRenderer @Inject constructor(
             /* height = */ textureRegion.regionHeight.toFloat(),
         )
 
-        val inputCoordinates = gameContextRepository.getCameraContext()?.getViewportCoordinates(
-            x = Gdx.input.x,
-            y = Gdx.input.y,
-        )
+        val inputX = applicationContextRepository.getWidth() / Gdx.graphics.width * Gdx.input.x.toFloat()
+        val inputY = applicationContextRepository.getHeight() / Gdx.graphics.height * Gdx.input.y.toFloat()
 
         spriter.draw(
-            if (button.isEnabled && inputCoordinates != null && buttonRect.contains(
-                    /* x = */ inputCoordinates.first,
-                    /* y = */ inputCoordinates.second
-                )
-            ) {
+            if (button.isEnabled && buttonRect.contains(inputX, inputY)) {
                 getTextureRegionByName[KEY_BUTTON_SELECTED_TEXTURE] ?: textureRegion
             } else {
                 textureRegion
@@ -106,8 +106,8 @@ class MenuRenderer @Inject constructor(
         val backgroundRegionWidth = backgroundRegion.regionWidth
         val backgroundRegionHeight = backgroundRegion.regionWidth
 
-        for (x in 0 .. gameContextRepository.getWidth().toInt() / backgroundRegionWidth) {
-            for (y in 0 .. gameContextRepository.getHeight().toInt() / backgroundRegionHeight) {
+        for (x in 0 .. applicationContextRepository.getWidth().toInt() / backgroundRegionWidth) {
+            for (y in 0 .. applicationContextRepository.getHeight().toInt() / backgroundRegionHeight) {
                 spriter.draw(
                     /* region = */ backgroundRegion,
                     /* x = */ x * backgroundRegionWidth.toFloat(),
@@ -118,7 +118,7 @@ class MenuRenderer @Inject constructor(
 
         spriter.draw(
             /* region = */ gameLogo,
-            /* x = */ gameContextRepository.getWidth() / 2 - gameLogo.regionWidth.toFloat() / 2,
+            /* x = */ applicationContextRepository.getWidth() / 2 - gameLogo.regionWidth.toFloat() / 2,
             /* y = */ 8f,
         )
     }
@@ -134,7 +134,7 @@ class MenuRenderer @Inject constructor(
             font = getFont(),
             str = "CaveDroid " + CaveDroidConstants.VERSION,
             x = 0f,
-            y = gameContextRepository.getHeight() - getStringHeight("CaveDroid " + CaveDroidConstants.VERSION) * 1.5f,
+            y = applicationContextRepository.getHeight() - getStringHeight("CaveDroid " + CaveDroidConstants.VERSION) * 1.5f,
         );
         spriter.end()
 

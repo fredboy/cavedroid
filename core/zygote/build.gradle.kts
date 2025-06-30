@@ -12,6 +12,7 @@ dependencies {
     useDagger()
 
     useCommonModule()
+    useDataModules()
     useDomainModules()
     useEntityModules()
     useGameModules()
