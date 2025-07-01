@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.model.Joystick
 import ru.fredboy.cavedroid.common.utils.drawSprite
+import ru.fredboy.cavedroid.domain.assets.model.TouchButton
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -56,6 +57,22 @@ class TouchControlsRenderer @Inject constructor(
         )
     }
 
+    private val TouchButton.rectangleOnScreen
+        get() = Rectangle(
+            /* x = */ if (rectangle.x < 0f) {
+                applicationContextRepository.getWidth() + rectangle.x
+            } else {
+                rectangle.x
+            },
+            /* y = */ if (rectangle.y < 0f) {
+                applicationContextRepository.getHeight() + rectangle.y
+            } else {
+                rectangle.y
+            },
+            /* width = */ rectangle.width,
+            /* height = */ rectangle.height,
+        )
+
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
         if (!applicationContextRepository.isTouch() || gameWindowsManager.currentWindowType != GameWindowType.NONE) {
             return
@@ -64,7 +81,7 @@ class TouchControlsRenderer @Inject constructor(
         val touchControlsMap = getTouchButtons()
 
         touchControlsMap.forEach { (key, value) ->
-            val touchKey = value.rectangle
+            val touchKey = value.rectangleOnScreen
             spriteBatch.draw(
                 /* region = */ textureRegions[key],
                 /* x = */ touchKey.x,
@@ -76,7 +93,7 @@ class TouchControlsRenderer @Inject constructor(
 
         // FIXME: Add pressed state for buttons
         if (mobController.player.controlMode == Player.ControlMode.CURSOR) {
-            val altKeyRect = touchControlsMap["alt"]?.rectangle ?: return
+            val altKeyRect = touchControlsMap["alt"]?.rectangleOnScreen ?: return
             spriteBatch.draw(shadeTexture, altKeyRect.x, altKeyRect.y, altKeyRect.width, altKeyRect.height)
         }
 

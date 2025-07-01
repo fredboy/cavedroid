@@ -8,8 +8,11 @@ abstract class BaseScreen(
 ) : Screen {
 
     override fun resize(width: Int, height: Int) {
-        applicationContextRepository.setWidth(width.toFloat() / 2)
-        applicationContextRepository.setHeight(height.toFloat() / 2)
+        applicationContextRepository.setWidth(width.toFloat() * SCALE)
+        applicationContextRepository.setHeight(height.toFloat() * SCALE)
     }
 
+    companion object {
+        private const val SCALE = .5f
+    }
 }

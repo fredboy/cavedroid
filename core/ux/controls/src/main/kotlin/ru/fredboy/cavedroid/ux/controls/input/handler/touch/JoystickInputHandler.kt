@@ -11,7 +11,6 @@ import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
-import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.ux.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.ux.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.ux.controls.input.action.keys.MouseInputActionKey
@@ -26,7 +25,6 @@ class JoystickInputHandler @Inject constructor(
     private val gameContextRepository: GameContextRepository,
     private val mobController: MobController,
     private val gameWindowsManager: GameWindowsManager,
-    private val gameWorld: GameWorld,
     private val textureRegions: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
 
@@ -38,7 +36,7 @@ class JoystickInputHandler @Inject constructor(
             if (!value) {
                 resetVelocity()
                 if (TimeUtils.timeSinceMillis(activateTimeMs) < 200L &&
-                    mobController.player.controlMode != Player.ControlMode.CURSOR) {
+                    mobController.player.controlMode != Player.ControlMode.CURSOR && mobController.player.canJump) {
                     mobController.player.jump()
                 }
             } else {

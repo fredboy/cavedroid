@@ -37,7 +37,7 @@ internal class TouchButtonsRepositoryImpl @Inject constructor() : TouchButtonsAs
         buttons.forEach { (name, data) ->
             guiMap[name] = TouchButton(
                 rectangle = Rectangle(data.x, data.y, data.width, data.height),
-                code = if (data.isMouse) getMouseKey(name) else Input.Keys.valueOf(name),
+                code = if (data.isMouse) getMouseKey(name) else Input.Keys.valueOf(data.key),
                 isMouse = data.isMouse,
             )
         }

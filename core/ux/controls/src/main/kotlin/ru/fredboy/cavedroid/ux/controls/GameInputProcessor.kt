@@ -8,7 +8,6 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.model.Joystick
 import ru.fredboy.cavedroid.domain.assets.model.TouchButton
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
-import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -63,9 +62,6 @@ class GameInputProcessor @Inject constructor(
     private var touchDownX = 0f
     private var touchDownY = 0f
 
-    init {
-        gameContextRepository.setJoystick(Joystick(mobController.player.speed))
-    }
 
     override fun keyDown(keycode: Int): Boolean {
         return handleKeyboardAction(keycode, true)
@@ -80,7 +76,7 @@ class GameInputProcessor @Inject constructor(
     }
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        val (touchX, touchY) = requireCameraContext().getViewportCoordinates(screenX, screenY)
+        val (touchX, touchY) = gameContextRepository.getCameraContext().getViewportCoordinates(screenX, screenY)
 
         touchDownX = touchX
         touchDownY = touchY
@@ -104,7 +100,7 @@ class GameInputProcessor @Inject constructor(
     }
 
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        val (touchX, touchY) = requireCameraContext().getViewportCoordinates(screenX, screenY)
+        val (touchX, touchY) = gameContextRepository.getCameraContext().getViewportCoordinates(screenX, screenY)
 
         val joy: Joystick? = gameContextRepository.getJoystick()
 
@@ -148,7 +144,7 @@ class GameInputProcessor @Inject constructor(
     }
 
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
-        val (touchX, touchY) = requireCameraContext().getViewportCoordinates(screenX, screenY)
+        val (touchX, touchY) = gameContextRepository.getCameraContext().getViewportCoordinates(screenX, screenY)
 
         if (abs(touchX - touchDownX) < 16 && abs(touchY - touchDownY) < DRAG_THRESHOLD) {
             return false
@@ -157,7 +153,7 @@ class GameInputProcessor @Inject constructor(
         val action = mouseInputActionMapper.mapDragged(
             mouseX = screenX.toFloat(),
             mouseY = screenY.toFloat(),
-            cameraViewport = requireCameraContext().viewport,
+            cameraViewport = gameContextRepository.getCameraContext().viewport,
             pointer = pointer,
         )
 
@@ -175,7 +171,7 @@ class GameInputProcessor @Inject constructor(
                 mouseY = Gdx.input.y.toFloat(),
                 amountX = amountX,
                 amountY = amountY,
-                cameraViewport = requireCameraContext().viewport,
+                cameraViewport = gameContextRepository.getCameraContext().viewport,
             )
         return handleMouseAction(action)
     }
@@ -185,6 +181,22 @@ class GameInputProcessor @Inject constructor(
         handleMousePosition()
     }
 
+    private val TouchButton.rectangleOnScreen
+        get() = Rectangle(
+            /* x = */ if (rectangle.x < 0f) {
+                applicationContextRepository.getWidth() + rectangle.x
+            } else {
+                rectangle.x
+            },
+            /* y = */ if (rectangle.y < 0f) {
+                applicationContextRepository.getHeight() + rectangle.y
+            } else {
+                rectangle.y
+            },
+            /* width = */ rectangle.width,
+            /* height = */ rectangle.height,
+        )
+
     private fun getTouchedKey(touchX: Float, touchY: Float): TouchButton {
         if (gameWindowsManager.currentWindowType != GameWindowType.NONE) {
             return nullButton
@@ -192,7 +204,7 @@ class GameInputProcessor @Inject constructor(
 
         for (entry in getTouchButtonsUseCase().entries) {
             val button = entry.value
-            if (button.rectangle.contains(touchX, touchY)) {
+            if (button.rectangleOnScreen.contains(touchX, touchY)) {
                 return button
             }
         }
@@ -261,10 +273,7 @@ class GameInputProcessor @Inject constructor(
     }
 
     private fun handleMousePosition() {
-        val cameraContext = gameContextRepository.getCameraContext() ?: run {
-            Gdx.app.error(TAG, "CameraContext was not set")
-            return
-        }
+        val cameraContext = gameContextRepository.getCameraContext()
 
         val screenX = cameraContext.xOnViewport(Gdx.input.x)
         val screenY = cameraContext.yOnViewport(Gdx.input.y)
@@ -277,10 +286,6 @@ class GameInputProcessor @Inject constructor(
         )
 
         cursorMouseInputHandler.handle(action)
-    }
-
-    private fun requireCameraContext(): CameraContext {
-        return requireNotNull(gameContextRepository.getCameraContext()) { "CameraContext was not set" }
     }
 
     companion object {
