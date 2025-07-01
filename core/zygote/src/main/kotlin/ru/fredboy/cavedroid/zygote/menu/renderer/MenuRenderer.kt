@@ -130,6 +130,7 @@ class MenuRenderer @Inject constructor(
         spriter.projectionMatrix = camera.combined
     }
 
+    @Suppress("unused")
     fun render(delta: Float) {
         spriter.begin()
         drawBackground()

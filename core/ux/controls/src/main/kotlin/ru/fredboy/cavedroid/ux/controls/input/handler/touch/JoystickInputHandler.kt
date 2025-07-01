@@ -55,14 +55,8 @@ class JoystickInputHandler @Inject constructor(
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-                applicationContextRepository.isTouch() &&
-//                mobsController.player.controlMode == Player.ControlMode.WALK &&
-                gameContextRepository.getJoystick() != null &&
-                (action.actionKey is MouseInputActionKey.Touch) &&
-                (action.actionKey.pointer == gameContextRepository.getJoystick().pointer || !active) &&
-                ((action.actionKey is MouseInputActionKey.Dragged) ||
-                        (action.screenX < action.cameraViewport.width / 2 && !action.actionKey.touchUp || active)) &&
-                !(action.actionKey is MouseInputActionKey.Screen && action.isInsideHotbar(textureRegions))
+                applicationContextRepository.isTouch() && action.actionKey is MouseInputActionKey.Touch && (action.actionKey.pointer == gameContextRepository.getJoystick().pointer || !active) && ((action.actionKey is MouseInputActionKey.Dragged) ||
+                (action.screenX < action.cameraViewport.width / 2 && !action.actionKey.touchUp || active)) && !(action.actionKey is MouseInputActionKey.Screen && action.isInsideHotbar(textureRegions))
 
     }
 
@@ -72,8 +66,8 @@ class JoystickInputHandler @Inject constructor(
         active = true
     }
 
-    private fun handleTouchUp(action: MouseInputAction) {
-        gameContextRepository.getJoystick()?.deactivate()
+    private fun handleTouchUp() {
+        gameContextRepository.getJoystick().deactivate()
         active = false
     }
 
@@ -139,7 +133,7 @@ class JoystickInputHandler @Inject constructor(
             is MouseInputActionKey.Dragged -> handleDragged()
             else -> {
                 if (action.actionKey.touchUp) {
-                    handleTouchUp(action)
+                    handleTouchUp()
                 } else {
                     handleTouchDown(action)
                 }

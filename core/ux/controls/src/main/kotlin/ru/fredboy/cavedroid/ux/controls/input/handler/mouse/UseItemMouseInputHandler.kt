@@ -47,7 +47,7 @@ class UseItemMouseInputHandler @Inject constructor(
         buttonHoldTask = null
     }
 
-    private fun handleHold(action: MouseInputAction) {
+    private fun handleHold() {
         cancelHold()
 
         val player = mobController.player
@@ -64,11 +64,11 @@ class UseItemMouseInputHandler @Inject constructor(
         }
     }
 
-    private fun handleDown(action: MouseInputAction) {
+    private fun handleDown() {
         cancelHold()
         buttonHoldTask = object : Timer.Task() {
             override fun run() {
-                handleHold(action)
+                handleHold()
             }
 
         }
@@ -89,7 +89,7 @@ class UseItemMouseInputHandler @Inject constructor(
         )
     }
 
-    private fun handleUp(action: MouseInputAction) {
+    private fun handleUp() {
         val player = mobController.player
         val item = player.activeItem.item
         cancelHold()
@@ -123,9 +123,9 @@ class UseItemMouseInputHandler @Inject constructor(
         }
 
         if (action.actionKey.touchUp && buttonHoldTask?.isScheduled == true) {
-            handleUp(action)
+            handleUp()
         } else if (!action.actionKey.touchUp) {
-            handleDown(action)
+            handleDown()
         }
     }
 

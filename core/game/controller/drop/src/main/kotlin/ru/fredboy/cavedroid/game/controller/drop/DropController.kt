@@ -59,6 +59,7 @@ class DropController @Inject constructor(
         drops.forEach(action)
     }
 
+    @Suppress("unused")
     fun update(delta: Float) {
         val iterator = drops.iterator()
 

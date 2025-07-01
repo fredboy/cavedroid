@@ -177,6 +177,7 @@ class GameInputProcessor @Inject constructor(
     }
 
 
+    @Suppress("unused")
     fun update(delta: Float) {
         handleMousePosition()
     }
@@ -264,7 +265,7 @@ class GameInputProcessor @Inject constructor(
         val action: MouseInputAction? = mouseInputActionMapper.map(
             mouseX = mouseX.toFloat(),
             mouseY = mouseY.toFloat(),
-            cameraViewport = requireNotNull(gameContextRepository.getCameraContext()?.viewport),
+            cameraViewport = requireNotNull(gameContextRepository.getCameraContext().viewport),
             button = button,
             touchUp = touchUp,
             pointer = pointer,

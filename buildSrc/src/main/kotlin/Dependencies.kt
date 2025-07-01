@@ -44,9 +44,10 @@ object Dependencies {
         const val ksp = "ru.fredboy:automultibind-ksp:${Versions.automultibind}"
     }
 
-    const val androidGradlePlugin = "com.android.tools.build:gradle:${Versions.agp}"
+    object KtLint {
+        const val ktlintGradlePlugin = "org.jlleitschuh.gradle:ktlint:${Versions.ktlintGradle}"
+    }
 
-    // TODO: Remove after complete kotlin migration
-    const val jetbrainsAnnotations = "org.jetbrains:annotations:${Versions.jetbrainsAnnotations}"
+    const val androidGradlePlugin = "com.android.tools.build:gradle:${Versions.agp}"
 
 }

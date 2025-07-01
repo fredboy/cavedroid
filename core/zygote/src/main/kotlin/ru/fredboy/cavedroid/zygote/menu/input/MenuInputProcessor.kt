@@ -28,8 +28,8 @@ class MenuInputProcessor @Inject constructor(
         val touchX = applicationContextRepository.getWidth() / Gdx.graphics.width * screenX.toFloat()
         val touchY = applicationContextRepository.getHeight() / Gdx.graphics.height * screenY.toFloat()
 
-        menuButtonRepository.getCurrentMenuButtons()?.values?.forEachIndexed { index, button ->
-            if (!button.isEnabled) {
+        menuButtonRepository.getCurrentMenuButtons()?.values?.forEachIndexed { index, menuButton ->
+            if (!menuButton.isEnabled) {
                 return@forEachIndexed
             }
 
@@ -42,22 +42,22 @@ class MenuInputProcessor @Inject constructor(
             )
 
             if (rect.contains(touchX, touchY)) {
-                when (button) {
+                when (menuButton) {
                     is MenuButton.Simple -> {
-                        val action = menuButtonActions[button.actionKey] ?: run {
-                            Gdx.app.error(TAG, "Menu handler for action '${button.actionKey}' not found")
+                        val action = menuButtonActions[menuButton.actionKey] ?: run {
+                            Gdx.app.error(TAG, "Menu handler for action '${menuButton.actionKey}' not found")
                             return@forEachIndexed
                         }
 
                         if (action.canPerform()) {
                             action.perform()
                         } else {
-                            Gdx.app.debug(TAG, "Can't perform action ${button.actionKey}")
+                            Gdx.app.debug(TAG, "Can't perform action ${menuButton.actionKey}")
                         }
                     }
 
                     is MenuButton.BooleanOption -> {
-                        button.optionKeys.forEach { optionKey ->
+                        menuButton.optionKeys.forEach { optionKey ->
                             menuButtonBooleanOption[optionKey]?.toggleOption() ?: run {
                                 Gdx.app.error(TAG, "Menu option handler for option '$optionKey' not found")
                             }

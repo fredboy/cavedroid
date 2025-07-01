@@ -7,3 +7,5 @@ val PluginDependenciesSpecScope.ksp
     get() = id("com.google.devtools.ksp") version Versions.ksp
 val PluginDependenciesSpecScope.kotlinxSerialization
     get() = id("org.jetbrains.kotlin.plugin.serialization") version Versions.kotlin
+val PluginDependenciesSpecScope.ktlintGradle
+    get() = id("org.jlleitschuh.gradle.ktlint") version Versions.ktlintGradle

@@ -1,6 +1,7 @@
 plugins {
     kotlin
     ksp
+    ktlintGradle
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility

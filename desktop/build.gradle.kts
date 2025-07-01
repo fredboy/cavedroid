@@ -1,5 +1,6 @@
 plugins {
-    id("kotlin")
+    kotlin
+    ktlintGradle
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility

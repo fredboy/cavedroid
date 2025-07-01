@@ -97,8 +97,8 @@ class Player(
             leg.setOrigin(leg.width / 2f, 0f)
             head.setOrigin(head.width / 2, head.height)
 
-            var backHandAnim = 0f
-            var frontHandAnim = 0f
+            var backHandAnim: Float
+            var frontHandAnim: Float
 
             val rightHandAnim = getRightHandAnim(delta)
 

@@ -75,7 +75,7 @@ class CaveDroidApplication(
 
     override fun quitGame() {
         (screen as? GameScreen)?.let { gameScreen ->
-            screen.dispose()
+            gameScreen.dispose()
             setScreen(applicationComponent.menuScreen)
         } ?: Gdx.app.error(TAG, "quitGame called when active screen is not Game")
     }

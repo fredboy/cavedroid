@@ -63,6 +63,7 @@ class ContainerController @Inject constructor(
         }
     }
 
+    @Suppress("unused")
     fun update(delta: Float) {
         val iterator = containerMap.iterator()
         while (iterator.hasNext()) {

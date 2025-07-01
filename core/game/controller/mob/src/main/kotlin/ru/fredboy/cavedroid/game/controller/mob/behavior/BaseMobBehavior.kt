@@ -9,6 +9,7 @@ abstract class BaseMobBehavior<MOB : Mob>(
     val mobType: KClass<MOB>,
 ) : MobBehavior {
 
+    @Suppress("UNCHECKED_CAST")
     final override fun update(mob: Mob, worldAdapter: MobWorldAdapter, delta: Float) {
         if (mob::class == mobType) {
             with(mob as MOB) {
