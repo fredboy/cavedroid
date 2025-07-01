@@ -7,8 +7,6 @@ class GameContext(
     internal val isLoadGame: Boolean,
     internal var showInfo: Boolean,
     internal var showMap: Boolean,
-    internal var isFullscreen: Boolean,
-    internal var useDynamicCamera: Boolean,
     internal var joystick: Joystick,
     internal var cameraContext: CameraContext
 )

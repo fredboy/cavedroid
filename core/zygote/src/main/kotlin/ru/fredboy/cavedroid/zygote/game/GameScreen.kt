@@ -27,8 +27,6 @@ class GameScreen @Inject constructor(
             isLoadGame = isLoadGame,
             showInfo = false,
             showMap = false,
-            isFullscreen = false,
-            useDynamicCamera = false,
             joystick = Joystick(Player.SPEED),
             cameraContext = CameraContext(
                 viewport = Rectangle(

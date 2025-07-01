@@ -45,9 +45,7 @@ class MenuRenderer @Inject constructor(
     }
 
     private fun getButtonTextureRegionKey(button: MenuButton): String {
-        val buttonAction = menuButtonActions[button.actionKey]
-
-        if (buttonAction?.canPerform() != true) {
+        if (button is MenuButton.Simple && menuButtonActions[button.actionKey]?.canPerform() != true) {
             return KEY_BUTTON_DISABLED_TEXTURE
         }
 

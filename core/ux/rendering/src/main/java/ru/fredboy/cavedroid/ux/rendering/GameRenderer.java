@@ -211,7 +211,7 @@ public class GameRenderer {
     }
 
     private void updateCameraPosition(float delta) {
-        if (mGameContextRepository.useDynamicCamera()) {
+        if (mApplicationContextRepository.useDynamicCamera()) {
             updateDynamicCameraPosition(delta);
         } else {
             updateStaticCameraPosition();

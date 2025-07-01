@@ -13,10 +13,6 @@ interface GameContextRepository {
 
     fun getJoystick(): Joystick
 
-    fun isFullscreen(): Boolean
-
-    fun useDynamicCamera(): Boolean
-
     fun getCameraContext(): CameraContext
 
     fun setShowInfo(show: Boolean)
@@ -24,10 +20,6 @@ interface GameContextRepository {
     fun setShowMap(show: Boolean)
 
     fun setJoystick(joystick: Joystick)
-
-    fun setFullscreen(fullscreen: Boolean)
-
-    fun setUseDynamicCamera(use: Boolean)
 
     fun setCameraContext(cameraContext: CameraContext)
 

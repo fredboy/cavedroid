@@ -25,9 +25,24 @@ class CaveDroidApplication(
         setScreen(applicationComponent.gameScreen.apply { newGame(gameMode) })
     }
 
+    private fun initFullscreenMode(isFullscreen: Boolean) {
+        if (Gdx.app.type != Application.ApplicationType.Desktop) {
+            return
+        }
+
+        if (isFullscreen) {
+            Gdx.graphics.setFullscreenMode(Gdx.graphics.displayMode);
+        } else {
+            Gdx.graphics.setWindowedMode(960, 540)
+        }
+    }
+
     override fun create() {
         val width = DEFAULT_VIEWPORT_WIDTH
         val height = width / Gdx.graphics.ratio
+
+        val isFullscreen = preferencesStore.getPreference("fullscreen").toBoolean()
+        initFullscreenMode(isFullscreen)
 
         applicationComponent = DaggerApplicationComponent.builder()
             .applicationContext(
@@ -37,6 +52,8 @@ class CaveDroidApplication(
                     gameDirectory = gameDataDirectoryPath,
                     width = width,
                     height = height,
+                    isFullscreen = isFullscreen,
+                    useDynamicCamera = preferencesStore.getPreference("dyncam").toBoolean()
                 )
             )
             .applicationController(this)

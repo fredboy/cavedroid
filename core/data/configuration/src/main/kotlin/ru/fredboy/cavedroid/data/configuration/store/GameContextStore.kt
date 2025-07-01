@@ -28,14 +28,6 @@ class GameContextStore @Inject constructor(
         get() = synchronized(lock) { gameContext.joystick }
         set(value) = synchronized(lock) { gameContext.joystick = value }
 
-    var isFullscreen: Boolean
-        get() = synchronized(lock) { gameContext.isFullscreen }
-        set(value) = synchronized(lock) { gameContext.isFullscreen = value }
-
-    var useDynamicCamera: Boolean
-        get() = synchronized(lock) { gameContext.useDynamicCamera }
-        set(value) = synchronized(lock) { gameContext.useDynamicCamera = value }
-
     var cameraContext: CameraContext
         get() = synchronized(lock) { gameContext.cameraContext }
         set(value) = synchronized(lock) { gameContext.cameraContext = value }

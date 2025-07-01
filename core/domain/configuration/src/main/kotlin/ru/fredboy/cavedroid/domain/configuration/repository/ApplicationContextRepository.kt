@@ -6,6 +6,11 @@ interface ApplicationContextRepository {
 
     fun isTouch(): Boolean
 
+    fun isFullscreen(): Boolean
+
+    fun useDynamicCamera(): Boolean
+
+
     fun getGameDirectory(): String
 
     fun getWidth(): Float
@@ -13,6 +18,10 @@ interface ApplicationContextRepository {
     fun getHeight(): Float
 
     fun setTouch(isTouch: Boolean)
+
+    fun setFullscreen(fullscreen: Boolean)
+
+    fun setUseDynamicCamera(use: Boolean)
 
     fun setGameDirectory(path: String)
 

@@ -35,6 +35,7 @@ class MenuScreen @Inject constructor() : Screen {
     }
 
     override fun show() {
+        resetMenu()
         Gdx.input.inputProcessor = menuInputProcessor
     }
 

@@ -1,5 +1,7 @@
 package ru.fredboy.cavedroid.data.configuration.repository
 
+import com.badlogic.gdx.Application
+import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.data.configuration.store.ApplicationContextStore
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import javax.inject.Inject
@@ -14,6 +16,10 @@ class ApplicationContextRepositoryImpl @Inject constructor(
 
     override fun isTouch(): Boolean = applicationContextStore.isTouch
 
+    override fun isFullscreen(): Boolean = applicationContextStore.isFullscreen
+
+    override fun useDynamicCamera(): Boolean = applicationContextStore.useDynamicCamera
+
     override fun getGameDirectory(): String = applicationContextStore.gameDirectory
 
     override fun getWidth(): Float = applicationContextStore.width
@@ -22,6 +28,23 @@ class ApplicationContextRepositoryImpl @Inject constructor(
 
     override fun setTouch(isTouch: Boolean) {
         applicationContextStore.isTouch = isTouch
+    }
+
+    override fun setFullscreen(fullscreen: Boolean) {
+        if (Gdx.app.type != Application.ApplicationType.Desktop) {
+            return
+        }
+
+        if (fullscreen) {
+            Gdx.graphics.setFullscreenMode(Gdx.graphics.displayMode);
+        } else {
+            Gdx.graphics.setWindowedMode(2 * getWidth().toInt(), 2 * getHeight().toInt())
+        }
+        applicationContextStore.isFullscreen = fullscreen
+    }
+
+    override fun setUseDynamicCamera(use: Boolean) {
+        applicationContextStore.useDynamicCamera = use
     }
 
     override fun setGameDirectory(path: String) {

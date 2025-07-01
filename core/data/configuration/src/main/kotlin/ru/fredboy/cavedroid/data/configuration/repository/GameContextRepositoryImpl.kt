@@ -1,13 +1,11 @@
 package ru.fredboy.cavedroid.data.configuration.repository
 
-import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.model.Joystick
 import ru.fredboy.cavedroid.data.configuration.store.GameContextStore
 import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @GameScope
 class GameContextRepositoryImpl @Inject constructor(
@@ -22,10 +20,6 @@ class GameContextRepositoryImpl @Inject constructor(
 
     override fun getJoystick(): Joystick = gameContextStore.joystick
 
-    override fun isFullscreen(): Boolean = gameContextStore.isFullscreen
-
-    override fun useDynamicCamera(): Boolean = gameContextStore.useDynamicCamera
-
     override fun getCameraContext(): CameraContext = gameContextStore.cameraContext
 
     override fun setShowInfo(show: Boolean) {
@@ -38,22 +32,6 @@ class GameContextRepositoryImpl @Inject constructor(
 
     override fun setJoystick(joystick: Joystick) {
         gameContextStore.joystick = joystick
-    }
-
-    override fun setFullscreen(fullscreen: Boolean) {
-        if (fullscreen) {
-            Gdx.graphics.setFullscreenMode(Gdx.graphics.displayMode);
-        } else {
-            Gdx.graphics.setWindowedMode(
-                /* width = */ getCameraContext().viewport.width.toInt(),
-                /* height = */ getCameraContext().viewport.height.toInt(),
-            );
-        }
-        gameContextStore.isFullscreen = fullscreen
-    }
-
-    override fun setUseDynamicCamera(use: Boolean) {
-        gameContextStore.useDynamicCamera = use
     }
 
     override fun setCameraContext(cameraContext: CameraContext) {
