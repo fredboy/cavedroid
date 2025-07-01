@@ -73,6 +73,10 @@ public class GameProc implements Disposable {
         mContainerController.update(delta);
     }
 
+    public void onResize() {
+        mGameRenderer.onResize();
+    }
+
     public void show() {
         Gdx.input.setInputProcessor(mGameInputProcessor);
     }

@@ -238,6 +238,11 @@ public class GameRenderer {
         }
     }
 
+    public void onResize() {
+        spriter.setProjectionMatrix(mGameContextRepository.getCameraContext().getCamera().combined);
+        shaper.setProjectionMatrix(mGameContextRepository.getCameraContext().getCamera().combined);
+    }
+
     public void render(float delta) {
         updateCameraPosition(delta);
 

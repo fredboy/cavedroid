@@ -1,7 +1,6 @@
 package ru.fredboy.cavedroid.zygote.game
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.model.Joystick
@@ -10,6 +9,7 @@ import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.zygote.CaveDroidApplication
+import ru.fredboy.cavedroid.zygote.base.BaseScreen
 import ru.fredboy.cavedroid.zygote.game.di.DaggerGameComponent
 import ru.fredboy.cavedroid.zygote.game.di.GameComponent
 import javax.inject.Inject
@@ -18,9 +18,9 @@ import javax.inject.Singleton
 @Singleton
 class GameScreen @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
-) : Screen {
+) : BaseScreen(applicationContextRepository) {
 
-    private var gameProc: GameProc? = null
+    private var gameComponent: GameComponent? = null
 
     private fun getGameContext(isLoadGame: Boolean): GameContext {
         return GameContext(
@@ -55,39 +55,53 @@ class GameScreen @Inject constructor(
             .build()
     }
 
-    private fun resetGameProc() {
-        gameProc?.dispose()
-        gameProc = null
+    private fun resetGameComponent() {
+        gameComponent?.gameProc?.dispose()
+        gameComponent = null
     }
 
     fun newGame(gameMode: Int) {
-        resetGameProc()
-        gameProc = getGameComponent(false).gameProc.apply {
-            setPlayerGameMode(gameMode)
+        resetGameComponent()
+        gameComponent = getGameComponent(false).apply {
+            gameProc.setPlayerGameMode(gameMode)
         }
     }
 
     fun loadGame() {
-        resetGameProc()
-        gameProc = getGameComponent(true).gameProc
+        resetGameComponent()
+        gameComponent = getGameComponent(true)
     }
 
     override fun show() {
-        val proc = requireNotNull(gameProc) {
-            "GameScreen#show: gameProc was not set before show"
+        val proc = requireNotNull(gameComponent?.gameProc) {
+            "GameScreen#show: gameComponent was not set before show"
         }
         proc.show()
     }
 
     override fun render(delta: Float) {
-        val proc = requireNotNull(gameProc) {
-            "GameScreen#render: gameProc was not set before render"
+        val proc = requireNotNull(gameComponent?.gameProc) {
+            "GameScreen#render: gameComponent was not set before render"
         }
         proc.update(delta)
     }
 
     override fun resize(width: Int, height: Int) {
+        super.resize(width, height)
 
+        gameComponent?.gameContextRepository?.getCameraContext()?.let { cameraContext ->
+            cameraContext.viewport.apply {
+                setWidth(applicationContextRepository.getWidth())
+                setHeight(applicationContextRepository.getHeight())
+            }
+            cameraContext.camera.setToOrtho(
+                /* yDown = */ true,
+                /* viewportWidth = */ applicationContextRepository.getWidth(),
+                /* viewportHeight = */ applicationContextRepository.getHeight(),
+            )
+        }
+
+        gameComponent?.gameProc?.onResize()
     }
 
     override fun pause() {
@@ -103,6 +117,6 @@ class GameScreen @Inject constructor(
     }
 
     override fun dispose() {
-        resetGameProc()
+        resetGameComponent()
     }
 }

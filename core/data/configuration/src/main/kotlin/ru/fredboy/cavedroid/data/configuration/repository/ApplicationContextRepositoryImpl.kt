@@ -31,14 +31,16 @@ class ApplicationContextRepositoryImpl @Inject constructor(
     }
 
     override fun setFullscreen(fullscreen: Boolean) {
-        if (Gdx.app.type != Application.ApplicationType.Desktop) {
+        if (!Gdx.graphics.supportsDisplayModeChange()) {
             return
         }
 
         if (fullscreen) {
             Gdx.graphics.setFullscreenMode(Gdx.graphics.displayMode);
         } else {
-            Gdx.graphics.setWindowedMode(2 * getWidth().toInt(), 2 * getHeight().toInt())
+            Gdx.graphics.setWindowedMode(960, 540)
+            setWidth(Gdx.graphics.width.toFloat() / 2)
+            setHeight(Gdx.graphics.height.toFloat() / 2)
         }
         applicationContextStore.isFullscreen = fullscreen
     }

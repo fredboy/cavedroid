@@ -6,6 +6,7 @@ import ru.deadsoftware.cavedroid.generated.module.*
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.data.configuration.di.GameContextModule
 import ru.fredboy.cavedroid.data.configuration.model.GameContext
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.game.controller.container.di.ControllerContainerModule
 import ru.fredboy.cavedroid.game.controller.drop.di.ControllerDropModule
 import ru.fredboy.cavedroid.game.controller.mob.di.MobControllerModule
@@ -35,6 +36,8 @@ import ru.fredboy.cavedroid.zygote.game.GameProc
 interface GameComponent {
 
     val gameProc: GameProc
+
+    val gameContextRepository: GameContextRepository
 
     @Component.Builder
     interface Builder {

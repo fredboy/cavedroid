@@ -1,9 +1,10 @@
 package ru.fredboy.cavedroid.zygote.menu
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Screen
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.menu.repository.MenuButtonRepository
 import ru.fredboy.cavedroid.zygote.CaveDroidApplication
+import ru.fredboy.cavedroid.zygote.base.BaseScreen
 import ru.fredboy.cavedroid.zygote.menu.di.DaggerMenuComponent
 import ru.fredboy.cavedroid.zygote.menu.di.MenuComponent
 import ru.fredboy.cavedroid.zygote.menu.input.MenuInputProcessor
@@ -12,7 +13,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MenuScreen @Inject constructor() : Screen {
+class MenuScreen @Inject constructor(
+    applicationContextRepository: ApplicationContextRepository,
+) : BaseScreen(applicationContextRepository) {
 
     private val menuRenderer: MenuRenderer
 
@@ -44,6 +47,8 @@ class MenuScreen @Inject constructor() : Screen {
     }
 
     override fun resize(width: Int, height: Int) {
+        super.resize(width, height)
+        menuRenderer.onResize()
     }
 
     override fun pause() {

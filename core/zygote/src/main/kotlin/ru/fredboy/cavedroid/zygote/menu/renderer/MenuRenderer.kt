@@ -121,6 +121,15 @@ class MenuRenderer @Inject constructor(
         )
     }
 
+    fun onResize() {
+        camera.setToOrtho(
+            /* yDown = */ true,
+            /* viewportWidth = */ applicationContextRepository.getWidth(),
+            /* viewportHeight = */ applicationContextRepository.getHeight(),
+        )
+        spriter.projectionMatrix = camera.combined
+    }
+
     fun render(delta: Float) {
         spriter.begin()
         drawBackground()
