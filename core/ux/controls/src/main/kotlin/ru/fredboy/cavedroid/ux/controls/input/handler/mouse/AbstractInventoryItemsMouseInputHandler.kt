@@ -23,11 +23,13 @@ abstract class AbstractInventoryItemsMouseInputHandler(
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.currentWindowType == windowType &&
-                isInsideWindow(action, windowTexture) &&
-                (action.actionKey is MouseInputActionKey.Left ||
-                        action.actionKey is MouseInputActionKey.Right ||
-                        action.actionKey is MouseInputActionKey.Screen)
-                && (action.actionKey.touchUp || action.actionKey is MouseInputActionKey.Screen)
+            isInsideWindow(action, windowTexture) &&
+            (
+                action.actionKey is MouseInputActionKey.Left ||
+                    action.actionKey is MouseInputActionKey.Right ||
+                    action.actionKey is MouseInputActionKey.Screen
+                ) &&
+            (action.actionKey.touchUp || action.actionKey is MouseInputActionKey.Screen)
     }
 
     protected fun updateCraftResult(window: AbstractInventoryWindowWithCraftGrid) {
@@ -48,7 +50,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         action: MouseInputAction,
         items: MutableList<InventoryItem>,
         window: AbstractInventoryWindow,
-        index: Int
+        index: Int,
     ) {
         if (action.actionKey is MouseInputActionKey.Screen) {
             if (!action.actionKey.touchUp) {
@@ -71,12 +73,15 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         action: MouseInputAction,
         items: MutableList<InventoryItem>,
         window: AbstractInventoryWindow,
-        index: Int
+        index: Int,
     ) {
         val selectedItem = window.selectedItem
 
-        if (!selectedItem.isNoneOrNull() && (selectedItem.item != items[index].item ||
-                    !selectedItem.canBeAdded(items[index].amount))) {
+        if (!selectedItem.isNoneOrNull() && (
+                selectedItem.item != items[index].item ||
+                    !selectedItem.canBeAdded(items[index].amount)
+                )
+        ) {
             return
         }
 
@@ -96,7 +101,5 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         if (window is AbstractInventoryWindowWithCraftGrid) {
             reduceCraftItems(window)
         }
-
     }
-
 }

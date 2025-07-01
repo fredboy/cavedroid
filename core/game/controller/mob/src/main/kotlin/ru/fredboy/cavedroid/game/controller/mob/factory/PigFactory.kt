@@ -25,5 +25,4 @@ class PigFactory @Inject constructor(
 
         return pig
     }
-
 }

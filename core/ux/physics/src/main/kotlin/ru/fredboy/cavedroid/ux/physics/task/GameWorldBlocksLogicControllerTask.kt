@@ -43,7 +43,7 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
         val startX = getChunkStart()
 
         for (y in gameWorld.height downTo 0) {
-            for (x in startX ..< startX + CHUNK_WIDTH) {
+            for (x in startX..<startX + CHUNK_WIDTH) {
                 updateBlock(x, y)
             }
         }
@@ -59,5 +59,4 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
 
         const val WORLD_BLOCKS_LOGIC_UPDATE_INTERVAL_SEC = .1f
     }
-
 }

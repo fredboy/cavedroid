@@ -25,7 +25,7 @@ class PlayerMapper @Inject constructor(
             y = player.y,
             width = player.width,
             height = player.height,
-            velocityX =  player.velocity.x,
+            velocityX = player.velocity.x,
             velocityY = player.velocity.y,
             animDelta = player.animDelta,
             anim = player.anim,
@@ -61,7 +61,7 @@ class PlayerMapper @Inject constructor(
             getFallbackItem = getFallbackItemUseCase,
             x = saveDataDto.x,
             y = saveDataDto.y,
-            behavior = PlayerMobBehavior()
+            behavior = PlayerMobBehavior(),
         ).apply {
             width = saveDataDto.width
             height = saveDataDto.height

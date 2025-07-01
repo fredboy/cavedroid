@@ -10,5 +10,4 @@ abstract class DataMenuModule {
 
     @Binds
     internal abstract fun bindMenuButtonsRepository(impl: MenuButtonRepositoryImpl): MenuButtonRepository
-
 }

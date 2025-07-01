@@ -1,10 +1,10 @@
 package ru.fredboy.cavedroid.data.assets.internal
 
 import com.badlogic.gdx.graphics.g2d.Sprite
-import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageAssetsRepository
 import ru.fredboy.cavedroid.common.utils.BLOCK_SIZE_PX
 import ru.fredboy.cavedroid.common.utils.bl
 import ru.fredboy.cavedroid.common.utils.px
+import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageAssetsRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,7 +27,7 @@ internal class BlockDamageAssetsRepositoryImpl @Inject constructor() : BlockDama
                 x = index.px.toInt(),
                 y = 0,
                 width = blockSize,
-                height = blockSize
+                height = blockSize,
             )
         }
     }
@@ -48,5 +48,4 @@ internal class BlockDamageAssetsRepositoryImpl @Inject constructor() : BlockDama
     companion object {
         private const val BLOCK_DAMAGE_SHEET_PATH = "textures/break.png"
     }
-
 }

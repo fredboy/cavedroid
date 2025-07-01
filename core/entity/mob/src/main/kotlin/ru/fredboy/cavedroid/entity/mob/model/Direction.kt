@@ -7,7 +7,8 @@ enum class Direction(
     val basis: Int,
 ) {
     LEFT(0, -1),
-    RIGHT(1, 1);
+    RIGHT(1, 1),
+    ;
 
     companion object {
         fun random() = if (MathUtils.randomBoolean()) LEFT else RIGHT

@@ -42,10 +42,10 @@ class GameInputProcessor @Inject constructor(
             /* x = */ applicationContextRepository.getWidth() / 2,
             /* y = */ 0f,
             /* width = */ applicationContextRepository.getWidth() / 2,
-            /* height = */ applicationContextRepository.getHeight() / 2
+            /* height = */ applicationContextRepository.getHeight() / 2,
         ),
         Input.Buttons.LEFT,
-        true
+        true,
     )
 
     private val mouseRightTouchButton = TouchButton(
@@ -53,15 +53,14 @@ class GameInputProcessor @Inject constructor(
             /* x = */ applicationContextRepository.getWidth() / 2,
             /* y = */ applicationContextRepository.getHeight() / 2,
             /* width = */ applicationContextRepository.getWidth() / 2,
-            /* height = */ applicationContextRepository.getHeight() / 2
+            /* height = */ applicationContextRepository.getHeight() / 2,
         ),
         Input.Buttons.RIGHT,
-        true
+        true,
     )
 
     private var touchDownX = 0f
     private var touchDownY = 0f
-
 
     override fun keyDown(keycode: Int): Boolean {
         return handleKeyboardAction(keycode, true)
@@ -72,7 +71,7 @@ class GameInputProcessor @Inject constructor(
     }
 
     override fun keyTyped(p0: Char): Boolean {
-        return false;
+        return false
     }
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
@@ -123,7 +122,7 @@ class GameInputProcessor @Inject constructor(
                     mouseY = screenY,
                     button = touchedKey.code,
                     touchUp = true,
-                    pointer = pointer
+                    pointer = pointer,
                 )
             } else {
                 keyUp(touchedKey.code)
@@ -175,7 +174,6 @@ class GameInputProcessor @Inject constructor(
             )
         return handleMouseAction(action)
     }
-
 
     @Suppress("unused")
     fun update(delta: Float) {

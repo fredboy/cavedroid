@@ -22,5 +22,4 @@ interface MobWorldAdapter {
     fun destroyBackgroundBlock(x: Int, y: Int, shouldDrop: Boolean)
 
     fun findSpawnPoint(): Vector2
-
 }

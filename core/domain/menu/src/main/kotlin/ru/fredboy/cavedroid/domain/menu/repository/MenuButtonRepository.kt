@@ -14,5 +14,4 @@ interface MenuButtonRepository : Disposable {
     fun getCurrentMenuButtons(): Map<String, MenuButton>?
 
     fun setButtonEnabled(menuKey: String, buttonKey: String, enabled: Boolean)
-
 }

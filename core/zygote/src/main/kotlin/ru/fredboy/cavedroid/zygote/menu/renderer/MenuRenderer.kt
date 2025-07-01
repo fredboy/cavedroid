@@ -62,7 +62,7 @@ class MenuRenderer @Inject constructor(
             is MenuButton.Simple -> button.label
             is MenuButton.BooleanOption -> String.format(
                 button.label,
-                button.optionKeys.map { key -> buttonBooleanOptions[key]?.getOption().toString() }
+                button.optionKeys.map { key -> buttonBooleanOptions[key]?.getOption().toString() },
             )
         }
 
@@ -104,8 +104,8 @@ class MenuRenderer @Inject constructor(
         val backgroundRegionWidth = backgroundRegion.regionWidth
         val backgroundRegionHeight = backgroundRegion.regionWidth
 
-        for (x in 0 .. applicationContextRepository.getWidth().toInt() / backgroundRegionWidth) {
-            for (y in 0 .. applicationContextRepository.getHeight().toInt() / backgroundRegionHeight) {
+        for (x in 0..applicationContextRepository.getWidth().toInt() / backgroundRegionWidth) {
+            for (y in 0..applicationContextRepository.getHeight().toInt() / backgroundRegionHeight) {
                 spriter.draw(
                     /* region = */ backgroundRegion,
                     /* x = */ x * backgroundRegionWidth.toFloat(),
@@ -143,9 +143,8 @@ class MenuRenderer @Inject constructor(
             str = "CaveDroid " + CaveDroidConstants.VERSION,
             x = 0f,
             y = applicationContextRepository.getHeight() - getStringHeight("CaveDroid " + CaveDroidConstants.VERSION) * 1.5f,
-        );
+        )
         spriter.end()
-
     }
 
     fun dispose() {
@@ -159,5 +158,4 @@ class MenuRenderer @Inject constructor(
         private const val KEY_BUTTON_ENABLED_TEXTURE = "button_1"
         private const val KEY_BUTTON_DISABLED_TEXTURE = "button_0"
     }
-
 }

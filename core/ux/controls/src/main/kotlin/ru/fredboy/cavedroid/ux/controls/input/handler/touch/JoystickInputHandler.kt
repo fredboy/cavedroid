@@ -36,7 +36,8 @@ class JoystickInputHandler @Inject constructor(
             if (!value) {
                 resetVelocity()
                 if (TimeUtils.timeSinceMillis(activateTimeMs) < 200L &&
-                    mobController.player.controlMode != Player.ControlMode.CURSOR && mobController.player.canJump) {
+                    mobController.player.controlMode != Player.ControlMode.CURSOR && mobController.player.canJump
+                ) {
                     mobController.player.jump()
                 }
             } else {
@@ -55,9 +56,10 @@ class JoystickInputHandler @Inject constructor(
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-                applicationContextRepository.isTouch() && action.actionKey is MouseInputActionKey.Touch && (action.actionKey.pointer == gameContextRepository.getJoystick().pointer || !active) && ((action.actionKey is MouseInputActionKey.Dragged) ||
-                (action.screenX < action.cameraViewport.width / 2 && !action.actionKey.touchUp || active)) && !(action.actionKey is MouseInputActionKey.Screen && action.isInsideHotbar(textureRegions))
-
+            applicationContextRepository.isTouch() && action.actionKey is MouseInputActionKey.Touch && (action.actionKey.pointer == gameContextRepository.getJoystick().pointer || !active) && (
+                (action.actionKey is MouseInputActionKey.Dragged) ||
+                    (action.screenX < action.cameraViewport.width / 2 && !action.actionKey.touchUp || active)
+                ) && !(action.actionKey is MouseInputActionKey.Screen && action.isInsideHotbar(textureRegions))
     }
 
     private fun handleTouchDown(action: MouseInputAction) {
@@ -112,7 +114,7 @@ class JoystickInputHandler @Inject constructor(
         val joyVector = joystick.getVelocityVector()
 
         if (mobController.player.isFlyMode) {
-            joyVector.scl(2f);
+            joyVector.scl(2f)
         }
 
         mobController.player.velocity.x = joyVector.x
@@ -140,5 +142,4 @@ class JoystickInputHandler @Inject constructor(
             }
         }
     }
-
 }

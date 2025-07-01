@@ -9,7 +9,6 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetItemTextureUseCase
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.item.CommonItemParams
 import ru.fredboy.cavedroid.domain.items.model.item.Item
-import ru.fredboy.cavedroid.domain.items.model.item.Item.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,76 +21,76 @@ class ItemMapper @Inject constructor(
         val params = mapCommonParams(key, dto)
 
         return when (dto.type) {
-            "normal" -> Normal(
-                params = params,
-                sprite = requireNotNull(loadSprite(dto))
-            )
-
-            "usable" -> Usable(
+            "normal" -> Item.Normal(
                 params = params,
                 sprite = requireNotNull(loadSprite(dto)),
-                useActionKey = requireNotNull(dto.actionKey)
             )
 
-            "shovel" -> Shovel(
+            "usable" -> Item.Usable(
                 params = params,
                 sprite = requireNotNull(loadSprite(dto)),
-                mobDamageMultiplier = dto.mobDamageMultiplier,
-                blockDamageMultiplier = dto.blockDamageMultiplier,
-                level = requireNotNull(dto.toolLevel)
+                useActionKey = requireNotNull(dto.actionKey),
             )
 
-            "sword" -> Sword(
+            "shovel" -> Item.Shovel(
                 params = params,
                 sprite = requireNotNull(loadSprite(dto)),
                 mobDamageMultiplier = dto.mobDamageMultiplier,
                 blockDamageMultiplier = dto.blockDamageMultiplier,
-                level = requireNotNull(dto.toolLevel)
+                level = requireNotNull(dto.toolLevel),
             )
 
-            "pickaxe" -> Pickaxe(
+            "sword" -> Item.Sword(
                 params = params,
                 sprite = requireNotNull(loadSprite(dto)),
                 mobDamageMultiplier = dto.mobDamageMultiplier,
                 blockDamageMultiplier = dto.blockDamageMultiplier,
-                level = requireNotNull(dto.toolLevel)
+                level = requireNotNull(dto.toolLevel),
             )
 
-            "axe" -> Axe(
+            "pickaxe" -> Item.Pickaxe(
                 params = params,
                 sprite = requireNotNull(loadSprite(dto)),
                 mobDamageMultiplier = dto.mobDamageMultiplier,
                 blockDamageMultiplier = dto.blockDamageMultiplier,
-                level = requireNotNull(dto.toolLevel)
+                level = requireNotNull(dto.toolLevel),
             )
 
-            "shears" -> Shears(
+            "axe" -> Item.Axe(
                 params = params,
                 sprite = requireNotNull(loadSprite(dto)),
                 mobDamageMultiplier = dto.mobDamageMultiplier,
                 blockDamageMultiplier = dto.blockDamageMultiplier,
-                level = requireNotNull(dto.toolLevel)
+                level = requireNotNull(dto.toolLevel),
             )
 
-            "block" -> Block(
+            "shears" -> Item.Shears(
                 params = params,
-                block = requireNotNull(block)
+                sprite = requireNotNull(loadSprite(dto)),
+                mobDamageMultiplier = dto.mobDamageMultiplier,
+                blockDamageMultiplier = dto.blockDamageMultiplier,
+                level = requireNotNull(dto.toolLevel),
             )
 
-            "slab" -> Slab(
+            "block" -> Item.Block(
+                params = params,
+                block = requireNotNull(block),
+            )
+
+            "slab" -> Item.Slab(
                 params = params,
                 topPartBlock = requireNotNull(slabTopBlock),
-                bottomPartBlock = requireNotNull(slabBottomBlock)
+                bottomPartBlock = requireNotNull(slabBottomBlock),
             )
 
-            "food" -> Food(
+            "food" -> Item.Food(
                 params = params,
                 sprite = requireNotNull(loadSprite(dto)),
-                heal = requireNotNull(dto.heal)
+                heal = requireNotNull(dto.heal),
             )
 
-            "none" -> None(
-                params = params
+            "none" -> Item.None(
+                params = params,
             )
 
             else -> throw IllegalArgumentException("Unknown item type ${dto.type}")
@@ -126,5 +125,4 @@ class ItemMapper @Inject constructor(
                 }
             }
     }
-
 }

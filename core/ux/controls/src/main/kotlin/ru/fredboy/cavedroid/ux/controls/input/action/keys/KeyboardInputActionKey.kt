@@ -23,6 +23,6 @@ sealed interface KeyboardInputActionKey {
     data object ShowMap : KeyboardInputActionKey
 
     data class SelectHotbarSlot(
-        val slot: Int
+        val slot: Int,
     ) : KeyboardInputActionKey
 }

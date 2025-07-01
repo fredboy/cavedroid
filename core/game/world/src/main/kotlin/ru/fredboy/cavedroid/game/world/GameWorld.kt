@@ -60,7 +60,6 @@ class GameWorld @Inject constructor(
         onBlockDestroyedListeners.removeFirst { it.get() == listener }
     }
 
-
     private fun transformX(x: Int): Int {
         var transformed = x % width
         if (transformed < 0) {
@@ -72,13 +71,13 @@ class GameWorld @Inject constructor(
     private fun getMap(x: Int, y: Int, layer: Layer): Block {
         val fallback = itemsRepository.fallbackBlock
 
-        if (y !in 0 ..< height) {
+        if (y !in 0..<height) {
             return fallback
         }
 
         val transformedX = transformX(x)
 
-        if (transformedX !in 0 ..< width) {
+        if (transformedX !in 0..<width) {
             return fallback
         }
 
@@ -101,13 +100,13 @@ class GameWorld @Inject constructor(
     }
 
     private fun setMap(x: Int, y: Int, layer: Layer, value: Block, dropOld: Boolean) {
-        if (y !in 0 ..< height) {
+        if (y !in 0..<height) {
             return
         }
 
         val transformedX = transformX(x)
 
-        if (transformedX !in 0 ..< width) {
+        if (transformedX !in 0..<width) {
             return
         }
 
@@ -127,7 +126,7 @@ class GameWorld @Inject constructor(
 
     private fun isSameSlab(slab1: Block, slab2: Block): Boolean {
         return slab1 is Block.Slab && slab2 is Block.Slab &&
-                (slab1.params.key == slab2.otherPartBlockKey || slab1.otherPartBlockKey == slab2.params.key)
+            (slab1.params.key == slab2.otherPartBlockKey || slab1.otherPartBlockKey == slab2.params.key)
     }
 
     fun hasForeAt(x: Int, y: Int): Boolean {
@@ -178,7 +177,8 @@ class GameWorld @Inject constructor(
 
     fun placeToBackground(x: Int, y: Int, value: Block, dropOld: Boolean = false): Boolean {
         val wasPlaced = if (value.isNone() || getBackMap(x, y).isNone() && value.params.hasCollision &&
-            (!value.params.isTransparent || value.params.key == "glass" || value.isChest() || value.isSlab())) {
+            (!value.params.isTransparent || value.params.key == "glass" || value.isChest() || value.isSlab())
+        ) {
             setBackMap(x, y, value, dropOld)
             true
         } else {

@@ -29,12 +29,9 @@ class GameWorldMobDamageControllerTask @Inject constructor(
                 }
             }
         }
-
-
     }
 
     companion object {
         const val ENVIRONMENTAL_MOB_DAMAGE_INTERVAL_SEC = 0.5f
     }
-
 }

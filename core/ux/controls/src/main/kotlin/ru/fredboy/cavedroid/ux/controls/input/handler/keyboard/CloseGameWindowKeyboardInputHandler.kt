@@ -21,17 +21,17 @@ class CloseGameWindowKeyboardInputHandler @Inject constructor(
 
     override fun checkConditions(action: KeyboardInputAction): Boolean {
         return action.actionKey is KeyboardInputActionKey.OpenInventory &&
-                !action.isKeyDown && gameWindowsManager.currentWindowType != GameWindowType.NONE
+            !action.isKeyDown && gameWindowsManager.currentWindowType != GameWindowType.NONE
     }
 
     override fun handle(action: KeyboardInputAction) {
         val selectedItem = gameWindowsManager.currentWindow?.selectedItem
         if (selectedItem != null) {
-            for (i in 1 .. selectedItem.amount) {
+            for (i in 1..selectedItem.amount) {
                 dropController.addDrop(
                     /* x = */ mobController.player.x + (32f * mobController.player.direction.basis),
                     /* y = */ mobController.player.y,
-                    /* item = */ selectedItem
+                    /* item = */ selectedItem,
                 )
             }
             gameWindowsManager.currentWindow?.selectedItem = null

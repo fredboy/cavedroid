@@ -50,7 +50,7 @@ class InventoryItem(
         font: BitmapFont,
         text: String,
         x: Float,
-        y: Float
+        y: Float,
     ) {
         spriteBatch.drawString(font, text, x + 1, y + 1, Color.BLACK)
         spriteBatch.drawString(font, text, x, y, Color.WHITE)
@@ -76,7 +76,7 @@ class InventoryItem(
             font = font,
             text = amountString,
             x = x + 10f - getStringWidth(amountString) + 1f,
-            y = y + 10f - getStringHeight(amountString) + 1f
+            y = y + 10f - getStringHeight(amountString) + 1f,
         )
     }
 
@@ -110,7 +110,7 @@ class InventoryItem(
                 /* x = */ x,
                 /* y = */ y + 1.px - 2,
                 /* width = */ 1.px * (amount.toFloat() / item.params.maxStack.toFloat()),
-                /* height = */ 2f
+                /* height = */ 2f,
             )
             shapeRenderer.end()
             spriteBatch.begin()
@@ -121,7 +121,7 @@ class InventoryItem(
                 font = font,
                 text = amountString,
                 x = x + 1.px - getStringWidth(amountString),
-                y = y + 1.px - getStringHeight(amountString)
+                y = y + 1.px - getStringHeight(amountString),
             )
         }
     }
@@ -133,5 +133,4 @@ class InventoryItem(
             return this?.item == null || this.item.isNone()
         }
     }
-
 }

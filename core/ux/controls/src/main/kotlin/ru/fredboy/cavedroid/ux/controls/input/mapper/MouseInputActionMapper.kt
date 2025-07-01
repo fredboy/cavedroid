@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
-import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.ux.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.ux.controls.input.action.keys.MouseInputActionKey
 import javax.inject.Inject
@@ -79,5 +78,4 @@ class MouseInputActionMapper @Inject constructor(
     private fun getScreenY(mouseY: Float): Float {
         return mouseY * (applicationContextRepository.getHeight() / Gdx.graphics.height)
     }
-
 }

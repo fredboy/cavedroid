@@ -22,7 +22,7 @@ class DropMapper @Inject constructor(
             velocityY = drop.velocity.y,
             itemKey = drop.item.params.key,
             amount = drop.amount,
-            pickedUp = drop.isPickedUp
+            pickedUp = drop.isPickedUp,
         )
     }
 
@@ -33,7 +33,7 @@ class DropMapper @Inject constructor(
             x = saveDataDto.x,
             y = saveDataDto.y,
             item = getItemByKeyUseCase[saveDataDto.itemKey],
-            amount = saveDataDto.amount
+            amount = saveDataDto.amount,
         ).apply {
             width = saveDataDto.width
             height = saveDataDto.height
@@ -46,5 +46,4 @@ class DropMapper @Inject constructor(
     companion object {
         private const val SAVE_DATA_VERSION = 3
     }
-
 }

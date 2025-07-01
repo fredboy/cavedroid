@@ -14,5 +14,4 @@ class GetCraftingResultUseCase @Inject constructor(
     operator fun get(input: List<Item>): InventoryItem {
         return itemsRepository.getCraftingResult(input)
     }
-
 }

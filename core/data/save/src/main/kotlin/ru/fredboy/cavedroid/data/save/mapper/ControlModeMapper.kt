@@ -15,7 +15,7 @@ class ControlModeMapper @Inject constructor() {
             value = when (direction) {
                 Player.ControlMode.WALK -> 0
                 Player.ControlMode.CURSOR -> 1
-            }
+            },
         )
     }
 

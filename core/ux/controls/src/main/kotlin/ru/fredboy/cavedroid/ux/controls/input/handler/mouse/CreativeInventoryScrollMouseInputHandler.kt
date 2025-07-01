@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
-import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
@@ -32,25 +31,26 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.currentWindowType == GameWindowType.CREATIVE_INVENTORY &&
-                (gameWindowsManager.isDragging || isInsideWindow(action, creativeInventoryTexture)) &&
-                (checkStartDragConditions(action) || checkEndDragConditions(action) ||
-                        checkDragConditions(action) || action.actionKey is MouseInputActionKey.Scroll)
-
+            (gameWindowsManager.isDragging || isInsideWindow(action, creativeInventoryTexture)) &&
+            (
+                checkStartDragConditions(action) || checkEndDragConditions(action) ||
+                    checkDragConditions(action) || action.actionKey is MouseInputActionKey.Scroll
+                )
     }
 
     private fun checkStartDragConditions(action: MouseInputAction): Boolean {
         return (action.actionKey is MouseInputActionKey.Screen) &&
-                !action.actionKey.touchUp && !gameWindowsManager.isDragging
+            !action.actionKey.touchUp && !gameWindowsManager.isDragging
     }
 
     private fun checkEndDragConditions(action: MouseInputAction): Boolean {
         return action.actionKey is MouseInputActionKey.Screen &&
-                action.actionKey.touchUp && gameWindowsManager.isDragging
+            action.actionKey.touchUp && gameWindowsManager.isDragging
     }
 
     private fun checkDragConditions(action: MouseInputAction): Boolean {
         return applicationContextRepository.isTouch() && action.actionKey is MouseInputActionKey.Dragged &&
-                abs(action.screenY - dragStartY) >= DRAG_SENSITIVITY
+            abs(action.screenY - dragStartY) >= DRAG_SENSITIVITY
     }
 
     private fun clampScrollAmount() {
@@ -58,7 +58,7 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
             MathUtils.clamp(
                 /* value = */ gameWindowsManager.creativeScrollAmount,
                 /* min = */ 0,
-                /* max = */ (gameWindowsManager.currentWindow as CreativeInventoryWindow).getMaxScroll(itemsRepository)
+                /* max = */ (gameWindowsManager.currentWindow as CreativeInventoryWindow).getMaxScroll(itemsRepository),
             )
     }
 

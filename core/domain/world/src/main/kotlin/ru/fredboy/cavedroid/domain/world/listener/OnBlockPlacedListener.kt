@@ -6,5 +6,4 @@ import ru.fredboy.cavedroid.domain.world.model.Layer
 fun interface OnBlockPlacedListener {
 
     fun onBlockPlaced(block: Block, x: Int, y: Int, layer: Layer)
-
 }

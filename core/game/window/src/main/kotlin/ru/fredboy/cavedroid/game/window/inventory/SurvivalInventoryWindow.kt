@@ -5,7 +5,7 @@ import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.window.GameWindowType
 
 class SurvivalInventoryWindow(
-    itemsRepository: ItemsRepository
+    itemsRepository: ItemsRepository,
 ) : AbstractInventoryWindowWithCraftGrid(itemsRepository) {
 
     override val type = GameWindowType.SURVIVAL_INVENTORY

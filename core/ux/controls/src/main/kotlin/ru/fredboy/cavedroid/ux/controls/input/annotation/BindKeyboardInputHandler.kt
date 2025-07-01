@@ -7,6 +7,6 @@ import ru.fredboy.cavedroid.ux.controls.input.IKeyboardInputHandler
 @BindsIntoSet(
     interfaceClass = IKeyboardInputHandler::class,
     modulePackage = MultibindingConfig.GENERATED_MODULES_PACKAGE,
-    moduleName = "KeyboardInputHandlersModule"
+    moduleName = "KeyboardInputHandlersModule",
 )
 annotation class BindKeyboardInputHandler

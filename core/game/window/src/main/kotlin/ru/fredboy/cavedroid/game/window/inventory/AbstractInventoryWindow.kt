@@ -18,7 +18,7 @@ abstract class AbstractInventoryWindow {
         items: MutableList<InventoryItem>,
         itemsRepository: ItemsRepository,
         index: Int,
-        pointer: Int = -1
+        pointer: Int = -1,
     ) {
         if (selectedItem != null &&
             selectedItem?.item?.isNone() != true &&
@@ -63,12 +63,13 @@ abstract class AbstractInventoryWindow {
 
         if (selectedItem == null ||
             (!clickedItem.isNoneOrNull() && selectedItem.item != clickedItem.item) ||
-            !clickedItem.canBeAdded()) {
+            !clickedItem.canBeAdded()
+        ) {
             return
         }
 
         val newItem = selectedItem.item.toInventoryItem(
-            (clickedItem.takeIf { !it.item.isNone() }?.amount ?: 0) + 1
+            (clickedItem.takeIf { !it.item.isNone() }?.amount ?: 0) + 1,
         )
         items[index] = newItem
         selectedItem.amount--
@@ -77,5 +78,4 @@ abstract class AbstractInventoryWindow {
             this@AbstractInventoryWindow.selectedItem = null
         }
     }
-
 }

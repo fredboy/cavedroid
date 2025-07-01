@@ -10,5 +10,4 @@ abstract class ControllerDropModule {
 
     @Binds
     internal abstract fun bindDropAdapter(impl: DropAdapterImpl): DropAdapter
-
 }

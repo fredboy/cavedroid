@@ -41,8 +41,8 @@ class GameScreen @Inject constructor(
                         /* viewportWidth = */ applicationContextRepository.getWidth(),
                         /* viewportHeight = */ applicationContextRepository.getHeight(),
                     )
-                }
-            )
+                },
+            ),
         )
     }
 
@@ -105,15 +105,12 @@ class GameScreen @Inject constructor(
     }
 
     override fun pause() {
-
     }
 
     override fun resume() {
-
     }
 
     override fun hide() {
-
     }
 
     override fun dispose() {

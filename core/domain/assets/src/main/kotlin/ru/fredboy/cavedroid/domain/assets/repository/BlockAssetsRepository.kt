@@ -5,5 +5,4 @@ import com.badlogic.gdx.graphics.Texture
 abstract class BlockAssetsRepository : AssetsRepository() {
 
     abstract fun getBlockTexture(textureName: String): Texture
-
 }

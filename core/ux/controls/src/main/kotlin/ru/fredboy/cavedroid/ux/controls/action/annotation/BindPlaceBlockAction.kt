@@ -7,6 +7,6 @@ import ru.fredboy.cavedroid.ux.controls.action.placeblock.IPlaceBlockAction
 @BindsIntoMapStringKey(
     interfaceClass = IPlaceBlockAction::class,
     modulePackage = MultibindingConfig.GENERATED_MODULES_PACKAGE,
-    moduleName = "PlaceBlockActionsModule"
+    moduleName = "PlaceBlockActionsModule",
 )
 annotation class BindPlaceBlockAction(val stringKey: String)

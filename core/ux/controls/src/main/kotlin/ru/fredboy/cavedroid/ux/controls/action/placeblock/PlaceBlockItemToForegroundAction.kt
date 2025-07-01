@@ -28,5 +28,4 @@ class PlaceBlockItemToForegroundAction @Inject constructor(
     companion object {
         const val ACTION_KEY = "place_foreground_block"
     }
-
 }

@@ -11,9 +11,8 @@ import javax.inject.Inject
 @GameScope
 @BindKeyboardInputHandler
 class ToggleGameModeKeyboardInputHandler @Inject constructor(
-    private val mobController: MobController
+    private val mobController: MobController,
 ) : IKeyboardInputHandler {
-
 
     override fun checkConditions(action: KeyboardInputAction): Boolean {
         return action.actionKey is KeyboardInputActionKey.SwitchGameMode && action.isKeyDown
@@ -26,6 +25,4 @@ class ToggleGameModeKeyboardInputHandler @Inject constructor(
             mobController.player.gameMode = 1
         }
     }
-
-
 }

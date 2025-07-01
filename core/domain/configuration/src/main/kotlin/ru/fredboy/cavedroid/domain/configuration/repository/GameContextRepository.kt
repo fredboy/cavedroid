@@ -22,5 +22,4 @@ interface GameContextRepository {
     fun setJoystick(joystick: Joystick)
 
     fun setCameraContext(cameraContext: CameraContext)
-
 }

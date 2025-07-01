@@ -13,7 +13,7 @@ import javax.inject.Inject
 class UseBedAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobController: MobController,
-    private val getBlockByKeyUseCase: GetBlockByKeyUseCase
+    private val getBlockByKeyUseCase: GetBlockByKeyUseCase,
 ) : IUseItemAction {
 
     override fun perform(item: Item.Usable, x: Int, y: Int) {

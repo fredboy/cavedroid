@@ -14,7 +14,9 @@ internal object DesktopLauncher {
         with(config) {
             setWindowIcon(
                 /* fileType = */ Files.FileType.Internal,
-                /* ...filePaths = */ "icons/icon512.png", "icons/icon256.png", "icons/icon128.png"
+                "icons/icon512.png",
+                "icons/icon256.png",
+                "icons/icon128.png",
             )
             setTitle("CaveDroid")
             setWindowedMode(960, 540)

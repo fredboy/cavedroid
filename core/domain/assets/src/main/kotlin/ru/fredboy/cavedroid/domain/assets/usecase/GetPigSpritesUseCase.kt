@@ -13,5 +13,4 @@ class GetPigSpritesUseCase @Inject constructor(
     operator fun invoke(): MobSprite.Pig {
         return gameAssetsHolder.getPigSprites()
     }
-
 }

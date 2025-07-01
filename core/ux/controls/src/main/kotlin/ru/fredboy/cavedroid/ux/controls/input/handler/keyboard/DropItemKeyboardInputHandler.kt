@@ -23,8 +23,8 @@ class DropItemKeyboardInputHandler @Inject constructor(
 
     override fun checkConditions(action: KeyboardInputAction): Boolean {
         return action.actionKey is KeyboardInputActionKey.DropItem &&
-                action.isKeyDown && gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-                !mobController.player.activeItem.item.isNone()
+            action.isKeyDown && gameWindowsManager.currentWindowType == GameWindowType.NONE &&
+            !mobController.player.activeItem.item.isNone()
     }
 
     private fun createDrop(item: Item, playerX: Float, playerY: Float, amount: Int) {
@@ -32,14 +32,14 @@ class DropItemKeyboardInputHandler @Inject constructor(
             /* x = */ playerX + ((DROP_DISTANCE - Drop.DROP_SIZE / 2) * mobController.player.direction.basis),
             /* y = */ playerY,
             /* item = */ item,
-            /* count = */ amount
+            /* count = */ amount,
         )
     }
 
     override fun handle(action: KeyboardInputAction) {
         val player = mobController.player
         val currentItem = player.activeItem
-        val dropAmount =  if (currentItem.item.isTool()) currentItem.amount else 1
+        val dropAmount = if (currentItem.item.isTool()) currentItem.amount else 1
 
         createDrop(currentItem.item, player.x, player.y, dropAmount)
         player.decreaseCurrentItemCount(dropAmount)

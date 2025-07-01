@@ -45,7 +45,7 @@ class TouchControlsRenderer @Inject constructor(
             x = joystick.centerX - Joystick.RADIUS,
             y = joystick.centerY - Joystick.RADIUS,
             width = Joystick.SIZE,
-            height = Joystick.SIZE
+            height = Joystick.SIZE,
         )
 
         spriteBatch.drawSprite(
@@ -53,7 +53,7 @@ class TouchControlsRenderer @Inject constructor(
             x = joystick.activeX - Joystick.STICK_SIZE / 2,
             y = joystick.activeY - Joystick.STICK_SIZE / 2,
             width = Joystick.STICK_SIZE,
-            height = Joystick.STICK_SIZE
+            height = Joystick.STICK_SIZE,
         )
     }
 
@@ -87,7 +87,7 @@ class TouchControlsRenderer @Inject constructor(
                 /* x = */ touchKey.x,
                 /* y = */ touchKey.y,
                 /* width = */ touchKey.width,
-                /* height = */ touchKey.height
+                /* height = */ touchKey.height,
             )
         }
 
@@ -105,5 +105,4 @@ class TouchControlsRenderer @Inject constructor(
 
         private const val SHADE_KEY = "shade"
     }
-
 }

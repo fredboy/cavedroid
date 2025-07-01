@@ -7,7 +7,6 @@ import ru.fredboy.cavedroid.data.menu.model.MenuButtonDto
 import ru.fredboy.cavedroid.data.menu.model.MenuButtonVisibilityDto
 import ru.fredboy.cavedroid.domain.menu.model.MenuButton
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @MenuScope
 class MenuButtonMapper @Inject constructor() {

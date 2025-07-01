@@ -27,7 +27,7 @@ class MobController @Inject constructor(
         getFallbackItem = getFallbackItemUseCase,
         x = 0f,
         y = 0f,
-        behavior = PlayerMobBehavior()
+        behavior = PlayerMobBehavior(),
     )
 
     init {

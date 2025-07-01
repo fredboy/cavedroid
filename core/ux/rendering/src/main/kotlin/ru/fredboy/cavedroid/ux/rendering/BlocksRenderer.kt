@@ -5,9 +5,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
+import ru.fredboy.cavedroid.common.utils.px
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageFrameCountUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageSpriteUseCase
-import ru.fredboy.cavedroid.common.utils.px
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.entity.container.model.Furnace
@@ -29,7 +29,7 @@ abstract class BlocksRenderer(
         get() = isNone() || params.isTransparent
 
     private fun blockDamageSprite(index: Int): Sprite? {
-        if (index !in 0..< getBlockDamageFrameCount()) {
+        if (index !in 0..<getBlockDamageFrameCount()) {
             return null
         }
         return getBlockDamageSprite[index]
@@ -56,7 +56,7 @@ abstract class BlocksRenderer(
                 /* x = */ cursorX.px - viewport.x + block.params.spriteMargins.left,
                 /* y = */ cursorY.px - viewport.y + block.params.spriteMargins.top,
                 /* width = */ block.spriteWidth,
-                /* height = */ block.spriteHeight
+                /* height = */ block.spriteHeight,
             )
             sprite.draw(spriteBatch)
         }
@@ -66,7 +66,7 @@ abstract class BlocksRenderer(
         shapeRenderer: ShapeRenderer,
         viewport: Rectangle,
         x: Int,
-        y: Int
+        y: Int,
     ) {
         val foregroundBlock = gameWorld.getForeMap(x, y)
         val backgroundBlock = gameWorld.getBackMap(x, y)
@@ -81,7 +81,7 @@ abstract class BlocksRenderer(
                 /* x = */ drawX + marginLeft,
                 /* y = */ drawY + marginTop,
                 /* width = */ backgroundBlock.width,
-                /* height = */ backgroundBlock.height
+                /* height = */ backgroundBlock.height,
             )
         }
     }
@@ -121,5 +121,4 @@ abstract class BlocksRenderer(
     companion object {
         private const val MAX_BLOCK_DAMAGE_INDEX = 10
     }
-
 }

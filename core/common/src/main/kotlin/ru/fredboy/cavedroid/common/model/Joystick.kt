@@ -44,7 +44,7 @@ class Joystick(
         }
         return Vector2(
             stickVector.x * value,
-            stickVector.y * value
+            stickVector.y * value,
         )
     }
 
@@ -69,5 +69,4 @@ class Joystick(
         const val SIZE = RADIUS * 2
         const val STICK_SIZE = 32f
     }
-
 }

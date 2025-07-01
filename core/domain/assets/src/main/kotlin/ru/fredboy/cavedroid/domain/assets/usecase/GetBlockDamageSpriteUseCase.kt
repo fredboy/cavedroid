@@ -13,5 +13,4 @@ class GetBlockDamageSpriteUseCase @Inject constructor(
     operator fun get(stage: Int): Sprite {
         return gameAssetsHolder.getBlockDamageSprite(stage)
     }
-
 }

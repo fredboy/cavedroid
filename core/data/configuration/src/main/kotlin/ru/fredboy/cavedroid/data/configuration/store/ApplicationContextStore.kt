@@ -46,7 +46,6 @@ class ApplicationContextStore @Inject constructor(
         get() = synchronized(lock) { applicationContext.height }
         set(value) = synchronized(lock) { applicationContext.height = value }
 
-
     private companion object {
         private const val KEY_FULLSCREEN_PREF = "fullscreen"
         private const val KEY_DYNAMIC_CAMERA_PREF = "dyncam"

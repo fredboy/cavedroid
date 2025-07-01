@@ -51,7 +51,7 @@ class Player(
     var activeSlot
         get() = _activeSlot
         set(value) {
-            if (value in 0 ..< HOTBAR_SIZE) {
+            if (value in 0..<HOTBAR_SIZE) {
                 _activeSlot = value
             }
         }
@@ -198,8 +198,8 @@ class Player(
         val spriteOrigin = item.params.inHandSpriteOrigin
         val handMultiplier = -direction.basis
         val xOffset = (-1 + direction.index) * itemSprite.width + SMALL_ITEM_SIZE / 2 +
-                handMultiplier * itemSprite.width * spriteOrigin.x
-        val yOffset = if (!isSmallSprite) - itemSprite.height / 2 else 0f
+            handMultiplier * itemSprite.width * spriteOrigin.x
+        val yOffset = if (!isSmallSprite) -itemSprite.height / 2 else 0f
 
         val rotate = handAnim + HAND_ITEM_ANGLE_DEG
 
@@ -221,7 +221,6 @@ class Player(
         itemSprite.rotation = -handMultiplier * rotate
         itemSprite.setPosition(itemX, itemY)
         itemSprite.draw(spriteBatch)
-
 
         // dont forget to reset
         itemSprite.setFlip(false, itemSprite.isFlipY)
@@ -258,7 +257,7 @@ class Player(
 
     enum class ControlMode {
         WALK,
-        CURSOR
+        CURSOR,
     }
 
     companion object {

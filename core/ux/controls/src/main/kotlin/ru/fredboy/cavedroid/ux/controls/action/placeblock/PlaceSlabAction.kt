@@ -21,10 +21,13 @@ class PlaceSlabAction @Inject constructor(
             return
         }
 
-        val slabPart = if ((gameWorld.hasForeAt(x, y - 1)
-                    || gameWorld.getForeMap(x - 1, y) == placeable.topPartBlock
-                    || gameWorld.getForeMap(x + 1, y) == placeable.topPartBlock)
-            && !gameWorld.hasForeAt(x, y + 1)) {
+        val slabPart = if ((
+                gameWorld.hasForeAt(x, y - 1) ||
+                    gameWorld.getForeMap(x - 1, y) == placeable.topPartBlock ||
+                    gameWorld.getForeMap(x + 1, y) == placeable.topPartBlock
+                ) &&
+            !gameWorld.hasForeAt(x, y + 1)
+        ) {
             placeable.topPartBlock
         } else {
             placeable.bottomPartBlock

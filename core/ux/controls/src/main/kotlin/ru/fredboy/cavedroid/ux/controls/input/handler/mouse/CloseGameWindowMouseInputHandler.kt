@@ -31,9 +31,9 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.currentWindowType != GameWindowType.NONE &&
-                (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
-                action.actionKey.touchUp &&
-                !isInsideWindow(action, getCurrentWindowTexture())
+            (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
+            action.actionKey.touchUp &&
+            !isInsideWindow(action, getCurrentWindowTexture())
     }
 
     private fun getCurrentWindowTexture(): TextureRegion {
@@ -50,15 +50,14 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
     override fun handle(action: MouseInputAction) {
         val selectedItem = gameWindowsManager.currentWindow?.selectedItem
         if (selectedItem != null) {
-                dropController.addDrop(
-                    /* x = */ mobController.player.x + (32f * mobController.player.direction.basis),
-                    /* y = */ mobController.player.y,
-                    /* item = */ selectedItem.item,
-                    /* count = */ selectedItem.amount,
-                )
+            dropController.addDrop(
+                /* x = */ mobController.player.x + (32f * mobController.player.direction.basis),
+                /* y = */ mobController.player.y,
+                /* item = */ selectedItem.item,
+                /* count = */ selectedItem.amount,
+            )
             gameWindowsManager.currentWindow?.selectedItem = null
         }
         gameWindowsManager.closeWindow()
     }
-
 }

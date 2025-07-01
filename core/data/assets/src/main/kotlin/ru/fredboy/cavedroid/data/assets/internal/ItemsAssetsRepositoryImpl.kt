@@ -26,5 +26,4 @@ internal class ItemsAssetsRepositoryImpl @Inject constructor() : ItemsAssetsRepo
     companion object {
         private const val ITEMS_TEXTURES_PATH = "textures/textures/items"
     }
-
 }

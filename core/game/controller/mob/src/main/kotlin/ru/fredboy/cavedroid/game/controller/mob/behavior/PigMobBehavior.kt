@@ -1,8 +1,8 @@
 package ru.fredboy.cavedroid.game.controller.mob.behavior
 
 import com.badlogic.gdx.math.MathUtils
-import ru.fredboy.cavedroid.entity.mob.model.Pig
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.model.Pig
 
 class PigMobBehavior : BaseMobBehavior<Pig>(
     mobType = Pig::class,
@@ -17,5 +17,4 @@ class PigMobBehavior : BaseMobBehavior<Pig>(
             }
         }
     }
-
 }

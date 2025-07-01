@@ -5,11 +5,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.common.utils.bl
 import ru.fredboy.cavedroid.common.utils.drawString
 import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.common.utils.px
+import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -50,13 +50,13 @@ class DebugRenderer @Inject constructor(
         shapeRenderer: ShapeRenderer,
         minimapX: Float,
         minimapY: Float,
-        minimapSize: Float
+        minimapSize: Float,
     ) {
         val mapArea = Rectangle(
             /* x = */ mobController.player.x - (minimapSize.px / 2),
             /* y = */ mobController.player.y - (minimapSize.px / 2),
             /* width = */ minimapSize.px,
-            /* height = */ minimapSize.px
+            /* height = */ minimapSize.px,
         )
 
         spriteBatch.end()
@@ -71,7 +71,7 @@ class DebugRenderer @Inject constructor(
                     /* x = */ minimapX + (x - mapArea.x.bl),
                     /* y = */ minimapY + (y - mapArea.y.bl),
                     /* width = */ 1f,
-                    /* height = */ 1f
+                    /* height = */ 1f,
                 )
             }
         }
@@ -99,10 +99,9 @@ class DebugRenderer @Inject constructor(
                 shapeRenderer = shapeRenderer,
                 minimapX = viewport.width - MinimapConfig.margin - MinimapConfig.size,
                 minimapY = MinimapConfig.margin,
-                minimapSize = MinimapConfig.size
+                minimapSize = MinimapConfig.size,
             )
         }
-
     }
 
     companion object {

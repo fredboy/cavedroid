@@ -13,5 +13,4 @@ class GetFallbackBlockUseCase @Inject constructor(
     operator fun invoke(): Block.None {
         return itemsRepository.fallbackBlock
     }
-
 }

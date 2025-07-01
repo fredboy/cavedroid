@@ -4,7 +4,7 @@ import android.content.Context
 import ru.fredboy.cavedroid.common.api.PreferencesStore
 
 class AndroidPreferencesStore(
-    private val context: Context
+    private val context: Context,
 ) : PreferencesStore {
 
     private val sharedPreferences by lazy { context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE) }

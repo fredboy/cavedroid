@@ -27,7 +27,5 @@ data class WorldGeneratorConfig(
                 seaLevel = 192,
             )
         }
-
     }
-
 }

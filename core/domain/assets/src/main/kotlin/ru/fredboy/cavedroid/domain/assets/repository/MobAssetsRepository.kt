@@ -7,5 +7,4 @@ abstract class MobAssetsRepository : AssetsRepository() {
     abstract fun getPlayerSprites(): MobSprite.Player
 
     abstract fun getPigSprites(): MobSprite.Pig
-
 }

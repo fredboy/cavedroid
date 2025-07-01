@@ -38,7 +38,6 @@ class Drop(
         )
     }
 
-
     companion object {
         private fun getInitialVelocity(): Vector2 = Vector2(MathUtils.random(-100f, 100f), -100f)
 
@@ -47,5 +46,4 @@ class Drop(
         const val MAGNET_VELOCITY = 256f
         const val DROP_SIZE = BLOCK_SIZE_PX / 2
     }
-
 }

@@ -18,8 +18,10 @@ class UseFurnaceAction @Inject constructor(
 
     override fun perform(block: Block, x: Int, y: Int) {
         // TODO: transform x
-        val furnace = (containerController.getContainer(x, y, Layer.FOREGROUND.z)
-            ?: containerController.getContainer(x, y, Layer.FOREGROUND.z)) as? Furnace
+        val furnace = (
+            containerController.getContainer(x, y, Layer.FOREGROUND.z)
+                ?: containerController.getContainer(x, y, Layer.FOREGROUND.z)
+            ) as? Furnace
         furnace ?: return
 
         gameWindowsManager.openFurnace(furnace)

@@ -7,11 +7,10 @@ import javax.inject.Inject
 
 @Reusable
 class GetItemTextureUseCase @Inject constructor(
-    private val gameAssetsHolder: GameAssetsHolder
+    private val gameAssetsHolder: GameAssetsHolder,
 ) {
 
     operator fun get(name: String): Texture {
         return gameAssetsHolder.getItemTexture(name)
     }
-
 }

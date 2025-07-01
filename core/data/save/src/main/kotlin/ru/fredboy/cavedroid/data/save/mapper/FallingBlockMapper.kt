@@ -20,7 +20,7 @@ class FallingBlockMapper @Inject constructor(
             y = fallingBlock.y,
             width = fallingBlock.width,
             height = fallingBlock.height,
-            velocityX =  fallingBlock.velocity.x,
+            velocityX = fallingBlock.velocity.x,
             velocityY = fallingBlock.velocity.y,
             animDelta = fallingBlock.animDelta,
             anim = fallingBlock.anim,

@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 @GameScope
 class GameContextRepositoryImpl @Inject constructor(
-    private val gameContextStore: GameContextStore
+    private val gameContextStore: GameContextStore,
 ) : GameContextRepository {
 
     override fun isLoadGame(): Boolean = gameContextStore.isLoadGame

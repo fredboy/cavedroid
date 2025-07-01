@@ -2,7 +2,6 @@ package ru.fredboy.cavedroid.ux.controls.input.handler.keyboard
 
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
-import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.ux.controls.input.IKeyboardInputHandler
@@ -20,12 +19,11 @@ class StopSwimKeyboardInputHandler @Inject constructor(
 
     override fun checkConditions(action: KeyboardInputAction): Boolean {
         return action.actionKey is KeyboardInputActionKey.Up && !action.isKeyDown &&
-                mobController.player.swim &&
-                (mobController.player.controlMode == Player.ControlMode.WALK || !applicationContextRepository.isTouch())
+            mobController.player.swim &&
+            (mobController.player.controlMode == Player.ControlMode.WALK || !applicationContextRepository.isTouch())
     }
 
     override fun handle(action: KeyboardInputAction) {
         mobController.player.swim = false
     }
-
 }

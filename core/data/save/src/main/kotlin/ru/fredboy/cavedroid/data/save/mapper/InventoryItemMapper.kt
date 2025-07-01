@@ -15,7 +15,7 @@ class InventoryItemMapper @Inject constructor(
         return SaveDataDto.InventoryItemSaveDataDto(
             version = SAVE_DATA_VERSION,
             itemKey = inventoryItem.item.params.key,
-            amount = inventoryItem.amount
+            amount = inventoryItem.amount,
         )
     }
 

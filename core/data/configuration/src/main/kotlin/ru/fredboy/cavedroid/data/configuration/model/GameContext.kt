@@ -8,5 +8,5 @@ class GameContext(
     internal var showInfo: Boolean,
     internal var showMap: Boolean,
     internal var joystick: Joystick,
-    internal var cameraContext: CameraContext
+    internal var cameraContext: CameraContext,
 )

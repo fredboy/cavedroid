@@ -18,11 +18,11 @@ interface SaveDataRepository {
         dropController: DropController,
         mobController: MobController,
         containerController: ContainerController,
-        gameWorld: GameWorld
+        gameWorld: GameWorld,
     )
 
     fun loadMap(
-        gameDataFolder: String
+        gameDataFolder: String,
     ): GameMapSaveData
 
     fun loadContainerController(
@@ -43,5 +43,4 @@ interface SaveDataRepository {
     ): MobController
 
     fun exists(gameDataFolder: String): Boolean
-
 }

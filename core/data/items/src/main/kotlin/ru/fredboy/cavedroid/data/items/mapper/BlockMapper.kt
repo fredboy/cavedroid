@@ -4,8 +4,18 @@ import com.badlogic.gdx.graphics.Texture
 import ru.fredboy.cavedroid.data.items.model.BlockDto
 import ru.fredboy.cavedroid.data.items.repository.ItemsRepositoryImpl
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockTextureUseCase
-import ru.fredboy.cavedroid.domain.items.model.block.*
-import ru.fredboy.cavedroid.domain.items.model.block.Block.*
+import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.items.model.block.Block.Chest
+import ru.fredboy.cavedroid.domain.items.model.block.Block.Furnace
+import ru.fredboy.cavedroid.domain.items.model.block.Block.Lava
+import ru.fredboy.cavedroid.domain.items.model.block.Block.None
+import ru.fredboy.cavedroid.domain.items.model.block.Block.Normal
+import ru.fredboy.cavedroid.domain.items.model.block.Block.Slab
+import ru.fredboy.cavedroid.domain.items.model.block.Block.Water
+import ru.fredboy.cavedroid.domain.items.model.block.BlockAnimationInfo
+import ru.fredboy.cavedroid.domain.items.model.block.BlockDropInfo
+import ru.fredboy.cavedroid.domain.items.model.block.BlockMargins
+import ru.fredboy.cavedroid.domain.items.model.block.CommonBlockParams
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,7 +46,7 @@ class BlockMapper @Inject constructor(
                 left = dto.left,
                 top = dto.top,
                 right = dto.right,
-                bottom = dto.bottom
+                bottom = dto.bottom,
             ),
             hitPoints = dto.hp,
             dropInfo = mapBlockDropInfo(dto),
@@ -61,7 +71,7 @@ class BlockMapper @Inject constructor(
     }
 
     private fun mapToolType(dto: BlockDto): Class<out Item.Tool>? {
-        return when(dto.toolType) {
+        return when (dto.toolType) {
             "shovel" -> Item.Shovel::class.java
             "sword" -> Item.Sword::class.java
             "pickaxe" -> Item.Pickaxe::class.java
@@ -103,5 +113,4 @@ class BlockMapper @Inject constructor(
 
         return getBlockTexture[textureName]
     }
-
 }

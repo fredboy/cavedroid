@@ -17,7 +17,7 @@ class Pig(
 ) : Mob(x, y, WIDTH, HEIGHT, Direction.random(), MAX_HEALTH, behavior) {
 
     override val speed get() = SPEED
-    
+
     override fun changeDir() {
         switchDir()
         velocity = Vector2(direction.basis * speed, 0f)
@@ -45,7 +45,7 @@ class Pig(
         spriteBatch: SpriteBatch,
         x: Float,
         y: Float,
-        delta: Float
+        delta: Float,
     ) {
         updateAnimation(delta)
 
@@ -65,11 +65,11 @@ class Pig(
         spriteBatch.drawSprite(sprite.leg, leftLegX, legY, anim, tint = tintColor)
         spriteBatch.drawSprite(sprite.leg, rightLegX, legY, anim, tint = tintColor)
     }
-    
+
     companion object {
         private const val WIDTH = 25f
         private const val HEIGHT = 18f
-        private const val SPEED =  48f
+        private const val SPEED = 48f
         private const val JUMP_VELOCITY = -133.332f
         private const val MAX_HEALTH = 10
     }

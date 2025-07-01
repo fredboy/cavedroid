@@ -19,7 +19,7 @@ class UseChestAction @Inject constructor(
     override fun perform(block: Block, x: Int, y: Int) {
         // TODO: transform x
         val chest = (containerController.getContainer(x, y, Layer.FOREGROUND.z) as? Chest)
-            ?: (containerController.getContainer(x, y, Layer.BACKGROUND.z)  as? Chest)
+            ?: (containerController.getContainer(x, y, Layer.BACKGROUND.z) as? Chest)
             ?: return
         gameWindowsManager.openChest(chest)
     }

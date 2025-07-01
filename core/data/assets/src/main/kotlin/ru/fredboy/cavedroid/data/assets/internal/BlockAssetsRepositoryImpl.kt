@@ -26,5 +26,4 @@ internal class BlockAssetsRepositoryImpl @Inject constructor() : BlockAssetsRepo
     companion object {
         private const val BLOCKS_TEXTURES_PATH = "textures/textures/blocks"
     }
-
 }

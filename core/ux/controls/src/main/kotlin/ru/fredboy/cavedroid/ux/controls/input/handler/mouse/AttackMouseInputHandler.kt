@@ -22,9 +22,8 @@ class AttackMouseInputHandler @Inject constructor(
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-                !action.isInsideHotbar(textureRegions) &&
-                action.actionKey is MouseInputActionKey.Left
-
+            !action.isInsideHotbar(textureRegions) &&
+            action.actionKey is MouseInputActionKey.Left
     }
 
     override fun handle(action: MouseInputAction) {

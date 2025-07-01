@@ -60,25 +60,25 @@ class SelectCraftingInventoryItemMouseInputHandler @Inject constructor(
         val yOnWindow = action.screenY - (action.cameraViewport.height / 2 - texture.regionHeight / 2)
 
         val xOnGrid = (xOnWindow - GameWindowsConfigs.Crafting.itemsGridMarginLeft) /
-                GameWindowsConfigs.Crafting.itemsGridColWidth
+            GameWindowsConfigs.Crafting.itemsGridColWidth
         val yOnGrid = (yOnWindow - GameWindowsConfigs.Crafting.itemsGridMarginTop) /
-                GameWindowsConfigs.Crafting.itemsGridRowHeight
+            GameWindowsConfigs.Crafting.itemsGridRowHeight
 
         val xOnCraft = (xOnWindow - GameWindowsConfigs.Crafting.craftOffsetX) /
-                GameWindowsConfigs.Crafting.itemsGridColWidth
+            GameWindowsConfigs.Crafting.itemsGridColWidth
         val yOnCraft = (yOnWindow - GameWindowsConfigs.Crafting.craftOffsetY) /
-                GameWindowsConfigs.Crafting.itemsGridRowHeight
+            GameWindowsConfigs.Crafting.itemsGridRowHeight
 
         val isInsideInventoryGrid = xOnGrid >= 0 && xOnGrid < GameWindowsConfigs.Crafting.itemsInRow &&
-                yOnGrid >= 0 && yOnGrid < GameWindowsConfigs.Crafting.itemsInCol
+            yOnGrid >= 0 && yOnGrid < GameWindowsConfigs.Crafting.itemsInCol
 
         val isInsideCraftGrid = xOnCraft >= 0 && xOnCraft < GameWindowsConfigs.Crafting.craftGridSize &&
-                yOnCraft >= 0 && yOnCraft < GameWindowsConfigs.Crafting.craftGridSize
+            yOnCraft >= 0 && yOnCraft < GameWindowsConfigs.Crafting.craftGridSize
 
         val isInsideCraftResult = xOnWindow > GameWindowsConfigs.Crafting.craftResultOffsetX &&
-                xOnWindow < GameWindowsConfigs.Crafting.craftResultOffsetX + GameWindowsConfigs.Crafting.itemsGridColWidth &&
-                yOnWindow > GameWindowsConfigs.Crafting.craftResultOffsetY &&
-                yOnWindow < GameWindowsConfigs.Crafting.craftResultOffsetY + GameWindowsConfigs.Crafting.itemsGridRowHeight
+            xOnWindow < GameWindowsConfigs.Crafting.craftResultOffsetX + GameWindowsConfigs.Crafting.itemsGridColWidth &&
+            yOnWindow > GameWindowsConfigs.Crafting.craftResultOffsetY &&
+            yOnWindow < GameWindowsConfigs.Crafting.craftResultOffsetY + GameWindowsConfigs.Crafting.itemsGridRowHeight
 
         if (isInsideInventoryGrid) {
             handleInsideInventoryGrid(action, xOnGrid.toInt(), yOnGrid.toInt())
@@ -87,6 +87,5 @@ class SelectCraftingInventoryItemMouseInputHandler @Inject constructor(
         } else if (isInsideCraftResult) {
             handleInsideCraftResult(action)
         }
-
     }
 }

@@ -19,7 +19,7 @@ class OpenInventoryKeyboardInputHandler @Inject constructor(
 
     override fun checkConditions(action: KeyboardInputAction): Boolean {
         return action.actionKey is KeyboardInputActionKey.OpenInventory &&
-                !action.isKeyDown && gameWindowsManager.currentWindowType == GameWindowType.NONE
+            !action.isKeyDown && gameWindowsManager.currentWindowType == GameWindowType.NONE
     }
 
     override fun handle(action: KeyboardInputAction) {

@@ -10,7 +10,7 @@ interface ContainerWorldAdapter {
 
     fun checkContainerAtCoordinates(
         coordinates: ContainerCoordinates,
-        requiredType: KClass<out Block.Container>
+        requiredType: KClass<out Block.Container>,
     ): Boolean
 
     fun addOnBlockDestroyedListener(listener: OnBlockDestroyedListener)
@@ -20,5 +20,4 @@ interface ContainerWorldAdapter {
     fun removeOnBlockDestroyedListener(listener: OnBlockDestroyedListener)
 
     fun removeOnBlockPlacedListener(listener: OnBlockPlacedListener)
-
 }

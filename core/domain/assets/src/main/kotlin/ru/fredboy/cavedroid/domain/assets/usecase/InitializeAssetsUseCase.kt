@@ -12,5 +12,4 @@ class InitializeAssetsUseCase @Inject constructor(
     operator fun invoke() {
         gameAssetsHolder.initializeRepository()
     }
-
 }

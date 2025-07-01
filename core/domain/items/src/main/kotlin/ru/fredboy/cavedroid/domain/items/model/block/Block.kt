@@ -86,12 +86,12 @@ sealed class Block {
                 /* x = */ x + params.spriteMargins.left,
                 /* y = */ y + params.spriteMargins.top,
                 /* width = */ spriteWidth,
-                /* height = */ spriteHeight
+                /* height = */ spriteHeight,
             )
             draw(spriter)
         }
     }
-    
+
     fun isFluid(): Boolean {
         contract { returns(true) implies (this@Block is Fluid) }
         return this is Fluid
@@ -137,14 +137,14 @@ sealed class Block {
             /* x = */ x * BLOCK_SIZE_PX + params.collisionMargins.left,
             /* y = */ y * BLOCK_SIZE_PX + params.collisionMargins.top,
             /* width = */ width,
-            /* height = */ height
+            /* height = */ height,
         )
     }
 
     sealed class Container() : Block()
 
     data class None(
-        override val params: CommonBlockParams
+        override val params: CommonBlockParams,
     ) : Block()
 
     data class Normal(
@@ -153,7 +153,7 @@ sealed class Block {
 
     data class Furnace(
         override val params: CommonBlockParams,
-    ): Container() {
+    ) : Container() {
 
         override val sprite: Sprite
             get() = getSprite(false)
@@ -174,28 +174,27 @@ sealed class Block {
                     /* x = */ x + params.spriteMargins.left,
                     /* y = */ y + params.spriteMargins.top,
                     /* width = */ spriteWidth,
-                    /* height = */ spriteHeight
+                    /* height = */ spriteHeight,
                 )
                 draw(spriter)
             }
         }
-
     }
 
     data class Chest(
-        override val params: CommonBlockParams
-    ): Container()
+        override val params: CommonBlockParams,
+    ) : Container()
 
     data class Slab(
         override val params: CommonBlockParams,
         val fullBlockKey: String,
         val otherPartBlockKey: String,
-    ): Block()
+    ) : Block()
 
-    sealed class Fluid: Block() {
+    sealed class Fluid : Block() {
         abstract val state: Int
     }
-    
+
     data class Water(
         override val params: CommonBlockParams,
         override val state: Int,

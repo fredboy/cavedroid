@@ -1,8 +1,8 @@
 package ru.fredboy.cavedroid.game.controller.mob.behavior
 
-import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobBehavior
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.model.Mob
 import kotlin.reflect.KClass
 
 abstract class BaseMobBehavior<MOB : Mob>(
@@ -17,7 +17,7 @@ abstract class BaseMobBehavior<MOB : Mob>(
             }
         } else {
             throw IllegalArgumentException(
-                "Trying to update mob of type ${mob::class.simpleName} with behavior of ${mobType.simpleName}"
+                "Trying to update mob of type ${mob::class.simpleName} with behavior of ${mobType.simpleName}",
             )
         }
     }

@@ -7,6 +7,6 @@ import ru.fredboy.cavedroid.ux.physics.action.updateblock.IUpdateBlockAction
 @BindsIntoMapStringKey(
     interfaceClass = IUpdateBlockAction::class,
     modulePackage = MultibindingConfig.GENERATED_MODULES_PACKAGE,
-    moduleName = "UpdateBlockActionsModule"
+    moduleName = "UpdateBlockActionsModule",
 )
 annotation class BindUpdateBlockAction(val stringKey: String)

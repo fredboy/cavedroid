@@ -10,5 +10,4 @@ abstract class DataSaveModule {
 
     @Binds
     internal abstract fun bindSaveDataRepository(impl: SaveDataRepositoryImpl): SaveDataRepository
-
 }

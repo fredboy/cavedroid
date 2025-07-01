@@ -84,7 +84,7 @@ sealed class SaveDataDto {
     data class ChestSaveDataDto(
         override val version: Int,
         override val size: Int,
-        override val items: List<InventoryItemSaveDataDto>
+        override val items: List<InventoryItemSaveDataDto>,
     ) : ContainerSaveDataDto()
 
     @Serializable
@@ -104,13 +104,13 @@ sealed class SaveDataDto {
         override val velocityY: Float,
         val itemKey: String,
         val amount: Int,
-        val pickedUp: Boolean
+        val pickedUp: Boolean,
     ) : RectangleObjectSaveDataDto()
 
     @Serializable
     data class DropControllerSaveDataDto(
         override val version: Int,
-        val drops: List<DropSaveDataDto>
+        val drops: List<DropSaveDataDto>,
     ) : SaveDataDto()
 
     @Serializable
@@ -192,5 +192,4 @@ sealed class SaveDataDto {
         val mobs: List<@Contextual MobSaveDataDto>,
         val player: PlayerSaveDataDto,
     ) : SaveDataDto()
-
 }

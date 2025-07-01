@@ -64,7 +64,7 @@ class HudRenderer @Inject constructor(
         val totalHearts = Player.MAX_HEALTH / 2
         val wholeHearts = player.health / 2
 
-        for (i in 0..< totalHearts) {
+        for (i in 0..<totalHearts) {
             if (i < wholeHearts) {
                 spriteBatch.draw(wholeHeart, x + i * wholeHeart.regionWidth, y)
             } else if (i == wholeHearts && player.health % 2 == 1) {
@@ -73,13 +73,9 @@ class HudRenderer @Inject constructor(
                 spriteBatch.draw(emptyHeart, x + i * wholeHeart.regionWidth, y)
             }
         }
-
-
-
-
     }
 
-    private fun drawHotbarItems(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer,  hotbarX: Float) {
+    private fun drawHotbarItems(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, hotbarX: Float) {
         mobController.player.inventory.items.asSequence().take(HotbarConfig.hotbarCells)
             .forEachIndexed { index, item ->
                 if (item.item.isNone()) {
@@ -91,7 +87,7 @@ class HudRenderer @Inject constructor(
                     shapeRenderer = shapeRenderer,
                     font = getFont(),
                     x = hotbarX + HotbarConfig.horizontalMargin +
-                            index * (HotbarConfig.itemSeparatorWidth + HotbarConfig.itemSlotSpace),
+                        index * (HotbarConfig.itemSeparatorWidth + HotbarConfig.itemSlotSpace),
                     y = HotbarConfig.verticalMargin,
                     getStringWidth = getStringWidth::invoke,
                     getStringHeight = getStringHeight::invoke,
@@ -102,9 +98,9 @@ class HudRenderer @Inject constructor(
     private fun drawHotbarSelector(spriteBatch: SpriteBatch, hotbarX: Float) {
         spriteBatch.draw(
             /* region = */ hotbarSelectorTexture,
-            /* x = */ hotbarX - HotbarSelectorConfig.horizontalPadding
-                    + mobController.player.activeSlot * (HotbarConfig.itemSeparatorWidth + HotbarConfig.itemSlotSpace),
-            /* y = */ -HotbarSelectorConfig.verticalPadding
+            /* x = */ hotbarX - HotbarSelectorConfig.horizontalPadding +
+                mobController.player.activeSlot * (HotbarConfig.itemSeparatorWidth + HotbarConfig.itemSlotSpace),
+            /* y = */ -HotbarSelectorConfig.verticalPadding,
         )
     }
 
@@ -123,7 +119,7 @@ class HudRenderer @Inject constructor(
                 font = getFont(),
                 str = tooltip,
                 x = viewport.width / 2 - getStringWidth(tooltip) / 2,
-                y = hotbarTexture.regionHeight.toFloat()
+                y = hotbarTexture.regionHeight.toFloat(),
             )
         }
     }

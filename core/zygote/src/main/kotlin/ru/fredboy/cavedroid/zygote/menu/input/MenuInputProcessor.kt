@@ -23,7 +23,7 @@ class MenuInputProcessor @Inject constructor(
         screenX: Int,
         screenY: Int,
         pointer: Int,
-        button: Int
+        button: Int,
     ): Boolean {
         val touchX = applicationContextRepository.getWidth() / Gdx.graphics.width * screenX.toFloat()
         val touchY = applicationContextRepository.getHeight() / Gdx.graphics.height * screenY.toFloat()
@@ -38,7 +38,7 @@ class MenuInputProcessor @Inject constructor(
                 /* x = */ applicationContextRepository.getWidth() / 2 - 100,
                 /* y = */ applicationContextRepository.getHeight() / 4 + index * 30,
                 /* width = */ 200f,
-                /* height = */ 20f
+                /* height = */ 20f,
             )
 
             if (rect.contains(touchX, touchY)) {
@@ -64,7 +64,6 @@ class MenuInputProcessor @Inject constructor(
                         }
                     }
                 }
-
             }
         }
 
@@ -87,7 +86,7 @@ class MenuInputProcessor @Inject constructor(
         screenX: Int,
         screenY: Int,
         pointer: Int,
-        button: Int
+        button: Int,
     ): Boolean {
         return false
     }
@@ -96,7 +95,7 @@ class MenuInputProcessor @Inject constructor(
         screenX: Int,
         screenY: Int,
         pointer: Int,
-        button: Int
+        button: Int,
     ): Boolean {
         return false
     }

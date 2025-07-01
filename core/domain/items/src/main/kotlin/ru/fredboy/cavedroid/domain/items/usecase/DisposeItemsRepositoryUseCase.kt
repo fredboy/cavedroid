@@ -12,5 +12,4 @@ class DisposeItemsRepositoryUseCase @Inject constructor(
     operator fun invoke() {
         itemsRepository.dispose()
     }
-
 }

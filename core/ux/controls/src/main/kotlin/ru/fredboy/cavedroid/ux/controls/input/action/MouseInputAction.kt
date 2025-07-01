@@ -7,5 +7,5 @@ data class MouseInputAction(
     val screenX: Float,
     val screenY: Float,
     val actionKey: MouseInputActionKey,
-    val cameraViewport: Rectangle
+    val cameraViewport: Rectangle,
 ) : IGameInputAction

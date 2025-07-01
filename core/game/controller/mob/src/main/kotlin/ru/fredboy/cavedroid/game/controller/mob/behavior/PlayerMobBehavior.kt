@@ -3,8 +3,8 @@ package ru.fredboy.cavedroid.game.controller.mob.behavior
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.world.model.Layer
-import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.model.Player
 
 class PlayerMobBehavior : BaseMobBehavior<Player>(
     mobType = Player::class,
@@ -80,7 +80,8 @@ class PlayerMobBehavior : BaseMobBehavior<Player>(
         var blockDamageMultiplier = 1f
         (activeItem.item as? Item.Tool)?.let { currentTool ->
             if (currentTool.javaClass == targetBlock.params.toolType &&
-                currentTool.level >= targetBlock.params.toolLevel) {
+                currentTool.level >= targetBlock.params.toolLevel
+            ) {
                 blockDamageMultiplier = 2f * currentTool.level
             }
             blockDamageMultiplier *= currentTool.blockDamageMultiplier

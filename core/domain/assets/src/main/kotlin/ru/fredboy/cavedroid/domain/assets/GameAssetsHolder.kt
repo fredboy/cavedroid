@@ -7,7 +7,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import dagger.Reusable
 import ru.fredboy.cavedroid.domain.assets.model.MobSprite
 import ru.fredboy.cavedroid.domain.assets.model.TouchButton
-import ru.fredboy.cavedroid.domain.assets.repository.*
+import ru.fredboy.cavedroid.domain.assets.repository.AssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.BlockAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.FontAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.ItemsAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.TextureRegionsAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.TouchButtonsAssetsRepository
 import javax.inject.Inject
 
 @Reusable
@@ -18,7 +25,7 @@ class GameAssetsHolder @Inject constructor(
     private val itemsAssetsRepository: ItemsAssetsRepository,
     private val mobAssetsRepository: MobAssetsRepository,
     private val textureRegionsAssetsRepository: TextureRegionsAssetsRepository,
-    private val touchButtonsAssetsRepository: TouchButtonsAssetsRepository
+    private val touchButtonsAssetsRepository: TouchButtonsAssetsRepository,
 ) {
 
     private val repositories = sequenceOf(
@@ -28,7 +35,7 @@ class GameAssetsHolder @Inject constructor(
         itemsAssetsRepository,
         mobAssetsRepository,
         textureRegionsAssetsRepository,
-        touchButtonsAssetsRepository
+        touchButtonsAssetsRepository,
     )
 
     fun initializeRepository() {
@@ -82,5 +89,4 @@ class GameAssetsHolder @Inject constructor(
     fun getTextureRegionByName(name: String): TextureRegion? {
         return textureRegionsAssetsRepository.getTextureRegionByName(name)
     }
-
 }

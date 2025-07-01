@@ -10,12 +10,11 @@ import com.badlogic.gdx.math.Rectangle
 
 private fun Rectangle.shifted(shift: Float) = Rectangle(x + shift, y, width, height)
 
-private fun Rectangle.getLazyShifts(worldWidthPx: Float)
-    = Triple(
-        first = lazy { shifted(0f) },
-        second = lazy { shifted(-worldWidthPx) },
-        third = lazy { shifted(worldWidthPx) }
-    )
+private fun Rectangle.getLazyShifts(worldWidthPx: Float) = Triple(
+    first = lazy { shifted(0f) },
+    second = lazy { shifted(-worldWidthPx) },
+    third = lazy { shifted(worldWidthPx) },
+)
 
 fun Rectangle.cycledInsideWorld(
     viewport: Rectangle,
@@ -53,7 +52,7 @@ fun SpriteBatch.drawString(
     str: String,
     x: Float,
     y: Float,
-    color: Color = Color.WHITE
+    color: Color = Color.WHITE,
 ): GlyphLayout {
     font.color = color
     return font.draw(this, str, x, y)
@@ -85,7 +84,7 @@ fun SpriteBatch.withScissors(
     y: Float,
     width: Float,
     height: Float,
-    block: () -> Unit
+    block: () -> Unit,
 ) {
     val scaleX = Gdx.graphics.width / viewportWidth
     val scaleY = Gdx.graphics.height / viewportHeight
@@ -96,7 +95,7 @@ fun SpriteBatch.withScissors(
         /* x = */ (x * scaleX).toInt(),
         /* y = */ ((viewportHeight - y - height) * scaleY).toInt(),
         /* width = */ (width * scaleX).toInt(),
-        /* height = */ (height * scaleY).toInt()
+        /* height = */ (height * scaleY).toInt(),
     )
     block.invoke()
     flush()

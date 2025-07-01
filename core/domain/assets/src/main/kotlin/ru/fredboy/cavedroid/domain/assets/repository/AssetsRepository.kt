@@ -22,13 +22,13 @@ abstract class AssetsRepository : Disposable {
         x: Int,
         y: Int,
         width: Int,
-        height: Int
+        height: Int,
     ): TextureRegion {
         return TextureRegion(texture, x, y + height, width, -height)
     }
 
     protected fun flippedSprite(
-        texture: Texture
+        texture: Texture,
     ): Sprite {
         return Sprite(texture).apply { flip(false, true) }
     }
@@ -38,7 +38,7 @@ abstract class AssetsRepository : Disposable {
         x: Int,
         y: Int,
         width: Int,
-        height: Int
+        height: Int,
     ): Sprite {
         return Sprite(flippedRegion(texture, x, y, width, height))
     }
@@ -46,7 +46,7 @@ abstract class AssetsRepository : Disposable {
     protected fun resolveTexture(
         textureName: String,
         lookupPath: String,
-        cache: MutableMap<String, Texture>
+        cache: MutableMap<String, Texture>,
     ): Texture {
         val cached = cache[textureName]
 
@@ -66,5 +66,4 @@ abstract class AssetsRepository : Disposable {
     }
 
     abstract fun initialize()
-
 }

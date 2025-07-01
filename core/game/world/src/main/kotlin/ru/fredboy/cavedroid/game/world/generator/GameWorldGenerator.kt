@@ -21,19 +21,21 @@ class GameWorldGenerator(
     private val biomesMap by lazy { generateBiomes() }
 
     private val plainsPlants = listOf("dandelion", "rose", "tallgrass")
-    private val mushrooms = listOf("mushroom_brown", "mushroom_red",)
+    private val mushrooms = listOf("mushroom_brown", "mushroom_red")
 
     private fun generateHeights(): IntArray {
-        val surfaceHeightRange = config.minSurfaceHeight .. config.maxSurfaceHeight
+        val surfaceHeightRange = config.minSurfaceHeight..config.maxSurfaceHeight
         val result = IntArray(config.width)
 
         result[0] = surfaceHeightRange.random(random)
 
-        for (x in 1 ..< config.width) {
+        for (x in 1..<config.width) {
             val previous = result[x - 1]
             var d = random.nextInt(-5, 6).let { if (it !in -4..4) it / abs(it) else 0 }
 
-            if (previous + d !in surfaceHeightRange) { d = -d }
+            if (previous + d !in surfaceHeightRange) {
+                d = -d
+            }
 
             if (result.lastIndex - x < abs(result[0] - previous) * 3) {
                 d = result[0].compareTo(previous).let { if (it != 0) it / abs(it) else 0 }
@@ -62,7 +64,7 @@ class GameWorldGenerator(
     }
 
     private fun winterBiome(x: Int) {
-        assert(x in 0 ..< config.width) { "x not in range of world width" }
+        assert(x in 0..<config.width) { "x not in range of world width" }
 
         val surfaceHeight = heights[x]
 
@@ -81,7 +83,7 @@ class GameWorldGenerator(
             foreMap[x][surfaceHeight - 1] = snow
         }
 
-        for (y in min(surfaceHeight + 1, config.seaLevel) ..< config.height - 1) {
+        for (y in min(surfaceHeight + 1, config.seaLevel)..<config.height - 1) {
             if (y <= surfaceHeight) {
                 backMap[x][y] = dirt
                 continue
@@ -103,7 +105,7 @@ class GameWorldGenerator(
     }
 
     private fun plainsBiome(x: Int) {
-        assert(x in 0 ..< config.width) { "x not in range of world width" }
+        assert(x in 0..<config.width) { "x not in range of world width" }
 
         val surfaceHeight = heights[x]
 
@@ -117,7 +119,7 @@ class GameWorldGenerator(
         backMap[x][surfaceHeight] = grass
         backMap[x][config.height - 1] = bedrock
 
-        for (y in min(surfaceHeight + 1, config.seaLevel) ..< config.height - 1) {
+        for (y in min(surfaceHeight + 1, config.seaLevel)..<config.height - 1) {
             if (y <= surfaceHeight) {
                 backMap[x][y] = dirt
                 continue
@@ -141,7 +143,7 @@ class GameWorldGenerator(
     }
 
     private fun desertBiome(x: Int) {
-        assert(x in 0 ..< config.width) { "x not in range of world width" }
+        assert(x in 0..<config.width) { "x not in range of world width" }
 
         val surfaceHeight = heights[x]
 
@@ -150,13 +152,12 @@ class GameWorldGenerator(
         val sandstone = itemsRepository.getBlockByKey("sandstone")
         val stone = itemsRepository.getBlockByKey("stone")
 
-
         foreMap[x][surfaceHeight] = sand
         foreMap[x][config.height - 1] = bedrock
         backMap[x][surfaceHeight] = sand
         backMap[x][config.height - 1] = bedrock
 
-        for (y in min(surfaceHeight + 1, config.seaLevel) ..< config.height - 1) {
+        for (y in min(surfaceHeight + 1, config.seaLevel)..<config.height - 1) {
             if (y <= surfaceHeight) {
                 backMap[x][y] = sand
                 continue
@@ -183,8 +184,8 @@ class GameWorldGenerator(
     private fun fillWater() {
         val water = itemsRepository.getBlockByKey("water")
 
-        for (x in 0 ..< config.width) {
-            for (y in config.seaLevel ..< config.height) {
+        for (x in 0..<config.width) {
+            for (y in config.seaLevel..<config.height) {
                 if (!foreMap[x][y].isNone()) {
                     break
                 }
@@ -217,8 +218,8 @@ class GameWorldGenerator(
             backMap[x][top] = leaves
         }
 
-        for (x1 in max(0, x - 1) .. min(config.width - 1, x + 1)) {
-            for (y in height .. height + treeH - 4) {
+        for (x1 in max(0, x - 1)..min(config.width - 1, x + 1)) {
+            for (y in height..height + treeH - 4) {
                 foreMap[x1][y] = leaves
                 backMap[x1][y] = leaves
             }
@@ -245,14 +246,14 @@ class GameWorldGenerator(
             backMap[x][top] = leaves
         }
 
-        for (x1 in max(0, x - 1) .. min(config.width - 1, x + 1)) {
+        for (x1 in max(0, x - 1)..min(config.width - 1, x + 1)) {
             val y = height
             foreMap[x1][y] = leaves
             backMap[x1][y] = leaves
         }
 
         for (y in 1..2) {
-            for (x1 in max(0, x - y) .. min(config.width - 1, x + y)) {
+            for (x1 in max(0, x - y)..min(config.width - 1, x + y)) {
                 foreMap[x1][height + 1 + y] = leaves
                 backMap[x1][height + 1 + y] = leaves
             }
@@ -279,7 +280,7 @@ class GameWorldGenerator(
         }
     }
 
-    private fun generateOres(x : Int) {
+    private fun generateOres(x: Int) {
         val stone = itemsRepository.getBlockByKey("stone")
         val coal = itemsRepository.getBlockByKey("coal_ore")
         val iron = itemsRepository.getBlockByKey("iron_ore")
@@ -287,16 +288,16 @@ class GameWorldGenerator(
         val diamond = itemsRepository.getBlockByKey("diamond_ore")
         val lapis = itemsRepository.getBlockByKey("lapis_ore")
 
-        for (y in heights[x] ..< config.height) {
+        for (y in heights[x]..<config.height) {
             val res = random.nextInt(10000)
 
             val h = config.height - y
             val block = when {
                 res in 0..<25 && h < 16 -> diamond
-                res in 25 ..< 50 && h < 32 -> gold
-                res in 50 ..< 250 && h < 64 -> iron
-                res in 250 ..< 450 && h < 128 -> coal
-                res in 450 ..< (450 + (25 - (abs(h - 16) * (25 / 16)))) -> lapis
+                res in 25..<50 && h < 32 -> gold
+                res in 50..<250 && h < 64 -> iron
+                res in 250..<450 && h < 128 -> coal
+                res in 450..<(450 + (25 - (abs(h - 16) * (25 / 16)))) -> lapis
                 else -> null
             }
 
@@ -328,5 +329,4 @@ class GameWorldGenerator(
 
         return Pair(foreMap, backMap)
     }
-
 }

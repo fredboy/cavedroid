@@ -27,5 +27,4 @@ data class SpriteOrigin(
     fun applyToSprite(sprite: Sprite) {
         sprite.setOrigin(sprite.width * x, sprite.height * y)
     }
-
 }

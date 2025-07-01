@@ -5,5 +5,4 @@ interface IMenuAction {
     fun perform()
 
     fun canPerform(): Boolean = true
-
 }

@@ -34,7 +34,7 @@ abstract class Mob(
     val middleMapY get() = (y + height / 2).bl
     val lowerMapY get() = (y + height).bl
 
-    var animDelta = ANIMATION_SPEED;
+    var animDelta = ANIMATION_SPEED
     var anim = 0f
 
     var isDead = false
@@ -162,7 +162,7 @@ abstract class Mob(
             /* x = */ x - HIT_RANGE,
             /* y = */ y + HIT_RANGE,
             /* width = */ width + HIT_RANGE * 2f,
-            /* height = */ height + HIT_RANGE * 2f
+            /* height = */ height + HIT_RANGE * 2f,
         )
     }
 
@@ -171,7 +171,7 @@ abstract class Mob(
     }
 
     open fun getDropItems(
-        itemByKey: GetItemByKeyUseCase
+        itemByKey: GetItemByKeyUseCase,
     ): List<InventoryItem> {
         return emptyList()
     }
@@ -196,10 +196,9 @@ abstract class Mob(
 
         protected const val ANIMATION_RANGE = 60f
 
-        private const val HIT_RANGE = 8f;
+        private const val HIT_RANGE = 8f
 
         private const val DAMAGE_TINT_TIMEOUT_S = 0.5f
         private val DAMAGE_TINT_COLOR = Color((0xff8080 shl 8) or 0xFF)
-
     }
 }

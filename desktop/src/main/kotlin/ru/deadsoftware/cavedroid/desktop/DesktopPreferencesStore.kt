@@ -14,5 +14,4 @@ class DesktopPreferencesStore : PreferencesStore {
     override fun setPreference(key: String, value: String?) {
         prefs.put(key, value)
     }
-
 }

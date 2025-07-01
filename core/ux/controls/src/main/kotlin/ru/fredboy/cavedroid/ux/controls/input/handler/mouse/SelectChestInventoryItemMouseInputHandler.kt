@@ -50,21 +50,20 @@ class SelectChestInventoryItemMouseInputHandler @Inject constructor(
         val yOnWindow = action.screenY - (action.cameraViewport.height / 2 - texture.regionHeight / 2)
 
         val xOnGrid = (xOnWindow - GameWindowsConfigs.Chest.itemsGridMarginLeft) /
-                GameWindowsConfigs.Chest.itemsGridColWidth
+            GameWindowsConfigs.Chest.itemsGridColWidth
         val yOnGrid = (yOnWindow - GameWindowsConfigs.Chest.itemsGridMarginTop) /
-                GameWindowsConfigs.Chest.itemsGridRowHeight
+            GameWindowsConfigs.Chest.itemsGridRowHeight
 
         val xOnContent = (xOnWindow - GameWindowsConfigs.Chest.contentsMarginLeft) /
-                GameWindowsConfigs.Chest.itemsGridColWidth
+            GameWindowsConfigs.Chest.itemsGridColWidth
         val yOnContent = (yOnWindow - GameWindowsConfigs.Chest.contentsMarginTop) /
-                GameWindowsConfigs.Chest.itemsGridRowHeight
+            GameWindowsConfigs.Chest.itemsGridRowHeight
 
         val isInsideInventoryGrid = xOnGrid >= 0 && xOnGrid < GameWindowsConfigs.Chest.itemsInRow &&
-                yOnGrid >= 0 && yOnGrid < GameWindowsConfigs.Chest.itemsInCol
+            yOnGrid >= 0 && yOnGrid < GameWindowsConfigs.Chest.itemsInCol
 
         val isInsideContentGrid = xOnContent >= 0 && xOnContent < GameWindowsConfigs.Chest.contentsInRow &&
-                yOnContent >= 0 && yOnContent < GameWindowsConfigs.Chest.contentsInCol
-
+            yOnContent >= 0 && yOnContent < GameWindowsConfigs.Chest.contentsInCol
 
         if (isInsideInventoryGrid) {
             handleInsideInventoryGrid(action, xOnGrid.toInt(), yOnGrid.toInt())

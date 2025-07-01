@@ -10,7 +10,6 @@ interface ApplicationContextRepository {
 
     fun useDynamicCamera(): Boolean
 
-
     fun getGameDirectory(): String
 
     fun getWidth(): Float
@@ -28,5 +27,4 @@ interface ApplicationContextRepository {
     fun setWidth(width: Float)
 
     fun setHeight(height: Float)
-
 }

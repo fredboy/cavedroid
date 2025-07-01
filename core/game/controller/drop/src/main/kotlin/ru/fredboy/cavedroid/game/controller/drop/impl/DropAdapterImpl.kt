@@ -20,5 +20,4 @@ internal class DropAdapterImpl @Inject constructor(
     override fun dropItems(x: Float, y: Float, items: List<InventoryItem>) {
         items.forEach { item -> dropController.addDrop(x, y, item) }
     }
-
 }

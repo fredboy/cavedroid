@@ -10,7 +10,7 @@ import javax.inject.Inject
 @Reusable
 class PigMapper @Inject constructor(
     private val directionMapper: DirectionMapper,
-    private val getPigSpriteUseCase: GetPigSpritesUseCase
+    private val getPigSpriteUseCase: GetPigSpritesUseCase,
 ) {
 
     fun mapSaveData(pig: Pig): SaveDataDto.PigSaveDataDto {
@@ -20,7 +20,7 @@ class PigMapper @Inject constructor(
             y = pig.y,
             width = pig.width,
             height = pig.height,
-            velocityX =  pig.velocity.x,
+            velocityX = pig.velocity.x,
             velocityY = pig.velocity.y,
             animDelta = pig.animDelta,
             anim = pig.anim,
@@ -29,7 +29,7 @@ class PigMapper @Inject constructor(
             canJump = pig.canJump,
             flyMode = pig.isFlyMode,
             maxHealth = pig.maxHealth,
-            health = pig.health
+            health = pig.health,
         )
     }
 

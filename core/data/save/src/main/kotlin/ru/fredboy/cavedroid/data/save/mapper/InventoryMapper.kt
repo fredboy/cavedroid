@@ -16,7 +16,7 @@ class InventoryMapper @Inject constructor(
         return SaveDataDto.InventorySaveDataDto(
             version = SAVE_DATA_VERSION,
             size = inventory.size,
-            items = inventory.items.map(inventoryItemMapper::mapSaveData)
+            items = inventory.items.map(inventoryItemMapper::mapSaveData),
         )
     }
 
@@ -26,7 +26,7 @@ class InventoryMapper @Inject constructor(
         return Inventory(
             size = saveDataDto.size,
             fallbackItem = getFallbackItem(),
-            initialItems = saveDataDto.items.map(inventoryItemMapper::mapInventoryItem)
+            initialItems = saveDataDto.items.map(inventoryItemMapper::mapInventoryItem),
         )
     }
 

@@ -7,7 +7,6 @@ sealed class MenuButton {
     abstract val actionKey: String
     abstract val isEnabled: Boolean
 
-
     data class Simple(
         override val label: String,
         override val isVisible: Boolean,

@@ -37,9 +37,9 @@ class UseItemMouseInputHandler @Inject constructor(
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return buttonHoldTask?.isScheduled == true ||
-                !action.isInsideHotbar(textureRegions) &&
-                gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-                action.actionKey is MouseInputActionKey.Right
+            !action.isInsideHotbar(textureRegions) &&
+            gameWindowsManager.currentWindowType == GameWindowType.NONE &&
+            action.actionKey is MouseInputActionKey.Right
     }
 
     private fun cancelHold() {
@@ -59,7 +59,7 @@ class UseItemMouseInputHandler @Inject constructor(
             placeBlockActionMap.placeToBackgroundAction(
                 item = item,
                 x = player.cursorX,
-                y = player.cursorY
+                y = player.cursorY,
             )
         }
     }
@@ -70,7 +70,6 @@ class UseItemMouseInputHandler @Inject constructor(
             override fun run() {
                 handleHold()
             }
-
         }
         Timer.schedule(buttonHoldTask, TOUCH_HOLD_TIME_SEC)
     }
@@ -85,7 +84,7 @@ class UseItemMouseInputHandler @Inject constructor(
         useBlockActionMap[block.params.key]?.perform(
             block = block,
             x = mobController.player.cursorX,
-            y = mobController.player.cursorY
+            y = mobController.player.cursorY,
         )
     }
 
@@ -101,11 +100,11 @@ class UseItemMouseInputHandler @Inject constructor(
             placeBlockActionMap.placeToForegroundAction(
                 item = item,
                 x = player.cursorX,
-                y = player.cursorY
+                y = player.cursorY,
             )
         } else if (item is Item.Usable) {
             useItemActionMap[item.useActionKey]?.perform(item, player.cursorX, player.cursorY)
-                ?: Gdx.app.error(TAG, "use item action ${item.useActionKey} not found");
+                ?: Gdx.app.error(TAG, "use item action ${item.useActionKey} not found")
         } else if (item is Item.Food && player.health < player.maxHealth) {
             player.heal(item.heal)
             player.decreaseCurrentItemCount()

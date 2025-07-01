@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.data.configuration.repository
 
-import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.data.configuration.store.ApplicationContextStore
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -36,7 +35,7 @@ class ApplicationContextRepositoryImpl @Inject constructor(
         }
 
         if (fullscreen) {
-            Gdx.graphics.setFullscreenMode(Gdx.graphics.displayMode);
+            Gdx.graphics.setFullscreenMode(Gdx.graphics.displayMode)
         } else {
             Gdx.graphics.setWindowedMode(960, 540)
             setWidth(Gdx.graphics.width.toFloat() / 2)

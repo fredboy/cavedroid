@@ -42,5 +42,4 @@ class KeyboardInputActionMapper @Inject constructor() {
 
         return actionKey?.let { KeyboardInputAction(it, isKeyDown) }
     }
-
 }

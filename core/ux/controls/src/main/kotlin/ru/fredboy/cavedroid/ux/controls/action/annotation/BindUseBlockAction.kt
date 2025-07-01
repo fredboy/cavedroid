@@ -7,6 +7,6 @@ import ru.fredboy.cavedroid.ux.controls.action.useblock.IUseBlockAction
 @BindsIntoMapStringKey(
     interfaceClass = IUseBlockAction::class,
     modulePackage = MultibindingConfig.GENERATED_MODULES_PACKAGE,
-    moduleName = "UseBlockActionsModule"
+    moduleName = "UseBlockActionsModule",
 )
 annotation class BindUseBlockAction(val stringKey: String)

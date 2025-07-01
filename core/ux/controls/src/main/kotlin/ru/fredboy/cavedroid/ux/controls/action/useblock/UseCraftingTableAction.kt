@@ -9,7 +9,7 @@ import javax.inject.Inject
 @GameScope
 @BindUseBlockAction(stringKey = UseCraftingTableAction.KEY)
 class UseCraftingTableAction @Inject constructor(
-    private val gameWindowsManager: GameWindowsManager
+    private val gameWindowsManager: GameWindowsManager,
 ) : IUseBlockAction {
 
     override fun perform(block: Block, x: Int, y: Int) {

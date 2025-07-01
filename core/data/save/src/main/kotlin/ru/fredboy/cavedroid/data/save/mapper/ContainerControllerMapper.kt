@@ -28,7 +28,7 @@ class ContainerControllerMapper @Inject constructor(
                     is Chest -> chestMapper.mapSaveData(container)
                     else -> null
                 }?.let { value -> key.toString() to value }
-            }.toMap()
+            }.toMap(),
         )
     }
 
@@ -44,7 +44,7 @@ class ContainerControllerMapper @Inject constructor(
             getItemByKeyUseCase = getItemByKeyUseCase,
             containerWorldAdapter = containerWorldAdapter,
             containerFactory = containerFactory,
-            dropAdapter = dropAdapter
+            dropAdapter = dropAdapter,
         ).apply {
             saveDataDto.containerMap.forEach { (key, value) ->
                 val container = when (value) {

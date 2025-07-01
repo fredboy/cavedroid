@@ -24,7 +24,7 @@ class DropController @Inject constructor(
     constructor(
         itemsRepository: ItemsRepository,
         dropWorldAdapter: DropWorldAdapter,
-        initialDrop: Collection<Drop>
+        initialDrop: Collection<Drop>,
     ) : this(itemsRepository, dropWorldAdapter) {
         drops.addAll(initialDrop.filterNot { drop -> drop.item.isNone() })
     }
@@ -64,7 +64,7 @@ class DropController @Inject constructor(
         val iterator = drops.iterator()
 
         while (iterator.hasNext()) {
-            val drop = iterator.next();
+            val drop = iterator.next()
             if (drop.isPickedUp) {
                 iterator.remove()
             }
@@ -87,8 +87,7 @@ class DropController @Inject constructor(
             x = x.blockCenterPx() - Drop.DROP_SIZE / 2,
             y = y.blockCenterPx() - Drop.DROP_SIZE / 2,
             item = item,
-            count = dropInfo.count
+            count = dropInfo.count,
         )
     }
-
 }

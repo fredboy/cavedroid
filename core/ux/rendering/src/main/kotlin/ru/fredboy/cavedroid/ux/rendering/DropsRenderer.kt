@@ -38,5 +38,4 @@ class DropsRenderer @Inject constructor(
     companion object {
         private const val RENDER_LAYER = 100200
     }
-
 }

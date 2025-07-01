@@ -30,11 +30,15 @@ tasks.register<Jar>("dist") {
     manifest {
         attributes["Main-Class"] = desktopLauncherClassName
     }
-    from(files(configurations.runtimeClasspath.map { classpath ->
-        classpath.map { file ->
-            file.takeIf(File::isDirectory) ?: zipTree(file)
-        }
-    }))
+    from(
+        files(
+            configurations.runtimeClasspath.map { classpath ->
+                classpath.map { file ->
+                    file.takeIf(File::isDirectory) ?: zipTree(file)
+                }
+            },
+        ),
+    )
     with(tasks.jar.get())
 }
 

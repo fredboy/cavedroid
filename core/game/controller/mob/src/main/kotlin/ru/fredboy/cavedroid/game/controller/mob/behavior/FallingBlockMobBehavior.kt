@@ -13,5 +13,4 @@ class FallingBlockMobBehavior : BaseMobBehavior<FallingBlock>(
             kill()
         }
     }
-
 }

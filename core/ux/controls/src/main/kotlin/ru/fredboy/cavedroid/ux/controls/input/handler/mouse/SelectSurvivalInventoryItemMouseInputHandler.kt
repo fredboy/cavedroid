@@ -58,25 +58,25 @@ class SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
         val yOnWindow = action.screenY - (action.cameraViewport.height / 2 - windowTexture.regionHeight / 2)
 
         val xOnGrid = (xOnWindow - GameWindowsConfigs.Survival.itemsGridMarginLeft) /
-                GameWindowsConfigs.Survival.itemsGridColWidth
+            GameWindowsConfigs.Survival.itemsGridColWidth
         val yOnGrid = (yOnWindow - GameWindowsConfigs.Survival.itemsGridMarginTop) /
-                GameWindowsConfigs.Survival.itemsGridRowHeight
+            GameWindowsConfigs.Survival.itemsGridRowHeight
 
         val xOnCraft = (xOnWindow - GameWindowsConfigs.Survival.craftOffsetX) /
-                GameWindowsConfigs.Survival.itemsGridColWidth
+            GameWindowsConfigs.Survival.itemsGridColWidth
         val yOnCraft = (yOnWindow - GameWindowsConfigs.Survival.craftOffsetY) /
-                GameWindowsConfigs.Survival.itemsGridRowHeight
+            GameWindowsConfigs.Survival.itemsGridRowHeight
 
         val isInsideInventoryGrid = xOnGrid >= 0 && xOnGrid < GameWindowsConfigs.Survival.itemsInRow &&
-                yOnGrid >= 0 && yOnGrid < GameWindowsConfigs.Survival.itemsInCol
+            yOnGrid >= 0 && yOnGrid < GameWindowsConfigs.Survival.itemsInCol
 
         val isInsideCraftGrid = xOnCraft >= 0 && xOnCraft < GameWindowsConfigs.Survival.craftGridSize &&
-                yOnCraft >= 0 && yOnCraft < GameWindowsConfigs.Survival.craftGridSize
+            yOnCraft >= 0 && yOnCraft < GameWindowsConfigs.Survival.craftGridSize
 
         val isInsideCraftResult = xOnWindow > GameWindowsConfigs.Survival.craftResultOffsetX &&
-                xOnWindow < GameWindowsConfigs.Survival.craftResultOffsetX + GameWindowsConfigs.Survival.itemsGridColWidth &&
-                yOnWindow > GameWindowsConfigs.Survival.craftResultOffsetY &&
-                yOnWindow < GameWindowsConfigs.Survival.craftResultOffsetY + GameWindowsConfigs.Survival.itemsGridRowHeight
+            xOnWindow < GameWindowsConfigs.Survival.craftResultOffsetX + GameWindowsConfigs.Survival.itemsGridColWidth &&
+            yOnWindow > GameWindowsConfigs.Survival.craftResultOffsetY &&
+            yOnWindow < GameWindowsConfigs.Survival.craftResultOffsetY + GameWindowsConfigs.Survival.itemsGridRowHeight
 
         if (isInsideInventoryGrid) {
             handleInsideInventoryGrid(action, xOnGrid.toInt(), yOnGrid.toInt())
@@ -85,6 +85,5 @@ class SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
         } else if (isInsideCraftResult) {
             handleInsideCraftResult(action)
         }
-
     }
 }

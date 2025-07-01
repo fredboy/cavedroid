@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
-import ru.fredboy.cavedroid.ux.rendering.IGameRenderer
-import ru.fredboy.cavedroid.ux.rendering.WindowsRenderer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
@@ -15,6 +13,8 @@ import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowsConfigs
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.window.inventory.ChestInventoryWindow
+import ru.fredboy.cavedroid.ux.rendering.IGameRenderer
+import ru.fredboy.cavedroid.ux.rendering.WindowsRenderer
 import javax.inject.Inject
 
 @GameScope
@@ -30,8 +30,7 @@ class ChestWindowRenderer @Inject constructor(
     override val renderLayer get() = WindowsRenderer.Companion.RENDER_LAYER
 
     private val chestWindowTexture get() = requireNotNull(textureRegions[CHEST_WINDOW_KEY])
-    
-    
+
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
         val windowTexture = chestWindowTexture
         val window = gameWindowsManager.currentWindow as ChestInventoryWindow
@@ -52,9 +51,9 @@ class ChestWindowRenderer @Inject constructor(
             cellWidth = GameWindowsConfigs.Chest.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Chest.itemsGridRowHeight,
             getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight
+            getStringHeight = getStringHeight,
         )
-        
+
         drawItemsGrid(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
@@ -69,7 +68,7 @@ class ChestWindowRenderer @Inject constructor(
             cellWidth = GameWindowsConfigs.Chest.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Chest.itemsGridRowHeight,
             getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight
+            getStringHeight = getStringHeight,
         )
 
         drawItemsGrid(
@@ -85,7 +84,7 @@ class ChestWindowRenderer @Inject constructor(
             cellWidth = GameWindowsConfigs.Chest.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Chest.itemsGridRowHeight,
             getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight
+            getStringHeight = getStringHeight,
         )
 
         window.selectedItem?.drawSelected(

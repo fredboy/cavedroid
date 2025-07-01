@@ -2,13 +2,13 @@ package ru.fredboy.cavedroid.data.configuration.store
 
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.model.Joystick
-import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 import ru.fredboy.cavedroid.data.configuration.model.GameContext
+import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 import javax.inject.Inject
 
 @GameScope
 class GameContextStore @Inject constructor(
-    private val gameContext: GameContext
+    private val gameContext: GameContext,
 ) {
 
     private val lock = Any()

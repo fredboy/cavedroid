@@ -10,5 +10,4 @@ abstract class DataItemsModule {
 
     @Binds
     internal abstract fun bindItemsRepository(impl: ItemsRepositoryImpl): ItemsRepository
-
 }

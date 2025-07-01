@@ -62,7 +62,7 @@ sealed class Item {
 
     data class Normal(
         override val params: CommonItemParams,
-        override val sprite: Sprite
+        override val sprite: Sprite,
     ) : Item()
 
     sealed class Tool : Item() {
@@ -78,7 +78,7 @@ sealed class Item {
 
     data class None(
         override val params: CommonItemParams,
-    ): Item() {
+    ) : Item() {
         override val sprite: Sprite
             get() = throw IllegalAccessException("Trying to get sprite of None")
     }
@@ -86,18 +86,18 @@ sealed class Item {
     data class Usable(
         override val params: CommonItemParams,
         override val sprite: Sprite,
-        val useActionKey: String
+        val useActionKey: String,
     ) : Item()
 
     data class Block(
         override val params: CommonItemParams,
-        override val block: DomainBlockModel
+        override val block: DomainBlockModel,
     ) : Placeable()
 
     data class Slab(
         override val params: CommonItemParams,
         val topPartBlock: DomainBlockModel.Slab,
-        val bottomPartBlock: DomainBlockModel.Slab
+        val bottomPartBlock: DomainBlockModel.Slab,
     ) : Placeable() {
         override val block get() = bottomPartBlock
     }
@@ -147,5 +147,4 @@ sealed class Item {
         override val sprite: Sprite,
         val heal: Int,
     ) : Item()
-
 }

@@ -25,5 +25,4 @@ class FallingBlockFactory @Inject constructor(
 
         return fallingBlock
     }
-
 }

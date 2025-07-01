@@ -15,6 +15,6 @@ interface IGameRenderer {
         spriteBatch: SpriteBatch,
         shapeRenderer: ShapeRenderer,
         viewport: Rectangle,
-        delta: Float
+        delta: Float,
     )
 }

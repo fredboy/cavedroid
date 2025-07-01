@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
 abstract class Container(
     val size: Int,
     protected val fallbackItem: Item.None,
-    initialItems: List<InventoryItem>? = null
+    initialItems: List<InventoryItem>? = null,
 ) {
 
     val inventory = Inventory(size, fallbackItem, initialItems)
@@ -20,5 +20,4 @@ abstract class Container(
     abstract val type: KClass<out Block.Container>
 
     abstract fun update(itemByKey: GetItemByKeyUseCase)
-
 }

@@ -13,5 +13,4 @@ class GetFontUseCase @Inject constructor(
     operator fun invoke(): BitmapFont {
         return gameAssetsHolder.getFont()
     }
-
 }

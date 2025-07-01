@@ -32,7 +32,7 @@ import javax.inject.Singleton
         DataItemsModule::class,
         DataSaveModule::class,
         ApplicationContextModule::class,
-    ]
+    ],
 )
 interface ApplicationComponent {
 
@@ -79,6 +79,5 @@ interface ApplicationComponent {
         fun preferencesStore(impl: PreferencesStore): Builder
 
         fun build(): ApplicationComponent
-        
     }
 }

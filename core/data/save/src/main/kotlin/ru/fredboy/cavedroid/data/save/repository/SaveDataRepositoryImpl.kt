@@ -48,7 +48,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
 
     private fun buildBlocksDictionary(
         foreMap: Array<Array<Block>>,
-        backMap: Array<Array<Block>>
+        backMap: Array<Array<Block>>,
     ): Map<String, Int> {
         val maps = sequenceOf(foreMap.asSequence(), backMap.asSequence())
 
@@ -67,7 +67,6 @@ internal class SaveDataRepositoryImpl @Inject constructor(
 
         file.writeBytes(result, false)
     }
-
 
     private fun compressMap(map: Array<Array<Block>>, dict: Map<String, Int>): ByteArray {
         if (dict.size > 0xff) {
@@ -147,9 +146,8 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         }
     }
 
-
     private fun internalLoadMap(
-        savesPath: String
+        savesPath: String,
     ): Pair<Array<Array<Block>>, Array<Array<Block>>> {
         val dict = Gdx.files.absolute("$savesPath$DICT_FILE").readString().split("\n")
 
@@ -192,7 +190,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         dropController: DropController,
         mobController: MobController,
         containerController: ContainerController,
-        gameWorld: GameWorld
+        gameWorld: GameWorld,
     ) {
         val savesPath = "$gameDataFolder$SAVES_DIR"
 
@@ -224,20 +222,20 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         gameDataFolder: String,
         containerWorldAdapter: ContainerWorldAdapter,
         containerFactory: ContainerFactory,
-        dropAdapter: DropAdapter
+        dropAdapter: DropAdapter,
     ): ContainerController {
         val savesPath = "$gameDataFolder$SAVES_DIR"
         val containersFile = Gdx.files.absolute("$savesPath$CONTAINERS_FILE")
         val containersBytes = containersFile.readBytes()
 
         return ProtoBuf.decodeFromByteArray<SaveDataDto.ContainerControllerSaveDataDto>(
-            containersBytes
+            containersBytes,
         ).let { saveData ->
             containerControllerMapper.mapContainerController(
                 saveDataDto = saveData,
                 containerWorldAdapter = containerWorldAdapter,
                 containerFactory = containerFactory,
-                dropAdapter = dropAdapter
+                dropAdapter = dropAdapter,
             )
         }
     }
@@ -251,7 +249,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             .let { saveData ->
                 dropControllerMapper.mapDropController(
                     saveDataDto = saveData,
-                    dropWorldAdapter = dropWorldAdapter
+                    dropWorldAdapter = dropWorldAdapter,
                 )
             }
     }
@@ -265,7 +263,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             .let { saveData ->
                 mobControllerMapper.mapMobController(
                     saveDataDto = saveData,
-                    mobWorldAdapter = mobWorldAdapter
+                    mobWorldAdapter = mobWorldAdapter,
                 )
             }
     }
@@ -274,11 +272,11 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         val savesPath = "$gameDataFolder$SAVES_DIR"
 
         return Gdx.files.absolute("$savesPath$DROP_FILE").exists() &&
-                Gdx.files.absolute("$savesPath$MOBS_FILE").exists() &&
-                Gdx.files.absolute("$savesPath$CONTAINERS_FILE").exists() &&
-                Gdx.files.absolute("$savesPath$DICT_FILE").exists() &&
-                Gdx.files.absolute("$savesPath$FOREMAP_FILE").exists() &&
-                Gdx.files.absolute("$savesPath$BACKMAP_FILE").exists()
+            Gdx.files.absolute("$savesPath$MOBS_FILE").exists() &&
+            Gdx.files.absolute("$savesPath$CONTAINERS_FILE").exists() &&
+            Gdx.files.absolute("$savesPath$DICT_FILE").exists() &&
+            Gdx.files.absolute("$savesPath$FOREMAP_FILE").exists() &&
+            Gdx.files.absolute("$savesPath$BACKMAP_FILE").exists()
     }
 
     companion object {

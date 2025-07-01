@@ -12,5 +12,4 @@ class GetStringHeightUseCase @Inject constructor(
     operator fun invoke(string: String): Float {
         return gameAssetsHolder.getStringHeight(string)
     }
-
 }

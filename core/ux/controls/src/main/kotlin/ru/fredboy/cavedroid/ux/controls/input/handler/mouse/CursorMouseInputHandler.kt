@@ -2,11 +2,10 @@ package ru.fredboy.cavedroid.ux.controls.input.handler.mouse
 
 import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.common.utils.bl
 import ru.fredboy.cavedroid.common.utils.px
+import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
-import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByIndexUseCase
 import ru.fredboy.cavedroid.entity.mob.model.Direction
@@ -102,20 +101,31 @@ class CursorMouseInputHandler @Inject constructor(
 
     private fun getCreativeTooltip(action: MouseInputAction): String? {
         val creativeTexture = creativeInventoryTexture
-        val xOnGrid = (action.screenX - (action.cameraViewport.width / 2 - creativeTexture.regionWidth / 2 +
-                GameWindowsConfigs.Creative.itemsGridMarginLeft)) /
-                GameWindowsConfigs.Creative.itemsGridColWidth
-        val yOnGrid = (action.screenY - (action.cameraViewport.height / 2 - creativeTexture.regionHeight / 2 +
-                GameWindowsConfigs.Creative.itemsGridMarginTop)) /
-                GameWindowsConfigs.Creative.itemsGridRowHeight
+        val xOnGrid = (
+            action.screenX - (
+                action.cameraViewport.width / 2 - creativeTexture.regionWidth / 2 +
+                    GameWindowsConfigs.Creative.itemsGridMarginLeft
+                )
+            ) /
+            GameWindowsConfigs.Creative.itemsGridColWidth
+        val yOnGrid = (
+            action.screenY - (
+                action.cameraViewport.height / 2 - creativeTexture.regionHeight / 2 +
+                    GameWindowsConfigs.Creative.itemsGridMarginTop
+                )
+            ) /
+            GameWindowsConfigs.Creative.itemsGridRowHeight
 
         if (xOnGrid < 0 || xOnGrid >= GameWindowsConfigs.Creative.itemsInRow ||
-            yOnGrid < 0 || yOnGrid >= GameWindowsConfigs.Creative.itemsInCol) {
+            yOnGrid < 0 || yOnGrid >= GameWindowsConfigs.Creative.itemsInCol
+        ) {
             return null
         }
 
-        val itemIndex = (gameWindowsManager.creativeScrollAmount * GameWindowsConfigs.Creative.itemsInRow +
-                (xOnGrid.toInt() + yOnGrid.toInt() * GameWindowsConfigs.Creative.itemsInRow))
+        val itemIndex = (
+            gameWindowsManager.creativeScrollAmount * GameWindowsConfigs.Creative.itemsInRow +
+                (xOnGrid.toInt() + yOnGrid.toInt() * GameWindowsConfigs.Creative.itemsInRow)
+            )
         val item = getItemByIndexUseCase[itemIndex]
 
         return item.params.name
@@ -148,5 +158,4 @@ class CursorMouseInputHandler @Inject constructor(
             tooltipManager.showMouseTooltip(getCreativeTooltip(action).orEmpty())
         }
     }
-
 }

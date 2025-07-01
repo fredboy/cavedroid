@@ -11,5 +11,4 @@ class FurnaceInventoryWindow(
     override val type = GameWindowType.FURNACE
 
     override var selectedItem: InventoryItem? = null
-
 }

@@ -84,5 +84,4 @@ class MenuButtonRepositoryImpl @Inject constructor(
 
         private val JsonFormat = Json { ignoreUnknownKeys = true }
     }
-
 }

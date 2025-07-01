@@ -11,8 +11,8 @@ import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
 import ru.fredboy.cavedroid.entity.container.model.ContainerCoordinates
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
-import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 import kotlin.reflect.KClass
@@ -59,7 +59,7 @@ internal class WorldAdapterImpl @Inject constructor(
 
         while (y++ in 0..gameWorld.generatorConfig.seaLevel) {
             if (y == gameWorld.generatorConfig.seaLevel) {
-                while (x++ in 0 ..< width) {
+                while (x++ in 0..<width) {
                     if (getForegroundBlock(x, y).params.hasCollision) {
                         break
                     } else if (x == width - 1) {
@@ -79,7 +79,7 @@ internal class WorldAdapterImpl @Inject constructor(
 
     override fun checkContainerAtCoordinates(
         coordinates: ContainerCoordinates,
-        requiredType: KClass<out Block.Container>
+        requiredType: KClass<out Block.Container>,
     ): Boolean {
         val block = when (coordinates.z) {
             Layer.FOREGROUND.z -> gameWorld.getForeMap(coordinates.x, coordinates.y)

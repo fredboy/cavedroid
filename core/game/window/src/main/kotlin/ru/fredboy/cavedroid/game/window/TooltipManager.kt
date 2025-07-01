@@ -34,5 +34,4 @@ class TooltipManager @Inject constructor() {
     companion object {
         private const val TOOLTIP_TIME_S = 2f
     }
-
 }

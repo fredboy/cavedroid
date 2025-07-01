@@ -58,5 +58,4 @@ class GameWindowsManager @Inject constructor(
         currentWindow = null
         tooltipManager.showMouseTooltip("")
     }
-
 }

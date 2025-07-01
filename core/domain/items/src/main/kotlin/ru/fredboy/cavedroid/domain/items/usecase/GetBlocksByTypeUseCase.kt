@@ -13,5 +13,4 @@ class GetBlocksByTypeUseCase @Inject constructor(
     operator fun <T : Block> get(type: Class<T>): List<T> {
         return itemsRepository.getBlocksByType(type)
     }
-
 }

@@ -31,7 +31,7 @@ class CaveDroidApplication(
         }
 
         if (isFullscreen) {
-            Gdx.graphics.setFullscreenMode(Gdx.graphics.displayMode);
+            Gdx.graphics.setFullscreenMode(Gdx.graphics.displayMode)
         } else {
             Gdx.graphics.setWindowedMode(960, 540)
         }
@@ -53,8 +53,8 @@ class CaveDroidApplication(
                     width = width,
                     height = height,
                     isFullscreen = isFullscreen,
-                    useDynamicCamera = preferencesStore.getPreference("dyncam").toBoolean()
-                )
+                    useDynamicCamera = preferencesStore.getPreference("dyncam").toBoolean(),
+                ),
             )
             .applicationController(this)
             .preferencesStore(preferencesStore)

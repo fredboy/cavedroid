@@ -7,11 +7,10 @@ import javax.inject.Inject
 
 @Reusable
 class GetFallbackItemUseCase @Inject constructor(
-    private val itemsRepository: ItemsRepository
+    private val itemsRepository: ItemsRepository,
 ) {
 
     operator fun invoke(): Item.None {
         return itemsRepository.fallbackItem
     }
-
 }

@@ -19,7 +19,7 @@ sealed interface MobSprite {
 
     data class Pig(
         val headAndBody: Sprite,
-        val leg: Sprite
+        val leg: Sprite,
     ) : MobSprite {
 
         fun getLeftLegRelativeX(directionIndex: Int) = 9 - directionIndex * 9
@@ -27,7 +27,5 @@ sealed interface MobSprite {
         fun getRightLegRelativeX(directionIndex: Int) = 21 - (9 * directionIndex)
 
         fun getLegsRelativeY() = 12
-
     }
-
 }

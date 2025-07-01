@@ -11,7 +11,7 @@ class Chest(
 ) : Container(
     size = SIZE,
     fallbackItem = fallbackItem,
-    initialItems = initialItems
+    initialItems = initialItems,
 ) {
 
     override val type get() = Block.Chest::class

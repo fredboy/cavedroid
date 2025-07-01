@@ -5,20 +5,19 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
-import ru.fredboy.cavedroid.ux.rendering.IGameRenderer
-import ru.fredboy.cavedroid.ux.rendering.WindowsRenderer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
-import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.entity.mob.model.Direction
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowsConfigs
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.window.inventory.SurvivalInventoryWindow
+import ru.fredboy.cavedroid.ux.rendering.IGameRenderer
+import ru.fredboy.cavedroid.ux.rendering.WindowsRenderer
 import javax.inject.Inject
 import kotlin.math.atan
 
@@ -59,9 +58,9 @@ class SurvivalWindowRenderer @Inject constructor(
 
     private fun drawPlayerPortrait(spriteBatch: SpriteBatch, windowX: Float, windowY: Float, delta: Float) {
         val portraitX = windowX + GameWindowsConfigs.Survival.portraitMarginLeft +
-                (GameWindowsConfigs.Survival.portraitWidth / 2 - mobController.player.width / 2)
+            (GameWindowsConfigs.Survival.portraitWidth / 2 - mobController.player.width / 2)
         val portraitY = windowY + GameWindowsConfigs.Survival.portraitMarginTop +
-                (GameWindowsConfigs.Survival.portraitHeight / 2 - mobController.player.height / 2)
+            (GameWindowsConfigs.Survival.portraitHeight / 2 - mobController.player.height / 2)
 
         setPortraitHeadRotation(portraitX, portraitY)
         mobController.player.draw(spriteBatch, portraitX, portraitY, delta)
@@ -92,7 +91,7 @@ class SurvivalWindowRenderer @Inject constructor(
             cellWidth = GameWindowsConfigs.Survival.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Survival.itemsGridRowHeight,
             getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight
+            getStringHeight = getStringHeight,
         )
 
         drawItemsGrid(
@@ -108,7 +107,7 @@ class SurvivalWindowRenderer @Inject constructor(
             cellWidth = GameWindowsConfigs.Survival.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Survival.itemsGridRowHeight,
             getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight
+            getStringHeight = getStringHeight,
         )
 
         drawItemsGrid(
@@ -128,7 +127,7 @@ class SurvivalWindowRenderer @Inject constructor(
             cellWidth = GameWindowsConfigs.Survival.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Survival.itemsGridRowHeight,
             getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight
+            getStringHeight = getStringHeight,
         )
 
         window.craftResult.draw(

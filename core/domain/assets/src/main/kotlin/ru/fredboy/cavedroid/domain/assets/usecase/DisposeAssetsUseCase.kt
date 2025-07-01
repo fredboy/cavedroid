@@ -6,11 +6,10 @@ import javax.inject.Inject
 
 @Reusable
 class DisposeAssetsUseCase @Inject constructor(
-    private val gameAssetsHolder: GameAssetsHolder
+    private val gameAssetsHolder: GameAssetsHolder,
 ) {
 
     operator fun invoke() {
         gameAssetsHolder.dispose()
     }
-
 }

@@ -22,7 +22,7 @@ class BackgroundBlocksRenderer @Inject constructor(
     mobController: MobController,
     containerController: ContainerController,
     getBlockDamageFrameCount: GetBlockDamageFrameCountUseCase,
-    getBlockDamageSprite: GetBlockDamageSpriteUseCase
+    getBlockDamageSprite: GetBlockDamageSpriteUseCase,
 ) : BlocksRenderer(gameWorld, mobController, containerController, getBlockDamageFrameCount, getBlockDamageSprite) {
 
     override val renderLayer get() = RENDER_LAYER

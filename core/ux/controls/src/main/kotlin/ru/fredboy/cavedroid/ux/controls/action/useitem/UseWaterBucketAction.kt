@@ -28,5 +28,4 @@ class UseWaterBucketAction @Inject constructor(
     companion object {
         const val ACTION_KEY = "use_water_bucket"
     }
-
 }

@@ -11,5 +11,4 @@ interface ApplicationController {
     fun loadGame()
 
     fun exitGame()
-
 }

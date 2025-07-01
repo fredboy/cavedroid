@@ -52,7 +52,7 @@ abstract class AbstractWindowRenderer {
                 x = itemX,
                 y = itemY,
                 getStringWidth = getStringWidth::invoke,
-                getStringHeight = getStringHeight::invoke
+                getStringHeight = getStringHeight::invoke,
             ) ?: item?.let { spriteBatch.drawSprite(it.sprite, itemX, itemY) }
         }
     }
@@ -60,5 +60,4 @@ abstract class AbstractWindowRenderer {
     companion object {
         protected const val _TAG = "AbstractWindowRenderer"
     }
-
 }

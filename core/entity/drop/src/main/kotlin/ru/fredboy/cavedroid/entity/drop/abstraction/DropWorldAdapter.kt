@@ -12,5 +12,4 @@ interface DropWorldAdapter {
     fun removeOnBlockDestroyedListener(listener: OnBlockDestroyedListener)
 
     fun removeOnBlockPlacedListener(listener: OnBlockPlacedListener)
-
 }

@@ -12,5 +12,4 @@ class InitializeItemsRepositoryUseCase @Inject constructor(
     operator fun invoke() {
         itemsRepository.initialize()
     }
-
 }

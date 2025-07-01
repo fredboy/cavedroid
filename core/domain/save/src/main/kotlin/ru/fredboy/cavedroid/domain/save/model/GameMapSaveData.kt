@@ -4,7 +4,7 @@ import ru.fredboy.cavedroid.domain.items.model.block.Block
 
 class GameMapSaveData(
     private var foreMap: Array<Array<Block>>?,
-    private var backMap: Array<Array<Block>>?
+    private var backMap: Array<Array<Block>>?,
 ) {
     fun retrieveForeMap(): Array<Array<Block>> {
         val value = requireNotNull(foreMap)

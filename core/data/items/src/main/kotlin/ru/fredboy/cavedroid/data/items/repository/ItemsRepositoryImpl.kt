@@ -63,7 +63,7 @@ internal class ItemsRepositoryImpl @Inject constructor(
                     dto = dto,
                     block = blocksMap[key],
                     slabTopBlock = blocksMap[dto.topSlabBlock] as? Block.Slab,
-                    slabBottomBlock = blocksMap[dto.bottomSlabBlock] as? Block.Slab
+                    slabBottomBlock = blocksMap[dto.bottomSlabBlock] as? Block.Slab,
                 )
             } catch (e: Exception) {
                 Gdx.app.error(TAG, "Failed to map item $key. Reason: ${e.message}")
@@ -86,7 +86,7 @@ internal class ItemsRepositoryImpl @Inject constructor(
         jsonMap.forEach { (key, value) ->
             craftingRecipes += CraftingRecipe(
                 input = value.input.map(::Regex),
-                output = CraftingResult(getItemByKey(key), value.count)
+                output = CraftingResult(getItemByKey(key), value.count),
             )
         }
     }
@@ -183,5 +183,4 @@ internal class ItemsRepositoryImpl @Inject constructor(
         const val FALLBACK_BLOCK_KEY = "none"
         const val FALLBACK_ITEM_KEY = "none"
     }
-
 }

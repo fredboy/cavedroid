@@ -16,11 +16,10 @@ class SelectHotbarSlotKeyboardInputHandler @Inject constructor(
 
     override fun checkConditions(action: KeyboardInputAction): Boolean {
         return action.actionKey is KeyboardInputActionKey.SelectHotbarSlot &&
-                action.isKeyDown
+            action.isKeyDown
     }
 
     override fun handle(action: KeyboardInputAction) {
         mobController.player.activeSlot = (action.actionKey as KeyboardInputActionKey.SelectHotbarSlot).slot
     }
-
 }

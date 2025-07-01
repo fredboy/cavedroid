@@ -7,6 +7,6 @@ import ru.fredboy.cavedroid.ux.rendering.IGameRenderer
 @BindsIntoSet(
     interfaceClass = IGameRenderer::class,
     modulePackage = MultibindingConfig.GENERATED_MODULES_PACKAGE,
-    moduleName = "RenderModule"
+    moduleName = "RenderModule",
 )
 annotation class BindRenderer

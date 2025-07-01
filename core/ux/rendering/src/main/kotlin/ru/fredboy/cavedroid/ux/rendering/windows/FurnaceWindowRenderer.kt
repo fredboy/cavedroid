@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
-import ru.fredboy.cavedroid.ux.rendering.IGameRenderer
-import ru.fredboy.cavedroid.ux.rendering.WindowsRenderer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.common.utils.withScissors
@@ -18,6 +16,8 @@ import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowsConfigs
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.window.inventory.FurnaceInventoryWindow
+import ru.fredboy.cavedroid.ux.rendering.IGameRenderer
+import ru.fredboy.cavedroid.ux.rendering.WindowsRenderer
 import javax.inject.Inject
 
 @GameScope
@@ -36,10 +36,10 @@ class FurnaceWindowRenderer @Inject constructor(
 
     private val furnaceProgress by lazy { Sprite(textureRegions["furnace_progress"]) }
     private val furnaceBurn by lazy { Sprite(textureRegions["furnace_burn"]) }
-    
+
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
         val windowTexture = furnaceWindowTexture
-        
+
         val window = gameWindowsManager.currentWindow as FurnaceInventoryWindow
 
         val windowX = viewport.width / 2 - windowTexture.regionWidth / 2
@@ -60,7 +60,7 @@ class FurnaceWindowRenderer @Inject constructor(
             cellWidth = GameWindowsConfigs.Furnace.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Furnace.itemsGridRowHeight,
             getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight
+            getStringHeight = getStringHeight,
         )
 
         drawItemsGrid(
@@ -76,7 +76,7 @@ class FurnaceWindowRenderer @Inject constructor(
             cellWidth = GameWindowsConfigs.Furnace.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Furnace.itemsGridRowHeight,
             getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight
+            getStringHeight = getStringHeight,
         )
 
         window.furnace.fuel.draw(
@@ -123,7 +123,7 @@ class FurnaceWindowRenderer @Inject constructor(
                 spriteBatch.drawSprite(
                     sprite = furnaceBurn,
                     x = windowX + GameWindowsConfigs.Furnace.fuelBurnMarginLeft,
-                    y = windowY + GameWindowsConfigs.Furnace.fuelBurnMarginTop
+                    y = windowY + GameWindowsConfigs.Furnace.fuelBurnMarginTop,
                 )
             }
 

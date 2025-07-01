@@ -29,7 +29,7 @@ class MobControllerMapper @Inject constructor(
                     else -> null
                 }
             },
-            player = playerMapper.mapSaveData(mobController.player)
+            player = playerMapper.mapSaveData(mobController.player),
         )
     }
 
@@ -44,13 +44,15 @@ class MobControllerMapper @Inject constructor(
             getFallbackItemUseCase = getFallbackItemUseCase,
             mobWorldAdapter = mobWorldAdapter,
         ).apply {
-            (mobs as MutableList).addAll(saveDataDto.mobs.mapNotNull { mob ->
-                when (mob) {
-                    is SaveDataDto.PigSaveDataDto -> pigMapper.mapPig(mob)
-                    is SaveDataDto.FallingBlockSaveDataDto -> fallingBlockMapper.mapFallingBlock(mob)
-                    else -> null
-                }
-            })
+            (mobs as MutableList).addAll(
+                saveDataDto.mobs.mapNotNull { mob ->
+                    when (mob) {
+                        is SaveDataDto.PigSaveDataDto -> pigMapper.mapPig(mob)
+                        is SaveDataDto.FallingBlockSaveDataDto -> fallingBlockMapper.mapFallingBlock(mob)
+                        else -> null
+                    }
+                },
+            )
 
             player = playerMapper.mapPlayer(saveDataDto.player)
         }

@@ -21,7 +21,7 @@ class ContainerController @Inject constructor(
     private val containerWorldAdapter: ContainerWorldAdapter,
     private val containerFactory: ContainerFactory,
     private val dropAdapter: DropAdapter,
-): OnBlockPlacedListener, OnBlockDestroyedListener {
+) : OnBlockPlacedListener, OnBlockDestroyedListener {
 
     val containerMap = mutableMapOf<ContainerCoordinates, Container>()
 

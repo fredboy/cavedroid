@@ -10,13 +10,13 @@ import javax.inject.Inject
 @Reusable
 class DropControllerMapper @Inject constructor(
     private val dropMapper: DropMapper,
-    private val itemsRepository: ItemsRepository
+    private val itemsRepository: ItemsRepository,
 ) {
 
     fun mapSaveData(dropController: DropController): SaveDataDto.DropControllerSaveDataDto {
         return SaveDataDto.DropControllerSaveDataDto(
             version = SAVE_DATA_VERSION,
-            drops = dropController.getAllDrop().map(dropMapper::mapSaveData)
+            drops = dropController.getAllDrop().map(dropMapper::mapSaveData),
         )
     }
 
@@ -36,5 +36,4 @@ class DropControllerMapper @Inject constructor(
     companion object {
         private const val SAVE_DATA_VERSION = 3
     }
-
 }

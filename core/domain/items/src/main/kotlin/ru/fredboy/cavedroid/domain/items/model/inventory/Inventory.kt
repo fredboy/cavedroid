@@ -5,7 +5,7 @@ import ru.fredboy.cavedroid.domain.items.model.item.Item
 class Inventory @JvmOverloads constructor(
     val size: Int,
     private val fallbackItem: Item.None,
-    initialItems: List<InventoryItem>? = null
+    initialItems: List<InventoryItem>? = null,
 ) {
 
     private val _items: Array<InventoryItem> = Array(size) { index ->
@@ -43,7 +43,7 @@ class Inventory @JvmOverloads constructor(
             destination = _items,
             destinationOffset = 1,
             startIndex = 0,
-            endIndex = size - 1
+            endIndex = size - 1,
         )
 
         _items[0] = item.toInventoryItem(item.params.maxStack)

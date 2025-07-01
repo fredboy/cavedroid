@@ -33,7 +33,7 @@ class DebugInfoStringsProvider @Inject constructor(
             "Block: ${gameWorld.getForeMap(player.cursorX, player.cursorY).params.key}",
             "Hand: ${player.activeItem.item.params.key}",
             "Game mode: ${player.gameMode}",
-            "Block damage: ${player.blockDamage}"
+            "Block damage: ${player.blockDamage}",
         )
     }
 }

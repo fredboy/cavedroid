@@ -21,5 +21,4 @@ interface IGameInputHandler<A : IGameInputAction> {
      * This will not be called if [checkConditions] returned false
      */
     fun handle(action: A)
-
 }

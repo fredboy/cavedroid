@@ -13,5 +13,4 @@ class GetItemByKeyUseCase @Inject constructor(
     operator fun get(key: String): Item {
         return itemsRepository.getItemByKey(key)
     }
-
 }

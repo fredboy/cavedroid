@@ -33,10 +33,12 @@ class HotbarMouseInputHandler @Inject constructor(
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return buttonHoldTask?.isScheduled == true ||
-                ((action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen)
-                        && action.isInsideHotbar(textureRegions)
-                        || action.actionKey is MouseInputActionKey.Scroll) &&
-                gameWindowsManager.currentWindowType == GameWindowType.NONE
+            (
+                (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
+                    action.isInsideHotbar(textureRegions) ||
+                    action.actionKey is MouseInputActionKey.Scroll
+                ) &&
+            gameWindowsManager.currentWindowType == GameWindowType.NONE
     }
 
     private fun cancelHold() {
@@ -49,14 +51,18 @@ class HotbarMouseInputHandler @Inject constructor(
             /* x = */ playerX + ((DROP_DISTANCE - Drop.DROP_SIZE / 2) * mobController.player.direction.basis),
             /* y = */ playerY,
             /* item = */ item,
-            /* count = */ amount
+            /* count = */ amount,
         )
     }
 
     private fun getActionSlot(action: MouseInputAction): Int {
-        return ((action.screenX -
-                (action.cameraViewport.width / 2 - hotbarTexture.regionWidth / 2))
-                / HOTBAR_CELL_WIDTH).toInt()
+        return (
+            (
+                action.screenX -
+                    (action.cameraViewport.width / 2 - hotbarTexture.regionWidth / 2)
+                ) /
+                HOTBAR_CELL_WIDTH
+            ).toInt()
     }
 
     private fun handleHold(action: MouseInputAction) {
@@ -125,5 +131,4 @@ class HotbarMouseInputHandler @Inject constructor(
         private const val TOUCH_HOLD_TIME_SEC = 0.5f
         private const val HOTBAR_CELL_WIDTH = 20
     }
-
 }

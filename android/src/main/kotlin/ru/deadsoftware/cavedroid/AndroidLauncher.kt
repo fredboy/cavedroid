@@ -11,7 +11,7 @@ class AndroidLauncher : AndroidApplication() {
         super.onCreate(savedInstanceState)
 
         val gameDataDirectoryPath = packageManager.getPackageInfo(packageName, 0)
-            .applicationInfo.dataDir;
+            .applicationInfo.dataDir
 
         val config = AndroidApplicationConfiguration()
         config.useImmersiveMode = true
@@ -21,9 +21,9 @@ class AndroidLauncher : AndroidApplication() {
                 gameDataDirectoryPath = gameDataDirectoryPath,
                 isTouchScreen = true,
                 isDebug = BuildConfig.DEBUG,
-                preferencesStore = AndroidPreferencesStore(applicationContext)
+                preferencesStore = AndroidPreferencesStore(applicationContext),
             ),
-            /* config = */ config
+            /* config = */ config,
         )
     }
 
@@ -31,5 +31,4 @@ class AndroidLauncher : AndroidApplication() {
     override fun onBackPressed() {
         // ignore
     }
-
 }

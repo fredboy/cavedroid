@@ -22,9 +22,9 @@ class MobsRenderer @Inject constructor(
     override val renderLayer get() = RENDER_LAYER
 
     private fun drawMob(spriteBatch: SpriteBatch, viewport: Rectangle, mob: Mob, delta: Float) {
-         mob.cycledInsideWorld(viewport, gameWorld.width.px)?.let { mobRect ->
-             mob.draw(spriteBatch, mobRect.x - viewport.x, mobRect.y - viewport.y, delta)
-         }
+        mob.cycledInsideWorld(viewport, gameWorld.width.px)?.let { mobRect ->
+            mob.draw(spriteBatch, mobRect.x - viewport.x, mobRect.y - viewport.y, delta)
+        }
     }
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
@@ -33,7 +33,7 @@ class MobsRenderer @Inject constructor(
             /* spriteBatch = */ spriteBatch,
             /* x = */ player.x - viewport.x - player.width / 2,
             /* y = */ player.y - viewport.y,
-            /* delta = */ delta
+            /* delta = */ delta,
         )
 
         mobController.mobs.forEach { mob ->

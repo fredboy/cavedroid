@@ -20,5 +20,4 @@ abstract class AbstractInventoryWindowWithCraftGrid(
         set(value) {
             craftResultList[0] = value
         }
-
 }

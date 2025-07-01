@@ -6,7 +6,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-internal class MobAssetsRepositoryImpl @Inject constructor(): MobAssetsRepository() {
+internal class MobAssetsRepositoryImpl @Inject constructor() : MobAssetsRepository() {
 
     private var playerSprite: MobSprite.Player? = null
 
@@ -59,5 +59,4 @@ internal class MobAssetsRepositoryImpl @Inject constructor(): MobAssetsRepositor
         private const val PLAYER_SPRITES_PATH = "textures/mobs/char"
         private const val PIG_SPRITES_PATH = "textures/mobs/pig"
     }
-
 }

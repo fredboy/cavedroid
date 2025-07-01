@@ -19,7 +19,7 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
     private val itemsRepository: ItemsRepository,
 ) : Timer.Task() {
 
-    private var updateTick: Short = 0;
+    private var updateTick: Short = 0
 
     private val fluidStatesMap = mutableMapOf<KClass<out Block.Fluid>, List<Block.Fluid>>()
 
@@ -67,8 +67,8 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
         val onRight = gameWorld.getForeMap(x + 1, y)
 
         return !onTop.isFluid() &&
-                (onLeft !is Block.Fluid || onLeft.state >= current.state) &&
-                (onRight !is Block.Fluid || onRight.state >= current.state)
+            (onLeft !is Block.Fluid || onLeft.state >= current.state) &&
+            (onRight !is Block.Fluid || onRight.state >= current.state)
     }
 
     private fun drainFluid(x: Int, y: Int): Boolean {
@@ -91,8 +91,8 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
 
     private fun fluidCanFlowThere(fluid: Block.Fluid, targetBlock: Block): Boolean {
         return targetBlock.isNone() ||
-                (!targetBlock.params.hasCollision && !targetBlock.isFluid()) ||
-                (fluid::class == targetBlock::class && fluid.state < (targetBlock as Block.Fluid).state)
+            (!targetBlock.params.hasCollision && !targetBlock.isFluid()) ||
+            (fluid::class == targetBlock::class && fluid.state < (targetBlock as Block.Fluid).state)
     }
 
     private fun flowFluidTo(currentFluid: Block.Fluid, x: Int, y: Int, nextStateFluid: Block.Fluid) {
@@ -120,14 +120,14 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
         val fluid = gameWorld.getForeMap(x, y) as Block.Fluid
         val stateList = fluidStatesMap[fluid::class] ?: return
 
-          if (fluid.state < stateList.lastIndex && gameWorld.getForeMap(x, y + 1).params.hasCollision) {
-              val nextState = getNextStateBlock(fluid) ?: return
+        if (fluid.state < stateList.lastIndex && gameWorld.getForeMap(x, y + 1).params.hasCollision) {
+            val nextState = getNextStateBlock(fluid) ?: return
 
-              flowFluidTo(fluid, x - 1, y, nextState)
-              flowFluidTo(fluid, x + 1, y, nextState)
-          } else {
-              flowFluidTo(fluid, x, y + 1, stateList[1])
-          }
+            flowFluidTo(fluid, x - 1, y, nextState)
+            flowFluidTo(fluid, x + 1, y, nextState)
+        } else {
+            flowFluidTo(fluid, x, y + 1, stateList[1])
+        }
     }
 
     fun updateFluids(x: Int, y: Int) {
@@ -147,7 +147,7 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
         val midScreen = mobController.player.x.bl
 
         for (y in gameWorld.height - 1 downTo 0) {
-            for (x in 0 ..< min(gameWorld.width / 2, 32)) {
+            for (x in 0..<min(gameWorld.width / 2, 32)) {
                 updateFluids(midScreen + x, y)
                 updateFluids(midScreen - x, y)
             }
@@ -170,21 +170,19 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
 
     private inner class UpdateCommand(
         val priority: Int,
-        val command: Runnable
+        val command: Runnable,
     ) {
 
         constructor(block: Block, x: Int, y: Int, priority: Int) :
-                this(priority, Runnable { gameWorld.setForeMap(x, y, block) })
+            this(priority, Runnable { gameWorld.setForeMap(x, y, block) })
 
         constructor(fluid: Block.Fluid, x: Int, y: Int) :
-                this(fluid, x, y, ((5 - fluid.state) + 1) * (if (fluid.isLava()) 2 else 1))
+            this(fluid, x, y, ((5 - fluid.state) + 1) * (if (fluid.isLava()) 2 else 1))
 
         fun exec() = command.run()
-
     }
 
     companion object {
         const val FLUID_UPDATE_INTERVAL_SEC = 0.25f
     }
-
 }

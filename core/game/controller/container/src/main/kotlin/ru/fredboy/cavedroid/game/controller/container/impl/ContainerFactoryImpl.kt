@@ -12,7 +12,7 @@ import javax.inject.Inject
 @GameScope
 internal class ContainerFactoryImpl @Inject constructor(
     private val getFallbackItemUseCase: GetFallbackItemUseCase,
-): ContainerFactory {
+) : ContainerFactory {
 
     override fun createContainer(type: Block.Container): Container {
         return when (type) {
@@ -32,5 +32,4 @@ internal class ContainerFactoryImpl @Inject constructor(
             fallbackItem = getFallbackItemUseCase(),
         )
     }
-
 }

@@ -18,7 +18,6 @@ private val keystoreProperties = if (keystorePropertiesFile.exists()) {
     null
 }
 
-
 android {
     namespace = ApplicationInfo.packageName
     compileSdk = 34
@@ -32,7 +31,6 @@ android {
         named("debug") {
             res.srcDir("src/debug/res")
         }
-
     }
 
     compileOptions {

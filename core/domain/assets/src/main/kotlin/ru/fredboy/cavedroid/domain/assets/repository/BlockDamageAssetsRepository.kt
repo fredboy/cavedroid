@@ -7,5 +7,4 @@ abstract class BlockDamageAssetsRepository : AssetsRepository() {
     abstract val damageStages: Int
 
     abstract fun getBlockDamageSprite(stage: Int): Sprite
-
 }

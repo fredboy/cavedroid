@@ -17,7 +17,7 @@ import ru.fredboy.cavedroid.zygote.menu.renderer.MenuRenderer
         DataMenuModule::class,
         MenuBooleanOptionsModule::class,
         MenuActionsModule::class,
-    ]
+    ],
 )
 interface MenuComponent {
 

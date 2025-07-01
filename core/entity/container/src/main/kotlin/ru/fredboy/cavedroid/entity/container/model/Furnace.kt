@@ -11,7 +11,7 @@ import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 
 class Furnace(
     fallbackItem: Item.None,
-    initialItems: List<InventoryItem>? = null
+    initialItems: List<InventoryItem>? = null,
 ) : Container(
     size = SIZE,
     fallbackItem = fallbackItem,
@@ -60,11 +60,10 @@ class Furnace(
             field = MathUtils.clamp(value, 0f, 1f)
         }
 
-
     fun canSmelt(): Boolean {
         return (result.isNoneOrNull() || (result.item.params.key == input.item.params.smeltProductKey)) &&
-                !input.isNoneOrNull() && input.item.params.smeltProductKey != null &&
-                (!fuel.isNoneOrNull() || burnProgress > 0f)
+            !input.isNoneOrNull() && input.item.params.smeltProductKey != null &&
+            (!fuel.isNoneOrNull() || burnProgress > 0f)
     }
 
     private fun startBurning() {
@@ -93,7 +92,6 @@ class Furnace(
                 burnProgress += 0.01f
                 startBurnTimeMs = TimeUtils.millis()
             }
-
         }
 
         if (currentFuel?.isNone() == false && burnProgress >= 1f) {
@@ -147,5 +145,4 @@ class Furnace(
 
         const val SMELTING_TIME_MS = 10000L
     }
-
 }

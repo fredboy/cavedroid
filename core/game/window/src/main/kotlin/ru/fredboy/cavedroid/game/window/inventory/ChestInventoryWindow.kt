@@ -9,5 +9,4 @@ class ChestInventoryWindow(val chest: Chest) : AbstractInventoryWindow() {
     override val type = GameWindowType.CHEST
 
     override var selectedItem: InventoryItem? = null
-
 }

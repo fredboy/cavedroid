@@ -5,5 +5,4 @@ interface IMenuBooleanOption {
     fun getOption(): Boolean
 
     fun toggleOption()
-
 }

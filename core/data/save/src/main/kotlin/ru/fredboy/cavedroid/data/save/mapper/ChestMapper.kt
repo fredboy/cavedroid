@@ -16,7 +16,7 @@ class ChestMapper @Inject constructor(
         return SaveDataDto.ChestSaveDataDto(
             version = SAVE_DATA_VERSION,
             size = chest.size,
-            items = chest.items.map(inventoryItemMapper::mapSaveData)
+            items = chest.items.map(inventoryItemMapper::mapSaveData),
         )
     }
 
@@ -25,7 +25,7 @@ class ChestMapper @Inject constructor(
 
         return Chest(
             fallbackItem = getFallbackItemUseCase(),
-            initialItems = saveDataDto.items.map(inventoryItemMapper::mapInventoryItem)
+            initialItems = saveDataDto.items.map(inventoryItemMapper::mapInventoryItem),
         )
     }
 

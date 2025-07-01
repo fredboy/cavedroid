@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
-import ru.fredboy.cavedroid.ux.rendering.IGameRenderer
-import ru.fredboy.cavedroid.ux.rendering.WindowsRenderer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
@@ -15,6 +13,8 @@ import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowsConfigs
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.window.inventory.CraftingInventoryWindow
+import ru.fredboy.cavedroid.ux.rendering.IGameRenderer
+import ru.fredboy.cavedroid.ux.rendering.WindowsRenderer
 import javax.inject.Inject
 
 @GameScope
@@ -54,7 +54,7 @@ class CraftingWindowRenderer @Inject constructor(
             cellWidth = GameWindowsConfigs.Crafting.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Crafting.itemsGridRowHeight,
             getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight
+            getStringHeight = getStringHeight,
         )
 
         drawItemsGrid(
@@ -70,7 +70,7 @@ class CraftingWindowRenderer @Inject constructor(
             cellWidth = GameWindowsConfigs.Crafting.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Crafting.itemsGridRowHeight,
             getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight
+            getStringHeight = getStringHeight,
         )
 
         drawItemsGrid(
@@ -84,7 +84,7 @@ class CraftingWindowRenderer @Inject constructor(
             cellWidth = GameWindowsConfigs.Crafting.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Crafting.itemsGridRowHeight,
             getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight
+            getStringHeight = getStringHeight,
         )
 
         window.craftResult.draw(

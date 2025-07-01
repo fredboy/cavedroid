@@ -10,5 +10,4 @@ abstract class ControllerContainerModule {
 
     @Binds
     internal abstract fun bindContainerFactory(impl: ContainerFactoryImpl): ContainerFactory
-
 }

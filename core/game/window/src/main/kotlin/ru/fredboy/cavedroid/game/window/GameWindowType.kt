@@ -6,5 +6,5 @@ enum class GameWindowType {
     SURVIVAL_INVENTORY,
     CHEST,
     CRAFTING_TABLE,
-    FURNACE
+    FURNACE,
 }

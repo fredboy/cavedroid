@@ -15,7 +15,7 @@ class DirectionMapper @Inject constructor() {
             value = when (direction) {
                 Direction.LEFT -> 0
                 Direction.RIGHT -> 1
-            }
+            },
         )
     }
 

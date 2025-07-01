@@ -12,5 +12,4 @@ class GetBlockDamageFrameCountUseCase @Inject constructor(
     operator fun invoke(): Int {
         return gameAssetsHolder.getBlockDamageFrameCount()
     }
-
 }

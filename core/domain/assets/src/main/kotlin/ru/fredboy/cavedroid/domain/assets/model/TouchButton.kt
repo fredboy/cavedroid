@@ -5,5 +5,5 @@ import com.badlogic.gdx.math.Rectangle
 data class TouchButton(
     val rectangle: Rectangle,
     val code: Int,
-    val isMouse: Boolean
+    val isMouse: Boolean,
 )

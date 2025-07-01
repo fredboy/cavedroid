@@ -10,7 +10,7 @@ class FallingBlock(
     x: Float,
     y: Float,
     behavior: MobBehavior,
-) : Mob(x, y, 1.px, 1.px, Direction.RIGHT, Int.MAX_VALUE , behavior) {
+) : Mob(x, y, 1.px, 1.px, Direction.RIGHT, Int.MAX_VALUE, behavior) {
 
     init {
         velocity.y = 1f
@@ -26,9 +26,8 @@ class FallingBlock(
         spriteBatch: SpriteBatch,
         x: Float,
         y: Float,
-        delta: Float
+        delta: Float,
     ) {
         block.draw(spriteBatch, x, y)
     }
-
 }

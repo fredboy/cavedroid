@@ -30,7 +30,7 @@ internal class TextureRegionsAssetsRepositoryImpl @Inject constructor() : Textur
                     x = 0,
                     y = 0,
                     width = texture.width,
-                    height = texture.height
+                    height = texture.height,
                 )
             } else {
                 fileData.forEach { (regionName, regionData) ->
@@ -39,7 +39,7 @@ internal class TextureRegionsAssetsRepositoryImpl @Inject constructor() : Textur
                         x = regionData.x,
                         y = regionData.y,
                         width = regionData.width ?: texture.width,
-                        height = regionData.height ?: texture.height
+                        height = regionData.height ?: texture.height,
                     )
                 }
             }
@@ -66,5 +66,4 @@ internal class TextureRegionsAssetsRepositoryImpl @Inject constructor() : Textur
 
         private const val JSON_TEXTURE_REGIONS = "json/texture_regions.json"
     }
-
 }

@@ -44,10 +44,6 @@ object Dependencies {
         const val ksp = "ru.fredboy:automultibind-ksp:${Versions.automultibind}"
     }
 
-    object KtLint {
-        const val ktlintGradlePlugin = "org.jlleitschuh.gradle:ktlint:${Versions.ktlintGradle}"
-    }
-
     const val androidGradlePlugin = "com.android.tools.build:gradle:${Versions.agp}"
 
 }
