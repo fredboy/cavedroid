@@ -8,6 +8,7 @@ import ru.fredboy.cavedroid.data.configuration.di.GameContextModule
 import ru.fredboy.cavedroid.data.configuration.model.GameContext
 import ru.fredboy.cavedroid.game.controller.container.di.ControllerContainerModule
 import ru.fredboy.cavedroid.game.controller.drop.di.ControllerDropModule
+import ru.fredboy.cavedroid.game.controller.mob.di.MobControllerModule
 import ru.fredboy.cavedroid.game.world.di.GameWorldModule
 import ru.fredboy.cavedroid.zygote.di.ApplicationComponent
 import ru.fredboy.cavedroid.zygote.game.GameProc
@@ -28,6 +29,7 @@ import ru.fredboy.cavedroid.zygote.game.GameProc
         ControllerContainerModule::class,
         ControllerDropModule::class,
         GameContextModule::class,
+        MobControllerModule::class,
     ]
 )
 interface GameComponent {

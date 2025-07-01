@@ -153,7 +153,7 @@ abstract class Mob(
             health = Int.MAX_VALUE - heal
         }
 
-        health += health
+        health += heal
         checkHealth()
     }
 

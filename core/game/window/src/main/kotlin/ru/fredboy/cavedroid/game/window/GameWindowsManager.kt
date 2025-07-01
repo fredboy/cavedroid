@@ -4,7 +4,10 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.entity.container.model.Chest
 import ru.fredboy.cavedroid.entity.container.model.Furnace
+import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindow
+import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindowWithCraftGrid
 import ru.fredboy.cavedroid.game.window.inventory.ChestInventoryWindow
 import ru.fredboy.cavedroid.game.window.inventory.CraftingInventoryWindow
 import ru.fredboy.cavedroid.game.window.inventory.CreativeInventoryWindow
@@ -16,6 +19,8 @@ import javax.inject.Inject
 class GameWindowsManager @Inject constructor(
     private val tooltipManager: TooltipManager,
     private val itemsRepository: ItemsRepository,
+    private val dropAdapter: DropAdapter,
+    private val playerAdapter: PlayerAdapter,
 ) {
 
     var creativeScrollAmount = 0
@@ -47,11 +52,9 @@ class GameWindowsManager @Inject constructor(
     }
 
     fun closeWindow() {
-//        (currentWindow as? AbstractInventoryWindowWithCraftGrid)?.let { window ->
-//            window.craftingItems.forEach { item ->
-//                dropController.addDrop(mobController.player.x, mobController.player.y, item)
-//            }
-//        }
+        (currentWindow as? AbstractInventoryWindowWithCraftGrid)?.let { window ->
+            dropAdapter.dropItems(playerAdapter.x, playerAdapter.y, window.craftingItems)
+        }
         currentWindow = null
         tooltipManager.showMouseTooltip("")
     }

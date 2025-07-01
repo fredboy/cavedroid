@@ -13,6 +13,7 @@ import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepositor
 import ru.fredboy.cavedroid.domain.items.model.block.Block;
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem;
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase;
+import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter;
 import ru.fredboy.cavedroid.entity.drop.model.Drop;
 import ru.fredboy.cavedroid.entity.mob.model.FallingBlock;
 import ru.fredboy.cavedroid.entity.mob.model.Mob;
@@ -37,18 +38,21 @@ public class GamePhysics {
     private final MobController mMobController;
     private final DropController mDropController;
     private final GetItemByKeyUseCase mGetItemByKeyUseCase;
+    private final DropAdapter mDropAdapter;
 
     @Inject
     public GamePhysics(GameWorld gameWorld,
                        ApplicationContextRepository gameContextRepository,
                        MobController mobController,
                        DropController dropController,
-                       GetItemByKeyUseCase getItemByKeyUseCase) {
+                       GetItemByKeyUseCase getItemByKeyUseCase,
+                       DropAdapter dropAdapter) {
         mGameWorld = gameWorld;
         mGameContextRepository = gameContextRepository;
         mMobController = mobController;
         mDropController = dropController;
         mGetItemByKeyUseCase = getItemByKeyUseCase;
+        mDropAdapter = dropAdapter;
     }
 
     /**
@@ -380,7 +384,7 @@ public class GamePhysics {
 //            for (InventoryItem invItem : player.getInventory().getItems()) {
 //                mDropController.addDrop(player.x, player.y, invItem);
 //            }
-            player.getInventory().clear();
+            mDropAdapter.dropInventory(player.x, player.y, player.getInventory());
             mMobController.respawnPlayer();
         }
     }

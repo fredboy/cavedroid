@@ -44,7 +44,9 @@ class PlayerMobBehavior : BaseMobBehavior<Player>(
                     toolLevel >= targetBlock.params.toolLevel
                 }
 
-                decreaseCurrentItemCount()
+                if (activeItem.item.isTool()) {
+                    decreaseCurrentItemCount()
+                }
 
                 when (targetLayer) {
                     Layer.FOREGROUND -> worldAdapter.destroyForegroundBlock(cursorX, cursorY, shouldDrop)

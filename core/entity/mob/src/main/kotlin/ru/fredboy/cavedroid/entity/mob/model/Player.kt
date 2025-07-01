@@ -69,6 +69,10 @@ class Player(
     }
 
     override fun damage(damage: Int) {
+        if (gameMode == 1) {
+            return
+        }
+
         super.damage(damage)
 
         if (damage > 0 && canJump) {
