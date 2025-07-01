@@ -16,3 +16,7 @@ dependencies {
     implementation(Dependencies.LibGDX.Ios.backend)
     implementation(Dependencies.LibGDX.Ios.natives)
 }
+
+robovm {
+    isIosSkipSigning = true
+}

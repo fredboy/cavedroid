@@ -50,8 +50,9 @@ internal class SaveDataRepositoryImpl @Inject constructor(
 
         return maps.flatten()
             .flatMap(Array<Block>::asSequence)
+            .map { it.params.key }
             .toSet()
-            .mapIndexed { index, block -> block.params.key to index }
+            .mapIndexed { index, key -> key to index }
             .toMap()
     }
 
