@@ -1,5 +1,6 @@
 include("android")
 include("desktop")
+include("ios")
 
 /**
  * Global modules

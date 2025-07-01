@@ -67,4 +67,11 @@ object Versions {
      * [Source](https://github.com/JLLeitschuh/ktlint-gradle)
      */
     const val ktlintGradle = "12.3.0"
+
+    /**
+     * RoboVM is an ahead-of-time compiler for Java bytecode, targeting Linux, Mac OS X and iOS.
+     *
+     * [Source](https://github.com/MobiVM/robovm)
+     */
+    const val roboVM = "2.3.23"
 }

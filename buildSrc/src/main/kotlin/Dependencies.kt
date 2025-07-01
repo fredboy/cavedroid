@@ -18,6 +18,11 @@ object Dependencies {
             const val backend = "com.badlogicgames.gdx:gdx-backend-lwjgl3:${Versions.gdx}"
             const val natives = "com.badlogicgames.gdx:gdx-platform:${Versions.gdx}:natives-desktop"
         }
+
+        object Ios {
+            const val backend = "com.badlogicgames.gdx:gdx-backend-robovm:${Versions.gdx}"
+            const val natives = "com.badlogicgames.gdx:gdx-platform:${Versions.gdx}:natives-ios"
+        }
     }
 
     object Dagger {
@@ -40,6 +45,12 @@ object Dependencies {
     object Automultibind {
         const val annotations = "ru.fredboy:automultibind-annotations:${Versions.automultibind}"
         const val ksp = "ru.fredboy:automultibind-ksp:${Versions.automultibind}"
+    }
+
+    object RoboVM {
+        const val rt = "com.mobidevelop.robovm:robovm-rt:${Versions.roboVM}"
+        const val cocoatouch = "com.mobidevelop.robovm:robovm-cocoatouch:${Versions.roboVM}"
+        const val gradlePlugin = "com.mobidevelop.robovm:robovm-gradle-plugin:${Versions.roboVM}"
     }
 
     const val androidGradlePlugin = "com.android.tools.build:gradle:${Versions.agp}"
