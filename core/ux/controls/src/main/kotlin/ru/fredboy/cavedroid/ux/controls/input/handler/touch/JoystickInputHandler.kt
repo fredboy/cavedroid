@@ -36,7 +36,8 @@ class JoystickInputHandler @Inject constructor(
             if (!value) {
                 resetVelocity()
                 if (TimeUtils.timeSinceMillis(activateTimeMs) < 200L &&
-                    mobController.player.controlMode != Player.ControlMode.CURSOR && mobController.player.canJump
+                    mobController.player.controlMode != Player.ControlMode.CURSOR &&
+                    mobController.player.canJump
                 ) {
                     mobController.player.jump()
                 }
@@ -54,13 +55,15 @@ class JoystickInputHandler @Inject constructor(
         }
     }
 
-    override fun checkConditions(action: MouseInputAction): Boolean {
-        return gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-            applicationContextRepository.isTouch() && action.actionKey is MouseInputActionKey.Touch && (action.actionKey.pointer == gameContextRepository.getJoystick().pointer || !active) && (
-                (action.actionKey is MouseInputActionKey.Dragged) ||
-                    (action.screenX < action.cameraViewport.width / 2 && !action.actionKey.touchUp || active)
-                ) && !(action.actionKey is MouseInputActionKey.Screen && action.isInsideHotbar(textureRegions))
-    }
+    override fun checkConditions(action: MouseInputAction): Boolean = gameWindowsManager.currentWindowType == GameWindowType.NONE &&
+        applicationContextRepository.isTouch() &&
+        action.actionKey is MouseInputActionKey.Touch &&
+        (action.actionKey.pointer == gameContextRepository.getJoystick().pointer || !active) &&
+        (
+            (action.actionKey is MouseInputActionKey.Dragged) ||
+                (action.screenX < action.cameraViewport.width / 2 && !action.actionKey.touchUp || active)
+            ) &&
+        !(action.actionKey is MouseInputActionKey.Screen && action.isInsideHotbar(textureRegions))
 
     private fun handleTouchDown(action: MouseInputAction) {
         val key = action.actionKey as MouseInputActionKey.Screen

@@ -12,13 +12,11 @@ class ChestMapper @Inject constructor(
     private val getFallbackItemUseCase: GetFallbackItemUseCase,
 ) {
 
-    fun mapSaveData(chest: Chest): SaveDataDto.ChestSaveDataDto {
-        return SaveDataDto.ChestSaveDataDto(
-            version = SAVE_DATA_VERSION,
-            size = chest.size,
-            items = chest.items.map(inventoryItemMapper::mapSaveData),
-        )
-    }
+    fun mapSaveData(chest: Chest): SaveDataDto.ChestSaveDataDto = SaveDataDto.ChestSaveDataDto(
+        version = SAVE_DATA_VERSION,
+        size = chest.size,
+        items = chest.items.map(inventoryItemMapper::mapSaveData),
+    )
 
     fun mapChest(saveDataDto: SaveDataDto.ChestSaveDataDto): Chest {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)

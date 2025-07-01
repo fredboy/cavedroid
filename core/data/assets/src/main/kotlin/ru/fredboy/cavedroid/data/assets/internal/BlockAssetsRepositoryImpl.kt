@@ -10,9 +10,7 @@ internal class BlockAssetsRepositoryImpl @Inject constructor() : BlockAssetsRepo
 
     private val blockTexturesCache = HashMap<String, Texture>()
 
-    override fun getBlockTexture(textureName: String): Texture {
-        return resolveTexture(textureName, BLOCKS_TEXTURES_PATH, blockTexturesCache)
-    }
+    override fun getBlockTexture(textureName: String): Texture = resolveTexture(textureName, BLOCKS_TEXTURES_PATH, blockTexturesCache)
 
     override fun initialize() {
         // no-op

@@ -19,19 +19,17 @@ class MobControllerMapper @Inject constructor(
     private val getFallbackItemUseCase: GetFallbackItemUseCase,
 ) {
 
-    fun mapSaveData(mobController: MobController): SaveDataDto.MobControllerSaveDataDto {
-        return SaveDataDto.MobControllerSaveDataDto(
-            version = SAVE_DATA_VERSION,
-            mobs = mobController.mobs.mapNotNull { mob ->
-                when (mob) {
-                    is Pig -> pigMapper.mapSaveData(mob)
-                    is FallingBlock -> fallingBlockMapper.mapSaveData(mob)
-                    else -> null
-                }
-            },
-            player = playerMapper.mapSaveData(mobController.player),
-        )
-    }
+    fun mapSaveData(mobController: MobController): SaveDataDto.MobControllerSaveDataDto = SaveDataDto.MobControllerSaveDataDto(
+        version = SAVE_DATA_VERSION,
+        mobs = mobController.mobs.mapNotNull { mob ->
+            when (mob) {
+                is Pig -> pigMapper.mapSaveData(mob)
+                is FallingBlock -> fallingBlockMapper.mapSaveData(mob)
+                else -> null
+            }
+        },
+        player = playerMapper.mapSaveData(mobController.player),
+    )
 
     fun mapMobController(
         saveDataDto: SaveDataDto.MobControllerSaveDataDto,

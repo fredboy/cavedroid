@@ -12,13 +12,9 @@ sealed class Item {
     abstract val params: CommonItemParams
     abstract val sprite: Sprite
 
-    override fun hashCode(): Int {
-        return params.key.hashCode()
-    }
+    override fun hashCode(): Int = params.key.hashCode()
 
-    override fun equals(other: Any?): Boolean {
-        return params.key == (other as Item).params.key
-    }
+    override fun equals(other: Any?): Boolean = params.key == (other as Item).params.key
 
     fun isNone(): Boolean {
         contract { returns(true) implies (this@Item is None) }
@@ -56,9 +52,7 @@ sealed class Item {
     }
 
     @JvmOverloads
-    fun toInventoryItem(amount: Int = 1): InventoryItem {
-        return InventoryItem(this, amount)
-    }
+    fun toInventoryItem(amount: Int = 1): InventoryItem = InventoryItem(this, amount)
 
     data class Normal(
         override val params: CommonItemParams,

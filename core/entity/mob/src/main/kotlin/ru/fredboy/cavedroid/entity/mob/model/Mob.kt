@@ -71,9 +71,7 @@ abstract class Mob(
 
     abstract val speed: Float
 
-    private fun isAnimationIncreasing(): Boolean {
-        return anim > 0 && animDelta > 0 || anim < 0 && animDelta < 0
-    }
+    private fun isAnimationIncreasing(): Boolean = anim > 0 && animDelta > 0 || anim < 0 && animDelta < 0
 
     private fun checkHealth() {
         health = MathUtils.clamp(health, 0, maxHealth)
@@ -157,14 +155,12 @@ abstract class Mob(
         checkHealth()
     }
 
-    fun getHitBox(): Rectangle {
-        return Rectangle(
-            /* x = */ x - HIT_RANGE,
-            /* y = */ y + HIT_RANGE,
-            /* width = */ width + HIT_RANGE * 2f,
-            /* height = */ height + HIT_RANGE * 2f,
-        )
-    }
+    fun getHitBox(): Rectangle = Rectangle(
+        /* x = */ x - HIT_RANGE,
+        /* y = */ y + HIT_RANGE,
+        /* width = */ width + HIT_RANGE * 2f,
+        /* height = */ height + HIT_RANGE * 2f,
+    )
 
     fun update(mobWorldAdapter: MobWorldAdapter, delta: Float) {
         behavior.update(this, mobWorldAdapter, delta)
@@ -172,9 +168,7 @@ abstract class Mob(
 
     open fun getDropItems(
         itemByKey: GetItemByKeyUseCase,
-    ): List<InventoryItem> {
-        return emptyList()
-    }
+    ): List<InventoryItem> = emptyList()
 
     abstract fun draw(spriteBatch: SpriteBatch, x: Float, y: Float, delta: Float)
 

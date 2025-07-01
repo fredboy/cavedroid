@@ -41,9 +41,7 @@ class InventoryItem(
         add(-count)
     }
 
-    fun canBeAdded(count: Int = 1): Boolean {
-        return amount + count <= item.params.maxStack
-    }
+    fun canBeAdded(count: Int = 1): Boolean = amount + count <= item.params.maxStack
 
     private fun drawAmountText(
         spriteBatch: SpriteBatch,
@@ -129,7 +127,7 @@ class InventoryItem(
     companion object {
         @OptIn(ExperimentalContracts::class)
         fun InventoryItem?.isNoneOrNull(): Boolean {
-            contract { returns(false) implies(this@isNoneOrNull != null) }
+            contract { returns(false) implies (this@isNoneOrNull != null) }
             return this?.item == null || this.item.isNone()
         }
     }

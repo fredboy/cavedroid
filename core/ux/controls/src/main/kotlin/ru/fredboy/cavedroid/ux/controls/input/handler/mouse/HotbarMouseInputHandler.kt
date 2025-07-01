@@ -31,15 +31,13 @@ class HotbarMouseInputHandler @Inject constructor(
 
     private var buttonHoldTask: Timer.Task? = null
 
-    override fun checkConditions(action: MouseInputAction): Boolean {
-        return buttonHoldTask?.isScheduled == true ||
-            (
-                (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
-                    action.isInsideHotbar(textureRegions) ||
-                    action.actionKey is MouseInputActionKey.Scroll
-                ) &&
-            gameWindowsManager.currentWindowType == GameWindowType.NONE
-    }
+    override fun checkConditions(action: MouseInputAction): Boolean = buttonHoldTask?.isScheduled == true ||
+        (
+            (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
+                action.isInsideHotbar(textureRegions) ||
+                action.actionKey is MouseInputActionKey.Scroll
+            ) &&
+        gameWindowsManager.currentWindowType == GameWindowType.NONE
 
     private fun cancelHold() {
         buttonHoldTask?.cancel()
@@ -55,15 +53,13 @@ class HotbarMouseInputHandler @Inject constructor(
         )
     }
 
-    private fun getActionSlot(action: MouseInputAction): Int {
-        return (
-            (
-                action.screenX -
-                    (action.cameraViewport.width / 2 - hotbarTexture.regionWidth / 2)
-                ) /
-                HOTBAR_CELL_WIDTH
-            ).toInt()
-    }
+    private fun getActionSlot(action: MouseInputAction): Int = (
+        (
+            action.screenX -
+                (action.cameraViewport.width / 2 - hotbarTexture.regionWidth / 2)
+            ) /
+            HOTBAR_CELL_WIDTH
+        ).toInt()
 
     private fun handleHold(action: MouseInputAction) {
 //        buttonHoldTask = null

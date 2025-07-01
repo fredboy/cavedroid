@@ -20,11 +20,9 @@ class AttackMouseInputHandler @Inject constructor(
     private val textureRegions: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
 
-    override fun checkConditions(action: MouseInputAction): Boolean {
-        return gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-            !action.isInsideHotbar(textureRegions) &&
-            action.actionKey is MouseInputActionKey.Left
-    }
+    override fun checkConditions(action: MouseInputAction): Boolean = gameWindowsManager.currentWindowType == GameWindowType.NONE &&
+        !action.isInsideHotbar(textureRegions) &&
+        action.actionKey is MouseInputActionKey.Left
 
     override fun handle(action: MouseInputAction) {
         if (action.actionKey.touchUp) {

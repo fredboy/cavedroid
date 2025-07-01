@@ -13,12 +13,10 @@ class DropControllerMapper @Inject constructor(
     private val itemsRepository: ItemsRepository,
 ) {
 
-    fun mapSaveData(dropController: DropController): SaveDataDto.DropControllerSaveDataDto {
-        return SaveDataDto.DropControllerSaveDataDto(
-            version = SAVE_DATA_VERSION,
-            drops = dropController.getAllDrop().map(dropMapper::mapSaveData),
-        )
-    }
+    fun mapSaveData(dropController: DropController): SaveDataDto.DropControllerSaveDataDto = SaveDataDto.DropControllerSaveDataDto(
+        version = SAVE_DATA_VERSION,
+        drops = dropController.getAllDrop().map(dropMapper::mapSaveData),
+    )
 
     fun mapDropController(
         saveDataDto: SaveDataDto.DropControllerSaveDataDto,

@@ -10,9 +10,7 @@ internal class ItemsAssetsRepositoryImpl @Inject constructor() : ItemsAssetsRepo
 
     private val itemTexturesCache = HashMap<String, Texture>()
 
-    override fun getItemTexture(textureName: String): Texture {
-        return resolveTexture(textureName, ITEMS_TEXTURES_PATH, itemTexturesCache)
-    }
+    override fun getItemTexture(textureName: String): Texture = resolveTexture(textureName, ITEMS_TEXTURES_PATH, itemTexturesCache)
 
     override fun initialize() {
         // no-op

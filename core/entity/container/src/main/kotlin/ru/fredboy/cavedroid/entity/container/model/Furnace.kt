@@ -60,11 +60,10 @@ class Furnace(
             field = MathUtils.clamp(value, 0f, 1f)
         }
 
-    fun canSmelt(): Boolean {
-        return (result.isNoneOrNull() || (result.item.params.key == input.item.params.smeltProductKey)) &&
-            !input.isNoneOrNull() && input.item.params.smeltProductKey != null &&
-            (!fuel.isNoneOrNull() || burnProgress > 0f)
-    }
+    fun canSmelt(): Boolean = (result.isNoneOrNull() || (result.item.params.key == input.item.params.smeltProductKey)) &&
+        !input.isNoneOrNull() &&
+        input.item.params.smeltProductKey != null &&
+        (!fuel.isNoneOrNull() || burnProgress > 0f)
 
     private fun startBurning() {
         requireNotNull(fuel.item.params.burningTimeMs) { "Cant start burning without fuel" }

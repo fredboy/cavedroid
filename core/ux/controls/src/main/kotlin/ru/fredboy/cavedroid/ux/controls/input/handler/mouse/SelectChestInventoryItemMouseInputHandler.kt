@@ -59,11 +59,15 @@ class SelectChestInventoryItemMouseInputHandler @Inject constructor(
         val yOnContent = (yOnWindow - GameWindowsConfigs.Chest.contentsMarginTop) /
             GameWindowsConfigs.Chest.itemsGridRowHeight
 
-        val isInsideInventoryGrid = xOnGrid >= 0 && xOnGrid < GameWindowsConfigs.Chest.itemsInRow &&
-            yOnGrid >= 0 && yOnGrid < GameWindowsConfigs.Chest.itemsInCol
+        val isInsideInventoryGrid = xOnGrid >= 0 &&
+            xOnGrid < GameWindowsConfigs.Chest.itemsInRow &&
+            yOnGrid >= 0 &&
+            yOnGrid < GameWindowsConfigs.Chest.itemsInCol
 
-        val isInsideContentGrid = xOnContent >= 0 && xOnContent < GameWindowsConfigs.Chest.contentsInRow &&
-            yOnContent >= 0 && yOnContent < GameWindowsConfigs.Chest.contentsInCol
+        val isInsideContentGrid = xOnContent >= 0 &&
+            xOnContent < GameWindowsConfigs.Chest.contentsInRow &&
+            yOnContent >= 0 &&
+            yOnContent < GameWindowsConfigs.Chest.contentsInCol
 
         if (isInsideInventoryGrid) {
             handleInsideInventoryGrid(action, xOnGrid.toInt(), yOnGrid.toInt())

@@ -10,7 +10,5 @@ class GetPlayerSpritesUseCase @Inject constructor(
     private val gameAssetsHolder: GameAssetsHolder,
 ) {
 
-    operator fun invoke(): MobSprite.Player {
-        return gameAssetsHolder.getPlayerSprites()
-    }
+    operator fun invoke(): MobSprite.Player = gameAssetsHolder.getPlayerSprites()
 }

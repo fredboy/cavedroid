@@ -17,16 +17,15 @@ class MoveCursorControlsModeKeyboardInputHandler @Inject constructor(
     private val mobsController: MobController,
 ) : IKeyboardInputHandler {
 
-    override fun checkConditions(action: KeyboardInputAction): Boolean {
-        return applicationContextRepository.isTouch() &&
-            mobsController.player.controlMode == Player.ControlMode.CURSOR && action.isKeyDown &&
-            (
-                action.actionKey is KeyboardInputActionKey.Left ||
-                    action.actionKey is KeyboardInputActionKey.Right ||
-                    action.actionKey is KeyboardInputActionKey.Up ||
-                    action.actionKey is KeyboardInputActionKey.Down
-                )
-    }
+    override fun checkConditions(action: KeyboardInputAction): Boolean = applicationContextRepository.isTouch() &&
+        mobsController.player.controlMode == Player.ControlMode.CURSOR &&
+        action.isKeyDown &&
+        (
+            action.actionKey is KeyboardInputActionKey.Left ||
+                action.actionKey is KeyboardInputActionKey.Right ||
+                action.actionKey is KeyboardInputActionKey.Up ||
+                action.actionKey is KeyboardInputActionKey.Down
+            )
 
     override fun handle(action: KeyboardInputAction) {
         val player = mobsController.player

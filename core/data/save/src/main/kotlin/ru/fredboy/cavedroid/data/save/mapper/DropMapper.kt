@@ -11,20 +11,18 @@ class DropMapper @Inject constructor(
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
 ) {
 
-    fun mapSaveData(drop: Drop): SaveDataDto.DropSaveDataDto {
-        return SaveDataDto.DropSaveDataDto(
-            version = SAVE_DATA_VERSION,
-            x = drop.x,
-            y = drop.y,
-            width = drop.width,
-            height = drop.height,
-            velocityX = drop.velocity.x,
-            velocityY = drop.velocity.y,
-            itemKey = drop.item.params.key,
-            amount = drop.amount,
-            pickedUp = drop.isPickedUp,
-        )
-    }
+    fun mapSaveData(drop: Drop): SaveDataDto.DropSaveDataDto = SaveDataDto.DropSaveDataDto(
+        version = SAVE_DATA_VERSION,
+        x = drop.x,
+        y = drop.y,
+        width = drop.width,
+        height = drop.height,
+        velocityX = drop.velocity.x,
+        velocityY = drop.velocity.y,
+        itemKey = drop.item.params.key,
+        amount = drop.amount,
+        pickedUp = drop.isPickedUp,
+    )
 
     fun mapDrop(saveDataDto: SaveDataDto.DropSaveDataDto): Drop {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)

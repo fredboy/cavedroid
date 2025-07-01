@@ -15,17 +15,15 @@ data class WorldGeneratorConfig(
 
     companion object {
 
-        fun getDefault(): WorldGeneratorConfig {
-            return WorldGeneratorConfig(
-                width = 1024,
-                height = 256,
-                seed = TimeUtils.millis(),
-                maxSurfaceHeight = 208,
-                minSurfaceHeight = 128,
-                biomes = Biome.entries.toList(),
-                minBiomeSize = 64,
-                seaLevel = 192,
-            )
-        }
+        fun getDefault(): WorldGeneratorConfig = WorldGeneratorConfig(
+            width = 1024,
+            height = 256,
+            seed = TimeUtils.millis(),
+            maxSurfaceHeight = 208,
+            minSurfaceHeight = 128,
+            biomes = Biome.entries.toList(),
+            minBiomeSize = 64,
+            seaLevel = 192,
+        )
     }
 }

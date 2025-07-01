@@ -22,7 +22,8 @@ abstract class AbstractInventoryWindow {
     ) {
         if (selectedItem != null &&
             selectedItem?.item?.isNone() != true &&
-            pointer >= 0 && selectItemPointer >= 0 &&
+            pointer >= 0 &&
+            selectItemPointer >= 0 &&
             pointer != selectItemPointer
         ) {
             return
@@ -31,7 +32,8 @@ abstract class AbstractInventoryWindow {
         val clickedItem = items[index]
 
         selectedItem?.let { selectedItem ->
-            if (!clickedItem.isNoneOrNull() && items[index].item == selectedItem.item &&
+            if (!clickedItem.isNoneOrNull() &&
+                items[index].item == selectedItem.item &&
                 items[index].amount + selectedItem.amount <= selectedItem.item.params.maxStack
             ) {
                 items[index].amount += selectedItem.amount

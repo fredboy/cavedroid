@@ -19,18 +19,16 @@ class ContainerControllerMapper @Inject constructor(
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
 ) {
 
-    fun mapSaveData(containerController: ContainerController): SaveDataDto.ContainerControllerSaveDataDto {
-        return SaveDataDto.ContainerControllerSaveDataDto(
-            version = SAVE_DATA_VERSION,
-            containerMap = containerController.containerMap.mapNotNull { (key, container) ->
-                when (container) {
-                    is Furnace -> furnaceMapper.mapSaveData(container)
-                    is Chest -> chestMapper.mapSaveData(container)
-                    else -> null
-                }?.let { value -> key.toString() to value }
-            }.toMap(),
-        )
-    }
+    fun mapSaveData(containerController: ContainerController): SaveDataDto.ContainerControllerSaveDataDto = SaveDataDto.ContainerControllerSaveDataDto(
+        version = SAVE_DATA_VERSION,
+        containerMap = containerController.containerMap.mapNotNull { (key, container) ->
+            when (container) {
+                is Furnace -> furnaceMapper.mapSaveData(container)
+                is Chest -> chestMapper.mapSaveData(container)
+                else -> null
+            }?.let { value -> key.toString() to value }
+        }.toMap(),
+    )
 
     fun mapContainerController(
         saveDataDto: SaveDataDto.ContainerControllerSaveDataDto,

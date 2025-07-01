@@ -67,11 +67,15 @@ class SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
         val yOnCraft = (yOnWindow - GameWindowsConfigs.Survival.craftOffsetY) /
             GameWindowsConfigs.Survival.itemsGridRowHeight
 
-        val isInsideInventoryGrid = xOnGrid >= 0 && xOnGrid < GameWindowsConfigs.Survival.itemsInRow &&
-            yOnGrid >= 0 && yOnGrid < GameWindowsConfigs.Survival.itemsInCol
+        val isInsideInventoryGrid = xOnGrid >= 0 &&
+            xOnGrid < GameWindowsConfigs.Survival.itemsInRow &&
+            yOnGrid >= 0 &&
+            yOnGrid < GameWindowsConfigs.Survival.itemsInCol
 
-        val isInsideCraftGrid = xOnCraft >= 0 && xOnCraft < GameWindowsConfigs.Survival.craftGridSize &&
-            yOnCraft >= 0 && yOnCraft < GameWindowsConfigs.Survival.craftGridSize
+        val isInsideCraftGrid = xOnCraft >= 0 &&
+            xOnCraft < GameWindowsConfigs.Survival.craftGridSize &&
+            yOnCraft >= 0 &&
+            yOnCraft < GameWindowsConfigs.Survival.craftGridSize
 
         val isInsideCraftResult = xOnWindow > GameWindowsConfigs.Survival.craftResultOffsetX &&
             xOnWindow < GameWindowsConfigs.Survival.craftResultOffsetX + GameWindowsConfigs.Survival.itemsGridColWidth &&

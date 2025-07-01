@@ -24,9 +24,7 @@ internal class FontAssetsRepositoryImpl @Inject constructor() : FontAssetsReposi
         return glyphLayout.height
     }
 
-    override fun getFont(): BitmapFont {
-        return requireNotNull(font)
-    }
+    override fun getFont(): BitmapFont = requireNotNull(font)
 
     override fun initialize() {
         font = BitmapFont(Gdx.files.internal(FONT_FILE_PATH), true)

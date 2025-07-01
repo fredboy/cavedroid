@@ -9,15 +9,13 @@ import javax.inject.Inject
 @Reusable
 class ControlModeMapper @Inject constructor() {
 
-    fun mapSaveData(direction: Player.ControlMode): SaveDataDto.ControlModeSaveDataDto {
-        return SaveDataDto.ControlModeSaveDataDto(
-            version = SAVE_DATA_VERSION,
-            value = when (direction) {
-                Player.ControlMode.WALK -> 0
-                Player.ControlMode.CURSOR -> 1
-            },
-        )
-    }
+    fun mapSaveData(direction: Player.ControlMode): SaveDataDto.ControlModeSaveDataDto = SaveDataDto.ControlModeSaveDataDto(
+        version = SAVE_DATA_VERSION,
+        value = when (direction) {
+            Player.ControlMode.WALK -> 0
+            Player.ControlMode.CURSOR -> 1
+        },
+    )
 
     fun mapControlMode(saveDataDto: SaveDataDto.ControlModeSaveDataDto): Player.ControlMode {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)

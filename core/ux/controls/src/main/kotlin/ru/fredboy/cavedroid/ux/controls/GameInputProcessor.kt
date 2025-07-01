@@ -62,17 +62,11 @@ class GameInputProcessor @Inject constructor(
     private var touchDownX = 0f
     private var touchDownY = 0f
 
-    override fun keyDown(keycode: Int): Boolean {
-        return handleKeyboardAction(keycode, true)
-    }
+    override fun keyDown(keycode: Int): Boolean = handleKeyboardAction(keycode, true)
 
-    override fun keyUp(keycode: Int): Boolean {
-        return handleKeyboardAction(keycode, false)
-    }
+    override fun keyUp(keycode: Int): Boolean = handleKeyboardAction(keycode, false)
 
-    override fun keyTyped(p0: Char): Boolean {
-        return false
-    }
+    override fun keyTyped(p0: Char): Boolean = false
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val (touchX, touchY) = gameContextRepository.getCameraContext().getViewportCoordinates(screenX, screenY)
@@ -138,9 +132,7 @@ class GameInputProcessor @Inject constructor(
         )
     }
 
-    override fun touchCancelled(p0: Int, p1: Int, p2: Int, p3: Int): Boolean {
-        return false
-    }
+    override fun touchCancelled(p0: Int, p1: Int, p2: Int, p3: Int): Boolean = false
 
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
         val (touchX, touchY) = gameContextRepository.getCameraContext().getViewportCoordinates(screenX, screenY)
@@ -159,9 +151,7 @@ class GameInputProcessor @Inject constructor(
         return handleMouseAction(action)
     }
 
-    override fun mouseMoved(p0: Int, p1: Int): Boolean {
-        return false
-    }
+    override fun mouseMoved(p0: Int, p1: Int): Boolean = false
 
     override fun scrolled(amountX: Float, amountY: Float): Boolean {
         val action: MouseInputAction? = mouseInputActionMapper

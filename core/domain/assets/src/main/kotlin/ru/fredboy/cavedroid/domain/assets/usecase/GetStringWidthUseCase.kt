@@ -9,7 +9,5 @@ class GetStringWidthUseCase @Inject constructor(
     private val gameAssetsHolder: GameAssetsHolder,
 ) {
 
-    operator fun invoke(string: String): Float {
-        return gameAssetsHolder.getStringWidth(string)
-    }
+    operator fun invoke(string: String): Float = gameAssetsHolder.getStringWidth(string)
 }

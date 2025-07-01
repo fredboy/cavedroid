@@ -19,17 +19,15 @@ class SwimUpKeyboardInputHandler @Inject constructor(
     private val gameWorld: GameWorld,
 ) : IKeyboardInputHandler {
 
-    private fun checkSwim(): Boolean {
-        return gameWorld.getForeMap(mobController.player.mapX, mobController.player.lowerMapY).isFluid()
-    }
+    private fun checkSwim(): Boolean = gameWorld.getForeMap(mobController.player.mapX, mobController.player.lowerMapY).isFluid()
 
-    override fun checkConditions(action: KeyboardInputAction): Boolean {
-        return action.actionKey is KeyboardInputActionKey.Up && action.isKeyDown &&
-            !mobController.player.swim &&
-            !mobController.player.canJump &&
-            checkSwim() && !mobController.player.isFlyMode &&
-            (mobController.player.controlMode == Player.ControlMode.WALK || !applicationContextRepository.isTouch())
-    }
+    override fun checkConditions(action: KeyboardInputAction): Boolean = action.actionKey is KeyboardInputActionKey.Up &&
+        action.isKeyDown &&
+        !mobController.player.swim &&
+        !mobController.player.canJump &&
+        checkSwim() &&
+        !mobController.player.isFlyMode &&
+        (mobController.player.controlMode == Player.ControlMode.WALK || !applicationContextRepository.isTouch())
 
     override fun handle(action: KeyboardInputAction) {
         mobController.player.swim = true

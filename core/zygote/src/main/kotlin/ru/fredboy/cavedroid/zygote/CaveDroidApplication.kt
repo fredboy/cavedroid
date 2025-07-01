@@ -16,7 +16,8 @@ class CaveDroidApplication(
     private val isTouchScreen: Boolean,
     private val isDebug: Boolean,
     private val preferencesStore: PreferencesStore,
-) : Game(), ApplicationController {
+) : Game(),
+    ApplicationController {
 
     lateinit var applicationComponent: ApplicationComponent
         private set

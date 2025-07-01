@@ -1,11 +1,9 @@
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.kotlin.dsl.project
 
-private fun DependencyHandler.implementation(dependency: String) =
-    add("implementation", dependency)
+private fun DependencyHandler.implementation(dependency: String) = add("implementation", dependency)
 
-private fun DependencyHandler.ksp(dependency: String) =
-    add("ksp", dependency)
+private fun DependencyHandler.ksp(dependency: String) = add("ksp", dependency)
 
 fun DependencyHandler.useModule(moduleName: String) {
     add("implementation", project(moduleName))

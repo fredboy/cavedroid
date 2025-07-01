@@ -86,8 +86,10 @@ class SelectFurnaceInventoryItemMouseInputHandler @Inject constructor(
             yOnWindow > GameWindowsConfigs.Furnace.smeltResultOffsetY &&
             yOnWindow < GameWindowsConfigs.Furnace.smeltResultOffsetY + GameWindowsConfigs.Furnace.itemsGridRowHeight
 
-        val isInsideInventoryGrid = xOnGrid >= 0 && xOnGrid < GameWindowsConfigs.Furnace.itemsInRow &&
-            yOnGrid >= 0 && yOnGrid < GameWindowsConfigs.Furnace.itemsInCol
+        val isInsideInventoryGrid = xOnGrid >= 0 &&
+            xOnGrid < GameWindowsConfigs.Furnace.itemsInRow &&
+            yOnGrid >= 0 &&
+            yOnGrid < GameWindowsConfigs.Furnace.itemsInCol
 
         if (isInsideInventoryGrid) {
             handleInsideInventoryGrid(action, xOnGrid.toInt(), yOnGrid.toInt())

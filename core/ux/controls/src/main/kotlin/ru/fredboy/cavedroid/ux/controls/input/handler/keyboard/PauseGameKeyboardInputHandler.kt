@@ -29,9 +29,7 @@ class PauseGameKeyboardInputHandler @Inject constructor(
     private val saveDataRepository: SaveDataRepository,
 ) : IKeyboardInputHandler {
 
-    override fun checkConditions(action: KeyboardInputAction): Boolean {
-        return action.actionKey is KeyboardInputActionKey.Pause && action.isKeyDown
-    }
+    override fun checkConditions(action: KeyboardInputAction): Boolean = action.actionKey is KeyboardInputActionKey.Pause && action.isKeyDown
 
     override fun handle(action: KeyboardInputAction) {
         if (gameWindowsManager.currentWindowType != GameWindowType.NONE) {

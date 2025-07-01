@@ -37,9 +37,7 @@ class Pig(
         }
     }
 
-    override fun getDropItems(itemByKey: GetItemByKeyUseCase): List<InventoryItem> {
-        return listOf(itemByKey["porkchop_raw"].toInventoryItem())
-    }
+    override fun getDropItems(itemByKey: GetItemByKeyUseCase): List<InventoryItem> = listOf(itemByKey["porkchop_raw"].toInventoryItem())
 
     override fun draw(
         spriteBatch: SpriteBatch,

@@ -10,7 +10,5 @@ class GetFallbackItemUseCase @Inject constructor(
     private val itemsRepository: ItemsRepository,
 ) {
 
-    operator fun invoke(): Item.None {
-        return itemsRepository.fallbackItem
-    }
+    operator fun invoke(): Item.None = itemsRepository.fallbackItem
 }

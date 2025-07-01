@@ -17,10 +17,9 @@ class ToggleControlsModeKeyboardInputHandler @Inject constructor(
     private val mobController: MobController,
 ) : IKeyboardInputHandler {
 
-    override fun checkConditions(action: KeyboardInputAction): Boolean {
-        return action.actionKey is KeyboardInputActionKey.SwitchControlsMode && !action.isKeyDown &&
-            applicationContextRepository.isTouch()
-    }
+    override fun checkConditions(action: KeyboardInputAction): Boolean = action.actionKey is KeyboardInputActionKey.SwitchControlsMode &&
+        !action.isKeyDown &&
+        applicationContextRepository.isTouch()
 
     override fun handle(action: KeyboardInputAction) {
         if (mobController.player.controlMode == Player.ControlMode.WALK) {

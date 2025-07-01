@@ -6,7 +6,6 @@ private val natives by configurations.creating
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    ktlintGradle
 }
 
 private val keystorePropertiesFile = rootProject.file("keystore.properties")

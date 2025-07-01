@@ -52,9 +52,7 @@ internal class TextureRegionsAssetsRepositoryImpl @Inject constructor() : Textur
         loadTextureRegions()
     }
 
-    override fun getTextureRegionByName(name: String): TextureRegion? {
-        return requireNotNull(textureRegions)[name]
-    }
+    override fun getTextureRegionByName(name: String): TextureRegion? = requireNotNull(textureRegions)[name]
 
     override fun dispose() {
         super.dispose()

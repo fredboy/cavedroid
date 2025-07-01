@@ -69,11 +69,15 @@ class SelectCraftingInventoryItemMouseInputHandler @Inject constructor(
         val yOnCraft = (yOnWindow - GameWindowsConfigs.Crafting.craftOffsetY) /
             GameWindowsConfigs.Crafting.itemsGridRowHeight
 
-        val isInsideInventoryGrid = xOnGrid >= 0 && xOnGrid < GameWindowsConfigs.Crafting.itemsInRow &&
-            yOnGrid >= 0 && yOnGrid < GameWindowsConfigs.Crafting.itemsInCol
+        val isInsideInventoryGrid = xOnGrid >= 0 &&
+            xOnGrid < GameWindowsConfigs.Crafting.itemsInRow &&
+            yOnGrid >= 0 &&
+            yOnGrid < GameWindowsConfigs.Crafting.itemsInCol
 
-        val isInsideCraftGrid = xOnCraft >= 0 && xOnCraft < GameWindowsConfigs.Crafting.craftGridSize &&
-            yOnCraft >= 0 && yOnCraft < GameWindowsConfigs.Crafting.craftGridSize
+        val isInsideCraftGrid = xOnCraft >= 0 &&
+            xOnCraft < GameWindowsConfigs.Crafting.craftGridSize &&
+            yOnCraft >= 0 &&
+            yOnCraft < GameWindowsConfigs.Crafting.craftGridSize
 
         val isInsideCraftResult = xOnWindow > GameWindowsConfigs.Crafting.craftResultOffsetX &&
             xOnWindow < GameWindowsConfigs.Crafting.craftResultOffsetX + GameWindowsConfigs.Crafting.itemsGridColWidth &&

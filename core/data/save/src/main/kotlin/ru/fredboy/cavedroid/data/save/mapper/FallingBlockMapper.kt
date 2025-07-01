@@ -13,26 +13,24 @@ class FallingBlockMapper @Inject constructor(
     private val getBlockByKeyUseCase: GetBlockByKeyUseCase,
 ) {
 
-    fun mapSaveData(fallingBlock: FallingBlock): SaveDataDto.FallingBlockSaveDataDto {
-        return SaveDataDto.FallingBlockSaveDataDto(
-            version = SAVE_DATA_VERSION,
-            x = fallingBlock.x,
-            y = fallingBlock.y,
-            width = fallingBlock.width,
-            height = fallingBlock.height,
-            velocityX = fallingBlock.velocity.x,
-            velocityY = fallingBlock.velocity.y,
-            animDelta = fallingBlock.animDelta,
-            anim = fallingBlock.anim,
-            direction = directionMapper.mapSaveData(fallingBlock.direction),
-            dead = fallingBlock.isDead,
-            canJump = fallingBlock.canJump,
-            flyMode = fallingBlock.isFlyMode,
-            maxHealth = fallingBlock.maxHealth,
-            health = fallingBlock.health,
-            blockKey = fallingBlock.block.params.key,
-        )
-    }
+    fun mapSaveData(fallingBlock: FallingBlock): SaveDataDto.FallingBlockSaveDataDto = SaveDataDto.FallingBlockSaveDataDto(
+        version = SAVE_DATA_VERSION,
+        x = fallingBlock.x,
+        y = fallingBlock.y,
+        width = fallingBlock.width,
+        height = fallingBlock.height,
+        velocityX = fallingBlock.velocity.x,
+        velocityY = fallingBlock.velocity.y,
+        animDelta = fallingBlock.animDelta,
+        anim = fallingBlock.anim,
+        direction = directionMapper.mapSaveData(fallingBlock.direction),
+        dead = fallingBlock.isDead,
+        canJump = fallingBlock.canJump,
+        flyMode = fallingBlock.isFlyMode,
+        maxHealth = fallingBlock.maxHealth,
+        health = fallingBlock.health,
+        blockKey = fallingBlock.block.params.key,
+    )
 
     fun mapFallingBlock(saveDataDto: SaveDataDto.FallingBlockSaveDataDto): FallingBlock {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)

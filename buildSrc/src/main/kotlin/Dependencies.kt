@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.version
-
 object Dependencies {
 
     object LibGDX {
@@ -45,5 +43,4 @@ object Dependencies {
     }
 
     const val androidGradlePlugin = "com.android.tools.build:gradle:${Versions.agp}"
-
 }

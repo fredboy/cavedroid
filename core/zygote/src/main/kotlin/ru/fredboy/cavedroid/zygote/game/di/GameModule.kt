@@ -31,18 +31,16 @@ object GameModule {
         saveDataRepository: SaveDataRepository,
         itemsRepository: ItemsRepository,
         dropWorldAdapter: DropWorldAdapter,
-    ): DropController {
-        return if (gameContextRepository.isLoadGame()) {
-            saveDataRepository.loadDropController(
-                gameDataFolder = applicationContextRepository.getGameDirectory(),
-                dropWorldAdapter = dropWorldAdapter,
-            )
-        } else {
-            DropController(
-                itemsRepository = itemsRepository,
-                dropWorldAdapter = dropWorldAdapter,
-            )
-        }
+    ): DropController = if (gameContextRepository.isLoadGame()) {
+        saveDataRepository.loadDropController(
+            gameDataFolder = applicationContextRepository.getGameDirectory(),
+            dropWorldAdapter = dropWorldAdapter,
+        )
+    } else {
+        DropController(
+            itemsRepository = itemsRepository,
+            dropWorldAdapter = dropWorldAdapter,
+        )
     }
 
     @Provides
@@ -55,22 +53,20 @@ object GameModule {
         containerWorldAdapter: ContainerWorldAdapter,
         containerFactory: ContainerFactory,
         dropAdapter: DropAdapter,
-    ): ContainerController {
-        return if (gameContextRepository.isLoadGame()) {
-            saveDataRepository.loadContainerController(
-                gameDataFolder = applicationContextRepository.getGameDirectory(),
-                containerWorldAdapter = containerWorldAdapter,
-                containerFactory = containerFactory,
-                dropAdapter = dropAdapter,
-            )
-        } else {
-            ContainerController(
-                getItemByKeyUseCase = getItemByKeyUseCase,
-                containerWorldAdapter = containerWorldAdapter,
-                containerFactory = containerFactory,
-                dropAdapter = dropAdapter,
-            )
-        }
+    ): ContainerController = if (gameContextRepository.isLoadGame()) {
+        saveDataRepository.loadContainerController(
+            gameDataFolder = applicationContextRepository.getGameDirectory(),
+            containerWorldAdapter = containerWorldAdapter,
+            containerFactory = containerFactory,
+            dropAdapter = dropAdapter,
+        )
+    } else {
+        ContainerController(
+            getItemByKeyUseCase = getItemByKeyUseCase,
+            containerWorldAdapter = containerWorldAdapter,
+            containerFactory = containerFactory,
+            dropAdapter = dropAdapter,
+        )
     }
 
     @Provides
@@ -82,19 +78,17 @@ object GameModule {
         mobAssetsRepository: MobAssetsRepository,
         getFallbackItemUseCase: GetFallbackItemUseCase,
         mobWorldAdapter: MobWorldAdapter,
-    ): MobController {
-        return if (gameContextRepository.isLoadGame()) {
-            saveDataRepository.loadMobController(
-                gameDataFolder = applicationContextRepository.getGameDirectory(),
-                mobWorldAdapter = mobWorldAdapter,
-            )
-        } else {
-            MobController(
-                mobAssetsRepository = mobAssetsRepository,
-                getFallbackItemUseCase = getFallbackItemUseCase,
-                mobWorldAdapter = mobWorldAdapter,
-            )
-        }
+    ): MobController = if (gameContextRepository.isLoadGame()) {
+        saveDataRepository.loadMobController(
+            gameDataFolder = applicationContextRepository.getGameDirectory(),
+            mobWorldAdapter = mobWorldAdapter,
+        )
+    } else {
+        MobController(
+            mobAssetsRepository = mobAssetsRepository,
+            getFallbackItemUseCase = getFallbackItemUseCase,
+            mobWorldAdapter = mobWorldAdapter,
+        )
     }
 
     @Provides

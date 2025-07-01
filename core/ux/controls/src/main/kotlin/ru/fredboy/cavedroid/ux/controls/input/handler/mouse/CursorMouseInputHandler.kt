@@ -41,8 +41,7 @@ class CursorMouseInputHandler @Inject constructor(
     private val Block.isAutoselectable
         get() = !isNone() && params.hasCollision
 
-    private fun GameWorld.isCurrentBlockAutoselectable() =
-        getForeMap(player.cursorX, player.cursorY).isAutoselectable
+    private fun GameWorld.isCurrentBlockAutoselectable() = getForeMap(player.cursorX, player.cursorY).isAutoselectable
 
     private fun setPlayerDirectionToCursor() {
         if (player.controlMode != Player.ControlMode.CURSOR) {
@@ -116,8 +115,10 @@ class CursorMouseInputHandler @Inject constructor(
             ) /
             GameWindowsConfigs.Creative.itemsGridRowHeight
 
-        if (xOnGrid < 0 || xOnGrid >= GameWindowsConfigs.Creative.itemsInRow ||
-            yOnGrid < 0 || yOnGrid >= GameWindowsConfigs.Creative.itemsInCol
+        if (xOnGrid < 0 ||
+            xOnGrid >= GameWindowsConfigs.Creative.itemsInRow ||
+            yOnGrid < 0 ||
+            yOnGrid >= GameWindowsConfigs.Creative.itemsInCol
         ) {
             return null
         }
@@ -131,9 +132,7 @@ class CursorMouseInputHandler @Inject constructor(
         return item.params.name
     }
 
-    override fun checkConditions(action: MouseInputAction): Boolean {
-        return action.actionKey is MouseInputActionKey.None
-    }
+    override fun checkConditions(action: MouseInputAction): Boolean = action.actionKey is MouseInputActionKey.None
 
     override fun handle(action: MouseInputAction) {
         val pastCursorX = player.cursorX

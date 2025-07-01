@@ -9,9 +9,7 @@ class AndroidPreferencesStore(
 
     private val sharedPreferences by lazy { context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE) }
 
-    override fun getPreference(key: String): String? {
-        return sharedPreferences.getString(key, null)
-    }
+    override fun getPreference(key: String): String? = sharedPreferences.getString(key, null)
 
     override fun setPreference(key: String, value: String?) {
         with(sharedPreferences.edit()) {

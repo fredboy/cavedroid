@@ -22,6 +22,12 @@ buildscript {
 allprojects {
     version = ApplicationInfo.versionName
 
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+
+    ktlint {
+        version.set("1.6.0")
+    }
+
     repositories {
         mavenLocal()
         mavenCentral()

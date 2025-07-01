@@ -21,11 +21,10 @@ class DropItemKeyboardInputHandler @Inject constructor(
     private val dropController: DropController,
 ) : IKeyboardInputHandler {
 
-    override fun checkConditions(action: KeyboardInputAction): Boolean {
-        return action.actionKey is KeyboardInputActionKey.DropItem &&
-            action.isKeyDown && gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-            !mobController.player.activeItem.item.isNone()
-    }
+    override fun checkConditions(action: KeyboardInputAction): Boolean = action.actionKey is KeyboardInputActionKey.DropItem &&
+        action.isKeyDown &&
+        gameWindowsManager.currentWindowType == GameWindowType.NONE &&
+        !mobController.player.activeItem.item.isNone()
 
     private fun createDrop(item: Item, playerX: Float, playerY: Float, amount: Int) {
         dropController.addDrop(

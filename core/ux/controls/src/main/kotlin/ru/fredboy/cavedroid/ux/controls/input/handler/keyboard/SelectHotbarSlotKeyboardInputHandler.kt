@@ -14,10 +14,8 @@ class SelectHotbarSlotKeyboardInputHandler @Inject constructor(
     private val mobController: MobController,
 ) : IKeyboardInputHandler {
 
-    override fun checkConditions(action: KeyboardInputAction): Boolean {
-        return action.actionKey is KeyboardInputActionKey.SelectHotbarSlot &&
-            action.isKeyDown
-    }
+    override fun checkConditions(action: KeyboardInputAction): Boolean = action.actionKey is KeyboardInputActionKey.SelectHotbarSlot &&
+        action.isKeyDown
 
     override fun handle(action: KeyboardInputAction) {
         mobController.player.activeSlot = (action.actionKey as KeyboardInputActionKey.SelectHotbarSlot).slot

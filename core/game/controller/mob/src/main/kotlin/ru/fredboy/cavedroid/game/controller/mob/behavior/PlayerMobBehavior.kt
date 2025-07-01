@@ -6,9 +6,10 @@ import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Player
 
-class PlayerMobBehavior : BaseMobBehavior<Player>(
-    mobType = Player::class,
-) {
+class PlayerMobBehavior :
+    BaseMobBehavior<Player>(
+        mobType = Player::class,
+    ) {
 
     private fun Block?.isHittable() = this != null && !isNone() && params.hitPoints >= 0
 

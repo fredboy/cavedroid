@@ -13,7 +13,5 @@ data class CameraContext(
 
     fun yOnViewport(y: Int) = viewport.height / Gdx.graphics.height * y.toFloat()
 
-    fun getViewportCoordinates(x: Int, y: Int): Pair<Float, Float> {
-        return xOnViewport(x) to yOnViewport(y)
-    }
+    fun getViewportCoordinates(x: Int, y: Int): Pair<Float, Float> = xOnViewport(x) to yOnViewport(y)
 }

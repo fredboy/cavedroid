@@ -10,7 +10,5 @@ class GetBlockByKeyUseCase @Inject constructor(
     private val itemsRepository: ItemsRepository,
 ) {
 
-    operator fun get(key: String): Block {
-        return itemsRepository.getBlockByKey(key)
-    }
+    operator fun get(key: String): Block = itemsRepository.getBlockByKey(key)
 }

@@ -10,7 +10,5 @@ class GetTouchButtonsUseCase @Inject constructor(
     private val gameAssetsHolder: GameAssetsHolder,
 ) {
 
-    operator fun invoke(): Map<String, TouchButton> {
-        return gameAssetsHolder.getTouchButtons()
-    }
+    operator fun invoke(): Map<String, TouchButton> = gameAssetsHolder.getTouchButtons()
 }

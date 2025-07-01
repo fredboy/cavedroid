@@ -11,9 +11,7 @@ class FullscreenMenuBooleanOption @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
 ) : IMenuBooleanOption {
 
-    override fun getOption(): Boolean {
-        return applicationContextRepository.isFullscreen()
-    }
+    override fun getOption(): Boolean = applicationContextRepository.isFullscreen()
 
     override fun toggleOption() {
         applicationContextRepository.setFullscreen(!getOption())

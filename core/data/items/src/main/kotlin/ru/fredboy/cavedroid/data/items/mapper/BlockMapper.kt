@@ -39,47 +39,43 @@ class BlockMapper @Inject constructor(
         }
     }
 
-    private fun mapCommonParams(key: String, dto: BlockDto): CommonBlockParams {
-        return CommonBlockParams(
-            key = key,
-            collisionMargins = BlockMargins(
-                left = dto.left,
-                top = dto.top,
-                right = dto.right,
-                bottom = dto.bottom,
-            ),
-            hitPoints = dto.hp,
-            dropInfo = mapBlockDropInfo(dto),
-            hasCollision = dto.collision,
-            isBackground = dto.background,
-            isTransparent = dto.transparent,
-            requiresBlock = dto.blockRequired,
-            animationInfo = mapBlockAnimationInfo(dto),
-            texture = getTexture(dto.texture),
-            spriteMargins = BlockMargins(
-                left = dto.spriteLeft,
-                top = dto.spriteTop,
-                right = dto.spriteRight,
-                bottom = dto.spriteBottom,
-            ),
-            toolLevel = dto.toolLevel,
-            toolType = mapToolType(dto),
-            damage = dto.damage,
-            tint = dto.tint,
-            isFallable = dto.fallable,
-        )
-    }
+    private fun mapCommonParams(key: String, dto: BlockDto): CommonBlockParams = CommonBlockParams(
+        key = key,
+        collisionMargins = BlockMargins(
+            left = dto.left,
+            top = dto.top,
+            right = dto.right,
+            bottom = dto.bottom,
+        ),
+        hitPoints = dto.hp,
+        dropInfo = mapBlockDropInfo(dto),
+        hasCollision = dto.collision,
+        isBackground = dto.background,
+        isTransparent = dto.transparent,
+        requiresBlock = dto.blockRequired,
+        animationInfo = mapBlockAnimationInfo(dto),
+        texture = getTexture(dto.texture),
+        spriteMargins = BlockMargins(
+            left = dto.spriteLeft,
+            top = dto.spriteTop,
+            right = dto.spriteRight,
+            bottom = dto.spriteBottom,
+        ),
+        toolLevel = dto.toolLevel,
+        toolType = mapToolType(dto),
+        damage = dto.damage,
+        tint = dto.tint,
+        isFallable = dto.fallable,
+    )
 
-    private fun mapToolType(dto: BlockDto): Class<out Item.Tool>? {
-        return when (dto.toolType) {
-            "shovel" -> Item.Shovel::class.java
-            "sword" -> Item.Sword::class.java
-            "pickaxe" -> Item.Pickaxe::class.java
-            "axe" -> Item.Axe::class.java
-            "shears" -> Item.Shears::class.java
+    private fun mapToolType(dto: BlockDto): Class<out Item.Tool>? = when (dto.toolType) {
+        "shovel" -> Item.Shovel::class.java
+        "sword" -> Item.Sword::class.java
+        "pickaxe" -> Item.Pickaxe::class.java
+        "axe" -> Item.Axe::class.java
+        "shears" -> Item.Shears::class.java
 
-            else -> null
-        }
+        else -> null
     }
 
     private fun mapBlockDropInfo(dto: BlockDto): BlockDropInfo? {

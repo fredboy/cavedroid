@@ -34,17 +34,13 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     private val mobControllerMapper: MobControllerMapper,
 ) : SaveDataRepository {
 
-    private fun Int.toByteArray(): ByteArray {
-        return ByteBuffer.allocate(Int.SIZE_BYTES)
-            .putInt(this)
-            .array()
-    }
+    private fun Int.toByteArray(): ByteArray = ByteBuffer.allocate(Int.SIZE_BYTES)
+        .putInt(this)
+        .array()
 
-    private fun Short.toByteArray(): ByteArray {
-        return ByteBuffer.allocate(Short.SIZE_BYTES)
-            .putShort(this)
-            .array()
-    }
+    private fun Short.toByteArray(): ByteArray = ByteBuffer.allocate(Short.SIZE_BYTES)
+        .putShort(this)
+        .array()
 
     private fun buildBlocksDictionary(
         foreMap: Array<Array<Block>>,

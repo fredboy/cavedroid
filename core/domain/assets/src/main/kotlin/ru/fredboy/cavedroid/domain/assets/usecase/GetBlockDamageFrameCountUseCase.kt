@@ -9,7 +9,5 @@ class GetBlockDamageFrameCountUseCase @Inject constructor(
     private val gameAssetsHolder: GameAssetsHolder,
 ) {
 
-    operator fun invoke(): Int {
-        return gameAssetsHolder.getBlockDamageFrameCount()
-    }
+    operator fun invoke(): Int = gameAssetsHolder.getBlockDamageFrameCount()
 }

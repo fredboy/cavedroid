@@ -17,12 +17,13 @@ class TurnOnFlyModeKeyboardInputHandler @Inject constructor(
     private val mobsController: MobController,
 ) : IKeyboardInputHandler {
 
-    override fun checkConditions(action: KeyboardInputAction): Boolean {
-        return mobsController.player.gameMode == 1 && action.actionKey is KeyboardInputActionKey.Up &&
-            !mobsController.player.swim &&
-            !mobsController.player.isFlyMode && !mobsController.player.canJump && action.isKeyDown &&
-            (mobsController.player.controlMode == Player.ControlMode.WALK || !applicationContextRepository.isTouch())
-    }
+    override fun checkConditions(action: KeyboardInputAction): Boolean = mobsController.player.gameMode == 1 &&
+        action.actionKey is KeyboardInputActionKey.Up &&
+        !mobsController.player.swim &&
+        !mobsController.player.isFlyMode &&
+        !mobsController.player.canJump &&
+        action.isKeyDown &&
+        (mobsController.player.controlMode == Player.ControlMode.WALK || !applicationContextRepository.isTouch())
 
     override fun handle(action: KeyboardInputAction) {
         mobsController.player.isFlyMode = true

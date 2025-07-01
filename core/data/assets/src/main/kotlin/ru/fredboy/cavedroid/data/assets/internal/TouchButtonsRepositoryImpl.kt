@@ -15,19 +15,15 @@ internal class TouchButtonsRepositoryImpl @Inject constructor() : TouchButtonsAs
 
     private val guiMap = HashMap<String, TouchButton>()
 
-    override fun getTouchButtons(): Map<String, TouchButton> {
-        return guiMap
-    }
+    override fun getTouchButtons(): Map<String, TouchButton> = guiMap
 
-    private fun getMouseKey(name: String): Int {
-        return when (name) {
-            "Left" -> Input.Buttons.LEFT
-            "Right" -> Input.Buttons.RIGHT
-            "Middle" -> Input.Buttons.MIDDLE
-            "Back" -> Input.Buttons.BACK
-            "Forward" -> Input.Buttons.FORWARD
-            else -> -1
-        }
+    private fun getMouseKey(name: String): Int = when (name) {
+        "Left" -> Input.Buttons.LEFT
+        "Right" -> Input.Buttons.RIGHT
+        "Middle" -> Input.Buttons.MIDDLE
+        "Back" -> Input.Buttons.BACK
+        "Forward" -> Input.Buttons.FORWARD
+        else -> -1
     }
 
     private fun loadTouchButtons() {

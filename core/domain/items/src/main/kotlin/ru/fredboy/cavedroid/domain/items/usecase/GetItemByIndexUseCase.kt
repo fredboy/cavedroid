@@ -10,7 +10,5 @@ class GetItemByIndexUseCase @Inject constructor(
     private val itemsRepository: ItemsRepository,
 ) {
 
-    operator fun get(index: Int): Item {
-        return itemsRepository.getItemByIndex(index)
-    }
+    operator fun get(index: Int): Item = itemsRepository.getItemByIndex(index)
 }

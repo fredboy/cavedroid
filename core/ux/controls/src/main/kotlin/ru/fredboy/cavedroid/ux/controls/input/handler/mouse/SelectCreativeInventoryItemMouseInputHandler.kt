@@ -25,12 +25,11 @@ class SelectCreativeInventoryItemMouseInputHandler @Inject constructor(
 
     private val creativeInventoryTexture get() = requireNotNull(textureRegions["creative"])
 
-    override fun checkConditions(action: MouseInputAction): Boolean {
-        return gameWindowsManager.currentWindowType == GameWindowType.CREATIVE_INVENTORY &&
-            !gameWindowsManager.isDragging &&
-            (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
-            action.actionKey.touchUp && isInsideWindow(action, creativeInventoryTexture)
-    }
+    override fun checkConditions(action: MouseInputAction): Boolean = gameWindowsManager.currentWindowType == GameWindowType.CREATIVE_INVENTORY &&
+        !gameWindowsManager.isDragging &&
+        (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
+        action.actionKey.touchUp &&
+        isInsideWindow(action, creativeInventoryTexture)
 
     override fun handle(action: MouseInputAction) {
         val creativeTexture = creativeInventoryTexture
@@ -49,8 +48,10 @@ class SelectCreativeInventoryItemMouseInputHandler @Inject constructor(
             ) /
             GameWindowsConfigs.Creative.itemsGridRowHeight
 
-        if (xOnGrid < 0 || xOnGrid >= GameWindowsConfigs.Creative.itemsInRow ||
-            yOnGrid < 0 || yOnGrid >= GameWindowsConfigs.Creative.itemsInCol
+        if (xOnGrid < 0 ||
+            xOnGrid >= GameWindowsConfigs.Creative.itemsInRow ||
+            yOnGrid < 0 ||
+            yOnGrid >= GameWindowsConfigs.Creative.itemsInCol
         ) {
             return
         }

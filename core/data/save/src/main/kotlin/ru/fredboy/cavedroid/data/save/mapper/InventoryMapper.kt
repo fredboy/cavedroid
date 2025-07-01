@@ -12,13 +12,11 @@ class InventoryMapper @Inject constructor(
     private val getFallbackItem: GetFallbackItemUseCase,
 ) {
 
-    fun mapSaveData(inventory: Inventory): SaveDataDto.InventorySaveDataDto {
-        return SaveDataDto.InventorySaveDataDto(
-            version = SAVE_DATA_VERSION,
-            size = inventory.size,
-            items = inventory.items.map(inventoryItemMapper::mapSaveData),
-        )
-    }
+    fun mapSaveData(inventory: Inventory): SaveDataDto.InventorySaveDataDto = SaveDataDto.InventorySaveDataDto(
+        version = SAVE_DATA_VERSION,
+        size = inventory.size,
+        items = inventory.items.map(inventoryItemMapper::mapSaveData),
+    )
 
     fun mapInventory(saveDataDto: SaveDataDto.InventorySaveDataDto): Inventory {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)

@@ -21,16 +21,14 @@ abstract class AbstractInventoryItemsMouseInputHandler(
 
     protected abstract val windowTexture: TextureRegion
 
-    override fun checkConditions(action: MouseInputAction): Boolean {
-        return gameWindowsManager.currentWindowType == windowType &&
-            isInsideWindow(action, windowTexture) &&
-            (
-                action.actionKey is MouseInputActionKey.Left ||
-                    action.actionKey is MouseInputActionKey.Right ||
-                    action.actionKey is MouseInputActionKey.Screen
-                ) &&
-            (action.actionKey.touchUp || action.actionKey is MouseInputActionKey.Screen)
-    }
+    override fun checkConditions(action: MouseInputAction): Boolean = gameWindowsManager.currentWindowType == windowType &&
+        isInsideWindow(action, windowTexture) &&
+        (
+            action.actionKey is MouseInputActionKey.Left ||
+                action.actionKey is MouseInputActionKey.Right ||
+                action.actionKey is MouseInputActionKey.Screen
+            ) &&
+        (action.actionKey.touchUp || action.actionKey is MouseInputActionKey.Screen)
 
     protected fun updateCraftResult(window: AbstractInventoryWindowWithCraftGrid) {
         window.craftResult = itemsRepository.getCraftingResult(window.craftingItems.map(InventoryItem::item))
@@ -77,7 +75,8 @@ abstract class AbstractInventoryItemsMouseInputHandler(
     ) {
         val selectedItem = window.selectedItem
 
-        if (!selectedItem.isNoneOrNull() && (
+        if (!selectedItem.isNoneOrNull() &&
+            (
                 selectedItem.item != items[index].item ||
                     !selectedItem.canBeAdded(items[index].amount)
                 )

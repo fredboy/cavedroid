@@ -19,9 +19,7 @@ class LoadGameAction @Inject constructor(
         gameController.loadGame()
     }
 
-    override fun canPerform(): Boolean {
-        return saveDataRepository.exists(applicationContextRepository.getGameDirectory())
-    }
+    override fun canPerform(): Boolean = saveDataRepository.exists(applicationContextRepository.getGameDirectory())
 
     companion object {
         const val KEY = "load_game_action"

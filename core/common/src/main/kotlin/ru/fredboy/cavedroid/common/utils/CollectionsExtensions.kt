@@ -13,6 +13,4 @@ fun <T> MutableCollection<T>.retrieveFirst(predicate: (T) -> Boolean): T? {
     return null
 }
 
-fun <T> MutableCollection<T>.removeFirst(predicate: (T) -> Boolean): Boolean {
-    return retrieveFirst(predicate) != null
-}
+fun <T> MutableCollection<T>.removeFirst(predicate: (T) -> Boolean): Boolean = retrieveFirst(predicate) != null

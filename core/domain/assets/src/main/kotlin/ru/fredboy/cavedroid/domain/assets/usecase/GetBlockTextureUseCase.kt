@@ -10,7 +10,5 @@ class GetBlockTextureUseCase @Inject constructor(
     private val gameAssetsHolder: GameAssetsHolder,
 ) {
 
-    operator fun get(name: String): Texture {
-        return gameAssetsHolder.getBlockTexture(name)
-    }
+    operator fun get(name: String): Texture = gameAssetsHolder.getBlockTexture(name)
 }

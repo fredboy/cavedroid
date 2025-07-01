@@ -5,9 +5,7 @@ data class ContainerCoordinates(
     val y: Int,
     val z: Int,
 ) {
-    override fun toString(): String {
-        return "($x;$y;$z)"
-    }
+    override fun toString(): String = "($x;$y;$z)"
 
     companion object {
 

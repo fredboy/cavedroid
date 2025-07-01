@@ -10,7 +10,5 @@ class GetTextureRegionByNameUseCase @Inject constructor(
     private val gameAssetsHolder: GameAssetsHolder,
 ) {
 
-    operator fun get(name: String): TextureRegion? {
-        return gameAssetsHolder.getTextureRegionByName(name)
-    }
+    operator fun get(name: String): TextureRegion? = gameAssetsHolder.getTextureRegionByName(name)
 }

@@ -80,9 +80,7 @@ class Player(
         }
     }
 
-    override fun getDropItems(itemByKey: GetItemByKeyUseCase): List<InventoryItem> {
-        return inventory.items
-    }
+    override fun getDropItems(itemByKey: GetItemByKeyUseCase): List<InventoryItem> = inventory.items
 
     override fun draw(spriteBatch: SpriteBatch, x: Float, y: Float, delta: Float) {
         updateAnimation(delta)

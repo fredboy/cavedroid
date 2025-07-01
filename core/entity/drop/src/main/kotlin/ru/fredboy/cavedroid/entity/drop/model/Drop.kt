@@ -29,14 +29,12 @@ class Drop(
         return Intersector.overlaps(magnetArea, rectangle)
     }
 
-    private fun getMagnetArea(): Rectangle {
-        return Rectangle(
-            /* x = */ x - MAGNET_DISTANCE,
-            /* y = */ y - MAGNET_DISTANCE,
-            /* width = */ width + MAGNET_DISTANCE * 2,
-            /* height = */ height + MAGNET_DISTANCE * 2,
-        )
-    }
+    private fun getMagnetArea(): Rectangle = Rectangle(
+        /* x = */ x - MAGNET_DISTANCE,
+        /* y = */ y - MAGNET_DISTANCE,
+        /* width = */ width + MAGNET_DISTANCE * 2,
+        /* height = */ height + MAGNET_DISTANCE * 2,
+    )
 
     companion object {
         private fun getInitialVelocity(): Vector2 = Vector2(MathUtils.random(-100f, 100f), -100f)

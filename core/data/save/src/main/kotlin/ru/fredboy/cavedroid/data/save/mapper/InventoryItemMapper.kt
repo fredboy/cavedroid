@@ -11,13 +11,11 @@ class InventoryItemMapper @Inject constructor(
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
 ) {
 
-    fun mapSaveData(inventoryItem: InventoryItem): SaveDataDto.InventoryItemSaveDataDto {
-        return SaveDataDto.InventoryItemSaveDataDto(
-            version = SAVE_DATA_VERSION,
-            itemKey = inventoryItem.item.params.key,
-            amount = inventoryItem.amount,
-        )
-    }
+    fun mapSaveData(inventoryItem: InventoryItem): SaveDataDto.InventoryItemSaveDataDto = SaveDataDto.InventoryItemSaveDataDto(
+        version = SAVE_DATA_VERSION,
+        itemKey = inventoryItem.item.params.key,
+        amount = inventoryItem.amount,
+    )
 
     fun mapInventoryItem(saveDataDto: SaveDataDto.InventoryItemSaveDataDto): InventoryItem {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)

@@ -4,9 +4,10 @@ import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Pig
 
-class PigMobBehavior : BaseMobBehavior<Pig>(
-    mobType = Pig::class,
-) {
+class PigMobBehavior :
+    BaseMobBehavior<Pig>(
+        mobType = Pig::class,
+    ) {
 
     override fun Pig.updateMob(worldAdapter: MobWorldAdapter, delta: Float) {
         if (MathUtils.randomBoolean(delta)) {

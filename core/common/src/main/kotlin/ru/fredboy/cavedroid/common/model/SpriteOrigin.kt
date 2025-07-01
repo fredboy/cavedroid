@@ -17,12 +17,10 @@ data class SpriteOrigin(
         assert(y in 0f..1f)
     }
 
-    fun getFlipped(flipX: Boolean, flipY: Boolean): SpriteOrigin {
-        return SpriteOrigin(
-            x = if (flipX) 1 - x else x,
-            y = if (flipY) 1 - y else y,
-        )
-    }
+    fun getFlipped(flipX: Boolean, flipY: Boolean): SpriteOrigin = SpriteOrigin(
+        x = if (flipX) 1 - x else x,
+        y = if (flipY) 1 - y else y,
+    )
 
     fun applyToSprite(sprite: Sprite) {
         sprite.setOrigin(sprite.width * x, sprite.height * y)

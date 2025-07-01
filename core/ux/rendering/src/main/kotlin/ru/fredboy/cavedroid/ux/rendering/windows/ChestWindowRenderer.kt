@@ -25,7 +25,8 @@ class ChestWindowRenderer @Inject constructor(
     private val getStringWidth: GetStringWidthUseCase,
     private val getStringHeight: GetStringHeightUseCase,
     private val getFont: GetFontUseCase,
-) : AbstractWindowRenderer(), IGameRenderer {
+) : AbstractWindowRenderer(),
+    IGameRenderer {
 
     override val renderLayer get() = WindowsRenderer.Companion.RENDER_LAYER
 

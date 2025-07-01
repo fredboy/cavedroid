@@ -120,29 +120,21 @@ internal class ItemsRepositoryImpl @Inject constructor(
         loadCraftingRecipes()
     }
 
-    override fun getItemByKey(key: String): Item {
-        return itemsMap.getOrFallback(key, fallbackItem) {
-            "No item with key '$key' found. Returning $FALLBACK_ITEM_KEY"
-        }
+    override fun getItemByKey(key: String): Item = itemsMap.getOrFallback(key, fallbackItem) {
+        "No item with key '$key' found. Returning $FALLBACK_ITEM_KEY"
     }
 
-    override fun getItemByIndex(index: Int): Item {
-        return if (index in itemsMap.values.indices) {
-            itemsMap.values.elementAt(index)
-        } else {
-            fallbackItem
-        }
+    override fun getItemByIndex(index: Int): Item = if (index in itemsMap.values.indices) {
+        itemsMap.values.elementAt(index)
+    } else {
+        fallbackItem
     }
 
-    override fun getBlockByKey(key: String): Block {
-        return blocksMap.getOrFallback(key, fallbackBlock) {
-            "No block with key '$key' found. Returning $FALLBACK_BLOCK_KEY"
-        }
+    override fun getBlockByKey(key: String): Block = blocksMap.getOrFallback(key, fallbackBlock) {
+        "No block with key '$key' found. Returning $FALLBACK_BLOCK_KEY"
     }
 
-    override fun <T : Block> getBlocksByType(type: Class<T>): List<T> {
-        return blocksMap.values.filterIsInstance(type)
-    }
+    override fun <T : Block> getBlocksByType(type: Class<T>): List<T> = blocksMap.values.filterIsInstance(type)
 
     override fun getCraftingResult(input: List<Item>): InventoryItem {
         val startIndex = input.indexOfFirst { !it.isNone() }.takeIf { it >= 0 }
@@ -163,9 +155,7 @@ internal class ItemsRepositoryImpl @Inject constructor(
         return output?.toInventoryItem() ?: fallbackItem.toInventoryItem()
     }
 
-    override fun getAllItems(): Collection<Item> {
-        return itemsMap.values
-    }
+    override fun getAllItems(): Collection<Item> = itemsMap.values
 
     override fun dispose() {
         _initialized = false

@@ -32,9 +32,7 @@ internal class BlockDamageAssetsRepositoryImpl @Inject constructor() : BlockDama
         }
     }
 
-    override fun getBlockDamageSprite(stage: Int): Sprite {
-        return requireNotNull(blockDamageSprites)[stage]
-    }
+    override fun getBlockDamageSprite(stage: Int): Sprite = requireNotNull(blockDamageSprites)[stage]
 
     override fun initialize() {
         loadBlockDamage()

@@ -11,33 +11,29 @@ import javax.inject.Inject
 @MenuScope
 class MenuButtonMapper @Inject constructor() {
 
-    fun map(dto: MenuButtonDto): MenuButton {
-        return when (dto.type) {
-            "boolean_option" -> MenuButton.BooleanOption(
-                label = dto.label.toString(),
-                isVisible = mapVisibility(dto.visibility),
-                actionKey = dto.actionKey.orEmpty(),
-                optionKeys = dto.options.orEmpty(),
-                isEnabled = dto.enabled ?: true,
-            )
+    fun map(dto: MenuButtonDto): MenuButton = when (dto.type) {
+        "boolean_option" -> MenuButton.BooleanOption(
+            label = dto.label.toString(),
+            isVisible = mapVisibility(dto.visibility),
+            actionKey = dto.actionKey.orEmpty(),
+            optionKeys = dto.options.orEmpty(),
+            isEnabled = dto.enabled ?: true,
+        )
 
-            "default", null -> MenuButton.Simple(
-                label = dto.label.toString(),
-                isVisible = mapVisibility(dto.visibility),
-                actionKey = dto.actionKey.orEmpty(),
-                isEnabled = dto.enabled ?: true,
-            )
+        "default", null -> MenuButton.Simple(
+            label = dto.label.toString(),
+            isVisible = mapVisibility(dto.visibility),
+            actionKey = dto.actionKey.orEmpty(),
+            isEnabled = dto.enabled ?: true,
+        )
 
-            else ->
-                throw IllegalArgumentException("Unknown button type: ${dto.type}")
-        }
+        else ->
+            throw IllegalArgumentException("Unknown button type: ${dto.type}")
     }
 
-    fun setButtonEnabled(button: MenuButton, isEnabled: Boolean): MenuButton {
-        return when (button) {
-            is MenuButton.Simple -> button.copy(isEnabled = isEnabled)
-            is MenuButton.BooleanOption -> button.copy(isEnabled = isEnabled)
-        }
+    fun setButtonEnabled(button: MenuButton, isEnabled: Boolean): MenuButton = when (button) {
+        is MenuButton.Simple -> button.copy(isEnabled = isEnabled)
+        is MenuButton.BooleanOption -> button.copy(isEnabled = isEnabled)
     }
 
     private fun mapVisibility(dto: MenuButtonVisibilityDto?): Boolean {

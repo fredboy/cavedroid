@@ -17,10 +17,9 @@ class OpenInventoryKeyboardInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
 ) : IKeyboardInputHandler {
 
-    override fun checkConditions(action: KeyboardInputAction): Boolean {
-        return action.actionKey is KeyboardInputActionKey.OpenInventory &&
-            !action.isKeyDown && gameWindowsManager.currentWindowType == GameWindowType.NONE
-    }
+    override fun checkConditions(action: KeyboardInputAction): Boolean = action.actionKey is KeyboardInputActionKey.OpenInventory &&
+        !action.isKeyDown &&
+        gameWindowsManager.currentWindowType == GameWindowType.NONE
 
     override fun handle(action: KeyboardInputAction) {
         if (mobController.player.gameMode == 1) {

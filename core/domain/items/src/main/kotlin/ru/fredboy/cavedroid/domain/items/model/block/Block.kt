@@ -38,13 +38,9 @@ sealed class Block {
             } ?: 0
         }
 
-    override fun hashCode(): Int {
-        return params.key.hashCode()
-    }
+    override fun hashCode(): Int = params.key.hashCode()
 
-    override fun equals(other: Any?): Boolean {
-        return params.key == (other as Item).params.key
-    }
+    override fun equals(other: Any?): Boolean = params.key == (other as Item).params.key
 
     fun initialize() {
         initAnimation()
@@ -132,16 +128,14 @@ sealed class Block {
         return this is None
     }
 
-    fun getRectangle(x: Int, y: Int): Rectangle {
-        return Rectangle(
-            /* x = */ x * BLOCK_SIZE_PX + params.collisionMargins.left,
-            /* y = */ y * BLOCK_SIZE_PX + params.collisionMargins.top,
-            /* width = */ width,
-            /* height = */ height,
-        )
-    }
+    fun getRectangle(x: Int, y: Int): Rectangle = Rectangle(
+        /* x = */ x * BLOCK_SIZE_PX + params.collisionMargins.left,
+        /* y = */ y * BLOCK_SIZE_PX + params.collisionMargins.top,
+        /* width = */ width,
+        /* height = */ height,
+    )
 
-    sealed class Container() : Block()
+    sealed class Container : Block()
 
     data class None(
         override val params: CommonBlockParams,
@@ -158,15 +152,13 @@ sealed class Block {
         override val sprite: Sprite
             get() = getSprite(false)
 
-        private fun getSprite(isActive: Boolean): Sprite {
-            return animation?.let { animation ->
-                if (isActive) {
-                    animation[1]
-                } else {
-                    animation[0]
-                }
-            } ?: sprite
-        }
+        private fun getSprite(isActive: Boolean): Sprite = animation?.let { animation ->
+            if (isActive) {
+                animation[1]
+            } else {
+                animation[0]
+            }
+        } ?: sprite
 
         fun draw(spriter: SpriteBatch, x: Float, y: Float, isActive: Boolean) {
             getSprite(isActive).apply {

@@ -34,9 +34,7 @@ class Inventory @JvmOverloads constructor(
         return -1
     }
 
-    fun canPickItem(item: Item): Boolean {
-        return getAvailableSlotForItem(item) >= 0
-    }
+    fun canPickItem(item: Item): Boolean = getAvailableSlotForItem(item) >= 0
 
     fun addItem(item: Item) {
         _items.copyInto(

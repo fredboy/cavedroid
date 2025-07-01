@@ -46,47 +46,25 @@ class GameAssetsHolder @Inject constructor(
         repositories.forEach(AssetsRepository::dispose)
     }
 
-    fun getBlockTexture(textureName: String): Texture {
-        return blockAssetsRepository.getBlockTexture(textureName)
-    }
+    fun getBlockTexture(textureName: String): Texture = blockAssetsRepository.getBlockTexture(textureName)
 
-    fun getItemTexture(textureName: String): Texture {
-        return itemsAssetsRepository.getItemTexture(textureName)
-    }
+    fun getItemTexture(textureName: String): Texture = itemsAssetsRepository.getItemTexture(textureName)
 
-    fun getBlockDamageFrameCount(): Int {
-        return blockDamageAssetsRepository.damageStages
-    }
+    fun getBlockDamageFrameCount(): Int = blockDamageAssetsRepository.damageStages
 
-    fun getBlockDamageSprite(stage: Int): Sprite {
-        return blockDamageAssetsRepository.getBlockDamageSprite(stage)
-    }
+    fun getBlockDamageSprite(stage: Int): Sprite = blockDamageAssetsRepository.getBlockDamageSprite(stage)
 
-    fun getStringWidth(string: String): Float {
-        return fontAssetsRepository.getStringWidth(string)
-    }
+    fun getStringWidth(string: String): Float = fontAssetsRepository.getStringWidth(string)
 
-    fun getStringHeight(string: String): Float {
-        return fontAssetsRepository.getStringHeight(string)
-    }
+    fun getStringHeight(string: String): Float = fontAssetsRepository.getStringHeight(string)
 
-    fun getFont(): BitmapFont {
-        return fontAssetsRepository.getFont()
-    }
+    fun getFont(): BitmapFont = fontAssetsRepository.getFont()
 
-    fun getPlayerSprites(): MobSprite.Player {
-        return mobAssetsRepository.getPlayerSprites()
-    }
+    fun getPlayerSprites(): MobSprite.Player = mobAssetsRepository.getPlayerSprites()
 
-    fun getPigSprites(): MobSprite.Pig {
-        return mobAssetsRepository.getPigSprites()
-    }
+    fun getPigSprites(): MobSprite.Pig = mobAssetsRepository.getPigSprites()
 
-    fun getTouchButtons(): Map<String, TouchButton> {
-        return touchButtonsAssetsRepository.getTouchButtons()
-    }
+    fun getTouchButtons(): Map<String, TouchButton> = touchButtonsAssetsRepository.getTouchButtons()
 
-    fun getTextureRegionByName(name: String): TextureRegion? {
-        return textureRegionsAssetsRepository.getTextureRegionByName(name)
-    }
+    fun getTextureRegionByName(name: String): TextureRegion? = textureRegionsAssetsRepository.getTextureRegionByName(name)
 }

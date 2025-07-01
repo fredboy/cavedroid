@@ -22,29 +22,27 @@ class GameScreen @Inject constructor(
 
     private var gameComponent: GameComponent? = null
 
-    private fun getGameContext(isLoadGame: Boolean): GameContext {
-        return GameContext(
-            isLoadGame = isLoadGame,
-            showInfo = false,
-            showMap = false,
-            joystick = Joystick(Player.SPEED),
-            cameraContext = CameraContext(
-                viewport = Rectangle(
-                    /* x = */ 0f,
-                    /* y = */ 0f,
-                    /* width = */ applicationContextRepository.getWidth(),
-                    /* height = */ applicationContextRepository.getHeight(),
-                ),
-                camera = OrthographicCamera().apply {
-                    setToOrtho(
-                        /* yDown = */ true,
-                        /* viewportWidth = */ applicationContextRepository.getWidth(),
-                        /* viewportHeight = */ applicationContextRepository.getHeight(),
-                    )
-                },
+    private fun getGameContext(isLoadGame: Boolean): GameContext = GameContext(
+        isLoadGame = isLoadGame,
+        showInfo = false,
+        showMap = false,
+        joystick = Joystick(Player.SPEED),
+        cameraContext = CameraContext(
+            viewport = Rectangle(
+                /* x = */ 0f,
+                /* y = */ 0f,
+                /* width = */ applicationContextRepository.getWidth(),
+                /* height = */ applicationContextRepository.getHeight(),
             ),
-        )
-    }
+            camera = OrthographicCamera().apply {
+                setToOrtho(
+                    /* yDown = */ true,
+                    /* viewportWidth = */ applicationContextRepository.getWidth(),
+                    /* viewportHeight = */ applicationContextRepository.getHeight(),
+                )
+            },
+        ),
+    )
 
     private fun getGameComponent(isLoadGame: Boolean): GameComponent {
         val gameContext = getGameContext(isLoadGame)

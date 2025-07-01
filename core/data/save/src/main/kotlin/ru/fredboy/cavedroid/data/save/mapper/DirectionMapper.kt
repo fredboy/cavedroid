@@ -9,15 +9,13 @@ import javax.inject.Inject
 @Reusable
 class DirectionMapper @Inject constructor() {
 
-    fun mapSaveData(direction: Direction): SaveDataDto.DirectionSaveDataDto {
-        return SaveDataDto.DirectionSaveDataDto(
-            version = SAVE_DATA_VERSION,
-            value = when (direction) {
-                Direction.LEFT -> 0
-                Direction.RIGHT -> 1
-            },
-        )
-    }
+    fun mapSaveData(direction: Direction): SaveDataDto.DirectionSaveDataDto = SaveDataDto.DirectionSaveDataDto(
+        version = SAVE_DATA_VERSION,
+        value = when (direction) {
+            Direction.LEFT -> 0
+            Direction.RIGHT -> 1
+        },
+    )
 
     fun mapDirection(saveDataDto: SaveDataDto.DirectionSaveDataDto): Direction {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)

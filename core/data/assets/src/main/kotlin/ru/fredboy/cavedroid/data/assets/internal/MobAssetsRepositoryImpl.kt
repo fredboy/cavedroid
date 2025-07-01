@@ -36,13 +36,9 @@ internal class MobAssetsRepositoryImpl @Inject constructor() : MobAssetsReposito
         )
     }
 
-    override fun getPlayerSprites(): MobSprite.Player {
-        return requireNotNull(playerSprite)
-    }
+    override fun getPlayerSprites(): MobSprite.Player = requireNotNull(playerSprite)
 
-    override fun getPigSprites(): MobSprite.Pig {
-        return requireNotNull(pigSprite)
-    }
+    override fun getPigSprites(): MobSprite.Pig = requireNotNull(pigSprite)
 
     override fun initialize() {
         loadPlayerSprite()

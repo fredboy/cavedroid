@@ -14,18 +14,16 @@ class FurnaceMapper @Inject constructor(
     private val getItemByKey: GetItemByKeyUseCase,
 ) {
 
-    fun mapSaveData(furnace: Furnace): SaveDataDto.FurnaceSaveDataDto {
-        return SaveDataDto.FurnaceSaveDataDto(
-            version = SAVE_DATA_VERSION,
-            size = furnace.size,
-            currentFuelItemKey = furnace.currentFuelKey,
-            items = furnace.items.map(inventoryItemMapper::mapSaveData),
-            startBurnTimeMs = furnace.startBurnTimeMs,
-            startSmeltTimeMs = furnace.smeltStarTimeMs,
-            burnProgress = furnace.burnProgress,
-            smeltProgress = furnace.smeltProgress,
-        )
-    }
+    fun mapSaveData(furnace: Furnace): SaveDataDto.FurnaceSaveDataDto = SaveDataDto.FurnaceSaveDataDto(
+        version = SAVE_DATA_VERSION,
+        size = furnace.size,
+        currentFuelItemKey = furnace.currentFuelKey,
+        items = furnace.items.map(inventoryItemMapper::mapSaveData),
+        startBurnTimeMs = furnace.startBurnTimeMs,
+        startSmeltTimeMs = furnace.smeltStarTimeMs,
+        burnProgress = furnace.burnProgress,
+        smeltProgress = furnace.smeltProgress,
+    )
 
     fun mapFurnace(saveDataDto: SaveDataDto.FurnaceSaveDataDto): Furnace {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)

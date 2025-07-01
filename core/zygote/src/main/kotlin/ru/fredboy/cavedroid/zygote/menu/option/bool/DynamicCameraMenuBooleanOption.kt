@@ -11,9 +11,7 @@ class DynamicCameraMenuBooleanOption @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
 ) : IMenuBooleanOption {
 
-    override fun getOption(): Boolean {
-        return applicationContextRepository.useDynamicCamera()
-    }
+    override fun getOption(): Boolean = applicationContextRepository.useDynamicCamera()
 
     override fun toggleOption() {
         applicationContextRepository.setUseDynamicCamera(!getOption())

@@ -14,9 +14,7 @@ class ToggleGameModeKeyboardInputHandler @Inject constructor(
     private val mobController: MobController,
 ) : IKeyboardInputHandler {
 
-    override fun checkConditions(action: KeyboardInputAction): Boolean {
-        return action.actionKey is KeyboardInputActionKey.SwitchGameMode && action.isKeyDown
-    }
+    override fun checkConditions(action: KeyboardInputAction): Boolean = action.actionKey is KeyboardInputActionKey.SwitchGameMode && action.isKeyDown
 
     override fun handle(action: KeyboardInputAction) {
         if (mobController.player.gameMode == 1) {

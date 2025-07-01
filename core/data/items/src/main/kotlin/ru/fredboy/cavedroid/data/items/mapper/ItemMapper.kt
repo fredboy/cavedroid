@@ -97,19 +97,17 @@ class ItemMapper @Inject constructor(
         }
     }
 
-    private fun mapCommonParams(key: String, dto: ItemDto): CommonItemParams {
-        return CommonItemParams(
-            key = key,
-            name = dto.name,
-            inHandSpriteOrigin = SpriteOrigin(
-                x = dto.originX,
-                y = dto.origin_y,
-            ),
-            maxStack = dto.maxStack,
-            burningTimeMs = dto.burningTime,
-            smeltProductKey = dto.smeltProduct,
-        )
-    }
+    private fun mapCommonParams(key: String, dto: ItemDto): CommonItemParams = CommonItemParams(
+        key = key,
+        name = dto.name,
+        inHandSpriteOrigin = SpriteOrigin(
+            x = dto.originX,
+            y = dto.origin_y,
+        ),
+        maxStack = dto.maxStack,
+        burningTimeMs = dto.burningTime,
+        smeltProductKey = dto.smeltProduct,
+    )
 
     private fun loadSprite(dto: ItemDto): Sprite? {
         if (dto.type == "none" || dto.type == "block" || dto.texture == ItemsRepositoryImpl.FALLBACK_ITEM_KEY) {

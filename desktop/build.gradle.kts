@@ -1,6 +1,5 @@
 plugins {
     kotlin
-    ktlintGradle
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility

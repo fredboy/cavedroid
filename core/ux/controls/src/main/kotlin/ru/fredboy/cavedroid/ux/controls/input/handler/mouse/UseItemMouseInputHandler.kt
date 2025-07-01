@@ -35,12 +35,10 @@ class UseItemMouseInputHandler @Inject constructor(
 
     private var buttonHoldTask: Timer.Task? = null
 
-    override fun checkConditions(action: MouseInputAction): Boolean {
-        return buttonHoldTask?.isScheduled == true ||
-            !action.isInsideHotbar(textureRegions) &&
-            gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-            action.actionKey is MouseInputActionKey.Right
-    }
+    override fun checkConditions(action: MouseInputAction): Boolean = buttonHoldTask?.isScheduled == true ||
+        !action.isInsideHotbar(textureRegions) &&
+        gameWindowsManager.currentWindowType == GameWindowType.NONE &&
+        action.actionKey is MouseInputActionKey.Right
 
     private fun cancelHold() {
         buttonHoldTask?.cancel()

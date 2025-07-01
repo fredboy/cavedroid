@@ -28,9 +28,7 @@ class GameSaveData(
         return value
     }
 
-    fun isEmpty(): Boolean {
-        return mobController == null &&
-            dropController == null &&
-            containerController == null
-    }
+    fun isEmpty(): Boolean = mobController == null &&
+        dropController == null &&
+        containerController == null
 }

@@ -2,7 +2,6 @@ plugins {
     kotlin
     ksp
     kotlinxSerialization
-    ktlintGradle
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility

@@ -13,25 +13,23 @@ class PigMapper @Inject constructor(
     private val getPigSpriteUseCase: GetPigSpritesUseCase,
 ) {
 
-    fun mapSaveData(pig: Pig): SaveDataDto.PigSaveDataDto {
-        return SaveDataDto.PigSaveDataDto(
-            version = SAVE_DATA_VERSION,
-            x = pig.x,
-            y = pig.y,
-            width = pig.width,
-            height = pig.height,
-            velocityX = pig.velocity.x,
-            velocityY = pig.velocity.y,
-            animDelta = pig.animDelta,
-            anim = pig.anim,
-            direction = directionMapper.mapSaveData(pig.direction),
-            dead = pig.isDead,
-            canJump = pig.canJump,
-            flyMode = pig.isFlyMode,
-            maxHealth = pig.maxHealth,
-            health = pig.health,
-        )
-    }
+    fun mapSaveData(pig: Pig): SaveDataDto.PigSaveDataDto = SaveDataDto.PigSaveDataDto(
+        version = SAVE_DATA_VERSION,
+        x = pig.x,
+        y = pig.y,
+        width = pig.width,
+        height = pig.height,
+        velocityX = pig.velocity.x,
+        velocityY = pig.velocity.y,
+        animDelta = pig.animDelta,
+        anim = pig.anim,
+        direction = directionMapper.mapSaveData(pig.direction),
+        dead = pig.isDead,
+        canJump = pig.canJump,
+        flyMode = pig.isFlyMode,
+        maxHealth = pig.maxHealth,
+        health = pig.health,
+    )
 
     fun mapPig(saveDataDto: SaveDataDto.PigSaveDataDto): Pig {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)

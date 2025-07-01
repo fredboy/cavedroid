@@ -21,7 +21,9 @@ import kotlin.reflect.KClass
 internal class WorldAdapterImpl @Inject constructor(
     private val gameWorld: GameWorld,
     private val itemsRepository: ItemsRepository,
-) : DropWorldAdapter, ContainerWorldAdapter, MobWorldAdapter {
+) : DropWorldAdapter,
+    ContainerWorldAdapter,
+    MobWorldAdapter {
 
     override val height: Int
         get() = gameWorld.height
@@ -37,13 +39,9 @@ internal class WorldAdapterImpl @Inject constructor(
         gameWorld.setBackMap(x, y, block)
     }
 
-    override fun getForegroundBlock(x: Int, y: Int): Block {
-        return gameWorld.getForeMap(x, y)
-    }
+    override fun getForegroundBlock(x: Int, y: Int): Block = gameWorld.getForeMap(x, y)
 
-    override fun getBackgroundBlock(x: Int, y: Int): Block {
-        return gameWorld.getBackMap(x, y)
-    }
+    override fun getBackgroundBlock(x: Int, y: Int): Block = gameWorld.getBackMap(x, y)
 
     override fun destroyForegroundBlock(x: Int, y: Int, shouldDrop: Boolean) {
         gameWorld.destroyForeMap(x, y, shouldDrop)

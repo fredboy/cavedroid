@@ -124,22 +124,15 @@ class GameWorld @Inject constructor(
         notifyBlockPlaced(x, y, layer, value)
     }
 
-    private fun isSameSlab(slab1: Block, slab2: Block): Boolean {
-        return slab1 is Block.Slab && slab2 is Block.Slab &&
-            (slab1.params.key == slab2.otherPartBlockKey || slab1.otherPartBlockKey == slab2.params.key)
-    }
+    private fun isSameSlab(slab1: Block, slab2: Block): Boolean = slab1 is Block.Slab &&
+        slab2 is Block.Slab &&
+        (slab1.params.key == slab2.otherPartBlockKey || slab1.otherPartBlockKey == slab2.params.key)
 
-    fun hasForeAt(x: Int, y: Int): Boolean {
-        return !getMap(x, y, Layer.FOREGROUND).isNone()
-    }
+    fun hasForeAt(x: Int, y: Int): Boolean = !getMap(x, y, Layer.FOREGROUND).isNone()
 
-    fun hasBackAt(x: Int, y: Int): Boolean {
-        return !getMap(x, y, Layer.BACKGROUND).isNone()
-    }
+    fun hasBackAt(x: Int, y: Int): Boolean = !getMap(x, y, Layer.BACKGROUND).isNone()
 
-    fun getForeMap(x: Int, y: Int): Block {
-        return getMap(x, y, Layer.FOREGROUND)
-    }
+    fun getForeMap(x: Int, y: Int): Block = getMap(x, y, Layer.FOREGROUND)
 
     fun setForeMap(x: Int, y: Int, block: Block, dropOld: Boolean = false) {
         setMap(x, y, Layer.FOREGROUND, block, dropOld)
@@ -149,17 +142,13 @@ class GameWorld @Inject constructor(
         setForeMap(x, y, itemsRepository.fallbackBlock)
     }
 
-    fun getBackMap(x: Int, y: Int): Block {
-        return getMap(x, y, Layer.BACKGROUND)
-    }
+    fun getBackMap(x: Int, y: Int): Block = getMap(x, y, Layer.BACKGROUND)
 
     fun setBackMap(x: Int, y: Int, block: Block, dropOld: Boolean = false) {
         setMap(x, y, Layer.BACKGROUND, block, dropOld)
     }
 
-    fun canPlaceToForeground(x: Int, y: Int, value: Block): Boolean {
-        return !hasForeAt(x, y) || value.isNone() || !getForeMap(x, y).params.hasCollision
-    }
+    fun canPlaceToForeground(x: Int, y: Int, value: Block): Boolean = !hasForeAt(x, y) || value.isNone() || !getForeMap(x, y).params.hasCollision
 
     fun placeToForeground(x: Int, y: Int, value: Block, dropOld: Boolean = false): Boolean {
         val wasPlaced = if (canPlaceToForeground(x, y, value)) {
@@ -176,7 +165,9 @@ class GameWorld @Inject constructor(
     }
 
     fun placeToBackground(x: Int, y: Int, value: Block, dropOld: Boolean = false): Boolean {
-        val wasPlaced = if (value.isNone() || getBackMap(x, y).isNone() && value.params.hasCollision &&
+        val wasPlaced = if (value.isNone() ||
+            getBackMap(x, y).isNone() &&
+            value.params.hasCollision &&
             (!value.params.isTransparent || value.params.key == "glass" || value.isChest() || value.isSlab())
         ) {
             setBackMap(x, y, value, dropOld)

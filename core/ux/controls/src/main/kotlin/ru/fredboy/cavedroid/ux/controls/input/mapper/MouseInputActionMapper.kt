@@ -37,14 +37,12 @@ class MouseInputActionMapper @Inject constructor(
         mouseY: Float,
         cameraViewport: Rectangle,
         pointer: Int,
-    ): MouseInputAction {
-        return MouseInputAction(
-            screenX = getScreenX(mouseX),
-            screenY = getScreenY(mouseY),
-            actionKey = MouseInputActionKey.Dragged(pointer),
-            cameraViewport = cameraViewport,
-        )
-    }
+    ): MouseInputAction = MouseInputAction(
+        screenX = getScreenX(mouseX),
+        screenY = getScreenY(mouseY),
+        actionKey = MouseInputActionKey.Dragged(pointer),
+        cameraViewport = cameraViewport,
+    )
 
     fun mapScrolled(
         mouseX: Float,
@@ -52,30 +50,22 @@ class MouseInputActionMapper @Inject constructor(
         amountX: Float,
         amountY: Float,
         cameraViewport: Rectangle,
-    ): MouseInputAction {
-        return MouseInputAction(
-            screenX = getScreenX(mouseX),
-            screenY = getScreenY(mouseY),
-            actionKey = MouseInputActionKey.Scroll(amountX, amountY),
-            cameraViewport = cameraViewport,
-        )
+    ): MouseInputAction = MouseInputAction(
+        screenX = getScreenX(mouseX),
+        screenY = getScreenY(mouseY),
+        actionKey = MouseInputActionKey.Scroll(amountX, amountY),
+        cameraViewport = cameraViewport,
+    )
+
+    private fun mapActionKey(button: Int, touchUp: Boolean, pointer: Int): MouseInputActionKey? = when (button) {
+        Input.Buttons.LEFT -> MouseInputActionKey.Left(touchUp)
+        Input.Buttons.RIGHT -> MouseInputActionKey.Right(touchUp)
+        Input.Buttons.MIDDLE -> MouseInputActionKey.Middle(touchUp)
+        -1 -> MouseInputActionKey.Screen(touchUp, pointer)
+        else -> null
     }
 
-    private fun mapActionKey(button: Int, touchUp: Boolean, pointer: Int): MouseInputActionKey? {
-        return when (button) {
-            Input.Buttons.LEFT -> MouseInputActionKey.Left(touchUp)
-            Input.Buttons.RIGHT -> MouseInputActionKey.Right(touchUp)
-            Input.Buttons.MIDDLE -> MouseInputActionKey.Middle(touchUp)
-            -1 -> MouseInputActionKey.Screen(touchUp, pointer)
-            else -> null
-        }
-    }
+    private fun getScreenX(mouseX: Float): Float = mouseX * (applicationContextRepository.getWidth() / Gdx.graphics.width)
 
-    private fun getScreenX(mouseX: Float): Float {
-        return mouseX * (applicationContextRepository.getWidth() / Gdx.graphics.width)
-    }
-
-    private fun getScreenY(mouseY: Float): Float {
-        return mouseY * (applicationContextRepository.getHeight() / Gdx.graphics.height)
-    }
+    private fun getScreenY(mouseY: Float): Float = mouseY * (applicationContextRepository.getHeight() / Gdx.graphics.height)
 }

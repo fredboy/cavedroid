@@ -29,22 +29,18 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
     private val furnaceInventoryTexture get() = requireNotNull(textureRegions["furnace"])
     private val chestInventoryTexture get() = requireNotNull(textureRegions["chest"])
 
-    override fun checkConditions(action: MouseInputAction): Boolean {
-        return gameWindowsManager.currentWindowType != GameWindowType.NONE &&
-            (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
-            action.actionKey.touchUp &&
-            !isInsideWindow(action, getCurrentWindowTexture())
-    }
+    override fun checkConditions(action: MouseInputAction): Boolean = gameWindowsManager.currentWindowType != GameWindowType.NONE &&
+        (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
+        action.actionKey.touchUp &&
+        !isInsideWindow(action, getCurrentWindowTexture())
 
-    private fun getCurrentWindowTexture(): TextureRegion {
-        return when (val window = gameWindowsManager.currentWindowType) {
-            GameWindowType.CREATIVE_INVENTORY -> creativeInventoryTexture
-            GameWindowType.SURVIVAL_INVENTORY -> survivalInventoryTexture
-            GameWindowType.CRAFTING_TABLE -> craftingInventoryTexture
-            GameWindowType.FURNACE -> furnaceInventoryTexture
-            GameWindowType.CHEST -> chestInventoryTexture
-            else -> throw UnsupportedOperationException("Cant close window ${window.name}")
-        }
+    private fun getCurrentWindowTexture(): TextureRegion = when (val window = gameWindowsManager.currentWindowType) {
+        GameWindowType.CREATIVE_INVENTORY -> creativeInventoryTexture
+        GameWindowType.SURVIVAL_INVENTORY -> survivalInventoryTexture
+        GameWindowType.CRAFTING_TABLE -> craftingInventoryTexture
+        GameWindowType.FURNACE -> furnaceInventoryTexture
+        GameWindowType.CHEST -> chestInventoryTexture
+        else -> throw UnsupportedOperationException("Cant close window ${window.name}")
     }
 
     override fun handle(action: MouseInputAction) {
