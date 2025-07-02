@@ -16,6 +16,7 @@ import ru.fredboy.cavedroid.domain.menu.model.MenuButton
 import ru.fredboy.cavedroid.domain.menu.repository.MenuButtonRepository
 import ru.fredboy.cavedroid.zygote.menu.action.IMenuAction
 import ru.fredboy.cavedroid.zygote.menu.option.bool.IMenuBooleanOption
+import ru.fredboy.cavedroid.zygote.menu.option.numerical.IMenuNumericalOption
 import javax.inject.Inject
 
 @MenuScope
@@ -25,6 +26,7 @@ class MenuRenderer @Inject constructor(
     private val getTextureRegionByName: GetTextureRegionByNameUseCase,
     private val menuButtonActions: Map<String, @JvmSuppressWildcards IMenuAction>,
     private val buttonBooleanOptions: Map<String, @JvmSuppressWildcards IMenuBooleanOption>,
+    private val buttonNumericalOptions: Map<String, @JvmSuppressWildcards IMenuNumericalOption>,
     private val getFont: GetFontUseCase,
     private val getStringWidth: GetStringWidthUseCase,
     private val getStringHeight: GetStringHeightUseCase,
@@ -62,7 +64,11 @@ class MenuRenderer @Inject constructor(
             is MenuButton.Simple -> button.label
             is MenuButton.BooleanOption -> String.format(
                 button.label,
-                button.optionKeys.map { key -> buttonBooleanOptions[key]?.getOption().toString() },
+                *button.optionKeys.map { key -> buttonBooleanOptions[key]?.getOption().toString() }.toTypedArray(),
+            )
+            is MenuButton.NumericalOption -> String.format(
+                button.label,
+                *button.optionKeys.mapNotNull { key -> buttonNumericalOptions[key]?.getOption() }.toTypedArray(),
             )
         }
 

@@ -25,6 +25,8 @@ class ApplicationContextRepositoryImpl @Inject constructor(
 
     override fun getHeight(): Float = applicationContextStore.height
 
+    override fun getScreenScale(): Int = applicationContextStore.screenScale
+
     override fun setTouch(isTouch: Boolean) {
         applicationContextStore.isTouch = isTouch
     }
@@ -58,5 +60,9 @@ class ApplicationContextRepositoryImpl @Inject constructor(
 
     override fun setHeight(height: Float) {
         applicationContextStore.height = height
+    }
+
+    override fun setScreenScale(scale: Int) {
+        applicationContextStore.screenScale = scale
     }
 }

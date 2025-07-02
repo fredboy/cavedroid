@@ -55,6 +55,7 @@ class CaveDroidApplication(
                     height = height,
                     isFullscreen = isFullscreen,
                     useDynamicCamera = preferencesStore.getPreference("dyncam").toBoolean(),
+                    screenScale = (preferencesStore.getPreference("screen_scale") ?: "1").toInt(),
                 ),
             )
             .applicationController(this)
@@ -96,6 +97,10 @@ class CaveDroidApplication(
     override fun exitGame() {
         setScreen(null)
         Gdx.app.exit()
+    }
+
+    override fun triggerResize() {
+        resize(Gdx.graphics.width, Gdx.graphics.height)
     }
 
     companion object {

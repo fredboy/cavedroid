@@ -46,8 +46,16 @@ class ApplicationContextStore @Inject constructor(
         get() = synchronized(lock) { applicationContext.height }
         set(value) = synchronized(lock) { applicationContext.height = value }
 
+    var screenScale: Int
+        get() = synchronized(lock) { applicationContext.screenScale }
+        set(value) = synchronized(lock) {
+            applicationContext.screenScale = value
+            preferencesStore.setPreference(KEY_SCREEN_SCALE_PREF, value.toString())
+        }
+
     private companion object {
         private const val KEY_FULLSCREEN_PREF = "fullscreen"
         private const val KEY_DYNAMIC_CAMERA_PREF = "dyncam"
+        private const val KEY_SCREEN_SCALE_PREF = "screen_scale"
     }
 }

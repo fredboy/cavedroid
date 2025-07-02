@@ -14,11 +14,23 @@ sealed class MenuButton {
         override val isEnabled: Boolean,
     ) : MenuButton()
 
+    sealed class Option : MenuButton() {
+        abstract val optionKeys: List<String>
+    }
+
     data class BooleanOption(
         override val label: String,
         override val isVisible: Boolean,
         override val actionKey: String,
         override val isEnabled: Boolean,
-        val optionKeys: List<String>,
-    ) : MenuButton()
+        override val optionKeys: List<String>,
+    ) : Option()
+
+    data class NumericalOption(
+        override val label: String,
+        override val isVisible: Boolean,
+        override val actionKey: String,
+        override val isEnabled: Boolean,
+        override val optionKeys: List<String>,
+    ) : Option()
 }

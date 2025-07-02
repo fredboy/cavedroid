@@ -16,6 +16,8 @@ interface ApplicationContextRepository {
 
     fun getHeight(): Float
 
+    fun getScreenScale(): Int
+
     fun setTouch(isTouch: Boolean)
 
     fun setFullscreen(fullscreen: Boolean)
@@ -27,4 +29,6 @@ interface ApplicationContextRepository {
     fun setWidth(width: Float)
 
     fun setHeight(height: Float)
+
+    fun setScreenScale(scale: Int)
 }

@@ -20,6 +20,14 @@ class MenuButtonMapper @Inject constructor() {
             isEnabled = dto.enabled ?: true,
         )
 
+        "numerical_option" -> MenuButton.NumericalOption(
+            label = dto.label.toString(),
+            isVisible = mapVisibility(dto.visibility),
+            actionKey = dto.actionKey.orEmpty(),
+            optionKeys = dto.options.orEmpty(),
+            isEnabled = dto.enabled ?: true,
+        )
+
         "default", null -> MenuButton.Simple(
             label = dto.label.toString(),
             isVisible = mapVisibility(dto.visibility),
@@ -34,6 +42,7 @@ class MenuButtonMapper @Inject constructor() {
     fun setButtonEnabled(button: MenuButton, isEnabled: Boolean): MenuButton = when (button) {
         is MenuButton.Simple -> button.copy(isEnabled = isEnabled)
         is MenuButton.BooleanOption -> button.copy(isEnabled = isEnabled)
+        is MenuButton.NumericalOption -> button.copy(isEnabled = isEnabled)
     }
 
     private fun mapVisibility(dto: MenuButtonVisibilityDto?): Boolean {
