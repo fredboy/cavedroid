@@ -41,6 +41,7 @@ class MenuButtonMapper @Inject constructor() {
 
         return when (Gdx.app.type) {
             Application.ApplicationType.Android -> dto.android
+            Application.ApplicationType.iOS -> dto.ios
             else -> dto.desktop
         }
     }
