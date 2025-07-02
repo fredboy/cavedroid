@@ -6,4 +6,5 @@ import kotlinx.serialization.Serializable
 data class MenuButtonVisibilityDto(
     val android: Boolean = true,
     val desktop: Boolean = true,
+    val ios: Boolean = true,
 )

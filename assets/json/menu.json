@@ -44,7 +44,8 @@
       "actionKey": "toggle_fullscreen_action",
       "options": ["fullscreen"],
       "visibility": {
-        "android": false
+        "android": false,
+        "ios": false
       }
     },
     "back": {
