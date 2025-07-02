@@ -25,6 +25,6 @@ class ScreenScaleMenuNumericalOption @Inject constructor(
     }
     companion object {
         const val KEY = "screen_scale"
-        private val SCALE_VALUES = arrayOf(1, 2, 3, 4)
+        private val SCALE_VALUES = arrayOf(1, 2, 3, 4, 5, 6)
     }
 }
