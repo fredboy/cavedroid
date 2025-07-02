@@ -16,7 +16,7 @@ mkdir "$release_dir"
 
 ./gradlew clean android:assembleRelease desktop:dist
 
-cp android/build/outputs/apk/release/*.apk "$release_dir/"
+cp android/build/outputs/apk/release/*.apk "$release_dir/android-$1.apk"
 cp desktop/build/libs/*.jar "$release_dir/"
 
 echo "$release_dir/"
