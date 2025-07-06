@@ -109,6 +109,7 @@ object GameModule {
 
         return GameWorld(
             itemsRepository = itemsRepository,
+            gameContextRepository = gameContextRepository,
             initialForeMap = mapData?.retrieveForeMap(),
             initialBackMap = mapData?.retrieveBackMap(),
         )

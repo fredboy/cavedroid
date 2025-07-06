@@ -4,6 +4,9 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.PolygonShape
+import com.badlogic.gdx.physics.box2d.Shape
+import com.badlogic.gdx.physics.box2d.World
 import ru.fredboy.cavedroid.common.utils.applyOrigin
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.domain.assets.model.MobSprite
@@ -17,10 +20,8 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobBehavior
 class Player(
     private val sprite: MobSprite.Player,
     private val getFallbackItem: GetFallbackItemUseCase,
-    x: Float,
-    y: Float,
     behavior: MobBehavior,
-) : Mob(x, y, WIDTH, HEIGHT, Direction.random(), MAX_HEALTH, behavior) {
+) : Mob(WIDTH, HEIGHT, Direction.random(), MAX_HEALTH, behavior) {
 
     var spawnPoint: Vector2? = null
 
@@ -65,7 +66,11 @@ class Player(
     override fun changeDir() = Unit
 
     override fun jump() {
-        velocity.y = JUMP_VELOCITY
+        body.applyLinearImpulse(
+            /* impulse = */ Vector2(0f, JUMP_VELOCITY),
+            /* point = */ body.worldCenter,
+            /* wake = */ true,
+        )
     }
 
     override fun damage(damage: Int) {
@@ -138,15 +143,11 @@ class Player(
         }
     }
 
-    fun respawn(spawnPoint: Vector2) {
+    fun respawn(spawnPoint: Vector2, world: World) {
         this.spawnPoint = spawnPoint
-
-        x = spawnPoint.x
-        y = spawnPoint.y
-
-        velocity.setZero()
         isDead = false
         heal(maxHealth)
+        spawn(spawnPoint.x, spawnPoint.y, world)
     }
 
     fun startHitting(withDamage: Boolean = true) {
@@ -264,15 +265,15 @@ class Player(
 
         const val MAX_HEALTH = 20
 
-        const val WIDTH = 4f
-        const val HEIGHT = 30f
+        const val WIDTH = .25f
+        const val HEIGHT = 1.9375f
 
-        const val SPEED = 69.072f
-        private const val JUMP_VELOCITY = -133.332f
+        const val SPEED = 6.26f
+        private const val JUMP_VELOCITY = -3f
 
         private val HIT_ANIMATION_RANGE = 30f..90f
 
-        private val SMALL_ITEM_SIZE = 8f
+        private val SMALL_ITEM_SIZE = .5f
         private val HAND_ITEM_ANGLE_DEG = 30f
     }
 }

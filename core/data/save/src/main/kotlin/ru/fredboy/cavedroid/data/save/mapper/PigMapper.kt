@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.data.save.mapper
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.assets.usecase.GetPigSpritesUseCase
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Pig
 import ru.fredboy.cavedroid.game.controller.mob.behavior.PigMobBehavior
 import javax.inject.Inject
@@ -15,8 +16,8 @@ class PigMapper @Inject constructor(
 
     fun mapSaveData(pig: Pig): SaveDataDto.PigSaveDataDto = SaveDataDto.PigSaveDataDto(
         version = SAVE_DATA_VERSION,
-        x = pig.x,
-        y = pig.y,
+        x = pig.position.x,
+        y = pig.position.y,
         width = pig.width,
         height = pig.height,
         velocityX = pig.velocity.x,
@@ -31,23 +32,22 @@ class PigMapper @Inject constructor(
         health = pig.health,
     )
 
-    fun mapPig(saveDataDto: SaveDataDto.PigSaveDataDto): Pig {
+    fun mapPig(
+        saveDataDto: SaveDataDto.PigSaveDataDto,
+        mobWorldAdapter: MobWorldAdapter,
+    ): Pig {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
         return Pig(
             sprite = getPigSpriteUseCase(),
-            x = saveDataDto.x,
-            y = saveDataDto.y,
             behavior = PigMobBehavior(),
         ).apply {
-            width = saveDataDto.width
-            height = saveDataDto.height
+            spawn(saveDataDto.x - width / 2f, saveDataDto.y - height / 2f, mobWorldAdapter.getBox2dWorld())
             velocity.x = saveDataDto.velocityX
-            velocity.x = saveDataDto.velocityY
+            velocity.y = saveDataDto.velocityY
             animDelta = saveDataDto.animDelta
             anim = saveDataDto.anim
             direction = directionMapper.mapDirection(saveDataDto.direction)
-            canJump = saveDataDto.canJump
             isFlyMode = saveDataDto.flyMode
             health = saveDataDto.health
         }

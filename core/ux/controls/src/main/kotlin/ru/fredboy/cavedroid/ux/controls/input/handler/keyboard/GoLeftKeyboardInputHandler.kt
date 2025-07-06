@@ -27,10 +27,10 @@ class GoLeftKeyboardInputHandler @Inject constructor(
 
     override fun handle(action: KeyboardInputAction) {
         if (action.isKeyDown) {
-            mobController.player.velocity.x = -mobController.player.speed
+            mobController.player.controlVector.x = -mobController.player.speed
             mobController.player.direction = Direction.LEFT
         } else {
-            mobController.player.velocity.x = 0f
+            mobController.player.controlVector.x = 0f
         }
     }
 }

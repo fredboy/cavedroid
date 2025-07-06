@@ -19,7 +19,7 @@ class UpdateRequiresBlockAction @Inject constructor(
 
             if (block.params.isFallable) {
                 gameWorld.resetForeMap(x, y)
-                fallingBlockFactory.create(x, y, block)
+                fallingBlockFactory.create(x.toFloat(), y.toFloat(), block)
             } else {
                 gameWorld.destroyForeMap(x, y, true)
             }

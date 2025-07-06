@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.data.save.mapper
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.items.usecase.GetBlockByKeyUseCase
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.FallingBlock
 import ru.fredboy.cavedroid.game.controller.mob.behavior.FallingBlockMobBehavior
 import javax.inject.Inject
@@ -15,8 +16,8 @@ class FallingBlockMapper @Inject constructor(
 
     fun mapSaveData(fallingBlock: FallingBlock): SaveDataDto.FallingBlockSaveDataDto = SaveDataDto.FallingBlockSaveDataDto(
         version = SAVE_DATA_VERSION,
-        x = fallingBlock.x,
-        y = fallingBlock.y,
+        x = fallingBlock.position.x,
+        y = fallingBlock.position.y,
         width = fallingBlock.width,
         height = fallingBlock.height,
         velocityX = fallingBlock.velocity.x,
@@ -32,23 +33,22 @@ class FallingBlockMapper @Inject constructor(
         blockKey = fallingBlock.block.params.key,
     )
 
-    fun mapFallingBlock(saveDataDto: SaveDataDto.FallingBlockSaveDataDto): FallingBlock {
+    fun mapFallingBlock(
+        saveDataDto: SaveDataDto.FallingBlockSaveDataDto,
+        mobWorldAdapter: MobWorldAdapter,
+    ): FallingBlock {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
         return FallingBlock(
             block = getBlockByKeyUseCase[saveDataDto.blockKey],
-            x = saveDataDto.x,
-            y = saveDataDto.y,
             behavior = FallingBlockMobBehavior(),
         ).apply {
-            width = saveDataDto.width
-            height = saveDataDto.height
+            spawn(saveDataDto.x - width / 2f, saveDataDto.y - width / 2f, mobWorldAdapter.getBox2dWorld())
             velocity.x = saveDataDto.velocityX
-            velocity.x = saveDataDto.velocityY
+            velocity.y = saveDataDto.velocityY
             animDelta = saveDataDto.animDelta
             anim = saveDataDto.anim
             direction = directionMapper.mapDirection(saveDataDto.direction)
-            canJump = saveDataDto.canJump
             isFlyMode = saveDataDto.flyMode
             health = saveDataDto.health
         }

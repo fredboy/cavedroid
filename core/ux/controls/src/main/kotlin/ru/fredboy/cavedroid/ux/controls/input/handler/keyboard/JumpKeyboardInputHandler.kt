@@ -17,11 +17,13 @@ class JumpKeyboardInputHandler @Inject constructor(
     private val mobController: MobController,
 ) : IKeyboardInputHandler {
 
-    override fun checkConditions(action: KeyboardInputAction): Boolean = action.actionKey is KeyboardInputActionKey.Up &&
-        mobController.player.canJump &&
-        !mobController.player.isFlyMode &&
-        action.isKeyDown &&
-        (mobController.player.controlMode == Player.ControlMode.WALK || !applicationContextRepository.isTouch())
+    override fun checkConditions(action: KeyboardInputAction): Boolean {
+        return action.actionKey is KeyboardInputActionKey.Up &&
+            mobController.player.canJump &&
+            !mobController.player.isFlyMode &&
+            action.isKeyDown &&
+            (mobController.player.controlMode == Player.ControlMode.WALK || !applicationContextRepository.isTouch())
+    }
 
     override fun handle(action: KeyboardInputAction) {
         mobController.player.jump()

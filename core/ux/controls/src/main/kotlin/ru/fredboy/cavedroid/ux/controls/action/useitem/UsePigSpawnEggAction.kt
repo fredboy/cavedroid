@@ -1,7 +1,6 @@
 package ru.fredboy.cavedroid.ux.controls.action.useitem
 
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.common.utils.px
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.mob.factory.PigFactory
@@ -16,7 +15,7 @@ class UsePigSpawnEggAction @Inject constructor(
 ) : IUseItemAction {
 
     override fun perform(item: Item.Usable, x: Int, y: Int) {
-        pigFactory.create(mobController.player.cursorX.px, mobController.player.cursorY.px)
+        pigFactory.create(mobController.player.cursorX.toFloat(), mobController.player.cursorY.toFloat())
         mobController.player.decreaseCurrentItemCount()
     }
 

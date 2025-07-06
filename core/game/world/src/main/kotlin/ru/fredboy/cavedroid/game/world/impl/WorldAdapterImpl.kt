@@ -1,8 +1,8 @@
 package ru.fredboy.cavedroid.game.world.impl
 
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.World
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.common.utils.px
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
@@ -72,7 +72,7 @@ internal class WorldAdapterImpl @Inject constructor(
             }
         }
 
-        return Vector2(x.px + .5f.px - Player.WIDTH / 2, y.px - Player.HEIGHT)
+        return Vector2(x + .5f - Player.WIDTH / 2, y - Player.HEIGHT)
     }
 
     override fun checkContainerAtCoordinates(
@@ -102,5 +102,9 @@ internal class WorldAdapterImpl @Inject constructor(
 
     override fun removeOnBlockPlacedListener(listener: OnBlockPlacedListener) {
         gameWorld.removeBlockPlacedListener(listener)
+    }
+
+    override fun getBox2dWorld(): World {
+        return gameWorld.world
     }
 }

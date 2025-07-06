@@ -13,4 +13,5 @@ dependencies {
     useCommonModule()
     useModule(":core:domain:items")
     useModule(":core:domain:assets")
+    useModule(":core:domain:world")
 }

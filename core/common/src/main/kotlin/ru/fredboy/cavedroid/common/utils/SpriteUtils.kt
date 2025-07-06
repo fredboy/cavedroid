@@ -14,8 +14,8 @@ fun SpriteBatch.drawSprite(
     x: Float,
     y: Float,
     rotation: Float = 0f,
-    width: Float = sprite.regionWidth.toFloat(),
-    height: Float = sprite.regionHeight.toFloat(),
+    width: Float = sprite.regionWidth.meters,
+    height: Float = sprite.regionHeight.meters,
     tint: Color? = null,
 ) {
     val oldColor = sprite.color
@@ -27,7 +27,7 @@ fun SpriteBatch.drawSprite(
 
     sprite.draw(this)
 
-    sprite.setSize(sprite.regionWidth.toFloat(), sprite.regionHeight.toFloat())
+    sprite.setSize(sprite.regionWidth.meters, sprite.regionHeight.meters)
     sprite.rotation = 0f
     sprite.color = oldColor
 }

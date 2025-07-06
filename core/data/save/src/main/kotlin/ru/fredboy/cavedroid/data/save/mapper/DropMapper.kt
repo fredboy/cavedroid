@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.data.save.mapper
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
+import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.drop.model.Drop
 import javax.inject.Inject
 
@@ -13,10 +14,10 @@ class DropMapper @Inject constructor(
 
     fun mapSaveData(drop: Drop): SaveDataDto.DropSaveDataDto = SaveDataDto.DropSaveDataDto(
         version = SAVE_DATA_VERSION,
-        x = drop.x,
-        y = drop.y,
-        width = drop.width,
-        height = drop.height,
+        x = drop.position.x,
+        y = drop.position.y,
+        width = Drop.DROP_SIZE,
+        height = Drop.DROP_SIZE,
         velocityX = drop.velocity.x,
         velocityY = drop.velocity.y,
         itemKey = drop.item.params.key,
@@ -24,17 +25,17 @@ class DropMapper @Inject constructor(
         pickedUp = drop.isPickedUp,
     )
 
-    fun mapDrop(saveDataDto: SaveDataDto.DropSaveDataDto): Drop {
+    fun mapDrop(
+        saveDataDto: SaveDataDto.DropSaveDataDto,
+        dropWorldAdapter: DropWorldAdapter,
+    ): Drop {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
         return Drop(
-            x = saveDataDto.x,
-            y = saveDataDto.y,
             item = getItemByKeyUseCase[saveDataDto.itemKey],
             amount = saveDataDto.amount,
         ).apply {
-            width = saveDataDto.width
-            height = saveDataDto.height
+            spawn(saveDataDto.x, saveDataDto.y, dropWorldAdapter.getBox2dWorld())
             velocity.y = saveDataDto.velocityY
             velocity.x = saveDataDto.velocityX
             isPickedUp = saveDataDto.pickedUp

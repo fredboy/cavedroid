@@ -2,13 +2,14 @@ package ru.fredboy.cavedroid.game.controller.mob
 
 import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.behavior.PlayerMobBehavior
-import java.util.*
+import java.util.LinkedList
 import javax.inject.Inject
 
 @GameScope
@@ -25,10 +26,12 @@ class MobController @Inject constructor(
     var player = Player(
         sprite = mobAssetsRepository.getPlayerSprites(),
         getFallbackItem = getFallbackItemUseCase,
-        x = 0f,
-        y = 0f,
         behavior = PlayerMobBehavior(),
     )
+        set(value) {
+            field.dispose()
+            field = value
+        }
 
     init {
         respawnPlayer()
@@ -44,9 +47,14 @@ class MobController @Inject constructor(
     }
 
     fun update(delta: Float) {
-        mobs.forEach { mob ->
-            mob.update(mobWorldAdapter, delta)
+        mobs.forEach { mob -> mob.update(mobWorldAdapter, delta) }
+        _mobs.removeAll { mob ->
+            mob.isDead.ifTrue {
+                mob.dispose()
+                true
+            } ?: false
         }
+
         player.update(mobWorldAdapter, delta)
     }
 
@@ -67,7 +75,10 @@ class MobController @Inject constructor(
     }
 
     fun respawnPlayer() {
-        player.respawn(player.spawnPoint ?: mobWorldAdapter.findSpawnPoint())
+        player.respawn(
+            spawnPoint = player.spawnPoint ?: mobWorldAdapter.findSpawnPoint(),
+            world = mobWorldAdapter.getBox2dWorld(),
+        )
     }
 
     companion object {

@@ -36,10 +36,13 @@ class JoystickInputHandler @Inject constructor(
             if (!value) {
                 resetVelocity()
                 if (TimeUtils.timeSinceMillis(activateTimeMs) < 200L &&
-                    mobController.player.controlMode != Player.ControlMode.CURSOR &&
-                    mobController.player.canJump
+                    mobController.player.controlMode != Player.ControlMode.CURSOR
                 ) {
-                    mobController.player.jump()
+                    if (mobController.player.canJump) {
+                        mobController.player.jump()
+                    } else if (mobController.player.gameMode == 1) {
+                        mobController.player.isFlyMode = true
+                    }
                 }
             } else {
                 activateTimeMs = TimeUtils.millis()
@@ -48,10 +51,10 @@ class JoystickInputHandler @Inject constructor(
         }
 
     private fun resetVelocity() {
-        mobController.player.velocity.x = 0f
+        mobController.player.controlVector.x = 0f
 
         if (mobController.player.isFlyMode) {
-            mobController.player.velocity.y = 0f
+            mobController.player.controlVector.y = 0f
         }
     }
 
@@ -120,7 +123,7 @@ class JoystickInputHandler @Inject constructor(
             joyVector.scl(2f)
         }
 
-        mobController.player.velocity.x = joyVector.x
+        mobController.player.controlVector.x = joyVector.x
 
         mobController.player.direction = if (joyVector.x < 0) {
             Direction.LEFT
@@ -129,7 +132,7 @@ class JoystickInputHandler @Inject constructor(
         }
 
         if (mobController.player.isFlyMode) {
-            mobController.player.velocity.y = joyVector.y
+            mobController.player.controlVector.y = joyVector.y
         }
     }
 

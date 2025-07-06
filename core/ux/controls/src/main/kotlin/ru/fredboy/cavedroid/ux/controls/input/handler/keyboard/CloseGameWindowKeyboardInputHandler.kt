@@ -1,8 +1,8 @@
 package ru.fredboy.cavedroid.ux.controls.input.handler.keyboard
 
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.controller.drop.DropController
-import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.ux.controls.input.IKeyboardInputHandler
@@ -15,8 +15,8 @@ import javax.inject.Inject
 @BindKeyboardInputHandler
 class CloseGameWindowKeyboardInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
-    private val mobController: MobController,
     private val dropController: DropController,
+    private val player: PlayerAdapter,
 ) : IKeyboardInputHandler {
 
     override fun checkConditions(action: KeyboardInputAction): Boolean = action.actionKey is KeyboardInputActionKey.OpenInventory &&
@@ -28,8 +28,8 @@ class CloseGameWindowKeyboardInputHandler @Inject constructor(
         if (selectedItem != null) {
             for (i in 1..selectedItem.amount) {
                 dropController.addDrop(
-                    /* x = */ mobController.player.x + (32f * mobController.player.direction.basis),
-                    /* y = */ mobController.player.y,
+                    /* x = */ player.x + (32f * player.direction.basis),
+                    /* y = */ player.y,
                     /* item = */ selectedItem,
                 )
             }

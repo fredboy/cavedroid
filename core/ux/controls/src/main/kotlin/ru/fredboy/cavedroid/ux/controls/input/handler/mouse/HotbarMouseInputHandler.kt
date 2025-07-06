@@ -69,7 +69,7 @@ class HotbarMouseInputHandler @Inject constructor(
         val currentItem = player.inventory.items[actionSlot]
         val dropAmount = if (currentItem.item.isTool()) currentItem.amount else 1
 
-        createDrop(currentItem.item, player.x, player.y, dropAmount)
+        createDrop(currentItem.item, player.position.x, player.position.y, dropAmount)
         player.inventory.decreaseItemAmount(actionSlot, dropAmount)
     }
 

@@ -34,10 +34,10 @@ fun forEachBlockInArea(
     area: Rectangle,
     func: (x: Int, y: Int) -> Unit,
 ) {
-    val startMapX = area.x.bl
-    val endMapX = (area.x + area.width - 1f).bl
-    val startMapY = area.y.bl
-    val endMapY = (area.y + area.height - 1f).bl
+    val startMapX = area.x.toInt()
+    val endMapX = (area.x + area.width).toInt()
+    val startMapY = area.y.toInt()
+    val endMapY = (area.y + area.height).toInt()
 
     for (x in startMapX..endMapX) {
         for (y in startMapY..endMapY) {
@@ -101,5 +101,3 @@ fun SpriteBatch.withScissors(
     flush()
     Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST)
 }
-
-fun Int.blockCenterPx() = (toFloat() + .5f).px

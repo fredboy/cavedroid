@@ -25,7 +25,9 @@ class DropControllerMapper @Inject constructor(
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
         return DropController(
-            initialDrop = saveDataDto.drops.map(dropMapper::mapDrop),
+            initialDrop = saveDataDto.drops.map { drop ->
+                dropMapper.mapDrop(drop, dropWorldAdapter)
+            },
             dropWorldAdapter = dropWorldAdapter,
             itemsRepository = itemsRepository,
         )

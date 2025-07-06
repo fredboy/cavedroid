@@ -6,8 +6,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.Body
+import com.badlogic.gdx.physics.box2d.BodyDef
+import com.badlogic.gdx.physics.box2d.CircleShape
+import com.badlogic.gdx.physics.box2d.FixtureDef
+import com.badlogic.gdx.physics.box2d.PolygonShape
+import com.badlogic.gdx.physics.box2d.World
+import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Timer
-import ru.fredboy.cavedroid.common.utils.bl
+import ru.fredboy.cavedroid.common.utils.Vector2Proxy
+import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobBehavior
@@ -15,24 +23,34 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import kotlin.math.abs
 
 abstract class Mob(
-    x: Float,
-    y: Float,
-    width: Float,
-    height: Float,
+    val width: Float,
+    val height: Float,
     var direction: Direction,
     val maxHealth: Int,
     val behavior: MobBehavior,
-) : Rectangle(x, y, width, height) {
+) : Disposable {
 
     private var resetTakeDamageTask: ResetTakeDamageTask? = null
 
-    var velocity = Vector2()
-        protected set
+    private var _body: Body? = null
 
-    val mapX get() = (x + width / 2).bl
-    val upperMapY get() = y.bl
-    val middleMapY get() = (y + height / 2).bl
-    val lowerMapY get() = (y + height).bl
+    val body: Body get() = requireNotNull(_body)
+
+    val position: Vector2 get() = body.position
+
+    val velocity = Vector2Proxy(
+        getVelocity = { body.linearVelocity },
+        setVelocity = { body.linearVelocity = it },
+    )
+
+    val controlVector = Vector2()
+
+    val mapX get() = body.position.x.toInt()
+    val upperMapY get() = (body.position.y - width / 2).toInt()
+    val middleMapY get() = body.position.y.toInt()
+    val lowerMapY get() = (body.position.y + height / 2).toInt()
+
+    val hitbox: Rectangle get() = Rectangle(position.x - width / 2f, position.y - height / 2f, width, height)
 
     var animDelta = ANIMATION_SPEED
     var anim = 0f
@@ -40,11 +58,22 @@ abstract class Mob(
     var isDead = false
         protected set
 
-    var canJump = false
+    val canJump: Boolean
+        get() = footContactCounter > 0
 
     var isFlyMode = false
+        set(value) {
+            body.gravityScale = if (value) {
+                0f
+            } else {
+                1f
+            }
+            field = value
+        }
 
     var health = maxHealth
+
+    var footContactCounter = 0
 
     var takingDamage = false
         set(value) {
@@ -69,7 +98,96 @@ abstract class Mob(
             Color.WHITE
         }
 
+    protected open val physicsCategory: Short
+        get() = PHYSICS_CATEGORY
+
     abstract val speed: Float
+
+    fun spawn(x: Float, y: Float, world: World) {
+        if (_body != null) {
+            Gdx.app.error(
+                /* tag = */ TAG,
+                /* message = */
+                "Attempted to spawn ${this::class.simpleName} on coordinates ($x;$y), " +
+                    "when mob is already spawned and alive!",
+            )
+            return
+        }
+
+        val bodyDef = BodyDef().apply {
+            type = BodyDef.BodyType.DynamicBody
+            position.set(x + width / 2f, y + height / 2f)
+            fixedRotation = true
+        }
+
+        _body = world.createBody(bodyDef)
+
+        body.userData = this
+
+        val legShapeRadius = width / 4f
+
+        val bodyShape = PolygonShape().apply {
+            setAsBox(width / 2f, height / 2f - legShapeRadius)
+        }
+
+        val bodyFixtureDef = FixtureDef().apply {
+            shape = bodyShape
+            density = 1f
+            friction = .2f
+            restitution = 0f
+            filter.categoryBits = physicsCategory
+            filter.maskBits = Block.PHYSICS_CATEGORY
+        }
+
+        val leftLegShape = CircleShape().apply {
+            radius = legShapeRadius
+            position = Vector2(-width / 2 + legShapeRadius, height / 2f - legShapeRadius)
+        }
+
+        val rightLegShape = CircleShape().apply {
+            radius = legShapeRadius
+            position = Vector2(width / 2 - legShapeRadius, height / 2f - legShapeRadius)
+        }
+
+        val leftLegFixtureDef = FixtureDef().apply {
+            shape = leftLegShape
+            friction = .2f
+            restitution = 0f
+            filter.categoryBits = physicsCategory
+            filter.maskBits = Block.PHYSICS_CATEGORY
+        }
+
+        val rightLegFixtureDef = FixtureDef().apply {
+            shape = rightLegShape
+            friction = .2f
+            restitution = 0f
+            filter.categoryBits = physicsCategory
+            filter.maskBits = Block.PHYSICS_CATEGORY
+        }
+
+        val jumpSensorShape = PolygonShape().apply {
+            setAsBox(width / 2f, .0625f, Vector2(0f, height / 2f + .0625f), 0f)
+        }
+
+        val jumpSensorFixtureDef = FixtureDef().apply {
+            shape = jumpSensorShape
+            isSensor = true
+        }
+
+        body.createFixture(bodyFixtureDef)
+        body.createFixture(leftLegFixtureDef)
+        body.createFixture(rightLegFixtureDef)
+        body.createFixture(jumpSensorFixtureDef).apply {
+            userData = "jump_sensor"
+        }
+
+        body.linearDamping = 1.5f
+
+        bodyShape.dispose()
+        leftLegShape.dispose()
+        rightLegShape.dispose()
+        jumpSensorShape.dispose()
+    }
 
     private fun isAnimationIncreasing(): Boolean = anim > 0 && animDelta > 0 || anim < 0 && animDelta < 0
 
@@ -155,15 +273,26 @@ abstract class Mob(
         checkHealth()
     }
 
-    fun getHitBox(): Rectangle = Rectangle(
-        /* x = */ x - HIT_RANGE,
-        /* y = */ y + HIT_RANGE,
-        /* width = */ width + HIT_RANGE * 2f,
-        /* height = */ height + HIT_RANGE * 2f,
-    )
-
     fun update(mobWorldAdapter: MobWorldAdapter, delta: Float) {
         behavior.update(this, mobWorldAdapter, delta)
+
+        if (!controlVector.isZero) {
+            body.applyForceToCenter(controlVector, true)
+            velocity.x = MathUtils.clamp(velocity.x, -abs(controlVector.x), abs(controlVector.x))
+            if (isFlyMode) {
+                velocity.y = MathUtils.clamp(velocity.y, -abs(controlVector.y), abs(controlVector.y))
+            }
+        }
+
+        if (position.x > mobWorldAdapter.width) {
+            body.setTransform(Vector2(position.x - mobWorldAdapter.width, position.y), 0f)
+        } else if (position.x < 0) {
+            body.setTransform(Vector2(position.x + mobWorldAdapter.width, position.y), 0f)
+        }
+
+        if (position.y > mobWorldAdapter.height) {
+            kill()
+        }
     }
 
     open fun getDropItems(
@@ -175,6 +304,11 @@ abstract class Mob(
     abstract fun changeDir()
 
     abstract fun jump()
+
+    override fun dispose() {
+        body.world.destroyBody(body)
+        _body = null
+    }
 
     private inner class ResetTakeDamageTask : Timer.Task() {
         override fun run() {
@@ -190,9 +324,11 @@ abstract class Mob(
 
         protected const val ANIMATION_RANGE = 60f
 
-        private const val HIT_RANGE = 8f
+        private const val HIT_RANGE = .5f
 
         private const val DAMAGE_TINT_TIMEOUT_S = 0.5f
         private val DAMAGE_TINT_COLOR = Color((0xff8080 shl 8) or 0xFF)
+
+        const val PHYSICS_CATEGORY: Short = 0x02
     }
 }

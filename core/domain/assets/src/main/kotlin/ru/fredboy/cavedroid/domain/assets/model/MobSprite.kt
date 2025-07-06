@@ -10,11 +10,11 @@ sealed interface MobSprite {
         val body: Sprite,
         val leg: Sprite,
     ) : MobSprite {
-        fun getBodyRelativeX() = 2
+        fun getBodyRelativeX() = .125f
 
-        fun getBodyRelativeY() = 8
+        fun getBodyRelativeY() = .5f
 
-        fun getLegsRelativeY() = 20
+        fun getLegsRelativeY() = 1.25f
     }
 
     data class Pig(
@@ -22,10 +22,10 @@ sealed interface MobSprite {
         val leg: Sprite,
     ) : MobSprite {
 
-        fun getLeftLegRelativeX(directionIndex: Int) = 9 - directionIndex * 9
+        fun getLeftLegRelativeX(directionIndex: Int) = .5625f - directionIndex * .5625f
 
-        fun getRightLegRelativeX(directionIndex: Int) = 21 - (9 * directionIndex)
+        fun getRightLegRelativeX(directionIndex: Int) = 1.3125f - (.5625f * directionIndex)
 
-        fun getLegsRelativeY() = 12
+        fun getLegsRelativeY() = .75f
     }
 }

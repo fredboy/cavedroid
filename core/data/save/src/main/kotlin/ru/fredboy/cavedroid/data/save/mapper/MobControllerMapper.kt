@@ -45,14 +45,25 @@ class MobControllerMapper @Inject constructor(
             (mobs as MutableList).addAll(
                 saveDataDto.mobs.mapNotNull { mob ->
                     when (mob) {
-                        is SaveDataDto.PigSaveDataDto -> pigMapper.mapPig(mob)
-                        is SaveDataDto.FallingBlockSaveDataDto -> fallingBlockMapper.mapFallingBlock(mob)
+                        is SaveDataDto.PigSaveDataDto -> pigMapper.mapPig(
+                            saveDataDto = mob,
+                            mobWorldAdapter = mobWorldAdapter,
+                        )
+
+                        is SaveDataDto.FallingBlockSaveDataDto -> fallingBlockMapper.mapFallingBlock(
+                            saveDataDto = mob,
+                            mobWorldAdapter = mobWorldAdapter,
+                        )
+
                         else -> null
                     }
                 },
             )
 
-            player = playerMapper.mapPlayer(saveDataDto.player)
+            player = playerMapper.mapPlayer(
+                saveDataDto = saveDataDto.player,
+                mobWorldAdapter = mobWorldAdapter,
+            )
         }
     }
 

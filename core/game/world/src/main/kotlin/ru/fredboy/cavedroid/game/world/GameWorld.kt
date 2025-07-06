@@ -1,12 +1,29 @@
 package ru.fredboy.cavedroid.game.world
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.Body
+import com.badlogic.gdx.physics.box2d.BodyDef
+import com.badlogic.gdx.physics.box2d.Contact
+import com.badlogic.gdx.physics.box2d.ContactImpulse
+import com.badlogic.gdx.physics.box2d.ContactListener
+import com.badlogic.gdx.physics.box2d.FixtureDef
+import com.badlogic.gdx.physics.box2d.Manifold
+import com.badlogic.gdx.physics.box2d.PolygonShape
+import com.badlogic.gdx.physics.box2d.World
+import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.common.utils.removeFirst
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
+import ru.fredboy.cavedroid.entity.drop.model.Drop
+import ru.fredboy.cavedroid.entity.mob.model.Mob
+import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.world.generator.GameWorldGenerator
 import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
 import java.lang.ref.WeakReference
@@ -16,9 +33,10 @@ import javax.inject.Inject
 @GameScope
 class GameWorld @Inject constructor(
     private val itemsRepository: ItemsRepository,
+    private val gameContextRepository: GameContextRepository,
     initialForeMap: Array<Array<Block>>?,
     initialBackMap: Array<Array<Block>>?,
-) {
+) : Disposable {
     val foreMap: Array<Array<Block>>
     val backMap: Array<Array<Block>>
 
@@ -26,6 +44,79 @@ class GameWorld @Inject constructor(
     val height: Int
 
     val generatorConfig = WorldGeneratorConfig.getDefault()
+
+    val world: World = World(Vector2(0f, 9.8f), false).apply {
+        setContactListener(
+            object : ContactListener {
+                override fun beginContact(contact: Contact) {
+                    val mob = contact.fixtureA.body.userData as? Mob
+                        ?: contact.fixtureB.body.userData as? Mob
+
+                    val block = contact.fixtureA.body.userData as? Block
+                        ?: contact.fixtureB.body.userData as? Block
+
+                    val drop = contact.fixtureA.body.userData as? Drop
+                        ?: contact.fixtureB.body.userData as? Drop
+
+                    if (mob != null && block != null && (contact.fixtureA.userData == "jump_sensor" || contact.fixtureB.userData == "jump_sensor")) {
+                        mob.footContactCounter++
+                        mob.isFlyMode = false
+                        mob.controlVector.y = 0f
+                    }
+
+                    if (mob != null && mob is Player && drop != null) {
+                        if (((contact.fixtureA.userData == "drop_sensor" || contact.fixtureB.userData == "drop_sensor"))) {
+                            val toPlayer = mob.position.cpy().sub(drop.position)
+                            drop.controlVector.set(toPlayer.nor().scl(5f))
+                        } else if (!drop.isPickedUp && ((contact.fixtureA.userData == "pick_up_sensor" || contact.fixtureB.userData == "pick_up_sensor"))) {
+                            mob.inventory.pickUpItem(drop.inventoryItem)
+                            drop.isPickedUp = true
+                        }
+                    }
+
+                    if (drop != null && block != null && drop.controlVector.isZero) {
+                        drop.isBobbing = true
+                    }
+                }
+
+                override fun endContact(contact: Contact) {
+                    val mob = contact.fixtureA.body.userData as? Mob
+                        ?: contact.fixtureB.body.userData as? Mob
+
+                    val block = contact.fixtureA.body.userData as? Block
+                        ?: contact.fixtureB.body.userData as? Block
+
+                    val drop = contact.fixtureA.body.userData as? Drop
+                        ?: contact.fixtureB.body.userData as? Drop
+
+                    if (mob != null && block != null && (contact.fixtureA.userData == "jump_sensor" || contact.fixtureB.userData == "jump_sensor")) {
+                        mob.footContactCounter--
+                        if (mob.footContactCounter < 0) {
+                            Gdx.app.error(TAG, "Mob '${Mob::class.simpleName}' has less that zero footContactCounter")
+                        }
+                    }
+
+                    if (mob != null && mob is Player && drop != null) {
+                        if (((contact.fixtureA.userData == "drop_sensor" || contact.fixtureB.userData == "drop_sensor"))) {
+                            drop.controlVector.setZero()
+                        }
+                    }
+
+                    if (drop != null && block != null && drop.controlVector.isZero) {
+                        drop.isBobbing = false
+                    }
+                }
+
+                override fun preSolve(contact: Contact, oldManifold: Manifold) = Unit
+
+                override fun postSolve(contact: Contact, impulse: ContactImpulse) = Unit
+            },
+        )
+    }
+
+    val bodies = mutableMapOf<Pair<Int, Int>, Body>()
+
+    private var box2dAccumulator: Float = 0f
 
     private val onBlockPlacedListeners = LinkedList<WeakReference<OnBlockPlacedListener>>()
     private val onBlockDestroyedListeners = LinkedList<WeakReference<OnBlockDestroyedListener>>()
@@ -42,6 +133,46 @@ class GameWorld @Inject constructor(
             foreMap = generatedFore
             backMap = generatedBack
         }
+    }
+
+    private fun Block.createBody(x: Int, y: Int): Body? {
+        if (!isSolidSurfaceBlock(x, y)) {
+            return null
+        }
+
+        val rect = getRectangle(x, y)
+
+        val bodyDef = BodyDef().apply {
+            type = BodyDef.BodyType.StaticBody
+            rect.getCenter(position)
+            fixedRotation = true
+        }
+
+        val shape = PolygonShape().apply {
+            setAsBox(rect.width / 2f, rect.height / 2f)
+        }
+
+        val fixtureDef = FixtureDef().apply {
+            this.shape = shape
+            density = 1f
+            friction = .2f
+            restitution = 0f
+            filter.categoryBits = Block.PHYSICS_CATEGORY
+        }
+
+        return world.createBody(bodyDef).also { body ->
+            body.createFixture(fixtureDef)
+            body.userData = this
+            shape.dispose()
+        }
+    }
+
+    private fun Block.updateBody(x: Int, y: Int): Body? {
+        bodies.remove(x to y)?.also { body ->
+            world.destroyBody(body)
+        }
+
+        return createBody(x, y)?.also { body -> bodies[x to y] = body }
     }
 
     fun addBlockPlacedListener(listener: OnBlockPlacedListener) {
@@ -99,6 +230,18 @@ class GameWorld @Inject constructor(
         }
     }
 
+    private fun isSolidSurfaceBlock(x: Int, y: Int): Boolean {
+        val block = getForeMap(x, y)
+
+        return block.params.hasCollision &&
+            (
+                !getForeMap(x - 1, y).params.hasCollision ||
+                    !getForeMap(x + 1, y).params.hasCollision ||
+                    !getForeMap(x, y - 1).params.hasCollision ||
+                    !getForeMap(x, y + 1).params.hasCollision
+                )
+    }
+
     private fun setMap(x: Int, y: Int, layer: Layer, value: Block, dropOld: Boolean) {
         if (y !in 0..<height) {
             return
@@ -117,7 +260,7 @@ class GameWorld @Inject constructor(
             }
 
         when (layer) {
-            Layer.FOREGROUND -> foreMap[transformedX][y] = value
+            Layer.FOREGROUND -> foreMap[transformedX][y] = value.apply { updateBody(x, y) }
             Layer.BACKGROUND -> backMap[transformedX][y] = value
         }
 
@@ -187,7 +330,42 @@ class GameWorld @Inject constructor(
         placeToBackground(x, y, itemsRepository.fallbackBlock, shouldDrop)
     }
 
+    fun update(delta: Float) {
+        val newBodies = buildMap {
+            forEachBlockInArea(gameContextRepository.getCameraContext().visibleWorld) { _x, y ->
+                if (y !in 0..<height) return@forEachBlockInArea
+
+                val x = transformX(_x)
+                val block = foreMap[x][y]
+                val body = bodies.remove(x to y)?.takeIf {
+                    if (it.userData == block && isSolidSurfaceBlock(x, y)) {
+                        true
+                    } else {
+                        world.destroyBody(it)
+                        false
+                    }
+                } ?: block.createBody(x, y)
+                body?.let {
+                    put(x to y, it)
+                }
+            }
+        }
+        bodies.putAll(newBodies)
+
+        box2dAccumulator += delta
+        while (box2dAccumulator >= PHYSICS_STEP_DELTA) {
+            world.step(PHYSICS_STEP_DELTA, 6, 2)
+            box2dAccumulator -= PHYSICS_STEP_DELTA
+        }
+    }
+
+    override fun dispose() {
+        world.dispose()
+    }
+
     companion object {
         private const val TAG = "GameWorld"
+
+        private const val PHYSICS_STEP_DELTA = 1f / 60f
     }
 }

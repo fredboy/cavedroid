@@ -2,13 +2,14 @@ package ru.fredboy.cavedroid.zygote.game.di
 
 import dagger.BindsInstance
 import dagger.Component
+import ru.deadsoftware.cavedroid.generated.module.HudRenderModule
 import ru.deadsoftware.cavedroid.generated.module.KeyboardInputHandlersModule
 import ru.deadsoftware.cavedroid.generated.module.MouseInputHandlersModule
 import ru.deadsoftware.cavedroid.generated.module.PlaceBlockActionsModule
-import ru.deadsoftware.cavedroid.generated.module.RenderModule
 import ru.deadsoftware.cavedroid.generated.module.UpdateBlockActionsModule
 import ru.deadsoftware.cavedroid.generated.module.UseBlockActionsModule
 import ru.deadsoftware.cavedroid.generated.module.UseItemActionsModule
+import ru.deadsoftware.cavedroid.generated.module.WorldRenderModule
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.data.configuration.di.GameContextModule
 import ru.fredboy.cavedroid.data.configuration.model.GameContext
@@ -28,7 +29,6 @@ import ru.fredboy.cavedroid.zygote.game.GameProc
         UseItemActionsModule::class,
         UpdateBlockActionsModule::class,
         PlaceBlockActionsModule::class,
-        RenderModule::class,
         KeyboardInputHandlersModule::class,
         MouseInputHandlersModule::class,
         UseBlockActionsModule::class,
@@ -37,6 +37,8 @@ import ru.fredboy.cavedroid.zygote.game.GameProc
         ControllerDropModule::class,
         GameContextModule::class,
         MobControllerModule::class,
+        WorldRenderModule::class,
+        HudRenderModule::class,
     ],
 )
 interface GameComponent {

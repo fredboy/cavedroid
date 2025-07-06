@@ -1,7 +1,8 @@
 package ru.fredboy.cavedroid.game.controller.drop
 
+import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.common.utils.blockCenterPx
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
@@ -39,20 +40,26 @@ class DropController @Inject constructor(
         return drops
     }
 
-    fun addDrop(drop: Drop) {
+    private fun addDrop(drop: Drop, x: Float, y: Float, initialForce: Vector2? = null) {
         if (drop.item.isNone()) {
             return
+        }
+
+        drop.spawn(x, y, dropWorldAdapter.getBox2dWorld())
+
+        if (initialForce != null) {
+            drop.body.applyForceToCenter(initialForce, true)
         }
 
         drops.add(drop)
     }
 
-    fun addDrop(x: Float, y: Float, item: Item, count: Int) {
-        addDrop(Drop(x, y, item, count))
+    fun addDrop(x: Float, y: Float, item: Item, count: Int, initialForce: Vector2? = null) {
+        addDrop(Drop(item, count), x, y, initialForce)
     }
 
-    fun addDrop(x: Float, y: Float, inventoryItem: InventoryItem) {
-        addDrop(x, y, inventoryItem.item, inventoryItem.amount)
+    fun addDrop(x: Float, y: Float, inventoryItem: InventoryItem, initialForce: Vector2? = null) {
+        addDrop(x, y, inventoryItem.item, inventoryItem.amount, initialForce)
     }
 
     fun forEach(action: (Drop) -> Unit) {
@@ -66,12 +73,16 @@ class DropController @Inject constructor(
         while (iterator.hasNext()) {
             val drop = iterator.next()
             if (drop.isPickedUp) {
+                drop.dispose()
                 iterator.remove()
+            } else {
+                drop.update(dropWorldAdapter, delta)
             }
         }
     }
 
     fun dispose() {
+        drops.forEach { it.dispose() }
         drops.clear()
     }
 
@@ -84,10 +95,11 @@ class DropController @Inject constructor(
         val item = itemsRepository.getItemByKey(dropInfo.itemKey).takeIf { !it.isNone() } ?: return
 
         addDrop(
-            x = x.blockCenterPx() - Drop.DROP_SIZE / 2,
-            y = y.blockCenterPx() - Drop.DROP_SIZE / 2,
+            x = x + .5f,
+            y = y + .5f,
             item = item,
             count = dropInfo.count,
+            initialForce = Vector2(MathUtils.random(-20f, 20f), -20f),
         )
     }
 }

@@ -144,5 +144,8 @@
     }
   },
   "joy_stick": {},
-  "joy_background": {}
+  "joy_background": {},
+  "textures/inventory_char": {
+    "inventory_char": {}
+  }
 }

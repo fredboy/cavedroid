@@ -2,7 +2,6 @@ package ru.fredboy.cavedroid.ux.physics.task
 
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.common.utils.bl
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -144,7 +143,7 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
     }
 
     private fun fluidUpdater() {
-        val midScreen = mobController.player.x.bl
+        val midScreen = mobController.player.mapX
 
         for (y in gameWorld.height - 1 downTo 0) {
             for (x in 0..<min(gameWorld.width / 2, 32)) {
