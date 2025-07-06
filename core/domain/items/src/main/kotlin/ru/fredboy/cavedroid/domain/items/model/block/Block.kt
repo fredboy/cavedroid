@@ -200,7 +200,5 @@ sealed class Block {
 
     companion object {
         private const val ANIMATION_FRAME_DURATION_MS = 100L
-
-        const val PHYSICS_CATEGORY: Short = 0x01
     }
 }

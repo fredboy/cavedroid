@@ -79,8 +79,8 @@ class CursorMouseInputHandler @Inject constructor(
     }
 
     private fun handleMouse(action: MouseInputAction) {
-        val worldX = action.screenX.meters + action.cameraViewport.x
-        val worldY = action.screenY.meters + action.cameraViewport.y
+        val worldX = action.screenX.meters + action.cameraViewport.x.meters
+        val worldY = action.screenY.meters + action.cameraViewport.y.meters
 
         // when worldX < 0, need to subtract 1 to avoid negative zero
 //        val fixCycledWorld = if (worldX < 0) 1 else 0

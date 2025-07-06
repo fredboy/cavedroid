@@ -18,6 +18,7 @@ import ru.fredboy.cavedroid.game.controller.container.di.ControllerContainerModu
 import ru.fredboy.cavedroid.game.controller.drop.di.ControllerDropModule
 import ru.fredboy.cavedroid.game.controller.mob.di.MobControllerModule
 import ru.fredboy.cavedroid.game.world.di.GameWorldModule
+import ru.fredboy.cavedroid.ux.physics.di.PhysicsModule
 import ru.fredboy.cavedroid.zygote.di.ApplicationComponent
 import ru.fredboy.cavedroid.zygote.game.GameProc
 
@@ -39,6 +40,7 @@ import ru.fredboy.cavedroid.zygote.game.GameProc
         MobControllerModule::class,
         WorldRenderModule::class,
         HudRenderModule::class,
+        PhysicsModule::class,
     ],
 )
 interface GameComponent {

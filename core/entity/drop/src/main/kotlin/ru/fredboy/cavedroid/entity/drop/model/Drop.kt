@@ -12,9 +12,10 @@ import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.utils.Vector2Proxy
-import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.domain.world.model.ContactSensorType
+import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import kotlin.math.abs
 
@@ -80,7 +81,7 @@ class Drop(
             setAsBox(DROP_SIZE / 2f, DROP_SIZE / 2f)
         }
 
-        val sensorShape = CircleShape().apply {
+        val attractorShape = CircleShape().apply {
             radius = MAGNET_DISTANCE
         }
 
@@ -89,30 +90,46 @@ class Drop(
             density = 1f
             friction = .2f
             restitution = 0f
-            filter.categoryBits = PHYSICS_CATEGORY
-            filter.maskBits = Block.PHYSICS_CATEGORY
+            filter.categoryBits = PhysicsConstants.CATEGORY_DROP
+            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
         }
 
         val pickUpFixtureDef = FixtureDef().apply {
             shape = bodyShape
             isSensor = true
+            filter.maskBits = PhysicsConstants.CATEGORY_MOB
         }
 
-        val sensorFixtureDef = FixtureDef().apply {
-            shape = sensorShape
+        val attractorFixtureDef = FixtureDef().apply {
+            shape = attractorShape
             isSensor = true
+            filter.maskBits = PhysicsConstants.CATEGORY_MOB
+        }
+
+        val groundSensorShape = PolygonShape().apply {
+            setAsBox(DROP_SIZE / 2f, .0625f, Vector2(0f, DROP_SIZE / 2f + .0625f), 0f)
+        }
+
+        val groundSensorFixtureDef = FixtureDef().apply {
+            shape = groundSensorShape
+            isSensor = true
+            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
         }
 
         body.createFixture(bodyFixtureDef)
         body.createFixture(pickUpFixtureDef).apply {
-            userData = "pick_up_sensor"
+            userData = ContactSensorType.DROP_PICK_UP
         }
-        body.createFixture(sensorFixtureDef).apply {
-            userData = "drop_sensor"
+        body.createFixture(attractorFixtureDef).apply {
+            userData = ContactSensorType.DROP_ATTRACTOR
+        }
+        body.createFixture(groundSensorFixtureDef).apply {
+            userData = ContactSensorType.DROP_ON_GROUND
         }
 
         bodyShape.dispose()
-        sensorShape.dispose()
+        attractorShape.dispose()
+        groundSensorShape.dispose()
     }
 
     fun update(dropWorldAdapter: DropWorldAdapter, delta: Float) {
@@ -160,7 +177,5 @@ class Drop(
         private const val TAG = "Drop"
         private const val MAGNET_DISTANCE = 1f
         const val DROP_SIZE = .5f
-
-        const val PHYSICS_CATEGORY: Short = 0x04
     }
 }

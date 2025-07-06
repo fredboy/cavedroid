@@ -1,14 +1,9 @@
 package ru.fredboy.cavedroid.game.world
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.BodyDef
-import com.badlogic.gdx.physics.box2d.Contact
-import com.badlogic.gdx.physics.box2d.ContactImpulse
-import com.badlogic.gdx.physics.box2d.ContactListener
 import com.badlogic.gdx.physics.box2d.FixtureDef
-import com.badlogic.gdx.physics.box2d.Manifold
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Disposable
@@ -21,19 +16,19 @@ import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
-import ru.fredboy.cavedroid.entity.drop.model.Drop
-import ru.fredboy.cavedroid.entity.mob.model.Mob
-import ru.fredboy.cavedroid.entity.mob.model.Player
+import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
+import ru.fredboy.cavedroid.game.world.abstraction.GamePhysicsController
 import ru.fredboy.cavedroid.game.world.generator.GameWorldGenerator
 import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
 import java.lang.ref.WeakReference
-import java.util.LinkedList
+import java.util.*
 import javax.inject.Inject
 
 @GameScope
 class GameWorld @Inject constructor(
     private val itemsRepository: ItemsRepository,
     private val gameContextRepository: GameContextRepository,
+    private val physicsController: GamePhysicsController,
     initialForeMap: Array<Array<Block>>?,
     initialBackMap: Array<Array<Block>>?,
 ) : Disposable {
@@ -46,72 +41,7 @@ class GameWorld @Inject constructor(
     val generatorConfig = WorldGeneratorConfig.getDefault()
 
     val world: World = World(Vector2(0f, 9.8f), false).apply {
-        setContactListener(
-            object : ContactListener {
-                override fun beginContact(contact: Contact) {
-                    val mob = contact.fixtureA.body.userData as? Mob
-                        ?: contact.fixtureB.body.userData as? Mob
-
-                    val block = contact.fixtureA.body.userData as? Block
-                        ?: contact.fixtureB.body.userData as? Block
-
-                    val drop = contact.fixtureA.body.userData as? Drop
-                        ?: contact.fixtureB.body.userData as? Drop
-
-                    if (mob != null && block != null && (contact.fixtureA.userData == "jump_sensor" || contact.fixtureB.userData == "jump_sensor")) {
-                        mob.footContactCounter++
-                        mob.isFlyMode = false
-                        mob.controlVector.y = 0f
-                    }
-
-                    if (mob != null && mob is Player && drop != null) {
-                        if (((contact.fixtureA.userData == "drop_sensor" || contact.fixtureB.userData == "drop_sensor"))) {
-                            val toPlayer = mob.position.cpy().sub(drop.position)
-                            drop.controlVector.set(toPlayer.nor().scl(5f))
-                        } else if (!drop.isPickedUp && ((contact.fixtureA.userData == "pick_up_sensor" || contact.fixtureB.userData == "pick_up_sensor"))) {
-                            mob.inventory.pickUpItem(drop.inventoryItem)
-                            drop.isPickedUp = true
-                        }
-                    }
-
-                    if (drop != null && block != null && drop.controlVector.isZero) {
-                        drop.isBobbing = true
-                    }
-                }
-
-                override fun endContact(contact: Contact) {
-                    val mob = contact.fixtureA.body.userData as? Mob
-                        ?: contact.fixtureB.body.userData as? Mob
-
-                    val block = contact.fixtureA.body.userData as? Block
-                        ?: contact.fixtureB.body.userData as? Block
-
-                    val drop = contact.fixtureA.body.userData as? Drop
-                        ?: contact.fixtureB.body.userData as? Drop
-
-                    if (mob != null && block != null && (contact.fixtureA.userData == "jump_sensor" || contact.fixtureB.userData == "jump_sensor")) {
-                        mob.footContactCounter--
-                        if (mob.footContactCounter < 0) {
-                            Gdx.app.error(TAG, "Mob '${Mob::class.simpleName}' has less that zero footContactCounter")
-                        }
-                    }
-
-                    if (mob != null && mob is Player && drop != null) {
-                        if (((contact.fixtureA.userData == "drop_sensor" || contact.fixtureB.userData == "drop_sensor"))) {
-                            drop.controlVector.setZero()
-                        }
-                    }
-
-                    if (drop != null && block != null && drop.controlVector.isZero) {
-                        drop.isBobbing = false
-                    }
-                }
-
-                override fun preSolve(contact: Contact, oldManifold: Manifold) = Unit
-
-                override fun postSolve(contact: Contact, impulse: ContactImpulse) = Unit
-            },
-        )
+        setContactListener(physicsController)
     }
 
     val bodies = mutableMapOf<Pair<Int, Int>, Body>()
@@ -157,7 +87,7 @@ class GameWorld @Inject constructor(
             density = 1f
             friction = .2f
             restitution = 0f
-            filter.categoryBits = Block.PHYSICS_CATEGORY
+            filter.categoryBits = PhysicsConstants.CATEGORY_BLOCK
         }
 
         return world.createBody(bodyDef).also { body ->

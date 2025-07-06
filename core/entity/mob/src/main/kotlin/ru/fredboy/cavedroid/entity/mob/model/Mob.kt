@@ -18,6 +18,8 @@ import ru.fredboy.cavedroid.common.utils.Vector2Proxy
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
+import ru.fredboy.cavedroid.domain.world.model.ContactSensorType
+import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobBehavior
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import kotlin.math.abs
@@ -99,7 +101,7 @@ abstract class Mob(
         }
 
     protected open val physicsCategory: Short
-        get() = PHYSICS_CATEGORY
+        get() = PhysicsConstants.CATEGORY_MOB
 
     abstract val speed: Float
 
@@ -136,7 +138,7 @@ abstract class Mob(
             friction = .2f
             restitution = 0f
             filter.categoryBits = physicsCategory
-            filter.maskBits = Block.PHYSICS_CATEGORY
+            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
         }
 
         val leftLegShape = CircleShape().apply {
@@ -154,7 +156,7 @@ abstract class Mob(
             friction = .2f
             restitution = 0f
             filter.categoryBits = physicsCategory
-            filter.maskBits = Block.PHYSICS_CATEGORY
+            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
         }
 
         val rightLegFixtureDef = FixtureDef().apply {
@@ -162,7 +164,7 @@ abstract class Mob(
             friction = .2f
             restitution = 0f
             filter.categoryBits = physicsCategory
-            filter.maskBits = Block.PHYSICS_CATEGORY
+            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
         }
 
         val jumpSensorShape = PolygonShape().apply {
@@ -172,13 +174,15 @@ abstract class Mob(
         val jumpSensorFixtureDef = FixtureDef().apply {
             shape = jumpSensorShape
             isSensor = true
+            filter.categoryBits = physicsCategory
+            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
         }
 
         body.createFixture(bodyFixtureDef)
         body.createFixture(leftLegFixtureDef)
         body.createFixture(rightLegFixtureDef)
         body.createFixture(jumpSensorFixtureDef).apply {
-            userData = "jump_sensor"
+            userData = ContactSensorType.MOB_ON_GROUND
         }
 
         body.linearDamping = 1.5f
@@ -328,7 +332,5 @@ abstract class Mob(
 
         private const val DAMAGE_TINT_TIMEOUT_S = 0.5f
         private val DAMAGE_TINT_COLOR = Color((0xff8080 shl 8) or 0xFF)
-
-        const val PHYSICS_CATEGORY: Short = 0x02
     }
 }
