@@ -2,8 +2,6 @@ package ru.fredboy.cavedroid.zygote.game
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
-import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.World
 import ru.fredboy.cavedroid.common.model.Joystick
 import ru.fredboy.cavedroid.data.configuration.model.GameContext
 import ru.fredboy.cavedroid.domain.configuration.model.CameraContext

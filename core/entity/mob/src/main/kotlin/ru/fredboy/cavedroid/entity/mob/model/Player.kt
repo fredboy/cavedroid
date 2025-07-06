@@ -4,8 +4,6 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.PolygonShape
-import com.badlogic.gdx.physics.box2d.Shape
 import com.badlogic.gdx.physics.box2d.World
 import ru.fredboy.cavedroid.common.utils.applyOrigin
 import ru.fredboy.cavedroid.common.utils.drawSprite

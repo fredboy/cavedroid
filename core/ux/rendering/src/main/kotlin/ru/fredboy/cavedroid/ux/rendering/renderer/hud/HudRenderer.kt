@@ -12,7 +12,6 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.TooltipManager
-import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.ux.rendering.annotation.BindHudRenderer
 import javax.inject.Inject
 

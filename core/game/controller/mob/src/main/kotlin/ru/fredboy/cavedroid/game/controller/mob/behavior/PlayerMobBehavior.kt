@@ -1,12 +1,10 @@
 package ru.fredboy.cavedroid.game.controller.mob.behavior
 
-import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Player
-import kotlin.math.abs
 
 class PlayerMobBehavior :
     BaseMobBehavior<Player>(

@@ -5,5 +5,5 @@ enum class ContactSensorType {
     MOB_SHOULD_JUMP,
     DROP_ON_GROUND,
     DROP_ATTRACTOR,
-    DROP_PICK_UP
+    DROP_PICK_UP,
 }

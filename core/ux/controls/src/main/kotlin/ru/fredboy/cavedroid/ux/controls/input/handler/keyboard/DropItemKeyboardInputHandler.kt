@@ -3,7 +3,6 @@ package ru.fredboy.cavedroid.ux.controls.input.handler.keyboard
 import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.item.Item
-import ru.fredboy.cavedroid.entity.drop.model.Drop
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.window.GameWindowType
