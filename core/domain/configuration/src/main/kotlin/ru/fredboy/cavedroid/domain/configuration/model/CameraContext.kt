@@ -1,12 +1,11 @@
 package ru.fredboy.cavedroid.domain.configuration.model
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Rectangle
 
 data class CameraContext(
     val viewport: Rectangle,
-    val camera: OrthographicCamera,
+    val visibleWorld: Rectangle,
 ) {
 
     fun xOnViewport(x: Int) = viewport.width / Gdx.graphics.width * x.toFloat()

@@ -2,8 +2,7 @@ package ru.fredboy.cavedroid.ux.controls.input.handler.mouse
 
 import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.common.utils.bl
-import ru.fredboy.cavedroid.common.utils.px
+import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -48,7 +47,7 @@ class CursorMouseInputHandler @Inject constructor(
             return
         }
 
-        if (player.cursorX.px + 8 < player.x + player.width / 2) {
+        if (player.cursorX.toFloat() + .5f < player.position.x) {
             player.direction = Direction.LEFT
         } else {
             player.direction = Direction.RIGHT
@@ -73,25 +72,25 @@ class CursorMouseInputHandler @Inject constructor(
     }
 
     private fun getPlayerHeadRotation(mouseWorldX: Float, mouseWorldY: Float): Float {
-        val h = mouseWorldX - (player.x + player.width / 2)
-        val v = mouseWorldY - player.y
+        val h = mouseWorldX - player.position.x
+        val v = mouseWorldY - player.position.y
 
         return MathUtils.atan(v / h) * MathUtils.radDeg
     }
 
     private fun handleMouse(action: MouseInputAction) {
-        val worldX = action.screenX + action.cameraViewport.x
-        val worldY = action.screenY + action.cameraViewport.y
+        val worldX = action.screenX.meters + action.cameraViewport.x.meters
+        val worldY = action.screenY.meters + action.cameraViewport.y.meters
 
         // when worldX < 0, need to subtract 1 to avoid negative zero
 //        val fixCycledWorld = if (worldX < 0) 1 else 0
 
-        player.cursorX = worldX.bl - 0
-        player.cursorY = worldY.bl
+        player.cursorX = worldX.toInt()
+        player.cursorY = worldY.toInt()
 
         player.headRotation = getPlayerHeadRotation(worldX, worldY)
 
-        if (worldX < player.x + player.width / 2) {
+        if (worldX < player.position.x) {
             player.direction = Direction.LEFT
         } else {
             player.direction = Direction.RIGHT

@@ -2,7 +2,6 @@ package ru.fredboy.cavedroid.game.controller.container
 
 import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.common.utils.px
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
@@ -60,7 +59,7 @@ class ContainerController @Inject constructor(
 
     fun destroyContainer(x: Int, y: Int, z: Int) {
         retrieveContainer(x, y, z)?.let { container ->
-            dropAdapter.dropInventory(x.px, y.px, container.inventory)
+            dropAdapter.dropInventory(x.toFloat(), y.toFloat(), container.inventory)
         }
     }
 

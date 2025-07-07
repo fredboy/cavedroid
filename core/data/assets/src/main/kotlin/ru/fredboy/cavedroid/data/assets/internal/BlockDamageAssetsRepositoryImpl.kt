@@ -1,9 +1,8 @@
 package ru.fredboy.cavedroid.data.assets.internal
 
 import com.badlogic.gdx.graphics.g2d.Sprite
-import ru.fredboy.cavedroid.common.utils.BLOCK_SIZE_PX
-import ru.fredboy.cavedroid.common.utils.bl
-import ru.fredboy.cavedroid.common.utils.px
+import ru.fredboy.cavedroid.common.utils.PIXELS_PER_METER
+import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageAssetsRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,13 +17,13 @@ internal class BlockDamageAssetsRepositoryImpl @Inject constructor() : BlockDama
 
     private fun loadBlockDamage() {
         val blockDamageTexture = loadTexture(BLOCK_DAMAGE_SHEET_PATH)
-        val size = blockDamageTexture.width.bl
-        val blockSize = BLOCK_SIZE_PX.toInt()
+        val size = blockDamageTexture.width.meters.toInt()
+        val blockSize = PIXELS_PER_METER.toInt()
 
         blockDamageSprites = Array(size) { index ->
             flippedSprite(
                 texture = blockDamageTexture,
-                x = index.px.toInt(),
+                x = (index * PIXELS_PER_METER).toInt(),
                 y = 0,
                 width = blockSize,
                 height = blockSize,

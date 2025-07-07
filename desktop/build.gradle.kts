@@ -48,4 +48,5 @@ dependencies {
     implementation(Dependencies.LibGDX.gdx)
     implementation(Dependencies.LibGDX.Desktop.backend)
     implementation(Dependencies.LibGDX.Desktop.natives)
+    implementation(Dependencies.LibGDX.Box2d.Natives.desktop)
 }

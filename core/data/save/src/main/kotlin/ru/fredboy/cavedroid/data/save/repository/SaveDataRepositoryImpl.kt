@@ -251,7 +251,10 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             }
     }
 
-    override fun loadMobController(gameDataFolder: String, mobWorldAdapter: MobWorldAdapter): MobController {
+    override fun loadMobController(
+        gameDataFolder: String,
+        mobWorldAdapter: MobWorldAdapter,
+    ): MobController {
         val savesPath = "$gameDataFolder$SAVES_DIR"
         val mobsFile = Gdx.files.absolute("$savesPath$MOBS_FILE")
         val mobsBytes = mobsFile.readBytes()

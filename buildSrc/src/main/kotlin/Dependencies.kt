@@ -3,6 +3,20 @@ object Dependencies {
     object LibGDX {
         const val gdx = "com.badlogicgames.gdx:gdx:${Versions.gdx}"
 
+        object Box2d {
+            const val box2d = "com.badlogicgames.gdx:gdx-box2d:${Versions.gdx}"
+            object Natives {
+                object Android {
+                    const val armeabi = "com.badlogicgames.gdx:gdx-box2d-platform:${Versions.gdx}:natives-armeabi-v7a"
+                    const val arm64 = "com.badlogicgames.gdx:gdx-box2d-platform:${Versions.gdx}:natives-arm64-v8a"
+                    const val x86 = "com.badlogicgames.gdx:gdx-box2d-platform:${Versions.gdx}:natives-x86"
+                    const val x86_64 = "com.badlogicgames.gdx:gdx-box2d-platform:${Versions.gdx}:natives-x86_64"
+                }
+
+                const val desktop = "com.badlogicgames.gdx:gdx-box2d-platform:${Versions.gdx}:natives-desktop"
+                const val ios = "com.badlogicgames.gdx:gdx-box2d-platform:${Versions.gdx}:natives-ios"
+            }
+        }
         object Android {
             const val backend = "com.badlogicgames.gdx:gdx-backend-android:${Versions.gdx}"
 

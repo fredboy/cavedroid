@@ -127,5 +127,10 @@ dependencies {
     natives(Dependencies.LibGDX.Android.Natives.x86)
     natives(Dependencies.LibGDX.Android.Natives.x86_64)
 
+    natives(Dependencies.LibGDX.Box2d.Natives.Android.armeabi)
+    natives(Dependencies.LibGDX.Box2d.Natives.Android.arm64)
+    natives(Dependencies.LibGDX.Box2d.Natives.Android.x86)
+    natives(Dependencies.LibGDX.Box2d.Natives.Android.x86_64)
+
     configurations["implementation"].exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk8")
 }

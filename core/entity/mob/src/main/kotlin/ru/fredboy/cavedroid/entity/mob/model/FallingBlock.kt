@@ -1,20 +1,14 @@
 package ru.fredboy.cavedroid.entity.mob.model
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import ru.fredboy.cavedroid.common.utils.px
+import ru.fredboy.cavedroid.common.utils.floor
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobBehavior
 
 class FallingBlock(
     val block: Block,
-    x: Float,
-    y: Float,
     behavior: MobBehavior,
-) : Mob(x, y, 1.px, 1.px, Direction.RIGHT, Int.MAX_VALUE, behavior) {
-
-    init {
-        velocity.y = 1f
-    }
+) : Mob(.9f, 1f, Direction.RIGHT, Int.MAX_VALUE, behavior) {
 
     override val speed get() = 0f
 
@@ -28,6 +22,6 @@ class FallingBlock(
         y: Float,
         delta: Float,
     ) {
-        block.draw(spriteBatch, x, y)
+        block.draw(spriteBatch, x.floor, y)
     }
 }

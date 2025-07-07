@@ -4,9 +4,9 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import ru.fredboy.cavedroid.common.utils.PIXELS_PER_METER
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.common.utils.drawString
-import ru.fredboy.cavedroid.common.utils.px
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
@@ -94,7 +94,13 @@ class InventoryItem(
         val sprite = item.sprite
         val placeableMarginTop = (item as? Item.Placeable)?.block?.params?.spriteMargins?.top ?: 0
         val placeableMarginLeft = (item as? Item.Placeable)?.block?.params?.spriteMargins?.left ?: 0
-        spriteBatch.drawSprite(sprite, x + placeableMarginLeft, y + placeableMarginTop)
+        spriteBatch.drawSprite(
+            sprite = sprite,
+            x = x + placeableMarginLeft,
+            y = y + placeableMarginTop,
+            width = sprite.regionWidth.toFloat(),
+            height = sprite.regionHeight.toFloat(),
+        )
 
         if (amount < 2) {
             return
@@ -106,8 +112,8 @@ class InventoryItem(
             shapeRenderer.color = Color.GREEN
             shapeRenderer.rect(
                 /* x = */ x,
-                /* y = */ y + 1.px - 2,
-                /* width = */ 1.px * (amount.toFloat() / item.params.maxStack.toFloat()),
+                /* y = */ y + (PIXELS_PER_METER) - 2,
+                /* width = */ PIXELS_PER_METER * (amount.toFloat() / item.params.maxStack.toFloat()),
                 /* height = */ 2f,
             )
             shapeRenderer.end()
@@ -118,8 +124,8 @@ class InventoryItem(
                 spriteBatch = spriteBatch,
                 font = font,
                 text = amountString,
-                x = x + 1.px - getStringWidth(amountString),
-                y = y + 1.px - getStringHeight(amountString),
+                x = x + PIXELS_PER_METER - getStringWidth(amountString),
+                y = y + PIXELS_PER_METER - getStringHeight(amountString),
             )
         }
     }

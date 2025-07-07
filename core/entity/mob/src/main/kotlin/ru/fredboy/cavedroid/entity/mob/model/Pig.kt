@@ -11,20 +11,14 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobBehavior
 
 class Pig(
     private val sprite: MobSprite.Pig,
-    x: Float,
-    y: Float,
     behavior: MobBehavior,
-) : Mob(x, y, WIDTH, HEIGHT, Direction.random(), MAX_HEALTH, behavior) {
+) : Mob(WIDTH, HEIGHT, Direction.random(), MAX_HEALTH, behavior) {
 
     override val speed get() = SPEED
 
     override fun changeDir() {
         switchDir()
-        velocity = Vector2(direction.basis * speed, 0f)
-    }
-
-    override fun jump() {
-        velocity.y = JUMP_VELOCITY
+        controlVector.set(Vector2(direction.basis * speed, 0f))
     }
 
     override fun damage(damage: Int) {
@@ -37,7 +31,9 @@ class Pig(
         }
     }
 
-    override fun getDropItems(itemByKey: GetItemByKeyUseCase): List<InventoryItem> = listOf(itemByKey["porkchop_raw"].toInventoryItem())
+    override fun getDropItems(itemByKey: GetItemByKeyUseCase): List<InventoryItem> {
+        return listOf(itemByKey["porkchop_raw"].toInventoryItem())
+    }
 
     override fun draw(
         spriteBatch: SpriteBatch,
@@ -65,10 +61,9 @@ class Pig(
     }
 
     companion object {
-        private const val WIDTH = 25f
-        private const val HEIGHT = 18f
-        private const val SPEED = 48f
-        private const val JUMP_VELOCITY = -133.332f
+        private const val WIDTH = 1.5625f
+        private const val HEIGHT = 1.125f
+        private const val SPEED = 3f
         private const val MAX_HEALTH = 10
     }
 }

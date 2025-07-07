@@ -19,7 +19,7 @@ class GameWorldMobDamageControllerTask @Inject constructor(
             yield(mobController.player)
             yieldAll(mobController.mobs)
         }.forEach { mob ->
-            forEachBlockInArea(mob) { x, y ->
+            forEachBlockInArea(mob.hitbox) { x, y ->
                 val foregroundBlock = gameWorld.getForeMap(x, y)
                 val backgroundBlock = gameWorld.getBackMap(x, y)
 

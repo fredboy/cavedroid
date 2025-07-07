@@ -12,6 +12,7 @@ dependencies {
 
     useCommonModule()
     useModule(":core:domain:items")
+    useModule(":core:domain:configuration")
     useModule(":core:domain:world")
     useModule(":core:entity:container")
     useModule(":core:entity:drop")

@@ -1,25 +1,11 @@
 package ru.fredboy.cavedroid.common.utils
 
-import com.badlogic.gdx.math.MathUtils
+import kotlin.math.floor
 
-const val BLOCK_SIZE_PX = 16f
+const val PIXELS_PER_METER = 16f
 
-/**
- * Converts this value in BLOCKS into pixels
- */
-val Float.px get() = this * BLOCK_SIZE_PX
+val Float.meters get() = this / PIXELS_PER_METER
 
-/**
- * Converts this value in BLOCKS into pixels
- */
-val Int.px get() = this * BLOCK_SIZE_PX
+val Int.meters get() = this.toFloat().meters
 
-/**
- * Converts this value in PIXELS into blocks
- */
-val Float.bl get() = MathUtils.floor(this / BLOCK_SIZE_PX)
-
-/**
- * Converts this value in PIXELS into blocks
- */
-val Int.bl get() = MathUtils.floor(this / BLOCK_SIZE_PX)
+val Float.floor get() = floor(this)

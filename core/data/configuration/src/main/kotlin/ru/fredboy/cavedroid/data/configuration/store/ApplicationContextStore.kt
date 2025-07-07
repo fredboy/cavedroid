@@ -53,9 +53,17 @@ class ApplicationContextStore @Inject constructor(
             preferencesStore.setPreference(KEY_SCREEN_SCALE_PREF, value.toString())
         }
 
+    var isAutoJumpEnabled: Boolean
+        get() = synchronized(lock) { applicationContext.isAutoJumpEnabled }
+        set(value) = synchronized(lock) {
+            applicationContext.isAutoJumpEnabled = value
+            preferencesStore.setPreference(KEY_AUTO_JUMP_PREF, value.toString())
+        }
+
     private companion object {
         private const val KEY_FULLSCREEN_PREF = "fullscreen"
         private const val KEY_DYNAMIC_CAMERA_PREF = "dyncam"
         private const val KEY_SCREEN_SCALE_PREF = "screen_scale"
+        private const val KEY_AUTO_JUMP_PREF = "auto_jump"
     }
 }

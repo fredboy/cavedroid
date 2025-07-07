@@ -36,23 +36,37 @@
       "type": "numerical_option",
       "label": "Screen Scale: x%d",
       "actionKey": "screen_scale_action",
-      "options": ["screen_scale"]
+      "options": [
+        "screen_scale"
+      ]
     },
     "dyncam": {
       "type": "boolean_option",
       "label": "Dynamic Camera: %s",
       "actionKey": "toggle_dyncam_action",
-      "options": ["dyncam"]
+      "options": [
+        "dyncam"
+      ]
     },
     "fullscreen": {
       "type": "boolean_option",
       "label": "Fullscreen: %s",
       "actionKey": "toggle_fullscreen_action",
-      "options": ["fullscreen"],
+      "options": [
+        "fullscreen"
+      ],
       "visibility": {
         "android": false,
         "ios": false
       }
+    },
+    "auto_jump": {
+      "type": "boolean_option",
+      "label": "Auto Jumping: %s",
+      "actionKey": "toggle_auto_jump_action",
+      "options": [
+        "auto_jump"
+      ]
     },
     "back": {
       "label": "Back",

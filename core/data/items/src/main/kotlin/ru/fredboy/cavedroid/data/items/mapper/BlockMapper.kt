@@ -14,7 +14,7 @@ import ru.fredboy.cavedroid.domain.items.model.block.Block.Slab
 import ru.fredboy.cavedroid.domain.items.model.block.Block.Water
 import ru.fredboy.cavedroid.domain.items.model.block.BlockAnimationInfo
 import ru.fredboy.cavedroid.domain.items.model.block.BlockDropInfo
-import ru.fredboy.cavedroid.domain.items.model.block.BlockMargins
+import ru.fredboy.cavedroid.domain.items.model.block.BlockInsets
 import ru.fredboy.cavedroid.domain.items.model.block.CommonBlockParams
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import javax.inject.Inject
@@ -41,12 +41,12 @@ class BlockMapper @Inject constructor(
 
     private fun mapCommonParams(key: String, dto: BlockDto): CommonBlockParams = CommonBlockParams(
         key = key,
-        collisionMargins = BlockMargins(
+        collisionMargins = BlockInsets.Pixels(
             left = dto.left,
             top = dto.top,
             right = dto.right,
             bottom = dto.bottom,
-        ),
+        ).toMeters(),
         hitPoints = dto.hp,
         dropInfo = mapBlockDropInfo(dto),
         hasCollision = dto.collision,
@@ -55,7 +55,7 @@ class BlockMapper @Inject constructor(
         requiresBlock = dto.blockRequired,
         animationInfo = mapBlockAnimationInfo(dto),
         texture = getTexture(dto.texture),
-        spriteMargins = BlockMargins(
+        spriteMargins = BlockInsets.Pixels(
             left = dto.spriteLeft,
             top = dto.spriteTop,
             right = dto.spriteRight,

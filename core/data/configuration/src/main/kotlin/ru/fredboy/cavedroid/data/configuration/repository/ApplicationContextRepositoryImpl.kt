@@ -27,6 +27,8 @@ class ApplicationContextRepositoryImpl @Inject constructor(
 
     override fun getScreenScale(): Int = applicationContextStore.screenScale
 
+    override fun isAutoJumpEnabled(): Boolean = applicationContextStore.isAutoJumpEnabled
+
     override fun setTouch(isTouch: Boolean) {
         applicationContextStore.isTouch = isTouch
     }
@@ -64,5 +66,9 @@ class ApplicationContextRepositoryImpl @Inject constructor(
 
     override fun setScreenScale(scale: Int) {
         applicationContextStore.screenScale = scale
+    }
+
+    override fun setAutoJumpEnabled(enabled: Boolean) {
+        applicationContextStore.isAutoJumpEnabled = enabled
     }
 }

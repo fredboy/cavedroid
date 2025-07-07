@@ -9,4 +9,5 @@ class ApplicationContext(
     internal var width: Float,
     internal var height: Float,
     internal var screenScale: Int,
+    internal var isAutoJumpEnabled: Boolean,
 )

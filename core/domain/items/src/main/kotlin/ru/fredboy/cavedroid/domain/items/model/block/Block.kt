@@ -4,8 +4,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.TimeUtils
-import ru.fredboy.cavedroid.common.utils.BLOCK_SIZE_PX
+import ru.fredboy.cavedroid.common.utils.PIXELS_PER_METER
 import ru.fredboy.cavedroid.common.utils.colorFromHexString
+import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
@@ -15,11 +16,11 @@ sealed class Block {
 
     abstract val params: CommonBlockParams
 
-    val width: Float get() = BLOCK_SIZE_PX - params.collisionMargins.left - params.collisionMargins.right
-    val height: Float get() = BLOCK_SIZE_PX - params.collisionMargins.top - params.collisionMargins.bottom
+    val width get() = 1f - params.collisionMargins.left - params.collisionMargins.right
+    val height get() = 1f - params.collisionMargins.top - params.collisionMargins.bottom
 
-    val spriteWidth: Float get() = BLOCK_SIZE_PX - params.spriteMargins.left - params.spriteMargins.right
-    val spriteHeight: Float get() = BLOCK_SIZE_PX - params.spriteMargins.top - params.spriteMargins.bottom
+    val spriteWidthMeters get() = (PIXELS_PER_METER - params.spriteMargins.left - params.spriteMargins.right).meters
+    val spriteHeightMeters get() = (PIXELS_PER_METER - params.spriteMargins.top - params.spriteMargins.bottom).meters
 
     protected var animation: Array<Sprite>? = null
 
@@ -79,10 +80,10 @@ sealed class Block {
     fun draw(spriter: SpriteBatch, x: Float, y: Float) {
         sprite.apply {
             setBounds(
-                /* x = */ x + params.spriteMargins.left,
-                /* y = */ y + params.spriteMargins.top,
-                /* width = */ spriteWidth,
-                /* height = */ spriteHeight,
+                /* x = */ x + params.spriteMarginsMeters.left,
+                /* y = */ y + params.spriteMarginsMeters.top,
+                /* width = */ spriteWidthMeters,
+                /* height = */ spriteHeightMeters,
             )
             draw(spriter)
         }
@@ -129,8 +130,8 @@ sealed class Block {
     }
 
     fun getRectangle(x: Int, y: Int): Rectangle = Rectangle(
-        /* x = */ x * BLOCK_SIZE_PX + params.collisionMargins.left,
-        /* y = */ y * BLOCK_SIZE_PX + params.collisionMargins.top,
+        /* x = */ x.toFloat() + params.collisionMargins.left,
+        /* y = */ y.toFloat() + params.collisionMargins.top,
         /* width = */ width,
         /* height = */ height,
     )
@@ -163,10 +164,10 @@ sealed class Block {
         fun draw(spriter: SpriteBatch, x: Float, y: Float, isActive: Boolean) {
             getSprite(isActive).apply {
                 setBounds(
-                    /* x = */ x + params.spriteMargins.left,
-                    /* y = */ y + params.spriteMargins.top,
-                    /* width = */ spriteWidth,
-                    /* height = */ spriteHeight,
+                    /* x = */ x + params.spriteMarginsMeters.left,
+                    /* y = */ y + params.spriteMarginsMeters.top,
+                    /* width = */ spriteWidthMeters,
+                    /* height = */ spriteHeightMeters,
                 )
                 draw(spriter)
             }

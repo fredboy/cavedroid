@@ -1,7 +1,6 @@
 package ru.fredboy.cavedroid.zygote.game
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.model.Joystick
 import ru.fredboy.cavedroid.data.configuration.model.GameContext
@@ -34,13 +33,12 @@ class GameScreen @Inject constructor(
                 /* width = */ applicationContextRepository.getWidth(),
                 /* height = */ applicationContextRepository.getHeight(),
             ),
-            camera = OrthographicCamera().apply {
-                setToOrtho(
-                    /* yDown = */ true,
-                    /* viewportWidth = */ applicationContextRepository.getWidth(),
-                    /* viewportHeight = */ applicationContextRepository.getHeight(),
-                )
-            },
+            visibleWorld = Rectangle(
+                /* x = */ 0f,
+                /* y = */ 0f,
+                /* width = */ applicationContextRepository.getWidth(),
+                /* height = */ applicationContextRepository.getHeight(),
+            ),
         ),
     )
 
@@ -92,11 +90,6 @@ class GameScreen @Inject constructor(
                 setWidth(applicationContextRepository.getWidth())
                 setHeight(applicationContextRepository.getHeight())
             }
-            cameraContext.camera.setToOrtho(
-                /* yDown = */ true,
-                /* viewportWidth = */ applicationContextRepository.getWidth(),
-                /* viewportHeight = */ applicationContextRepository.getHeight(),
-            )
         }
 
         gameComponent?.gameProc?.onResize()

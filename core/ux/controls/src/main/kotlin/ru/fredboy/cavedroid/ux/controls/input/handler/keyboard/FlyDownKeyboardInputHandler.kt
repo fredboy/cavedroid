@@ -23,9 +23,9 @@ class FlyDownKeyboardInputHandler @Inject constructor(
 
     override fun handle(action: KeyboardInputAction) {
         if (action.isKeyDown) {
-            mobController.player.velocity.y = mobController.player.speed
+            mobController.player.controlVector.y = mobController.player.speed
         } else {
-            mobController.player.velocity.y = 0f
+            mobController.player.controlVector.y = 0f
         }
     }
 }

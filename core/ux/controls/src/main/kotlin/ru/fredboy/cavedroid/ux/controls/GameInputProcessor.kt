@@ -5,12 +5,11 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.common.model.Joystick
+import ru.fredboy.cavedroid.common.utils.PIXELS_PER_METER
 import ru.fredboy.cavedroid.domain.assets.model.TouchButton
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
-import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.ux.controls.input.IKeyboardInputHandler
@@ -27,7 +26,6 @@ import kotlin.math.abs
 class GameInputProcessor @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
-    private val mobController: MobController,
     private val getTouchButtonsUseCase: GetTouchButtonsUseCase,
     private val cursorMouseInputHandler: CursorMouseInputHandler,
     private val mouseInputActionMapper: MouseInputActionMapper,
@@ -95,10 +93,10 @@ class GameInputProcessor @Inject constructor(
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val (touchX, touchY) = gameContextRepository.getCameraContext().getViewportCoordinates(screenX, screenY)
 
-        val joy: Joystick? = gameContextRepository.getJoystick()
+        val joy = gameContextRepository.getJoystick()
 
         if (applicationContextRepository.isTouch()) {
-            if (joy != null && joy.active && joy.pointer == pointer) {
+            if (joy.active && joy.pointer == pointer) {
                 return onMouseActionEvent(
                     mouseX = screenX,
                     mouseY = screenY,
@@ -165,19 +163,47 @@ class GameInputProcessor @Inject constructor(
         return handleMouseAction(action)
     }
 
+    fun onResize() {
+        val halfWidth = applicationContextRepository.getWidth() / 2
+        val halfHeight = applicationContextRepository.getHeight() / 2
+        mouseLeftTouchButton.rectangle.apply {
+            x = halfWidth
+            y = 0f
+            width = halfWidth
+            height = halfHeight
+        }
+        mouseRightTouchButton.rectangle.apply {
+            x = halfWidth
+            y = halfHeight
+            width = halfWidth
+            height = halfHeight
+        }
+    }
+
     @Suppress("unused")
     fun update(delta: Float) {
         handleMousePosition()
+
+        gameContextRepository.getJoystick()
+            .takeIf { joystick -> joystick.active }
+            ?.let { joystick ->
+                joystick.updateState(
+                    touchX = applicationContextRepository.getWidth() / Gdx.graphics.width * Gdx.input.getX(joystick.pointer),
+                    touchY = applicationContextRepository.getHeight() / Gdx.graphics.height * Gdx.input.getY(joystick.pointer),
+                )
+            }
     }
 
     private val TouchButton.rectangleOnScreen
         get() = Rectangle(
-            /* x = */ if (rectangle.x < 0f) {
+            /* x = */
+            if (rectangle.x < 0f) {
                 applicationContextRepository.getWidth() + rectangle.x
             } else {
                 rectangle.x
             },
-            /* y = */ if (rectangle.y < 0f) {
+            /* y = */
+            if (rectangle.y < 0f) {
                 applicationContextRepository.getHeight() + rectangle.y
             } else {
                 rectangle.y
@@ -271,7 +297,12 @@ class GameInputProcessor @Inject constructor(
             screenX = screenX,
             screenY = screenY,
             actionKey = MouseInputActionKey.None,
-            cameraViewport = cameraContext.viewport,
+            cameraViewport = Rectangle().apply {
+                x = cameraContext.visibleWorld.x * PIXELS_PER_METER
+                y = cameraContext.visibleWorld.y * PIXELS_PER_METER
+                width = applicationContextRepository.getWidth()
+                height = applicationContextRepository.getHeight()
+            },
         )
 
         cursorMouseInputHandler.handle(action)

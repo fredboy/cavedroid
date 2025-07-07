@@ -5,6 +5,7 @@ import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.assets.usecase.GetPlayerSpritesUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.behavior.PlayerMobBehavior
 import javax.inject.Inject
@@ -20,8 +21,8 @@ class PlayerMapper @Inject constructor(
 
     fun mapSaveData(player: Player): SaveDataDto.PlayerSaveDataDto = SaveDataDto.PlayerSaveDataDto(
         version = SAVE_DATA_VERSION,
-        x = player.x,
-        y = player.y,
+        x = player.position.x,
+        y = player.position.y,
         width = player.width,
         height = player.height,
         velocityX = player.velocity.x,
@@ -51,24 +52,23 @@ class PlayerMapper @Inject constructor(
         activeSlot = player.activeSlot,
     )
 
-    fun mapPlayer(saveDataDto: SaveDataDto.PlayerSaveDataDto): Player {
+    fun mapPlayer(
+        saveDataDto: SaveDataDto.PlayerSaveDataDto,
+        mobWorldAdapter: MobWorldAdapter,
+    ): Player {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
         return Player(
             sprite = getPlayerSpritesUseCase(),
             getFallbackItem = getFallbackItemUseCase,
-            x = saveDataDto.x,
-            y = saveDataDto.y,
             behavior = PlayerMobBehavior(),
         ).apply {
-            width = saveDataDto.width
-            height = saveDataDto.height
+            spawn(saveDataDto.x - width / 2f, saveDataDto.y - height / 2f, mobWorldAdapter.getBox2dWorld())
             velocity.x = saveDataDto.velocityX
-            velocity.x = saveDataDto.velocityY
+            velocity.y = saveDataDto.velocityY
             animDelta = saveDataDto.animDelta
             anim = saveDataDto.anim
             direction = directionMapper.mapDirection(saveDataDto.direction)
-            canJump = saveDataDto.canJump
             isFlyMode = saveDataDto.flyMode
             health = saveDataDto.health
             isHitting = saveDataDto.hitting

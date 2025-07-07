@@ -33,9 +33,9 @@ class GameAssetsHolder @Inject constructor(
         blockDamageAssetsRepository,
         fontAssetsRepository,
         itemsAssetsRepository,
-        mobAssetsRepository,
         textureRegionsAssetsRepository,
         touchButtonsAssetsRepository,
+        mobAssetsRepository,
     )
 
     fun initializeRepository() {

@@ -5,7 +5,7 @@ import ru.fredboy.cavedroid.domain.items.model.item.Item
 
 data class CommonBlockParams(
     val key: String,
-    val collisionMargins: BlockMargins,
+    val collisionMargins: BlockInsets.Meters,
     val hitPoints: Int,
     val dropInfo: BlockDropInfo?,
     val hasCollision: Boolean,
@@ -14,10 +14,12 @@ data class CommonBlockParams(
     val requiresBlock: Boolean,
     val animationInfo: BlockAnimationInfo?,
     val texture: Texture?,
-    val spriteMargins: BlockMargins,
+    val spriteMargins: BlockInsets.Pixels,
     val toolLevel: Int,
     val toolType: Class<out Item.Tool>?,
     val damage: Int,
     val tint: String?,
     val isFallable: Boolean,
-)
+) {
+    val spriteMarginsMeters by lazy { spriteMargins.toMeters() }
+}
