@@ -31,4 +31,6 @@ interface ApplicationContextRepository {
     fun setHeight(height: Float)
 
     fun setScreenScale(scale: Int)
+    fun isAutoJumpEnabled(): Boolean
+    fun setAutoJumpEnabled(enabled: Boolean)
 }

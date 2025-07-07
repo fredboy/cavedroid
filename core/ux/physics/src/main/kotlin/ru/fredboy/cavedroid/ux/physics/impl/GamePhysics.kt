@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.ux.physics.impl
 
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.ifTrue
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.entity.drop.model.Drop
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.model.Player
@@ -9,7 +10,9 @@ import ru.fredboy.cavedroid.game.world.abstraction.GamePhysicsController
 import javax.inject.Inject
 
 @GameScope
-internal class GamePhysics @Inject constructor() : GamePhysicsController() {
+internal class GamePhysics @Inject constructor(
+    private val applicationContextRepository: ApplicationContextRepository,
+) : GamePhysicsController() {
     override fun Mob.pickUpDrop(drop: Drop) {
         (this as? Player)?.inventory?.pickUpItem(drop.inventoryItem)?.ifTrue {
             drop.isPickedUp = true
@@ -35,6 +38,10 @@ internal class GamePhysics @Inject constructor() : GamePhysicsController() {
     }
 
     override fun Mob.onShouldJump() {
+        if (this is Player && !applicationContextRepository.isAutoJumpEnabled()) {
+            return
+        }
+
         if (controlVector.x != 0f) {
             jump()
         }
