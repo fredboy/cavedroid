@@ -9,10 +9,12 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
+import com.badlogic.gdx.physics.box2d.EdgeShape
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Disposable
+import com.badlogic.gdx.utils.TimeUtils
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.utils.Vector2Proxy
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
@@ -60,7 +62,7 @@ abstract class Mob(
         protected set
 
     val canJump: Boolean
-        get() = footContactCounter > 0
+        get() = footContactCounter > 0 && TimeUtils.timeSinceMillis(lastJumpMs) >= JUMP_COOLDOWN_MS
 
     var isFlyMode = false
         set(value) {
@@ -75,6 +77,8 @@ abstract class Mob(
     var health = maxHealth
 
     var footContactCounter = 0
+
+    private var lastJumpMs = 0L
 
     var takingDamage = false
         set(value) {
@@ -117,7 +121,7 @@ abstract class Mob(
 
         val bodyDef = BodyDef().apply {
             type = BodyDef.BodyType.DynamicBody
-            position.set(x + width / 2f, y + height / 2f)
+            position.set(x, y)
             fixedRotation = true
         }
 
@@ -167,7 +171,7 @@ abstract class Mob(
         }
 
         val jumpSensorShape = PolygonShape().apply {
-            setAsBox(width / 2f, .0625f, Vector2(0f, height / 2f + .0625f), 0f)
+            setAsBox(width / 4f, .0625f, Vector2(0f, height / 2f + .0625f), 0f)
         }
 
         val jumpSensorFixtureDef = FixtureDef().apply {
@@ -177,19 +181,33 @@ abstract class Mob(
             filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
         }
 
+        val autoJumpSensorShape = EdgeShape().apply {
+            set(-2f, height / 2f - .8f, 2f, height / 2f - .8f)
+        }
+
+        val autoJumpFixtureDef = FixtureDef().apply {
+            shape = autoJumpSensorShape
+            isSensor = true
+            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
+        }
+
         body.createFixture(bodyFixtureDef)
         body.createFixture(leftLegFixtureDef)
         body.createFixture(rightLegFixtureDef)
         body.createFixture(jumpSensorFixtureDef).apply {
             userData = ContactSensorType.MOB_ON_GROUND
         }
+        body.createFixture(autoJumpFixtureDef).apply {
+            userData = ContactSensorType.MOB_SHOULD_JUMP
+        }
 
-        body.linearDamping = 1.5f
+        body.linearDamping = 1f
 
         bodyShape.dispose()
         leftLegShape.dispose()
         rightLegShape.dispose()
         jumpSensorShape.dispose()
+        autoJumpSensorShape.dispose()
     }
 
     private fun isAnimationIncreasing(): Boolean = anim > 0 && animDelta > 0 || anim < 0 && animDelta < 0
@@ -306,7 +324,19 @@ abstract class Mob(
 
     abstract fun changeDir()
 
-    abstract fun jump()
+    open fun jump() {
+        if (!canJump) {
+            return
+        }
+
+        body.applyLinearImpulse(
+            /* impulse = */ Vector2(0f, JUMP_VELOCITY),
+            /* point = */ body.worldCenter,
+            /* wake = */ true,
+        )
+
+        lastJumpMs = TimeUtils.millis()
+    }
 
     override fun dispose() {
         body.world.destroyBody(body)
@@ -331,5 +361,9 @@ abstract class Mob(
 
         private const val DAMAGE_TINT_TIMEOUT_S = 0.5f
         private val DAMAGE_TINT_COLOR = Color((0xff8080 shl 8) or 0xFF)
+
+        private const val JUMP_VELOCITY = -3f
+
+        private const val JUMP_COOLDOWN_MS = 500L
     }
 }

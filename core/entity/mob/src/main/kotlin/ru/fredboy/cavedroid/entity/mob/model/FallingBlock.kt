@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.entity.mob.model
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import ru.fredboy.cavedroid.common.utils.floor
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobBehavior
 
@@ -21,6 +22,6 @@ class FallingBlock(
         y: Float,
         delta: Float,
     ) {
-        block.draw(spriteBatch, x, y)
+        block.draw(spriteBatch, x.floor, y)
     }
 }

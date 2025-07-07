@@ -95,9 +95,6 @@ class GameRenderer @Inject constructor(
 
         val moveVector = cameraTargetPosition.sub(camera.position)
 
-        cameraCenterToPlayer.x = player.x - camera.position.x
-        cameraCenterToPlayer.y = player.y - camera.position.y
-
         if (followPlayer && player.controlVector.isZero) {
             cameraDelayMs = TimeUtils.millis()
         }
@@ -109,6 +106,9 @@ class GameRenderer @Inject constructor(
             )
             return
         }
+
+        cameraCenterToPlayer.x = player.x - camera.position.x
+        cameraCenterToPlayer.y = player.y - camera.position.y
 
         val worldWidthScreenOffset: Float = gameWorld.width - camera.viewportWidth / 2
 

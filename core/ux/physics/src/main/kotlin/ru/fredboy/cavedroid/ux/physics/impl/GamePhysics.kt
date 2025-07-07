@@ -35,7 +35,9 @@ internal class GamePhysics @Inject constructor() : GamePhysicsController() {
     }
 
     override fun Mob.onShouldJump() {
-        // TODO: auto jump
+        if (controlVector.x != 0f) {
+            jump()
+        }
     }
 
     override fun Drop.onTouchGround() {

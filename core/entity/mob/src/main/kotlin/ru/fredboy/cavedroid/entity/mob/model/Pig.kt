@@ -21,10 +21,6 @@ class Pig(
         controlVector.set(Vector2(direction.basis * speed, 0f))
     }
 
-    override fun jump() {
-        velocity.y = JUMP_VELOCITY
-    }
-
     override fun damage(damage: Int) {
         super.damage(damage)
 
@@ -68,7 +64,6 @@ class Pig(
         private const val WIDTH = 1.5625f
         private const val HEIGHT = 1.125f
         private const val SPEED = 3f
-        private const val JUMP_VELOCITY = -3f
         private const val MAX_HEALTH = 10
     }
 }

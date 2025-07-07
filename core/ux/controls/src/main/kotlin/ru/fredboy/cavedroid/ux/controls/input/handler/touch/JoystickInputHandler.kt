@@ -119,10 +119,6 @@ class JoystickInputHandler @Inject constructor(
         val joystick = gameContextRepository.getJoystick()
         val joyVector = joystick.getVelocityVector()
 
-        if (mobController.player.isFlyMode) {
-            joyVector.scl(2f)
-        }
-
         mobController.player.controlVector.x = joyVector.x
 
         mobController.player.direction = if (joyVector.x < 0) {

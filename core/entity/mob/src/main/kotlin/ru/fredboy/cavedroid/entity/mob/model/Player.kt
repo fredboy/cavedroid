@@ -63,14 +63,6 @@ class Player(
 
     override fun changeDir() = Unit
 
-    override fun jump() {
-        body.applyLinearImpulse(
-            /* impulse = */ Vector2(0f, JUMP_VELOCITY),
-            /* point = */ body.worldCenter,
-            /* wake = */ true,
-        )
-    }
-
     override fun damage(damage: Int) {
         if (gameMode == 1) {
             return
@@ -267,7 +259,6 @@ class Player(
         const val HEIGHT = 1.9375f
 
         const val SPEED = 6.26f
-        private const val JUMP_VELOCITY = -3f
 
         private val HIT_ANIMATION_RANGE = 30f..90f
 

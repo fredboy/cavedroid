@@ -26,7 +26,9 @@ class PlaceSlabAction @Inject constructor(
                     gameWorld.getForeMap(x - 1, y) == placeable.topPartBlock ||
                     gameWorld.getForeMap(x + 1, y) == placeable.topPartBlock
                 ) &&
-            !gameWorld.hasForeAt(x, y + 1)
+            !gameWorld.hasForeAt(x, y) &&
+            !gameWorld.hasForeAt(x, y + 1) ||
+            gameWorld.getForeMap(x, y) == placeable.bottomPartBlock
         ) {
             placeable.topPartBlock
         } else {

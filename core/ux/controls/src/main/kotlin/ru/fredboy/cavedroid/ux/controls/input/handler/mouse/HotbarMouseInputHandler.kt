@@ -1,10 +1,10 @@
 package ru.fredboy.cavedroid.ux.controls.input.handler.mouse
 
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.items.model.item.Item
-import ru.fredboy.cavedroid.entity.drop.model.Drop
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -46,10 +46,11 @@ class HotbarMouseInputHandler @Inject constructor(
 
     private fun createDrop(item: Item, playerX: Float, playerY: Float, amount: Int) {
         dropController.addDrop(
-            /* x = */ playerX + ((DROP_DISTANCE - Drop.DROP_SIZE / 2) * mobController.player.direction.basis),
-            /* y = */ playerY,
-            /* item = */ item,
-            /* count = */ amount,
+            x = playerX + DROP_DISTANCE * mobController.player.direction.basis,
+            y = playerY,
+            item = item,
+            count = amount,
+            initialForce = Vector2(50f * mobController.player.direction.basis, -50f),
         )
     }
 

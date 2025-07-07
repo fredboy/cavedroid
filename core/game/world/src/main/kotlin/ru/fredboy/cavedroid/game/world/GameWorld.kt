@@ -40,10 +40,7 @@ class GameWorld @Inject constructor(
 
     val generatorConfig = WorldGeneratorConfig.getDefault()
 
-    val world: World = World(Vector2(0f, 9.8f), false).apply {
-        setContactListener(physicsController)
-    }
-
+    val world: World = World(Vector2(0f, 9.8f), false)
     val bodies = mutableMapOf<Pair<Int, Int>, Body>()
 
     private var box2dAccumulator: Float = 0f
@@ -63,6 +60,8 @@ class GameWorld @Inject constructor(
             foreMap = generatedFore
             backMap = generatedBack
         }
+
+        physicsController.attachToGameWorld(this)
     }
 
     private fun Block.createBody(x: Int, y: Int): Body? {
@@ -197,9 +196,11 @@ class GameWorld @Inject constructor(
         notifyBlockPlaced(x, y, layer, value)
     }
 
-    private fun isSameSlab(slab1: Block, slab2: Block): Boolean = slab1 is Block.Slab &&
-        slab2 is Block.Slab &&
-        (slab1.params.key == slab2.otherPartBlockKey || slab1.otherPartBlockKey == slab2.params.key)
+    private fun isSameSlab(slab1: Block, slab2: Block): Boolean {
+        return slab1 is Block.Slab &&
+            slab2 is Block.Slab &&
+            (slab1.params.key == slab2.otherPartBlockKey || slab1.otherPartBlockKey == slab2.params.key)
+    }
 
     fun hasForeAt(x: Int, y: Int): Boolean = !getMap(x, y, Layer.FOREGROUND).isNone()
 
@@ -228,7 +229,7 @@ class GameWorld @Inject constructor(
             setForeMap(x, y, value, dropOld)
             true
         } else if (value is Block.Slab && isSameSlab(value, getForeMap(x, y))) {
-            setForeMap(x, y, itemsRepository.getBlockByKey(value.otherPartBlockKey), dropOld)
+            setForeMap(x, y, itemsRepository.getBlockByKey(value.fullBlockKey), dropOld)
             true
         } else {
             false
@@ -290,6 +291,7 @@ class GameWorld @Inject constructor(
     }
 
     override fun dispose() {
+        physicsController.dispose()
         world.dispose()
     }
 
