@@ -41,7 +41,13 @@ class MobPhysicsFactoryImpl @Inject constructor(
     }
 
     private fun Body.createMainBodyFixture(width: Float, height: Float, physicsCategory: Short) {
-        val bodyShape = createBoxShape(0f, 0f, width, height - width / 2f)
+        val shapeHeight = if (width > height) {
+            height - width / 2f
+        } else {
+            height - width
+        }
+
+        val bodyShape = createBoxShape(0f, 0f, width, shapeHeight)
 
         FixtureDef().apply {
             shape = bodyShape
@@ -57,6 +63,10 @@ class MobPhysicsFactoryImpl @Inject constructor(
     }
 
     private fun Body.createFeetFixtures(width: Float, height: Float, physicsCategory: Short) {
+        if (height >= width) {
+            return createSingleFootFixture(width, height, physicsCategory)
+        }
+
         val footRadius = width / 4f
         val leftFootX = -(width / 4f)
         val rightFootX = width / 4f
@@ -78,6 +88,25 @@ class MobPhysicsFactoryImpl @Inject constructor(
             fixtureDef.shape = rightShape
             createFixture(fixtureDef)
             rightShape.dispose()
+        }
+    }
+
+    fun Body.createSingleFootFixture(width: Float, height: Float, physicsCategory: Short) {
+        val footRadius = width / 2f
+        val footX = 0f
+        val footY = height / 2f - footRadius
+
+        val footShape = createCircleShape(footRadius, footX, footY)
+
+        FixtureDef().apply {
+            friction = .2f
+            restitution = 0f
+            filter.categoryBits = physicsCategory
+            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
+        }.also { fixtureDef ->
+            fixtureDef.shape = footShape
+            createFixture(fixtureDef)
+            footShape.dispose()
         }
     }
 
