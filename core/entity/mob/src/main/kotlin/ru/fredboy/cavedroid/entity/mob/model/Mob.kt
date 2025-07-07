@@ -7,21 +7,15 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
-import com.badlogic.gdx.physics.box2d.BodyDef
-import com.badlogic.gdx.physics.box2d.CircleShape
-import com.badlogic.gdx.physics.box2d.EdgeShape
-import com.badlogic.gdx.physics.box2d.FixtureDef
-import com.badlogic.gdx.physics.box2d.PolygonShape
-import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.TimeUtils
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.utils.Vector2Proxy
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
-import ru.fredboy.cavedroid.domain.world.model.ContactSensorType
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobBehavior
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import kotlin.math.abs
 
@@ -103,12 +97,12 @@ abstract class Mob(
             Color.WHITE
         }
 
-    protected open val physicsCategory: Short
+    open val physicsCategory: Short
         get() = PhysicsConstants.CATEGORY_MOB
 
     abstract val speed: Float
 
-    fun spawn(x: Float, y: Float, world: World) {
+    fun spawn(x: Float, y: Float, factory: MobPhysicsFactory) {
         if (_body != null) {
             Gdx.app.error(
                 /* tag = */ TAG,
@@ -119,95 +113,7 @@ abstract class Mob(
             return
         }
 
-        val bodyDef = BodyDef().apply {
-            type = BodyDef.BodyType.DynamicBody
-            position.set(x, y)
-            fixedRotation = true
-        }
-
-        _body = world.createBody(bodyDef)
-
-        body.userData = this
-
-        val legShapeRadius = width / 4f
-
-        val bodyShape = PolygonShape().apply {
-            setAsBox(width / 2f, height / 2f - legShapeRadius)
-        }
-
-        val bodyFixtureDef = FixtureDef().apply {
-            shape = bodyShape
-            density = 1f
-            friction = .2f
-            restitution = 0f
-            filter.categoryBits = physicsCategory
-            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
-        }
-
-        val leftLegShape = CircleShape().apply {
-            radius = legShapeRadius
-            position = Vector2(-width / 2 + legShapeRadius, height / 2f - legShapeRadius)
-        }
-
-        val rightLegShape = CircleShape().apply {
-            radius = legShapeRadius
-            position = Vector2(width / 2 - legShapeRadius, height / 2f - legShapeRadius)
-        }
-
-        val leftLegFixtureDef = FixtureDef().apply {
-            shape = leftLegShape
-            friction = .2f
-            restitution = 0f
-            filter.categoryBits = physicsCategory
-            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
-        }
-
-        val rightLegFixtureDef = FixtureDef().apply {
-            shape = rightLegShape
-            friction = .2f
-            restitution = 0f
-            filter.categoryBits = physicsCategory
-            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
-        }
-
-        val jumpSensorShape = PolygonShape().apply {
-            setAsBox(width / 4f, .0625f, Vector2(0f, height / 2f + .0625f), 0f)
-        }
-
-        val jumpSensorFixtureDef = FixtureDef().apply {
-            shape = jumpSensorShape
-            isSensor = true
-            filter.categoryBits = physicsCategory
-            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
-        }
-
-        val autoJumpSensorShape = EdgeShape().apply {
-            set(-2f, height / 2f - .8f, 2f, height / 2f - .8f)
-        }
-
-        val autoJumpFixtureDef = FixtureDef().apply {
-            shape = autoJumpSensorShape
-            isSensor = true
-            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
-        }
-
-        body.createFixture(bodyFixtureDef)
-        body.createFixture(leftLegFixtureDef)
-        body.createFixture(rightLegFixtureDef)
-        body.createFixture(jumpSensorFixtureDef).apply {
-            userData = ContactSensorType.MOB_ON_GROUND
-        }
-        body.createFixture(autoJumpFixtureDef).apply {
-            userData = ContactSensorType.MOB_SHOULD_JUMP
-        }
-
-        body.linearDamping = 1f
-
-        bodyShape.dispose()
-        leftLegShape.dispose()
-        rightLegShape.dispose()
-        jumpSensorShape.dispose()
-        autoJumpSensorShape.dispose()
+        _body = factory.createBody(this, x, y, physicsCategory)
     }
 
     private fun isAnimationIncreasing(): Boolean = anim > 0 && animDelta > 0 || anim < 0 && animDelta < 0

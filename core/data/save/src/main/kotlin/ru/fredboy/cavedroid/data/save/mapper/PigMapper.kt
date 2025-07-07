@@ -3,7 +3,7 @@ package ru.fredboy.cavedroid.data.save.mapper
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.assets.usecase.GetPigSpritesUseCase
-import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.model.Pig
 import ru.fredboy.cavedroid.game.controller.mob.behavior.PigMobBehavior
 import javax.inject.Inject
@@ -34,7 +34,7 @@ class PigMapper @Inject constructor(
 
     fun mapPig(
         saveDataDto: SaveDataDto.PigSaveDataDto,
-        mobWorldAdapter: MobWorldAdapter,
+        mobPhysicsFactory: MobPhysicsFactory,
     ): Pig {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
@@ -42,7 +42,7 @@ class PigMapper @Inject constructor(
             sprite = getPigSpriteUseCase(),
             behavior = PigMobBehavior(),
         ).apply {
-            spawn(saveDataDto.x - width / 2f, saveDataDto.y - height / 2f, mobWorldAdapter.getBox2dWorld())
+            spawn(saveDataDto.x - width / 2f, saveDataDto.y - height / 2f, mobPhysicsFactory)
             velocity.x = saveDataDto.velocityX
             velocity.y = saveDataDto.velocityY
             animDelta = saveDataDto.animDelta

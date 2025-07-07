@@ -5,6 +5,7 @@ import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
@@ -40,6 +41,7 @@ interface SaveDataRepository {
     fun loadMobController(
         gameDataFolder: String,
         mobWorldAdapter: MobWorldAdapter,
+        mobPhysicsFactory: MobPhysicsFactory,
     ): MobController
 
     fun exists(gameDataFolder: String): Boolean

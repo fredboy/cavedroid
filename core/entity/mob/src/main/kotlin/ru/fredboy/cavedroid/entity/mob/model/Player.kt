@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.World
 import ru.fredboy.cavedroid.common.utils.applyOrigin
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.domain.assets.model.MobSprite
@@ -14,6 +13,7 @@ import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobBehavior
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 
 class Player(
     private val sprite: MobSprite.Player,
@@ -133,11 +133,11 @@ class Player(
         }
     }
 
-    fun respawn(spawnPoint: Vector2, world: World) {
+    fun respawn(spawnPoint: Vector2, mobPhysicsFactory: MobPhysicsFactory) {
         this.spawnPoint = spawnPoint
         isDead = false
         heal(maxHealth)
-        spawn(spawnPoint.x, spawnPoint.y, world)
+        spawn(spawnPoint.x, spawnPoint.y, mobPhysicsFactory)
     }
 
     fun startHitting(withDamage: Boolean = true) {

@@ -71,11 +71,6 @@ class PlayerMobBehavior :
             return
         }
 
-        if (isDead) {
-            dispose()
-            respawn(spawnPoint ?: worldAdapter.findSpawnPoint(), worldAdapter.getBox2dWorld())
-        }
-
         val (targetBlock, _) = worldAdapter.getTargetBlockWithLayer(cursorX, cursorY)
             ?.takeIf { isHitting && isHittingWithDamage }
             ?: run {

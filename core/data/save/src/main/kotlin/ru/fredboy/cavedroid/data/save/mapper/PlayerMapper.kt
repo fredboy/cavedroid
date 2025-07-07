@@ -5,7 +5,7 @@ import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.assets.usecase.GetPlayerSpritesUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
-import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.behavior.PlayerMobBehavior
 import javax.inject.Inject
@@ -54,7 +54,7 @@ class PlayerMapper @Inject constructor(
 
     fun mapPlayer(
         saveDataDto: SaveDataDto.PlayerSaveDataDto,
-        mobWorldAdapter: MobWorldAdapter,
+        mobPhysicsFactory: MobPhysicsFactory,
     ): Player {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
@@ -63,7 +63,7 @@ class PlayerMapper @Inject constructor(
             getFallbackItem = getFallbackItemUseCase,
             behavior = PlayerMobBehavior(),
         ).apply {
-            spawn(saveDataDto.x - width / 2f, saveDataDto.y - height / 2f, mobWorldAdapter.getBox2dWorld())
+            spawn(saveDataDto.x - width / 2f, saveDataDto.y - height / 2f, mobPhysicsFactory)
             velocity.x = saveDataDto.velocityX
             velocity.y = saveDataDto.velocityY
             animDelta = saveDataDto.animDelta

@@ -4,6 +4,7 @@ import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.FallingBlock
 import ru.fredboy.cavedroid.entity.mob.model.Pig
@@ -34,6 +35,7 @@ class MobControllerMapper @Inject constructor(
     fun mapMobController(
         saveDataDto: SaveDataDto.MobControllerSaveDataDto,
         mobWorldAdapter: MobWorldAdapter,
+        mobPhysicsFactory: MobPhysicsFactory,
     ): MobController {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
@@ -41,18 +43,19 @@ class MobControllerMapper @Inject constructor(
             mobAssetsRepository = mobAssetsRepository,
             getFallbackItemUseCase = getFallbackItemUseCase,
             mobWorldAdapter = mobWorldAdapter,
+            mobPhysicsFactory = mobPhysicsFactory,
         ).apply {
             (mobs as MutableList).addAll(
                 saveDataDto.mobs.mapNotNull { mob ->
                     when (mob) {
                         is SaveDataDto.PigSaveDataDto -> pigMapper.mapPig(
                             saveDataDto = mob,
-                            mobWorldAdapter = mobWorldAdapter,
+                            mobPhysicsFactory = mobPhysicsFactory,
                         )
 
                         is SaveDataDto.FallingBlockSaveDataDto -> fallingBlockMapper.mapFallingBlock(
                             saveDataDto = mob,
-                            mobWorldAdapter = mobWorldAdapter,
+                            mobPhysicsFactory = mobPhysicsFactory,
                         )
 
                         else -> null
@@ -62,7 +65,7 @@ class MobControllerMapper @Inject constructor(
 
             player = playerMapper.mapPlayer(
                 saveDataDto = saveDataDto.player,
-                mobWorldAdapter = mobWorldAdapter,
+                mobPhysicsFactory = mobPhysicsFactory,
             )
         }
     }

@@ -3,7 +3,7 @@ package ru.fredboy.cavedroid.data.save.mapper
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.items.usecase.GetBlockByKeyUseCase
-import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.model.FallingBlock
 import ru.fredboy.cavedroid.game.controller.mob.behavior.FallingBlockMobBehavior
 import javax.inject.Inject
@@ -35,7 +35,7 @@ class FallingBlockMapper @Inject constructor(
 
     fun mapFallingBlock(
         saveDataDto: SaveDataDto.FallingBlockSaveDataDto,
-        mobWorldAdapter: MobWorldAdapter,
+        mobPhysicsFactory: MobPhysicsFactory,
     ): FallingBlock {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
@@ -43,7 +43,7 @@ class FallingBlockMapper @Inject constructor(
             block = getBlockByKeyUseCase[saveDataDto.blockKey],
             behavior = FallingBlockMobBehavior(),
         ).apply {
-            spawn(saveDataDto.x - width / 2f, saveDataDto.y - width / 2f, mobWorldAdapter.getBox2dWorld())
+            spawn(saveDataDto.x - width / 2f, saveDataDto.y - width / 2f, mobPhysicsFactory)
             velocity.x = saveDataDto.velocityX
             velocity.y = saveDataDto.velocityY
             animDelta = saveDataDto.animDelta

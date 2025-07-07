@@ -5,6 +5,7 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.model.Player
@@ -17,6 +18,7 @@ class MobController @Inject constructor(
     mobAssetsRepository: MobAssetsRepository,
     getFallbackItemUseCase: GetFallbackItemUseCase,
     private val mobWorldAdapter: MobWorldAdapter,
+    private val mobPhysicsFactory: MobPhysicsFactory,
 ) {
 
     private val _mobs = LinkedList<Mob>()
@@ -56,6 +58,12 @@ class MobController @Inject constructor(
         }
 
         player.update(mobWorldAdapter, delta)
+        if (player.isDead) {
+            player.respawn(
+                spawnPoint = player.spawnPoint ?: mobWorldAdapter.findSpawnPoint(),
+                mobPhysicsFactory = mobPhysicsFactory,
+            )
+        }
     }
 
     fun checkPlayerCursorBounds() {
@@ -77,7 +85,7 @@ class MobController @Inject constructor(
     fun respawnPlayer() {
         player.respawn(
             spawnPoint = player.spawnPoint ?: mobWorldAdapter.findSpawnPoint(),
-            world = mobWorldAdapter.getBox2dWorld(),
+            mobPhysicsFactory = mobPhysicsFactory,
         )
     }
 
