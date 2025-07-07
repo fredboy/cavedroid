@@ -20,10 +20,11 @@ class GameWorldMobDamageControllerTask @Inject constructor(
             yieldAll(mobController.mobs)
         }.forEach { mob ->
             forEachBlockInArea(mob.hitbox) { x, y ->
-                val foregroundBlock = gameWorld.getForeMap(x, y)
-                val backgroundBlock = gameWorld.getBackMap(x, y)
+                val hitbox = mob.hitbox
+                val foregroundBlock = gameWorld.getForeMap(x, y).takeIf { it.getSpriteRectangle(x, y).overlaps(hitbox) }
+                val backgroundBlock = gameWorld.getBackMap(x, y).takeIf { it.getSpriteRectangle(x, y).overlaps(hitbox) }
 
-                val damage = max(foregroundBlock.params.damage, backgroundBlock.params.damage)
+                val damage = max(foregroundBlock?.params?.damage ?: 0, backgroundBlock?.params?.damage ?: 0)
                 if (damage > 0) {
                     mob.damage(damage)
                 }

@@ -32,6 +32,7 @@ internal class GamePhysics @Inject constructor(
     }
 
     override fun Mob.onTouchGround() {
+        damage((velocity.y - 5f).toInt())
         footContactCounter++
         isFlyMode = false
         controlVector.y = 0f

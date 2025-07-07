@@ -136,6 +136,13 @@ sealed class Block {
         /* height = */ height,
     )
 
+    fun getSpriteRectangle(x: Int, y: Int): Rectangle = Rectangle(
+        /* x = */ x.toFloat() + params.spriteMarginsMeters.left,
+        /* y = */ y.toFloat() + params.spriteMarginsMeters.top,
+        /* width = */ spriteWidthMeters,
+        /* height = */ spriteHeightMeters,
+    )
+
     sealed class Container : Block()
 
     data class None(

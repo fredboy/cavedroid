@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 
 private fun Rectangle.shifted(shift: Float) = Rectangle(x + shift, y, width, height)
@@ -34,10 +35,10 @@ fun forEachBlockInArea(
     area: Rectangle,
     func: (x: Int, y: Int) -> Unit,
 ) {
-    val startMapX = area.x.toInt()
-    val endMapX = (area.x + area.width).toInt()
-    val startMapY = area.y.toInt()
-    val endMapY = (area.y + area.height).toInt()
+    val startMapX = MathUtils.floor(area.x)
+    val endMapX = MathUtils.ceil(area.x + area.width)
+    val startMapY = MathUtils.floor(area.y)
+    val endMapY = MathUtils.ceil(area.y + area.height)
 
     for (x in startMapX..endMapX) {
         for (y in startMapY..endMapY) {
