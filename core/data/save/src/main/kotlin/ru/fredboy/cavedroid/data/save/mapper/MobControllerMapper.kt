@@ -4,6 +4,7 @@ import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
+import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.FallingBlock
@@ -36,6 +37,7 @@ class MobControllerMapper @Inject constructor(
         saveDataDto: SaveDataDto.MobControllerSaveDataDto,
         mobWorldAdapter: MobWorldAdapter,
         mobPhysicsFactory: MobPhysicsFactory,
+        dropQueue: DropQueue,
     ): MobController {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
@@ -44,6 +46,7 @@ class MobControllerMapper @Inject constructor(
             getFallbackItemUseCase = getFallbackItemUseCase,
             mobWorldAdapter = mobWorldAdapter,
             mobPhysicsFactory = mobPhysicsFactory,
+            dropQueue = dropQueue,
         ).apply {
             (mobs as MutableList).addAll(
                 saveDataDto.mobs.mapNotNull { mob ->

@@ -9,6 +9,7 @@ import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
+import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.drop.model.Drop
 import java.util.*
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class DropController @Inject constructor(
     private val itemsRepository: ItemsRepository,
     private val dropWorldAdapter: DropWorldAdapter,
+    private val dropQueue: DropQueue,
 ) : OnBlockDestroyedListener {
 
     private val drops = LinkedList<Drop>()
@@ -25,8 +27,9 @@ class DropController @Inject constructor(
     constructor(
         itemsRepository: ItemsRepository,
         dropWorldAdapter: DropWorldAdapter,
+        dropQueue: DropQueue,
         initialDrop: Collection<Drop>,
-    ) : this(itemsRepository, dropWorldAdapter) {
+    ) : this(itemsRepository, dropWorldAdapter, dropQueue) {
         drops.addAll(initialDrop.filterNot { drop -> drop.item.isNone() })
     }
 
@@ -66,8 +69,21 @@ class DropController @Inject constructor(
         drops.forEach(action)
     }
 
+    private fun getRandomInitialForce(): Vector2 {
+        return Vector2(MathUtils.random(-20f, 20f), -20f)
+    }
+
+    private fun drainDropQueue() {
+        while (dropQueue.queue.isNotEmpty()) {
+            val queued = dropQueue.queue.poll()
+            addDrop(queued.x, queued.y, queued.item, getRandomInitialForce())
+        }
+    }
+
     @Suppress("unused")
     fun update(delta: Float) {
+        drainDropQueue()
+
         val iterator = drops.iterator()
 
         while (iterator.hasNext()) {
@@ -99,7 +115,7 @@ class DropController @Inject constructor(
             y = y + .5f,
             item = item,
             count = dropInfo.count,
-            initialForce = Vector2(MathUtils.random(-20f, 20f), -20f),
+            initialForce = getRandomInitialForce(),
         )
     }
 }

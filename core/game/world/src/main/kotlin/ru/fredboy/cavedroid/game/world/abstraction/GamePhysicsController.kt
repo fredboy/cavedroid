@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.game.world.abstraction
 
+import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.ContactImpulse
 import com.badlogic.gdx.physics.box2d.ContactListener
@@ -32,6 +33,8 @@ abstract class GamePhysicsController : Disposable {
     protected abstract fun Mob.onLeaveGround()
 
     protected abstract fun Drop.onLeaveGround()
+
+    protected abstract fun Mob.stepUpTheBlock(block: Block, blockBody: Body): Boolean
 
     fun attachToGameWorld(gameWorld: GameWorld) {
         _gameWorld = gameWorld
@@ -79,6 +82,16 @@ abstract class GamePhysicsController : Disposable {
 
                 sensorType == ContactSensorType.DROP_PICK_UP && mob != null && drop != null ->
                     mob.pickUpDrop(drop)
+
+                sensorType == null && mob != null && block != null ->
+                    contact.isEnabled = !mob.stepUpTheBlock(
+                        block = block,
+                        blockBody = if (contact.fixtureA.body.userData == block) {
+                            contact.fixtureA.body
+                        } else {
+                            contact.fixtureB.body
+                        },
+                    )
             }
         }
 

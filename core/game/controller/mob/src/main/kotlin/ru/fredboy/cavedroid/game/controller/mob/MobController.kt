@@ -6,12 +6,13 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
+import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.behavior.PlayerMobBehavior
-import java.util.LinkedList
+import java.util.*
 import javax.inject.Inject
 
 @GameScope
@@ -20,6 +21,7 @@ class MobController @Inject constructor(
     getFallbackItemUseCase: GetFallbackItemUseCase,
     private val mobWorldAdapter: MobWorldAdapter,
     private val mobPhysicsFactory: MobPhysicsFactory,
+    private val dropQueue: DropQueue,
 ) : Disposable {
 
     private val _mobs = LinkedList<Mob>()
@@ -60,6 +62,8 @@ class MobController @Inject constructor(
 
         player.update(mobWorldAdapter, delta)
         if (player.isDead) {
+            dropQueue.offerInventory(player.position.x, player.position.y, player.inventory)
+            player.inventory.clear()
             player.dispose()
             player.respawn(
                 spawnPoint = player.spawnPoint ?: mobWorldAdapter.findSpawnPoint(),

@@ -15,6 +15,7 @@ import ru.fredboy.cavedroid.domain.save.model.GameMapSaveData
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
+import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
@@ -238,7 +239,11 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun loadDropController(gameDataFolder: String, dropWorldAdapter: DropWorldAdapter): DropController {
+    override fun loadDropController(
+        gameDataFolder: String,
+        dropWorldAdapter: DropWorldAdapter,
+        dropQueue: DropQueue,
+    ): DropController {
         val savesPath = "$gameDataFolder$SAVES_DIR"
         val dropFile = Gdx.files.absolute("$savesPath$DROP_FILE")
         val dropBytes = dropFile.readBytes()
@@ -248,6 +253,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
                 dropControllerMapper.mapDropController(
                     saveDataDto = saveData,
                     dropWorldAdapter = dropWorldAdapter,
+                    dropQueue = dropQueue,
                 )
             }
     }
@@ -256,6 +262,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         gameDataFolder: String,
         mobWorldAdapter: MobWorldAdapter,
         mobPhysicsFactory: MobPhysicsFactory,
+        dropQueue: DropQueue,
     ): MobController {
         val savesPath = "$gameDataFolder$SAVES_DIR"
         val mobsFile = Gdx.files.absolute("$savesPath$MOBS_FILE")
@@ -267,6 +274,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
                     saveDataDto = saveData,
                     mobWorldAdapter = mobWorldAdapter,
                     mobPhysicsFactory = mobPhysicsFactory,
+                    dropQueue = dropQueue,
                 )
             }
     }

@@ -12,6 +12,7 @@ import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
+import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
@@ -34,15 +35,18 @@ object GameModule {
         saveDataRepository: SaveDataRepository,
         itemsRepository: ItemsRepository,
         dropWorldAdapter: DropWorldAdapter,
+        dropQueue: DropQueue,
     ): DropController = if (gameContextRepository.isLoadGame()) {
         saveDataRepository.loadDropController(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
             dropWorldAdapter = dropWorldAdapter,
+            dropQueue = dropQueue,
         )
     } else {
         DropController(
             itemsRepository = itemsRepository,
             dropWorldAdapter = dropWorldAdapter,
+            dropQueue = dropQueue,
         )
     }
 
@@ -82,11 +86,13 @@ object GameModule {
         getFallbackItemUseCase: GetFallbackItemUseCase,
         mobWorldAdapter: MobWorldAdapter,
         mobPhysicsFactory: MobPhysicsFactory,
+        dropQueue: DropQueue,
     ): MobController = if (gameContextRepository.isLoadGame()) {
         saveDataRepository.loadMobController(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
             mobWorldAdapter = mobWorldAdapter,
             mobPhysicsFactory = mobPhysicsFactory,
+            dropQueue = dropQueue,
         )
     } else {
         MobController(
@@ -94,6 +100,7 @@ object GameModule {
             getFallbackItemUseCase = getFallbackItemUseCase,
             mobWorldAdapter = mobWorldAdapter,
             mobPhysicsFactory = mobPhysicsFactory,
+            dropQueue = dropQueue,
         )
     }
 

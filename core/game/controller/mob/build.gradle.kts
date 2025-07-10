@@ -14,5 +14,5 @@ dependencies {
     useModule(":core:domain:assets")
     useModule(":core:domain:items")
     useModule(":core:domain:world:")
-    useModule(":core:entity:mob")
+    useEntityModules()
 }

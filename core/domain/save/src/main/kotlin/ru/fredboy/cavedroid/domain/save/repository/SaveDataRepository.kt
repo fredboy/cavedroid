@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.domain.save.repository
 import ru.fredboy.cavedroid.domain.save.model.GameMapSaveData
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
+import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
@@ -36,12 +37,14 @@ interface SaveDataRepository {
     fun loadDropController(
         gameDataFolder: String,
         dropWorldAdapter: DropWorldAdapter,
+        dropQueue: DropQueue,
     ): DropController
 
     fun loadMobController(
         gameDataFolder: String,
         mobWorldAdapter: MobWorldAdapter,
         mobPhysicsFactory: MobPhysicsFactory,
+        dropQueue: DropQueue,
     ): MobController
 
     fun exists(gameDataFolder: String): Boolean

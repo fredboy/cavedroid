@@ -74,6 +74,8 @@ abstract class Mob(
 
     private var lastJumpMs = 0L
 
+    private var pendingBodyTransform: Vector2? = null
+
     var swim = false
 
     var canSwim = false
@@ -222,7 +224,16 @@ abstract class Mob(
         return controlVector.cpy().scl(1f / mediumResistance)
     }
 
+    fun applyPendingTransform(vector: Vector2) {
+        pendingBodyTransform = vector
+    }
+
     fun update(mobWorldAdapter: MobWorldAdapter, delta: Float) {
+        pendingBodyTransform?.let { transform ->
+            body.setTransform(transform.add(position), 0f)
+            pendingBodyTransform = null
+        }
+
         behavior.update(this, mobWorldAdapter, delta)
 
         val scaledControl = getControlVectorWithAppliedResistance(mobWorldAdapter)

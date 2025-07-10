@@ -7,3 +7,5 @@ inline fun <reified T> Boolean.ifTrue(func: () -> T): T? {
         null
     }
 }
+
+inline fun <reified T> Boolean.ifFalse(func: () -> T): T? = (!this).ifTrue(func)
