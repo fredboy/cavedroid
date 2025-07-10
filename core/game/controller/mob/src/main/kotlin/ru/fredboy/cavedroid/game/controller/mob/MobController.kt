@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.game.controller.mob
 
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
@@ -19,7 +20,7 @@ class MobController @Inject constructor(
     getFallbackItemUseCase: GetFallbackItemUseCase,
     private val mobWorldAdapter: MobWorldAdapter,
     private val mobPhysicsFactory: MobPhysicsFactory,
-) {
+) : Disposable {
 
     private val _mobs = LinkedList<Mob>()
 
@@ -59,6 +60,7 @@ class MobController @Inject constructor(
 
         player.update(mobWorldAdapter, delta)
         if (player.isDead) {
+            player.dispose()
             player.respawn(
                 spawnPoint = player.spawnPoint ?: mobWorldAdapter.findSpawnPoint(),
                 mobPhysicsFactory = mobPhysicsFactory,
@@ -87,6 +89,12 @@ class MobController @Inject constructor(
             spawnPoint = player.spawnPoint ?: mobWorldAdapter.findSpawnPoint(),
             mobPhysicsFactory = mobPhysicsFactory,
         )
+    }
+
+    override fun dispose() {
+        mobs.forEach { it.dispose() }
+        player.dispose()
+        _mobs.clear()
     }
 
     companion object {

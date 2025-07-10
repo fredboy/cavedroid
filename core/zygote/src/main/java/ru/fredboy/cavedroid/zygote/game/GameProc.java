@@ -93,11 +93,14 @@ public class GameProc implements Disposable {
 
     @Override
     public void dispose() {
-        mDropController.dispose();
+        mGameWorldFluidsLogicControllerTask.shutdownBlocking();
+        mGameWorldBlocksLogicControllerTask.shutdownBlocking();
+        mGameWorldMobDamageControllerTask.shutdownBlocking();
         mWorldLogicTimer.stop();
-        mGameWorldFluidsLogicControllerTask.cancel();
-        mGameWorldBlocksLogicControllerTask.cancel();
-        mGameWorldMobDamageControllerTask.cancel();
+
+        mDropController.dispose();
+        mMobsController.dispose();
+        mContainerController.dispose();
         mGameWorld.dispose();
     }
 }

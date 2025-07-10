@@ -1,23 +1,17 @@
 package ru.fredboy.cavedroid.game.world
 
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.Body
-import com.badlogic.gdx.physics.box2d.BodyDef
-import com.badlogic.gdx.physics.box2d.FixtureDef
-import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.common.utils.removeFirst
-import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
-import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.game.world.abstraction.GamePhysicsController
+import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
 import ru.fredboy.cavedroid.game.world.generator.GameWorldGenerator
 import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
 import java.lang.ref.WeakReference
@@ -27,8 +21,8 @@ import javax.inject.Inject
 @GameScope
 class GameWorld @Inject constructor(
     private val itemsRepository: ItemsRepository,
-    private val gameContextRepository: GameContextRepository,
     private val physicsController: GamePhysicsController,
+    private val gameWorldSolidBlockBodiesManager: GameWorldSolidBlockBodiesManager,
     initialForeMap: Array<Array<Block>>?,
     initialBackMap: Array<Array<Block>>?,
 ) : Disposable {
@@ -41,7 +35,6 @@ class GameWorld @Inject constructor(
     val generatorConfig = WorldGeneratorConfig.getDefault()
 
     val world: World = World(Vector2(0f, 9.8f), false)
-    val bodies = mutableMapOf<Pair<Int, Int>, Body>()
 
     private var box2dAccumulator: Float = 0f
 
@@ -62,46 +55,7 @@ class GameWorld @Inject constructor(
         }
 
         physicsController.attachToGameWorld(this)
-    }
-
-    private fun Block.createBody(x: Int, y: Int): Body? {
-        if (!isSolidSurfaceBlock(x, y)) {
-            return null
-        }
-
-        val rect = getRectangle(x, y)
-
-        val bodyDef = BodyDef().apply {
-            type = BodyDef.BodyType.StaticBody
-            rect.getCenter(position)
-            fixedRotation = true
-        }
-
-        val shape = PolygonShape().apply {
-            setAsBox(rect.width / 2f, rect.height / 2f)
-        }
-
-        val fixtureDef = FixtureDef().apply {
-            this.shape = shape
-            density = 1f
-            friction = .2f
-            restitution = 0f
-            filter.categoryBits = PhysicsConstants.CATEGORY_BLOCK
-        }
-
-        return world.createBody(bodyDef).also { body ->
-            body.createFixture(fixtureDef)
-            body.userData = this
-            shape.dispose()
-        }
-    }
-
-    private fun Block.updateBody(x: Int, y: Int): Body? {
-        bodies.remove(x to y)?.also { body ->
-            world.destroyBody(body)
-        }
-
-        return createBody(x, y)?.also { body -> bodies[x to y] = body }
+        gameWorldSolidBlockBodiesManager.attachToGameWorld(this)
     }
 
     fun addBlockPlacedListener(listener: OnBlockPlacedListener) {
@@ -159,18 +113,6 @@ class GameWorld @Inject constructor(
         }
     }
 
-    private fun isSolidSurfaceBlock(x: Int, y: Int): Boolean {
-        val block = getForeMap(x, y)
-
-        return block.params.hasCollision &&
-            (
-                !getForeMap(x - 1, y).params.hasCollision ||
-                    !getForeMap(x + 1, y).params.hasCollision ||
-                    !getForeMap(x, y - 1).params.hasCollision ||
-                    !getForeMap(x, y + 1).params.hasCollision
-                )
-    }
-
     private fun setMap(x: Int, y: Int, layer: Layer, value: Block, dropOld: Boolean) {
         if (y !in 0..<height) {
             return
@@ -189,7 +131,7 @@ class GameWorld @Inject constructor(
             }
 
         when (layer) {
-            Layer.FOREGROUND -> foreMap[transformedX][y] = value.apply { updateBody(x, y) }
+            Layer.FOREGROUND -> foreMap[transformedX][y] = value
             Layer.BACKGROUND -> backMap[transformedX][y] = value
         }
 
@@ -262,27 +204,6 @@ class GameWorld @Inject constructor(
     }
 
     fun update(delta: Float) {
-        val newBodies = buildMap {
-            forEachBlockInArea(gameContextRepository.getCameraContext().visibleWorld) { _x, y ->
-                if (y !in 0..<height) return@forEachBlockInArea
-
-                val x = transformX(_x)
-                val block = foreMap[x][y]
-                val body = bodies.remove(x to y)?.takeIf {
-                    if (it.userData == block && isSolidSurfaceBlock(x, y)) {
-                        true
-                    } else {
-                        world.destroyBody(it)
-                        false
-                    }
-                } ?: block.createBody(x, y)
-                body?.let {
-                    put(x to y, it)
-                }
-            }
-        }
-        bodies.putAll(newBodies)
-
         box2dAccumulator += delta
         while (box2dAccumulator >= PHYSICS_STEP_DELTA) {
             world.step(PHYSICS_STEP_DELTA, 6, 2)
@@ -292,6 +213,7 @@ class GameWorld @Inject constructor(
 
     override fun dispose() {
         physicsController.dispose()
+        gameWorldSolidBlockBodiesManager.dispose()
         world.dispose()
     }
 

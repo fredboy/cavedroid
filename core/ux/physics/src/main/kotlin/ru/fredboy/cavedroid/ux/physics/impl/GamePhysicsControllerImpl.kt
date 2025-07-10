@@ -11,7 +11,7 @@ import javax.inject.Inject
 import kotlin.math.max
 
 @GameScope
-internal class GamePhysics @Inject constructor(
+internal class GamePhysicsControllerImpl @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
 ) : GamePhysicsController() {
     override fun Mob.pickUpDrop(drop: Drop) {

@@ -6,4 +6,5 @@ enum class ContactSensorType {
     DROP_ON_GROUND,
     DROP_ATTRACTOR,
     DROP_PICK_UP,
+    BLOCK_WATER,
 }

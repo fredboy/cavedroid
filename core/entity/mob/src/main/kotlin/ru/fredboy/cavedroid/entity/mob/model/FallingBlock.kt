@@ -1,9 +1,11 @@
 package ru.fredboy.cavedroid.entity.mob.model
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.utils.floor
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobBehavior
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 
 class FallingBlock(
     val block: Block,
@@ -23,5 +25,9 @@ class FallingBlock(
         delta: Float,
     ) {
         block.draw(spriteBatch, x.floor, y)
+    }
+
+    override fun getControlVectorWithAppliedResistance(mobWorldAdapter: MobWorldAdapter): Vector2 {
+        return controlVector
     }
 }

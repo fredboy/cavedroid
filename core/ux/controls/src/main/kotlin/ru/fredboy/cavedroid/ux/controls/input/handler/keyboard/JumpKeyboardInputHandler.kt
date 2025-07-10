@@ -20,6 +20,7 @@ class JumpKeyboardInputHandler @Inject constructor(
     override fun checkConditions(action: KeyboardInputAction): Boolean {
         return action.actionKey is KeyboardInputActionKey.Up &&
             mobController.player.canJump &&
+            !mobController.player.canSwim &&
             !mobController.player.isFlyMode &&
             action.isKeyDown &&
             (mobController.player.controlMode == Player.ControlMode.WALK || !applicationContextRepository.isTouch())

@@ -193,16 +193,19 @@ sealed class Block {
 
     sealed class Fluid : Block() {
         abstract val state: Int
+        abstract val density: Float
     }
 
     data class Water(
         override val params: CommonBlockParams,
         override val state: Int,
+        override val density: Float,
     ) : Fluid()
 
     data class Lava(
         override val params: CommonBlockParams,
         override val state: Int,
+        override val density: Float,
     ) : Fluid()
 
     companion object {

@@ -74,6 +74,10 @@ abstract class Mob(
 
     private var lastJumpMs = 0L
 
+    var swim = false
+
+    var canSwim = false
+
     var takingDamage = false
         set(value) {
             field = value
@@ -200,14 +204,35 @@ abstract class Mob(
         checkHealth()
     }
 
+    protected open fun getControlVectorWithAppliedResistance(mobWorldAdapter: MobWorldAdapter): Vector2 {
+        if (isFlyMode) {
+            body.linearDamping = 1f
+            body.gravityScale = 0f
+            return controlVector
+        }
+
+        val liquid = mobWorldAdapter.getMediumLiquid(hitbox.apply { height *= .75f })
+
+        canSwim = liquid != null
+
+        val mediumResistance = liquid?.density ?: 1f
+        body.linearDamping = mediumResistance
+        body.gravityScale = 1f / mediumResistance * (if (swim && canSwim) -1f else 1f)
+
+        return controlVector.cpy().scl(1f / mediumResistance)
+    }
+
     fun update(mobWorldAdapter: MobWorldAdapter, delta: Float) {
         behavior.update(this, mobWorldAdapter, delta)
 
-        if (!controlVector.isZero) {
-            body.applyForceToCenter(controlVector, true)
-            velocity.x = MathUtils.clamp(velocity.x, -abs(controlVector.x), abs(controlVector.x))
+        val scaledControl = getControlVectorWithAppliedResistance(mobWorldAdapter)
+        if (!scaledControl.isZero) {
+            body.applyForceToCenter(scaledControl, true)
+            velocity.x = MathUtils.clamp(velocity.x, -abs(scaledControl.x), abs(scaledControl.x))
             if (isFlyMode) {
-                velocity.y = MathUtils.clamp(velocity.y, -abs(controlVector.y), abs(controlVector.y))
+                velocity.y = MathUtils.clamp(velocity.y, -abs(scaledControl.y), abs(scaledControl.y))
+            } else {
+                controlVector.y = 0f
             }
         }
 

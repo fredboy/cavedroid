@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.entity.mob.abstraction
 
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -25,4 +26,6 @@ interface MobWorldAdapter {
     fun findSpawnPoint(): Vector2
 
     fun getBox2dWorld(): World
+
+    fun getMediumLiquid(hitbox: Rectangle): Block.Fluid?
 }

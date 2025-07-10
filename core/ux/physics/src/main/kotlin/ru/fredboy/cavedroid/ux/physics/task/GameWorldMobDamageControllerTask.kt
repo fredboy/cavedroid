@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.ux.physics.task
 
-import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -12,9 +11,9 @@ import kotlin.math.max
 class GameWorldMobDamageControllerTask @Inject constructor(
     private val mobController: MobController,
     private val gameWorld: GameWorld,
-) : Timer.Task() {
+) : BaseGameWorldControllerTask() {
 
-    override fun run() {
+    override fun exec() {
         sequence {
             yield(mobController.player)
             yieldAll(mobController.mobs)

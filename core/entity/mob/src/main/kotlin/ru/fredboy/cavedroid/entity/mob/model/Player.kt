@@ -29,7 +29,6 @@ class Player(
     )
 
     var gameMode = 0
-    var swim = false
 
     var cursorX = 0
     var cursorY = 0

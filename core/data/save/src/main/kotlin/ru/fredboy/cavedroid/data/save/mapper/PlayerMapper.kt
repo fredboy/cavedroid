@@ -41,7 +41,6 @@ class PlayerMapper @Inject constructor(
         hitAnimDelta = player.hitAnimDelta,
         inventory = inventoryMapper.mapSaveData(player.inventory),
         gameMode = player.gameMode,
-        swim = player.swim,
         headRotation = player.headRotation,
         blockDamage = player.blockDamage,
         cursorX = player.cursorX,
@@ -77,7 +76,6 @@ class PlayerMapper @Inject constructor(
             hitAnimDelta = saveDataDto.hitAnimDelta
             inventory = inventoryMapper.mapInventory(saveDataDto.inventory)
             gameMode = saveDataDto.gameMode
-            swim = saveDataDto.swim
             headRotation = saveDataDto.headRotation
             blockDamage = saveDataDto.blockDamage
             cursorX = saveDataDto.cursorX
@@ -89,6 +87,6 @@ class PlayerMapper @Inject constructor(
     }
 
     companion object {
-        private const val SAVE_DATA_VERSION = 3
+        private const val SAVE_DATA_VERSION = 4
     }
 }

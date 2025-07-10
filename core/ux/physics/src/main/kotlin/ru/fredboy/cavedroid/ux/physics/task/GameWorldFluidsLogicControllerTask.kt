@@ -1,12 +1,11 @@
 package ru.fredboy.cavedroid.ux.physics.task
 
-import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
-import java.util.PriorityQueue
+import java.util.*
 import javax.inject.Inject
 import kotlin.math.min
 import kotlin.reflect.KClass
@@ -16,7 +15,7 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobController: MobController,
     private val itemsRepository: ItemsRepository,
-) : Timer.Task() {
+) : BaseGameWorldControllerTask() {
 
     private var updateTick: Short = 0
 
@@ -157,7 +156,7 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
         }
     }
 
-    override fun run() {
+    override fun exec() {
         if (updateTick < 0xFF) {
             updateTick++
         } else {

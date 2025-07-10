@@ -91,7 +91,8 @@
       "texture": "water_still",
       "animated": true,
       "frames": 16,
-      "state": 0
+      "state": 0,
+      "density": 2
     },
     "lava": {
       "collision": false,
@@ -101,7 +102,8 @@
       "animated": true,
       "frames": 16,
       "state": 0,
-      "damage": 4
+      "damage": 4,
+      "density": 3
     },
     "sand": {
       "hp": 45,
@@ -655,7 +657,8 @@
       "texture": "water_flow",
       "animated": true,
       "frames": 16,
-      "state": 1
+      "state": 1,
+      "density": 2
     },
     "water_12": {
       "top": 4,
@@ -667,7 +670,8 @@
       "texture": "water_flow",
       "animated": true,
       "frames": 16,
-      "state": 2
+      "state": 2,
+      "density": 2
     },
     "water_8": {
       "top": 8,
@@ -679,7 +683,8 @@
       "texture": "water_flow",
       "animated": true,
       "frames": 16,
-      "state": 3
+      "state": 3,
+      "density": 2
     },
     "water_4": {
       "top": 12,
@@ -691,7 +696,8 @@
       "texture": "water_flow",
       "animated": true,
       "frames": 16,
-      "state": 4
+      "state": 4,
+      "density": 2
     },
     "lava_16": {
       "collision": false,
@@ -701,7 +707,8 @@
       "animated": true,
       "frames": 16,
       "state": 1,
-      "damage": 4
+      "damage": 4,
+      "density": 3
     },
     "lava_12": {
       "top": 4,
@@ -714,7 +721,8 @@
       "animated": true,
       "frames": 16,
       "state": 2,
-      "damage": 4
+      "damage": 4,
+      "density": 3
     },
     "lava_8": {
       "top": 8,
@@ -727,7 +735,8 @@
       "animated": true,
       "frames": 16,
       "state": 3,
-      "damage": 4
+      "damage": 4,
+      "density": 3
     },
     "lava_4": {
       "top": 12,
@@ -740,7 +749,8 @@
       "animated": true,
       "frames": 16,
       "state": 4,
-      "damage": 4
+      "damage": 4,
+      "density": 3
     },
     "obsidian": {
       "hp": 15000,

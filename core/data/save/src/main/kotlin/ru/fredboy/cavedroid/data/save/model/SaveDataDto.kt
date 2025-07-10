@@ -175,7 +175,6 @@ sealed class SaveDataDto {
         val hitAnimDelta: Float,
         val inventory: InventorySaveDataDto,
         val gameMode: Int,
-        val swim: Boolean,
         val headRotation: Float,
         val blockDamage: Float,
         val cursorX: Int,

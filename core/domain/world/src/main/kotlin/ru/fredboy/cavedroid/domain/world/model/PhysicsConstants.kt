@@ -1,7 +1,7 @@
 package ru.fredboy.cavedroid.domain.world.model
 
 object PhysicsConstants {
-    const val CATEGORY_BLOCK: Short = 0x01
-    const val CATEGORY_MOB: Short = 0x02
-    const val CATEGORY_DROP: Short = 0x04
+    const val CATEGORY_BLOCK: Short = (1 shl 0).toShort()
+    const val CATEGORY_MOB: Short = (1 shl 1).toShort()
+    const val CATEGORY_DROP: Short = (1 shl 2).toShort()
 }

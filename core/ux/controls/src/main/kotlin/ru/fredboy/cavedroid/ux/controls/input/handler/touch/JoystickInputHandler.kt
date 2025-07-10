@@ -77,6 +77,7 @@ class JoystickInputHandler @Inject constructor(
     private fun handleTouchUp() {
         gameContextRepository.getJoystick().deactivate()
         active = false
+        mobController.player.swim = false
     }
 
     private fun handleCursor() {
@@ -130,6 +131,8 @@ class JoystickInputHandler @Inject constructor(
         if (mobController.player.isFlyMode) {
             mobController.player.controlVector.y = joyVector.y
         }
+
+        mobController.player.swim = true
     }
 
     override fun handle(action: MouseInputAction) {

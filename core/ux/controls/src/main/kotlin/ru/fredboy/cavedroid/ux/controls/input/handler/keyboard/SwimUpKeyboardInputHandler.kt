@@ -24,7 +24,7 @@ class SwimUpKeyboardInputHandler @Inject constructor(
     override fun checkConditions(action: KeyboardInputAction): Boolean = action.actionKey is KeyboardInputActionKey.Up &&
         action.isKeyDown &&
         !mobController.player.swim &&
-        !mobController.player.canJump &&
+        mobController.player.canSwim &&
         checkSwim() &&
         !mobController.player.isFlyMode &&
         (mobController.player.controlMode == Player.ControlMode.WALK || !applicationContextRepository.isTouch())

@@ -29,8 +29,8 @@ class BlockMapper @Inject constructor(
         val commonBlockParams = mapCommonParams(key, dto)
 
         return when (dto.meta) {
-            "water" -> Water(commonBlockParams, requireNotNull(dto.state))
-            "lava" -> Lava(commonBlockParams, requireNotNull(dto.state))
+            "water" -> Water(commonBlockParams, requireNotNull(dto.state), dto.density ?: 0f)
+            "lava" -> Lava(commonBlockParams, requireNotNull(dto.state), dto.density ?: 0f)
             "slab" -> Slab(commonBlockParams, requireNotNull(dto.fullBlock), requireNotNull(dto.otherPart))
             "furnace" -> Furnace(commonBlockParams)
             "chest" -> Chest(commonBlockParams)

@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.ux.physics.task
 
-import com.badlogic.gdx.utils.Timer.Task
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
@@ -13,7 +12,7 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
     private val gameWorld: GameWorld,
     private val updateBlockActions: Map<String, @JvmSuppressWildcards IUpdateBlockAction>,
     private val mobController: MobController,
-) : Task() {
+) : BaseGameWorldControllerTask() {
 
     private var currentRelativeChunk = 0
 
@@ -39,7 +38,7 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
         action?.update(x, y)
     }
 
-    override fun run() {
+    override fun exec() {
         val startX = getChunkStart()
 
         for (y in gameWorld.height downTo 0) {

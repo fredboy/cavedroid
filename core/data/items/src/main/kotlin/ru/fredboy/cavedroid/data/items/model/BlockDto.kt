@@ -32,4 +32,5 @@ data class BlockDto(
     @SerialName("damage") val damage: Int = 0,
     @SerialName("tint") val tint: String? = null,
     @SerialName("fallable") val fallable: Boolean = false,
+    @SerialName("density") val density: Float? = null,
 )

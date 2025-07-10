@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.game.world.impl
 
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import ru.fredboy.cavedroid.common.di.GameScope
@@ -106,5 +107,23 @@ internal class WorldAdapterImpl @Inject constructor(
 
     override fun getBox2dWorld(): World {
         return gameWorld.world
+    }
+
+    override fun getMediumLiquid(hitbox: Rectangle): Block.Fluid? {
+        val (startX, endX) = hitbox.x.toInt() to (hitbox.x + hitbox.width).toInt()
+        val (startY, endY) = hitbox.y.toInt() to (hitbox.y + hitbox.height).toInt()
+
+        var medium: Block.Fluid? = null
+        for (x in startX..endX) {
+            for (y in startY..endY) {
+                val block = getForegroundBlock(x, y) as? Block.Fluid
+                    ?: continue
+
+                if (medium == null || medium.density < block.density) {
+                    medium = block
+                }
+            }
+        }
+        return medium
     }
 }
