@@ -17,5 +17,7 @@ class PigMobBehavior :
                 changeDir()
             }
         }
+
+        swim = canSwim
     }
 }

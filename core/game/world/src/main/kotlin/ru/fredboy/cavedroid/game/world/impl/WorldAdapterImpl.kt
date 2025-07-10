@@ -116,7 +116,8 @@ internal class WorldAdapterImpl @Inject constructor(
         var medium: Block.Fluid? = null
         for (x in startX..endX) {
             for (y in startY..endY) {
-                val block = getForegroundBlock(x, y) as? Block.Fluid
+                val block = (getForegroundBlock(x, y) as? Block.Fluid)
+                    ?.takeIf { it.getRectangle(x, y).overlaps(hitbox) }
                     ?: continue
 
                 if (medium == null || medium.density < block.density) {
