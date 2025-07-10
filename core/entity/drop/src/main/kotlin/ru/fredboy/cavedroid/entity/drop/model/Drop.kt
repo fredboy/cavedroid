@@ -132,6 +132,16 @@ class Drop(
         groundSensorShape.dispose()
     }
 
+    private fun getControlVectorWithAppliedResistance(dropWorldAdapter: DropWorldAdapter): Vector2 {
+        val liquid = dropWorldAdapter.getMediumLiquid(hitbox.apply { height *= .75f })
+
+        val mediumResistance = liquid?.density ?: 1f
+        body.linearDamping = mediumResistance
+        body.gravityScale = (if (liquid != null) -1f else 1f) / mediumResistance
+
+        return controlVector.cpy().scl(1f / mediumResistance)
+    }
+
     fun update(dropWorldAdapter: DropWorldAdapter, delta: Float) {
         if (isBobbing) {
             bobTime += delta
@@ -140,10 +150,11 @@ class Drop(
             }
         }
 
-        if (!controlVector.isZero) {
-            body.applyForceToCenter(controlVector, true)
-            velocity.x = MathUtils.clamp(velocity.x, -abs(controlVector.x), abs(controlVector.x))
-            velocity.y = MathUtils.clamp(velocity.y, -abs(controlVector.y), abs(controlVector.y))
+        val scaledControl = getControlVectorWithAppliedResistance(dropWorldAdapter)
+        if (!scaledControl.isZero) {
+            body.applyForceToCenter(scaledControl, true)
+            velocity.x = MathUtils.clamp(velocity.x, -abs(scaledControl.x), abs(scaledControl.x))
+            velocity.y = MathUtils.clamp(velocity.y, -abs(scaledControl.y), abs(scaledControl.y))
         }
 
         val overlappingBlock = dropWorldAdapter.getForegroundBlock(
