@@ -62,7 +62,7 @@ class PlayerMapper @Inject constructor(
             getFallbackItem = getFallbackItemUseCase,
             behavior = PlayerMobBehavior(),
         ).apply {
-            spawn(saveDataDto.x - width / 2f, saveDataDto.y - height / 2f, mobPhysicsFactory)
+            spawn(saveDataDto.x, saveDataDto.y, mobPhysicsFactory)
             velocity.x = saveDataDto.velocityX
             velocity.y = saveDataDto.velocityY
             animDelta = saveDataDto.animDelta

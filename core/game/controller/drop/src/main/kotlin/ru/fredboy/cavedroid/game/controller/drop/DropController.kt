@@ -74,7 +74,7 @@ class DropController @Inject constructor(
     }
 
     private fun drainDropQueue() {
-        while (dropQueue.queue.isNotEmpty()) {
+        if (dropQueue.queue.isNotEmpty()) {
             val queued = dropQueue.queue.poll()
             addDrop(queued.x, queued.y, queued.item, getRandomInitialForce())
         }

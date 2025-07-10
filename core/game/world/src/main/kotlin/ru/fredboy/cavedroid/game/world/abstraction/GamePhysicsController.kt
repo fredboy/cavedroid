@@ -80,7 +80,7 @@ abstract class GamePhysicsController : Disposable {
                 sensorType == ContactSensorType.DROP_ATTRACTOR && drop != null && mob != null ->
                     drop.setAttractionTarget(mob)
 
-                sensorType == ContactSensorType.DROP_PICK_UP && mob != null && drop != null ->
+                sensorType == ContactSensorType.DROP_PICK_UP && mob != null && drop != null && !drop.isPickedUp ->
                     mob.pickUpDrop(drop)
 
                 sensorType == null && mob != null && block != null ->

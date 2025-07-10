@@ -43,7 +43,7 @@ class FallingBlockMapper @Inject constructor(
             block = getBlockByKeyUseCase[saveDataDto.blockKey],
             behavior = FallingBlockMobBehavior(),
         ).apply {
-            spawn(saveDataDto.x - width / 2f, saveDataDto.y - width / 2f, mobPhysicsFactory)
+            spawn(saveDataDto.x, saveDataDto.y, mobPhysicsFactory)
             velocity.x = saveDataDto.velocityX
             velocity.y = saveDataDto.velocityY
             animDelta = saveDataDto.animDelta
