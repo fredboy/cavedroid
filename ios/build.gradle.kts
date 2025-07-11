@@ -15,7 +15,7 @@ dependencies {
     implementation(Dependencies.RoboVM.cocoatouch)
     implementation(Dependencies.LibGDX.Ios.backend)
     implementation(Dependencies.LibGDX.Ios.natives)
-    implementation(Dependencies.LibGDX.Box2d.Natives.desktop)
+    implementation(Dependencies.LibGDX.Box2d.Natives.ios)
 }
 
 val generatePlist by tasks.registering {
