@@ -137,7 +137,8 @@ class Drop(
 
         val mediumResistance = liquid?.density ?: 1f
         body.linearDamping = mediumResistance
-        body.gravityScale = (if (liquid != null) -1f else 1f) / mediumResistance
+
+        body.gravityScale = (if (liquid != null) -1f else 1f)
 
         return controlVector.cpy().scl(1f / mediumResistance)
     }

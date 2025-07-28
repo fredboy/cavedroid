@@ -11,6 +11,9 @@ import ru.fredboy.cavedroid.domain.world.model.ContactSensorType
 import ru.fredboy.cavedroid.entity.drop.model.Drop
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.game.world.GameWorld
+import kotlin.math.max
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 abstract class GamePhysicsController : Disposable {
 
@@ -67,6 +70,11 @@ abstract class GamePhysicsController : Disposable {
             val sensorType = contact.fixtureA.userData as? ContactSensorType
                 ?: contact.fixtureB.userData as? ContactSensorType
 
+            // disable friction while mob is moving
+            if (mob != null && block != null && !mob.controlVector.isZero) {
+                contact.friction = 0f
+            }
+
             when {
                 sensorType == ContactSensorType.MOB_ON_GROUND && mob != null && block != null ->
                     mob.onTouchGround()
@@ -83,7 +91,9 @@ abstract class GamePhysicsController : Disposable {
                 sensorType == ContactSensorType.DROP_PICK_UP && mob != null && drop != null && !drop.isPickedUp ->
                     mob.pickUpDrop(drop)
 
-                sensorType == null && mob != null && block != null ->
+                sensorType == null && mob != null && block != null -> {
+                    mob.damage(max((mob.velocity.y.pow(2f) / 19.6f).roundToInt() - 3, 0))
+
                     contact.isEnabled = !mob.stepUpTheBlock(
                         block = block,
                         blockBody = if (contact.fixtureA.body.userData == block) {
@@ -92,6 +102,7 @@ abstract class GamePhysicsController : Disposable {
                             contact.fixtureB.body
                         },
                     )
+                }
             }
         }
 

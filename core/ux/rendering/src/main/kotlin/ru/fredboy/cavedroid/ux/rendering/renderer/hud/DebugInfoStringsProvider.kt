@@ -28,6 +28,7 @@ class DebugInfoStringsProvider @Inject constructor(
             "CurX: ${player.cursorX}",
             "CurY: ${player.cursorY}",
             "Velocity: ${player.velocity}",
+            "Control: ${player.controlVector}",
             "Swim: ${player.swim}",
             "Mobs: ${mobController.mobs.size}",
             "Drops: ${dropController.size}",

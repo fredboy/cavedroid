@@ -257,7 +257,7 @@ class Player(
         const val WIDTH = .25f
         const val HEIGHT = 1.9375f
 
-        const val SPEED = 6.26f
+        const val SPEED = 4.317f
 
         private val HIT_ANIMATION_RANGE = 30f..90f
 

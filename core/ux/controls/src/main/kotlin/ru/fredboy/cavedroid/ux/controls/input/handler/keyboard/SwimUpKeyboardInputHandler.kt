@@ -25,6 +25,7 @@ class SwimUpKeyboardInputHandler @Inject constructor(
         action.isKeyDown &&
         !mobController.player.swim &&
         mobController.player.canSwim &&
+        !mobController.player.canJump &&
         checkSwim() &&
         !mobController.player.isFlyMode &&
         (mobController.player.controlMode == Player.ControlMode.WALK || !applicationContextRepository.isTouch())

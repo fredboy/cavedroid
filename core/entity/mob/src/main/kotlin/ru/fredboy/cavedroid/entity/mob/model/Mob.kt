@@ -206,22 +206,21 @@ abstract class Mob(
         checkHealth()
     }
 
-    protected open fun getControlVectorWithAppliedResistance(mobWorldAdapter: MobWorldAdapter): Vector2 {
+    protected open fun applyMediumResistanceToBody(mobWorldAdapter: MobWorldAdapter) {
         if (isFlyMode) {
-            body.linearDamping = 1f
+            body.linearDamping = 2f
             body.gravityScale = 0f
-            return controlVector
+            return
         }
 
         val liquid = mobWorldAdapter.getMediumLiquid(hitbox.apply { height *= .75f })
 
         canSwim = liquid != null
 
-        val mediumResistance = liquid?.density ?: 1f
+        val mediumResistance = liquid?.density ?: 0f
         body.linearDamping = mediumResistance
-        body.gravityScale = 1f / mediumResistance * (if (swim && canSwim) -1f else 1f)
 
-        return controlVector.cpy().scl(1f / mediumResistance)
+        body.gravityScale = 1f * if (swim && canSwim) -speed else 1f
     }
 
     fun applyPendingTransform(vector: Vector2) {
@@ -236,14 +235,14 @@ abstract class Mob(
 
         behavior.update(this, mobWorldAdapter, delta)
 
-        val scaledControl = getControlVectorWithAppliedResistance(mobWorldAdapter)
-        if (!scaledControl.isZero) {
-            body.applyForceToCenter(scaledControl, true)
-            velocity.x = MathUtils.clamp(velocity.x, -abs(scaledControl.x), abs(scaledControl.x))
+        applyMediumResistanceToBody(mobWorldAdapter)
+        if (!controlVector.isZero) {
+            body.applyForceToCenter(controlVector, true)
+            velocity.x = MathUtils.clamp(velocity.x, -abs(controlVector.x), abs(controlVector.x))
             if (isFlyMode) {
-                velocity.y = MathUtils.clamp(velocity.y, -abs(scaledControl.y), abs(scaledControl.y))
+                velocity.y = MathUtils.clamp(velocity.y, -abs(controlVector.y), abs(controlVector.y))
             } else {
-                controlVector.y = 0f
+                this@Mob.controlVector.y = 0f
             }
         }
 
@@ -304,7 +303,7 @@ abstract class Mob(
         private const val DAMAGE_TINT_TIMEOUT_S = 0.5f
         private val DAMAGE_TINT_COLOR = Color((0xff8080 shl 8) or 0xFF)
 
-        private const val JUMP_VELOCITY = -3f
+        private const val JUMP_VELOCITY = -2.125f
 
         private const val JUMP_COOLDOWN_MS = 500L
     }

@@ -22,6 +22,7 @@ class TurnOnFlyModeKeyboardInputHandler @Inject constructor(
         !mobsController.player.swim &&
         !mobsController.player.isFlyMode &&
         !mobsController.player.canJump &&
+        !mobsController.player.canSwim &&
         action.isKeyDown &&
         (mobsController.player.controlMode == Player.ControlMode.WALK || !applicationContextRepository.isTouch())
 

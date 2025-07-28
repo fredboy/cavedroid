@@ -164,7 +164,9 @@ class GameWorld @Inject constructor(
         setMap(x, y, Layer.BACKGROUND, block, dropOld)
     }
 
-    fun canPlaceToForeground(x: Int, y: Int, value: Block): Boolean = !hasForeAt(x, y) || value.isNone() || !getForeMap(x, y).params.hasCollision
+    fun canPlaceToForeground(x: Int, y: Int, value: Block): Boolean {
+        return !hasForeAt(x, y) || value.isNone() || !getForeMap(x, y).params.hasCollision
+    }
 
     fun placeToForeground(x: Int, y: Int, value: Block, dropOld: Boolean = false): Boolean {
         val wasPlaced = if (canPlaceToForeground(x, y, value)) {

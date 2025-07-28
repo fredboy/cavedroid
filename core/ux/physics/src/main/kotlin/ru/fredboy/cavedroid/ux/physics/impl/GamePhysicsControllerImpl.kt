@@ -11,7 +11,6 @@ import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.world.abstraction.GamePhysicsController
 import javax.inject.Inject
-import kotlin.math.max
 
 @GameScope
 internal class GamePhysicsControllerImpl @Inject constructor(
@@ -36,7 +35,6 @@ internal class GamePhysicsControllerImpl @Inject constructor(
     }
 
     override fun Mob.onTouchGround() {
-        damage(max((velocity.y - 5f).toInt(), 0))
         footContactCounter++
         isFlyMode = false
         controlVector.y = 0f
@@ -98,5 +96,9 @@ internal class GamePhysicsControllerImpl @Inject constructor(
         applyPendingTransform(Vector2(0f, blockRect.y - (mobRect.y + mobRect.height)))
 
         return true
+    }
+
+    companion object {
+        private const val TAG = "GamePhysicsControllerImpl"
     }
 }

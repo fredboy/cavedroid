@@ -29,7 +29,7 @@ class MobPhysicsFactoryImpl @Inject constructor(
 
         val body = mobWorldAdapter.getBox2dWorld().createBody(bodyDef).apply {
             userData = mob
-            linearDamping = 1f
+//            linearDamping = 1f
         }
 
         body.createMainBodyFixture(mob.width, mob.height, physicsCategory)
@@ -76,7 +76,7 @@ class MobPhysicsFactoryImpl @Inject constructor(
         val rightShape = createCircleShape(footRadius, rightFootX, footY)
 
         FixtureDef().apply {
-            friction = .2f
+            friction = 8f
             restitution = 0f
             filter.categoryBits = physicsCategory
             filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
@@ -99,7 +99,7 @@ class MobPhysicsFactoryImpl @Inject constructor(
         val footShape = createCircleShape(footRadius, footX, footY)
 
         FixtureDef().apply {
-            friction = .2f
+            friction = 8f
             restitution = 0f
             filter.categoryBits = physicsCategory
             filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
