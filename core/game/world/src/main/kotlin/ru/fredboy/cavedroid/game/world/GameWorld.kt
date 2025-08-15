@@ -10,7 +10,7 @@ import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
-import ru.fredboy.cavedroid.game.world.abstraction.GamePhysicsController
+import ru.fredboy.cavedroid.game.world.GameWorldContactListener
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
 import ru.fredboy.cavedroid.game.world.generator.GameWorldGenerator
 import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @GameScope
 class GameWorld @Inject constructor(
     private val itemsRepository: ItemsRepository,
-    private val physicsController: GamePhysicsController,
+    private val physicsController: GameWorldContactListener,
     private val gameWorldSolidBlockBodiesManager: GameWorldSolidBlockBodiesManager,
     initialForeMap: Array<Array<Block>>?,
     initialBackMap: Array<Array<Block>>?,

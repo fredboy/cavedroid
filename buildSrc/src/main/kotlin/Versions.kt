@@ -59,7 +59,7 @@ object Versions {
      *
      * [Source](https://github.com/fredboy/automultibind)
      */
-    const val automultibind = "1.0.0"
+    const val automultibind = "1.0.1"
 
     /**
      * Ktlint gradle plugin

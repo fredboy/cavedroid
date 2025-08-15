@@ -7,6 +7,7 @@ java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
+    useAutomultibind()
     useLibgdx()
     useDagger()
 

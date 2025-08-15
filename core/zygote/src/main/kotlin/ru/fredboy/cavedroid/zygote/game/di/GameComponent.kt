@@ -2,8 +2,10 @@ package ru.fredboy.cavedroid.zygote.game.di
 
 import dagger.BindsInstance
 import dagger.Component
+import ru.deadsoftware.cavedroid.generated.module.DropContactHandlerModule
 import ru.deadsoftware.cavedroid.generated.module.HudRenderModule
 import ru.deadsoftware.cavedroid.generated.module.KeyboardInputHandlersModule
+import ru.deadsoftware.cavedroid.generated.module.MobContactHandlerModule
 import ru.deadsoftware.cavedroid.generated.module.MouseInputHandlersModule
 import ru.deadsoftware.cavedroid.generated.module.PlaceBlockActionsModule
 import ru.deadsoftware.cavedroid.generated.module.UpdateBlockActionsModule
@@ -24,7 +26,7 @@ import ru.fredboy.cavedroid.zygote.game.GameProc
 
 @GameScope
 @Component(
-    dependencies = [ ApplicationComponent::class ],
+    dependencies = [ApplicationComponent::class],
     modules = [
         GameModule::class,
         UseItemActionsModule::class,
@@ -41,6 +43,8 @@ import ru.fredboy.cavedroid.zygote.game.GameProc
         WorldRenderModule::class,
         HudRenderModule::class,
         PhysicsModule::class,
+        DropContactHandlerModule::class,
+        MobContactHandlerModule::class,
     ],
 )
 interface GameComponent {

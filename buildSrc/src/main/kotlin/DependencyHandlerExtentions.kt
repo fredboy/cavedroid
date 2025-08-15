@@ -25,9 +25,12 @@ fun DependencyHandler.useDomainModules() {
     useModule(":core:domain:assets")
     useModule(":core:domain:configuration")
     useModule(":core:domain:items")
-    useModule(":core:domain:save")
     useModule(":core:domain:menu")
     useModule(":core:domain:world")
+}
+
+fun DependencyHandler.useDomainSaveModule() {
+    useModule(":core:domain:save")
 }
 
 fun DependencyHandler.useEntityModules() {

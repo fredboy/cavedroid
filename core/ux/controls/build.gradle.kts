@@ -13,6 +13,7 @@ dependencies {
 
     useCommonModule()
     useDomainModules()
+    useDomainSaveModule()
     useEntityModules()
     useGameModules()
 }

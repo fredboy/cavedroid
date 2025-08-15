@@ -21,7 +21,7 @@ import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
-import ru.fredboy.cavedroid.game.world.abstraction.GamePhysicsController
+import ru.fredboy.cavedroid.game.world.GameWorldContactListener
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
 
 @Module
@@ -111,7 +111,7 @@ object GameModule {
         gameContextRepository: GameContextRepository,
         saveDataRepository: SaveDataRepository,
         itemsRepository: ItemsRepository,
-        physicsController: GamePhysicsController,
+        physicsController: GameWorldContactListener,
         gameWorldSolidBlockBodiesManager: GameWorldSolidBlockBodiesManager,
     ): GameWorld {
         val mapData = if (gameContextRepository.isLoadGame()) {

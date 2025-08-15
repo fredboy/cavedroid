@@ -7,6 +7,7 @@ java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
+    useAutomultibind()
     useLibgdx()
     useDagger()
 
@@ -14,4 +15,5 @@ dependencies {
     useModule(":core:domain:items")
     useModule(":core:domain:world")
     useModule(":core:entity:drop")
+    useModule(":core:entity:mob")
 }
