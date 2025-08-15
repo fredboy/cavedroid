@@ -34,8 +34,6 @@ You can download APK and JAR builds from [my website](https://fredboy.ru/pub/cav
 
 ## Build Instructions
 
-**Note:** You need to publish [my KSP processor](https://github.com/fredboy/automultibind) to your `mavenLocal` repository first.
-
 ### Android
 
 ```bash
