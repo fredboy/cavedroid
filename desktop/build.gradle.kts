@@ -5,7 +5,7 @@ plugins {
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
-private val desktopLauncherClassName = "ru.deadsoftware.cavedroid.desktop.DesktopLauncher"
+private val desktopLauncherClassName = "ru.fredboy.cavedroid.desktop.DesktopLauncher"
 
 tasks.register<JavaExec>("run") {
     dependsOn("build")
@@ -43,7 +43,7 @@ tasks.register<Jar>("dist") {
 
 dependencies {
     useCommonModule()
-    useZygoteModule()
+    useGdxModule()
 
     implementation(Dependencies.LibGDX.gdx)
     implementation(Dependencies.LibGDX.Desktop.backend)

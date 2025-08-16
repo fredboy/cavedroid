@@ -41,25 +41,11 @@ object Versions {
     const val ksp = "1.9.24-1.0.20"
 
     /**
-     * Kotlin poet version
-     *
-     * [Source](https://github.com/square/kotlinpoet)
-     */
-    const val kotlinPoetKsp = "1.16.0"
-
-    /**
-     * JetBrains annotations version
-     *
-     * [Source](https://github.com/JetBrains/java-annotations)
-     */
-    const val jetbrainsAnnotations = "23.1.0"
-
-    /**
      * Automultibind version
      *
      * [Source](https://github.com/fredboy/automultibind)
      */
-    const val automultibind = "1.0.1"
+    const val automultibind = "1.0.4"
 
     /**
      * Ktlint gradle plugin

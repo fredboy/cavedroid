@@ -47,14 +47,14 @@ fun DependencyHandler.useGameModules() {
     useModule(":core:game:world")
 }
 
-fun DependencyHandler.useUxModules() {
-    useModule(":core:ux:controls")
-    useModule(":core:ux:physics")
-    useModule(":core:ux:rendering")
+fun DependencyHandler.useGameplayModules() {
+    useModule(":core:gameplay:controls")
+    useModule(":core:gameplay:physics")
+    useModule(":core:gameplay:rendering")
 }
 
-fun DependencyHandler.useZygoteModule() {
-    useModule(":core:zygote")
+fun DependencyHandler.useGdxModule() {
+    useModule(":core:gdx")
 }
 
 fun DependencyHandler.useAutomultibind() {

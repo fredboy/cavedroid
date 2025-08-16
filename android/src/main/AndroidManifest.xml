@@ -9,7 +9,7 @@
             android:theme="@style/GdxTheme" tools:ignore="GoogleAppIndexingWarning">
         <activity
                 android:exported="true"
-                android:name="ru.deadsoftware.cavedroid.AndroidLauncher"
+                android:name="ru.fredboy.cavedroid.AndroidLauncher"
                 android:screenOrientation="sensorLandscape"
                 android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize"
                 tools:ignore="LockedOrientationActivity">

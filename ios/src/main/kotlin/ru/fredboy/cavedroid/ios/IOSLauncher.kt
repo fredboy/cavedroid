@@ -8,7 +8,7 @@ import org.robovm.apple.foundation.NSFileManager
 import org.robovm.apple.foundation.NSSearchPathDirectory
 import org.robovm.apple.foundation.NSSearchPathDomainMask
 import org.robovm.apple.uikit.UIApplication
-import ru.fredboy.cavedroid.zygote.CaveDroidApplication
+import ru.fredboy.cavedroid.gdx.CaveDroidApplication
 
 object IOSLauncher : IOSApplication.Delegate() {
     override fun createApplication(): IOSApplication? {

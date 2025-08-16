@@ -115,7 +115,7 @@ tasks.whenTaskAdded {
 
 dependencies {
     useCommonModule()
-    useZygoteModule()
+    useGdxModule()
 
     implementation(platform(Dependencies.Kotlin.bom))
 

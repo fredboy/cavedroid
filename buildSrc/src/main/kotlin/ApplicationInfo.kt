@@ -5,7 +5,7 @@ object ApplicationInfo {
     const val versionName = "alpha0.9.5"
     const val versionCode = 28
 
-    const val packageName = "ru.deadsoftware.cavedroid"
+    const val packageName = "ru.fredboy.cavedroid"
 
     val sourceCompatibility = JavaVersion.VERSION_17
 }

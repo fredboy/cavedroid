@@ -8,7 +8,7 @@ java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
     useCommonModule()
-    useZygoteModule()
+    useGdxModule()
 
     implementation(Dependencies.LibGDX.gdx)
     implementation(Dependencies.RoboVM.rt)

@@ -1,0 +1,43 @@
+package ru.fredboy.cavedroid.gameplay.controls.input.handler.keyboard
+
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
+import ru.fredboy.cavedroid.entity.mob.model.Player
+import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.gameplay.controls.input.IKeyboardInputHandler
+import ru.fredboy.cavedroid.gameplay.controls.input.action.KeyboardInputAction
+import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.KeyboardInputActionKey
+import ru.fredboy.cavedroid.gameplay.controls.input.annotation.BindKeyboardInputHandler
+import javax.inject.Inject
+
+@GameScope
+@BindKeyboardInputHandler
+class MoveCursorControlsModeKeyboardInputHandler @Inject constructor(
+    private val applicationContextRepository: ApplicationContextRepository,
+    private val mobsController: MobController,
+) : IKeyboardInputHandler {
+
+    override fun checkConditions(action: KeyboardInputAction): Boolean = applicationContextRepository.isTouch() &&
+        mobsController.player.controlMode == Player.ControlMode.CURSOR &&
+        action.isKeyDown &&
+        (
+            action.actionKey is KeyboardInputActionKey.Left ||
+                action.actionKey is KeyboardInputActionKey.Right ||
+                action.actionKey is KeyboardInputActionKey.Up ||
+                action.actionKey is KeyboardInputActionKey.Down
+            )
+
+    override fun handle(action: KeyboardInputAction) {
+        val player = mobsController.player
+
+        when (action.actionKey) {
+            KeyboardInputActionKey.Left -> player.cursorX--
+            KeyboardInputActionKey.Right -> player.cursorX++
+            KeyboardInputActionKey.Up -> player.cursorY--
+            KeyboardInputActionKey.Down -> player.cursorY++
+            else -> return
+        }
+
+        mobsController.checkPlayerCursorBounds()
+    }
+}

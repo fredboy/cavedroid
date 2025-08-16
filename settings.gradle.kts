@@ -50,13 +50,13 @@ include("core:game:window")
 include("core:game:world")
 
 /**
- * UX Modules, physics, rendering, controls, etc.
+ * Gameplay modules, physics, rendering, controls, etc.
  */
-include("core:ux:controls")
-include("core:ux:physics")
-include("core:ux:rendering")
+include("core:gameplay:controls")
+include("core:gameplay:physics")
+include("core:gameplay:rendering")
 
 /**
- * Zygote module: initialization, menu, screens...
+ * Gdx module: initialization, menu, screens...
  */
-include("core:zygote")
+include("core:gdx")
