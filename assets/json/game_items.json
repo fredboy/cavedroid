@@ -172,7 +172,8 @@
       "texture": "leaves_oak",
       "tool_level": 1,
       "tool_type": "shears",
-      "tint": "#5AC557"
+      "tint": "#5AC557",
+      "casts_shadows": false
     },
     "log_spruce": {
       "hp": 180,
@@ -187,7 +188,8 @@
       "texture": "leaves_spruce",
       "tool_level": 1,
       "tool_type": "shears",
-      "tint": "#486D4E"
+      "tint": "#486D4E",
+      "casts_shadows": false
     },
     "sponge": {
       "hp": 54,
@@ -943,6 +945,7 @@
       "name": "Leaves",
       "type": "block",
       "texture": "leaves_oak"
+
     },
     "log_spruce": {
       "name": "Spruce",

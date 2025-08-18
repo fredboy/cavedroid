@@ -33,5 +33,5 @@ data class BlockDto(
     @SerialName("tint") val tint: String? = null,
     @SerialName("fallable") val fallable: Boolean = false,
     @SerialName("density") val density: Float? = null,
-    @SerialName("cast_shadows") val castShadows: Boolean = true,
+    @SerialName("casts_shadows") val castShadows: Boolean = true,
 )
