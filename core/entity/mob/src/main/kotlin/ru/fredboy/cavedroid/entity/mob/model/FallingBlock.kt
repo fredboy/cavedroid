@@ -38,8 +38,8 @@ class FallingBlock(
                 speed = 0f,
                 behaviorType = MobBehaviorType.FALLING_BLOCK,
                 dropInfo = MobDropInfo(
-                    itemKey = block.params.key,
-                    count = 1,
+                    itemKey = "none",
+                    count = 0,
                 ),
                 hp = Int.MAX_VALUE,
                 sprites = emptyList(),
