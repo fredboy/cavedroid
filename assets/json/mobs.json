@@ -9,7 +9,7 @@
     "hp": 20,
     "sprites": [
       {
-        "file": "2",
+        "file": "hand",
         "offset_x": 2,
         "offset_y": 8,
         "is_background": true,
@@ -17,27 +17,27 @@
         "is_static": false
       },
       {
-        "file": "3",
+        "file": "leg",
         "offset_x": 2,
         "offset_y": 20,
         "is_background": true,
         "is_static": false
       },
       {
-        "file": "0",
+        "file": "head",
         "is_background": false,
         "is_head": true,
         "is_static": false,
         "origin_y": 1
       },
       {
-        "file": "1",
+        "file": "body",
         "offset_x": 2,
         "offset_y": 8,
         "is_background": false
       },
       {
-        "file": "2",
+        "file": "hand",
         "offset_x": 2,
         "offset_y": 8,
         "is_background": false,
@@ -45,7 +45,7 @@
         "is_static": false
       },
       {
-        "file": "3",
+        "file": "leg",
         "offset_x": 2,
         "offset_y": 20,
         "is_background": false,
@@ -64,7 +64,7 @@
     "drop_count": 1,
     "sprites": [
       {
-        "file": "1",
+        "file": "leg",
         "offset_x": 9,
         "offset_y": 12,
         "is_background": true,
@@ -73,7 +73,7 @@
         "is_static": false
       },
       {
-        "file": "1",
+        "file": "leg",
         "offset_x": 21,
         "offset_y": 12,
         "is_background": true,
@@ -82,14 +82,14 @@
         "is_static": false
       },
       {
-        "file": "0",
+        "file": "body",
         "is_background": false,
         "is_head": false,
         "is_hand": false,
         "is_static": true
       },
       {
-        "file": "1",
+        "file": "leg",
         "offset_x": 9,
         "offset_y": 12,
         "is_background": false,
@@ -98,7 +98,7 @@
         "is_static": false
       },
       {
-        "file": "1",
+        "file": "leg",
         "offset_x": 21,
         "offset_y": 12,
         "is_background": false,
@@ -119,7 +119,7 @@
     "drop_count": 1,
     "sprites": [
       {
-        "file": "1",
+        "file": "leg",
         "offset_x": 6,
         "offset_y": 14,
         "is_background": true,
@@ -128,7 +128,7 @@
         "is_static": false
       },
       {
-        "file": "1",
+        "file": "leg",
         "offset_x": 18,
         "offset_y": 14,
         "is_background": true,
@@ -137,14 +137,14 @@
         "is_static": false
       },
       {
-        "file": "0",
+        "file": "body",
         "is_background": false,
         "is_head": false,
         "is_hand": false,
         "is_static": true
       },
       {
-        "file": "1",
+        "file": "leg",
         "offset_x": 6,
         "offset_y": 14,
         "is_background": false,
@@ -153,7 +153,7 @@
         "is_static": false
       },
       {
-        "file": "1",
+        "file": "leg",
         "offset_x": 18,
         "offset_y": 14,
         "is_background": false,
