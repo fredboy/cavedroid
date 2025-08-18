@@ -65,6 +65,7 @@ fun DependencyHandler.useAutomultibind() {
 fun DependencyHandler.useLibgdx() {
     implementation(Dependencies.LibGDX.gdx)
     implementation(Dependencies.LibGDX.Box2d.box2d)
+    implementation(Dependencies.LibGDX.box2dLights)
 }
 
 fun DependencyHandler.useDagger() {

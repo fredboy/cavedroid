@@ -4,6 +4,7 @@ import dagger.Binds
 import dagger.Module
 import ru.fredboy.cavedroid.data.assets.internal.BlockAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.BlockDamageAssetsRepositoryImpl
+import ru.fredboy.cavedroid.data.assets.internal.EnvironmentTextureRegionsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.FontAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.ItemsAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.MobAssetsRepositoryImpl
@@ -11,6 +12,7 @@ import ru.fredboy.cavedroid.data.assets.internal.TextureRegionsAssetsRepositoryI
 import ru.fredboy.cavedroid.data.assets.internal.TouchButtonsRepositoryImpl
 import ru.fredboy.cavedroid.domain.assets.repository.BlockAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.FontAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.ItemsAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
@@ -54,4 +56,9 @@ abstract class DataAssetsModule {
     internal abstract fun bindTouchButtonsAssetsRepository(
         impl: TouchButtonsRepositoryImpl,
     ): TouchButtonsAssetsRepository
+
+    @Binds
+    internal abstract fun bindEnvironmentTextureRegionsAssetsRepository(
+        impl: EnvironmentTextureRegionsRepositoryImpl,
+    ): EnvironmentTextureRegionsRepository
 }

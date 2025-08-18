@@ -1,9 +1,12 @@
 package ru.fredboy.cavedroid.entity.mob.model
 
+import box2dLight.Light
+import box2dLight.PointLight
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.Filter
 import ru.fredboy.cavedroid.common.utils.applyOrigin
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.domain.items.model.inventory.Inventory
@@ -12,7 +15,9 @@ import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
+import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.impl.PlayerMobBehavior
 
 class Player(
@@ -56,6 +61,16 @@ class Player(
     val hotbarItems get() = inventory.items.subList(0, HOTBAR_SIZE)
 
     val activeItem get() = inventory.items[activeSlot]
+
+    var sight: Light? = null
+        set(value) {
+            if (field != null) {
+                field?.dispose()
+                field = null
+            }
+
+            field = value
+        }
 
     override fun changeDir() = Unit
 
@@ -129,11 +144,43 @@ class Player(
         }
     }
 
+    override fun dispose() {
+        super.dispose()
+        sight = null
+    }
+
     fun respawn(spawnPoint: Vector2, mobPhysicsFactory: MobPhysicsFactory) {
         this.spawnPoint = spawnPoint
         isDead = false
         heal(maxHealth)
         spawn(spawnPoint.x, spawnPoint.y, mobPhysicsFactory)
+    }
+
+    fun initSight(mobWorldAdapter: MobWorldAdapter) {
+        sight = PointLight(
+            mobWorldAdapter.getRayHandler(),
+            128,
+            Color().apply { a = .3f },
+            4f,
+            position.x,
+            position.y,
+        ).apply {
+            attachToBody(body)
+            ignoreAttachedBody = true
+            setContactFilter(
+                Filter().apply {
+                    categoryBits = PhysicsConstants.CATEGORY_OPAQUE
+                },
+            )
+            setSoftnessLength(3f)
+        }
+    }
+
+    fun updateSight() {
+        sight?.let { sight ->
+            sight.setPosition(position.x, position.y)
+            sight.direction = 0f
+        }
     }
 
     fun startHitting(withDamage: Boolean = true) {

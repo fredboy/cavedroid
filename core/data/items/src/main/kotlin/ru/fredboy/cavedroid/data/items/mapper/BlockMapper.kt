@@ -66,6 +66,7 @@ class BlockMapper @Inject constructor(
         damage = dto.damage,
         tint = dto.tint,
         isFallable = dto.fallable,
+        castsShadows = dto.castShadows,
     )
 
     private fun mapToolType(dto: BlockDto): Class<out Item.Tool>? = when (dto.toolType) {

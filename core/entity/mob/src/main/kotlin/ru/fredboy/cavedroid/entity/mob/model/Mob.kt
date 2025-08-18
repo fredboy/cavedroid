@@ -113,7 +113,7 @@ abstract class Mob(
     open val physicsCategory: Short
         get() = PhysicsConstants.CATEGORY_MOB
 
-    fun spawn(x: Float, y: Float, factory: MobPhysicsFactory) {
+    open fun spawn(x: Float, y: Float, factory: MobPhysicsFactory) {
         if (_body != null) {
             Gdx.app.error(
                 /* tag = */ TAG,

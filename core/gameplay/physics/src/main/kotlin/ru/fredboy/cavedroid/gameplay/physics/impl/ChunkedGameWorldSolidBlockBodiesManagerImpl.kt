@@ -13,6 +13,7 @@ import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
 import javax.inject.Inject
+import kotlin.experimental.or
 
 @GameScope
 class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor() : GameWorldSolidBlockBodiesManager() {
@@ -78,6 +79,10 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor() : GameWo
                     friction = .2f
                     restitution = 0f
                     filter.categoryBits = PhysicsConstants.CATEGORY_BLOCK
+
+                    if (cluster.block.params.castsShadows) {
+                        filter.categoryBits = filter.categoryBits or PhysicsConstants.CATEGORY_OPAQUE
+                    }
                 }
 
                 body.createFixture(fixtureDef).apply {

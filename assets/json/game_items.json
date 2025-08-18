@@ -5,7 +5,8 @@
       "transparent": true,
       "drop": "none",
       "texture": "none",
-      "meta": "none"
+      "meta": "none",
+      "casts_shadows": false
     },
     "stone": {
       "hp": 450,
@@ -92,7 +93,8 @@
       "animated": true,
       "frames": 16,
       "state": 0,
-      "density": 10
+      "density": 10,
+      "casts_shadows": false
     },
     "lava": {
       "collision": false,
@@ -103,7 +105,8 @@
       "frames": 16,
       "state": 0,
       "damage": 4,
-      "density": 15
+      "density": 15,
+      "casts_shadows": false
     },
     "sand": {
       "hp": 45,
@@ -197,7 +200,8 @@
       "hp": 27,
       "transparent": true,
       "drop": "none",
-      "texture": "glass"
+      "texture": "glass",
+      "casts_shadows": false
     },
     "lapis_ore": {
       "hp": 900,
@@ -235,7 +239,8 @@
       "drop": "bed",
       "texture": "bed_l",
       "tool_level": 0,
-      "tool_type": "axe"
+      "tool_type": "axe",
+      "casts_shadows": false
     },
     "bed_r": {
       "hp": 21,
@@ -245,7 +250,8 @@
       "drop": "bed",
       "texture": "bed_r",
       "tool_level": 0,
-      "tool_type": "axe"
+      "tool_type": "axe",
+      "casts_shadows": false
     },
     "web": {
       "hp": 1200,
@@ -254,7 +260,8 @@
       "drop": "web",
       "texture": "web",
       "tool_level": 1,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "casts_shadows": false
     },
     "tallgrass": {
       "collision": false,
@@ -658,7 +665,8 @@
       "animated": true,
       "frames": 16,
       "state": 1,
-      "density": 10
+      "density": 10,
+      "casts_shadows": false
     },
     "water_12": {
       "top": 4,
@@ -671,7 +679,8 @@
       "animated": true,
       "frames": 16,
       "state": 2,
-      "density": 10
+      "density": 10,
+      "casts_shadows": false
     },
     "water_8": {
       "top": 8,
@@ -684,7 +693,8 @@
       "animated": true,
       "frames": 16,
       "state": 3,
-      "density": 10
+      "density": 10,
+      "casts_shadows": false
     },
     "water_4": {
       "top": 12,
@@ -697,7 +707,8 @@
       "animated": true,
       "frames": 16,
       "state": 4,
-      "density": 10
+      "density": 10,
+      "casts_shadows": false
     },
     "lava_16": {
       "collision": false,
@@ -708,7 +719,8 @@
       "frames": 16,
       "state": 1,
       "damage": 4,
-      "density": 15
+      "density": 15,
+      "casts_shadows": false
     },
     "lava_12": {
       "top": 4,
@@ -722,7 +734,8 @@
       "frames": 16,
       "state": 2,
       "damage": 4,
-      "density": 15
+      "density": 15,
+      "casts_shadows": false
     },
     "lava_8": {
       "top": 8,
@@ -736,7 +749,8 @@
       "frames": 16,
       "state": 3,
       "damage": 4,
-      "density": 15
+      "density": 15,
+      "casts_shadows": false
     },
     "lava_4": {
       "top": 12,
@@ -750,7 +764,8 @@
       "frames": 16,
       "state": 4,
       "damage": 4,
-      "density": 15
+      "density": 15,
+      "casts_shadows": false
     },
     "obsidian": {
       "hp": 15000,

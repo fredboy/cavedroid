@@ -60,4 +60,11 @@ object Versions {
      * [Source](https://github.com/MobiVM/robovm)
      */
     const val roboVM = "2.3.23"
+
+    /**
+     * Box2d Lights
+     *
+     * [Source](https://github.com/libgdx/box2dlights)
+     */
+    const val box2dLights = "1.5"
 }

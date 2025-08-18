@@ -36,10 +36,12 @@ class MobController @Inject constructor(
         set(value) {
             field.dispose()
             field = value
+            field.initSight(mobWorldAdapter)
         }
 
     init {
         respawnPlayer()
+        player.initSight(mobWorldAdapter)
     }
 
     fun addMob(mob: Mob) {

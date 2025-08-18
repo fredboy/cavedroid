@@ -11,6 +11,7 @@ import ru.fredboy.cavedroid.data.items.di.DataItemsModule
 import ru.fredboy.cavedroid.data.save.di.DataSaveModule
 import ru.fredboy.cavedroid.domain.assets.repository.BlockAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.FontAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.ItemsAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
@@ -68,6 +69,8 @@ interface ApplicationComponent {
     val applicationController: ApplicationController
 
     val mobParamsRepository: MobParamsRepository
+
+    val environmentTextureRegionsRepository: EnvironmentTextureRegionsRepository
 
     @Component.Builder
     interface Builder {

@@ -20,6 +20,7 @@ data class CommonBlockParams(
     val damage: Int,
     val tint: String?,
     val isFallable: Boolean,
+    val castsShadows: Boolean,
 ) {
     val spriteMarginsMeters by lazy { spriteMargins.toMeters() }
 }

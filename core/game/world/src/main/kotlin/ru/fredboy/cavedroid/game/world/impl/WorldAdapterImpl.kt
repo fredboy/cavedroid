@@ -1,5 +1,7 @@
 package ru.fredboy.cavedroid.game.world.impl
 
+import box2dLight.DirectionalLight
+import box2dLight.RayHandler
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
@@ -128,5 +130,13 @@ internal class WorldAdapterImpl @Inject constructor(
             }
         }
         return medium
+    }
+
+    override fun getRayHandler(): RayHandler {
+        return gameWorld.rayHandler
+    }
+
+    override fun getSun(): DirectionalLight {
+        return gameWorld.sun
     }
 }

@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gdx.game.di
 import dagger.Module
 import dagger.Provides
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
@@ -115,6 +116,7 @@ object GameModule {
         itemsRepository: ItemsRepository,
         physicsController: GameWorldContactListener,
         gameWorldSolidBlockBodiesManager: GameWorldSolidBlockBodiesManager,
+        environmentTextureRegionsRepository: EnvironmentTextureRegionsRepository,
     ): GameWorld {
         val mapData = if (gameContextRepository.isLoadGame()) {
             saveDataRepository.loadMap(
@@ -128,6 +130,7 @@ object GameModule {
             itemsRepository = itemsRepository,
             physicsController = physicsController,
             gameWorldSolidBlockBodiesManager = gameWorldSolidBlockBodiesManager,
+            environmentTextureRegionsRepository = environmentTextureRegionsRepository,
             initialForeMap = mapData?.retrieveForeMap(),
             initialBackMap = mapData?.retrieveBackMap(),
         )
