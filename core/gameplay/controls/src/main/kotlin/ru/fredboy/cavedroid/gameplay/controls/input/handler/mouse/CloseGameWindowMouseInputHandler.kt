@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @GameScope
 @BindMouseInputHandler
 class CloseGameWindowMouseInputHandler @Inject constructor(
+    private val gameContextRepository: GameContextRepository,
     private val gameWindowsManager: GameWindowsManager,
     private val mobController: MobController,
     private val dropController: DropController,
@@ -32,7 +34,7 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
     override fun checkConditions(action: MouseInputAction): Boolean = gameWindowsManager.currentWindowType != GameWindowType.NONE &&
         (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
         action.actionKey.touchUp &&
-        !isInsideWindow(action, getCurrentWindowTexture())
+        !isInsideWindow(gameContextRepository, action, getCurrentWindowTexture())
 
     private fun getCurrentWindowTexture(): TextureRegion = when (val window = gameWindowsManager.currentWindowType) {
         GameWindowType.CREATIVE_INVENTORY -> creativeInventoryTexture

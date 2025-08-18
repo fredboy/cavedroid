@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.common.utils.PIXELS_PER_METER
 import ru.fredboy.cavedroid.domain.assets.model.TouchButton
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -142,7 +141,6 @@ class GameInputProcessor @Inject constructor(
         val action = mouseInputActionMapper.mapDragged(
             mouseX = screenX.toFloat(),
             mouseY = screenY.toFloat(),
-            cameraViewport = gameContextRepository.getCameraContext().viewport,
             pointer = pointer,
         )
 
@@ -158,7 +156,6 @@ class GameInputProcessor @Inject constructor(
                 mouseY = Gdx.input.y.toFloat(),
                 amountX = amountX,
                 amountY = amountY,
-                cameraViewport = gameContextRepository.getCameraContext().viewport,
             )
         return handleMouseAction(action)
     }
@@ -279,7 +276,6 @@ class GameInputProcessor @Inject constructor(
         val action: MouseInputAction? = mouseInputActionMapper.map(
             mouseX = mouseX.toFloat(),
             mouseY = mouseY.toFloat(),
-            cameraViewport = requireNotNull(gameContextRepository.getCameraContext().viewport),
             button = button,
             touchUp = touchUp,
             pointer = pointer,
@@ -297,12 +293,6 @@ class GameInputProcessor @Inject constructor(
             screenX = screenX,
             screenY = screenY,
             actionKey = MouseInputActionKey.None,
-            cameraViewport = Rectangle().apply {
-                x = cameraContext.visibleWorld.x * PIXELS_PER_METER
-                y = cameraContext.visibleWorld.y * PIXELS_PER_METER
-                width = applicationContextRepository.getWidth()
-                height = applicationContextRepository.getHeight()
-            },
         )
 
         cursorMouseInputHandler.handle(action)

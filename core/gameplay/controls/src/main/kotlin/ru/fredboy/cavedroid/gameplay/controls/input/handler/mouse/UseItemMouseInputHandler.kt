@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
@@ -24,6 +25,7 @@ import javax.inject.Inject
 @GameScope
 @BindMouseInputHandler
 class UseItemMouseInputHandler @Inject constructor(
+    private val gameContextRepository: GameContextRepository,
     private val mobController: MobController,
     private val useItemActionMap: Map<String, @JvmSuppressWildcards IUseItemAction>,
     private val placeBlockActionMap: Map<String, @JvmSuppressWildcards IPlaceBlockAction>,
@@ -36,7 +38,7 @@ class UseItemMouseInputHandler @Inject constructor(
     private var buttonHoldTask: Timer.Task? = null
 
     override fun checkConditions(action: MouseInputAction): Boolean = buttonHoldTask?.isScheduled == true ||
-        !action.isInsideHotbar(textureRegions) &&
+        !action.isInsideHotbar(gameContextRepository, textureRegions) &&
         gameWindowsManager.currentWindowType == GameWindowType.NONE &&
         action.actionKey is MouseInputActionKey.Right
 

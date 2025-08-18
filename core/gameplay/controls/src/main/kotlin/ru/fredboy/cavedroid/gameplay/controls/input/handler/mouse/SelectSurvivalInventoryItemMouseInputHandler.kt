@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
@@ -15,11 +16,17 @@ import javax.inject.Inject
 @GameScope
 @BindMouseInputHandler
 class SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
+    private val gameContextRepository: GameContextRepository,
     private val gameWindowsManager: GameWindowsManager,
     private val mobController: MobController,
     private val textureRegions: GetTextureRegionByNameUseCase,
-    private val itemsRepository: ItemsRepository,
-) : AbstractInventoryItemsMouseInputHandler(itemsRepository, gameWindowsManager, GameWindowType.SURVIVAL_INVENTORY) {
+    itemsRepository: ItemsRepository,
+) : AbstractInventoryItemsMouseInputHandler(
+    gameContextRepository = gameContextRepository,
+    itemsRepository = itemsRepository,
+    gameWindowsManager = gameWindowsManager,
+    windowType = GameWindowType.SURVIVAL_INVENTORY,
+) {
 
     override val windowTexture get() = requireNotNull(textureRegions["survival"])
 
@@ -54,8 +61,10 @@ class SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
     }
 
     override fun handle(action: MouseInputAction) {
-        val xOnWindow = action.screenX - (action.cameraViewport.width / 2 - windowTexture.regionWidth / 2)
-        val yOnWindow = action.screenY - (action.cameraViewport.height / 2 - windowTexture.regionHeight / 2)
+        val xOnWindow =
+            action.screenX - (gameContextRepository.getCameraContext().viewport.width / 2 - windowTexture.regionWidth / 2)
+        val yOnWindow =
+            action.screenY - (gameContextRepository.getCameraContext().viewport.height / 2 - windowTexture.regionHeight / 2)
 
         val xOnGrid = (xOnWindow - GameWindowsConfigs.Survival.itemsGridMarginLeft) /
             GameWindowsConfigs.Survival.itemsGridColWidth

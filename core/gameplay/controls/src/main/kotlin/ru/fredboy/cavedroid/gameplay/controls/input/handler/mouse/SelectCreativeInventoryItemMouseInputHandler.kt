@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByIndexUseCase
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @GameScope
 @BindMouseInputHandler
 class SelectCreativeInventoryItemMouseInputHandler @Inject constructor(
+    private val gameContextRepository: GameContextRepository,
     private val gameWindowsManager: GameWindowsManager,
     private val mobController: MobController,
     private val textureRegions: GetTextureRegionByNameUseCase,
@@ -29,20 +31,20 @@ class SelectCreativeInventoryItemMouseInputHandler @Inject constructor(
         !gameWindowsManager.isDragging &&
         (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
         action.actionKey.touchUp &&
-        isInsideWindow(action, creativeInventoryTexture)
+        isInsideWindow(gameContextRepository, action, creativeInventoryTexture)
 
     override fun handle(action: MouseInputAction) {
         val creativeTexture = creativeInventoryTexture
         val xOnGrid = (
             action.screenX - (
-                action.cameraViewport.width / 2 - creativeTexture.regionWidth / 2 +
+                gameContextRepository.getCameraContext().viewport.width / 2 - creativeTexture.regionWidth / 2 +
                     GameWindowsConfigs.Creative.itemsGridMarginLeft
                 )
             ) /
             GameWindowsConfigs.Creative.itemsGridColWidth
         val yOnGrid = (
             action.screenY - (
-                action.cameraViewport.height / 2 - creativeTexture.regionHeight / 2 +
+                gameContextRepository.getCameraContext().viewport.height / 2 - creativeTexture.regionHeight / 2 +
                     GameWindowsConfigs.Creative.itemsGridMarginTop
                 )
             ) /

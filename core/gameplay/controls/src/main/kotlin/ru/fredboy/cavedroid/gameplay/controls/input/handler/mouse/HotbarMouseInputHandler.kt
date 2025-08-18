@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.drop.DropController
@@ -21,6 +22,7 @@ import javax.inject.Inject
 @GameScope
 @BindMouseInputHandler
 class HotbarMouseInputHandler @Inject constructor(
+    private val gameContextRepository: GameContextRepository,
     private val gameWindowsManager: GameWindowsManager,
     private val mobController: MobController,
     private val dropController: DropController,
@@ -34,7 +36,7 @@ class HotbarMouseInputHandler @Inject constructor(
     override fun checkConditions(action: MouseInputAction): Boolean = buttonHoldTask?.isScheduled == true ||
         (
             (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
-                action.isInsideHotbar(textureRegions) ||
+                action.isInsideHotbar(gameContextRepository, textureRegions) ||
                 action.actionKey is MouseInputActionKey.Scroll
             ) &&
         gameWindowsManager.currentWindowType == GameWindowType.NONE
@@ -57,7 +59,7 @@ class HotbarMouseInputHandler @Inject constructor(
     private fun getActionSlot(action: MouseInputAction): Int = (
         (
             action.screenX -
-                (action.cameraViewport.width / 2 - hotbarTexture.regionWidth / 2)
+                (gameContextRepository.getCameraContext().viewport.width / 2 - hotbarTexture.regionWidth / 2)
             ) /
             HOTBAR_CELL_WIDTH
         ).toInt()

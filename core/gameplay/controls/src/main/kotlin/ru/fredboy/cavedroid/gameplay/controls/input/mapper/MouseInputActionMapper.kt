@@ -2,7 +2,6 @@ package ru.fredboy.cavedroid.gameplay.controls.input.mapper
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
@@ -17,7 +16,6 @@ class MouseInputActionMapper @Inject constructor(
     fun map(
         mouseX: Float,
         mouseY: Float,
-        cameraViewport: Rectangle,
         button: Int,
         touchUp: Boolean,
         pointer: Int,
@@ -28,20 +26,17 @@ class MouseInputActionMapper @Inject constructor(
             screenX = getScreenX(mouseX),
             screenY = getScreenY(mouseY),
             actionKey = actionKey,
-            cameraViewport = cameraViewport,
         )
     }
 
     fun mapDragged(
         mouseX: Float,
         mouseY: Float,
-        cameraViewport: Rectangle,
         pointer: Int,
     ): MouseInputAction = MouseInputAction(
         screenX = getScreenX(mouseX),
         screenY = getScreenY(mouseY),
         actionKey = MouseInputActionKey.Dragged(pointer),
-        cameraViewport = cameraViewport,
     )
 
     fun mapScrolled(
@@ -49,12 +44,10 @@ class MouseInputActionMapper @Inject constructor(
         mouseY: Float,
         amountX: Float,
         amountY: Float,
-        cameraViewport: Rectangle,
     ): MouseInputAction = MouseInputAction(
         screenX = getScreenX(mouseX),
         screenY = getScreenY(mouseY),
         actionKey = MouseInputActionKey.Scroll(amountX, amountY),
-        cameraViewport = cameraViewport,
     )
 
     private fun mapActionKey(button: Int, touchUp: Boolean, pointer: Int): MouseInputActionKey? = when (button) {

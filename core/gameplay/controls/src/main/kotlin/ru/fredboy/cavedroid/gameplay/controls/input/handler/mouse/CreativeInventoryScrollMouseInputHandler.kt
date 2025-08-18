@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
@@ -20,6 +21,7 @@ import kotlin.math.abs
 @BindMouseInputHandler
 class CreativeInventoryScrollMouseInputHandler @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
+    private val gameContextRepository: GameContextRepository,
     private val gameWindowsManager: GameWindowsManager,
     private val itemsRepository: ItemsRepository,
     private val textureRegions: GetTextureRegionByNameUseCase,
@@ -29,26 +31,41 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
 
     private var dragStartY = 0f
 
-    override fun checkConditions(action: MouseInputAction): Boolean = gameWindowsManager.currentWindowType == GameWindowType.CREATIVE_INVENTORY &&
-        (gameWindowsManager.isDragging || isInsideWindow(action, creativeInventoryTexture)) &&
-        (
-            checkStartDragConditions(action) ||
-                checkEndDragConditions(action) ||
-                checkDragConditions(action) ||
-                action.actionKey is MouseInputActionKey.Scroll
-            )
+    override fun checkConditions(action: MouseInputAction): Boolean {
+        return gameWindowsManager.currentWindowType == GameWindowType.CREATIVE_INVENTORY &&
+            (
+                gameWindowsManager.isDragging ||
+                    isInsideWindow(
+                        gameContextRepository,
+                        action,
+                        creativeInventoryTexture,
+                    )
+                ) &&
+            (
+                checkStartDragConditions(action) ||
+                    checkEndDragConditions(action) ||
+                    checkDragConditions(action) ||
+                    action.actionKey is MouseInputActionKey.Scroll
+                )
+    }
 
-    private fun checkStartDragConditions(action: MouseInputAction): Boolean = (action.actionKey is MouseInputActionKey.Screen) &&
-        !action.actionKey.touchUp &&
-        !gameWindowsManager.isDragging
+    private fun checkStartDragConditions(action: MouseInputAction): Boolean {
+        return (action.actionKey is MouseInputActionKey.Screen) &&
+            !action.actionKey.touchUp &&
+            !gameWindowsManager.isDragging
+    }
 
-    private fun checkEndDragConditions(action: MouseInputAction): Boolean = action.actionKey is MouseInputActionKey.Screen &&
-        action.actionKey.touchUp &&
-        gameWindowsManager.isDragging
+    private fun checkEndDragConditions(action: MouseInputAction): Boolean {
+        return action.actionKey is MouseInputActionKey.Screen &&
+            action.actionKey.touchUp &&
+            gameWindowsManager.isDragging
+    }
 
-    private fun checkDragConditions(action: MouseInputAction): Boolean = applicationContextRepository.isTouch() &&
-        action.actionKey is MouseInputActionKey.Dragged &&
-        abs(action.screenY - dragStartY) >= DRAG_SENSITIVITY
+    private fun checkDragConditions(action: MouseInputAction): Boolean {
+        return applicationContextRepository.isTouch() &&
+            action.actionKey is MouseInputActionKey.Dragged &&
+            abs(action.screenY - dragStartY) >= DRAG_SENSITIVITY
+    }
 
     private fun clampScrollAmount() {
         gameWindowsManager.creativeScrollAmount =

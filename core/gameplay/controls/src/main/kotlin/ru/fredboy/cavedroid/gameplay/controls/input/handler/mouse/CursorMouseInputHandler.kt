@@ -5,6 +5,7 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByIndexUseCase
 import ru.fredboy.cavedroid.entity.mob.model.Direction
@@ -25,6 +26,7 @@ import javax.inject.Inject
 @BindMouseInputHandler
 class CursorMouseInputHandler @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
+    private val gameContextRepository: GameContextRepository,
     private val mobController: MobController,
     private val gameWorld: GameWorld,
     private val gameWindowsManager: GameWindowsManager,
@@ -79,8 +81,8 @@ class CursorMouseInputHandler @Inject constructor(
     }
 
     private fun handleMouse(action: MouseInputAction) {
-        val worldX = action.screenX.meters + action.cameraViewport.x.meters
-        val worldY = action.screenY.meters + action.cameraViewport.y.meters
+        val worldX = action.screenX.meters + gameContextRepository.getCameraContext().visibleWorld.x
+        val worldY = action.screenY.meters + gameContextRepository.getCameraContext().visibleWorld.y
 
         // when worldX < 0, need to subtract 1 to avoid negative zero
 //        val fixCycledWorld = if (worldX < 0) 1 else 0
@@ -101,14 +103,14 @@ class CursorMouseInputHandler @Inject constructor(
         val creativeTexture = creativeInventoryTexture
         val xOnGrid = (
             action.screenX - (
-                action.cameraViewport.width / 2 - creativeTexture.regionWidth / 2 +
+                gameContextRepository.getCameraContext().viewport.width / 2 - creativeTexture.regionWidth / 2 +
                     GameWindowsConfigs.Creative.itemsGridMarginLeft
                 )
             ) /
             GameWindowsConfigs.Creative.itemsGridColWidth
         val yOnGrid = (
             action.screenY - (
-                action.cameraViewport.height / 2 - creativeTexture.regionHeight / 2 +
+                gameContextRepository.getCameraContext().viewport.height / 2 - creativeTexture.regionHeight / 2 +
                     GameWindowsConfigs.Creative.itemsGridMarginTop
                 )
             ) /

@@ -64,9 +64,15 @@ class JoystickInputHandler @Inject constructor(
         (action.actionKey.pointer == gameContextRepository.getJoystick().pointer || !active) &&
         (
             (action.actionKey is MouseInputActionKey.Dragged) ||
-                (action.screenX < action.cameraViewport.width / 2 && !action.actionKey.touchUp || active)
+                (action.screenX < gameContextRepository.getCameraContext().viewport.width / 2 && !action.actionKey.touchUp || active)
             ) &&
-        !(action.actionKey is MouseInputActionKey.Screen && action.isInsideHotbar(textureRegions))
+        !(
+            action.actionKey is MouseInputActionKey.Screen &&
+                action.isInsideHotbar(
+                    gameContextRepository,
+                    textureRegions,
+                )
+            )
 
     private fun handleTouchDown(action: MouseInputAction) {
         val key = action.actionKey as MouseInputActionKey.Screen

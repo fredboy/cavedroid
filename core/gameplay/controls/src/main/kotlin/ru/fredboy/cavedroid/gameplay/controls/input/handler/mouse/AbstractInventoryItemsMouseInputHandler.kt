@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem.Companion.isNoneOrNull
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
@@ -14,6 +15,7 @@ import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.isInsideWindow
 
 abstract class AbstractInventoryItemsMouseInputHandler(
+    private val gameContextRepository: GameContextRepository,
     private val itemsRepository: ItemsRepository,
     private val gameWindowsManager: GameWindowsManager,
     private val windowType: GameWindowType,
@@ -22,7 +24,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
     protected abstract val windowTexture: TextureRegion
 
     override fun checkConditions(action: MouseInputAction): Boolean = gameWindowsManager.currentWindowType == windowType &&
-        isInsideWindow(action, windowTexture) &&
+        isInsideWindow(gameContextRepository, action, windowTexture) &&
         (
             action.actionKey is MouseInputActionKey.Left ||
                 action.actionKey is MouseInputActionKey.Right ||

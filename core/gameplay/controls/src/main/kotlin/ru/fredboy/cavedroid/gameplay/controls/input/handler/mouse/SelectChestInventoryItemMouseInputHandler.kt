@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
@@ -15,11 +16,17 @@ import javax.inject.Inject
 @GameScope
 @BindMouseInputHandler
 class SelectChestInventoryItemMouseInputHandler @Inject constructor(
+    private val gameContextRepository: GameContextRepository,
     private val gameWindowsManager: GameWindowsManager,
     private val mobController: MobController,
     private val textureRegions: GetTextureRegionByNameUseCase,
     itemsRepository: ItemsRepository,
-) : AbstractInventoryItemsMouseInputHandler(itemsRepository, gameWindowsManager, GameWindowType.CHEST) {
+) : AbstractInventoryItemsMouseInputHandler(
+    gameContextRepository = gameContextRepository,
+    itemsRepository = itemsRepository,
+    gameWindowsManager = gameWindowsManager,
+    windowType = GameWindowType.CHEST,
+) {
 
     override val windowTexture get() = requireNotNull(textureRegions["chest"])
 
@@ -46,8 +53,10 @@ class SelectChestInventoryItemMouseInputHandler @Inject constructor(
     override fun handle(action: MouseInputAction) {
         val texture = windowTexture
 
-        val xOnWindow = action.screenX - (action.cameraViewport.width / 2 - texture.regionWidth / 2)
-        val yOnWindow = action.screenY - (action.cameraViewport.height / 2 - texture.regionHeight / 2)
+        val xOnWindow =
+            action.screenX - (gameContextRepository.getCameraContext().viewport.width / 2 - texture.regionWidth / 2)
+        val yOnWindow =
+            action.screenY - (gameContextRepository.getCameraContext().viewport.height / 2 - texture.regionHeight / 2)
 
         val xOnGrid = (xOnWindow - GameWindowsConfigs.Chest.itemsGridMarginLeft) /
             GameWindowsConfigs.Chest.itemsGridColWidth

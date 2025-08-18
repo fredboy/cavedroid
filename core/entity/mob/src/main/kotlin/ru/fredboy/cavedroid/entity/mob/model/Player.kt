@@ -155,6 +155,17 @@ class Player(
         isHitting = false
     }
 
+    fun hitMob(mob: Mob) {
+        startHitting(false)
+        val activeTool = activeItem.item as? Item.Tool
+        if (activeTool != null) {
+            decreaseCurrentItemCount()
+        }
+        val damage = 1 * (activeTool?.mobDamageMultiplier ?: 1f)
+        mob.damage(damage.toInt())
+        stopHitting()
+    }
+
     fun decreaseCurrentItemCount(amount: Int = 1) {
         if (gameMode == 1) {
             return
