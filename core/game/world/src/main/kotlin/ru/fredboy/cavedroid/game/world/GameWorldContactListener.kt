@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.Manifold
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.abstraction.AbstractContactHandler
+import ru.fredboy.cavedroid.domain.world.model.ChunkUserData
 import ru.fredboy.cavedroid.domain.world.model.ContactSensorType
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import javax.inject.Inject
@@ -40,9 +41,14 @@ class GameWorldContactListener @Inject constructor(
                 }
             }
             .flatMap { handler ->
+                val entityA = (contact.fixtureA.body.userData as? ChunkUserData)
+                    ?.let { contact.fixtureA.userData } ?: contact.fixtureA.body.userData
+                val entityB = (contact.fixtureB.body.userData as? ChunkUserData)
+                    ?.let { contact.fixtureB.userData } ?: contact.fixtureB.body.userData
+
                 listOf(
-                    Triple(handler, contact.fixtureA.body.userData, contact.fixtureB.body.userData),
-                    Triple(handler, contact.fixtureB.body.userData, contact.fixtureA.body.userData),
+                    Triple(handler, entityA, entityB),
+                    Triple(handler, entityB, entityA),
                 )
             }
             .firstOrNull { (handler, entityA, entityB) ->
@@ -62,6 +68,10 @@ class GameWorldContactListener @Inject constructor(
         override fun beginContact(contact: Contact?) {
             contact ?: return
 
+            if (!contact.isTouching) {
+                return
+            }
+
             // no contacts between sensors
             if (contact.fixtureA.isSensor && contact.fixtureB.isSensor) {
                 return
@@ -70,8 +80,8 @@ class GameWorldContactListener @Inject constructor(
             val mob = contact.fixtureA.body.userData as? Mob
                 ?: contact.fixtureB.body.userData as? Mob
 
-            val block = contact.fixtureA.body.userData as? Block
-                ?: contact.fixtureB.body.userData as? Block
+            val block = contact.fixtureA.userData as? Block
+                ?: contact.fixtureB.userData as? Block
 
             val sensorType = contact.fixtureA.userData as? ContactSensorType
                 ?: contact.fixtureB.userData as? ContactSensorType
@@ -99,7 +109,7 @@ class GameWorldContactListener @Inject constructor(
             }
 
             val (handler, entityA, entityB) = findContactHandler(contact) ?: return
-            handler.handleBeginContact(contact, entityA, entityB)
+            handler.handleEndContact(contact, entityA, entityB)
         }
 
         override fun preSolve(contact: Contact?, oldManifold: Manifold?) = Unit

@@ -12,7 +12,7 @@ import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesMana
 import javax.inject.Inject
 
 @GameScope
-class GameWorldSolidBlockBodiesManagerImpl @Inject constructor() : GameWorldSolidBlockBodiesManager() {
+class LegacyGameWorldSolidBlockBodiesManagerImpl @Inject constructor() : GameWorldSolidBlockBodiesManager() {
 
     override fun initialize() {
         for (x in 0..<gameWorld.width) {
@@ -71,7 +71,9 @@ class GameWorldSolidBlockBodiesManagerImpl @Inject constructor() : GameWorldSoli
         }
 
         return world.createBody(bodyDef).also { body ->
-            body.createFixture(fixtureDef)
+            body.createFixture(fixtureDef).also { fixture ->
+                fixture.userData = this
+            }
             body.userData = this
             shape.dispose()
         }

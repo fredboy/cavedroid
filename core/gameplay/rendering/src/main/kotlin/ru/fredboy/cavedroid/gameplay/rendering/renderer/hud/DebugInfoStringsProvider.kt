@@ -40,6 +40,7 @@ class DebugInfoStringsProvider @Inject constructor(
             "Player can jump: ${player.canJump}",
             "Player fly mode: ${player.isFlyMode}",
             "Static bodies: ${gameWorldSolidBlockBodiesManager.bodies.size}",
+            "Fixtures: ${gameWorld.world.fixtureCount}",
         )
     }
 }

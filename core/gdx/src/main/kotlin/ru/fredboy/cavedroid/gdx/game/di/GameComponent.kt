@@ -2,16 +2,6 @@ package ru.fredboy.cavedroid.gdx.game.di
 
 import dagger.BindsInstance
 import dagger.Component
-import ru.fredboy.cavedroid.generated.module.DropContactHandlerModule
-import ru.fredboy.cavedroid.generated.module.HudRenderModule
-import ru.fredboy.cavedroid.generated.module.KeyboardInputHandlersModule
-import ru.fredboy.cavedroid.generated.module.MobContactHandlerModule
-import ru.fredboy.cavedroid.generated.module.MouseInputHandlersModule
-import ru.fredboy.cavedroid.generated.module.PlaceBlockActionsModule
-import ru.fredboy.cavedroid.generated.module.UpdateBlockActionsModule
-import ru.fredboy.cavedroid.generated.module.UseBlockActionsModule
-import ru.fredboy.cavedroid.generated.module.UseItemActionsModule
-import ru.fredboy.cavedroid.generated.module.WorldRenderModule
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.data.configuration.di.GameContextModule
 import ru.fredboy.cavedroid.data.configuration.model.GameContext
@@ -23,6 +13,16 @@ import ru.fredboy.cavedroid.game.world.di.GameWorldModule
 import ru.fredboy.cavedroid.gameplay.physics.di.PhysicsModule
 import ru.fredboy.cavedroid.gdx.di.ApplicationComponent
 import ru.fredboy.cavedroid.gdx.game.GameProc
+import ru.fredboy.cavedroid.generated.module.DropContactHandlerModule
+import ru.fredboy.cavedroid.generated.module.HudRenderModule
+import ru.fredboy.cavedroid.generated.module.KeyboardInputHandlersModule
+import ru.fredboy.cavedroid.generated.module.MobContactHandlerModule
+import ru.fredboy.cavedroid.generated.module.MouseInputHandlersModule
+import ru.fredboy.cavedroid.generated.module.PlaceBlockActionsModule
+import ru.fredboy.cavedroid.generated.module.UpdateBlockActionsModule
+import ru.fredboy.cavedroid.generated.module.UseBlockActionsModule
+import ru.fredboy.cavedroid.generated.module.UseItemActionsModule
+import ru.fredboy.cavedroid.generated.module.WorldRenderModule
 
 @GameScope
 @Component(
