@@ -133,6 +133,25 @@ sealed class SaveDataDto {
     ) : MobSaveDataDto()
 
     @Serializable
+    data class CowSaveDataDto(
+        override val version: Int,
+        override val x: Float,
+        override val y: Float,
+        override val width: Float,
+        override val height: Float,
+        override val velocityX: Float,
+        override val velocityY: Float,
+        override val animDelta: Float,
+        override val anim: Float,
+        override val direction: DirectionSaveDataDto,
+        override val dead: Boolean,
+        override val canJump: Boolean,
+        override val flyMode: Boolean,
+        override val maxHealth: Int,
+        override val health: Int,
+    ) : MobSaveDataDto()
+
+    @Serializable
     data class FallingBlockSaveDataDto(
         override val version: Int,
         override val x: Float,

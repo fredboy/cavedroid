@@ -1,5 +1,6 @@
-package ru.fredboy.cavedroid.game.controller.mob.behavior
+package ru.fredboy.cavedroid.entity.mob.impl
 
+import ru.fredboy.cavedroid.entity.mob.abstraction.BaseMobBehavior
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.FallingBlock
 

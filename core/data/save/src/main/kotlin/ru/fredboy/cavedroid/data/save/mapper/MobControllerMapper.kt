@@ -7,6 +7,7 @@ import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.model.Cow
 import ru.fredboy.cavedroid.entity.mob.model.FallingBlock
 import ru.fredboy.cavedroid.entity.mob.model.Pig
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -19,6 +20,7 @@ class MobControllerMapper @Inject constructor(
     private val playerMapper: PlayerMapper,
     private val mobAssetsRepository: MobAssetsRepository,
     private val getFallbackItemUseCase: GetFallbackItemUseCase,
+    private val cowMapper: CowMapper,
 ) {
 
     fun mapSaveData(mobController: MobController): SaveDataDto.MobControllerSaveDataDto = SaveDataDto.MobControllerSaveDataDto(
@@ -27,6 +29,7 @@ class MobControllerMapper @Inject constructor(
             when (mob) {
                 is Pig -> pigMapper.mapSaveData(mob)
                 is FallingBlock -> fallingBlockMapper.mapSaveData(mob)
+                is Cow -> cowMapper.mapSaveData(mob)
                 else -> null
             }
         },
@@ -57,6 +60,11 @@ class MobControllerMapper @Inject constructor(
                         )
 
                         is SaveDataDto.FallingBlockSaveDataDto -> fallingBlockMapper.mapFallingBlock(
+                            saveDataDto = mob,
+                            mobPhysicsFactory = mobPhysicsFactory,
+                        )
+
+                        is SaveDataDto.CowSaveDataDto -> cowMapper.mapCow(
                             saveDataDto = mob,
                             mobPhysicsFactory = mobPhysicsFactory,
                         )

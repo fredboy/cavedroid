@@ -64,6 +64,8 @@ class GameAssetsHolder @Inject constructor(
 
     fun getPigSprites(): MobSprite.Pig = mobAssetsRepository.getPigSprites()
 
+    fun getCowSprites(): MobSprite.Cow = mobAssetsRepository.getCowSprites()
+
     fun getTouchButtons(): Map<String, TouchButton> = touchButtonsAssetsRepository.getTouchButtons()
 
     fun getTextureRegionByName(name: String): TextureRegion? = textureRegionsAssetsRepository.getTextureRegionByName(name)

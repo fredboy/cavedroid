@@ -4,8 +4,8 @@ import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.items.usecase.GetBlockByKeyUseCase
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
+import ru.fredboy.cavedroid.entity.mob.impl.FallingBlockMobBehavior
 import ru.fredboy.cavedroid.entity.mob.model.FallingBlock
-import ru.fredboy.cavedroid.game.controller.mob.behavior.FallingBlockMobBehavior
 import javax.inject.Inject
 
 @Reusable

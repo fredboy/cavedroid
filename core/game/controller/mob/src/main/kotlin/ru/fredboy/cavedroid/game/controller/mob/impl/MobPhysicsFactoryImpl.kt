@@ -29,7 +29,6 @@ class MobPhysicsFactoryImpl @Inject constructor(
 
         val body = mobWorldAdapter.getBox2dWorld().createBody(bodyDef).apply {
             userData = mob
-//            linearDamping = 1f
         }
 
         body.createMainBodyFixture(mob.width, mob.height, physicsCategory)
@@ -41,10 +40,10 @@ class MobPhysicsFactoryImpl @Inject constructor(
     }
 
     private fun Body.createMainBodyFixture(width: Float, height: Float, physicsCategory: Short) {
-        val shapeHeight = if (width > height) {
-            height - width / 2f
-        } else {
+        val shapeHeight = if (height > width) {
             height - width
+        } else {
+            height - width / 2f
         }
 
         val bodyShape = createBoxShape(0f, 0f, width, shapeHeight)
@@ -63,7 +62,7 @@ class MobPhysicsFactoryImpl @Inject constructor(
     }
 
     private fun Body.createFeetFixtures(width: Float, height: Float, physicsCategory: Short) {
-        if (height >= width) {
+        if (height > width) {
             return createSingleFootFixture(width, height, physicsCategory)
         }
 

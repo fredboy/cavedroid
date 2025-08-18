@@ -2,43 +2,43 @@ package ru.fredboy.cavedroid.data.save.mapper
 
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
-import ru.fredboy.cavedroid.domain.assets.usecase.GetPigSpritesUseCase
+import ru.fredboy.cavedroid.domain.assets.GameAssetsHolder
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
-import ru.fredboy.cavedroid.entity.mob.model.Pig
+import ru.fredboy.cavedroid.entity.mob.model.Cow
 import javax.inject.Inject
 
 @Reusable
-class PigMapper @Inject constructor(
+class CowMapper @Inject constructor(
     private val directionMapper: DirectionMapper,
-    private val getPigSpriteUseCase: GetPigSpritesUseCase,
+    private val gameAssetsHolder: GameAssetsHolder,
 ) {
 
-    fun mapSaveData(pig: Pig): SaveDataDto.PigSaveDataDto = SaveDataDto.PigSaveDataDto(
+    fun mapSaveData(cow: Cow): SaveDataDto.CowSaveDataDto = SaveDataDto.CowSaveDataDto(
         version = SAVE_DATA_VERSION,
-        x = pig.position.x,
-        y = pig.position.y,
-        width = pig.width,
-        height = pig.height,
-        velocityX = pig.velocity.x,
-        velocityY = pig.velocity.y,
-        animDelta = pig.animDelta,
-        anim = pig.anim,
-        direction = directionMapper.mapSaveData(pig.direction),
-        dead = pig.isDead,
-        canJump = pig.canJump,
-        flyMode = pig.isFlyMode,
-        maxHealth = pig.maxHealth,
-        health = pig.health,
+        x = cow.position.x,
+        y = cow.position.y,
+        width = cow.width,
+        height = cow.height,
+        velocityX = cow.velocity.x,
+        velocityY = cow.velocity.y,
+        animDelta = cow.animDelta,
+        anim = cow.anim,
+        direction = directionMapper.mapSaveData(cow.direction),
+        dead = cow.isDead,
+        canJump = cow.canJump,
+        flyMode = cow.isFlyMode,
+        maxHealth = cow.maxHealth,
+        health = cow.health,
     )
 
-    fun mapPig(
-        saveDataDto: SaveDataDto.PigSaveDataDto,
+    fun mapCow(
+        saveDataDto: SaveDataDto.CowSaveDataDto,
         mobPhysicsFactory: MobPhysicsFactory,
-    ): Pig {
+    ): Cow {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
-        return Pig(
-            sprite = getPigSpriteUseCase(),
+        return Cow(
+            sprite = gameAssetsHolder.getCowSprites(),
         ).apply {
             spawn(saveDataDto.x, saveDataDto.y, mobPhysicsFactory)
             velocity.x = saveDataDto.velocityX

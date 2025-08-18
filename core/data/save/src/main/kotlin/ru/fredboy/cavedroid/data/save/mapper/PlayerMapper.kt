@@ -6,8 +6,8 @@ import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.assets.usecase.GetPlayerSpritesUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
+import ru.fredboy.cavedroid.entity.mob.impl.PlayerMobBehavior
 import ru.fredboy.cavedroid.entity.mob.model.Player
-import ru.fredboy.cavedroid.game.controller.mob.behavior.PlayerMobBehavior
 import javax.inject.Inject
 
 @Reusable

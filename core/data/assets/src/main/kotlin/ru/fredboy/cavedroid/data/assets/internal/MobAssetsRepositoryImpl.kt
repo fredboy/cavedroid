@@ -16,6 +16,8 @@ internal class MobAssetsRepositoryImpl @Inject constructor(
 
     private var pigSprite: MobSprite.Pig? = null
 
+    private var cowSprite: MobSprite.Cow? = null
+
     private var playerCursorSprite: Sprite? = null
 
     private fun loadPlayerSprite() {
@@ -42,9 +44,22 @@ internal class MobAssetsRepositoryImpl @Inject constructor(
         )
     }
 
+    private fun loadCowSprites() {
+        val (bodyTexture, legTexture) = List(2) { index ->
+            loadTexture("$COW_SPRITES_PATH/$index.png")
+        }
+
+        cowSprite = MobSprite.Cow(
+            headAndBody = flippedSprite(bodyTexture),
+            leg = flippedSprite(legTexture),
+        )
+    }
+
     override fun getPlayerSprites(): MobSprite.Player = requireNotNull(playerSprite)
 
     override fun getPigSprites(): MobSprite.Pig = requireNotNull(pigSprite)
+
+    override fun getCowSprites(): MobSprite.Cow = requireNotNull(cowSprite)
 
     override fun getPlayerCursorSprite(): Sprite {
         return requireNotNull(playerCursorSprite)
@@ -53,6 +68,7 @@ internal class MobAssetsRepositoryImpl @Inject constructor(
     override fun initialize() {
         loadPlayerSprite()
         loadPigSprite()
+        loadCowSprites()
         playerCursorSprite = textureRegionsAssetsRepository.getTextureRegionByName(CURSOR_KEY)?.let {
             Sprite(it).apply {
                 setSize(1f, 1f)
@@ -70,6 +86,7 @@ internal class MobAssetsRepositoryImpl @Inject constructor(
     companion object {
         private const val PLAYER_SPRITES_PATH = "textures/mobs/char"
         private const val PIG_SPRITES_PATH = "textures/mobs/pig"
+        private const val COW_SPRITES_PATH = "textures/mobs/cow"
         private const val CURSOR_KEY = "cursor"
     }
 }

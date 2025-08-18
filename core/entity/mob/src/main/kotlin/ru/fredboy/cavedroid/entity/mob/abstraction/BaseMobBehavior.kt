@@ -1,7 +1,5 @@
-package ru.fredboy.cavedroid.game.controller.mob.behavior
+package ru.fredboy.cavedroid.entity.mob.abstraction
 
-import ru.fredboy.cavedroid.entity.mob.abstraction.MobBehavior
-import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import kotlin.reflect.KClass
 
@@ -11,7 +9,7 @@ abstract class BaseMobBehavior<MOB : Mob>(
 
     @Suppress("UNCHECKED_CAST")
     final override fun update(mob: Mob, worldAdapter: MobWorldAdapter, delta: Float) {
-        if (mob::class == mobType) {
+        if (mobType.isInstance(mob)) {
             with(mob as MOB) {
                 updateMob(worldAdapter, delta)
             }

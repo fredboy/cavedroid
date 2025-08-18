@@ -1440,9 +1440,30 @@
       "smelt_product": "porkchop_cooked"
     },
     "porkchop_cooked": {
-      "name": "Raw Porkchop",
+      "name": "Cooked Porkchop",
       "type": "food",
       "texture": "porkchop_cooked",
+      "heal": 8
+    },
+    "spawn_egg_cow": {
+      "name": "Cow Spawn Egg",
+      "type": "usable",
+      "texture": "spawn_egg",
+      "tint": "#51382C",
+      "action_key": "use_spawn_egg_cow",
+      "origin_x": 0.5
+    },
+    "beef_raw": {
+      "name": "Raw Beef",
+      "type": "food",
+      "texture": "beef_raw",
+      "heal": 3,
+      "smelt_product": "beef_cooked"
+    },
+    "beef_cooked": {
+      "name": "Cooked Beef",
+      "type": "food",
+      "texture": "beef_cooked",
       "heal": 8
     }
   }
