@@ -6,20 +6,19 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.utils.applyOrigin
 import ru.fredboy.cavedroid.common.utils.drawSprite
-import ru.fredboy.cavedroid.domain.assets.model.MobSprite
 import ru.fredboy.cavedroid.domain.items.model.inventory.Inventory
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
-import ru.fredboy.cavedroid.entity.mob.abstraction.MobBehavior
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
+import ru.fredboy.cavedroid.entity.mob.impl.PlayerMobBehavior
 
 class Player(
-    private val sprite: MobSprite.Player,
     private val getFallbackItem: GetFallbackItemUseCase,
-    behavior: MobBehavior,
-) : Mob(WIDTH, HEIGHT, Direction.random(), MAX_HEALTH, behavior) {
+    params: MobParams,
+) : Mob(Direction.random(), params, PlayerMobBehavior()) {
 
     var spawnPoint: Vector2? = null
 
@@ -58,8 +57,6 @@ class Player(
 
     val activeItem get() = inventory.items[activeSlot]
 
-    override val speed get() = SPEED
-
     override fun changeDir() = Unit
 
     override fun damage(damage: Int) {
@@ -79,56 +76,56 @@ class Player(
     override fun draw(spriteBatch: SpriteBatch, x: Float, y: Float, delta: Float) {
         updateAnimation(delta)
 
-        with(sprite) {
-            hand.setFlip(looksRight(), hand.isFlipY)
-            leg.setFlip(looksRight(), leg.isFlipY)
-            head.setFlip(looksRight(), head.isFlipY)
-            body.setFlip(looksRight(), body.isFlipY)
+        var backHandAnim: Float
+        var frontHandAnim: Float
 
-            hand.setOrigin(hand.width / 2f, 0f)
-            leg.setOrigin(leg.width / 2f, 0f)
-            head.setOrigin(head.width / 2, head.height)
+        val rightHandAnim = getRightHandAnim(delta)
 
-            var backHandAnim: Float
-            var frontHandAnim: Float
+        val backgroundTintColor = tintColor.cpy().sub(Color(0xAAAAAA shl 8))
 
-            val rightHandAnim = getRightHandAnim(delta)
+        if (looksLeft()) {
+            backHandAnim = rightHandAnim
+            frontHandAnim = anim
+        } else {
+            backHandAnim = -anim
+            frontHandAnim = -rightHandAnim
+        }
 
-            if (looksLeft()) {
-                backHandAnim = rightHandAnim
-                frontHandAnim = anim
+        params.sprites.forEach { spriteData ->
+            val sprite = spriteData.sprite
+
+            sprite.setFlip(looksRight(), sprite.isFlipY)
+            sprite.applyOrigin(spriteData.origin)
+
+            if (spriteData.isBackground) {
+                sprite.color = backgroundTintColor
             } else {
-                backHandAnim = -anim
-                frontHandAnim = -rightHandAnim
+                sprite.color = tintColor
             }
 
-            val backgroundTintColor = tintColor.cpy().sub(Color(0xAAAAAA shl 8))
-
-            hand.color = backgroundTintColor
-            spriteBatch.drawSprite(hand, x + getBodyRelativeX(), y + getBodyRelativeY(), backHandAnim)
-
-            if (looksLeft()) {
-                drawItem(spriteBatch, x, y, -backHandAnim)
+            val animationValue = if (spriteData.isStatic) {
+                0f
+            } else if (spriteData.isHead) {
+                headRotation
+            } else if (spriteData.isHand && spriteData.isBackground) {
+                backHandAnim
+            } else if (spriteData.isHand) {
+                frontHandAnim
+            } else if (spriteData.isBackground) {
+                anim
+            } else {
+                -anim
             }
 
-            leg.color = backgroundTintColor
-            spriteBatch.drawSprite(leg, x + getBodyRelativeX(), y + getLegsRelativeY(), anim)
-
-            leg.color = tintColor
-            spriteBatch.drawSprite(leg, x + getBodyRelativeX(), y + getLegsRelativeY(), -anim)
-
-            head.color = tintColor
-            spriteBatch.drawSprite(head, x, y, headRotation)
-
-            body.color = tintColor
-            spriteBatch.drawSprite(body, x + getBodyRelativeX(), y + getBodyRelativeY())
-
-            if (looksRight()) {
-                drawItem(spriteBatch, x, y, frontHandAnim)
+            if (spriteData.isHand && looksRight() && !spriteData.isBackground) {
+                drawItem(spriteBatch, sprite.height, x, y, animationValue)
             }
 
-            hand.color = tintColor
-            spriteBatch.drawSprite(hand, x + getBodyRelativeX(), y + getBodyRelativeY(), frontHandAnim)
+            spriteBatch.drawSprite(sprite, x + spriteData.offsetX, y + spriteData.offsetY, animationValue)
+
+            if (spriteData.isHand && spriteData.isBackground && looksLeft()) {
+                drawItem(spriteBatch, sprite.height, x, y, -animationValue)
+            }
         }
     }
 
@@ -182,13 +179,12 @@ class Player(
         inventory.items[activeSlot] = item.toInventoryItem()
     }
 
-    private fun drawItem(spriteBatch: SpriteBatch, x: Float, y: Float, handAnim: Float) {
+    private fun drawItem(spriteBatch: SpriteBatch, handLength: Float, x: Float, y: Float, handAnim: Float) {
         val item = activeItem.item.takeIf { !it.isNone() } ?: return
         val itemSprite = item.sprite
         val isSmallSprite = !item.isTool() || item.isShears()
         val originalWidth = itemSprite.width
         val originalHeight = itemSprite.height
-        val handLength = sprite.hand.height
 
         if (isSmallSprite) {
             itemSprite.setSize(SMALL_ITEM_SIZE, SMALL_ITEM_SIZE)
@@ -263,16 +259,9 @@ class Player(
         const val HOTBAR_SIZE = 9
         const val INVENTORY_SIZE = 36
 
-        const val MAX_HEALTH = 20
-
-        const val WIDTH = .25f
-        const val HEIGHT = 1.9375f
-
-        const val SPEED = 4.317f
-
         private val HIT_ANIMATION_RANGE = 30f..90f
 
-        private val SMALL_ITEM_SIZE = .5f
-        private val HAND_ITEM_ANGLE_DEG = 30f
+        private const val SMALL_ITEM_SIZE = .5f
+        private const val HAND_ITEM_ANGLE_DEG = 30f
     }
 }

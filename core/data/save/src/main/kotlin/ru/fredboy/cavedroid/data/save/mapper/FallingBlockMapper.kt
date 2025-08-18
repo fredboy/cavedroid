@@ -4,7 +4,6 @@ import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.items.usecase.GetBlockByKeyUseCase
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
-import ru.fredboy.cavedroid.entity.mob.impl.FallingBlockMobBehavior
 import ru.fredboy.cavedroid.entity.mob.model.FallingBlock
 import javax.inject.Inject
 
@@ -31,6 +30,7 @@ class FallingBlockMapper @Inject constructor(
         maxHealth = fallingBlock.maxHealth,
         health = fallingBlock.health,
         blockKey = fallingBlock.block.params.key,
+        key = fallingBlock.params.key,
     )
 
     fun mapFallingBlock(
@@ -41,7 +41,6 @@ class FallingBlockMapper @Inject constructor(
 
         return FallingBlock(
             block = getBlockByKeyUseCase[saveDataDto.blockKey],
-            behavior = FallingBlockMobBehavior(),
         ).apply {
             spawn(saveDataDto.x, saveDataDto.y, mobPhysicsFactory)
             velocity.x = saveDataDto.velocityX

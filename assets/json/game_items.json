@@ -1429,7 +1429,8 @@
       "type": "usable",
       "texture": "spawn_egg",
       "tint": "#EDBFB4",
-      "action_key": "use_spawn_egg_pig",
+      "action_key": "use_spawn_egg",
+      "mob_key": "pig",
       "origin_x": 0.5
     },
     "porkchop_raw": {
@@ -1450,7 +1451,8 @@
       "type": "usable",
       "texture": "spawn_egg",
       "tint": "#51382C",
-      "action_key": "use_spawn_egg_cow",
+      "action_key": "use_spawn_egg",
+      "mob_key": "cow",
       "origin_x": 0.5
     },
     "beef_raw": {

@@ -9,7 +9,6 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
-import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.TooltipManager
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindHudRenderer
@@ -45,7 +44,7 @@ class HudRenderer @Inject constructor(
         val halfHeart = halfHeartTexture
         val emptyHeart = emptyHeartTexture
 
-        val totalHearts = Player.MAX_HEALTH / 2
+        val totalHearts = player.maxHealth / 2
         val wholeHearts = player.health / 2
 
         for (i in 0..<totalHearts) {

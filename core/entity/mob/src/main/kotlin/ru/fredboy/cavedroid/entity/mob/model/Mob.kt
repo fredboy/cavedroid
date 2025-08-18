@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.TimeUtils
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.utils.Vector2Proxy
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
+import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobBehavior
@@ -20,16 +21,22 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import kotlin.math.abs
 
 abstract class Mob(
-    val width: Float,
-    val height: Float,
     var direction: Direction,
-    val maxHealth: Int,
+    val params: MobParams,
     val behavior: MobBehavior,
 ) : Disposable {
 
     private var resetTakeDamageTask: ResetTakeDamageTask? = null
 
     private var _body: Body? = null
+
+    val width get() = params.width
+
+    val height get() = params.height
+
+    val maxHealth get() = params.hp
+
+    val speed get() = params.speed
 
     val body: Body get() = requireNotNull(_body)
 
@@ -105,8 +112,6 @@ abstract class Mob(
 
     open val physicsCategory: Short
         get() = PhysicsConstants.CATEGORY_MOB
-
-    abstract val speed: Float
 
     fun spawn(x: Float, y: Float, factory: MobPhysicsFactory) {
         if (_body != null) {
@@ -259,7 +264,7 @@ abstract class Mob(
 
     open fun getDropItems(
         itemByKey: GetItemByKeyUseCase,
-    ): List<InventoryItem> = emptyList()
+    ): List<InventoryItem> = listOf(InventoryItem(itemByKey[params.dropInfo.itemKey], params.dropInfo.count))
 
     abstract fun draw(spriteBatch: SpriteBatch, x: Float, y: Float, delta: Float)
 

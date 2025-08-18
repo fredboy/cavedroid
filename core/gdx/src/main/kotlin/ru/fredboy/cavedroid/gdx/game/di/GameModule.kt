@@ -3,10 +3,10 @@ package ru.fredboy.cavedroid.gdx.game.di
 import dagger.Module
 import dagger.Provides
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
@@ -82,11 +82,12 @@ object GameModule {
         applicationContextRepository: ApplicationContextRepository,
         gameContextRepository: GameContextRepository,
         saveDataRepository: SaveDataRepository,
-        mobAssetsRepository: MobAssetsRepository,
+        mobParamsRepository: MobParamsRepository,
         getFallbackItemUseCase: GetFallbackItemUseCase,
         mobWorldAdapter: MobWorldAdapter,
         mobPhysicsFactory: MobPhysicsFactory,
         dropQueue: DropQueue,
+        getItemByKeyUseCase: GetItemByKeyUseCase,
     ): MobController = if (gameContextRepository.isLoadGame()) {
         saveDataRepository.loadMobController(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
@@ -96,11 +97,12 @@ object GameModule {
         )
     } else {
         MobController(
-            mobAssetsRepository = mobAssetsRepository,
+            mobParamsRepository = mobParamsRepository,
             getFallbackItemUseCase = getFallbackItemUseCase,
             mobWorldAdapter = mobWorldAdapter,
             mobPhysicsFactory = mobPhysicsFactory,
             dropQueue = dropQueue,
+            getItemByKeyUseCase = getItemByKeyUseCase,
         )
     }
 

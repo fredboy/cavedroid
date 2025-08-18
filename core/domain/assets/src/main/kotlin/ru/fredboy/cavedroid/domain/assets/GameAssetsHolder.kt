@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import dagger.Reusable
-import ru.fredboy.cavedroid.domain.assets.model.MobSprite
 import ru.fredboy.cavedroid.domain.assets.model.TouchButton
 import ru.fredboy.cavedroid.domain.assets.repository.AssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockAssetsRepository
@@ -60,11 +59,9 @@ class GameAssetsHolder @Inject constructor(
 
     fun getFont(): BitmapFont = fontAssetsRepository.getFont()
 
-    fun getPlayerSprites(): MobSprite.Player = mobAssetsRepository.getPlayerSprites()
-
-    fun getPigSprites(): MobSprite.Pig = mobAssetsRepository.getPigSprites()
-
-    fun getCowSprites(): MobSprite.Cow = mobAssetsRepository.getCowSprites()
+    fun getMobTexture(mobName: String, textureName: String): Texture {
+        return mobAssetsRepository.getMobTexture(mobName, textureName)
+    }
 
     fun getTouchButtons(): Map<String, TouchButton> = touchButtonsAssetsRepository.getTouchButtons()
 

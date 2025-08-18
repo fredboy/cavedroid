@@ -21,4 +21,5 @@ data class ItemDto(
     @SerialName("burning_time") val burningTime: Long? = null,
     @SerialName("smelt_product") val smeltProduct: String? = null,
     @SerialName("heal") val heal: Int? = null,
+    @SerialName("mob_key") val mobKey: String? = null,
 )

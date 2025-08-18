@@ -30,6 +30,7 @@ class ItemMapper @Inject constructor(
                 params = params,
                 sprite = requireNotNull(loadSprite(dto)),
                 useActionKey = requireNotNull(dto.actionKey),
+                mobKey = dto.mobKey,
             )
 
             "shovel" -> Item.Shovel(

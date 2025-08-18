@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.World
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
@@ -13,7 +14,6 @@ import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
 import ru.fredboy.cavedroid.entity.container.model.ContainerCoordinates
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
-import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 import kotlin.reflect.KClass
@@ -22,6 +22,7 @@ import kotlin.reflect.KClass
 internal class WorldAdapterImpl @Inject constructor(
     private val gameWorld: GameWorld,
     private val itemsRepository: ItemsRepository,
+    private val mobParamsRepository: MobParamsRepository,
 ) : DropWorldAdapter,
     ContainerWorldAdapter,
     MobWorldAdapter {
@@ -73,7 +74,8 @@ internal class WorldAdapterImpl @Inject constructor(
             }
         }
 
-        return Vector2(x + .5f - Player.WIDTH / 2, y - Player.HEIGHT)
+        val charParams = mobParamsRepository.getMobParamsByKey("char")
+        return Vector2(x + .5f - (charParams?.width ?: 1f) / 2, y - (charParams?.height ?: 1f))
     }
 
     override fun checkContainerAtCoordinates(

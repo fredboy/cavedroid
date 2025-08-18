@@ -4,12 +4,12 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.ifTrue
-import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
+import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
+import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
-import ru.fredboy.cavedroid.entity.mob.impl.PlayerMobBehavior
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import java.util.*
@@ -17,11 +17,12 @@ import javax.inject.Inject
 
 @GameScope
 class MobController @Inject constructor(
-    mobAssetsRepository: MobAssetsRepository,
     getFallbackItemUseCase: GetFallbackItemUseCase,
+    mobParamsRepository: MobParamsRepository,
     private val mobWorldAdapter: MobWorldAdapter,
     private val mobPhysicsFactory: MobPhysicsFactory,
     private val dropQueue: DropQueue,
+    private val getItemByKeyUseCase: GetItemByKeyUseCase,
 ) : Disposable {
 
     private val _mobs = LinkedList<Mob>()
@@ -29,9 +30,8 @@ class MobController @Inject constructor(
     val mobs: List<Mob> get() = _mobs
 
     var player = Player(
-        sprite = mobAssetsRepository.getPlayerSprites(),
         getFallbackItem = getFallbackItemUseCase,
-        behavior = PlayerMobBehavior(),
+        params = requireNotNull(mobParamsRepository.getMobParamsByKey("char")),
     )
         set(value) {
             field.dispose()
@@ -55,6 +55,7 @@ class MobController @Inject constructor(
         mobs.forEach { mob -> mob.update(mobWorldAdapter, delta) }
         _mobs.removeAll { mob ->
             mob.isDead.ifTrue {
+                dropQueue.offerItems(mob.position.x, mob.position.y, mob.getDropItems(getItemByKeyUseCase))
                 mob.dispose()
                 true
             } ?: false

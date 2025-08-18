@@ -6,7 +6,7 @@ import ru.fredboy.cavedroid.common.model.Joystick
 import ru.fredboy.cavedroid.data.configuration.model.GameContext
 import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
-import ru.fredboy.cavedroid.entity.mob.model.Player
+import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
 import ru.fredboy.cavedroid.gdx.base.BaseScreen
 import ru.fredboy.cavedroid.gdx.game.di.DaggerGameComponent
@@ -17,6 +17,7 @@ import javax.inject.Singleton
 @Singleton
 class GameScreen @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
+    private val mobParamsRepository: MobParamsRepository,
 ) : BaseScreen(applicationContextRepository) {
 
     private var gameComponent: GameComponent? = null
@@ -25,7 +26,7 @@ class GameScreen @Inject constructor(
         isLoadGame = isLoadGame,
         showInfo = false,
         showMap = false,
-        joystick = Joystick(Player.SPEED),
+        joystick = Joystick(requireNotNull(mobParamsRepository.getMobParamsByKey("char")).speed),
         cameraContext = CameraContext(
             viewport = Rectangle(
                 /* x = */ 0f,

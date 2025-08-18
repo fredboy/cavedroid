@@ -20,6 +20,7 @@ import ru.fredboy.cavedroid.domain.assets.usecase.DisposeAssetsUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.InitializeAssetsUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.gdx.game.GameScreen
 import ru.fredboy.cavedroid.gdx.menu.MenuScreen
@@ -65,6 +66,8 @@ interface ApplicationComponent {
     val saveDataRepository: SaveDataRepository
 
     val applicationController: ApplicationController
+
+    val mobParamsRepository: MobParamsRepository
 
     @Component.Builder
     interface Builder {

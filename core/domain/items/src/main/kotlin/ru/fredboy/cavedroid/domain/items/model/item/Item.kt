@@ -81,6 +81,7 @@ sealed class Item {
         override val params: CommonItemParams,
         override val sprite: Sprite,
         val useActionKey: String,
+        val mobKey: String?,
     ) : Item()
 
     data class Block(

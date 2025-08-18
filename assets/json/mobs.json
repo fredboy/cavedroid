@@ -1,0 +1,166 @@
+{
+  "char": {
+    "name": "Player",
+    "width": 4,
+    "height": 30,
+    "speed": 4.317,
+    "behavior": "player",
+    "drop": "none",
+    "hp": 20,
+    "sprites": [
+      {
+        "file": "2",
+        "offset_x": 2,
+        "offset_y": 8,
+        "is_background": true,
+        "is_hand": true,
+        "is_static": false
+      },
+      {
+        "file": "3",
+        "offset_x": 2,
+        "offset_y": 20,
+        "is_background": true,
+        "is_static": false
+      },
+      {
+        "file": "0",
+        "is_background": false,
+        "is_head": true,
+        "is_static": false,
+        "origin_y": 1
+      },
+      {
+        "file": "1",
+        "offset_x": 2,
+        "offset_y": 8,
+        "is_background": false
+      },
+      {
+        "file": "2",
+        "offset_x": 2,
+        "offset_y": 8,
+        "is_background": false,
+        "is_hand": true,
+        "is_static": false
+      },
+      {
+        "file": "3",
+        "offset_x": 2,
+        "offset_y": 20,
+        "is_background": false,
+        "is_static": false
+      }
+    ]
+  },
+  "pig": {
+    "name": "Pig",
+    "width": 25,
+    "height": 16,
+    "speed": 3,
+    "hp": 10,
+    "behavior": "passive",
+    "drop": "porkchop_raw",
+    "drop_count": 1,
+    "sprites": [
+      {
+        "file": "1",
+        "offset_x": 9,
+        "offset_y": 12,
+        "is_background": true,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false
+      },
+      {
+        "file": "1",
+        "offset_x": 21,
+        "offset_y": 12,
+        "is_background": true,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false
+      },
+      {
+        "file": "0",
+        "is_background": false,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": true
+      },
+      {
+        "file": "1",
+        "offset_x": 9,
+        "offset_y": 12,
+        "is_background": false,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false
+      },
+      {
+        "file": "1",
+        "offset_x": 21,
+        "offset_y": 12,
+        "is_background": false,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false
+      }
+    ]
+  },
+  "cow": {
+    "name": "Cow",
+    "width": 22,
+    "height": 22,
+    "speed": 3,
+    "hp": 10,
+    "behavior": "passive",
+    "drop": "beef_raw",
+    "drop_count": 1,
+    "sprites": [
+      {
+        "file": "1",
+        "offset_x": 6,
+        "offset_y": 14,
+        "is_background": true,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false
+      },
+      {
+        "file": "1",
+        "offset_x": 18,
+        "offset_y": 14,
+        "is_background": true,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false
+      },
+      {
+        "file": "0",
+        "is_background": false,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": true
+      },
+      {
+        "file": "1",
+        "offset_x": 6,
+        "offset_y": 14,
+        "is_background": false,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false
+      },
+      {
+        "file": "1",
+        "offset_x": 18,
+        "offset_y": 14,
+        "is_background": false,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false
+      }
+    ]
+  }
+}

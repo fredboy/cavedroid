@@ -3,10 +3,9 @@ package ru.fredboy.cavedroid.data.save.mapper
 import com.badlogic.gdx.math.Vector2
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
-import ru.fredboy.cavedroid.domain.assets.usecase.GetPlayerSpritesUseCase
+import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
-import ru.fredboy.cavedroid.entity.mob.impl.PlayerMobBehavior
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import javax.inject.Inject
 
@@ -15,12 +14,13 @@ class PlayerMapper @Inject constructor(
     private val directionMapper: DirectionMapper,
     private val inventoryMapper: InventoryMapper,
     private val controlModeMapper: ControlModeMapper,
-    private val getPlayerSpritesUseCase: GetPlayerSpritesUseCase,
     private val getFallbackItemUseCase: GetFallbackItemUseCase,
+    private val mobParamsRepository: MobParamsRepository,
 ) {
 
     fun mapSaveData(player: Player): SaveDataDto.PlayerSaveDataDto = SaveDataDto.PlayerSaveDataDto(
         version = SAVE_DATA_VERSION,
+        key = player.params.key,
         x = player.position.x,
         y = player.position.y,
         width = player.width,
@@ -58,9 +58,8 @@ class PlayerMapper @Inject constructor(
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
         return Player(
-            sprite = getPlayerSpritesUseCase(),
             getFallbackItem = getFallbackItemUseCase,
-            behavior = PlayerMobBehavior(),
+            params = requireNotNull(mobParamsRepository.getMobParamsByKey(saveDataDto.key)),
         ).apply {
             spawn(saveDataDto.x, saveDataDto.y, mobPhysicsFactory)
             velocity.x = saveDataDto.velocityX
@@ -87,6 +86,6 @@ class PlayerMapper @Inject constructor(
     }
 
     companion object {
-        private const val SAVE_DATA_VERSION = 4
+        private const val SAVE_DATA_VERSION = 5
     }
 }
