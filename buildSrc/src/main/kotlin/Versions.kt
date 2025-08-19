@@ -67,4 +67,11 @@ object Versions {
      * [Source](https://github.com/libgdx/box2dlights)
      */
     const val box2dLights = "1.5"
+
+    /**
+     * Kotlin extensions for libGDX.
+     *
+     * [Source](https://github.com/libktx/ktx)
+     */
+    const val libKtx = "1.13.1-rc1"
 }

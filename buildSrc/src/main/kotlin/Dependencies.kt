@@ -41,6 +41,10 @@ object Dependencies {
         }
     }
 
+    object LibKTX {
+        const val scene2d = "io.github.libktx:ktx-scene2d:${Versions.libKtx}"
+    }
+
     object Dagger {
         const val dagger = "com.google.dagger:dagger:${Versions.dagger}"
         const val compiler = "com.google.dagger:dagger-compiler:${Versions.dagger}"

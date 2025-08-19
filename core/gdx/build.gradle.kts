@@ -9,6 +9,7 @@ java.targetCompatibility = ApplicationInfo.sourceCompatibility
 dependencies {
     useAutomultibind()
     useLibgdx()
+    useLibKtx()
     useDagger()
 
     useCommonModule()
@@ -18,6 +19,4 @@ dependencies {
     useEntityModules()
     useGameModules()
     useGameplayModules()
-
-    useModule(":core:domain:menu")
 }

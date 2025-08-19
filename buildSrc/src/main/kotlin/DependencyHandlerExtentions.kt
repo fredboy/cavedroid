@@ -68,6 +68,10 @@ fun DependencyHandler.useLibgdx() {
     implementation(Dependencies.LibGDX.box2dLights)
 }
 
+fun DependencyHandler.useLibKtx() {
+    implementation(Dependencies.LibKTX.scene2d)
+}
+
 fun DependencyHandler.useDagger() {
     implementation(Dependencies.Dagger.dagger)
     ksp(Dependencies.Dagger.compiler)
