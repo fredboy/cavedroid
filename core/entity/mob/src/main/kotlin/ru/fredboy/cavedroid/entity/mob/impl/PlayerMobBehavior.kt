@@ -68,6 +68,9 @@ class PlayerMobBehavior :
     override fun Player.updateMob(worldAdapter: MobWorldAdapter, delta: Float) {
         hitBlock(worldAdapter)
         updateSight()
+        if (checkForAutojump()) {
+            jump()
+        }
 
         if (gameMode == 1) {
             return

@@ -70,6 +70,7 @@ fun DependencyHandler.useLibgdx() {
 
 fun DependencyHandler.useLibKtx() {
     implementation(Dependencies.LibKTX.scene2d)
+    implementation(Dependencies.LibKTX.actors)
 }
 
 fun DependencyHandler.useDagger() {

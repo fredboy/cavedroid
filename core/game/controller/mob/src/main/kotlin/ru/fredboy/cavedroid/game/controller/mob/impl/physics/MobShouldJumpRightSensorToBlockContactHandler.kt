@@ -6,6 +6,7 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.abstraction.AbstractContactHandler
 import ru.fredboy.cavedroid.domain.world.model.ContactSensorType
+import ru.fredboy.cavedroid.entity.mob.model.Direction
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import javax.inject.Inject
@@ -13,12 +14,12 @@ import kotlin.reflect.KClass
 
 @GameScope
 @BindMobContactHandler
-class MobShouldJumpSensorToBlockContactHandler @Inject constructor(
+class MobShouldJumpRightSensorToBlockContactHandler @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
 ) : AbstractContactHandler<Mob, Block>() {
 
-    override val sensorType: ContactSensorType?
-        get() = ContactSensorType.MOB_SHOULD_JUMP
+    override val sensorType: ContactSensorType
+        get() = ContactSensorType.MOB_SHOULD_JUMP_RIGHT
 
     override val entityClassA: KClass<Mob>
         get() = Mob::class
@@ -31,10 +32,14 @@ class MobShouldJumpSensorToBlockContactHandler @Inject constructor(
             return
         }
 
-        if (controlVector.x != 0f) {
-            jump()
-        }
+        autojumpCounters[Direction.RIGHT.index]++
     }
 
-    override fun Mob.handleEndContact(contact: Contact, entityB: Block) = Unit
+    override fun Mob.handleEndContact(contact: Contact, entityB: Block) {
+        if (this is Player && !applicationContextRepository.isAutoJumpEnabled()) {
+            return
+        }
+
+        autojumpCounters[Direction.RIGHT.index]--
+    }
 }

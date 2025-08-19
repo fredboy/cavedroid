@@ -85,9 +85,9 @@ class CursorMouseInputHandler @Inject constructor(
         val worldY = action.screenY.meters + gameContextRepository.getCameraContext().visibleWorld.y
 
         // when worldX < 0, need to subtract 1 to avoid negative zero
-//        val fixCycledWorld = if (worldX < 0) 1 else 0
+        val fixCycledWorld = if (worldX < 0) 1 else 0
 
-        player.cursorX = worldX.toInt()
+        player.cursorX = worldX.toInt() - fixCycledWorld
         player.cursorY = worldY.toInt()
 
         player.headRotation = getPlayerHeadRotation(worldX, worldY)

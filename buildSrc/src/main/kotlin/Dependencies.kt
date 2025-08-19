@@ -43,6 +43,7 @@ object Dependencies {
 
     object LibKTX {
         const val scene2d = "io.github.libktx:ktx-scene2d:${Versions.libKtx}"
+        const val actors = "io.github.libktx:ktx-actors:${Versions.libKtx}"
     }
 
     object Dagger {

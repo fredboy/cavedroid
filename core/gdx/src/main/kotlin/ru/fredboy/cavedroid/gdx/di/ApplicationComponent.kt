@@ -24,7 +24,7 @@ import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.gdx.game.GameScreen
-import ru.fredboy.cavedroid.gdx.menu.MenuScreen
+import ru.fredboy.cavedroid.gdx.menu.v2.MenuScreen
 import javax.inject.Singleton
 
 @Singleton
@@ -43,8 +43,6 @@ interface ApplicationComponent {
     val disposeAssets: DisposeAssetsUseCase
 
     val gameScreen: GameScreen
-
-    val menuScreen: MenuScreen
 
     val applicationContextRepository: ApplicationContextRepository
 
@@ -71,6 +69,8 @@ interface ApplicationComponent {
     val mobParamsRepository: MobParamsRepository
 
     val environmentTextureRegionsRepository: EnvironmentTextureRegionsRepository
+
+    val menuScreen: MenuScreen
 
     @Component.Builder
     interface Builder {
