@@ -85,3 +85,7 @@ fun DependencyHandler.useKotlinxSerializationJson() {
 fun DependencyHandler.useKotlinxSerializationProtobuf() {
     implementation(Dependencies.Kotlin.Serialization.protobuf)
 }
+
+fun DependencyHandler.useKotlinxCoroutines() {
+    implementation(Dependencies.Kotlin.coroutinesCore)
+}

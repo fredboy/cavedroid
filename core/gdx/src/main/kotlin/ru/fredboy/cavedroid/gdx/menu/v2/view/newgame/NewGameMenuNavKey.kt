@@ -1,4 +1,4 @@
-package ru.fredboy.cavedroid.gdx.menu.v2.stage.newgame
+package ru.fredboy.cavedroid.gdx.menu.v2.view.newgame
 
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavKey
 

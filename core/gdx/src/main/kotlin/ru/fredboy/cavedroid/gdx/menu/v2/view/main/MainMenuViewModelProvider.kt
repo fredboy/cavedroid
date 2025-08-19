@@ -1,4 +1,4 @@
-package ru.fredboy.cavedroid.gdx.menu.v2.stage.newgame
+package ru.fredboy.cavedroid.gdx.menu.v2.view.main
 
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.di.MenuScope
@@ -11,14 +11,14 @@ import kotlin.reflect.KClass
 
 @MenuScope
 @BindViewModelProvider
-class NewGameMenuViewModelProvider @Inject constructor(
+class MainMenuViewModelProvider @Inject constructor(
     private val applicationController: ApplicationController,
-) : ViewModelProvider<NewGameMenuViewModel> {
+) : ViewModelProvider<MainMenuViewModel> {
 
-    override val viewModelClass: KClass<NewGameMenuViewModel>
-        get() = NewGameMenuViewModel::class
+    override val viewModelClass: KClass<MainMenuViewModel>
+        get() = MainMenuViewModel::class
 
-    override fun get(navKey: NavKey, navBackStack: NavBackStack): NewGameMenuViewModel {
-        return NewGameMenuViewModel(applicationController, navBackStack)
+    override fun get(navKey: NavKey, navBackStack: NavBackStack): MainMenuViewModel {
+        return MainMenuViewModel(applicationController, navBackStack)
     }
 }

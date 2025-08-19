@@ -1,4 +1,4 @@
-package ru.fredboy.cavedroid.gdx.menu.v2.stage.newgame
+package ru.fredboy.cavedroid.gdx.menu.v2.view.main
 
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
@@ -10,7 +10,7 @@ import ktx.scene2d.table
 import ktx.scene2d.textButton
 
 @Scene2dDsl
-fun Stage.newGameMenuView(viewModel: NewGameMenuViewModel) {
+fun Stage.mainMenuView(viewModel: MainMenuViewModel) {
     actors {
         table {
             setFillParent(true)
@@ -22,25 +22,33 @@ fun Stage.newGameMenuView(viewModel: NewGameMenuViewModel) {
                 ),
             )
 
-            textButton("Creative") {
+            textButton("New Game") {
                 onClick {
-                    viewModel.onCreativeClick()
+                    viewModel.onNewGameClick()
                 }
             }
 
             row()
 
-            textButton("Survival") {
+            textButton("Load Game") {
                 onClick {
-                    viewModel.onSurvivalClick()
+                    viewModel.onLoadGameClick()
                 }
             }
 
             row()
 
-            textButton("Back") {
+            textButton("Settings") {
                 onClick {
-                    viewModel.onBackClick()
+                    viewModel.onSettingsClick()
+                }
+            }
+
+            row()
+
+            textButton("Exit") {
+                onClick {
+                    viewModel.onExitGameClick()
                 }
             }
 

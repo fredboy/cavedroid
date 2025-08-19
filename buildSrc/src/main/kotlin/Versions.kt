@@ -74,4 +74,11 @@ object Versions {
      * [Source](https://github.com/libktx/ktx)
      */
     const val libKtx = "1.13.1-rc1"
+
+    /**
+     * Kotlin coroutines
+     *
+     * [Source](https://github.com/Kotlin/kotlinx.coroutines)
+     */
+    const val kotlinxCoroutines = "1.10.2"
 }

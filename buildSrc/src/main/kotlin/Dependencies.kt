@@ -56,6 +56,7 @@ object Dependencies {
         const val kspPlugin = "com.google.devtools.ksp:${Versions.ksp}"
         const val bom = "org.jetbrains.kotlin:kotlin-bom:${Versions.kotlin}"
         const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
+        const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinxCoroutines}"
 
         object Serialization {
             const val json = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlinxSerialization}"

@@ -1,19 +1,10 @@
 package ru.fredboy.cavedroid.gdx.menu.v2
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.scenes.scene2d.ui.Skin
-import com.badlogic.gdx.utils.Scaling
-import com.badlogic.gdx.utils.viewport.ScalingViewport
-import ktx.scene2d.Scene2DSkin
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
 import ru.fredboy.cavedroid.gdx.base.BaseScreen
 import ru.fredboy.cavedroid.gdx.menu.di.DaggerMenuComponent
-import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
-import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavRootStage
-import ru.fredboy.cavedroid.gdx.menu.v2.stage.main.MainMenuNavKey
-import ru.fredboy.cavedroid.gdx.menu.v2.stage.main.mainMenuView
 import javax.inject.Inject
 import javax.inject.Singleton
 

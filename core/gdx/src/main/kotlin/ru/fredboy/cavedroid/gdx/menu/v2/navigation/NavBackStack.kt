@@ -20,8 +20,12 @@ class NavBackStack(
             return
         }
 
-        stack.pop()
-        _navRootStage?.onStackChanged(stack.peek())
+        val popped = stack.pop()
+        _navRootStage?.onStackChanged(stack.peek(), popped)
+    }
+
+    fun hasKey(key: NavKey): Boolean {
+        return key in stack
     }
 
     fun attachNavRootStage(navRootStage: NavRootStage) {

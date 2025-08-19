@@ -1,14 +1,13 @@
-package ru.fredboy.cavedroid.gdx.menu.v2.stage.newgame
+package ru.fredboy.cavedroid.gdx.menu.v2.view.newgame
 
 import ru.fredboy.cavedroid.common.api.ApplicationController
-import ru.fredboy.cavedroid.common.di.MenuScope
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
-import javax.inject.Inject
+import ru.fredboy.cavedroid.gdx.menu.v2.navigation.ViewModel
 
 class NewGameMenuViewModel(
     private val applicationController: ApplicationController,
     private val navBackStack: NavBackStack,
-) {
+) : ViewModel() {
 
     fun onSurvivalClick() {
         applicationController.newGameSurvival()
