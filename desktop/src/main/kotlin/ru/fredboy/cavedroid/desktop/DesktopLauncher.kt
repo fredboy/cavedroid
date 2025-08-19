@@ -3,12 +3,19 @@ package ru.fredboy.cavedroid.desktop
 import com.badlogic.gdx.Files
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
+import com.badlogic.gdx.utils.Os
+import com.badlogic.gdx.utils.SharedLibraryLoader
+import org.lwjgl.system.Configuration
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
 
 internal object DesktopLauncher {
 
     @JvmStatic
     fun main(arg: Array<String>) {
+        if (SharedLibraryLoader.os == Os.MacOsX) {
+            Configuration.GLFW_LIBRARY_NAME.set("glfw_async")
+        }
+
         val config = Lwjgl3ApplicationConfiguration()
 
         with(config) {
