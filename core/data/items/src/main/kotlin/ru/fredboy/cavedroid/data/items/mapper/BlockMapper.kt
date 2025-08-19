@@ -1,7 +1,9 @@
 package ru.fredboy.cavedroid.data.items.mapper
 
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.data.items.model.BlockDto
+import ru.fredboy.cavedroid.data.items.model.BlockLightDto
 import ru.fredboy.cavedroid.data.items.repository.ItemsRepositoryImpl
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockTextureUseCase
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -15,6 +17,7 @@ import ru.fredboy.cavedroid.domain.items.model.block.Block.Water
 import ru.fredboy.cavedroid.domain.items.model.block.BlockAnimationInfo
 import ru.fredboy.cavedroid.domain.items.model.block.BlockDropInfo
 import ru.fredboy.cavedroid.domain.items.model.block.BlockInsets
+import ru.fredboy.cavedroid.domain.items.model.block.BlockLightInfo
 import ru.fredboy.cavedroid.domain.items.model.block.CommonBlockParams
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import javax.inject.Inject
@@ -67,7 +70,18 @@ class BlockMapper @Inject constructor(
         tint = dto.tint,
         isFallable = dto.fallable,
         castsShadows = dto.castShadows,
+        lightInfo = mapLightInfo(dto.lightInfo),
+        allowAttachToBackground = dto.allowAttachToBackground,
     )
+
+    private fun mapLightInfo(info: BlockLightDto?): BlockLightInfo? {
+        info ?: return null
+
+        return BlockLightInfo(
+            lightBrightness = MathUtils.clamp(info.lightBrightness, 0f, 1f),
+            lightDistance = info.lightDistance,
+        )
+    }
 
     private fun mapToolType(dto: BlockDto): Class<out Item.Tool>? = when (dto.toolType) {
         "shovel" -> Item.Shovel::class.java

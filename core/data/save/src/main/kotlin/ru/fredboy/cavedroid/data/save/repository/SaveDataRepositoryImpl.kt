@@ -2,6 +2,8 @@ package ru.fredboy.cavedroid.data.save.repository
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
+import com.badlogic.gdx.utils.TimeUtils
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
@@ -29,6 +31,7 @@ import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 import javax.inject.Inject
 
+@OptIn(ExperimentalSerializationApi::class)
 internal class SaveDataRepositoryImpl @Inject constructor(
     private val itemsRepository: ItemsRepository,
     private val dropControllerMapper: DropControllerMapper,
@@ -147,7 +150,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
 
     private fun internalLoadMap(
         savesPath: String,
-    ): Pair<Array<Array<Block>>, Array<Array<Block>>> {
+    ): GameMapSaveData {
         val dict = Gdx.files.absolute("$savesPath$DICT_FILE").readString().split("\n")
 
         val foreMap: Array<Array<Block>>
@@ -162,7 +165,14 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             close()
         }
 
-        return foreMap to backMap
+        val meta = loadMapData(savesPath)
+
+        return GameMapSaveData(
+            foreMap = foreMap,
+            backMap = backMap,
+            gameTime = meta.gameTime,
+            moonPhase = meta.moonPhase,
+        )
     }
 
     private fun saveMap(gameWorld: GameWorld, savesPath: String) {
@@ -170,6 +180,8 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         val fullBackMap = gameWorld.backMap
 
         val dict = buildBlocksDictionary(fullForeMap, fullBackMap)
+
+        saveMapData(gameWorld, savesPath)
 
         saveDict(Gdx.files.absolute("$savesPath$DICT_FILE"), dict)
 
@@ -182,6 +194,30 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             write(compressMap(fullBackMap, dict))
             close()
         }
+    }
+
+    private fun saveMapData(gameWorld: GameWorld, savesPath: String) {
+        val metaFile = Gdx.files.absolute("$savesPath$META_FILE")
+
+        val worldSaveDataDto = SaveDataDto.WorldSaveDataDto(
+            version = 1,
+            name = "World",
+            timestamp = TimeUtils.millis(),
+            gameTime = gameWorld.currentGameTime,
+            moonPhase = gameWorld.moonPhase,
+        )
+
+        val bytes = ProtoBuf.encodeToByteArray(worldSaveDataDto)
+
+        metaFile.writeBytes(bytes, false)
+    }
+
+    private fun loadMapData(savesPath: String): SaveDataDto.WorldSaveDataDto {
+        val metaFile = Gdx.files.absolute("$savesPath$META_FILE")
+
+        val bytes = metaFile.readBytes()
+
+        return ProtoBuf.decodeFromByteArray<SaveDataDto.WorldSaveDataDto>(bytes)
     }
 
     override fun save(
@@ -199,10 +235,10 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         val mobsFile = Gdx.files.absolute("$savesPath$MOBS_FILE")
         val containersFile = Gdx.files.absolute("$savesPath$CONTAINERS_FILE")
 
-        val dropBytes = ProtoBuf.encodeToByteArray(dropControllerMapper.mapSaveData(dropController as DropController))
-        val mobsBytes = ProtoBuf.encodeToByteArray(mobControllerMapper.mapSaveData(mobController as MobController))
+        val dropBytes = ProtoBuf.encodeToByteArray(dropControllerMapper.mapSaveData(dropController))
+        val mobsBytes = ProtoBuf.encodeToByteArray(mobControllerMapper.mapSaveData(mobController))
         val containersBytes =
-            ProtoBuf.encodeToByteArray(containerControllerMapper.mapSaveData(containerController as ContainerController))
+            ProtoBuf.encodeToByteArray(containerControllerMapper.mapSaveData(containerController))
 
         dropFile.writeBytes(dropBytes, false)
         mobsFile.writeBytes(mobsBytes, false)
@@ -213,8 +249,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
 
     override fun loadMap(gameDataFolder: String): GameMapSaveData {
         val savesPath = "$gameDataFolder$SAVES_DIR"
-        val (foreMap, backMap) = internalLoadMap(savesPath)
-        return GameMapSaveData(foreMap, backMap)
+        return internalLoadMap(savesPath)
     }
 
     override fun loadContainerController(
@@ -291,7 +326,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     }
 
     companion object {
-        private const val MAP_SAVE_VERSION: UByte = 2u
+        private const val MAP_SAVE_VERSION: UByte = 3u
 
         private const val SAVES_DIR = "/saves"
         private const val DROP_FILE = "/drop.dat"
@@ -300,5 +335,6 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         private const val DICT_FILE = "/dict"
         private const val FOREMAP_FILE = "/foremap.dat.gz"
         private const val BACKMAP_FILE = "/backmap.dat.gz"
+        private const val META_FILE = "/meta.dat"
     }
 }

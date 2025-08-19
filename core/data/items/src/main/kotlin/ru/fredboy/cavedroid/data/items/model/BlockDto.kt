@@ -18,6 +18,7 @@ data class BlockDto(
     @SerialName("background") val background: Boolean = false,
     @SerialName("transparent") val transparent: Boolean = false,
     @SerialName("block_required") val blockRequired: Boolean = false,
+    @SerialName("allow_attach_to_bg") val allowAttachToBackground: Boolean = false,
     @SerialName("drop") val drop: String,
     @SerialName("meta") val meta: String? = null,
     @SerialName("texture") val texture: String,
@@ -34,4 +35,5 @@ data class BlockDto(
     @SerialName("fallable") val fallable: Boolean = false,
     @SerialName("density") val density: Float? = null,
     @SerialName("casts_shadows") val castShadows: Boolean = true,
+    @SerialName("light_info") val lightInfo: BlockLightDto? = null,
 )

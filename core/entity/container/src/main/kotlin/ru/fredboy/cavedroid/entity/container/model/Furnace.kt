@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.entity.container.model
 
+import box2dLight.Light
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.TimeUtils
@@ -19,6 +20,8 @@ class Furnace(
 ) {
 
     override val type get() = Block.Furnace::class
+
+    var lightSource: Light? = null
 
     var fuel: InventoryItem
         get() = items[FUEL_INDEX]
@@ -44,6 +47,10 @@ class Furnace(
         set(value) {
             currentFuelKey = value?.params?.key
             field = value
+
+            lightSource?.apply {
+                this@apply.isActive = value != null && !value.isNone()
+            }
         }
 
     var currentFuelKey: String? = null
@@ -94,7 +101,7 @@ class Furnace(
         }
 
         if (currentFuel?.isNone() == false && burnProgress >= 1f) {
-            if (canSmelt()) {
+            if (canSmelt() && !fuel.isNoneOrNull()) {
                 startBurning()
             } else {
                 currentFuel = null

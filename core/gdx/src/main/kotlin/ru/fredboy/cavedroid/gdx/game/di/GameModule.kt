@@ -23,6 +23,7 @@ import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.GameWorldContactListener
+import ru.fredboy.cavedroid.game.world.GameWorldLightManager
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
 
 @Module
@@ -117,6 +118,7 @@ object GameModule {
         physicsController: GameWorldContactListener,
         gameWorldSolidBlockBodiesManager: GameWorldSolidBlockBodiesManager,
         environmentTextureRegionsRepository: EnvironmentTextureRegionsRepository,
+        gameWorldLightManager: GameWorldLightManager,
     ): GameWorld {
         val mapData = if (gameContextRepository.isLoadGame()) {
             saveDataRepository.loadMap(
@@ -131,8 +133,14 @@ object GameModule {
             physicsController = physicsController,
             gameWorldSolidBlockBodiesManager = gameWorldSolidBlockBodiesManager,
             environmentTextureRegionsRepository = environmentTextureRegionsRepository,
-            initialForeMap = mapData?.retrieveForeMap(),
-            initialBackMap = mapData?.retrieveBackMap(),
-        )
+            gameWorldLightManager = gameWorldLightManager,
+            initialForeMap = mapData?.foreMap,
+            initialBackMap = mapData?.backMap,
+        ).apply {
+            mapData?.let {
+                this.currentGameTime = mapData.gameTime
+                this.moonPhase = mapData.moonPhase
+            }
+        }
     }
 }

@@ -31,8 +31,8 @@ class WeatherRenderer @Inject constructor(
     ) {
         val skyWidth = max(SKY_SPAN, viewport.width)
         val normalizedTime = gameWorld.getNormalizedTime()
-        val moonPositionX = (skyWidth * (normalizedTime - 0.5f)) + (viewport.width / 2 - skyWidth / 2)
-        val sunPositionX = (moonPositionX + skyWidth) % (skyWidth * 2f)
+        val sunPositionX = (skyWidth * normalizedTime) + (viewport.width / 2 - skyWidth / 2)
+        val moonPositionX = (sunPositionX + skyWidth) % (skyWidth * 2f)
         val sunSprite = environmentTextureRegionsRepository.getSunSprite()
         val moonSprite = environmentTextureRegionsRepository.getMoonPhaseSprite(gameWorld.moonPhase)
 

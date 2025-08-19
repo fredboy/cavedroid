@@ -65,7 +65,7 @@ class Player(
     var sight: Light? = null
         set(value) {
             if (field != null) {
-                field?.dispose()
+                field?.remove(true)
                 field = null
             }
 

@@ -20,7 +20,7 @@ class UseFurnaceAction @Inject constructor(
         // TODO: transform x
         val furnace = (
             containerController.getContainer(x, y, Layer.FOREGROUND.z)
-                ?: containerController.getContainer(x, y, Layer.FOREGROUND.z)
+                ?: containerController.getContainer(x, y, Layer.BACKGROUND.z)
             ) as? Furnace
         furnace ?: return
 

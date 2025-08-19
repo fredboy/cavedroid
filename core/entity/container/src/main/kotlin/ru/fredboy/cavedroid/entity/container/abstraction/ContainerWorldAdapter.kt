@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.entity.container.abstraction
 
+import box2dLight.RayHandler
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
@@ -20,4 +21,6 @@ interface ContainerWorldAdapter {
     fun removeOnBlockDestroyedListener(listener: OnBlockDestroyedListener)
 
     fun removeOnBlockPlacedListener(listener: OnBlockPlacedListener)
+
+    fun getRayHandler(): RayHandler
 }

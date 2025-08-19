@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.entity.mob.abstraction
 
-import box2dLight.DirectionalLight
 import box2dLight.RayHandler
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
@@ -32,6 +31,4 @@ interface MobWorldAdapter {
     fun getMediumLiquid(hitbox: Rectangle): Block.Fluid?
 
     fun getRayHandler(): RayHandler
-
-    fun getSun(): DirectionalLight
 }

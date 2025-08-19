@@ -12,6 +12,7 @@ data class CommonBlockParams(
     val isBackground: Boolean,
     val isTransparent: Boolean,
     val requiresBlock: Boolean,
+    val allowAttachToBackground: Boolean,
     val animationInfo: BlockAnimationInfo?,
     val texture: Texture?,
     val spriteMargins: BlockInsets.Pixels,
@@ -21,6 +22,7 @@ data class CommonBlockParams(
     val tint: String?,
     val isFallable: Boolean,
     val castsShadows: Boolean,
+    val lightInfo: BlockLightInfo?,
 ) {
     val spriteMarginsMeters by lazy { spriteMargins.toMeters() }
 }

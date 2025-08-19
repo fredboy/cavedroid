@@ -14,7 +14,11 @@ class UpdateRequiresBlockAction @Inject constructor(
 ) : IUpdateBlockAction {
 
     override fun update(x: Int, y: Int) {
-        if (gameWorld.getForeMap(x, y + 1).params.hasCollision.not()) {
+        val attachedToBottom = gameWorld.getForeMap(x, y + 1).params.hasCollision
+        val attachedToBg = gameWorld.getForeMap(x, y).params.allowAttachToBackground &&
+            gameWorld.getBackMap(x, y).params.hasCollision
+
+        if (!attachedToBottom && !attachedToBg) {
             val block = gameWorld.getForeMap(x, y)
 
             if (block.params.isFallable) {

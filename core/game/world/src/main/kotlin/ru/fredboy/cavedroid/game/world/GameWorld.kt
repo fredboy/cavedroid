@@ -1,11 +1,8 @@
 package ru.fredboy.cavedroid.game.world
 
-import box2dLight.DirectionalLight
 import box2dLight.RayHandler
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.Filter
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
@@ -16,14 +13,12 @@ import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
-import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
 import ru.fredboy.cavedroid.game.world.generator.GameWorldGenerator
 import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
 import java.lang.ref.WeakReference
 import java.util.*
 import javax.inject.Inject
-import kotlin.math.max
 
 @GameScope
 class GameWorld @Inject constructor(
@@ -31,6 +26,7 @@ class GameWorld @Inject constructor(
     private val physicsController: GameWorldContactListener,
     private val gameWorldSolidBlockBodiesManager: GameWorldSolidBlockBodiesManager,
     private val environmentTextureRegionsRepository: EnvironmentTextureRegionsRepository,
+    private val gameWorldLightManager: GameWorldLightManager,
     initialForeMap: Array<Array<Block>>?,
     initialBackMap: Array<Array<Block>>?,
 ) : Disposable {
@@ -40,25 +36,16 @@ class GameWorld @Inject constructor(
     val width: Int
     val height: Int
 
-    var currentGameTime = -DAY_DURATION_SEC / 6.0
-        private set
+    var currentGameTime = 0f
 
     var moonPhase = 0
-        private set
 
     val generatorConfig = WorldGeneratorConfig.getDefault()
 
     val world: World = World(Vector2(0f, 9.8f), false)
 
-    val rayHandler: RayHandler = RayHandler(world)
-
-    val sun = DirectionalLight(rayHandler, 128, Color().apply { a = 1f }, 90.1f).apply {
-        val filter = Filter().apply {
-            maskBits = PhysicsConstants.CATEGORY_OPAQUE
-        }
-        setContactFilter(filter)
-        setSoftnessLength(3f)
-    }
+    val rayHandler: RayHandler
+        get() = gameWorldLightManager.rayHandler
 
     private var box2dAccumulator: Float = 0f
 
@@ -80,6 +67,7 @@ class GameWorld @Inject constructor(
 
         physicsController.attachToGameWorld(this)
         gameWorldSolidBlockBodiesManager.attachToGameWorld(this)
+        gameWorldLightManager.attachToGameWorld(this)
     }
 
     fun addBlockPlacedListener(listener: OnBlockPlacedListener) {
@@ -233,15 +221,11 @@ class GameWorld @Inject constructor(
      * Returns the value between 0 and 1 representing the daylight
      */
     fun getSunlight(): Float {
-        return (MathUtils.cos((currentGameTime / DAY_DURATION_SEC * MathUtils.PI2).toFloat()) + 1f) / 2f
+        return (MathUtils.sin(currentGameTime / DAY_DURATION_SEC * MathUtils.PI2) + 1f) / 2f
     }
 
-    /**
-     * Returns current game time as a value between 0 and 2. 1 being midnight and 0 being noon
-     * So values < 1 are a.m. and > 1 are p.m.
-     */
     fun getNormalizedTime(): Float {
-        return (currentGameTime / DAY_DURATION_SEC * 2).toFloat()
+        return currentGameTime / DAY_DURATION_SEC * 2
     }
 
     fun update(delta: Float) {
@@ -252,17 +236,17 @@ class GameWorld @Inject constructor(
             moonPhase = (moonPhase + 1) % environmentTextureRegionsRepository.getMoonPhasesCount()
         }
 
+        gameWorldLightManager.update()
+
         box2dAccumulator += delta
         while (box2dAccumulator >= PHYSICS_STEP_DELTA) {
             world.step(PHYSICS_STEP_DELTA, 6, 2)
             box2dAccumulator -= PHYSICS_STEP_DELTA
         }
-
-        sun.color = Color().apply { a = max(getSunlight(), 0.1f) }
     }
 
     override fun dispose() {
-        sun.dispose()
+        gameWorldLightManager.dispose()
         physicsController.dispose()
         gameWorldSolidBlockBodiesManager.dispose()
         world.dispose()

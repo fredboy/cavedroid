@@ -195,4 +195,13 @@ sealed class SaveDataDto {
         val mobs: List<@Contextual MobSaveDataDto>,
         val player: PlayerSaveDataDto,
     ) : SaveDataDto()
+
+    @Serializable
+    data class WorldSaveDataDto(
+        override val version: Int,
+        val name: String,
+        val timestamp: Long,
+        val gameTime: Float,
+        val moonPhase: Int,
+    ) : SaveDataDto()
 }

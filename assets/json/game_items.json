@@ -106,7 +106,10 @@
       "state": 0,
       "damage": 4,
       "density": 15,
-      "casts_shadows": false
+      "casts_shadows": false,
+      "light_info": {
+        "light_distance": 15
+      }
     },
     "sand": {
       "hp": 45,
@@ -656,7 +659,8 @@
       "block_required": true,
       "drop": "cactus",
       "texture": "cactus",
-      "damage": 1
+      "damage": 1,
+      "casts_shadows": false
     },
     "water_16": {
       "collision": false,
@@ -722,7 +726,10 @@
       "state": 1,
       "damage": 4,
       "density": 15,
-      "casts_shadows": false
+      "casts_shadows": false,
+      "light_info": {
+        "light_distance": 15
+      }
     },
     "lava_12": {
       "top": 4,
@@ -737,7 +744,10 @@
       "state": 2,
       "damage": 4,
       "density": 15,
-      "casts_shadows": false
+      "casts_shadows": false,
+      "light_info": {
+        "light_distance": 15
+      }
     },
     "lava_8": {
       "top": 8,
@@ -752,7 +762,10 @@
       "state": 3,
       "damage": 4,
       "density": 15,
-      "casts_shadows": false
+      "casts_shadows": false,
+      "light_info": {
+        "light_distance": 15
+      }
     },
     "lava_4": {
       "top": 12,
@@ -767,7 +780,10 @@
       "state": 4,
       "damage": 4,
       "density": 15,
-      "casts_shadows": false
+      "casts_shadows": false,
+      "light_info": {
+        "light_distance": 15
+      }
     },
     "obsidian": {
       "hp": 15000,
@@ -825,6 +841,21 @@
       "sprite_top": 2,
       "sprite_left": 1,
       "sprite_right": 1
+    },
+    "torch": {
+      "hp": 1,
+      "collision": false,
+      "background": true,
+      "transparent": true,
+      "block_required": true,
+      "allow_attach_to_bg": true,
+      "drop": "torch",
+      "drop_count": 1,
+      "texture": "torch",
+      "casts_shadows": false,
+      "light_info": {
+        "light_distance": 13
+      }
     }
   },
   "items": {
@@ -888,6 +919,13 @@
       "type": "block",
       "texture": "chest"
     },
+    "torch": {
+      "name": "Torch",
+      "type": "block",
+      "texture": "torch",
+      "origin_x": 0.5,
+      "origin_y": 1
+    },
     "sapling_spruce": {
       "name": "Spruce Sapling",
       "type": "block",
@@ -945,7 +983,6 @@
       "name": "Leaves",
       "type": "block",
       "texture": "leaves_oak"
-
     },
     "log_spruce": {
       "name": "Spruce",
@@ -1244,7 +1281,7 @@
       "type": "shovel",
       "texture": "wood_shovel",
       "origin_x": 0.125,
-      "tool_level" : 1,
+      "tool_level": 1,
       "max_stack": 59
     },
     "stone_shovel": {
@@ -1252,7 +1289,7 @@
       "type": "shovel",
       "texture": "stone_shovel",
       "origin_x": 0.125,
-      "tool_level" : 2,
+      "tool_level": 2,
       "max_stack": 131
     },
     "iron_shovel": {
@@ -1260,7 +1297,7 @@
       "type": "shovel",
       "texture": "iron_shovel",
       "origin_x": 0.125,
-      "tool_level" : 3,
+      "tool_level": 3,
       "max_stack": 250
     },
     "diamond_shovel": {
@@ -1268,7 +1305,7 @@
       "type": "shovel",
       "texture": "diamond_shovel",
       "origin_x": 0.125,
-      "tool_level" : 4,
+      "tool_level": 4,
       "max_stack": 1561
     },
     "gold_shovel": {
@@ -1276,7 +1313,7 @@
       "type": "shovel",
       "texture": "gold_shovel",
       "origin_x": 0.125,
-      "tool_level" : 1,
+      "tool_level": 1,
       "block_damage_multiplier": 6,
       "max_stack": 32
     },
@@ -1285,7 +1322,7 @@
       "type": "pickaxe",
       "texture": "wood_pickaxe",
       "origin_x": 0.125,
-      "tool_level" : 1,
+      "tool_level": 1,
       "max_stack": 59,
       "burning_time": 10000
     },
@@ -1294,7 +1331,7 @@
       "type": "pickaxe",
       "texture": "stone_pickaxe",
       "origin_x": 0.125,
-      "tool_level" : 2,
+      "tool_level": 2,
       "max_stack": 131
     },
     "iron_pickaxe": {
@@ -1302,7 +1339,7 @@
       "type": "pickaxe",
       "texture": "iron_pickaxe",
       "origin_x": 0.125,
-      "tool_level" : 3,
+      "tool_level": 3,
       "max_stack": 251
     },
     "diamond_pickaxe": {
@@ -1310,7 +1347,7 @@
       "type": "pickaxe",
       "texture": "diamond_pickaxe",
       "origin_x": 0.125,
-      "tool_level" : 4,
+      "tool_level": 4,
       "max_stack": 1562
     },
     "gold_pickaxe": {
@@ -1318,7 +1355,7 @@
       "type": "pickaxe",
       "texture": "gold_pickaxe",
       "origin_x": 0.125,
-      "tool_level" : 1,
+      "tool_level": 1,
       "block_damage_multiplier": 6,
       "max_stack": 33
     },
@@ -1327,7 +1364,7 @@
       "type": "axe",
       "texture": "wood_axe",
       "origin_x": 0.125,
-      "tool_level" : 1,
+      "tool_level": 1,
       "max_stack": 60,
       "burning_time": 10000
     },
@@ -1336,7 +1373,7 @@
       "type": "axe",
       "texture": "stone_axe",
       "origin_x": 0.125,
-      "tool_level" : 2,
+      "tool_level": 2,
       "max_stack": 131
     },
     "iron_axe": {
@@ -1344,7 +1381,7 @@
       "type": "axe",
       "texture": "iron_axe",
       "origin_x": 0.125,
-      "tool_level" : 3,
+      "tool_level": 3,
       "max_stack": 250
     },
     "diamond_axe": {
@@ -1352,7 +1389,7 @@
       "type": "axe",
       "texture": "diamond_axe",
       "origin_x": 0.125,
-      "tool_level" : 4,
+      "tool_level": 4,
       "max_stack": 1561
     },
     "gold_axe": {
@@ -1360,7 +1397,7 @@
       "type": "axe",
       "texture": "gold_axe",
       "origin_x": 0.125,
-      "tool_level" : 1,
+      "tool_level": 1,
       "block_damage_multiplier": 6,
       "max_stack": 32
     },
@@ -1368,7 +1405,7 @@
       "name": "Shears",
       "type": "shears",
       "texture": "shears",
-      "tool_level" : 1,
+      "tool_level": 1,
       "origin_x": 0.125,
       "max_stack": 238
     },
