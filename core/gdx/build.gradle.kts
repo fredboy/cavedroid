@@ -1,5 +1,5 @@
 plugins {
-    kotlin
+    kotlin("jvm")
     ksp
 }
 
@@ -9,7 +9,9 @@ java.targetCompatibility = ApplicationInfo.sourceCompatibility
 dependencies {
     useAutomultibind()
     useLibgdx()
+    useLibKtx()
     useDagger()
+    useKotlinxCoroutines()
 
     useCommonModule()
     useDataModules()
@@ -18,6 +20,4 @@ dependencies {
     useEntityModules()
     useGameModules()
     useGameplayModules()
-
-    useModule(":core:domain:menu")
 }

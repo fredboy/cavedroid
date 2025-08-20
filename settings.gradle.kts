@@ -13,7 +13,6 @@ include("core:common")
 include("core:data:assets")
 include("core:data:configuration")
 include("core:data:items")
-include("core:data:menu")
 include("core:data:save")
 
 /**
@@ -22,7 +21,6 @@ include("core:data:save")
 include("core:domain:assets")
 include("core:domain:configuration")
 include("core:domain:items")
-include("core:domain:menu")
 include("core:domain:world")
 include("core:domain:save")
 

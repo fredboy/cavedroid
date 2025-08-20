@@ -130,22 +130,44 @@ class MobPhysicsFactoryImpl @Inject constructor(
     }
 
     private fun Body.createAutoJumpSensor(height: Float) {
-        val sensorShape = createEdgeShape(
-            x1 = -2f,
-            y1 = height / 2f - .8f,
-            x2 = 2f,
-            y2 = height / 2f - .8f,
-        )
+        val sensorShapeR = PolygonShape().apply {
+            setAsBox(
+                0.5f,
+                0.125f,
+                Vector2(0.5f, height / 2 - 0.8f),
+                0f,
+            )
+        }
+
+        val sensorShapeL = PolygonShape().apply {
+            setAsBox(
+                0.5f,
+                0.125f,
+                Vector2(-0.5f, height / 2 - 0.8f),
+                0f,
+            )
+        }
 
         FixtureDef().apply {
-            shape = sensorShape
+            shape = sensorShapeR
             isSensor = true
             filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
         }.also { fixtureDef ->
             createFixture(fixtureDef).apply {
-                userData = ContactSensorType.MOB_SHOULD_JUMP
+                userData = ContactSensorType.MOB_SHOULD_JUMP_RIGHT
             }
-            sensorShape.dispose()
+            sensorShapeR.dispose()
+        }
+
+        FixtureDef().apply {
+            shape = sensorShapeL
+            isSensor = true
+            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
+        }.also { fixtureDef ->
+            createFixture(fixtureDef).apply {
+                userData = ContactSensorType.MOB_SHOULD_JUMP_LEFT
+            }
+            sensorShapeL.dispose()
         }
     }
 

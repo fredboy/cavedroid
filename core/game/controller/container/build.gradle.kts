@@ -1,5 +1,5 @@
 plugins {
-    kotlin
+    kotlin("jvm")
     ksp
 }
 

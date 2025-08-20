@@ -55,7 +55,7 @@ class CaveDroidApplication(
                     height = height,
                     isFullscreen = isFullscreen,
                     useDynamicCamera = preferencesStore.getPreference("dyncam").toBoolean(),
-                    screenScale = (preferencesStore.getPreference("screen_scale") ?: "2").toInt(),
+                    screenScale = (preferencesStore.getPreference("screen_scale") ?: "5").toInt(),
                     isAutoJumpEnabled = preferencesStore.getPreference("auto_jump").toBoolean(),
                 ),
             )

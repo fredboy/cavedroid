@@ -1,0 +1,118 @@
+
+skin.png
+size: 1024, 1024
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+font
+  rotate: false
+  xy: 1, 241
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+background
+  rotate: false
+  xy: 739, 737
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+button_disabled
+  rotate: false
+  xy: 1, 219
+  size: 200, 20
+  orig: 200, 20
+  offset: 0, 0
+  index: -1
+button_disabled_v
+  rotate: false
+  xy: 515, 506
+  size: 20, 200
+  orig: 20, 200
+  offset: 0, 0
+  index: -1
+button_down
+  rotate: false
+  xy: 515, 733
+  size: 200, 20
+  orig: 200, 20
+  offset: 0, 0
+  index: -1
+button_hover
+  rotate: false
+  xy: 1, 197
+  size: 200, 20
+  orig: 200, 20
+  offset: 0, 0
+  index: -1
+button_up
+  rotate: false
+  xy: 203, 219
+  size: 200, 20
+  orig: 200, 20
+  offset: 0, 0
+  index: -1
+checkbox_off
+  rotate: false
+  xy: 717, 733
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+checkbox_off_hover
+  rotate: false
+  xy: 1, 175
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+checkbox_on
+  rotate: false
+  xy: 203, 197
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+checkbox_on_hover
+  rotate: false
+  xy: 405, 219
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+cursor
+  rotate: false
+  xy: 225, 209
+  size: 5, 8
+  orig: 5, 8
+  offset: 0, 0
+  index: -1
+gamelogo
+  rotate: false
+  xy: 515, 708
+  size: 163, 23
+  orig: 163, 23
+  offset: 0, 0
+  index: -1
+knob
+  rotate: false
+  xy: 23, 175
+  size: 8, 20
+  orig: 8, 20
+  offset: 0, 0
+  index: -1
+knob_h
+  rotate: false
+  xy: 680, 723
+  size: 20, 8
+  orig: 20, 8
+  offset: 0, 0
+  index: -1
+shade
+  rotate: false
+  xy: 1, 157
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1

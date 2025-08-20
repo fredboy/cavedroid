@@ -1,5 +1,5 @@
 plugins {
-    kotlin
+    kotlin("jvm")
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility

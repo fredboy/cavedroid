@@ -17,7 +17,6 @@ fun DependencyHandler.useDataModules() {
     useModule(":core:data:assets")
     useModule(":core:data:configuration")
     useModule(":core:data:items")
-    useModule(":core:data:menu")
     useModule(":core:data:save")
 }
 
@@ -25,7 +24,6 @@ fun DependencyHandler.useDomainModules() {
     useModule(":core:domain:assets")
     useModule(":core:domain:configuration")
     useModule(":core:domain:items")
-    useModule(":core:domain:menu")
     useModule(":core:domain:world")
 }
 
@@ -68,6 +66,11 @@ fun DependencyHandler.useLibgdx() {
     implementation(Dependencies.LibGDX.box2dLights)
 }
 
+fun DependencyHandler.useLibKtx() {
+    implementation(Dependencies.LibKTX.scene2d)
+    implementation(Dependencies.LibKTX.actors)
+}
+
 fun DependencyHandler.useDagger() {
     implementation(Dependencies.Dagger.dagger)
     ksp(Dependencies.Dagger.compiler)
@@ -79,4 +82,8 @@ fun DependencyHandler.useKotlinxSerializationJson() {
 
 fun DependencyHandler.useKotlinxSerializationProtobuf() {
     implementation(Dependencies.Kotlin.Serialization.protobuf)
+}
+
+fun DependencyHandler.useKotlinxCoroutines() {
+    implementation(Dependencies.Kotlin.coroutinesCore)
 }

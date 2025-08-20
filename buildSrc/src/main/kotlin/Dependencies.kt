@@ -41,6 +41,11 @@ object Dependencies {
         }
     }
 
+    object LibKTX {
+        const val scene2d = "io.github.libktx:ktx-scene2d:${Versions.libKtx}"
+        const val actors = "io.github.libktx:ktx-actors:${Versions.libKtx}"
+    }
+
     object Dagger {
         const val dagger = "com.google.dagger:dagger:${Versions.dagger}"
         const val compiler = "com.google.dagger:dagger-compiler:${Versions.dagger}"
@@ -51,6 +56,7 @@ object Dependencies {
         const val kspPlugin = "com.google.devtools.ksp:${Versions.ksp}"
         const val bom = "org.jetbrains.kotlin:kotlin-bom:${Versions.kotlin}"
         const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
+        const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinxCoroutines}"
 
         object Serialization {
             const val json = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlinxSerialization}"

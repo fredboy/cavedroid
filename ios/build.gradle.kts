@@ -1,5 +1,5 @@
 plugins {
-    kotlin
+    kotlin("jvm")
     id("robovm")
 }
 
@@ -55,7 +55,7 @@ val generatePlist by tasks.registering {
                     <key>UIStatusBarHidden</key>
                     <true/>
                     <key>MinimumOSVersion</key>
-                    <string>11.0</string>
+                    <string>12.0</string>
                     <key>UIDeviceFamily</key>
                     <array>
                         <integer>1</integer>

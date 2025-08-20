@@ -1,5 +1,5 @@
 plugins {
-    kotlin
+    kotlin("jvm")
     ksp
 }
 
@@ -9,4 +9,5 @@ java.targetCompatibility = ApplicationInfo.sourceCompatibility
 dependencies {
     useLibgdx()
     useDagger()
+    useKotlinxCoroutines()
 }

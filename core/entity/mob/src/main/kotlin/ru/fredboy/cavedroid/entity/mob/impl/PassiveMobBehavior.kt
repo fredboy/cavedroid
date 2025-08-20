@@ -11,6 +11,10 @@ class PassiveMobBehavior :
     ) {
 
     override fun PassiveMob.updateMob(worldAdapter: MobWorldAdapter, delta: Float) {
+        if (checkForAutojump()) {
+            jump()
+        }
+
         if (MathUtils.randomBoolean(delta)) {
             if (velocity.x != 0f) {
                 velocity.x = 0f

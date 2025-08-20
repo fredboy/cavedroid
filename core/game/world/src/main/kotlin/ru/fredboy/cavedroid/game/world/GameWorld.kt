@@ -139,7 +139,7 @@ class GameWorld @Inject constructor(
         getMap(x, y, layer)
             .takeIf { !it.isNone() }
             ?.let { currentBlock ->
-                notifyBlockDestroyed(x, y, layer, currentBlock, dropOld)
+                notifyBlockDestroyed(transformedX, y, layer, currentBlock, dropOld)
             }
 
         when (layer) {
@@ -147,7 +147,7 @@ class GameWorld @Inject constructor(
             Layer.BACKGROUND -> backMap[transformedX][y] = value
         }
 
-        notifyBlockPlaced(x, y, layer, value)
+        notifyBlockPlaced(transformedX, y, layer, value)
     }
 
     private fun isSameSlab(slab1: Block, slab2: Block): Boolean {

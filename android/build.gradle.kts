@@ -19,7 +19,7 @@ private val keystoreProperties = if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = ApplicationInfo.packageName
-    compileSdk = 34
+    compileSdk = 36
 
     sourceSets {
 
@@ -39,8 +39,8 @@ android {
 
     defaultConfig {
         applicationId = ApplicationInfo.packageName
-        minSdk = 19
-        targetSdk = 34
+        minSdk = 21
+        targetSdk = 36
 
         versionCode = ApplicationInfo.versionCode
         versionName = ApplicationInfo.versionName
@@ -117,8 +117,6 @@ dependencies {
     useCommonModule()
     useGdxModule()
 
-    implementation(platform(Dependencies.Kotlin.bom))
-
     implementation(Dependencies.LibGDX.gdx)
     implementation(Dependencies.LibGDX.Android.backend)
 
@@ -131,6 +129,4 @@ dependencies {
     natives(Dependencies.LibGDX.Box2d.Natives.Android.arm64)
     natives(Dependencies.LibGDX.Box2d.Natives.Android.x86)
     natives(Dependencies.LibGDX.Box2d.Natives.Android.x86_64)
-
-    configurations["implementation"].exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk8")
 }

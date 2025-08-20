@@ -1,5 +1,7 @@
 package ru.fredboy.cavedroid
 
+import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
@@ -11,13 +13,22 @@ class AndroidLauncher : AndroidApplication() {
         super.onCreate(savedInstanceState)
 
         val gameDataDirectoryPath = packageManager.getPackageInfo(packageName, 0)
-            .applicationInfo.dataDir
+            .applicationInfo?.dataDir ?: run {
+            finish()
+            return
+        }
 
         val config = AndroidApplicationConfiguration()
         config.useImmersiveMode = true
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            onBackInvokedDispatcher.registerOnBackInvokedCallback(Int.MAX_VALUE) {
+            }
+        }
+
         initialize(
-            /* listener = */ CaveDroidApplication(
+            /* listener = */
+            CaveDroidApplication(
                 gameDataDirectoryPath = gameDataDirectoryPath,
                 isTouchScreen = true,
                 isDebug = BuildConfig.DEBUG,
@@ -27,7 +38,8 @@ class AndroidLauncher : AndroidApplication() {
         )
     }
 
-    @Suppress("OVERRIDE_DEPRECATION")
+    @Deprecated("Deprecated in Java")
+    @SuppressLint("GestureBackNavigation")
     override fun onBackPressed() {
         // ignore
     }
