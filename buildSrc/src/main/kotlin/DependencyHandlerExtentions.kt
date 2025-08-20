@@ -17,7 +17,6 @@ fun DependencyHandler.useDataModules() {
     useModule(":core:data:assets")
     useModule(":core:data:configuration")
     useModule(":core:data:items")
-    useModule(":core:data:menu")
     useModule(":core:data:save")
 }
 
@@ -25,7 +24,6 @@ fun DependencyHandler.useDomainModules() {
     useModule(":core:domain:assets")
     useModule(":core:domain:configuration")
     useModule(":core:domain:items")
-    useModule(":core:domain:menu")
     useModule(":core:domain:world")
 }
 
