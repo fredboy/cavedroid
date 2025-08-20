@@ -71,7 +71,7 @@ class BlockMapper @Inject constructor(
         isFallable = dto.fallable,
         castsShadows = dto.castShadows,
         lightInfo = mapLightInfo(dto.lightInfo),
-        allowAttachToBackground = dto.allowAttachToBackground,
+        allowAttachToNeighbour = dto.allowAttachToNeighbour,
     )
 
     private fun mapLightInfo(info: BlockLightDto?): BlockLightInfo? {

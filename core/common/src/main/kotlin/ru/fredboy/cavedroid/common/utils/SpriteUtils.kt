@@ -17,9 +17,11 @@ fun SpriteBatch.drawSprite(
     width: Float = sprite.regionWidth.meters,
     height: Float = sprite.regionHeight.meters,
     tint: Color? = null,
+    origin: SpriteOrigin? = null,
 ) {
     val oldColor = sprite.color
 
+    origin?.applyToSprite(sprite)
     sprite.setPosition(x, y)
     sprite.setSize(width, height)
     sprite.rotation = rotation
@@ -30,6 +32,7 @@ fun SpriteBatch.drawSprite(
     sprite.setSize(sprite.regionWidth.meters, sprite.regionHeight.meters)
     sprite.rotation = 0f
     sprite.color = oldColor
+    sprite.setOriginCenter()
 }
 
 fun Sprite.applyOrigin(origin: SpriteOrigin) {

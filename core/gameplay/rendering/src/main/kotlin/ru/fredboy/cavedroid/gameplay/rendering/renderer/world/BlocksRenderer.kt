@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
+import ru.fredboy.cavedroid.common.model.SpriteOrigin
+import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageFrameCountUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageSpriteUseCase
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -102,10 +104,37 @@ abstract class BlocksRenderer(
             if (foregroundBlock is Block.Furnace) {
                 val furnace = containerController.getContainer(x, y, Layer.FOREGROUND.z) as? Furnace
                 foregroundBlock.draw(spriteBatch, x.toFloat(), y.toFloat(), furnace?.isActive ?: false)
+            } else if (foregroundBlock.params.allowAttachToNeighbour) {
+                drawAttachedToNeighbour(spriteBatch, foregroundBlock, x, y)
             } else {
                 foregroundBlock.draw(spriteBatch, x.toFloat(), y.toFloat())
             }
         }
+    }
+
+    private fun drawAttachedToNeighbour(spriteBatch: SpriteBatch, block: Block, x: Int, y: Int) {
+        val bottom = gameWorld.getForeMap(x, y + 1)
+        val left = gameWorld.getForeMap(x - 1, y)
+        val right = gameWorld.getForeMap(x + 1, y)
+
+        if (bottom.params.hasCollision) {
+            block.draw(spriteBatch, x.toFloat(), y.toFloat())
+            return
+        }
+
+        val rotation = when {
+            left.params.run { hasCollision && !isTransparent } -> 45f
+            right.params.run { hasCollision && !isTransparent } -> -45f
+            else -> 0f
+        }
+
+        spriteBatch.drawSprite(
+            sprite = block.sprite,
+            x = x.toFloat() + 0.6f * (rotation / -45f),
+            y = y.toFloat(),
+            rotation = rotation,
+            origin = SpriteOrigin(0.5f, 1f),
+        )
     }
 
     companion object {

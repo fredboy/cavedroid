@@ -12,7 +12,7 @@ data class CommonBlockParams(
     val isBackground: Boolean,
     val isTransparent: Boolean,
     val requiresBlock: Boolean,
-    val allowAttachToBackground: Boolean,
+    val allowAttachToNeighbour: Boolean,
     val animationInfo: BlockAnimationInfo?,
     val texture: Texture?,
     val spriteMargins: BlockInsets.Pixels,

@@ -18,7 +18,7 @@ data class BlockDto(
     @SerialName("background") val background: Boolean = false,
     @SerialName("transparent") val transparent: Boolean = false,
     @SerialName("block_required") val blockRequired: Boolean = false,
-    @SerialName("allow_attach_to_bg") val allowAttachToBackground: Boolean = false,
+    @SerialName("allow_attach_to_neighbour") val allowAttachToNeighbour: Boolean = false,
     @SerialName("drop") val drop: String,
     @SerialName("meta") val meta: String? = null,
     @SerialName("texture") val texture: String,

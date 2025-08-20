@@ -848,7 +848,7 @@
       "background": true,
       "transparent": true,
       "block_required": true,
-      "allow_attach_to_bg": true,
+      "allow_attach_to_neighbour": true,
       "drop": "torch",
       "drop_count": 1,
       "texture": "torch",
