@@ -5,6 +5,9 @@
 *.ear
 hs_err_pid*
 
+## Kotlin
+.kotlin
+
 ## Robovm
 /ios/robovm-build/
 
