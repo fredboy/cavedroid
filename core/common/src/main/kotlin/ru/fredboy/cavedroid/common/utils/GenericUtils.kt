@@ -9,3 +9,5 @@ inline fun <reified T> Boolean.ifTrue(func: () -> T): T? {
 }
 
 inline fun <reified T> Boolean.ifFalse(func: () -> T): T? = (!this).ifTrue(func)
+
+fun Boolean.toToggleStateString(): String = if (this) "ON" else "OFF"

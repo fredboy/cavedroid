@@ -1,10 +1,11 @@
 package ru.fredboy.cavedroid.gdx.menu.v2
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.Disposable
-import com.badlogic.gdx.utils.Scaling
-import com.badlogic.gdx.utils.viewport.ScalingViewport
+import com.badlogic.gdx.utils.viewport.ScreenViewport
 import ktx.scene2d.Scene2DSkin
 import ru.fredboy.cavedroid.common.di.MenuScope
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -29,13 +30,19 @@ class MenuNavigationController @Inject constructor(
     private val viewModelProviders: Set<@JvmSuppressWildcards ViewModelProvider<*>>,
     private val applicationContextRepository: ApplicationContextRepository,
 ) : Disposable {
-    private val viewport = ScalingViewport(
-        Scaling.stretch,
-        applicationContextRepository.getWidth(),
-        applicationContextRepository.getHeight(),
-    )
+    private val viewport = ScreenViewport()
 
-    private val skin = Skin(Gdx.files.internal("skin/skin"))
+    private val skin = Skin(Gdx.files.internal("skin/skin.json"))
+        .apply {
+            atlas.textures.forEach { texture ->
+                texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest)
+            }
+
+            getAll(BitmapFont::class.java)
+                .forEach { entry ->
+                    entry.value.data.setScale(Gdx.graphics.density)
+                }
+        }
 
     init {
         Scene2DSkin.defaultSkin = skin
@@ -65,6 +72,10 @@ class MenuNavigationController @Inject constructor(
 
             else -> throw IllegalStateException("Unknown key $navKey")
         }
+    }
+
+    fun reset() {
+        navBackStack.reset()
     }
 
     private inline fun <reified V : Any> findViewModel(navKey: NavKey, cachedViewModel: ViewModel?): V {

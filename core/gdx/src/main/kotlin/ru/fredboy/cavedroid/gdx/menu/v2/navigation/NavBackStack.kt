@@ -24,6 +24,14 @@ class NavBackStack(
         _navRootStage?.onStackChanged(stack.peek(), popped)
     }
 
+    fun reset() {
+        while (stack.size > 1) {
+            _navRootStage?.clearViewModelFor(stack.pop())
+        }
+
+        _navRootStage?.onStackChanged(stack.peek())
+    }
+
     fun hasKey(key: NavKey): Boolean {
         return key in stack
     }

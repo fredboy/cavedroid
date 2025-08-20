@@ -28,6 +28,7 @@ class MenuScreen @Inject constructor(
     override fun show() {
         currentStage.let { stage ->
             Gdx.input.inputProcessor = stage
+            menuNavigationController.reset()
         }
     }
 

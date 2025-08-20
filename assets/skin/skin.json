@@ -1,0 +1,105 @@
+{
+"com.badlogic.gdx.graphics.g2d.BitmapFont": {
+	"MinecraftFont": {
+		"file": "font.fnt",
+		"scaledSize": 16,
+		"markupEnabled": true,
+		"flip": false
+	}
+},
+"com.badlogic.gdx.graphics.Color": {
+	"black": {
+		"r": 0,
+		"g": 0,
+		"b": 0,
+		"a": 1
+	},
+	"white": {
+		"r": 1,
+		"g": 1,
+		"b": 1,
+		"a": 1
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable": {
+	"background_tile": {
+		"region": "background",
+		"color": "white",
+		"minWidth": 16,
+		"minHeight": 16
+	},
+	"shade_tile": {
+		"region": "shade",
+		"color": "white",
+		"minWidth": 16,
+		"minHeight": 16
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle": {
+	"default": {
+		"up": "button_up",
+		"down": "button_down",
+		"over": "button_hover",
+		"disabled": "button_disabled"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle": {
+	"default": {
+		"checkboxOn": "checkbox_on",
+		"checkboxOff": "checkbox_off",
+		"checkboxOnOver": "checkbox_on_hover",
+		"checkboxOver": "checkbox_off_hover",
+		"font": "MinecraftFont"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
+	"default": {
+		"font": "MinecraftFont"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle": {
+	"default": {
+		"background": "shade_tile",
+		"hScroll": "button_disabled",
+		"hScrollKnob": "knob",
+		"vScroll": "button_disabled_v",
+		"vScrollKnob": "knob_h"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle": {
+	"default-horizontal": {
+		"background": "button_disabled",
+		"knob": "knob"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
+	"default": {
+		"font": "MinecraftFont",
+		"up": "button_up",
+		"down": "button_down",
+		"over": "button_hover",
+		"focused": "button_hover",
+		"disabled": "button_disabled"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
+	"default": {
+		"font": "MinecraftFont",
+		"fontColor": "white",
+		"cursor": "cursor",
+		"messageFontColor": "white"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle": {
+	"default": {
+		"label": "default",
+		"background": "shade_tile",
+		"wrapWidth": 8
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle": {
+	"default": {
+		"titleFont": "MinecraftFont"
+	}
+}
+}

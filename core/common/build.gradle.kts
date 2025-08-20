@@ -9,4 +9,5 @@ java.targetCompatibility = ApplicationInfo.sourceCompatibility
 dependencies {
     useLibgdx()
     useDagger()
+    useKotlinxCoroutines()
 }

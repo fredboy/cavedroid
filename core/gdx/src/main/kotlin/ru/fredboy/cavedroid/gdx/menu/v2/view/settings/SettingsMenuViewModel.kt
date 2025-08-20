@@ -1,9 +1,11 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.settings
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -18,17 +20,38 @@ class SettingsMenuViewModel(
     private val applicationContextRepository: ApplicationContextRepository,
 ) : ViewModel() {
 
-    private val reloadTrigger = MutableSharedFlow<Unit>(replay = 0)
+    private val _screenScaleFlow = MutableSharedFlow<Int>(replay = 0)
+    private val screenScaleFlow: Flow<Int> = _screenScaleFlow
+        .onStart { emit(applicationContextRepository.getScreenScale()) }
+        .distinctUntilChanged()
 
-    val settingsMenuState: StateFlow<SettingsMenuState> = reloadTrigger
-        .onStart { emit(Unit) }
-        .map {
-            createState()
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(500L),
-            initialValue = createState(),
-        )
+    private val _dynamicCameraFlow = MutableSharedFlow<Boolean>(replay = 0)
+    private val dynamicCameraFlow: Flow<Boolean> = _dynamicCameraFlow
+        .onStart { emit(applicationContextRepository.useDynamicCamera()) }
+        .distinctUntilChanged()
+
+    private val _fullscreenFlow = MutableSharedFlow<Boolean>(replay = 0)
+    private val fullscreenFlow: Flow<Boolean> = _fullscreenFlow
+        .onStart { emit(applicationContextRepository.isFullscreen()) }
+        .distinctUntilChanged()
+
+    private val _autoJumpFlow = MutableSharedFlow<Boolean>(replay = 0)
+    private val autoJumpFlow: Flow<Boolean> = _autoJumpFlow
+        .onStart { emit(applicationContextRepository.isAutoJumpEnabled()) }
+        .distinctUntilChanged()
+
+    val stateFlow: StateFlow<SettingsMenuState> = combine(
+        screenScaleFlow,
+        dynamicCameraFlow,
+        fullscreenFlow,
+        autoJumpFlow,
+    ) { scale, dynamicCamera, fullscreen, autoJump ->
+        SettingsMenuState(scale, dynamicCamera, fullscreen, autoJump)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(500L),
+        initialValue = createState(),
+    )
 
     private fun createState(): SettingsMenuState {
         return SettingsMenuState(
@@ -39,32 +62,29 @@ class SettingsMenuViewModel(
         )
     }
 
-    fun onScreenScaleClick() {
-        applicationContextRepository.setScreenScale((applicationContextRepository.getScreenScale() + 1) % 6 + 1)
-        applicationController.triggerResize()
-
-        viewModelScope.launch { reloadTrigger.emit(Unit) }
+    fun onChangeScreenScale(scale: Int) {
+        viewModelScope.launch { _screenScaleFlow.emit(scale) }
     }
 
-    fun onDynamicCameraClick() {
-        applicationContextRepository.setUseDynamicCamera(!applicationContextRepository.useDynamicCamera())
-
-        viewModelScope.launch { reloadTrigger.emit(Unit) }
+    fun onDynamicCameraClick(useDynamicCamera: Boolean) {
+        viewModelScope.launch { _dynamicCameraFlow.emit(useDynamicCamera) }
     }
 
-    fun onFullscreenClick() {
-        applicationContextRepository.setFullscreen(!applicationContextRepository.isFullscreen())
-
-        viewModelScope.launch { reloadTrigger.emit(Unit) }
+    fun onFullscreenClick(isFullscreen: Boolean) {
+        viewModelScope.launch { _fullscreenFlow.emit(isFullscreen) }
     }
 
-    fun onAutoJumpClick() {
-        applicationContextRepository.setAutoJumpEnabled(!applicationContextRepository.isAutoJumpEnabled())
-
-        viewModelScope.launch { reloadTrigger.emit(Unit) }
+    fun onAutoJumpClick(autoJump: Boolean) {
+        viewModelScope.launch { _autoJumpFlow.emit(autoJump) }
     }
 
-    fun onBackClick() {
+    fun onDoneClick() {
+        stateFlow.value.run {
+            applicationContextRepository.setScreenScale(screenScale)
+            applicationContextRepository.setFullscreen(fullscreen)
+            applicationContextRepository.setUseDynamicCamera(dynamicCamera)
+            applicationContextRepository.setAutoJumpEnabled(autoJump)
+        }
         navBackStack.pop()
     }
 }
