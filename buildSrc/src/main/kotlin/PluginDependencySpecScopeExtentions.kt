@@ -10,5 +10,6 @@ val PluginDependenciesSpecScope.kotlinxSerialization
 val PluginDependenciesSpecScope.ktlintGradle
     get() = id("org.jlleitschuh.gradle.ktlint") version Versions.ktlintGradle
 
-val PluginDependenciesSpecScope.proGuard
-    get() = id("com.guardsquare.proguard")
+val PluginDependenciesSpecScope.construo
+    get() = id("io.github.fourlastor.construo") version Versions.construo
+

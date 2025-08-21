@@ -1,7 +1,9 @@
+import io.github.fourlastor.construo.Target
 import proguard.gradle.ProGuardTask
 
 plugins {
     kotlin("jvm")
+    construo
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility
@@ -54,6 +56,33 @@ tasks.register<ProGuardTask>("proguard") {
     libraryjars("${System.getProperty("java.home")}/jmods/java.desktop.jmod")
     libraryjars("${System.getProperty("java.home")}/jmods/java.logging.jmod")
     libraryjars("${System.getProperty("java.home")}/jmods/java.prefs.jmod")
+}
+
+construo {
+    name.set("cavedroid")
+    humanName.set(ApplicationInfo.name)
+    version.set(ApplicationInfo.versionName)
+    mainClass.set(desktopLauncherClassName)
+    outputDir.set(layout.buildDirectory.dir("dist"))
+    jarTask.set("proguard")
+
+    targets {
+        create<Target.Linux>("linuxX64") {
+            architecture.set(Target.Architecture.X86_64)
+            jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.11%2B9/OpenJDK17U-jdk_x64_linux_hotspot_17.0.11_9.tar.gz")
+        }
+        create<Target.MacOs>("macM1") {
+            architecture.set(Target.Architecture.AARCH64)
+            jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.11%2B9/OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.11_9.tar.gz")
+            identifier.set(ApplicationInfo.packageName)
+            macIcon.set(project.file("macos/AppIcon.icns"))
+        }
+        create<Target.Windows>("winX64") {
+            architecture.set(Target.Architecture.X86_64)
+            jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.11%2B9/OpenJDK17U-jdk_x64_windows_hotspot_17.0.11_9.zip")
+            useGpuHint.set(false)
+        }
+    }
 }
 
 dependencies {

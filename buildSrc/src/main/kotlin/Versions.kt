@@ -88,4 +88,11 @@ object Versions {
      * [Source](https://github.com/Guardsquare/proguard)
      */
     const val proGuard = "7.7.0"
+
+    /**
+     * Construo
+     *
+     * A gradle plugin to cross compile jvm projects
+     */
+    const val construo = "1.7.1"
 }
