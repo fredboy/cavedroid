@@ -40,7 +40,7 @@ fun Stage.aboutMenuView(viewModel: AboutMenuViewModel) {
 
             label(
                 """
-                    CaveDroid ${CaveDroidConstants.VERSION}
+                    ${CaveDroidConstants.TITLE} ${CaveDroidConstants.VERSION}
 
                     MIT License
 
