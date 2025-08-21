@@ -24,7 +24,7 @@ class GameScreen @Inject constructor(
 
     private fun getGameContext(isLoadGame: Boolean): GameContext = GameContext(
         isLoadGame = isLoadGame,
-        showInfo = false,
+        showInfo = applicationContextRepository.isDebug(),
         showMap = false,
         joystick = Joystick(requireNotNull(mobParamsRepository.getMobParamsByKey("char")).speed),
         cameraContext = CameraContext(

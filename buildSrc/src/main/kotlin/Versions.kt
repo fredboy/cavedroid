@@ -10,7 +10,7 @@ object Versions {
      *
      * [Source](https://github.com/libgdx/libgdx)
      */
-    const val gdx = "1.13.5"
+    const val gdx = "1.13.1"
 
     /**
      * Dagger version
