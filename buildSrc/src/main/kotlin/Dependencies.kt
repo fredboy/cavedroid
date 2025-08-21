@@ -76,4 +76,6 @@ object Dependencies {
     }
 
     const val androidGradlePlugin = "com.android.tools.build:gradle:${Versions.agp}"
+
+    const val proGuardPlugin = "com.guardsquare:proguard-gradle:${Versions.proGuard}"
 }

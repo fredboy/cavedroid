@@ -9,3 +9,6 @@ val PluginDependenciesSpecScope.kotlinxSerialization
     get() = id("org.jetbrains.kotlin.plugin.serialization") version Versions.kotlin
 val PluginDependenciesSpecScope.ktlintGradle
     get() = id("org.jlleitschuh.gradle.ktlint") version Versions.ktlintGradle
+
+val PluginDependenciesSpecScope.proGuard
+    get() = id("com.guardsquare.proguard")

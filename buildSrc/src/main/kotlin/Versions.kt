@@ -81,4 +81,11 @@ object Versions {
      * [Source](https://github.com/Kotlin/kotlinx.coroutines)
      */
     const val kotlinxCoroutines = "1.10.2"
+
+    /**
+     * ProGuard plugin
+     *
+     * [Source](https://github.com/Guardsquare/proguard)
+     */
+    const val proGuard = "7.7.0"
 }

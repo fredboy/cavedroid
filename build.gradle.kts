@@ -16,6 +16,7 @@ buildscript {
         classpath(Dependencies.androidGradlePlugin)
         classpath(Dependencies.Kotlin.gradlePlugin)
         classpath(Dependencies.RoboVM.gradlePlugin)
+        classpath(Dependencies.proGuardPlugin)
     }
 }
 

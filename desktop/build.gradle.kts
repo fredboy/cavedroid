@@ -1,3 +1,5 @@
+import proguard.gradle.ProGuardTask
+
 plugins {
     kotlin("jvm")
 }
@@ -39,6 +41,19 @@ tasks.register<Jar>("dist") {
         ),
     )
     with(tasks.jar.get())
+}
+
+tasks.register<ProGuardTask>("proguard") {
+    injars(tasks.named("dist"))
+    outjars(layout.buildDirectory.file("libs/release-${ApplicationInfo.versionName}.jar"))
+
+    configuration("proguard-rules.pro")
+
+    // Java runtime libraries
+    libraryjars("${System.getProperty("java.home")}/jmods/java.base.jmod")
+    libraryjars("${System.getProperty("java.home")}/jmods/java.desktop.jmod")
+    libraryjars("${System.getProperty("java.home")}/jmods/java.logging.jmod")
+    libraryjars("${System.getProperty("java.home")}/jmods/java.prefs.jmod")
 }
 
 dependencies {
