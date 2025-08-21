@@ -42,6 +42,10 @@ class MenuScreen @Inject constructor(
     override fun resize(width: Int, height: Int) {
         super.resize(width, height)
 
+        currentStage.viewport.setWorldSize(
+            applicationContextRepository.getWidth(),
+            applicationContextRepository.getHeight(),
+        )
         currentStage.viewport.update(width, height, true)
     }
 

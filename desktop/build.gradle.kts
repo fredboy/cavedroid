@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.tasks.factory.dependsOn
 import io.github.fourlastor.construo.Target
 import proguard.gradle.ProGuardTask
 
@@ -10,6 +11,14 @@ java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 private val desktopLauncherClassName = "ru.fredboy.cavedroid.desktop.DesktopLauncher"
+
+sourceSets {
+    main {
+        resources {
+            srcDirs("src/main/extra")
+        }
+    }
+}
 
 tasks.register<JavaExec>("run") {
     dependsOn("build")
@@ -57,6 +66,16 @@ tasks.register<ProGuardTask>("proguard") {
     libraryjars("${System.getProperty("java.home")}/jmods/java.logging.jmod")
     libraryjars("${System.getProperty("java.home")}/jmods/java.prefs.jmod")
 }
+
+tasks.register<Copy>("copyLicenseReport") {
+    dependsOn("generateLicenseReport")
+
+    from("build/reports/dependency-license/THIRD-PARTY-NOTICES.txt")
+    into("src/main/extra")
+    rename { "notices.txt" }
+}
+
+tasks.processResources.dependsOn("copyLicenseReport")
 
 construo {
     name.set("cavedroid")

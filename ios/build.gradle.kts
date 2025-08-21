@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.tasks.factory.dependsOn
+
 plugins {
     kotlin("jvm")
     id("robovm")
@@ -81,6 +83,16 @@ val generatePlist by tasks.registering {
 
 tasks.matching { it.name.startsWith("createIpa") || it.name.startsWith("launchIPhone") }
     .configureEach { dependsOn(generatePlist) }
+
+tasks.register<Copy>("copyLicenseReport") {
+    dependsOn("generateLicenseReport")
+
+    from("build/reports/dependency-license/THIRD-PARTY-NOTICES.txt")
+    into("extra")
+    rename { "notices.txt" }
+}
+
+tasks.assemble.dependsOn("copyLicenseReport")
 
 robovm {
     isIosSkipSigning = true

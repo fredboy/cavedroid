@@ -52,6 +52,14 @@
 		"font": "MinecraftFont"
 	}
 },
+"com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle": {
+	"default": {
+		"up": "button_up_square",
+		"down": "button_down_square",
+		"over": "button_hover_square",
+		"disabled": "button_disabled_square"
+	}
+},
 "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
 	"default": {
 		"font": "MinecraftFont"
@@ -60,10 +68,8 @@
 "com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle": {
 	"default": {
 		"background": "shade_tile",
-		"hScroll": "button_disabled",
-		"hScrollKnob": "knob",
-		"vScroll": "button_disabled_v",
-		"vScrollKnob": "knob_h"
+		"hScrollKnob": "shade",
+		"vScrollKnob": "shade"
 	}
 },
 "com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle": {

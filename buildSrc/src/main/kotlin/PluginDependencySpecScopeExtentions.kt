@@ -9,7 +9,7 @@ val PluginDependenciesSpecScope.kotlinxSerialization
     get() = id("org.jetbrains.kotlin.plugin.serialization") version Versions.kotlin
 val PluginDependenciesSpecScope.ktlintGradle
     get() = id("org.jlleitschuh.gradle.ktlint") version Versions.ktlintGradle
-
 val PluginDependenciesSpecScope.construo
     get() = id("io.github.fourlastor.construo") version Versions.construo
-
+val PluginDependenciesSpecScope.dependencyLicenseReport
+    get() = id("com.github.jk1.dependency-license-report") version Versions.licenseReportPlugin

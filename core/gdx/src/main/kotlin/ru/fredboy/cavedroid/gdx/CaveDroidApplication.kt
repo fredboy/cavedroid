@@ -5,6 +5,7 @@ import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.PreferencesStore
+import ru.fredboy.cavedroid.common.utils.DEFAULT_VIEWPORT_WIDTH
 import ru.fredboy.cavedroid.common.utils.ratio
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
 import ru.fredboy.cavedroid.gdx.di.ApplicationComponent
@@ -55,7 +56,6 @@ class CaveDroidApplication(
                     height = height,
                     isFullscreen = isFullscreen,
                     useDynamicCamera = preferencesStore.getPreference("dyncam").toBoolean(),
-                    screenScale = (preferencesStore.getPreference("screen_scale") ?: "5").toInt(),
                     isAutoJumpEnabled = preferencesStore.getPreference("auto_jump").toBoolean(),
                 ),
             )
@@ -106,6 +106,5 @@ class CaveDroidApplication(
 
     companion object {
         private const val TAG = "CaveDroidApplication"
-        private const val DEFAULT_VIEWPORT_WIDTH = 480f
     }
 }

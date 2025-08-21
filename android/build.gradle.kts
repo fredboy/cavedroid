@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.tasks.factory.dependsOn
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -25,6 +26,9 @@ android {
 
         named("main") {
             jniLibs.srcDir("libs")
+            assets {
+                srcDirs("src/main/assets", "src/main/extra")
+            }
         }
 
         named("debug") {
@@ -117,11 +121,21 @@ task("copyAndroidNatives") {
     }
 }
 
+tasks.register<Copy>("copyLicenseReport") {
+    dependsOn("generateLicenseReport")
+
+    from("build/reports/dependency-license/THIRD-PARTY-NOTICES.txt")
+    into("src/main/extra")
+    rename { "notices.txt" }
+}
+
 tasks.whenTaskAdded {
     if (name.contains("package")) {
         dependsOn("copyAndroidNatives")
     }
 }
+
+tasks.preBuild.dependsOn("copyLicenseReport")
 
 dependencies {
     useCommonModule()

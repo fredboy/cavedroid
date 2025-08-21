@@ -20,11 +20,6 @@ class SettingsMenuViewModel(
     private val applicationContextRepository: ApplicationContextRepository,
 ) : ViewModel() {
 
-    private val _screenScaleFlow = MutableSharedFlow<Int>(replay = 0)
-    private val screenScaleFlow: Flow<Int> = _screenScaleFlow
-        .onStart { emit(applicationContextRepository.getScreenScale()) }
-        .distinctUntilChanged()
-
     private val _dynamicCameraFlow = MutableSharedFlow<Boolean>(replay = 0)
     private val dynamicCameraFlow: Flow<Boolean> = _dynamicCameraFlow
         .onStart { emit(applicationContextRepository.useDynamicCamera()) }
@@ -41,12 +36,11 @@ class SettingsMenuViewModel(
         .distinctUntilChanged()
 
     val stateFlow: StateFlow<SettingsMenuState> = combine(
-        screenScaleFlow,
         dynamicCameraFlow,
         fullscreenFlow,
         autoJumpFlow,
-    ) { scale, dynamicCamera, fullscreen, autoJump ->
-        SettingsMenuState(scale, dynamicCamera, fullscreen, autoJump)
+    ) { dynamicCamera, fullscreen, autoJump ->
+        SettingsMenuState(dynamicCamera, fullscreen, autoJump)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(500L),
@@ -55,15 +49,10 @@ class SettingsMenuViewModel(
 
     private fun createState(): SettingsMenuState {
         return SettingsMenuState(
-            screenScale = applicationContextRepository.getScreenScale(),
             dynamicCamera = applicationContextRepository.useDynamicCamera(),
             fullscreen = applicationContextRepository.isFullscreen(),
             autoJump = applicationContextRepository.isAutoJumpEnabled(),
         )
-    }
-
-    fun onChangeScreenScale(scale: Int) {
-        viewModelScope.launch { _screenScaleFlow.emit(scale) }
     }
 
     fun onDynamicCameraClick(useDynamicCamera: Boolean) {
@@ -80,7 +69,6 @@ class SettingsMenuViewModel(
 
     fun onDoneClick() {
         stateFlow.value.run {
-            applicationContextRepository.setScreenScale(screenScale)
             applicationContextRepository.setFullscreen(fullscreen)
             applicationContextRepository.setUseDynamicCamera(dynamicCamera)
             applicationContextRepository.setAutoJumpEnabled(autoJump)

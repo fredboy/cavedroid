@@ -267,9 +267,9 @@ class GameRenderer @Inject constructor(
         handleMousePosition()
         spriter.end()
 
-        if (gameContextRepository.shouldShowInfo()) {
-            debugRenderer.render(gameWorld.world, camera.combined)
-        }
+//        if (gameContextRepository.shouldShowInfo()) {
+//            debugRenderer.render(gameWorld.world, camera.combined)
+//        }
     }
 
     fun resetCameraToPlayer() {

@@ -12,7 +12,6 @@ import ktx.scene2d.image
 import ktx.scene2d.label
 import ktx.scene2d.table
 import ru.fredboy.cavedroid.common.CaveDroidConstants
-import ru.fredboy.cavedroid.common.utils.dp
 
 @Scene2dDsl
 fun <S> KWidget<S>.menuButtonsTable(
@@ -28,11 +27,12 @@ fun <S> KWidget<S>.menuButtonsTable(
                 ),
             ),
         )
+        pad(8f)
 
         image("gamelogo").apply {
             cell(
-                width = 600.dp,
-                height = 600.dp * drawable.minHeight / drawable.minWidth,
+                width = 600f,
+                height = 600f * drawable.minHeight / drawable.minWidth,
             )
             center()
             top()
@@ -44,9 +44,9 @@ fun <S> KWidget<S>.menuButtonsTable(
 
         table {
             defaults()
-                .width(600.dp)
-                .height(60.dp)
-                .pad(10.dp)
+                .width(600f)
+                .height(60f)
+                .pad(10f)
 
             init()
         }

@@ -1,5 +1,8 @@
+import com.github.jk1.license.render.TextReportRenderer
+
 plugins {
     ktlintGradle
+    dependencyLicenseReport
 }
 
 buildscript {
@@ -24,9 +27,16 @@ allprojects {
     version = ApplicationInfo.versionName
 
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    apply(plugin = "com.github.jk1.dependency-license-report")
 
     ktlint {
         version.set("1.6.0")
+    }
+
+    licenseReport {
+        excludeOwnGroup = true
+        renderers = arrayOf(TextReportRenderer())
+        excludes = arrayOf("CaveCraft.*")
     }
 
     repositories {

@@ -46,13 +46,6 @@ class ApplicationContextStore @Inject constructor(
         get() = synchronized(lock) { applicationContext.height }
         set(value) = synchronized(lock) { applicationContext.height = value }
 
-    var screenScale: Int
-        get() = synchronized(lock) { applicationContext.screenScale }
-        set(value) = synchronized(lock) {
-            applicationContext.screenScale = value
-            preferencesStore.setPreference(KEY_SCREEN_SCALE_PREF, value.toString())
-        }
-
     var isAutoJumpEnabled: Boolean
         get() = synchronized(lock) { applicationContext.isAutoJumpEnabled }
         set(value) = synchronized(lock) {

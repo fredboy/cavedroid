@@ -20,11 +20,14 @@ class GameScreen @Inject constructor(
     private val mobParamsRepository: MobParamsRepository,
 ) : BaseScreen(applicationContextRepository) {
 
+    override val scaleFactor: Float
+        get() = 0.5f
+
     private var gameComponent: GameComponent? = null
 
     private fun getGameContext(isLoadGame: Boolean): GameContext = GameContext(
         isLoadGame = isLoadGame,
-        showInfo = applicationContextRepository.isDebug(),
+        showInfo = false,
         showMap = false,
         joystick = Joystick(requireNotNull(mobParamsRepository.getMobParamsByKey("char")).speed),
         cameraContext = CameraContext(

@@ -25,8 +25,6 @@ class ApplicationContextRepositoryImpl @Inject constructor(
 
     override fun getHeight(): Float = applicationContextStore.height
 
-    override fun getScreenScale(): Int = applicationContextStore.screenScale
-
     override fun isAutoJumpEnabled(): Boolean = applicationContextStore.isAutoJumpEnabled
 
     override fun setTouch(isTouch: Boolean) {
@@ -34,7 +32,7 @@ class ApplicationContextRepositoryImpl @Inject constructor(
     }
 
     override fun setFullscreen(fullscreen: Boolean) {
-        if (!Gdx.graphics.supportsDisplayModeChange()) {
+        if (!Gdx.graphics.supportsDisplayModeChange() || fullscreen == isFullscreen()) {
             return
         }
 
@@ -62,10 +60,6 @@ class ApplicationContextRepositoryImpl @Inject constructor(
 
     override fun setHeight(height: Float) {
         applicationContextStore.height = height
-    }
-
-    override fun setScreenScale(scale: Int) {
-        applicationContextStore.screenScale = scale
     }
 
     override fun setAutoJumpEnabled(enabled: Boolean) {

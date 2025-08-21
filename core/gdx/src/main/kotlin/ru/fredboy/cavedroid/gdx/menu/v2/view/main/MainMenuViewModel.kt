@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gdx.menu.v2.view.main
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.ViewModel
+import ru.fredboy.cavedroid.gdx.menu.v2.view.help.HelpMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.newgame.NewGameMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.settings.SettingsMenuNavKey
 
@@ -25,5 +26,9 @@ class MainMenuViewModel(
 
     fun onExitGameClick() {
         applicationController.exitGame()
+    }
+
+    fun onHelpClick() {
+        navBackStack.push(HelpMenuNavKey)
     }
 }
