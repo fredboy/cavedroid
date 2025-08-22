@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
+import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.drawString
@@ -36,7 +37,7 @@ class GameRenderer @Inject constructor(
     private val getFont: GetFontUseCase,
     @Suppress("LocalVariableName") _worldRenderers: Set<@JvmSuppressWildcards IWorldRenderer>,
     @Suppress("LocalVariableName") _hudRenderers: Set<@JvmSuppressWildcards IHudRenderer>,
-) {
+) : Disposable {
 
     private val worldRenderers = _worldRenderers.sortedBy { it.renderLayer }
     private val hudRenderers = _hudRenderers.sortedBy { it.renderLayer }
@@ -210,23 +211,6 @@ class GameRenderer @Inject constructor(
     }
 
     private fun renderLights() {
-        val cameraPosition = camera.position.cpy()
-
-        val wrap = when {
-            camera.position.x + camera.viewportWidth / 2 > gameWorld.width.toFloat() -> -1
-            camera.position.x - camera.viewportWidth / 2 < 0f -> 1
-            else -> 0
-        }
-
-        if (wrap != 0) {
-            camera.position.x += gameWorld.width * wrap
-            camera.update()
-            gameWorld.rayHandler.setCombinedMatrix(camera)
-            gameWorld.rayHandler.updateAndRender()
-            camera.position.set(cameraPosition)
-            camera.update()
-        }
-
         gameWorld.rayHandler.setCombinedMatrix(camera)
         gameWorld.rayHandler.updateAndRender()
     }
@@ -275,6 +259,11 @@ class GameRenderer @Inject constructor(
     fun resetCameraToPlayer() {
         updateStaticCameraPositionToPlayer()
         camera.update()
+    }
+
+    override fun dispose() {
+        spriter.dispose()
+        shaper.dispose()
     }
 
     companion object {

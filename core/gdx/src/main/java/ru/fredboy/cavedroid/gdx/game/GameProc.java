@@ -99,6 +99,7 @@ public class GameProc implements Disposable {
         mGameWorldMobDamageControllerTask.shutdownBlocking();
         mWorldLogicTimer.stop();
 
+        mGameRenderer.dispose();
         mDropController.dispose();
         mMobsController.dispose();
         mContainerController.dispose();
