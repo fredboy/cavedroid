@@ -18,6 +18,6 @@ mkdir "$release_dir"
 
 cp "android/build/outputs/apk/release/android-release.apk" "$release_dir/android-$1.apk"
 cp "desktop/build/dist/cavedroid-linuxX64.zip" "$release_dir/linux-$1.zip"
-cp "desktop/build/dist/cavedroid-winX64.zip" "$release_dir/win-$1.jar"
+cp "desktop/build/dist/cavedroid-winX64.zip" "$release_dir/win-$1.zip"
 
 echo "$release_dir/"
