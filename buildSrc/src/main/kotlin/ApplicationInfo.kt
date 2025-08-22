@@ -2,8 +2,8 @@ import org.gradle.api.JavaVersion
 
 object ApplicationInfo {
     const val name = "CaveDroid"
-    const val versionName = "alpha0.9.5"
-    const val versionCode = 28
+    const val versionName = "beta-0.10.0"
+    const val versionCode = 29
 
     const val packageName = "ru.fredboy.cavedroid"
 
