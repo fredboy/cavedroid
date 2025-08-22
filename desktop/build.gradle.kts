@@ -1,6 +1,9 @@
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import io.github.fourlastor.construo.Target
 import proguard.gradle.ProGuardTask
+import java.io.FileInputStream
+import java.util.Properties
+import kotlin.apply
 
 plugins {
     kotlin("jvm")
@@ -11,6 +14,16 @@ java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 private val desktopLauncherClassName = "ru.fredboy.cavedroid.desktop.DesktopLauncher"
+
+private val keystorePropertiesFile = rootProject.file("keystore.properties")
+
+private val keystoreProperties = if (keystorePropertiesFile.exists()) {
+    Properties().apply {
+        load(FileInputStream(keystorePropertiesFile))
+    }
+} else {
+    null
+}
 
 sourceSets {
     main {
@@ -67,6 +80,37 @@ tasks.register<ProGuardTask>("proguard") {
     libraryjars("${System.getProperty("java.home")}/jmods/java.prefs.jmod")
 }
 
+tasks.register<Jar>("generateSignedJar") {
+    requireNotNull(keystoreProperties) { "keystore.properties missing" }
+
+    val storeFile = requireNotNull(keystoreProperties["releaseKeystorePath"]?.let(::file))
+    val storePassword = requireNotNull(keystoreProperties["releaseKeystorePassword"]?.toString())
+    val keyAlias = requireNotNull(keystoreProperties["releaseKeyAlias"]?.toString())
+    val keyPassword = requireNotNull(keystoreProperties["releaseKeyPassword"]?.toString())
+
+    dependsOn("proguard")
+
+    val proguardJar = layout.buildDirectory.file("libs/release-${ApplicationInfo.versionName}.jar").get().asFile
+    from(zipTree(proguardJar))
+
+    archiveBaseName.set("release-signed")
+    destinationDirectory.set(layout.buildDirectory.dir("libs"))
+
+    doLast {
+        ant.withGroovyBuilder {
+            val signedJar = archiveFile.get().asFile
+
+            "signjar"(
+                "jar" to signedJar.absolutePath,
+                "alias" to keyAlias,
+                "keystore" to storeFile,
+                "storepass" to storePassword,
+                "keypass" to keyPassword,
+            )
+        }
+    }
+}
+
 tasks.register<Copy>("copyLicenseReport") {
     dependsOn("generateLicenseReport")
 
@@ -83,7 +127,7 @@ construo {
     version.set(ApplicationInfo.versionName)
     mainClass.set(desktopLauncherClassName)
     outputDir.set(layout.buildDirectory.dir("dist"))
-    jarTask.set("proguard")
+    jarTask.set("generateSignedJar")
 
     targets {
         create<Target.Linux>("linuxX64") {
