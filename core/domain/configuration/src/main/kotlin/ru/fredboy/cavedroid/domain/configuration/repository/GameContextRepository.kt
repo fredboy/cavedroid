@@ -5,6 +5,12 @@ import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 
 interface GameContextRepository {
 
+    fun getSaveGameDirectory(): String
+
+    fun setSaveGameDirectory(directory: String)
+
+    fun getWorldName(): String
+
     fun isLoadGame(): Boolean
 
     fun shouldShowInfo(): Boolean

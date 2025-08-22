@@ -41,6 +41,7 @@ object GameModule {
     ): DropController = if (gameContextRepository.isLoadGame()) {
         saveDataRepository.loadDropController(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
+            saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
             dropWorldAdapter = dropWorldAdapter,
             dropQueue = dropQueue,
         )
@@ -65,6 +66,7 @@ object GameModule {
     ): ContainerController = if (gameContextRepository.isLoadGame()) {
         saveDataRepository.loadContainerController(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
+            saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
             containerWorldAdapter = containerWorldAdapter,
             containerFactory = containerFactory,
             dropAdapter = dropAdapter,
@@ -93,6 +95,7 @@ object GameModule {
     ): MobController = if (gameContextRepository.isLoadGame()) {
         saveDataRepository.loadMobController(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
+            saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
             mobWorldAdapter = mobWorldAdapter,
             mobPhysicsFactory = mobPhysicsFactory,
             dropQueue = dropQueue,
@@ -123,6 +126,7 @@ object GameModule {
         val mapData = if (gameContextRepository.isLoadGame()) {
             saveDataRepository.loadMap(
                 gameDataFolder = applicationContextRepository.getGameDirectory(),
+                saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
             )
         } else {
             null

@@ -14,7 +14,7 @@ import ktx.scene2d.textButton
 import ru.fredboy.cavedroid.common.CaveDroidConstants
 
 @Scene2dDsl
-fun Stage.aboutMenuView(viewModel: AboutMenuViewModel) {
+fun Stage.aboutMenuView(viewModel: AboutMenuViewModel) = viewModel.also {
     actors {
         table {
             setFillParent(true)

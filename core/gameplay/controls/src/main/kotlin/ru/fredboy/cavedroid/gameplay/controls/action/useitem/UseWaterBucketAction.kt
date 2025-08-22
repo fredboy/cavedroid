@@ -20,7 +20,7 @@ class UseWaterBucketAction @Inject constructor(
 
     override fun perform(item: Item.Usable, x: Int, y: Int) {
         gameWorld.placeToForeground(x, y, getBlockByKeyUseCase["water"])
-        if (mobsController.player.gameMode != 1) {
+        if (!mobsController.player.gameMode.isCreative()) {
             mobsController.player.setCurrentInventorySlotItem(getItemByKeyUseCase["bucket_empty"])
         }
     }

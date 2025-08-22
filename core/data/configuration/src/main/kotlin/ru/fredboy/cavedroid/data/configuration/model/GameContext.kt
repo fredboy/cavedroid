@@ -5,6 +5,8 @@ import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 
 class GameContext(
     internal val isLoadGame: Boolean,
+    internal var saveGameDirectory: String,
+    internal val worldName: String,
     internal var showInfo: Boolean,
     internal var showMap: Boolean,
     internal var joystick: Joystick,

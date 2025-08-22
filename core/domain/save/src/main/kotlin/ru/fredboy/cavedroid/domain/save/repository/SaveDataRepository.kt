@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.domain.save.repository
 
 import ru.fredboy.cavedroid.domain.save.model.GameMapSaveData
+import ru.fredboy.cavedroid.domain.save.model.GameSaveInfo
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
 import ru.fredboy.cavedroid.entity.drop.DropQueue
@@ -15,8 +16,16 @@ import ru.fredboy.cavedroid.game.world.GameWorld
 
 interface SaveDataRepository {
 
+    fun getActualSaveDirName(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        overwrite: Boolean,
+    ): String
+
     fun save(
         gameDataFolder: String,
+        saveGameDirectory: String,
+        worldName: String,
         dropController: DropController,
         mobController: MobController,
         containerController: ContainerController,
@@ -25,10 +34,12 @@ interface SaveDataRepository {
 
     fun loadMap(
         gameDataFolder: String,
+        saveGameDirectory: String,
     ): GameMapSaveData
 
     fun loadContainerController(
         gameDataFolder: String,
+        saveGameDirectory: String,
         containerWorldAdapter: ContainerWorldAdapter,
         containerFactory: ContainerFactory,
         dropAdapter: DropAdapter,
@@ -36,16 +47,20 @@ interface SaveDataRepository {
 
     fun loadDropController(
         gameDataFolder: String,
+        saveGameDirectory: String,
         dropWorldAdapter: DropWorldAdapter,
         dropQueue: DropQueue,
     ): DropController
 
     fun loadMobController(
         gameDataFolder: String,
+        saveGameDirectory: String,
         mobWorldAdapter: MobWorldAdapter,
         mobPhysicsFactory: MobPhysicsFactory,
         dropQueue: DropQueue,
     ): MobController
 
-    fun exists(gameDataFolder: String): Boolean
+    fun getSavesInfo(gameDataFolder: String): List<GameSaveInfo>
+
+    fun deleteSave(gameDataFolder: String, saveDir: String)
 }

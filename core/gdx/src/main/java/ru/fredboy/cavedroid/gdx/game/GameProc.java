@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Timer;
 import ru.fredboy.cavedroid.common.di.GameScope;
+import ru.fredboy.cavedroid.common.model.GameMode;
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository;
 import ru.fredboy.cavedroid.entity.mob.model.Player;
 import ru.fredboy.cavedroid.game.controller.container.ContainerController;
@@ -69,7 +70,7 @@ public class GameProc implements Disposable {
         mGameRenderer.resetCameraToPlayer();
     }
 
-    public void setPlayerGameMode(int gameMode) {
+    public void setPlayerGameMode(GameMode gameMode) {
         mMobsController.getPlayer().setGameMode(gameMode);
     }
 

@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.data.save.model
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import ru.fredboy.cavedroid.common.model.GameMode
 
 @Serializable
 sealed class SaveDataDto {
@@ -178,7 +179,7 @@ sealed class SaveDataDto {
         val hitAnim: Float,
         val hitAnimDelta: Float,
         val inventory: InventorySaveDataDto,
-        val gameMode: Int,
+        val gameMode: GameMode,
         val headRotation: Float,
         val blockDamage: Float,
         val cursorX: Int,
@@ -203,5 +204,6 @@ sealed class SaveDataDto {
         val timestamp: Long,
         val gameTime: Float,
         val moonPhase: Int,
+        val gameMode: GameMode,
     ) : SaveDataDto()
 }

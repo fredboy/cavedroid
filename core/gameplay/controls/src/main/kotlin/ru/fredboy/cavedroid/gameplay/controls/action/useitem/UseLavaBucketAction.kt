@@ -21,7 +21,7 @@ class UseLavaBucketAction @Inject constructor(
     override fun perform(item: Item.Usable, x: Int, y: Int) {
         gameWorld.placeToForeground(x, y, getBlockByKeyUseCase["lava"])
 
-        if (mobController.player.gameMode != 1) {
+        if (!mobController.player.gameMode.isCreative()) {
             mobController.player.setCurrentInventorySlotItem(getItemByKeyUseCase["bucket_empty"])
         }
     }

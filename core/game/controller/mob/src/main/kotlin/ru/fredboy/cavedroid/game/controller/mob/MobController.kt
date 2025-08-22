@@ -77,7 +77,7 @@ class MobController @Inject constructor(
 
     fun checkPlayerCursorBounds() {
         with(player) {
-            if (gameMode == 0) {
+            if (gameMode.isSurvival()) {
                 val minCursorX = mapX - SURVIVAL_CURSOR_RANGE
                 val maxCursorX = mapX + SURVIVAL_CURSOR_RANGE
                 val minCursorY = middleMapY - SURVIVAL_CURSOR_RANGE

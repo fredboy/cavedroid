@@ -8,7 +8,7 @@ import ktx.scene2d.textButton
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.menuButtonsTable
 
 @Scene2dDsl
-fun Stage.helpMenuView(viewModel: HelpMenuViewModel) {
+fun Stage.helpMenuView(viewModel: HelpMenuViewModel) = viewModel.also {
     actors {
         menuButtonsTable {
             textButton("About") {

@@ -14,6 +14,14 @@ class GameContextRepositoryImpl @Inject constructor(
 
     override fun isLoadGame(): Boolean = gameContextStore.isLoadGame
 
+    override fun getSaveGameDirectory(): String = gameContextStore.saveGameDirectory
+
+    override fun setSaveGameDirectory(directory: String) {
+        gameContextStore.saveGameDirectory = directory
+    }
+
+    override fun getWorldName(): String = gameContextStore.worldName
+
     override fun shouldShowInfo(): Boolean = gameContextStore.showInfo
 
     override fun shouldShowMap(): Boolean = gameContextStore.showMap

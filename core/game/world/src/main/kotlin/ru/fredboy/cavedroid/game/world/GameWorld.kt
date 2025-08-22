@@ -36,7 +36,7 @@ class GameWorld @Inject constructor(
     val width: Int
     val height: Int
 
-    var currentGameTime = 0f
+    var currentGameTime = DAY_DURATION_SEC * 0.125f
 
     var moonPhase = 0
 

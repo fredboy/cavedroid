@@ -86,6 +86,6 @@ class PlayerMapper @Inject constructor(
     }
 
     companion object {
-        private const val SAVE_DATA_VERSION = 5
+        private const val SAVE_DATA_VERSION = 6
     }
 }

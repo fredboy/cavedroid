@@ -1,14 +1,12 @@
 package ru.fredboy.cavedroid.common.api
 
+import ru.fredboy.cavedroid.common.model.StartGameConfig
+
 interface ApplicationController {
 
     fun quitGame()
 
-    fun newGameCreative()
-
-    fun newGameSurvival()
-
-    fun loadGame()
+    fun startGame(startGameConfig: StartGameConfig)
 
     fun exitGame()
 

@@ -13,7 +13,7 @@ import ktx.scene2d.table
 import ktx.scene2d.textButton
 
 @Scene2dDsl
-fun Stage.attributionMenuView(viewModel: AttributionMenuViewModel) {
+fun Stage.attributionMenuView(viewModel: AttributionMenuViewModel) = viewModel.also {
     actors {
         table {
             setFillParent(true)

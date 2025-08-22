@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Filter
+import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.common.utils.applyOrigin
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.domain.items.model.inventory.Inventory
@@ -32,7 +33,7 @@ class Player(
         fallbackItem = getFallbackItem(),
     )
 
-    var gameMode = 0
+    var gameMode = GameMode.SURVIVAL
 
     var cursorX = 0
     var cursorY = 0
@@ -75,7 +76,7 @@ class Player(
     override fun changeDir() = Unit
 
     override fun damage(damage: Int) {
-        if (gameMode == 1) {
+        if (gameMode.isCreative()) {
             return
         }
 
@@ -211,7 +212,7 @@ class Player(
     }
 
     fun decreaseCurrentItemCount(amount: Int = 1) {
-        if (gameMode == 1) {
+        if (gameMode.isCreative()) {
             return
         }
 

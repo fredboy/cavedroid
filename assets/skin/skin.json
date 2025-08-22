@@ -92,6 +92,7 @@
 	"default": {
 		"font": "MinecraftFont",
 		"fontColor": "white",
+		"background": "shade_tile",
 		"cursor": "cursor",
 		"messageFontColor": "white"
 	}

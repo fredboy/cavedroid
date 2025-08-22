@@ -13,7 +13,7 @@ import ktx.scene2d.table
 import ktx.scene2d.textButton
 
 @Scene2dDsl
-suspend fun Stage.noticeMenuView(viewModel: NoticeMenuViewModel) {
+suspend fun Stage.noticeMenuView(viewModel: NoticeMenuViewModel) = viewModel.also {
     viewModel.stateFlow.collect { state ->
         actors {
             table {

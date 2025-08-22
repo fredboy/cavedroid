@@ -5,15 +5,20 @@ import ktx.actors.onClick
 import ktx.scene2d.Scene2dDsl
 import ktx.scene2d.actors
 import ktx.scene2d.textButton
+import ktx.scene2d.textField
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.menuButtonsTable
 
 @Scene2dDsl
-fun Stage.newGameMenuView(viewModel: NewGameMenuViewModel) {
+fun Stage.newGameMenuView(viewModel: NewGameMenuViewModel) = viewModel.also {
     actors {
         menuButtonsTable {
+            val worldNameField = textField("New World")
+
+            row()
+
             textButton("Creative") {
                 onClick {
-                    viewModel.onCreativeClick()
+                    viewModel.onCreativeClick(worldNameField.text)
                 }
             }
 
@@ -21,7 +26,7 @@ fun Stage.newGameMenuView(viewModel: NewGameMenuViewModel) {
 
             textButton("Survival") {
                 onClick {
-                    viewModel.onSurvivalClick()
+                    viewModel.onSurvivalClick(worldNameField.text)
                 }
             }
 

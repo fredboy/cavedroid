@@ -10,7 +10,7 @@ import ru.fredboy.cavedroid.common.utils.toToggleStateString
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.menuButtonsTable
 
 @Scene2dDsl
-suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) {
+suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel.also {
     viewModel.stateFlow.collect { state ->
         actors {
             menuButtonsTable {

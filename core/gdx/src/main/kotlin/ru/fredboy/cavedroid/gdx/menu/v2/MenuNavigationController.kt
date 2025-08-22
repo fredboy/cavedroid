@@ -36,6 +36,9 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.notice.noticeMenuView
 import ru.fredboy.cavedroid.gdx.menu.v2.view.settings.SettingsMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.settings.SettingsMenuViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.settings.settingsMenuView
+import ru.fredboy.cavedroid.gdx.menu.v2.view.singleplayer.SinglePlayerMenuNavKey
+import ru.fredboy.cavedroid.gdx.menu.v2.view.singleplayer.SinglePlayerMenuViewModel
+import ru.fredboy.cavedroid.gdx.menu.v2.view.singleplayer.singlePlayerMenuView
 import javax.inject.Inject
 
 @MenuScope
@@ -72,43 +75,41 @@ class MenuNavigationController @Inject constructor(
             is MainMenuNavKey -> {
                 val viewModel = findViewModel<MainMenuViewModel>(navKey, cachedViewModel)
                 mainMenuView(viewModel)
-                viewModel
             }
 
             is NewGameMenuNavKey -> {
                 val viewModel = findViewModel<NewGameMenuViewModel>(navKey, cachedViewModel)
                 newGameMenuView(viewModel)
-                viewModel
             }
 
             is SettingsMenuNavKey -> {
                 val viewModel = findViewModel<SettingsMenuViewModel>(navKey, cachedViewModel)
                 settingsMenuView(viewModel)
-                viewModel
             }
 
             is HelpMenuNavKey -> {
                 val viewModel = findViewModel<HelpMenuViewModel>(navKey, cachedViewModel)
                 helpMenuView(viewModel)
-                viewModel
             }
 
             is AboutMenuNavKey -> {
                 val viewModel = findViewModel<AboutMenuViewModel>(navKey, cachedViewModel)
                 aboutMenuView(viewModel)
-                viewModel
             }
 
             is AttributionMenuNavKey -> {
                 val viewModel = findViewModel<AttributionMenuViewModel>(navKey, cachedViewModel)
                 attributionMenuView(viewModel)
-                viewModel
             }
 
             is NoticeMenuNavKey -> {
                 val viewModel = findViewModel<NoticeMenuViewModel>(navKey, cachedViewModel)
                 noticeMenuView(viewModel)
-                viewModel
+            }
+
+            is SinglePlayerMenuNavKey -> {
+                val viewModel = findViewModel<SinglePlayerMenuViewModel>(navKey, cachedViewModel)
+                singlePlayerMenuView(viewModel)
             }
 
             else -> throw IllegalStateException("Unknown key $navKey")

@@ -36,7 +36,7 @@ class HudRenderer @Inject constructor(
     private fun drawHealth(spriteBatch: SpriteBatch, x: Float, y: Float) {
         val player = mobController.player
 
-        if (player.gameMode == 1) {
+        if (player.gameMode.isCreative()) {
             return
         }
 

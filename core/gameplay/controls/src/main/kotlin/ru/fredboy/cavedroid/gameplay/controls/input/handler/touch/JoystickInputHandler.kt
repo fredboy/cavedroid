@@ -40,7 +40,7 @@ class JoystickInputHandler @Inject constructor(
                 ) {
                     if (mobController.player.canJump) {
                         mobController.player.jump()
-                    } else if (mobController.player.gameMode == 1) {
+                    } else if (mobController.player.gameMode.isCreative()) {
                         mobController.player.isFlyMode = true
                     }
                 }

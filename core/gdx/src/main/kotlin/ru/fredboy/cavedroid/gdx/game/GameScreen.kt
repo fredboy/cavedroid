@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gdx.game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.model.Joystick
+import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.data.configuration.model.GameContext
 import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -25,8 +26,10 @@ class GameScreen @Inject constructor(
 
     private var gameComponent: GameComponent? = null
 
-    private fun getGameContext(isLoadGame: Boolean): GameContext = GameContext(
-        isLoadGame = isLoadGame,
+    private fun getGameContext(gameConfig: StartGameConfig): GameContext = GameContext(
+        isLoadGame = gameConfig is StartGameConfig.Load,
+        saveGameDirectory = gameConfig.saveDirectory,
+        worldName = gameConfig.worldName,
         showInfo = false,
         showMap = false,
         joystick = Joystick(requireNotNull(mobParamsRepository.getMobParamsByKey("char")).speed),
@@ -46,8 +49,8 @@ class GameScreen @Inject constructor(
         ),
     )
 
-    private fun getGameComponent(isLoadGame: Boolean): GameComponent {
-        val gameContext = getGameContext(isLoadGame)
+    private fun getGameComponent(gameConfig: StartGameConfig): GameComponent {
+        val gameContext = getGameContext(gameConfig)
 
         return DaggerGameComponent.builder()
             .applicationComponent((Gdx.app.applicationListener as CaveDroidApplication).applicationComponent)
@@ -60,23 +63,25 @@ class GameScreen @Inject constructor(
         gameComponent = null
     }
 
-    fun newGame(gameMode: Int) {
+    fun newGame(gameConfig: StartGameConfig.New) {
         resetGameComponent()
-        gameComponent = getGameComponent(false).apply {
-            gameProc.setPlayerGameMode(gameMode)
+        gameComponent = getGameComponent(gameConfig).apply {
+            gameProc.setPlayerGameMode(gameConfig.gameMode)
         }
     }
 
-    fun loadGame() {
+    fun loadGame(gameConfig: StartGameConfig.Load) {
         resetGameComponent()
-        gameComponent = getGameComponent(true)
+        gameComponent = getGameComponent(gameConfig)
     }
 
     override fun show() {
-        val proc = requireNotNull(gameComponent?.gameProc) {
+        val gameComponent = requireNotNull(gameComponent) {
             "GameScreen#show: gameComponent was not set before show"
         }
-        proc.show()
+        gameComponent.gameProc.show()
+        render(1f / 60f)
+        gameComponent.gameSaveHelper.saveGame(overwrite = gameComponent.gameContextRepository.isLoadGame())
     }
 
     override fun render(delta: Float) {

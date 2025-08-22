@@ -12,20 +12,12 @@ import ktx.scene2d.textButton
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.menuButtonsTable
 
 @Scene2dDsl
-fun Stage.mainMenuView(viewModel: MainMenuViewModel) {
+fun Stage.mainMenuView(viewModel: MainMenuViewModel) = viewModel.also {
     actors {
         menuButtonsTable {
-            textButton("New Game") {
+            textButton("Single Player") {
                 onClick {
-                    viewModel.onNewGameClick()
-                }
-            }
-
-            row()
-
-            textButton("Load Game") {
-                onClick {
-                    viewModel.onLoadGameClick()
+                    viewModel.onSinglePlayerClick()
                 }
             }
 

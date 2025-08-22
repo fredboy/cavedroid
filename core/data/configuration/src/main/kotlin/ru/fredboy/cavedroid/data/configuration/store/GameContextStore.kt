@@ -16,6 +16,13 @@ class GameContextStore @Inject constructor(
     val isLoadGame: Boolean
         get() = gameContext.isLoadGame
 
+    var saveGameDirectory: String
+        get() = synchronized(lock) { gameContext.saveGameDirectory }
+        set(value) = synchronized(lock) { gameContext.saveGameDirectory = value }
+
+    val worldName: String
+        get() = gameContext.worldName
+
     var showInfo: Boolean
         get() = synchronized(lock) { gameContext.showInfo }
         set(value) = synchronized(lock) { gameContext.showInfo = value }

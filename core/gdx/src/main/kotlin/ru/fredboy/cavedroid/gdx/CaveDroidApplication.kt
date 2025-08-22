@@ -5,6 +5,7 @@ import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.PreferencesStore
+import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.utils.DEFAULT_VIEWPORT_WIDTH
 import ru.fredboy.cavedroid.common.utils.ratio
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
@@ -22,10 +23,6 @@ class CaveDroidApplication(
 
     lateinit var applicationComponent: ApplicationComponent
         private set
-
-    private fun newGame(gameMode: Int) {
-        setScreen(applicationComponent.gameScreen.apply { newGame(gameMode) })
-    }
 
     private fun initFullscreenMode(isFullscreen: Boolean) {
         if (Gdx.app.type != Application.ApplicationType.Desktop) {
@@ -83,16 +80,15 @@ class CaveDroidApplication(
         } ?: Gdx.app.error(TAG, "quitGame called when active screen is not Game")
     }
 
-    override fun newGameCreative() {
-        newGame(1)
-    }
+    override fun startGame(startGameConfig: StartGameConfig) {
+        val gameScreen = applicationComponent.gameScreen.apply {
+            when (startGameConfig) {
+                is StartGameConfig.New -> newGame(startGameConfig)
+                is StartGameConfig.Load -> loadGame(startGameConfig)
+            }
+        }
 
-    override fun newGameSurvival() {
-        newGame(0)
-    }
-
-    override fun loadGame() {
-        setScreen(applicationComponent.gameScreen.apply { loadGame() })
+        setScreen(gameScreen)
     }
 
     override fun exitGame() {

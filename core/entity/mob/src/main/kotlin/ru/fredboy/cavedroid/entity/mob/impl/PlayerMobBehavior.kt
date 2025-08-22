@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.entity.mob.impl
 
+import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.world.model.Layer
@@ -36,32 +37,36 @@ class PlayerMobBehavior :
                 return
             }
 
-        if (gameMode == 0) {
-            if (blockDamage >= targetBlock.params.hitPoints) {
-                val shouldDrop = activeItem.item.let { itemInHand ->
-                    val toolLevel = (itemInHand as? Item.Tool)?.level?.takeIf {
-                        targetBlock.params.toolType == itemInHand.javaClass
-                    } ?: 0
+        when (gameMode) {
+            GameMode.SURVIVAL -> {
+                if (blockDamage >= targetBlock.params.hitPoints) {
+                    val shouldDrop = activeItem.item.let { itemInHand ->
+                        val toolLevel = (itemInHand as? Item.Tool)?.level?.takeIf {
+                            targetBlock.params.toolType == itemInHand.javaClass
+                        } ?: 0
 
-                    toolLevel >= targetBlock.params.toolLevel
+                        toolLevel >= targetBlock.params.toolLevel
+                    }
+
+                    if (activeItem.item.isTool()) {
+                        decreaseCurrentItemCount()
+                    }
+
+                    when (targetLayer) {
+                        Layer.FOREGROUND -> worldAdapter.destroyForegroundBlock(cursorX, cursorY, shouldDrop)
+                        Layer.BACKGROUND -> worldAdapter.destroyBackgroundBlock(cursorX, cursorY, shouldDrop)
+                    }
+                    blockDamage = 0f
                 }
+            }
 
-                if (activeItem.item.isTool()) {
-                    decreaseCurrentItemCount()
-                }
-
+            GameMode.CREATIVE -> {
                 when (targetLayer) {
-                    Layer.FOREGROUND -> worldAdapter.destroyForegroundBlock(cursorX, cursorY, shouldDrop)
-                    Layer.BACKGROUND -> worldAdapter.destroyBackgroundBlock(cursorX, cursorY, shouldDrop)
+                    Layer.FOREGROUND -> worldAdapter.destroyForegroundBlock(cursorX, cursorY, false)
+                    Layer.BACKGROUND -> worldAdapter.destroyBackgroundBlock(cursorX, cursorY, false)
                 }
-                blockDamage = 0f
+                stopHitting()
             }
-        } else {
-            when (targetLayer) {
-                Layer.FOREGROUND -> worldAdapter.destroyForegroundBlock(cursorX, cursorY, false)
-                Layer.BACKGROUND -> worldAdapter.destroyBackgroundBlock(cursorX, cursorY, false)
-            }
-            stopHitting()
         }
     }
 
@@ -72,7 +77,7 @@ class PlayerMobBehavior :
             jump()
         }
 
-        if (gameMode == 1) {
+        if (gameMode.isCreative()) {
             return
         }
 

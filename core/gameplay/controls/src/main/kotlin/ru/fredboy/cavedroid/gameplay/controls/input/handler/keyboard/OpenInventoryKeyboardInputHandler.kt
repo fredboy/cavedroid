@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.keyboard
 
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
@@ -22,10 +23,9 @@ class OpenInventoryKeyboardInputHandler @Inject constructor(
         gameWindowsManager.currentWindowType == GameWindowType.NONE
 
     override fun handle(action: KeyboardInputAction) {
-        if (mobController.player.gameMode == 1) {
-            gameWindowsManager.openCreativeInventory()
-        } else {
-            gameWindowsManager.openSurvivalInventory()
+        when (mobController.player.gameMode) {
+            GameMode.CREATIVE -> gameWindowsManager.openCreativeInventory()
+            GameMode.SURVIVAL -> gameWindowsManager.openSurvivalInventory()
         }
     }
 }
