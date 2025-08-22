@@ -9,5 +9,6 @@ class SaveInfoVo(
     val directory: String,
     val timeCreated: String,
     val gameMode: GameMode,
+    val isSupported: Boolean,
     val screenshot: Texture?,
 )

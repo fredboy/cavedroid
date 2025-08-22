@@ -45,8 +45,9 @@ class SinglePlayerMenuViewModel(
                     version = saveInfo.version,
                     name = saveInfo.name,
                     directory = saveInfo.directory,
-                    timeCreated = saveInfo.timeCreated,
+                    timeCreated = saveInfo.lastModifiedString,
                     gameMode = saveInfo.gameMode,
+                    isSupported = saveInfo.isSupported,
                     screenshot = saveInfo.screenshotHandle?.let { handle ->
                         withContext(GdxMainDispatcher) {
                             Texture(handle).also { texture ->

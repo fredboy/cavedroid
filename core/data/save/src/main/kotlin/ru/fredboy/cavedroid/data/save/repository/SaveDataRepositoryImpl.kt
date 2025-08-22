@@ -9,6 +9,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
+import ru.fredboy.cavedroid.common.CaveDroidConstants.MAX_SAVES_COUNT
 import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.data.save.mapper.ContainerControllerMapper
 import ru.fredboy.cavedroid.data.save.mapper.DropControllerMapper
@@ -415,9 +416,9 @@ internal class SaveDataRepositoryImpl @Inject constructor(
                     screenshotHandle = saveDir.child(SCREENSHOT_FILE).takeIf { it.exists() },
                 )
             }
-            .filter { it.isSupported }
-            .take(MAX_SAVES)
+            .take(MAX_SAVES_COUNT)
             .toList()
+            .sortedByDescending { it.lastModifiedTimestamp }
     }
 
     override fun deleteSave(gameDataFolder: String, saveDir: String) {
@@ -435,9 +436,6 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         private const val TAG = "SaveDataRepositoryImpl"
 
         private const val MAP_SAVE_VERSION: UByte = 5u
-
-        private const val MAX_SAVES = 8
-
         private const val SAVES_DIR = "saves"
         private const val DROP_FILE = "drop.dat"
         private const val MOBS_FILE = "mobs.dat"

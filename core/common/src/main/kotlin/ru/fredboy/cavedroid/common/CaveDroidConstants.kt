@@ -6,4 +6,6 @@ object CaveDroidConstants {
     const val VERSION = "alpha 0.9.5"
 
     const val GITHUB_LINK = "https://github.com/fredboy/cavedroid"
+
+    const val MAX_SAVES_COUNT = 8
 }

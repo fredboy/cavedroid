@@ -16,6 +16,7 @@ import ktx.scene2d.label
 import ktx.scene2d.scrollPane
 import ktx.scene2d.table
 import ktx.scene2d.textButton
+import ru.fredboy.cavedroid.common.CaveDroidConstants.MAX_SAVES_COUNT
 
 @Scene2dDsl
 suspend fun Stage.singlePlayerMenuView(viewModel: SinglePlayerMenuViewModel) = viewModel.also {
@@ -43,7 +44,8 @@ suspend fun Stage.singlePlayerMenuView(viewModel: SinglePlayerMenuViewModel) = v
                                 expandX = true,
                                 fillX = true,
                                 height = 200f,
-                                pad = 32f,
+                                padTop = 32f,
+                                padBottom = 32f,
                             )
 
                             row()
@@ -62,7 +64,13 @@ suspend fun Stage.singlePlayerMenuView(viewModel: SinglePlayerMenuViewModel) = v
 
                 table {
                     textButton("New") {
-                        onClick { viewModel.onNewGameClick() }
+                        onClick {
+                            if (!isDisabled) {
+                                viewModel.onNewGameClick()
+                            }
+                        }
+
+                        isDisabled = state.saves.size >= MAX_SAVES_COUNT
                     }.cell(
                         width = 400f,
                         height = 60f,
@@ -114,12 +122,28 @@ private fun <S> KWidget<S>.saveItem(
     )
 
     table {
-        label("${saveInfo.name} - ${saveInfo.gameMode.name}") {
-            touchable = Touchable.disabled
+        table {
+            label(saveInfo.name) {
+                setEllipsis(true)
+            }.cell(
+                growX = false,
+                fillX = false,
+                minWidth = 50f,
+                maxWidth = 300f,
+                align = Align.left,
+            )
+
+            label(" - ${saveInfo.gameMode.name}")
+                .cell(
+                    expandX = true,
+                    fillX = true,
+                    align = Align.left,
+                )
         }.cell(
             expandX = true,
             fillX = true,
             pad = 16f,
+            align = Align.left,
         )
 
         row()
@@ -143,7 +167,13 @@ private fun <S> KWidget<S>.saveItem(
             .height(60f)
 
         val loadButton = textButton("Load") {
+            isDisabled = !saveInfo.isSupported
+
             onClick {
+                if (isDisabled) {
+                    return@onClick
+                }
+
                 onLoad()
                 isDisabled = true
             }
@@ -153,6 +183,10 @@ private fun <S> KWidget<S>.saveItem(
 
         textButton("Delete") {
             onClick {
+                if (isDisabled) {
+                    return@onClick
+                }
+
                 onDelete()
                 loadButton.isDisabled = true
                 loadButton.touchable = Touchable.disabled
