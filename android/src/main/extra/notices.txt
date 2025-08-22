@@ -1,5 +1,5 @@
 
-Dependency License Report for android alpha0.9.5
+Dependency License Report for android beta-0.10.0
 
 1. Group: androidx.annotation  Name: annotation  Version: 1.6.0
 
@@ -586,5 +586,5 @@ POM License: MIT License - https://github.com/fredboy/automultibind/blob/master/
 --------------------------------------------------------------------------------
 
 
-This report was generated at Fri Aug 22 19:49:47 NOVT 2025.
+This report was generated at Sat Aug 23 04:02:44 NOVT 2025.
 

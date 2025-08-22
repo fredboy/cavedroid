@@ -1,5 +1,5 @@
 
-Dependency License Report for desktop alpha0.9.5
+Dependency License Report for desktop beta-0.10.0
 
 1. Group: com.badlogicgames.box2dlights  Name: box2dlights  Version: 1.5
 
@@ -532,5 +532,5 @@ POM License: MIT License - https://github.com/fredboy/automultibind/blob/master/
 --------------------------------------------------------------------------------
 
 
-This report was generated at Sat Aug 23 02:44:58 NOVT 2025.
+This report was generated at Sat Aug 23 04:02:45 NOVT 2025.
 
