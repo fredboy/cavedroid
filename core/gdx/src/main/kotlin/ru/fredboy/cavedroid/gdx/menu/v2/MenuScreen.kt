@@ -39,9 +39,7 @@ class MenuScreen @Inject constructor(
         }
     }
 
-    override fun resize(width: Int, height: Int) {
-        super.resize(width, height)
-
+    override fun onResize(width: Int, height: Int) {
         currentStage.viewport.setWorldSize(
             applicationContextRepository.getWidth(),
             applicationContextRepository.getHeight(),
@@ -57,7 +55,7 @@ class MenuScreen @Inject constructor(
 
     override fun hide() {}
 
-    override fun dispose() {
+    override fun onDispose() {
         menuNavigationController.dispose()
     }
 }

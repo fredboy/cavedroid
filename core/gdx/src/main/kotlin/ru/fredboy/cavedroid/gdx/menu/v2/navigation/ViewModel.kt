@@ -13,7 +13,11 @@ abstract class ViewModel : Disposable {
 
     val viewModelScope = CoroutineScope(dispatcher + job)
 
-    override fun dispose() {
+    final override fun dispose() {
         job.cancel()
+        onDispose()
+    }
+
+    open fun onDispose() {
     }
 }

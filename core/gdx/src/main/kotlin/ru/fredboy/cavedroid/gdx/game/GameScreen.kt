@@ -91,9 +91,7 @@ class GameScreen @Inject constructor(
         proc.update(delta)
     }
 
-    override fun resize(width: Int, height: Int) {
-        super.resize(width, height)
-
+    override fun onResize(width: Int, height: Int) {
         gameComponent?.gameContextRepository?.getCameraContext()?.let { cameraContext ->
             cameraContext.viewport.apply {
                 setWidth(applicationContextRepository.getWidth())
@@ -113,7 +111,7 @@ class GameScreen @Inject constructor(
     override fun hide() {
     }
 
-    override fun dispose() {
+    override fun onDispose() {
         resetGameComponent()
     }
 }

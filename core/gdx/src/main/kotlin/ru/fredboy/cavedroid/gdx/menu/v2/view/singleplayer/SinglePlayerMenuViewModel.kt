@@ -100,8 +100,7 @@ class SinglePlayerMenuViewModel(
         navBackStack.pop()
     }
 
-    override fun dispose() {
-        super.dispose()
+    override fun onDispose() {
         loadedTextures.forEach(Texture::dispose)
         loadedTextures.clear()
     }
