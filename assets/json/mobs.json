@@ -37,18 +37,18 @@
         "is_background": false
       },
       {
+        "file": "leg",
+        "offset_x": 2,
+        "offset_y": 20,
+        "is_background": false,
+        "is_static": false
+      },
+      {
         "file": "hand",
         "offset_x": 2,
         "offset_y": 8,
         "is_background": false,
         "is_hand": true,
-        "is_static": false
-      },
-      {
-        "file": "leg",
-        "offset_x": 2,
-        "offset_y": 20,
-        "is_background": false,
         "is_static": false
       }
     ]

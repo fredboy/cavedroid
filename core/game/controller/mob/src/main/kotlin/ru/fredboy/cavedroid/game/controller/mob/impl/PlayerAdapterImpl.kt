@@ -49,6 +49,9 @@ class PlayerAdapterImpl @Inject constructor(
     override val controlVector: Vector2
         get() = player.controlVector
 
+    override val speed: Float
+        get() = player.speed
+
     override fun decreaseCurrentItemCount(amount: Int) {
         player.decreaseCurrentItemCount(amount)
     }

@@ -25,5 +25,7 @@ interface PlayerAdapter {
 
     val controlVector: Vector2
 
+    val speed: Float
+
     fun decreaseCurrentItemCount(amount: Int = 1)
 }

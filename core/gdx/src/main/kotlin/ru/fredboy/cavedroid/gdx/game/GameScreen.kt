@@ -22,7 +22,7 @@ class GameScreen @Inject constructor(
 ) : BaseScreen(applicationContextRepository) {
 
     override val scaleFactor: Float
-        get() = 0.5f
+        get() = 0.25f
 
     private var gameComponent: GameComponent? = null
 
@@ -94,6 +94,11 @@ class GameScreen @Inject constructor(
     override fun onResize(width: Int, height: Int) {
         gameComponent?.gameContextRepository?.getCameraContext()?.let { cameraContext ->
             cameraContext.viewport.apply {
+                setWidth(applicationContextRepository.getWidth())
+                setHeight(applicationContextRepository.getHeight())
+            }
+
+            cameraContext.visibleWorld.apply {
                 setWidth(applicationContextRepository.getWidth())
                 setHeight(applicationContextRepository.getHeight())
             }

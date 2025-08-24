@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.meters
@@ -75,9 +76,9 @@ class CursorMouseInputHandler @Inject constructor(
 
     private fun getPlayerHeadRotation(mouseWorldX: Float, mouseWorldY: Float): Float {
         val h = mouseWorldX - player.position.x
-        val v = mouseWorldY - player.position.y
-
-        return MathUtils.atan(v / h) * MathUtils.radDeg
+        val v = mouseWorldY - (player.position.y - player.height / 2f + player.width / 2f)
+        val rotation = MathUtils.atan(v / h) * MathUtils.radDeg
+        return MathUtils.clamp(rotation, -45f, 45f)
     }
 
     private fun handleMouse(action: MouseInputAction) {
@@ -92,9 +93,9 @@ class CursorMouseInputHandler @Inject constructor(
 
         player.headRotation = getPlayerHeadRotation(worldX, worldY)
 
-        if (worldX < player.position.x) {
+        if (worldX.toInt() < player.position.x.toInt()) {
             player.direction = Direction.LEFT
-        } else {
+        } else if (worldX.toInt() > player.position.x.toInt()) {
             player.direction = Direction.RIGHT
         }
     }

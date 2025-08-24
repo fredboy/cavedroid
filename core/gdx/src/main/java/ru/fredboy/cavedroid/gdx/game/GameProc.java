@@ -57,7 +57,7 @@ public class GameProc implements Disposable {
         mGameWorld = gameWorld;
 
         mobsController.getPlayer().setControlMode(
-                applicationContextRepository.isTouch() ? Player.ControlMode.WALK : Player.ControlMode.CURSOR
+                /*applicationContextRepository.isTouch() ? Player.ControlMode.WALK : */Player.ControlMode.CURSOR
         );
 
         mWorldLogicTimer.scheduleTask(gameWorldFluidsLogicControllerTask, 0,

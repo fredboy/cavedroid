@@ -25,6 +25,7 @@ import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.IHudRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.world.IWorldRenderer
 import javax.inject.Inject
+import kotlin.math.abs
 import kotlin.math.min
 
 @GameScope
@@ -89,64 +90,23 @@ class GameRenderer @Inject constructor(
     }
 
     private fun updateDynamicCameraPosition(delta: Float) {
-        val cameraTargetPosition = Vector3()
+        val cameraTargetPosition = Vector3().apply {
+            x = player.x + camera.viewportWidth / 4f * player.direction.basis
+            y = player.y
+        }
 
-        val followPlayer = player.controlMode == Player.ControlMode.WALK || !applicationContextRepository.isTouch()
-
-        if (followPlayer) {
-            cameraTargetPosition.x = player.x + min(player.controlVector.x * 2, camera.viewportWidth / 2)
-            cameraTargetPosition.y = player.y + player.velocity.y
-        } else {
-            cameraTargetPosition.x = player.cursorX + .5f
-            cameraTargetPosition.y = player.cursorY + .5f
+        if (!gameContextRepository.getCameraContext().visibleWorld.contains(player.x, player.y)) {
+            camera.position.set(cameraTargetPosition)
+            return
         }
 
         val moveVector = cameraTargetPosition.sub(camera.position)
 
-        if (followPlayer && player.controlVector.isZero) {
-            cameraDelayMs = TimeUtils.millis()
+        if (!moveVector.isZero(abs(0.5f))) {
+            moveVector.x = 30f * player.direction.basis * delta
         }
 
-        if (TimeUtils.timeSinceMillis(cameraDelayMs) < DYNAMIC_CAMERA_DELAY_MS && !player.controlVector.isZero) {
-            updateStaticCameraPosition(
-                targetX = player.x - cameraCenterToPlayer.x,
-                targetY = camera.position.y + moveVector.y * delta * 2,
-            )
-            return
-        }
-
-        cameraCenterToPlayer.x = player.x - camera.position.x
-        cameraCenterToPlayer.y = player.y - camera.position.y
-
-        val worldWidthScreenOffset: Float = gameWorld.width - camera.viewportWidth / 2
-
-        if (moveVector.x >= worldWidthScreenOffset) {
-            camera.position.x += gameWorld.width
-            moveVector.x -= gameWorld.width
-        } else if (moveVector.x <= -worldWidthScreenOffset) {
-            camera.position.x -= gameWorld.width
-            moveVector.x += gameWorld.width
-        }
-
-        camera.position.add(moveVector.scl(delta * 2))
-
-        val maxCamDistanceToPlayer = camera.viewportWidth
-
-        if (camera.position.x + camera.viewportWidth / 2 > player.x + maxCamDistanceToPlayer) {
-            camera.position.x = player.x + maxCamDistanceToPlayer - camera.viewportWidth / 2
-        }
-
-        if (camera.position.y + camera.viewportHeight / 2 > player.y + maxCamDistanceToPlayer) {
-            camera.position.y = player.y + maxCamDistanceToPlayer - camera.viewportHeight / 2
-        }
-
-        if (camera.position.x + camera.viewportWidth / 2 < player.x - maxCamDistanceToPlayer) {
-            camera.position.x = player.x - maxCamDistanceToPlayer - camera.viewportWidth / 2
-        }
-
-        if (camera.position.y + camera.viewportHeight < player.y - maxCamDistanceToPlayer) {
-            camera.position.y = player.y - maxCamDistanceToPlayer - camera.viewportHeight / 2
-        }
+        camera.position.add(moveVector)
     }
 
     private fun updateCameraPosition(delta: Float) {

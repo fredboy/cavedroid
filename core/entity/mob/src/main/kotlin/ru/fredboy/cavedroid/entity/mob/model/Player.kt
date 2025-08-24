@@ -161,7 +161,7 @@ class Player(
         sight = PointLight(
             mobWorldAdapter.getRayHandler(),
             128,
-            Color().apply { a = .3f },
+            Color().apply { a = 1f },
             4f,
             position.x,
             position.y,
@@ -173,7 +173,7 @@ class Player(
                     categoryBits = PhysicsConstants.CATEGORY_OPAQUE
                 },
             )
-            setSoftnessLength(3f)
+            isXray = true
         }
     }
 
