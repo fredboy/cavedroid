@@ -44,7 +44,7 @@ class Player(
     val selectedX get() = cursorX.toInt()
     val selectedY get() = cursorY.toInt()
 
-    var controlMode = ControlMode.WALK
+    var controlMode = ControlMode.CURSOR
     var blockDamage = 0f
 
     var isHitting = false

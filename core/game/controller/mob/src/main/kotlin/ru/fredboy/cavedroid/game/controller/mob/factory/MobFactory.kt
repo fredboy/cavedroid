@@ -33,7 +33,7 @@ class MobFactory @Inject constructor(
                 null
             }
         }?.also { mob ->
-            mob.spawn(x, y, mobPhysicsFactory)
+            mob.spawn(x + 0.5f, y - mobParams.height, mobPhysicsFactory)
             mobController.addMob(mob)
         }
     }

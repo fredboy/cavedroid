@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import kotlinx.serialization.json.Json
 import ru.fredboy.cavedroid.data.items.mapper.MobParamsMapper
 import ru.fredboy.cavedroid.data.items.model.MobParamsDto
+import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import javax.inject.Inject
@@ -44,6 +45,13 @@ class MobParamsRepositoryImpl @Inject constructor(
             Gdx.app.error(TAG, "No such mob: '$key'")
             null
         }
+    }
+
+    override fun getMobKeysByBehaviorType(mobBehaviorType: MobBehaviorType): List<String> {
+        return mobParamsMap.asSequence()
+            .filter { it.value.behaviorType == mobBehaviorType }
+            .map { it.key }
+            .toList()
     }
 
     override fun dispose() {

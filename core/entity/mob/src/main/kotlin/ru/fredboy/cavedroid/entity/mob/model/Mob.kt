@@ -280,7 +280,7 @@ abstract class Mob(
         }
 
         body.applyLinearImpulse(
-            /* impulse = */ Vector2(0f, JUMP_VELOCITY),
+            /* impulse = */ Vector2(0f, JUMP_VELOCITY).scl(body.mass),
             /* point = */ body.worldCenter,
             /* wake = */ true,
         )
@@ -312,7 +312,7 @@ abstract class Mob(
         private const val DAMAGE_TINT_TIMEOUT_S = 0.5f
         private val DAMAGE_TINT_COLOR = Color((0xff8080 shl 8) or 0xFF)
 
-        private const val JUMP_VELOCITY = -2.125f
+        private const val JUMP_VELOCITY = -5.05f
 
         private const val JUMP_COOLDOWN_MS = 500L
     }

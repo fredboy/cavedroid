@@ -228,6 +228,10 @@ class GameWorld @Inject constructor(
         return currentGameTime / DAY_DURATION_SEC * 2
     }
 
+    fun isDayTime(): Boolean {
+        return currentGameTime < DAY_DURATION_SEC / 2f
+    }
+
     fun update(delta: Float) {
         currentGameTime += delta
 
