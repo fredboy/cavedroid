@@ -30,7 +30,7 @@ import javax.inject.Inject
 
 @GameScope
 @BindMouseInputHandler
-class TouchWorldInputHandler @Inject constructor(
+class TouchCursorInputHandler @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
     private val mobController: MobController,
@@ -93,6 +93,16 @@ class TouchWorldInputHandler @Inject constructor(
         Timer.schedule(buttonHoldTask, TOUCH_HOLD_TIME_SEC)
     }
 
+    private fun tryHitMob(): Boolean {
+        mobController.mobs.forEach { mob ->
+            if (mob.position.dst(player.cursorX, player.cursorY) < 1f) {
+                player.hitMob(mob)
+                return true
+            }
+        }
+        return false
+    }
+
     private fun handleUp() {
         val player = mobController.player
         val item = player.activeItem.item
@@ -106,6 +116,10 @@ class TouchWorldInputHandler @Inject constructor(
         cancelHold()
 
         if (wasDragged) {
+            return
+        }
+
+        if (tryHitMob()) {
             return
         }
 

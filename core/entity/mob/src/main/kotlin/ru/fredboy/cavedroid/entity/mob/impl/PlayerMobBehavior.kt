@@ -101,9 +101,7 @@ class PlayerMobBehavior :
         }
 
         if (isHitting && isHittingWithDamage) {
-            println("hitting, damage : $blockDamage")
             blockDamage += 60f * delta * blockDamageMultiplier
-            println("hitting, damage : $blockDamage")
         }
     }
 }

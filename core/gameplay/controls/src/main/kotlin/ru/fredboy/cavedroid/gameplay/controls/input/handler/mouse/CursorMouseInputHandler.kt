@@ -8,7 +8,6 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByIndexUseCase
 import ru.fredboy.cavedroid.entity.mob.model.Direction
-import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsConfigs
@@ -37,18 +36,6 @@ class CursorMouseInputHandler @Inject constructor(
     private val player get() = mobController.player
 
     private val creativeInventoryTexture get() = requireNotNull(textureRegions["creative"])
-
-    private fun setPlayerDirectionToCursor() {
-        if (player.controlMode != Player.ControlMode.CURSOR) {
-            return
-        }
-
-        if (player.cursorX.toFloat() + .5f < player.position.x) {
-            player.direction = Direction.LEFT
-        } else {
-            player.direction = Direction.RIGHT
-        }
-    }
 
     private fun getPlayerHeadRotation(mouseWorldX: Float, mouseWorldY: Float): Float {
         val h = mouseWorldX - player.position.x
