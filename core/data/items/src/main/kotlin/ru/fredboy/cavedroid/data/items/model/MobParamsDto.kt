@@ -13,5 +13,8 @@ data class MobParamsDto(
     @SerialName("drop") val drop: String,
     @SerialName("drop_count") val dropCount: Int = 1,
     @SerialName("hp") val hp: Int = -1,
+    @SerialName("animation_range") val animationRange: Float = 60f,
+    @SerialName("damage_to_player") val damageToPlayer: Int = 0,
+    @SerialName("takes_sun_damage") val takesSunDamage: Boolean = false,
     @SerialName("sprites") val sprites: List<MobSpriteDto>,
 )

@@ -18,6 +18,7 @@ import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobBehavior
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import kotlin.math.abs
 
 abstract class Mob(
@@ -56,7 +57,9 @@ abstract class Mob(
 
     val hitbox: Rectangle get() = Rectangle(position.x - width / 2f, position.y - height / 2f, width, height)
 
-    var animDelta = ANIMATION_SPEED
+    private val animationSpeed = DEFAULT_ANIMATION_SPEED * (params.animationRange / DEFAULT_ANIMATION_RANGE)
+
+    var animDelta = animationSpeed
     var anim = 0f
 
     var isDead = false
@@ -142,7 +145,7 @@ abstract class Mob(
     protected fun updateAnimation(delta: Float) {
         val velocityMultiplier = abs(velocity.x) / speed
         val animMultiplier = (if (velocityMultiplier == 0f) 1f else velocityMultiplier) * delta
-        val maxAnim = ANIMATION_RANGE * (if (velocityMultiplier == 0f) 1f else velocityMultiplier)
+        val maxAnim = params.animationRange * (if (velocityMultiplier == 0f) 1f else velocityMultiplier)
 
         if (velocity.x != 0f || abs(anim) > animDelta * animMultiplier) {
             anim += animDelta * animMultiplier
@@ -152,10 +155,10 @@ abstract class Mob(
 
         if (anim > maxAnim) {
             anim = maxAnim
-            animDelta = -ANIMATION_SPEED
+            animDelta = -animationSpeed
         } else if (anim < -maxAnim) {
             anim = -maxAnim
-            animDelta = ANIMATION_SPEED
+            animDelta = animationSpeed
         }
 
         if (velocity.x == 0f && isAnimationIncreasing()) {
@@ -201,7 +204,7 @@ abstract class Mob(
 
     fun heal(heal: Int) {
         if (heal < 0) {
-            Gdx.app.error(TAG, "Heal can't be negative")
+            damage(-heal)
             return
         }
 
@@ -234,13 +237,13 @@ abstract class Mob(
         pendingBodyTransform = vector
     }
 
-    fun update(mobWorldAdapter: MobWorldAdapter, delta: Float) {
+    fun update(mobWorldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, delta: Float) {
         pendingBodyTransform?.let { transform ->
             body.setTransform(transform.add(position), 0f)
             pendingBodyTransform = null
         }
 
-        behavior.update(this, mobWorldAdapter, delta)
+        behavior.update(this, mobWorldAdapter, playerAdapter, delta)
 
         applyMediumResistanceToBody(mobWorldAdapter)
         if (!controlVector.isZero) {
@@ -303,12 +306,9 @@ abstract class Mob(
         private const val TAG = "Mob"
 
         @JvmStatic
-        protected val ANIMATION_SPEED = 360f
+        protected val DEFAULT_ANIMATION_SPEED = 360f
 
-        protected const val ANIMATION_RANGE = 60f
-
-        private const val HIT_RANGE = .5f
-
+        private const val DEFAULT_ANIMATION_RANGE = 60f
         private const val DAMAGE_TINT_TIMEOUT_S = 0.5f
         private val DAMAGE_TINT_COLOR = Color((0xff8080 shl 8) or 0xFF)
 

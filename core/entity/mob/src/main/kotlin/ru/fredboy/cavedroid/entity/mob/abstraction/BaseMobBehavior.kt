@@ -9,10 +9,10 @@ abstract class BaseMobBehavior<MOB : Mob>(
 ) : MobBehavior {
 
     @Suppress("UNCHECKED_CAST")
-    final override fun update(mob: Mob, worldAdapter: MobWorldAdapter, delta: Float) {
+    final override fun update(mob: Mob, worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, delta: Float) {
         if (mobType.isInstance(mob)) {
             with(mob as MOB) {
-                updateMob(worldAdapter, delta)
+                updateMob(worldAdapter, playerAdapter, delta)
             }
         } else {
             throw IllegalArgumentException(
@@ -21,7 +21,7 @@ abstract class BaseMobBehavior<MOB : Mob>(
         }
     }
 
-    open fun MOB.updateMob(worldAdapter: MobWorldAdapter, delta: Float) {
+    open fun MOB.updateMob(worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, delta: Float) {
         if (checkForAutojump()) {
             jump()
         }

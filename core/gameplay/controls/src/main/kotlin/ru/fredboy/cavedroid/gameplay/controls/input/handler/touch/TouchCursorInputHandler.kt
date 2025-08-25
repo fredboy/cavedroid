@@ -135,6 +135,9 @@ class TouchCursorInputHandler @Inject constructor(
         } else if (item is Item.Usable) {
             useItemActionMap[item.useActionKey]?.perform(item, player.selectedX, player.selectedY)
                 ?: Gdx.app.error(TAG, "use item action ${item.useActionKey} not found")
+        } else if (item is Item.Food && player.health < player.maxHealth) {
+            player.heal(item.heal)
+            player.decreaseCurrentItemCount()
         } else {
             tryUseBlock()
         }

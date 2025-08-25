@@ -1522,6 +1522,24 @@
       "type": "food",
       "texture": "beef_cooked",
       "heal": 8
+    },
+    "spawn_egg_zombie": {
+      "name": "Zombie Spawn Egg",
+      "type": "usable",
+      "texture": "spawn_egg",
+      "tint": "#4C754C",
+      "action_key": "use_spawn_egg",
+      "mob_key": "zombie",
+      "origin_x": 0.5
+    },
+    "rotten_flesh": {
+      "name": "Rotten Flesh",
+      "type": "food",
+      "texture": "rotten_flesh",
+      "action_key": "use_rotten_flesh_action",
+      "origin_x": 0,
+      "origin_y": 1,
+      "heal": -2
     }
   }
 }

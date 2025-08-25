@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Disposable
+import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.utils.Vector2Proxy
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
@@ -26,6 +27,8 @@ class Drop(
     constructor(item: Item, amount: Int = 1) : this(InventoryItem(item, amount))
 
     private var _body: Body? = null
+
+    val timestamp = TimeUtils.millis()
 
     val body: Body get() = requireNotNull(_body)
 

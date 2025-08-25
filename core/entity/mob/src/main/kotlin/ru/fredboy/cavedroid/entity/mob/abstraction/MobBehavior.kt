@@ -4,5 +4,7 @@ import ru.fredboy.cavedroid.entity.mob.model.Mob
 
 interface MobBehavior {
 
-    fun update(mob: Mob, worldAdapter: MobWorldAdapter, delta: Float)
+    val attacksWhenPossible: Boolean get() = false
+
+    fun update(mob: Mob, worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, delta: Float)
 }

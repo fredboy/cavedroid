@@ -13,6 +13,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.model.Player
+import ru.fredboy.cavedroid.game.controller.mob.impl.PlayerAdapterImpl_Factory
 import java.util.*
 import javax.inject.Inject
 
@@ -25,6 +26,9 @@ class MobController @Inject constructor(
     private val dropQueue: DropQueue,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
 ) : Disposable {
+
+    // TODO: Do proper DI
+    private val playerAdapter = PlayerAdapterImpl_Factory.newInstance(this)
 
     private val _mobs = LinkedList<Mob>()
 
@@ -54,7 +58,7 @@ class MobController @Inject constructor(
     }
 
     fun update(delta: Float) {
-        mobs.forEach { mob -> mob.update(mobWorldAdapter, delta) }
+        mobs.forEach { mob -> mob.update(mobWorldAdapter, playerAdapter, delta) }
         _mobs.removeAll { mob ->
             mob.isDead.ifTrue {
                 dropQueue.offerItems(mob.position.x, mob.position.y, mob.getDropItems(getItemByKeyUseCase))
@@ -63,7 +67,7 @@ class MobController @Inject constructor(
             } ?: false
         }
 
-        player.update(mobWorldAdapter, delta)
+        player.update(mobWorldAdapter, playerAdapter, delta)
         if (player.isDead) {
             dropQueue.offerInventory(player.position.x, player.position.y, player.inventory)
             player.inventory.clear()

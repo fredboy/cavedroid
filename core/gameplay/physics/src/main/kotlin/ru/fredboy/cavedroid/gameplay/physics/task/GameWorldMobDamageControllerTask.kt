@@ -28,10 +28,19 @@ class GameWorldMobDamageControllerTask @Inject constructor(
                     mob.damage(damage)
                 }
             }
+
+            if (mob.behavior.attacksWhenPossible && mob.hitbox.overlaps(mobController.player.hitbox)) {
+                mobController.player.damage(mob.params.damageToPlayer)
+            }
+
+            if (mob.params.takesSunDamage && gameWorld.isDayTime()) {
+                mob.damage(SUN_DAMAGE)
+            }
         }
     }
 
     companion object {
+        private const val SUN_DAMAGE = 4
         const val ENVIRONMENTAL_MOB_DAMAGE_INTERVAL_SEC = 0.5f
     }
 }

@@ -32,6 +32,9 @@ class MobParamsMapper @Inject constructor(
             ),
             hp = dto.hp,
             sprites = dto.sprites.map { spriteDto -> mapMobSprite(key, spriteDto) },
+            animationRange = dto.animationRange,
+            damageToPlayer = dto.damageToPlayer,
+            takesSunDamage = dto.takesSunDamage,
         )
     }
 

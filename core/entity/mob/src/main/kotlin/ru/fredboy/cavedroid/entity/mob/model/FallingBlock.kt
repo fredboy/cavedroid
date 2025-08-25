@@ -43,6 +43,9 @@ class FallingBlock(
                 ),
                 hp = Int.MAX_VALUE,
                 sprites = emptyList(),
+                animationRange = 0f,
+                damageToPlayer = 0,
+                takesSunDamage = false,
             )
         }
     }

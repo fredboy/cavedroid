@@ -10,4 +10,7 @@ data class MobParams(
     val dropInfo: MobDropInfo,
     val hp: Int,
     val sprites: List<MobSprite>,
+    val animationRange: Float,
+    val damageToPlayer: Int,
+    val takesSunDamage: Boolean,
 )

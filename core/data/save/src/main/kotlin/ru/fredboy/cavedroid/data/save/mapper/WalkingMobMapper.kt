@@ -4,16 +4,16 @@ import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
-import ru.fredboy.cavedroid.entity.mob.model.PassiveMob
+import ru.fredboy.cavedroid.entity.mob.model.WalkingMob
 import javax.inject.Inject
 
 @Reusable
-class PassiveMobMapper @Inject constructor(
+class WalkingMobMapper @Inject constructor(
     private val directionMapper: DirectionMapper,
     private val mobParamsRepository: MobParamsRepository,
 ) {
 
-    fun mapSaveData(mob: PassiveMob): SaveDataDto.PassiveMobSaveDataDto = SaveDataDto.PassiveMobSaveDataDto(
+    fun mapSaveData(mob: WalkingMob): SaveDataDto.WalkingMobSaveDataDto = SaveDataDto.WalkingMobSaveDataDto(
         version = SAVE_DATA_VERSION,
         key = mob.params.key,
         x = mob.position.x,
@@ -33,12 +33,12 @@ class PassiveMobMapper @Inject constructor(
     )
 
     fun mapPassiveMob(
-        saveDataDto: SaveDataDto.PassiveMobSaveDataDto,
+        saveDataDto: SaveDataDto.WalkingMobSaveDataDto,
         mobPhysicsFactory: MobPhysicsFactory,
-    ): PassiveMob {
+    ): WalkingMob {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
-        return PassiveMob(
+        return WalkingMob(
             params = requireNotNull(mobParamsRepository.getMobParamsByKey(saveDataDto.key)),
         ).apply {
             spawn(saveDataDto.x, saveDataDto.y, mobPhysicsFactory)

@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.game.controller.drop
 
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
@@ -88,7 +89,7 @@ class DropController @Inject constructor(
 
         while (iterator.hasNext()) {
             val drop = iterator.next()
-            if (drop.isPickedUp) {
+            if (drop.isPickedUp || TimeUtils.timeSinceMillis(drop.timestamp) > DROP_TTL_ML) {
                 drop.dispose()
                 iterator.remove()
             } else {
@@ -117,5 +118,9 @@ class DropController @Inject constructor(
             count = dropInfo.count,
             initialForce = getRandomInitialForce(),
         )
+    }
+
+    companion object {
+        private const val DROP_TTL_ML = 600_000
     }
 }

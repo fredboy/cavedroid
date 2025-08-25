@@ -9,13 +9,13 @@ import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.FallingBlock
-import ru.fredboy.cavedroid.entity.mob.model.PassiveMob
+import ru.fredboy.cavedroid.entity.mob.model.WalkingMob
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
 
 @Reusable
 class MobControllerMapper @Inject constructor(
-    private val passiveMobMapper: PassiveMobMapper,
+    private val walkingMobMapper: WalkingMobMapper,
     private val fallingBlockMapper: FallingBlockMapper,
     private val playerMapper: PlayerMapper,
     private val getFallbackItemUseCase: GetFallbackItemUseCase,
@@ -27,7 +27,7 @@ class MobControllerMapper @Inject constructor(
         version = SAVE_DATA_VERSION,
         mobs = mobController.mobs.mapNotNull { mob ->
             when (mob) {
-                is PassiveMob -> passiveMobMapper.mapSaveData(mob)
+                is WalkingMob -> walkingMobMapper.mapSaveData(mob)
                 is FallingBlock -> fallingBlockMapper.mapSaveData(mob)
                 else -> null
             }
@@ -54,7 +54,7 @@ class MobControllerMapper @Inject constructor(
             (mobs as MutableList).addAll(
                 saveDataDto.mobs.mapNotNull { mob ->
                     when (mob) {
-                        is SaveDataDto.PassiveMobSaveDataDto -> passiveMobMapper.mapPassiveMob(
+                        is SaveDataDto.WalkingMobSaveDataDto -> walkingMobMapper.mapPassiveMob(
                             saveDataDto = mob,
                             mobPhysicsFactory = mobPhysicsFactory,
                         )

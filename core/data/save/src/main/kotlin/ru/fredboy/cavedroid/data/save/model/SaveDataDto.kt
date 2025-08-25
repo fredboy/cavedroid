@@ -116,7 +116,7 @@ sealed class SaveDataDto {
     ) : SaveDataDto()
 
     @Serializable
-    data class PassiveMobSaveDataDto(
+    data class WalkingMobSaveDataDto(
         override val version: Int,
         override val key: String,
         override val x: Float,

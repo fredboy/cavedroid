@@ -51,7 +51,7 @@ class Player(
     var isHittingWithDamage = false
 
     var hitAnim = 0f
-    var hitAnimDelta = ANIMATION_SPEED
+    var hitAnimDelta = DEFAULT_ANIMATION_SPEED
 
     var headRotation = 0f
 
@@ -200,7 +200,7 @@ class Player(
         isHitting = true
         isHittingWithDamage = withDamage
         hitAnim = HIT_ANIMATION_RANGE.endInclusive
-        hitAnimDelta = ANIMATION_SPEED
+        hitAnimDelta = DEFAULT_ANIMATION_SPEED
     }
 
     fun stopHitting() {
@@ -291,7 +291,7 @@ class Player(
                 hitAnim = MathUtils.clamp(hitAnim, HIT_ANIMATION_RANGE.start, HIT_ANIMATION_RANGE.endInclusive)
                 hitAnimDelta = -hitAnimDelta
             } else {
-                hitAnimDelta = ANIMATION_SPEED
+                hitAnimDelta = DEFAULT_ANIMATION_SPEED
             }
         }
 
