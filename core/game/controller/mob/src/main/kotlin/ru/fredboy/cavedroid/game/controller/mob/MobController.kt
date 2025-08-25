@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.game.controller.mob
 
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.ifTrue
@@ -41,7 +42,6 @@ class MobController @Inject constructor(
 
     init {
         respawnPlayer()
-        player.initSight(mobWorldAdapter)
     }
 
     fun addMob(mob: Mob) {
@@ -68,26 +68,22 @@ class MobController @Inject constructor(
             dropQueue.offerInventory(player.position.x, player.position.y, player.inventory)
             player.inventory.clear()
             player.dispose()
-            player.respawn(
-                spawnPoint = player.spawnPoint ?: mobWorldAdapter.findSpawnPoint(),
-                mobPhysicsFactory = mobPhysicsFactory,
-            )
+            respawnPlayer()
         }
     }
 
     fun checkPlayerCursorBounds() {
         with(player) {
             if (gameMode.isSurvival()) {
-                val minCursorX = mapX - SURVIVAL_CURSOR_RANGE
-                val maxCursorX = mapX + SURVIVAL_CURSOR_RANGE
-                val minCursorY = middleMapY - SURVIVAL_CURSOR_RANGE
-                val maxCursorY = middleMapY + SURVIVAL_CURSOR_RANGE
+                val plToCursor = Vector2(cursorX, cursorY)
+                    .sub(position)
+                    .limit2(SURVIVAL_CURSOR_RANGE_2)
 
-                cursorX = MathUtils.clamp(cursorX, minCursorX, maxCursorX)
-                cursorY = MathUtils.clamp(cursorY, minCursorY, maxCursorY)
+                cursorX = position.x + plToCursor.x
+                cursorY = position.y + plToCursor.y
             }
 
-            cursorY = MathUtils.clamp(cursorY, 0, mobWorldAdapter.height)
+            cursorY = MathUtils.clamp(cursorY, 0f, mobWorldAdapter.height.toFloat())
         }
     }
 
@@ -96,6 +92,7 @@ class MobController @Inject constructor(
             spawnPoint = player.spawnPoint ?: mobWorldAdapter.findSpawnPoint(),
             mobPhysicsFactory = mobPhysicsFactory,
         )
+        player.initSight(mobWorldAdapter)
     }
 
     override fun dispose() {
@@ -105,6 +102,6 @@ class MobController @Inject constructor(
     }
 
     companion object {
-        private const val SURVIVAL_CURSOR_RANGE = 4
+        private const val SURVIVAL_CURSOR_RANGE_2 = 36f
     }
 }

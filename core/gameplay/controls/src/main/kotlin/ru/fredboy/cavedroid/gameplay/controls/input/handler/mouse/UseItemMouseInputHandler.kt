@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -33,14 +34,20 @@ class UseItemMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val gameWorld: GameWorld,
     private val textureRegions: GetTextureRegionByNameUseCase,
+    private val applicationContextRepository: ApplicationContextRepository,
 ) : IMouseInputHandler {
 
     private var buttonHoldTask: Timer.Task? = null
 
-    override fun checkConditions(action: MouseInputAction): Boolean = buttonHoldTask?.isScheduled == true ||
-        !action.isInsideHotbar(gameContextRepository, textureRegions) &&
-        gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-        action.actionKey is MouseInputActionKey.Right
+    override fun checkConditions(action: MouseInputAction): Boolean {
+        return !applicationContextRepository.isTouch() &&
+            (
+                buttonHoldTask?.isScheduled == true ||
+                    !action.isInsideHotbar(gameContextRepository, textureRegions) &&
+                    gameWindowsManager.currentWindowType == GameWindowType.NONE &&
+                    action.actionKey is MouseInputActionKey.Right
+                )
+    }
 
     private fun cancelHold() {
         buttonHoldTask?.cancel()
@@ -58,8 +65,8 @@ class UseItemMouseInputHandler @Inject constructor(
         if (item is Item.Placeable) {
             placeBlockActionMap.placeToBackgroundAction(
                 item = item,
-                x = player.cursorX,
-                y = player.cursorY,
+                x = player.selectedX,
+                y = player.selectedY,
             )
         }
     }
@@ -75,16 +82,16 @@ class UseItemMouseInputHandler @Inject constructor(
     }
 
     private fun tryUseBlock() {
-        val block = gameWorld.getForeMap(mobController.player.cursorX, mobController.player.cursorY)
+        val block = gameWorld.getForeMap(mobController.player.selectedX, mobController.player.selectedY)
             .takeIf { !it.isNone() }
-            ?: gameWorld.getBackMap(mobController.player.cursorX, mobController.player.cursorY)
+            ?: gameWorld.getBackMap(mobController.player.selectedX, mobController.player.selectedY)
                 .takeIf { !it.isNone() }
             ?: return
 
         useBlockActionMap[block.params.key]?.perform(
             block = block,
-            x = mobController.player.cursorX,
-            y = mobController.player.cursorY,
+            x = mobController.player.selectedX,
+            y = mobController.player.selectedY,
         )
     }
 
@@ -99,11 +106,11 @@ class UseItemMouseInputHandler @Inject constructor(
         if (item is Item.Placeable) {
             placeBlockActionMap.placeToForegroundAction(
                 item = item,
-                x = player.cursorX,
-                y = player.cursorY,
+                x = player.selectedX,
+                y = player.selectedY,
             )
         } else if (item is Item.Usable) {
-            useItemActionMap[item.useActionKey]?.perform(item, player.cursorX, player.cursorY)
+            useItemActionMap[item.useActionKey]?.perform(item, player.selectedX, player.selectedY)
                 ?: Gdx.app.error(TAG, "use item action ${item.useActionKey} not found")
         } else if (item is Item.Food && player.health < player.maxHealth) {
             player.heal(item.heal)

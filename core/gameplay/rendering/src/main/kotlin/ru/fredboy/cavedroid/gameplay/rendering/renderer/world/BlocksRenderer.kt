@@ -38,23 +38,23 @@ abstract class BlocksRenderer(
     protected fun drawBlockDamage(spriteBatch: SpriteBatch) {
         val player = mobsController.player
         val blockDamage = player.blockDamage.takeIf { it > 0f } ?: return
-        val cursorX = player.cursorX
-        val cursorY = player.cursorY
+        val selectedX = player.selectedX
+        val selectedY = player.selectedY
 
         val block = if (background) {
-            gameWorld.getBackMap(cursorX, cursorY)
+            gameWorld.getBackMap(selectedX, selectedY)
         } else {
-            gameWorld.getForeMap(cursorX, cursorY)
+            gameWorld.getForeMap(selectedX, selectedY)
         }
 
         val index = (MAX_BLOCK_DAMAGE_INDEX.toFloat() * (blockDamage / block.params.hitPoints.toFloat()))
             .let(MathUtils::floor)
         val sprite = blockDamageSprite(index) ?: return
 
-        if (gameWorld.hasForeAt(cursorX, cursorY) != background) {
+        if (gameWorld.hasForeAt(selectedX, selectedY) != background) {
             sprite.setBounds(
-                /* x = */ cursorX.toFloat() + block.params.spriteMarginsMeters.left,
-                /* y = */ cursorY.toFloat() + block.params.spriteMarginsMeters.top,
+                /* x = */ selectedX.toFloat() + block.params.spriteMarginsMeters.left,
+                /* y = */ selectedY.toFloat() + block.params.spriteMarginsMeters.top,
                 /* width = */ block.spriteWidthMeters,
                 /* height = */ block.spriteHeightMeters,
             )

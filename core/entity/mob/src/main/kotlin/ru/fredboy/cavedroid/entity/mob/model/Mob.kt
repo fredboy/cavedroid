@@ -251,6 +251,8 @@ abstract class Mob(
             } else {
                 this@Mob.controlVector.y = 0f
             }
+        } else if (!isFlyMode) {
+            body.linearVelocity = body.linearVelocity.cpy().apply { x = 0f }
         }
 
         if (position.x > mobWorldAdapter.width) {

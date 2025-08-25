@@ -4,9 +4,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
-import ru.fredboy.cavedroid.entity.mob.model.Player
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindWorldRenderer
@@ -16,7 +16,7 @@ import javax.inject.Inject
 @BindWorldRenderer
 class PlayerCursorRenderer @Inject constructor(
     private val gameWorld: GameWorld,
-    private val textureRegions: GetTextureRegionByNameUseCase,
+    private val applicationContextRepository: ApplicationContextRepository,
     private val mobController: MobController,
     private val mobAssetsRepository: MobAssetsRepository,
 ) : IWorldRenderer {
@@ -24,14 +24,27 @@ class PlayerCursorRenderer @Inject constructor(
     override val renderLayer get() = RENDER_LAYER
 
     private fun drawCursor(spriteBatch: SpriteBatch) {
-        val cursorX = mobController.player.cursorX
-        val cursorY = mobController.player.cursorY
+        val selectedX = mobController.player.selectedX
+        val selectedY = mobController.player.selectedY
 
-        if (gameWorld.hasForeAt(cursorX, cursorY) ||
-            gameWorld.hasBackAt(cursorX, cursorY) ||
-            mobController.player.controlMode == Player.ControlMode.CURSOR
-        ) {
-            spriteBatch.draw(mobAssetsRepository.getPlayerCursorSprite(), cursorX.toFloat(), cursorY.toFloat(), 1f, 1f)
+        if (gameWorld.hasForeAt(selectedX, selectedY) || gameWorld.hasBackAt(selectedX, selectedY)) {
+            spriteBatch.draw(
+                /* region = */ mobAssetsRepository.getPlayerCursorSprite(),
+                /* x = */ selectedX.toFloat(),
+                /* y = */ selectedY.toFloat(),
+                /* width = */ 1f,
+                /* height = */ 1f,
+            )
+        }
+
+        if (applicationContextRepository.isTouch()) {
+            mobAssetsRepository.getCrosshairSprite().let { crosshairSprite ->
+                spriteBatch.drawSprite(
+                    sprite = crosshairSprite,
+                    x = mobController.player.cursorX - crosshairSprite.width / 2,
+                    y = mobController.player.cursorY - crosshairSprite.height / 2,
+                )
+            }
         }
     }
 

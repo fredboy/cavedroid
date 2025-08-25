@@ -43,8 +43,8 @@ class PlayerMapper @Inject constructor(
         gameMode = player.gameMode,
         headRotation = player.headRotation,
         blockDamage = player.blockDamage,
-        cursorX = player.cursorX,
-        cursorY = player.cursorY,
+        cursorX = player.selectedX,
+        cursorY = player.selectedY,
         spawnPointX = player.spawnPoint?.x ?: 0f,
         spawnPointY = player.spawnPoint?.y ?: 0f,
         controlMode = controlModeMapper.mapSaveData(player.controlMode),
@@ -77,8 +77,8 @@ class PlayerMapper @Inject constructor(
             gameMode = saveDataDto.gameMode
             headRotation = saveDataDto.headRotation
             blockDamage = saveDataDto.blockDamage
-            cursorX = saveDataDto.cursorX
-            cursorY = saveDataDto.cursorY
+            cursorX = saveDataDto.cursorX.toFloat()
+            cursorY = saveDataDto.cursorY.toFloat()
             controlMode = controlModeMapper.mapControlMode(saveDataDto.controlMode)
             spawnPoint = Vector2(saveDataDto.spawnPointX, saveDataDto.spawnPointY)
             activeSlot = saveDataDto.activeSlot

@@ -12,7 +12,6 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
-import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
@@ -89,12 +88,6 @@ class TouchControlsRenderer @Inject constructor(
                 /* width = */ touchKey.width,
                 /* height = */ touchKey.height,
             )
-        }
-
-        // FIXME: Add pressed state for buttons
-        if (mobController.player.controlMode == Player.ControlMode.CURSOR) {
-            val altKeyRect = touchControlsMap["alt"]?.rectangleOnScreen ?: return
-            spriteBatch.draw(shadeTexture, altKeyRect.x, altKeyRect.y, altKeyRect.width, altKeyRect.height)
         }
 
         drawJoystick(spriteBatch)

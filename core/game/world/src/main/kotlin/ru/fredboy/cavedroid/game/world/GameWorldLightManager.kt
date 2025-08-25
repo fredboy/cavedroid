@@ -6,6 +6,7 @@ import box2dLight.PointLight
 import box2dLight.RayHandler
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.physics.box2d.Filter
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
@@ -107,6 +108,9 @@ class GameWorldLightManager @Inject constructor() :
     fun update() {
         var sunAngle = (gameWorld.getNormalizedTime() * 30f + 75f)
         if (sunAngle >= 120f) sunAngle -= 60f
+        if (MathUtils.isEqual(90f, sunAngle, 0.1f)) {
+            sunAngle = 90.1f
+        }
         sunLight.direction = sunAngle
         sunLight.color = Color().apply { a = max(gameWorld.getSunlight(), 0.1f) }
     }

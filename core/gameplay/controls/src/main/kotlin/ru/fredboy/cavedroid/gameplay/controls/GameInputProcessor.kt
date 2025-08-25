@@ -1,16 +1,14 @@
 package ru.fredboy.cavedroid.gameplay.controls
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.ifFalse
 import ru.fredboy.cavedroid.domain.assets.model.TouchButton
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
-import ru.fredboy.cavedroid.game.window.GameWindowType
-import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.gameplay.controls.input.IKeyboardInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
@@ -31,33 +29,12 @@ class GameInputProcessor @Inject constructor(
     private val keyboardInputActionMapper: KeyboardInputActionMapper,
     private val mouseInputHandlers: Set<@JvmSuppressWildcards IMouseInputHandler>,
     private val keyboardInputHandlers: Set<@JvmSuppressWildcards IKeyboardInputHandler>,
-    private val gameWindowsManager: GameWindowsManager,
 ) : InputProcessor {
-
-    private val mouseLeftTouchButton = TouchButton(
-        Rectangle(
-            /* x = */ applicationContextRepository.getWidth() / 2,
-            /* y = */ 0f,
-            /* width = */ applicationContextRepository.getWidth() / 2,
-            /* height = */ applicationContextRepository.getHeight() / 2,
-        ),
-        Input.Buttons.LEFT,
-        true,
-    )
-
-    private val mouseRightTouchButton = TouchButton(
-        Rectangle(
-            /* x = */ applicationContextRepository.getWidth() / 2,
-            /* y = */ applicationContextRepository.getHeight() / 2,
-            /* width = */ applicationContextRepository.getWidth() / 2,
-            /* height = */ applicationContextRepository.getHeight() / 2,
-        ),
-        Input.Buttons.RIGHT,
-        true,
-    )
 
     private var touchDownX = 0f
     private var touchDownY = 0f
+
+    private val pointerToTouchedKey = mutableMapOf<Int, Int>()
 
     override fun keyDown(keycode: Int): Boolean = handleKeyboardAction(keycode, true)
 
@@ -73,17 +50,17 @@ class GameInputProcessor @Inject constructor(
 
         if (applicationContextRepository.isTouch()) {
             val touchedKey = getTouchedKey(touchX, touchY)
-            return if (touchedKey.isMouse) {
-                onMouseActionEvent(
-                    mouseX = screenX,
-                    mouseY = screenY,
-                    button = touchedKey.code,
-                    touchUp = false,
-                    pointer = pointer,
-                )
-            } else {
-                keyDown(touchedKey.code)
-            }
+
+            return touchedKey.isMouse.ifFalse {
+                keyDown(touchedKey.code).takeIf { it }
+                    ?.also { pointerToTouchedKey[pointer] = touchedKey.code }
+            } ?: onMouseActionEvent(
+                mouseX = screenX,
+                mouseY = screenY,
+                button = touchedKey.takeIf { it.isMouse }?.code ?: nullButton.code,
+                touchUp = false,
+                pointer = pointer,
+            )
         }
 
         return onMouseActionEvent(screenX, screenY, button, false, pointer)
@@ -105,19 +82,22 @@ class GameInputProcessor @Inject constructor(
                 )
             }
 
+            pointerToTouchedKey.remove(pointer)?.let { keyCode ->
+                keyUp(keyCode)
+                return true
+            }
+
             val touchedKey: TouchButton = getTouchedKey(touchX, touchY)
 
-            return if (touchedKey.isMouse) {
-                onMouseActionEvent(
-                    mouseX = screenX,
-                    mouseY = screenY,
-                    button = touchedKey.code,
-                    touchUp = true,
-                    pointer = pointer,
-                )
-            } else {
-                keyUp(touchedKey.code)
-            }
+            return (touchedKey.isMouse).ifFalse {
+                keyUp(touchedKey.code).takeIf { it }
+            } ?: onMouseActionEvent(
+                mouseX = screenX,
+                mouseY = screenY,
+                button = touchedKey.takeIf { it.isMouse }?.code ?: nullButton.code,
+                touchUp = true,
+                pointer = pointer,
+            )
         }
 
         return onMouseActionEvent(
@@ -136,6 +116,14 @@ class GameInputProcessor @Inject constructor(
 
         if (abs(touchX - touchDownX) < 16 && abs(touchY - touchDownY) < DRAG_THRESHOLD) {
             return false
+        }
+
+        val touchedKey = getTouchedKey(touchX, touchY)
+        if (pointerToTouchedKey[pointer] != touchedKey.code) {
+            pointerToTouchedKey.remove(pointer)?.let { keyCode ->
+                keyUp(keyCode)
+                return true
+            }
         }
 
         val action = mouseInputActionMapper.mapDragged(
@@ -158,23 +146,6 @@ class GameInputProcessor @Inject constructor(
                 amountY = amountY,
             )
         return handleMouseAction(action)
-    }
-
-    fun onResize() {
-        val halfWidth = applicationContextRepository.getWidth() / 2
-        val halfHeight = applicationContextRepository.getHeight() / 2
-        mouseLeftTouchButton.rectangle.apply {
-            x = halfWidth
-            y = 0f
-            width = halfWidth
-            height = halfHeight
-        }
-        mouseRightTouchButton.rectangle.apply {
-            x = halfWidth
-            y = halfHeight
-            width = halfWidth
-            height = halfHeight
-        }
     }
 
     @Suppress("unused")
@@ -210,23 +181,11 @@ class GameInputProcessor @Inject constructor(
         )
 
     private fun getTouchedKey(touchX: Float, touchY: Float): TouchButton {
-        if (gameWindowsManager.currentWindowType != GameWindowType.NONE) {
-            return nullButton
-        }
-
         for (entry in getTouchButtonsUseCase().entries) {
             val button = entry.value
             if (button.rectangleOnScreen.contains(touchX, touchY)) {
                 return button
             }
-        }
-
-        if (mouseLeftTouchButton.rectangle.contains(touchX, touchY)) {
-            return mouseLeftTouchButton
-        }
-
-        if (mouseRightTouchButton.rectangle.contains(touchX, touchY)) {
-            return mouseRightTouchButton
         }
 
         return nullButton

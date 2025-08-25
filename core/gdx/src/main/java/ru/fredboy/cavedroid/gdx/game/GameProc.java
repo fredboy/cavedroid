@@ -85,7 +85,6 @@ public class GameProc implements Disposable {
 
     public void onResize() {
         mGameRenderer.onResize();
-        mGameInputProcessor.onResize();
     }
 
     public void show() {

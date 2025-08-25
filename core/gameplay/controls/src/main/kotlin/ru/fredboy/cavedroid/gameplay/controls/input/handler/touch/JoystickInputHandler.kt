@@ -2,11 +2,9 @@ package ru.fredboy.cavedroid.gameplay.controls.input.handler.touch
 
 import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.common.model.Joystick
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
-import ru.fredboy.cavedroid.entity.mob.model.Direction
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
@@ -35,9 +33,7 @@ class JoystickInputHandler @Inject constructor(
         set(value) {
             if (!value) {
                 resetVelocity()
-                if (TimeUtils.timeSinceMillis(activateTimeMs) < 200L &&
-                    mobController.player.controlMode != Player.ControlMode.CURSOR
-                ) {
+                if (TimeUtils.timeSinceMillis(activateTimeMs) < 200L) {
                     if (mobController.player.canJump) {
                         mobController.player.jump()
                     } else if (mobController.player.gameMode.isCreative()) {
@@ -58,68 +54,48 @@ class JoystickInputHandler @Inject constructor(
         }
     }
 
-    override fun checkConditions(action: MouseInputAction): Boolean = gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-        applicationContextRepository.isTouch() &&
-        action.actionKey is MouseInputActionKey.Touch &&
-        (action.actionKey.pointer == gameContextRepository.getJoystick().pointer || !active) &&
-        (
-            (action.actionKey is MouseInputActionKey.Dragged) ||
-                (action.screenX < gameContextRepository.getCameraContext().viewport.width / 2 && !action.actionKey.touchUp || active)
-            ) &&
-        !(
-            action.actionKey is MouseInputActionKey.Screen &&
-                action.isInsideHotbar(
-                    gameContextRepository,
-                    textureRegions,
+    override fun checkConditions(action: MouseInputAction): Boolean {
+        return gameWindowsManager.currentWindowType == GameWindowType.NONE &&
+            applicationContextRepository.isTouch() &&
+            action.actionKey is MouseInputActionKey.Touch &&
+            (action.actionKey.pointer == gameContextRepository.getJoystick().pointer || !active) &&
+            (
+                (
+                    action.actionKey is MouseInputActionKey.Dragged &&
+                        active &&
+                        action.actionKey.pointer == gameContextRepository.getJoystick().pointer
+                    ) ||
+                    (
+                        action.actionKey is MouseInputActionKey.Screen &&
+                            action.screenX < applicationContextRepository.getWidth() / 2f &&
+                            !action.actionKey.touchUp ||
+                            active
+                        )
+                ) &&
+            !(
+                action.actionKey is MouseInputActionKey.Screen &&
+                    action.isInsideHotbar(
+                        gameContextRepository,
+                        textureRegions,
+                    )
                 )
-            )
+    }
 
     private fun handleTouchDown(action: MouseInputAction) {
         val key = action.actionKey as MouseInputActionKey.Screen
         gameContextRepository.getJoystick().activate(action.screenX, action.screenY, key.pointer)
+        mobController.player.controlMode = Player.ControlMode.WALK
         active = true
     }
 
     private fun handleTouchUp() {
         gameContextRepository.getJoystick().deactivate()
+        mobController.player.controlMode = Player.ControlMode.CURSOR
         active = false
-        mobController.player.swim = false
-    }
-
-    private fun handleCursor() {
-        val joystick = gameContextRepository.getJoystick()
-
-        if (TimeUtils.timeSinceMillis(cursorTimeoutMs) < 150L) {
-            return
-        }
-
-        val pastCursorX = mobController.player.cursorX
-        val pastCursorY = mobController.player.cursorY
-
-        if (Math.abs(joystick.activeX - joystick.centerX) >= Joystick.RADIUS / 2) {
-            mobController.player.cursorX += if (joystick.activeX > joystick.centerX) 1 else -1
-            cursorTimeoutMs = TimeUtils.millis()
-        }
-
-        if (Math.abs(joystick.activeY - joystick.centerY) >= Joystick.RADIUS / 2) {
-            mobController.player.cursorY += if (joystick.activeY > joystick.centerY) 1 else -1
-            cursorTimeoutMs = TimeUtils.millis()
-        }
-
-        mobController.checkPlayerCursorBounds()
-
-        if (mobController.player.cursorX != pastCursorX || mobController.player.cursorY != pastCursorY) {
-            mobController.player.blockDamage = 0f
-        }
     }
 
     private fun handleDragged() {
         if (!active) {
-            return
-        }
-
-        if (mobController.player.controlMode == Player.ControlMode.CURSOR) {
-            handleCursor()
             return
         }
 
@@ -128,17 +104,9 @@ class JoystickInputHandler @Inject constructor(
 
         mobController.player.controlVector.x = joyVector.x
 
-        mobController.player.direction = if (joyVector.x < 0) {
-            Direction.LEFT
-        } else {
-            Direction.RIGHT
-        }
-
         if (mobController.player.isFlyMode) {
             mobController.player.controlVector.y = joyVector.y
         }
-
-        mobController.player.swim = true
     }
 
     override fun handle(action: MouseInputAction) {

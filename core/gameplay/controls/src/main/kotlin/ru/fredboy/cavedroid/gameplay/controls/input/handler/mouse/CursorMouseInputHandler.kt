@@ -1,13 +1,11 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
-import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByIndexUseCase
 import ru.fredboy.cavedroid.entity.mob.model.Direction
 import ru.fredboy.cavedroid.entity.mob.model.Player
@@ -40,11 +38,6 @@ class CursorMouseInputHandler @Inject constructor(
 
     private val creativeInventoryTexture get() = requireNotNull(textureRegions["creative"])
 
-    private val Block.isAutoselectable
-        get() = !isNone() && params.hasCollision
-
-    private fun GameWorld.isCurrentBlockAutoselectable() = getForeMap(player.cursorX, player.cursorY).isAutoselectable
-
     private fun setPlayerDirectionToCursor() {
         if (player.controlMode != Player.ControlMode.CURSOR) {
             return
@@ -54,23 +47,6 @@ class CursorMouseInputHandler @Inject constructor(
             player.direction = Direction.LEFT
         } else {
             player.direction = Direction.RIGHT
-        }
-    }
-
-    private fun handleWalkTouch() {
-        player.cursorX = player.mapX + player.direction.basis
-        player.cursorY = player.upperMapY
-        player.headRotation = 0f
-
-        for (i in 1..2) {
-            if (gameWorld.isCurrentBlockAutoselectable()) {
-                break
-            }
-            player.cursorY++
-        }
-
-        if (!gameWorld.isCurrentBlockAutoselectable()) {
-            player.cursorX -= player.direction.basis
         }
     }
 
@@ -88,8 +64,8 @@ class CursorMouseInputHandler @Inject constructor(
         // when worldX < 0, need to subtract 1 to avoid negative zero
         val fixCycledWorld = if (worldX < 0) 1 else 0
 
-        player.cursorX = worldX.toInt() - fixCycledWorld
-        player.cursorY = worldY.toInt()
+        player.cursorX = worldX - fixCycledWorld
+        player.cursorY = worldY
 
         player.headRotation = getPlayerHeadRotation(worldX, worldY)
 
@@ -134,24 +110,21 @@ class CursorMouseInputHandler @Inject constructor(
         return item.params.name
     }
 
-    override fun checkConditions(action: MouseInputAction): Boolean = action.actionKey is MouseInputActionKey.None
+    override fun checkConditions(action: MouseInputAction): Boolean {
+        return !applicationContextRepository.isTouch() && action.actionKey is MouseInputActionKey.None
+    }
 
     override fun handle(action: MouseInputAction) {
-        val pastCursorX = player.cursorX
-        val pastCursorY = player.cursorY
+        val pastSelectedX = player.selectedX
+        val pastSelectedY = player.selectedY
 
-        when {
-            player.controlMode == Player.ControlMode.WALK && applicationContextRepository.isTouch() -> handleWalkTouch()
-            !applicationContextRepository.isTouch() -> handleMouse(action)
+        if (!applicationContextRepository.isTouch()) {
+            handleMouse(action)
         }
 
         mobController.checkPlayerCursorBounds()
 
-        if (player.controlMode == Player.ControlMode.WALK && applicationContextRepository.isTouch()) {
-            setPlayerDirectionToCursor()
-        }
-
-        if (player.cursorX != pastCursorX || player.cursorY != pastCursorY) {
+        if (player.selectedX != pastSelectedX || player.selectedY != pastSelectedY) {
             player.blockDamage = 0f
         }
 

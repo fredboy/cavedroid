@@ -75,7 +75,7 @@ class MobPhysicsFactoryImpl @Inject constructor(
         val rightShape = createCircleShape(footRadius, rightFootX, footY)
 
         FixtureDef().apply {
-            friction = 8f
+            friction = 1f
             restitution = 0f
             filter.categoryBits = physicsCategory
             filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
@@ -98,7 +98,7 @@ class MobPhysicsFactoryImpl @Inject constructor(
         val footShape = createCircleShape(footRadius, footX, footY)
 
         FixtureDef().apply {
-            friction = 8f
+            friction = 1f
             restitution = 0f
             filter.categoryBits = physicsCategory
             filter.maskBits = PhysicsConstants.CATEGORY_BLOCK

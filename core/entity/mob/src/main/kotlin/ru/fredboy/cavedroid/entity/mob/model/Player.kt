@@ -35,8 +35,14 @@ class Player(
 
     var gameMode = GameMode.SURVIVAL
 
-    var cursorX = 0
-    var cursorY = 0
+    var cursorX = 0f
+    var cursorY = 0f
+
+    var holdCursor = false
+    var cursorToPlayer = Vector2()
+
+    val selectedX get() = cursorX.toInt()
+    val selectedY get() = cursorY.toInt()
 
     var controlMode = ControlMode.WALK
     var blockDamage = 0f
@@ -155,13 +161,15 @@ class Player(
         isDead = false
         heal(maxHealth)
         spawn(spawnPoint.x, spawnPoint.y, mobPhysicsFactory)
+        cursorX = position.x
+        cursorY = position.y
     }
 
     fun initSight(mobWorldAdapter: MobWorldAdapter) {
         sight = PointLight(
             mobWorldAdapter.getRayHandler(),
             128,
-            Color().apply { a = 1f },
+            Color().apply { a = 0.5f },
             4f,
             position.x,
             position.y,

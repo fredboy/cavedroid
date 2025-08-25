@@ -8,4 +8,6 @@ abstract class MobAssetsRepository : AssetsRepository() {
     abstract fun getMobTexture(mobName: String, textureName: String): Texture
 
     abstract fun getPlayerCursorSprite(): Sprite
+
+    abstract fun getCrosshairSprite(): Sprite
 }

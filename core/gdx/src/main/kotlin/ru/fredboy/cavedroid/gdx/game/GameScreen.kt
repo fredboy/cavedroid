@@ -22,7 +22,7 @@ class GameScreen @Inject constructor(
 ) : BaseScreen(applicationContextRepository) {
 
     override val scaleFactor: Float
-        get() = 0.25f
+        get() = 0.5f
 
     private var gameComponent: GameComponent? = null
 
@@ -118,5 +118,9 @@ class GameScreen @Inject constructor(
 
     override fun onDispose() {
         resetGameComponent()
+    }
+
+    companion object {
+        private const val JOYSTICK_MARGIN = 16f
     }
 }

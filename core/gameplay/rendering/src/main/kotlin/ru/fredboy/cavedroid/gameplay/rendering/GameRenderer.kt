@@ -25,8 +25,6 @@ import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.IHudRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.world.IWorldRenderer
 import javax.inject.Inject
-import kotlin.math.abs
-import kotlin.math.min
 
 @GameScope
 class GameRenderer @Inject constructor(
@@ -91,8 +89,8 @@ class GameRenderer @Inject constructor(
 
     private fun updateDynamicCameraPosition(delta: Float) {
         val cameraTargetPosition = Vector3().apply {
-            x = player.x + camera.viewportWidth / 4f * player.direction.basis
-            y = player.y
+            x = player.x / 2f + player.cursorX / 2f
+            y = player.y / 2f + player.cursorY / 2f
         }
 
         if (!gameContextRepository.getCameraContext().visibleWorld.contains(player.x, player.y)) {
@@ -102,8 +100,12 @@ class GameRenderer @Inject constructor(
 
         val moveVector = cameraTargetPosition.sub(camera.position)
 
-        if (!moveVector.isZero(abs(0.5f))) {
-            moveVector.x = 30f * player.direction.basis * delta
+        if (!moveVector.isZero(0.1f)) {
+            if (player.controlMode == Player.ControlMode.WALK) {
+                moveVector.nor().scl(30f * delta)
+            } else {
+                moveVector.scl(delta)
+            }
         }
 
         camera.position.add(moveVector)

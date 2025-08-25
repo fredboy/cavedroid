@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
@@ -21,11 +22,15 @@ class AttackMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val textureRegions: GetTextureRegionByNameUseCase,
     private val gameContextRepository: GameContextRepository,
+    private val applicationContextRepository: ApplicationContextRepository,
 ) : IMouseInputHandler {
 
-    override fun checkConditions(action: MouseInputAction): Boolean = gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-        !action.isInsideHotbar(gameContextRepository, textureRegions) &&
-        action.actionKey is MouseInputActionKey.Left
+    override fun checkConditions(action: MouseInputAction): Boolean {
+        return !applicationContextRepository.isTouch() &&
+            gameWindowsManager.currentWindowType == GameWindowType.NONE &&
+            !action.isInsideHotbar(gameContextRepository, textureRegions) &&
+            action.actionKey is MouseInputActionKey.Left
+    }
 
     override fun handle(action: MouseInputAction) {
         if (action.actionKey.touchUp) {

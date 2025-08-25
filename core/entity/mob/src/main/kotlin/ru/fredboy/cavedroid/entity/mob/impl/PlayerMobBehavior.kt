@@ -31,11 +31,8 @@ class PlayerMobBehavior :
             return
         }
 
-        val (targetBlock, targetLayer) = worldAdapter.getTargetBlockWithLayer(cursorX, cursorY)
-            ?: run {
-                stopHitting()
-                return
-            }
+        val (targetBlock, targetLayer) = worldAdapter.getTargetBlockWithLayer(selectedX, selectedY)
+            ?: return
 
         when (gameMode) {
             GameMode.SURVIVAL -> {
@@ -53,8 +50,8 @@ class PlayerMobBehavior :
                     }
 
                     when (targetLayer) {
-                        Layer.FOREGROUND -> worldAdapter.destroyForegroundBlock(cursorX, cursorY, shouldDrop)
-                        Layer.BACKGROUND -> worldAdapter.destroyBackgroundBlock(cursorX, cursorY, shouldDrop)
+                        Layer.FOREGROUND -> worldAdapter.destroyForegroundBlock(selectedX, selectedY, shouldDrop)
+                        Layer.BACKGROUND -> worldAdapter.destroyBackgroundBlock(selectedX, selectedY, shouldDrop)
                     }
                     blockDamage = 0f
                 }
@@ -62,8 +59,8 @@ class PlayerMobBehavior :
 
             GameMode.CREATIVE -> {
                 when (targetLayer) {
-                    Layer.FOREGROUND -> worldAdapter.destroyForegroundBlock(cursorX, cursorY, false)
-                    Layer.BACKGROUND -> worldAdapter.destroyBackgroundBlock(cursorX, cursorY, false)
+                    Layer.FOREGROUND -> worldAdapter.destroyForegroundBlock(selectedX, selectedY, false)
+                    Layer.BACKGROUND -> worldAdapter.destroyBackgroundBlock(selectedX, selectedY, false)
                 }
                 stopHitting()
             }
@@ -77,11 +74,16 @@ class PlayerMobBehavior :
             jump()
         }
 
+        if (holdCursor) {
+            cursorX = position.x + cursorToPlayer.x
+            cursorY = position.y + cursorToPlayer.y
+        }
+
         if (gameMode.isCreative()) {
             return
         }
 
-        val (targetBlock, _) = worldAdapter.getTargetBlockWithLayer(cursorX, cursorY)
+        val (targetBlock, _) = worldAdapter.getTargetBlockWithLayer(selectedX, selectedY)
             ?.takeIf { isHitting && isHittingWithDamage }
             ?: run {
                 blockDamage = 0f
@@ -99,7 +101,9 @@ class PlayerMobBehavior :
         }
 
         if (isHitting && isHittingWithDamage) {
+            println("hitting, damage : $blockDamage")
             blockDamage += 60f * delta * blockDamageMultiplier
+            println("hitting, damage : $blockDamage")
         }
     }
 }
