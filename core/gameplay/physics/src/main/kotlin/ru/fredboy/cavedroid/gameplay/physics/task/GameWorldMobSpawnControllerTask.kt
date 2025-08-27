@@ -51,7 +51,7 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
     companion object {
         private const val TAG = "GameWorldMobSpawnControllerTask"
 
-        private const val SPAWN_CHUNK_SIZE = 16
+        private const val SPAWN_CHUNK_SIZE = 64
 
         const val SPAWN_INTERVAL_SEC = GameWorld.DAY_DURATION_SEC / 4f
     }
