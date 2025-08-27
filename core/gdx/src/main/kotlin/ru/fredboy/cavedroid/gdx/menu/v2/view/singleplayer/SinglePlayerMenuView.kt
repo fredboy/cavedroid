@@ -44,7 +44,6 @@ suspend fun Stage.singlePlayerMenuView(viewModel: SinglePlayerMenuViewModel) = v
                                 expandX = true,
                                 fillX = true,
                                 height = 200f,
-                                padTop = 32f,
                                 padBottom = 32f,
                             )
 

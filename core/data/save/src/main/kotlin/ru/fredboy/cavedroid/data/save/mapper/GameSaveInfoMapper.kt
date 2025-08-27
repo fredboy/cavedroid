@@ -2,13 +2,15 @@ package ru.fredboy.cavedroid.data.save.mapper
 
 import com.badlogic.gdx.files.FileHandle
 import dagger.Reusable
+import ru.fredboy.cavedroid.common.utils.DateFormatter
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.save.model.GameSaveInfo
-import java.util.Date
 import javax.inject.Inject
 
 @Reusable
-internal class GameSaveInfoMapper @Inject constructor() {
+internal class GameSaveInfoMapper @Inject constructor(
+    private val dateFormatter: DateFormatter,
+) {
 
     fun map(
         dto: SaveDataDto.WorldSaveDataDto,
@@ -20,16 +22,11 @@ internal class GameSaveInfoMapper @Inject constructor() {
             version = dto.version,
             name = dto.name,
             directory = dir,
-            lastModifiedString = mapTimeCreated(dto.timestamp),
+            lastModifiedString = dateFormatter.format(dto.timestamp),
             lastModifiedTimestamp = dto.timestamp,
             gameMode = dto.gameMode,
             isSupported = dto.version == expectedVersion,
             screenshotHandle = screenshotHandle,
         )
-    }
-
-    private fun mapTimeCreated(timestamp: Long): String {
-        val dateTime = Date(timestamp)
-        return dateTime.toString()
     }
 }
