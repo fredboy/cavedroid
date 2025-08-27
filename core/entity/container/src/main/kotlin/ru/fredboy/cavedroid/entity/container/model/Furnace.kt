@@ -132,7 +132,11 @@ class Furnace(
             } else {
                 result.add()
             }
-            input.subtract()
+            if (input.item.isTool()) {
+                input.amount = 0
+            } else {
+                input.subtract()
+            }
             if (input.amount <= 0) {
                 input = fallbackItem.toInventoryItem()
             }
