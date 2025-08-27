@@ -89,7 +89,14 @@ class GameWorldLightManager @Inject constructor() :
         }
     }
 
-    override fun onBlockDestroyed(block: Block, x: Int, y: Int, layer: Layer, withDrop: Boolean) {
+    override fun onBlockDestroyed(
+        block: Block,
+        x: Int,
+        y: Int,
+        layer: Layer,
+        withDrop: Boolean,
+        destroyedByPlayer: Boolean,
+    ) {
         val light = blockLights.remove(Triple(x, y, layer))
         light?.remove(true)
     }

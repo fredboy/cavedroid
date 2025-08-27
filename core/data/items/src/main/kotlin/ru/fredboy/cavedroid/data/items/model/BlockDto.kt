@@ -19,12 +19,10 @@ data class BlockDto(
     @SerialName("transparent") val transparent: Boolean = false,
     @SerialName("block_required") val blockRequired: Boolean = false,
     @SerialName("allow_attach_to_neighbour") val allowAttachToNeighbour: Boolean = false,
-    @SerialName("drop") val drop: String,
     @SerialName("meta") val meta: String? = null,
     @SerialName("texture") val texture: String,
     @SerialName("animated") val animated: Boolean = false,
     @SerialName("frames") val frames: Int = 0,
-    @SerialName("drop_count") val dropCount: Int = 1,
     @SerialName("full_block") val fullBlock: String? = null,
     @SerialName("state") val state: Int? = null,
     @SerialName("other_part") val otherPart: String? = null,
@@ -36,4 +34,5 @@ data class BlockDto(
     @SerialName("density") val density: Float? = null,
     @SerialName("casts_shadows") val castShadows: Boolean = true,
     @SerialName("light_info") val lightInfo: BlockLightDto? = null,
+    @SerialName("drop_info") val dropInfo: List<BlockDropInfoDto> = listOf(),
 )

@@ -2,16 +2,17 @@ package ru.fredboy.cavedroid.data.save.mapper
 
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
-import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import javax.inject.Inject
 
 @Reusable
 class DropControllerMapper @Inject constructor(
     private val dropMapper: DropMapper,
-    private val itemsRepository: ItemsRepository,
+    private val getItemByKeyUseCase: GetItemByKeyUseCase,
 ) {
 
     fun mapSaveData(dropController: DropController): SaveDataDto.DropControllerSaveDataDto = SaveDataDto.DropControllerSaveDataDto(
@@ -23,6 +24,7 @@ class DropControllerMapper @Inject constructor(
         saveDataDto: SaveDataDto.DropControllerSaveDataDto,
         dropWorldAdapter: DropWorldAdapter,
         dropQueue: DropQueue,
+        playerAdapter: PlayerAdapter,
     ): DropController {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
@@ -32,7 +34,8 @@ class DropControllerMapper @Inject constructor(
             },
             dropWorldAdapter = dropWorldAdapter,
             dropQueue = dropQueue,
-            itemsRepository = itemsRepository,
+            getItemByKeyUseCase = getItemByKeyUseCase,
+            playerAdapter = playerAdapter,
         )
     }
 

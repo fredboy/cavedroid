@@ -119,13 +119,20 @@ class GameWorld @Inject constructor(
         }
     }
 
-    private fun notifyBlockDestroyed(x: Int, y: Int, layer: Layer, value: Block, withDrop: Boolean) {
+    private fun notifyBlockDestroyed(
+        x: Int,
+        y: Int,
+        layer: Layer,
+        value: Block,
+        withDrop: Boolean,
+        destroyedByPlayer: Boolean,
+    ) {
         onBlockDestroyedListeners.forEach { listener ->
-            listener.get()?.onBlockDestroyed(value, x, y, layer, withDrop)
+            listener.get()?.onBlockDestroyed(value, x, y, layer, withDrop, destroyedByPlayer)
         }
     }
 
-    private fun setMap(x: Int, y: Int, layer: Layer, value: Block, dropOld: Boolean) {
+    private fun setMap(x: Int, y: Int, layer: Layer, value: Block, dropOld: Boolean, destroyedByPlayer: Boolean) {
         if (y !in 0..<height) {
             return
         }
@@ -139,7 +146,7 @@ class GameWorld @Inject constructor(
         getMap(x, y, layer)
             .takeIf { !it.isNone() }
             ?.let { currentBlock ->
-                notifyBlockDestroyed(transformedX, y, layer, currentBlock, dropOld)
+                notifyBlockDestroyed(transformedX, y, layer, currentBlock, dropOld, destroyedByPlayer)
             }
 
         when (layer) {
@@ -162,8 +169,8 @@ class GameWorld @Inject constructor(
 
     fun getForeMap(x: Int, y: Int): Block = getMap(x, y, Layer.FOREGROUND)
 
-    fun setForeMap(x: Int, y: Int, block: Block, dropOld: Boolean = false) {
-        setMap(x, y, Layer.FOREGROUND, block, dropOld)
+    fun setForeMap(x: Int, y: Int, block: Block, dropOld: Boolean = false, destroyedByPlayer: Boolean = false) {
+        setMap(x, y, Layer.FOREGROUND, block, dropOld, destroyedByPlayer)
     }
 
     fun resetForeMap(x: Int, y: Int) {
@@ -172,20 +179,26 @@ class GameWorld @Inject constructor(
 
     fun getBackMap(x: Int, y: Int): Block = getMap(x, y, Layer.BACKGROUND)
 
-    fun setBackMap(x: Int, y: Int, block: Block, dropOld: Boolean = false) {
-        setMap(x, y, Layer.BACKGROUND, block, dropOld)
+    fun setBackMap(x: Int, y: Int, block: Block, dropOld: Boolean = false, destroyedByPlayer: Boolean = false) {
+        setMap(x, y, Layer.BACKGROUND, block, dropOld, destroyedByPlayer)
     }
 
     fun canPlaceToForeground(x: Int, y: Int, value: Block): Boolean {
         return !hasForeAt(x, y) || value.isNone() || !getForeMap(x, y).params.hasCollision
     }
 
-    fun placeToForeground(x: Int, y: Int, value: Block, dropOld: Boolean = false): Boolean {
+    fun placeToForeground(
+        x: Int,
+        y: Int,
+        value: Block,
+        dropOld: Boolean = false,
+        destroyedByPlayer: Boolean = false,
+    ): Boolean {
         val wasPlaced = if (canPlaceToForeground(x, y, value)) {
-            setForeMap(x, y, value, dropOld)
+            setForeMap(x, y, value, dropOld, destroyedByPlayer)
             true
         } else if (value is Block.Slab && isSameSlab(value, getForeMap(x, y))) {
-            setForeMap(x, y, itemsRepository.getBlockByKey(value.fullBlockKey), dropOld)
+            setForeMap(x, y, itemsRepository.getBlockByKey(value.fullBlockKey), dropOld, destroyedByPlayer)
             true
         } else {
             false
@@ -194,13 +207,19 @@ class GameWorld @Inject constructor(
         return wasPlaced
     }
 
-    fun placeToBackground(x: Int, y: Int, value: Block, dropOld: Boolean = false): Boolean {
+    fun placeToBackground(
+        x: Int,
+        y: Int,
+        value: Block,
+        dropOld: Boolean = false,
+        destroyedByPlayer: Boolean = false,
+    ): Boolean {
         val wasPlaced = if (value.isNone() ||
             getBackMap(x, y).isNone() &&
             value.params.hasCollision &&
             (!value.params.isTransparent || value.params.key == "glass" || value.isChest() || value.isSlab())
         ) {
-            setBackMap(x, y, value, dropOld)
+            setBackMap(x, y, value, dropOld, destroyedByPlayer)
             true
         } else {
             false
@@ -209,12 +228,12 @@ class GameWorld @Inject constructor(
         return wasPlaced
     }
 
-    fun destroyForeMap(x: Int, y: Int, shouldDrop: Boolean) {
-        placeToForeground(x, y, itemsRepository.fallbackBlock, shouldDrop)
+    fun destroyForeMap(x: Int, y: Int, shouldDrop: Boolean, destroyedByPlayer: Boolean = false) {
+        placeToForeground(x, y, itemsRepository.fallbackBlock, shouldDrop, destroyedByPlayer)
     }
 
-    fun destroyBackMap(x: Int, y: Int, shouldDrop: Boolean) {
-        placeToBackground(x, y, itemsRepository.fallbackBlock, shouldDrop)
+    fun destroyBackMap(x: Int, y: Int, shouldDrop: Boolean, destroyedByPlayer: Boolean = false) {
+        placeToBackground(x, y, itemsRepository.fallbackBlock, shouldDrop, destroyedByPlayer)
     }
 
     /**

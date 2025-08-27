@@ -2,10 +2,14 @@ package ru.fredboy.cavedroid.data.items.repository
 
 import com.badlogic.gdx.Gdx
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 import ru.fredboy.cavedroid.data.items.mapper.BlockMapper
 import ru.fredboy.cavedroid.data.items.mapper.ItemMapper
 import ru.fredboy.cavedroid.data.items.model.BlockDto
 import ru.fredboy.cavedroid.data.items.model.CraftingDto
+import ru.fredboy.cavedroid.data.items.model.DropAmountDto
 import ru.fredboy.cavedroid.data.items.model.GameItemsDto
 import ru.fredboy.cavedroid.data.items.model.ItemDto
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -168,7 +172,17 @@ internal class ItemsRepositoryImpl @Inject constructor(
     companion object {
         private const val TAG = "ItemsRepositoryImpl"
 
-        private val JsonFormat = Json { ignoreUnknownKeys = true }
+        private val JsonFormat = Json {
+            serializersModule = SerializersModule {
+                polymorphic(DropAmountDto::class) {
+                    subclass(DropAmountDto.ExactAmount::class)
+                    subclass(DropAmountDto.RandomRange::class)
+                    subclass(DropAmountDto.RandomChance::class)
+                }
+            }
+            ignoreUnknownKeys = true
+            classDiscriminator = "type"
+        }
 
         const val FALLBACK_BLOCK_KEY = "none"
         const val FALLBACK_ITEM_KEY = "none"

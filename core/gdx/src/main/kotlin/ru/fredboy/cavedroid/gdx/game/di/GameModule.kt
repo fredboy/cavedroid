@@ -18,6 +18,7 @@ import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -35,21 +36,24 @@ object GameModule {
         applicationContextRepository: ApplicationContextRepository,
         gameContextRepository: GameContextRepository,
         saveDataRepository: SaveDataRepository,
-        itemsRepository: ItemsRepository,
         dropWorldAdapter: DropWorldAdapter,
         dropQueue: DropQueue,
+        playerAdapter: PlayerAdapter,
+        getItemByKeyUseCase: GetItemByKeyUseCase,
     ): DropController = if (gameContextRepository.isLoadGame()) {
         saveDataRepository.loadDropController(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
             saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
             dropWorldAdapter = dropWorldAdapter,
             dropQueue = dropQueue,
+            playerAdapter = playerAdapter,
         )
     } else {
         DropController(
-            itemsRepository = itemsRepository,
             dropWorldAdapter = dropWorldAdapter,
             dropQueue = dropQueue,
+            playerAdapter = playerAdapter,
+            getItemByKeyUseCase = getItemByKeyUseCase,
         )
     }
 

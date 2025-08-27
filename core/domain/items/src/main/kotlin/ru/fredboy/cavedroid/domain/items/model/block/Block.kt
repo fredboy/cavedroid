@@ -2,12 +2,15 @@ package ru.fredboy.cavedroid.domain.items.model.block
 
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.utils.PIXELS_PER_METER
 import ru.fredboy.cavedroid.common.utils.colorFromHexString
 import ru.fredboy.cavedroid.common.utils.meters
+import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
@@ -142,6 +145,42 @@ sealed class Block {
         /* width = */ spriteWidthMeters,
         /* height = */ spriteHeightMeters,
     )
+
+    fun getDropItem(itemByKey: GetItemByKeyUseCase, toolRequirementMet: Boolean): InventoryItem? {
+        if (params.dropInfo.isEmpty()) {
+            return null
+        }
+
+        for (info in params.dropInfo) {
+            if (info.requiresTool && !toolRequirementMet) {
+                continue
+            }
+
+            when (info.amount) {
+                is BlockDropAmount.ExactAmount -> {
+                    return InventoryItem(itemByKey[info.itemKey], info.amount.amount)
+                }
+
+                is BlockDropAmount.RandomChance -> {
+                    if (MathUtils.randomBoolean(info.amount.chance)) {
+                        return InventoryItem(itemByKey[info.itemKey], info.amount.amount)
+                    } else {
+                        continue
+                    }
+                }
+
+                is BlockDropAmount.RandomRange -> {
+                    if (MathUtils.randomBoolean(info.amount.chance)) {
+                        return InventoryItem(itemByKey[info.itemKey], info.amount.range.random())
+                    } else {
+                        continue
+                    }
+                }
+            }
+        }
+
+        return null
+    }
 
     sealed class Container : Block()
 

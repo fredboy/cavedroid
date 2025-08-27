@@ -20,9 +20,9 @@ interface MobWorldAdapter {
 
     fun getBackgroundBlock(x: Int, y: Int): Block
 
-    fun destroyForegroundBlock(x: Int, y: Int, shouldDrop: Boolean)
+    fun destroyForegroundBlock(x: Int, y: Int, shouldDrop: Boolean, destroyedByPlayer: Boolean)
 
-    fun destroyBackgroundBlock(x: Int, y: Int, shouldDrop: Boolean)
+    fun destroyBackgroundBlock(x: Int, y: Int, shouldDrop: Boolean, destroyedByPlayer: Boolean)
 
     fun findSpawnPoint(): Vector2
 

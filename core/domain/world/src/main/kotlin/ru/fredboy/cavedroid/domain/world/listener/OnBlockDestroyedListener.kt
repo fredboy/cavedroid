@@ -5,5 +5,5 @@ import ru.fredboy.cavedroid.domain.world.model.Layer
 
 fun interface OnBlockDestroyedListener {
 
-    fun onBlockDestroyed(block: Block, x: Int, y: Int, layer: Layer, withDrop: Boolean)
+    fun onBlockDestroyed(block: Block, x: Int, y: Int, layer: Layer, withDrop: Boolean, destroyedByPlayer: Boolean)
 }

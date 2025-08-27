@@ -3,74 +3,145 @@
     "none": {
       "collision": false,
       "transparent": true,
-      "drop": "none",
       "texture": "none",
       "meta": "none",
       "casts_shadows": false
     },
     "stone": {
       "hp": 450,
-      "drop": "cobblestone",
       "texture": "stone",
       "tool_level": 1,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "cobblestone",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "grass": {
       "hp": 54,
-      "drop": "dirt",
       "texture": "grass",
       "tool_level": 0,
-      "tool_type": "shovel"
+      "tool_type": "shovel",
+      "drop_info": [
+        {
+          "key": "dirt",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "grass_snowed": {
       "hp": 54,
-      "drop": "dirt",
       "texture": "grass_snowed",
       "tool_level": 0,
-      "tool_type": "shovel"
+      "tool_type": "shovel",
+      "drop_info": [
+        {
+          "key": "dirt",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "dirt": {
       "hp": 45,
-      "drop": "dirt",
       "texture": "dirt",
       "tool_level": 0,
-      "tool_type": "shovel"
+      "tool_type": "shovel",
+      "drop_info": [
+        {
+          "key": "dirt",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "cobblestone": {
       "hp": 600,
-      "drop": "cobblestone",
       "texture": "cobblestone",
       "tool_level": 1,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "cobblestone",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "planks_oak": {
       "hp": 180,
-      "drop": "planks_oak",
       "texture": "planks_oak",
       "tool_level": 0,
-      "tool_type": "axe"
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "planks_oak",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "planks_spruce": {
       "hp": 180,
-      "drop": "planks_spruce",
       "texture": "planks_spruce",
       "tool_level": 0,
-      "tool_type": "axe"
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "planks_spruce",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "crafting_table": {
       "hp": 180,
-      "drop": "crafting_table",
       "texture": "crafting_table",
       "tool_level": 0,
-      "tool_type": "axe"
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "crafting_table",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "sapling_oak": {
       "collision": false,
       "transparent": true,
       "block_required": true,
-      "drop": "sapling_oak",
       "texture": "sapling_oak",
-      "hp": 0
+      "hp": 0,
+      "drop_info": [
+        {
+          "key": "sapling_oak",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "sapling_spruce": {
       "collision": false,
@@ -78,16 +149,23 @@
       "block_required": true,
       "drop": "sapling_spruce",
       "texture": "sapling_spruce",
-      "hp": 0
+      "hp": 0,
+      "drop_info": [
+        {
+          "key": "sapling_spruce",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "bedrock": {
-      "drop": "bedrock",
       "texture": "bedrock"
     },
     "water": {
       "collision": false,
       "transparent": true,
-      "drop": "water",
       "meta": "water",
       "texture": "water_still",
       "animated": true,
@@ -98,7 +176,6 @@
     },
     "lava": {
       "collision": false,
-      "drop": "lava",
       "meta": "lava",
       "texture": "lava_still",
       "animated": true,
@@ -113,196 +190,453 @@
     },
     "sand": {
       "hp": 45,
-      "drop": "sand",
       "texture": "sand",
       "tool_level": 0,
       "tool_type": "shovel",
-      "fallable": true
+      "fallable": true,
+      "drop_info": [
+        {
+          "key": "sand",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "gravel": {
       "hp": 54,
-      "drop": "gravel",
       "texture": "gravel",
       "tool_level": 0,
       "tool_type": "shovel",
-      "fallable": true
+      "fallable": true,
+      "drop_info": [
+        {
+          "key": "flint",
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.1,
+            "amount": 1
+          }
+        },
+        {
+          "key": "gravel",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "gold_ore": {
       "hp": 900,
-      "drop": "gold_ore",
       "texture": "gold_ore",
       "tool_level": 3,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "gold_ore",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "iron_ore": {
       "hp": 900,
       "drop": "iron_ore",
       "texture": "iron_ore",
       "tool_level": 2,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "iron_ore",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "coal_ore": {
       "hp": 900,
-      "drop": "coal",
       "texture": "coal_ore",
       "tool_level": 1,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "coal",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "diamond_ore": {
       "hp": 900,
-      "drop": "diamond",
       "texture": "diamond_ore",
       "tool_level": 3,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "diamond",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "diamond_block": {
       "hp": 1500,
-      "drop": "diamond_block",
       "texture": "diamond_block",
       "tool_level": 3,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "diamond_block",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "log_oak": {
       "hp": 180,
-      "drop": "log_oak",
       "texture": "log_oak",
       "tool_level": 0,
-      "tool_type": "axe"
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "log_oak",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "leaves_oak": {
       "hp": 21,
-      "drop": "leaves_oak",
       "texture": "leaves_oak",
       "tool_level": 1,
       "tool_type": "shears",
       "tint": "#5AC557",
-      "casts_shadows": false
+      "casts_shadows": false,
+      "drop_info": [
+        {
+          "key": "leaves_oak",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        },
+        {
+          "key": "sapling_oak",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.05,
+            "amount": 1
+          }
+        },
+        {
+          "key": "apple",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.01,
+            "amount": 1
+          }
+        },
+        {
+          "key": "stick",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_range",
+            "min": 1,
+            "max": 2,
+            "chance": 0.02
+          }
+        }
+      ]
     },
     "log_spruce": {
       "hp": 180,
-      "drop": "log_spruce",
       "texture": "log_spruce",
       "tool_level": 0,
-      "tool_type": "axe"
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "log_spruce",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "leaves_spruce": {
       "hp": 21,
-      "drop": "leaves_spruce",
       "texture": "leaves_spruce",
       "tool_level": 1,
       "tool_type": "shears",
       "tint": "#486D4E",
-      "casts_shadows": false
+      "casts_shadows": false,
+      "drop_info": [
+        {
+          "key": "leaves_spruce",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        },
+        {
+          "key": "sapling_spruce",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.05,
+            "amount": 1
+          }
+        },
+        {
+          "key": "stick",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_range",
+            "min": 1,
+            "max": 2,
+            "chance": 0.02
+          }
+        }
+      ]
     },
     "sponge": {
       "hp": 54,
-      "drop": "sponge",
       "texture": "sponge",
       "tool_level": 0,
-      "tool_type": "hoe"
+      "tool_type": "hoe",
+      "drop_info": [
+        {
+          "key": "sponge",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "glass": {
       "hp": 27,
       "transparent": true,
-      "drop": "none",
       "texture": "glass",
       "casts_shadows": false
     },
     "lapis_ore": {
       "hp": 900,
-      "drop": "lapis",
       "texture": "lapis_ore",
       "tool_level": 2,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "lapis_lazuli",
+          "amount": {
+            "type": "random_range",
+            "min": 4,
+            "max": 9,
+            "chance": 1
+          }
+        }
+      ]
     },
     "lapis_block": {
       "hp": 900,
-      "drop": "lapis_block",
       "texture": "lapis_block",
       "tool_level": 2,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "lapis_block",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "sandstone": {
       "hp": 240,
-      "drop": "sandstone",
       "texture": "sandstone",
       "tool_level": 1,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "sandstone",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "noteblock": {
       "hp": 75,
       "drop": "noteblock",
       "texture": "noteblock",
       "tool_level": 0,
-      "tool_type": "axe"
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "noteblock",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "bed_l": {
       "hp": 21,
       "collision": false,
       "background": true,
       "transparent": true,
-      "drop": "bed",
       "texture": "bed_l",
       "tool_level": 0,
       "tool_type": "axe",
-      "casts_shadows": false
+      "casts_shadows": false,
+      "drop_info": [
+        {
+          "key": "bed",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "bed_r": {
       "hp": 21,
       "collision": false,
       "background": true,
       "transparent": true,
-      "drop": "bed",
       "texture": "bed_r",
       "tool_level": 0,
       "tool_type": "axe",
-      "casts_shadows": false
+      "casts_shadows": false,
+      "drop_info": [
+        {
+          "key": "bed",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "web": {
       "hp": 1200,
       "collision": false,
       "transparent": true,
-      "drop": "web",
       "texture": "web",
       "tool_level": 1,
       "tool_type": "shears",
-      "casts_shadows": false
+      "casts_shadows": false,
+      "drop_info": [
+        {
+          "key": "web",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "tallgrass": {
       "collision": false,
       "transparent": true,
       "block_required": true,
-      "drop": "tallgrass",
       "texture": "tallgrass",
       "tool_level": 1,
       "tool_type": "shears",
       "tint": "#5AC557",
-      "hp": 0
+      "hp": 0,
+      "drop_info": [
+        {
+          "key": "tallgrass",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "deadbush": {
       "collision": false,
       "transparent": true,
       "block_required": true,
-      "drop": "deadbush",
       "texture": "deadbush",
       "tool_level": 1,
       "tool_type": "shears",
-      "hp": 0
+      "hp": 0,
+      "drop_info": [
+        {
+          "key": "deadbush",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "bricks": {
       "hp": 600,
-      "drop": "bricks",
       "texture": "bricks",
       "tool_level": 1,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "bricks",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
+    },
+    "clay": {
+      "hp": 54,
+      "texture": "clay",
+      "tool_level": 0,
+      "tool_type": "shovel",
+      "drop_info": [
+        {
+          "key": "clay_ball",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 4
+          }
+        }
+      ]
     },
     "dandelion": {
       "collision": false,
       "transparent": true,
       "block_required": true,
-      "drop": "dandelion",
       "texture": "dandelion",
-      "hp": 0
+      "hp": 0,
+      "drop_info": [
+        {
+          "key": "dandelion",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "rose": {
       "collision": false,
@@ -310,7 +644,16 @@
       "block_required": true,
       "drop": "rose",
       "texture": "rose",
-      "hp": 0
+      "hp": 0,
+      "drop_info": [
+        {
+          "key": "rose",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "mushroom_brown": {
       "collision": false,
@@ -318,7 +661,16 @@
       "block_required": true,
       "drop": "mushroom_brown",
       "texture": "mushroom_brown",
-      "hp": 0
+      "hp": 0,
+      "drop_info": [
+        {
+          "key": "mushroom_brown",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "mushroom_red": {
       "collision": false,
@@ -326,133 +678,304 @@
       "block_required": true,
       "drop": "mushroom_red",
       "texture": "mushroom_red",
-      "hp": 0
+      "hp": 0,
+      "drop_info": [
+        {
+          "key": "mushroom_red",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "wool_colored_white": {
       "hp": 75,
       "drop": "wool_colored_white",
       "texture": "wool_colored_white",
       "tool_level": 0,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "drop_info": [
+        {
+          "key": "wool_colored_white",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "wool_colored_orange": {
       "hp": 75,
       "drop": "wool_colored_orange",
       "texture": "wool_colored_orange",
       "tool_level": 0,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "drop_info": [
+        {
+          "key": "wool_colored_orange",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "wool_colored_magenta": {
       "hp": 75,
       "drop": "wool_colored_magenta",
       "texture": "wool_colored_magenta",
       "tool_level": 0,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "drop_info": [
+        {
+          "key": "wool_colored_magenta",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "wool_colored_light_blue": {
       "hp": 75,
       "drop": "wool_colored_light_blue",
       "texture": "wool_colored_light_blue",
       "tool_level": 0,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "drop_info": [
+        {
+          "key": "wool_colored_light_blue",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "wool_colored_yellow": {
       "hp": 75,
       "drop": "wool_colored_yellow",
       "texture": "wool_colored_yellow",
       "tool_level": 0,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "drop_info": [
+        {
+          "key": "wool_colored_yellow",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "wool_colored_lime": {
       "hp": 75,
       "drop": "wool_colored_lime",
       "texture": "wool_colored_lime",
       "tool_level": 0,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "drop_info": [
+        {
+          "key": "wool_colored_lime",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "wool_colored_pink": {
       "hp": 75,
       "drop": "wool_colored_pink",
       "texture": "wool_colored_pink",
       "tool_level": 0,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "drop_info": [
+        {
+          "key": "wool_colored_pink",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "wool_colored_gray": {
       "hp": 75,
       "drop": "wool_colored_gray",
       "texture": "wool_colored_gray",
       "tool_level": 0,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "drop_info": [
+        {
+          "key": "wool_colored_gray",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "wool_colored_silver": {
       "hp": 75,
       "drop": "wool_colored_silver",
       "texture": "wool_colored_silver",
       "tool_level": 0,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "drop_info": [
+        {
+          "key": "wool_colored_silver",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "wool_colored_cyan": {
       "hp": 75,
       "drop": "wool_colored_cyan",
       "texture": "wool_colored_cyan",
       "tool_level": 0,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "drop_info": [
+        {
+          "key": "wool_colored_cyan",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "wool_colored_purple": {
       "hp": 75,
       "drop": "wool_colored_purple",
       "texture": "wool_colored_purple",
       "tool_level": 0,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "drop_info": [
+        {
+          "key": "wool_colored_purple",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "wool_colored_blue": {
       "hp": 75,
       "drop": "wool_colored_blue",
       "texture": "wool_colored_blue",
       "tool_level": 0,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "drop_info": [
+        {
+          "key": "wool_colored_blue",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "wool_colored_brown": {
       "hp": 75,
       "drop": "wool_colored_brown",
       "texture": "wool_colored_brown",
       "tool_level": 0,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "drop_info": [
+        {
+          "key": "wool_colored_brown",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "wool_colored_green": {
       "hp": 75,
       "drop": "wool_colored_green",
       "texture": "wool_colored_green",
       "tool_level": 0,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "drop_info": [
+        {
+          "key": "wool_colored_green",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "wool_colored_red": {
       "hp": 75,
       "drop": "wool_colored_red",
       "texture": "wool_colored_red",
       "tool_level": 0,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "drop_info": [
+        {
+          "key": "wool_colored_red",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "wool_colored_black": {
       "hp": 75,
       "drop": "wool_colored_black",
       "texture": "wool_colored_black",
       "tool_level": 0,
-      "tool_type": "shears"
+      "tool_type": "shears",
+      "drop_info": [
+        {
+          "key": "wool_colored_black",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "gold_block": {
       "hp": 900,
       "drop": "gold_block",
       "texture": "gold_block",
       "tool_level": 3,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "gold_block",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "iron_block": {
       "hp": 1500,
       "drop": "iron_block",
       "texture": "iron_block",
       "tool_level": 2,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "iron_block",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "stone_slab_bottom": {
       "top": 8,
@@ -465,7 +988,16 @@
       "full_block": "double_stone_slab",
       "other_part": "stone_slab_top",
       "tool_level": 1,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "stone_slab",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "stone_slab_top": {
       "hp": 600,
@@ -478,7 +1010,16 @@
       "full_block": "double_stone_slab",
       "other_part": "stone_slab_bottom",
       "tool_level": 1,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "stone_slab",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "double_stone_slab": {
       "hp": 600,
@@ -486,7 +1027,16 @@
       "drop_count": 2,
       "texture": "stone_slab",
       "tool_level": 1,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "stone_slab",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "sandstone_slab_bottom": {
       "top": 8,
@@ -499,7 +1049,16 @@
       "full_block": "sandstone",
       "other_part": "sandstone_slab_top",
       "tool_level": 1,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "sandstone_slab",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "sandstone_slab_top": {
       "bottom": 8,
@@ -512,7 +1071,16 @@
       "full_block": "sandstone",
       "other_part": "sandstone_slab_bottom",
       "tool_level": 1,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "sandstone_slab",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "oak_slab_bottom": {
       "top": 8,
@@ -525,7 +1093,16 @@
       "full_block": "planks_oak",
       "other_part": "oak_slab_top",
       "tool_level": 0,
-      "tool_type": "axe"
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "oak_slab",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "oak_slab_top": {
       "bottom": 8,
@@ -538,7 +1115,16 @@
       "full_block": "planks_oak",
       "other_part": "oak_slab_bottom",
       "tool_level": 0,
-      "tool_type": "axe"
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "oak_slab",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "spruce_slab_bottom": {
       "top": 8,
@@ -551,7 +1137,16 @@
       "full_block": "planks_spruce",
       "other_part": "spruce_slab_top",
       "tool_level": 0,
-      "tool_type": "axe"
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "spruce_slab",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "spruce_slab_top": {
       "bottom": 8,
@@ -564,7 +1159,16 @@
       "full_block": "planks_spruce",
       "other_part": "spruce_slab_bottom",
       "tool_level": 0,
-      "tool_type": "axe"
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "spruce_slab",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "cobblestone_slab_bottom": {
       "top": 8,
@@ -577,7 +1181,16 @@
       "full_block": "cobblestone",
       "other_part": "cobblestone_slab_top",
       "tool_level": 1,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "cobblestone_slab",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "cobblestone_slab_top": {
       "bottom": 8,
@@ -590,7 +1203,16 @@
       "full_block": "cobblestone",
       "other_part": "cobblestone_slab_bottom",
       "tool_level": 1,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "cobblestone_slab",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "brick_slab_bottom": {
       "top": 8,
@@ -603,7 +1225,16 @@
       "full_block": "bricks",
       "other_part": "brick_slab_top",
       "tool_level": 1,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "brick_slab",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "brick_slab_top": {
       "bottom": 8,
@@ -616,14 +1247,32 @@
       "full_block": "bricks",
       "other_part": "brick_slab_bottom",
       "tool_level": 1,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "brick_slab",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "stonebrick": {
       "hp": 450,
       "drop": "stonebrick",
       "texture": "stonebrick",
       "tool_level": 1,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "stonebrick",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "stonebrick_slab_bottom": {
       "top": 8,
@@ -636,7 +1285,16 @@
       "full_block": "stonebrick",
       "other_part": "stonebrick_slab_top",
       "tool_level": 1,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "stonebrick_slab",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "stonebrick_slab_top": {
       "bottom": 8,
@@ -649,7 +1307,16 @@
       "full_block": "stonebrick",
       "other_part": "brick_slab_bottom",
       "tool_level": 1,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "stonebrick_slab",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "cactus": {
       "left": 1,
@@ -660,7 +1327,16 @@
       "drop": "cactus",
       "texture": "cactus",
       "damage": 1,
-      "casts_shadows": false
+      "casts_shadows": false,
+      "drop_info": [
+        {
+          "key": "cactus",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "water_16": {
       "collision": false,
@@ -790,7 +1466,16 @@
       "drop": "obsidian",
       "texture": "obsidian",
       "tool_level": 4,
-      "tool_type": "pickaxe"
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "obsidian",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "snow": {
       "top": 14,
@@ -802,7 +1487,16 @@
       "hp": 6,
       "tool_level": 1,
       "tool_type": "shovel",
-      "block_required": true
+      "block_required": true,
+      "drop_info": [
+        {
+          "key": "snowball",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "snow_block": {
       "collision": true,
@@ -812,7 +1506,16 @@
       "texture": "snow",
       "hp": 60,
       "tool_level": 1,
-      "tool_type": "shovel"
+      "tool_type": "shovel",
+      "drop_info": [
+        {
+          "key": "snowball",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 4
+          }
+        }
+      ]
     },
     "furnace": {
       "hp": 1050,
@@ -824,7 +1527,16 @@
       "frames": 2,
       "tool_level": 1,
       "tool_type": "pickaxe",
-      "meta": "furnace"
+      "meta": "furnace",
+      "drop_info": [
+        {
+          "key": "furnace",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "chest": {
       "hp": 180,
@@ -840,7 +1552,16 @@
       "right": 1,
       "sprite_top": 2,
       "sprite_left": 1,
-      "sprite_right": 1
+      "sprite_right": 1,
+      "drop_info": [
+        {
+          "key": "chest",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     },
     "torch": {
       "hp": 1,
@@ -855,7 +1576,16 @@
       "casts_shadows": false,
       "light_info": {
         "light_distance": 13
-      }
+      },
+      "drop_info": [
+        {
+          "key": "torch",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     }
   },
   "items": {
@@ -1039,6 +1769,11 @@
       "name": "Bricks",
       "type": "block",
       "texture": "bricks"
+    },
+    "clay": {
+      "name": "Clay",
+      "type": "block",
+      "texture": "clay"
     },
     "dandelion": {
       "name": "Dandelion",
@@ -1536,10 +2271,30 @@
       "name": "Rotten Flesh",
       "type": "food",
       "texture": "rotten_flesh",
-      "action_key": "use_rotten_flesh_action",
       "origin_x": 0,
       "origin_y": 1,
       "heal": -2
+    },
+    "flint": {
+      "name": "Flint",
+      "texture": "flint"
+    },
+    "clay_ball": {
+      "name": "Clay ball",
+      "texture": "clay_ball",
+      "smelt_product": "brick"
+    },
+    "brick": {
+      "name": "Brick",
+      "texture": "brick"
+    },
+    "apple": {
+      "name": "Apple",
+      "type": "food",
+      "texture": "apple",
+      "origin_x": 0,
+      "origin_y": 1,
+      "heal": 4
     }
   }
 }

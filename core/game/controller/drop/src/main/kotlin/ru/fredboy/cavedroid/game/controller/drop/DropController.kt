@@ -4,33 +4,37 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
-import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.drop.model.Drop
+import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import java.util.*
 import javax.inject.Inject
 
 @GameScope
 class DropController @Inject constructor(
-    private val itemsRepository: ItemsRepository,
     private val dropWorldAdapter: DropWorldAdapter,
     private val dropQueue: DropQueue,
+    private val playerAdapter: PlayerAdapter,
+    private val getItemByKeyUseCase: GetItemByKeyUseCase,
 ) : OnBlockDestroyedListener {
 
     private val drops = LinkedList<Drop>()
 
     constructor(
-        itemsRepository: ItemsRepository,
         dropWorldAdapter: DropWorldAdapter,
         dropQueue: DropQueue,
         initialDrop: Collection<Drop>,
-    ) : this(itemsRepository, dropWorldAdapter, dropQueue) {
+        playerAdapter: PlayerAdapter,
+        getItemByKeyUseCase: GetItemByKeyUseCase,
+    ) : this(dropWorldAdapter, dropQueue, playerAdapter, getItemByKeyUseCase) {
         drops.addAll(initialDrop.filterNot { drop -> drop.item.isNone() })
     }
 
@@ -103,21 +107,37 @@ class DropController @Inject constructor(
         drops.clear()
     }
 
-    override fun onBlockDestroyed(block: Block, x: Int, y: Int, layer: Layer, withDrop: Boolean) {
+    override fun onBlockDestroyed(
+        block: Block,
+        x: Int,
+        y: Int,
+        layer: Layer,
+        withDrop: Boolean,
+        destroyedByPlayer: Boolean,
+    ) {
         if (!withDrop) {
             return
         }
 
-        val dropInfo = block.params.dropInfo ?: return
-        val item = itemsRepository.getItemByKey(dropInfo.itemKey).takeIf { !it.isNone() } ?: return
+        val toolRequirementMet = destroyedByPlayer.ifTrue {
+            playerAdapter.activeItem.item.let { itemInHand ->
+                val toolLevel = (itemInHand as? Item.Tool)?.level?.takeIf {
+                    block.params.toolType == itemInHand.javaClass
+                } ?: 0
 
-        addDrop(
-            x = x + .5f,
-            y = y + .5f,
-            item = item,
-            count = dropInfo.count,
-            initialForce = getRandomInitialForce(),
-        )
+                toolLevel >= block.params.toolLevel
+            }
+        } ?: false
+
+        block.getDropItem(getItemByKeyUseCase, toolRequirementMet)?.let { dropItem ->
+            addDrop(
+                x = x + .5f,
+                y = y + .5f,
+                item = dropItem.item,
+                count = dropItem.amount,
+                initialForce = getRandomInitialForce(),
+            )
+        }
     }
 
     companion object {

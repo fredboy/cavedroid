@@ -46,12 +46,12 @@ internal class WorldAdapterImpl @Inject constructor(
 
     override fun getBackgroundBlock(x: Int, y: Int): Block = gameWorld.getBackMap(x, y)
 
-    override fun destroyForegroundBlock(x: Int, y: Int, shouldDrop: Boolean) {
-        gameWorld.destroyForeMap(x, y, shouldDrop)
+    override fun destroyForegroundBlock(x: Int, y: Int, shouldDrop: Boolean, destroyedByPlayer: Boolean) {
+        gameWorld.destroyForeMap(x, y, shouldDrop, destroyedByPlayer)
     }
 
-    override fun destroyBackgroundBlock(x: Int, y: Int, shouldDrop: Boolean) {
-        gameWorld.destroyBackMap(x, y, shouldDrop)
+    override fun destroyBackgroundBlock(x: Int, y: Int, shouldDrop: Boolean, destroyedByPlayer: Boolean) {
+        gameWorld.destroyBackMap(x, y, shouldDrop, destroyedByPlayer)
     }
 
     override fun findSpawnPoint(): Vector2 {

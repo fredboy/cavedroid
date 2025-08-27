@@ -7,7 +7,7 @@ data class CommonBlockParams(
     val key: String,
     val collisionMargins: BlockInsets.Meters,
     val hitPoints: Int,
-    val dropInfo: BlockDropInfo?,
+    val dropInfo: List<BlockDropInfo>,
     val hasCollision: Boolean,
     val isBackground: Boolean,
     val isTransparent: Boolean,

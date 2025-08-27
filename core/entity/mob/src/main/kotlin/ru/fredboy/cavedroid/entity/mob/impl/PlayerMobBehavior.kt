@@ -38,21 +38,24 @@ class PlayerMobBehavior :
         when (gameMode) {
             GameMode.SURVIVAL -> {
                 if (blockDamage >= targetBlock.params.hitPoints) {
-                    val shouldDrop = activeItem.item.let { itemInHand ->
-                        val toolLevel = (itemInHand as? Item.Tool)?.level?.takeIf {
-                            targetBlock.params.toolType == itemInHand.javaClass
-                        } ?: 0
-
-                        toolLevel >= targetBlock.params.toolLevel
-                    }
-
                     if (activeItem.item.isTool()) {
                         decreaseCurrentItemCount()
                     }
 
                     when (targetLayer) {
-                        Layer.FOREGROUND -> worldAdapter.destroyForegroundBlock(selectedX, selectedY, shouldDrop)
-                        Layer.BACKGROUND -> worldAdapter.destroyBackgroundBlock(selectedX, selectedY, shouldDrop)
+                        Layer.FOREGROUND -> worldAdapter.destroyForegroundBlock(
+                            x = selectedX,
+                            y = selectedY,
+                            shouldDrop = true,
+                            destroyedByPlayer = true,
+                        )
+
+                        Layer.BACKGROUND -> worldAdapter.destroyBackgroundBlock(
+                            x = selectedX,
+                            y = selectedY,
+                            shouldDrop = true,
+                            destroyedByPlayer = true,
+                        )
                     }
                     blockDamage = 0f
                 }
@@ -60,8 +63,19 @@ class PlayerMobBehavior :
 
             GameMode.CREATIVE -> {
                 when (targetLayer) {
-                    Layer.FOREGROUND -> worldAdapter.destroyForegroundBlock(selectedX, selectedY, false)
-                    Layer.BACKGROUND -> worldAdapter.destroyBackgroundBlock(selectedX, selectedY, false)
+                    Layer.FOREGROUND -> worldAdapter.destroyForegroundBlock(
+                        x = selectedX,
+                        y = selectedY,
+                        shouldDrop = false,
+                        destroyedByPlayer = true,
+                    )
+
+                    Layer.BACKGROUND -> worldAdapter.destroyBackgroundBlock(
+                        x = selectedX,
+                        y = selectedY,
+                        shouldDrop = false,
+                        destroyedByPlayer = true,
+                    )
                 }
                 stopHitting()
             }

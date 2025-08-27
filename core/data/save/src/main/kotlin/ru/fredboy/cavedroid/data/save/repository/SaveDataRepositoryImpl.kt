@@ -28,6 +28,7 @@ import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -339,6 +340,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         saveGameDirectory: String,
         dropWorldAdapter: DropWorldAdapter,
         dropQueue: DropQueue,
+        playerAdapter: PlayerAdapter,
     ): DropController {
         val savesPath = getSavePath(gameDataFolder, saveGameDirectory)
         val dropFile = Gdx.files.absolute("$savesPath/$DROP_FILE")
@@ -350,6 +352,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
                     saveDataDto = saveData,
                     dropWorldAdapter = dropWorldAdapter,
                     dropQueue = dropQueue,
+                    playerAdapter = playerAdapter,
                 )
             }
     }

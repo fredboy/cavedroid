@@ -98,7 +98,14 @@ class ContainerController @Inject constructor(
         containerWorldAdapter.removeOnBlockDestroyedListener(this)
     }
 
-    override fun onBlockDestroyed(block: Block, x: Int, y: Int, layer: Layer, withDrop: Boolean) {
+    override fun onBlockDestroyed(
+        block: Block,
+        x: Int,
+        y: Int,
+        layer: Layer,
+        withDrop: Boolean,
+        destroyedByPlayer: Boolean,
+    ) {
         destroyContainer(x, y, layer.z)
     }
 
