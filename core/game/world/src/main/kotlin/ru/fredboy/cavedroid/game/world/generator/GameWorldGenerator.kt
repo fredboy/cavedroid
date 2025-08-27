@@ -1,11 +1,13 @@
 package ru.fredboy.cavedroid.game.world.generator
 
+import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
+import kotlin.random.nextInt
 
 class GameWorldGenerator(
     private val config: WorldGeneratorConfig,
@@ -73,6 +75,7 @@ class GameWorldGenerator(
         val dirt = itemsRepository.getBlockByKey("dirt")
         val stone = itemsRepository.getBlockByKey("stone")
         val snow = itemsRepository.getBlockByKey("snow")
+        val clay = itemsRepository.getBlockByKey("clay")
 
         foreMap[x][surfaceHeight] = grass
         foreMap[x][config.height - 1] = bedrock
@@ -90,7 +93,13 @@ class GameWorldGenerator(
             }
 
             foreMap[x][y] = when {
-                y < surfaceHeight + random.nextInt(5, 8) -> dirt
+                y < surfaceHeight + random.nextInt(
+                    from = 5,
+                    until = 8,
+                ) -> (surfaceHeight > config.seaLevel && random.nextInt(100) < 20).ifTrue {
+                    clay
+                } ?: dirt
+
                 else -> stone
             }
             backMap[x][y] = foreMap[x][y]
@@ -113,6 +122,7 @@ class GameWorldGenerator(
         val bedrock = itemsRepository.getBlockByKey("bedrock")
         val dirt = itemsRepository.getBlockByKey("dirt")
         val stone = itemsRepository.getBlockByKey("stone")
+        val clay = itemsRepository.getBlockByKey("clay")
 
         foreMap[x][surfaceHeight] = grass
         foreMap[x][config.height - 1] = bedrock
@@ -126,7 +136,13 @@ class GameWorldGenerator(
             }
 
             foreMap[x][y] = when {
-                y < surfaceHeight + random.nextInt(5, 8) -> dirt
+                y < surfaceHeight + random.nextInt(
+                    from = 5,
+                    until = 8,
+                ) -> (surfaceHeight > config.seaLevel && random.nextInt(100) < 20).ifTrue {
+                    clay
+                } ?: dirt
+
                 else -> stone
             }
             backMap[x][y] = foreMap[x][y]
@@ -151,6 +167,7 @@ class GameWorldGenerator(
         val bedrock = itemsRepository.getBlockByKey("bedrock")
         val sandstone = itemsRepository.getBlockByKey("sandstone")
         val stone = itemsRepository.getBlockByKey("stone")
+        val clay = itemsRepository.getBlockByKey("clay")
 
         foreMap[x][surfaceHeight] = sand
         foreMap[x][config.height - 1] = bedrock
@@ -164,7 +181,13 @@ class GameWorldGenerator(
             }
 
             foreMap[x][y] = when {
-                y < surfaceHeight + random.nextInt(5, 8) -> sand
+                y < surfaceHeight + random.nextInt(
+                    from = 5,
+                    until = 8,
+                ) -> (surfaceHeight > config.seaLevel && random.nextInt(100) < 20).ifTrue {
+                    clay
+                } ?: sand
+
                 y < surfaceHeight + random.nextInt(0, 2) -> sandstone
                 else -> stone
             }
