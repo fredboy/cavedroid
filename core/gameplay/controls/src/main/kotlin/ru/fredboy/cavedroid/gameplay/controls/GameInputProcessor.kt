@@ -34,7 +34,7 @@ class GameInputProcessor @Inject constructor(
     private var touchDownX = 0f
     private var touchDownY = 0f
 
-    private val pointerToTouchedKey = mutableMapOf<Int, Int>()
+    private val pointerToTouchedKey = mutableMapOf<Int, TouchButton>()
 
     override fun keyDown(keycode: Int): Boolean = handleKeyboardAction(keycode, true)
 
@@ -51,16 +51,19 @@ class GameInputProcessor @Inject constructor(
         if (applicationContextRepository.isTouch()) {
             val touchedKey = getTouchedKey(touchX, touchY)
 
-            return touchedKey.isMouse.ifFalse {
-                keyDown(touchedKey.code).takeIf { it }
-                    ?.also { pointerToTouchedKey[pointer] = touchedKey.code }
-            } ?: onMouseActionEvent(
-                mouseX = screenX,
-                mouseY = screenY,
-                button = touchedKey.takeIf { it.isMouse }?.code ?: nullButton.code,
-                touchUp = false,
-                pointer = pointer,
-            )
+            pointerToTouchedKey[pointer] = touchedKey
+
+            return if (!touchedKey.isMouse) {
+                keyDown(touchedKey.code)
+            } else {
+                onMouseActionEvent(
+                    mouseX = screenX,
+                    mouseY = screenY,
+                    button = touchedKey.code,
+                    touchUp = false,
+                    pointer = pointer,
+                )
+            }
         }
 
         return onMouseActionEvent(screenX, screenY, button, false, pointer)
@@ -82,12 +85,7 @@ class GameInputProcessor @Inject constructor(
                 )
             }
 
-            pointerToTouchedKey.remove(pointer)?.let { keyCode ->
-                keyUp(keyCode)
-                return true
-            }
-
-            val touchedKey: TouchButton = getTouchedKey(touchX, touchY)
+            val touchedKey: TouchButton = pointerToTouchedKey[pointer] ?: getTouchedKey(touchX, touchY)
 
             return (touchedKey.isMouse).ifFalse {
                 keyUp(touchedKey.code).takeIf { it }
@@ -119,10 +117,19 @@ class GameInputProcessor @Inject constructor(
         }
 
         val touchedKey = getTouchedKey(touchX, touchY)
-        if (pointerToTouchedKey[pointer] != touchedKey.code) {
-            pointerToTouchedKey.remove(pointer)?.let { keyCode ->
-                keyUp(keyCode)
-                return true
+        if (pointerToTouchedKey[pointer]?.code != touchedKey.code) {
+            pointerToTouchedKey.remove(pointer)?.let { key ->
+                return if (!key.isMouse) {
+                    keyUp(key.code)
+                } else {
+                    onMouseActionEvent(
+                        mouseX = screenX,
+                        mouseY = screenY,
+                        button = key.code,
+                        touchUp = true,
+                        pointer = pointer,
+                    )
+                }
             }
         }
 
