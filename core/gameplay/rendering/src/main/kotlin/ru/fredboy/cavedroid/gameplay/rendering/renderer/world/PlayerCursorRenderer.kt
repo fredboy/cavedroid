@@ -7,6 +7,7 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindWorldRenderer
@@ -19,6 +20,7 @@ class PlayerCursorRenderer @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
     private val mobController: MobController,
     private val mobAssetsRepository: MobAssetsRepository,
+    private val gameContextRepository: GameContextRepository,
 ) : IWorldRenderer {
 
     override val renderLayer get() = RENDER_LAYER
@@ -37,7 +39,7 @@ class PlayerCursorRenderer @Inject constructor(
             )
         }
 
-        if (applicationContextRepository.isTouch()) {
+        if (applicationContextRepository.isTouch() || gameContextRepository.shouldShowInfo()) {
             mobAssetsRepository.getCrosshairSprite().let { crosshairSprite ->
                 spriteBatch.drawSprite(
                     sprite = crosshairSprite,

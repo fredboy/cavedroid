@@ -13,7 +13,6 @@ import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsConfigs
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.window.TooltipManager
-import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
@@ -26,7 +25,6 @@ class CursorMouseInputHandler @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
     private val mobController: MobController,
-    private val gameWorld: GameWorld,
     private val gameWindowsManager: GameWindowsManager,
     private val tooltipManager: TooltipManager,
     private val textureRegions: GetTextureRegionByNameUseCase,
@@ -108,8 +106,6 @@ class CursorMouseInputHandler @Inject constructor(
         if (!applicationContextRepository.isTouch()) {
             handleMouse(action)
         }
-
-        mobController.checkPlayerCursorBounds()
 
         if (player.selectedX != pastSelectedX || player.selectedY != pastSelectedY) {
             player.blockDamage = 0f

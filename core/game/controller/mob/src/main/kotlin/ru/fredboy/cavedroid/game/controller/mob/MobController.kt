@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.ifTrue
+import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
@@ -67,7 +68,13 @@ class MobController @Inject constructor(
             } ?: false
         }
 
+        updatePlayer(delta)
+    }
+
+    private fun updatePlayer(delta: Float) {
         player.update(mobWorldAdapter, playerAdapter, delta)
+        limitPlayerCursor()
+
         if (player.isDead) {
             dropQueue.offerInventory(player.position.x, player.position.y, player.inventory)
             player.inventory.clear()
@@ -76,10 +83,11 @@ class MobController @Inject constructor(
         }
     }
 
-    fun checkPlayerCursorBounds() {
+    fun limitPlayerCursor() {
         with(player) {
+            val cursor = Vector2(cursorX, cursorY)
             if (gameMode.isSurvival()) {
-                val plToCursor = Vector2(cursorX, cursorY)
+                val plToCursor = cursor
                     .sub(position)
                     .limit2(SURVIVAL_CURSOR_RANGE_2)
 
@@ -88,6 +96,30 @@ class MobController @Inject constructor(
             }
 
             cursorY = MathUtils.clamp(cursorY, 0f, mobWorldAdapter.height.toFloat())
+
+            cursor.set(cursorX, cursorY)
+            mobWorldAdapter.getBox2dWorld().rayCast(
+                { fixture, point, _, fraction ->
+                    if (fixture.userData !is Block) {
+                        return@rayCast -1f
+                    }
+
+                    val pointToCursor = cursor.cpy().sub(point)
+
+                    if (pointToCursor.len() < 0.5f) {
+                        return@rayCast -1f
+                    }
+
+                    point.cpy().add(pointToCursor.nor().scl(0.5f))
+                        .run {
+                            cursorX = x
+                            cursorY = y
+                        }
+                    return@rayCast fraction
+                },
+                position,
+                cursor,
+            )
         }
     }
 

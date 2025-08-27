@@ -250,6 +250,9 @@ class GameInputProcessor @Inject constructor(
     }
 
     private fun handleMousePosition() {
+        if (applicationContextRepository.isTouch()) {
+            return
+        }
         val cameraContext = gameContextRepository.getCameraContext()
 
         val screenX = cameraContext.xOnViewport(Gdx.input.x)

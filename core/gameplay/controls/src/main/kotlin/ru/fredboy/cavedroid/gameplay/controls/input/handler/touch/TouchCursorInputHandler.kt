@@ -160,7 +160,6 @@ class TouchCursorInputHandler @Inject constructor(
     override fun checkConditions(action: MouseInputAction): Boolean {
         return applicationContextRepository.isTouch() &&
             gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-//            player.controlMode == Player.ControlMode.CURSOR &&
             (
                 (
                     action.actionKey is MouseInputActionKey.Screen &&
@@ -209,7 +208,6 @@ class TouchCursorInputHandler @Inject constructor(
         val pastSelectedY = player.selectedY
 
         updateCursorPosition(action)
-        mobController.checkPlayerCursorBounds()
         setPlayerDirectionToCursor()
 
         if (player.selectedX != pastSelectedX || player.selectedY != pastSelectedY) {
