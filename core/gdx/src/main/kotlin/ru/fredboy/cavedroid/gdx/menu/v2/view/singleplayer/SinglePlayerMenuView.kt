@@ -21,74 +21,101 @@ import ru.fredboy.cavedroid.common.CaveDroidConstants.MAX_SAVES_COUNT
 @Scene2dDsl
 suspend fun Stage.singlePlayerMenuView(viewModel: SinglePlayerMenuViewModel) = viewModel.also {
     viewModel.stateFlow.collect { state ->
-        actors {
-            table {
-                setFillParent(true)
-                background(
-                    TiledDrawable(
-                        TextureRegionDrawable(
-                            skin.getRegion("background"),
-                        ),
+        when (state) {
+            is SinglePlayerMenuState.LoadingWorld -> loading()
+            is SinglePlayerMenuState.ShowList -> savesList(viewModel, state)
+        }
+    }
+}
+
+@Scene2dDsl
+private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SinglePlayerMenuState.ShowList) {
+    actors {
+        table {
+            setFillParent(true)
+            background(
+                TiledDrawable(
+                    TextureRegionDrawable(
+                        skin.getRegion("background"),
                     ),
-                )
-                pad(8f)
+                ),
+            )
+            pad(8f)
 
-                scrollPane {
-                    table {
-                        state.saves.takeIf { it.isNotEmpty() }?.onEach { save ->
-                            saveItem(
-                                saveInfo = save,
-                                onLoad = { viewModel.onLoadClick(save) },
-                                onDelete = { viewModel.onDeleteClick(save) },
-                            ).cell(
-                                expandX = true,
-                                fillX = true,
-                                height = 200f,
-                                padBottom = 32f,
-                            )
-
-                            row()
-                        } ?: label("No worlds here yet... Try creating a new one")
-                    }
-                }.also { pane ->
-                    setScrollFocus(pane)
-                }.cell(
-                    expand = true,
-                    fill = true,
-                    align = Align.center,
-                )
-
-                row()
-                    .bottom()
-
+            scrollPane {
                 table {
-                    textButton("New") {
-                        onClick {
-                            if (!isDisabled) {
-                                viewModel.onNewGameClick()
-                            }
+                    state.saves.takeIf { it.isNotEmpty() }?.onEach { save ->
+                        saveItem(
+                            saveInfo = save,
+                            onLoad = { viewModel.onLoadClick(save) },
+                            onDelete = { viewModel.onDeleteClick(save) },
+                        ).cell(
+                            expandX = true,
+                            fillX = true,
+                            height = 200f,
+                            padBottom = 32f,
+                        )
+
+                        row()
+                    } ?: label("No worlds here yet... Try creating a new one")
+                }
+            }.also { pane ->
+                setScrollFocus(pane)
+            }.cell(
+                expand = true,
+                fill = true,
+                align = Align.center,
+            )
+
+            row()
+                .bottom()
+
+            table {
+                textButton("New") {
+                    onClick {
+                        if (!isDisabled) {
+                            viewModel.onNewGameClick()
                         }
+                    }
 
-                        isDisabled = state.saves.size >= MAX_SAVES_COUNT
-                    }.cell(
-                        width = 400f,
-                        height = 60f,
-                        padRight = 16f,
-                    )
-
-                    textButton("Back") {
-                        onClick { viewModel.onBackClick() }
-                    }.cell(
-                        width = 400f,
-                        height = 60f,
-                        padLeft = 16f,
-                    )
+                    isDisabled = state.saves.size >= MAX_SAVES_COUNT
                 }.cell(
-                    expandX = true,
-                    fillX = true,
-                    padTop = 16f,
+                    width = 400f,
+                    height = 60f,
+                    padRight = 16f,
                 )
-            }
+
+                textButton("Back") {
+                    onClick { viewModel.onBackClick() }
+                }.cell(
+                    width = 400f,
+                    height = 60f,
+                    padLeft = 16f,
+                )
+            }.cell(
+                expandX = true,
+                fillX = true,
+                padTop = 16f,
+            )
+        }
+    }
+}
+
+@Scene2dDsl
+private fun Stage.loading() {
+    actors {
+        table {
+            setFillParent(true)
+            background(
+                TiledDrawable(
+                    TextureRegionDrawable(
+                        skin.getRegion("background"),
+                    ),
+                ),
+            )
+            pad(8f)
+
+            label("Loading World...")
         }
     }
 }

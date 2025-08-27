@@ -1,5 +1,10 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.singleplayer
 
-data class SinglePlayerMenuState(
-    val saves: List<SaveInfoVo>,
-)
+sealed interface SinglePlayerMenuState {
+
+    data object LoadingWorld : SinglePlayerMenuState
+
+    data class ShowList(
+        val saves: List<SaveInfoVo>,
+    ) : SinglePlayerMenuState
+}

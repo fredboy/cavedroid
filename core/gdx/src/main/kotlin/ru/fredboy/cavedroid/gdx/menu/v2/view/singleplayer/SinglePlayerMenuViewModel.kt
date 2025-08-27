@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gdx.menu.v2.view.singleplayer
 
 import com.badlogic.gdx.graphics.Texture
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -29,17 +30,20 @@ class SinglePlayerMenuViewModel(
 
     private val loadedTextures = mutableListOf<Texture>()
 
-    private val reloadTrigger = MutableSharedFlow<Unit>(replay = 0)
+    private val reloadTrigger = MutableSharedFlow<Trigger>(replay = 0)
 
     private val saveInfoFlow = reloadTrigger
-        .onStart { emit(Unit) }
-        .map {
+        .onStart { emit(Trigger.LOAD_LIST) }
+        .map { trigger ->
+            if (trigger == Trigger.LOADING_WORLD) {
+                return@map SinglePlayerMenuState.LoadingWorld
+            }
+
             val appDir = applicationContextRepository.getGameDirectory()
-            withContext(Dispatchers.IO) {
+            val saves = withContext(Dispatchers.IO) {
                 saveDataRepository.getSavesInfo(appDir)
             }
-        }
-        .map { saves ->
+
             saves.map { saveInfo ->
                 SaveInfoVo(
                     version = saveInfo.version,
@@ -58,17 +62,16 @@ class SinglePlayerMenuViewModel(
                         }
                     },
                 )
-            }
+            }.let { SinglePlayerMenuState.ShowList(it) }
         }
-        .map { saves -> SinglePlayerMenuState(saves) }
 
     val stateFlow: StateFlow<SinglePlayerMenuState> =
-        combine(reloadTrigger.onStart { emit(Unit) }, saveInfoFlow) { _, state ->
+        combine(reloadTrigger.onStart { emit(Trigger.LOAD_LIST) }, saveInfoFlow) { _, state ->
             state
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = SinglePlayerMenuState(emptyList()),
+            initialValue = SinglePlayerMenuState.ShowList(emptyList()),
         )
 
     fun onNewGameClick() {
@@ -76,12 +79,19 @@ class SinglePlayerMenuViewModel(
     }
 
     fun onLoadClick(save: SaveInfoVo) {
-        applicationController.startGame(
-            startGameConfig = StartGameConfig.Load(
-                worldName = save.name,
-                saveDirectory = save.directory,
-            ),
-        )
+        viewModelScope.launch {
+            reloadTrigger.emit(Trigger.LOADING_WORLD)
+            delay(50)
+
+            withContext(GdxMainDispatcher) {
+                applicationController.startGame(
+                    startGameConfig = StartGameConfig.Load(
+                        worldName = save.name,
+                        saveDirectory = save.directory,
+                    ),
+                )
+            }
+        }
     }
 
     fun onDeleteClick(save: SaveInfoVo) {
@@ -92,7 +102,7 @@ class SinglePlayerMenuViewModel(
                     saveDir = save.directory,
                 )
             }
-            reloadTrigger.emit(Unit)
+            reloadTrigger.emit(Trigger.LOAD_LIST)
         }
     }
 
@@ -103,5 +113,10 @@ class SinglePlayerMenuViewModel(
     override fun onDispose() {
         loadedTextures.forEach(Texture::dispose)
         loadedTextures.clear()
+    }
+
+    private enum class Trigger {
+        LOAD_LIST,
+        LOADING_WORLD,
     }
 }
