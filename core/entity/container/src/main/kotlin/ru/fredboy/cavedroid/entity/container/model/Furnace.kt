@@ -75,7 +75,11 @@ class Furnace(
     private fun startBurning() {
         requireNotNull(fuel.item.params.burningTimeMs) { "Cant start burning without fuel" }
         currentFuel = fuel.item
-        fuel.subtract()
+        if (fuel.item.isTool()) {
+            fuel.amount = 0
+        } else {
+            fuel.subtract()
+        }
         if (fuel.amount <= 0) {
             fuel = fallbackItem.toInventoryItem()
         }
@@ -132,11 +136,7 @@ class Furnace(
             } else {
                 result.add()
             }
-            if (input.item.isTool()) {
-                input.amount = 0
-            } else {
-                input.subtract()
-            }
+            input.subtract()
             if (input.amount <= 0) {
                 input = fallbackItem.toInventoryItem()
             }

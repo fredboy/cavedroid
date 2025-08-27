@@ -114,6 +114,13 @@ class MobController @Inject constructor(
                         .run {
                             cursorX = x
                             cursorY = y
+
+                            if (player.holdCursor) {
+                                player.cursorToPlayer.set(
+                                    player.cursorX - player.position.x,
+                                    player.cursorY - player.position.y,
+                                )
+                            }
                         }
                     return@rayCast fraction
                 },
