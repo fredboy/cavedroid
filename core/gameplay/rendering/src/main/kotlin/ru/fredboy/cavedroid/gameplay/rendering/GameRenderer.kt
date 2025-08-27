@@ -7,11 +7,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.badlogic.gdx.utils.Disposable
-import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.drawString
 import ru.fredboy.cavedroid.common.utils.meters
@@ -19,7 +17,6 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
-import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.window.TooltipManager
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.IHudRenderer
@@ -72,9 +69,6 @@ class GameRenderer @Inject constructor(
 
     private val spriter = SpriteBatch()
 
-    private var cameraDelayMs: Long = TimeUtils.millis()
-    private val cameraCenterToPlayer: Vector2 = Vector2()
-
     init {
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f)
     }
@@ -100,12 +94,8 @@ class GameRenderer @Inject constructor(
 
         val moveVector = cameraTargetPosition.sub(camera.position)
 
-        if (!moveVector.isZero(0.1f)) {
-            if (player.controlMode == Player.ControlMode.WALK) {
-                moveVector.nor().scl(30f * delta)
-            } else {
-                moveVector.scl(delta)
-            }
+        if (!moveVector.isZero(0.05f)) {
+            moveVector.nor().scl(30f * delta)
         }
 
         camera.position.add(moveVector)
