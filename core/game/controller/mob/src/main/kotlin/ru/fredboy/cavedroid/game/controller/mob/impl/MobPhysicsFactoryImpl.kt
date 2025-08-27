@@ -112,9 +112,9 @@ class MobPhysicsFactoryImpl @Inject constructor(
     private fun Body.createGroundSensor(width: Float, height: Float) {
         val sensorShape = createBoxShape(
             x = 0f,
-            y = height / 2f + 0.0625f,
+            y = height / 2f - 0.125f,
             width = width / 2f,
-            height = 0.125f,
+            height = 0.25f,
         )
 
         FixtureDef().apply {

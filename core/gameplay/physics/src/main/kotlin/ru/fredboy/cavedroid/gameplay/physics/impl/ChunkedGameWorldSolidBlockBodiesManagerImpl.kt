@@ -76,7 +76,7 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor() : GameWo
                 val fixtureDef = FixtureDef().apply {
                     this.shape = shape
                     density = 1f
-                    friction = .2f
+                    friction = 0f
                     restitution = 0f
                     filter.categoryBits = PhysicsConstants.CATEGORY_BLOCK
 
