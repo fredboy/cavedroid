@@ -36,7 +36,7 @@ class GameWorld @Inject constructor(
     val width: Int
     val height: Int
 
-    var currentGameTime = DAY_DURATION_SEC * 0.125f
+    var currentGameTime = DAY_DURATION_SEC * 0.75f
 
     var moonPhase = 0
 
@@ -46,6 +46,18 @@ class GameWorld @Inject constructor(
 
     val rayHandler: RayHandler
         get() = gameWorldLightManager.rayHandler
+
+    private var timeMultiplier = 1f
+
+    private var skipNight = false
+        set(value) {
+            timeMultiplier = if (value) {
+                200f
+            } else {
+                1f
+            }
+            field = value
+        }
 
     private var box2dAccumulator: Float = 0f
 
@@ -251,12 +263,24 @@ class GameWorld @Inject constructor(
         return currentGameTime < DAY_DURATION_SEC / 2f
     }
 
+    fun skipNight() {
+        if (isDayTime()) {
+            return
+        }
+
+        skipNight = true
+    }
+
     fun update(delta: Float) {
-        currentGameTime += delta
+        currentGameTime += (delta * timeMultiplier)
 
         if (currentGameTime >= DAY_DURATION_SEC) {
             currentGameTime -= DAY_DURATION_SEC
             moonPhase = (moonPhase + 1) % environmentTextureRegionsRepository.getMoonPhasesCount()
+        }
+
+        if (isDayTime()) {
+            skipNight = false
         }
 
         gameWorldLightManager.update()

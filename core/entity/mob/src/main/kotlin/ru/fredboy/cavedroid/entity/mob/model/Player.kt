@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Filter
 import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.common.utils.applyOrigin
 import ru.fredboy.cavedroid.common.utils.drawSprite
+import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.items.model.inventory.Inventory
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
@@ -56,6 +57,8 @@ class Player(
     var headRotation = 0f
 
     private var _activeSlot = 0
+
+    var isInBed = false
 
     var activeSlot
         get() = _activeSlot
@@ -117,7 +120,10 @@ class Player(
             val sprite = spriteData.sprite
 
             sprite.setFlip(looksRight(), sprite.isFlipY)
-            sprite.applyOrigin(spriteData.origin)
+
+            if (!isInBed) {
+                sprite.applyOrigin(spriteData.origin)
+            }
 
             if (spriteData.isBackground) {
                 sprite.color = backgroundTintColor
@@ -125,7 +131,9 @@ class Player(
                 sprite.color = tintColor
             }
 
-            val animationValue = if (spriteData.isStatic) {
+            val animationValue = if (isInBed) {
+                90f
+            } else if (spriteData.isStatic) {
                 0f
             } else if (spriteData.isHead) {
                 headRotation
@@ -139,11 +147,23 @@ class Player(
                 -anim
             }
 
+            val spriteX = if (isInBed) {
+                x - spriteData.offsetY
+            } else {
+                x + spriteData.offsetX
+            }
+
+            val spriteY = if (isInBed) {
+                y - sprite.regionHeight.meters / 2 + height * 0.625f
+            } else {
+                y + spriteData.offsetY
+            }
+
             if (spriteData.isHand && looksRight() && !spriteData.isBackground) {
                 drawItem(spriteBatch, sprite.height, x, y, animationValue)
             }
 
-            spriteBatch.drawSprite(sprite, x + spriteData.offsetX, y + spriteData.offsetY, animationValue)
+            spriteBatch.drawSprite(sprite, spriteX, spriteY, animationValue)
 
             if (spriteData.isHand && spriteData.isBackground && looksLeft()) {
                 drawItem(spriteBatch, sprite.height, x, y, -animationValue)

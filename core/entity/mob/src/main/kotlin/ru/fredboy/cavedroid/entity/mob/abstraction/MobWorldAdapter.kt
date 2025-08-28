@@ -31,4 +31,6 @@ interface MobWorldAdapter {
     fun getMediumLiquid(hitbox: Rectangle): Block.Fluid?
 
     fun getRayHandler(): RayHandler
+
+    fun isDayTime(): Boolean
 }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
@@ -136,6 +137,13 @@ class MobController @Inject constructor(
             mobPhysicsFactory = mobPhysicsFactory,
         )
         player.initSight(mobWorldAdapter)
+    }
+
+    fun playerCanSleep(): Boolean {
+        return mobs.none { mob ->
+            mob.params.behaviorType == MobBehaviorType.AGGRESSIVE &&
+                mob.position.cpy().sub(player.position).len() < 16f
+        }
     }
 
     override fun dispose() {

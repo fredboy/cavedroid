@@ -134,4 +134,8 @@ internal class WorldAdapterImpl @Inject constructor(
     override fun getRayHandler(): RayHandler {
         return gameWorld.rayHandler
     }
+
+    override fun isDayTime(): Boolean {
+        return gameWorld.isDayTime()
+    }
 }

@@ -83,6 +83,16 @@ class PlayerMobBehavior :
     }
 
     override fun Player.updateMob(worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, delta: Float) {
+        if (isInBed) {
+            if (worldAdapter.isDayTime()) {
+                isInBed = false
+            } else {
+                controlVector.setZero()
+                velocity.set(0f, 0f)
+                return
+            }
+        }
+
         hitBlock(worldAdapter)
         updateSight()
         if (checkForAutojump()) {
