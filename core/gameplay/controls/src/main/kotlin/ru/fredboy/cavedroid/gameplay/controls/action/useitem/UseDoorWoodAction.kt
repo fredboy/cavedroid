@@ -17,7 +17,7 @@ class UseDoorWoodAction @Inject constructor(
     private val getBlockByKeyUseCase: GetBlockByKeyUseCase,
 ) : IUseItemAction {
 
-    override fun perform(item: Item.Usable, x: Int, y: Int) {
+    override fun perform(item: Item.Usable, x: Int, y: Int): Boolean {
         val (top, bottom) = if (mobController.player.direction == Direction.RIGHT) {
             getBlockByKeyUseCase["door_wood_top_left_closed"] to getBlockByKeyUseCase["door_wood_bottom_left_closed"]
         } else {
@@ -28,7 +28,10 @@ class UseDoorWoodAction @Inject constructor(
             gameWorld.placeToForeground(x, y, bottom)
             gameWorld.placeToForeground(x, y - 1, top)
             mobController.player.decreaseCurrentItemCount()
+            return true
         }
+
+        return false
     }
 
     companion object {

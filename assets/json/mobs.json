@@ -266,7 +266,7 @@
     "height": 18,
     "speed": 3,
     "hp": 10,
-    "behavior": "passive",
+    "behavior": "sheep",
     "drop_info": [
       {
         "key": "wool_colored_white",
@@ -288,7 +288,7 @@
       },
       {
         "file": "leg_fur",
-        "offset_x": 6,
+        "offset_x": 7,
         "offset_y": 10,
         "is_background": true,
         "is_head": false,
@@ -307,7 +307,7 @@
       },
       {
         "file": "leg_fur",
-        "offset_x": 18,
+        "offset_x": 19,
         "offset_y": 10,
         "is_background": true,
         "is_head": false,
@@ -330,7 +330,7 @@
         "is_head": false,
         "is_hand": false,
         "is_static": true,
-        "offset_x": 6,
+        "offset_x": 7,
         "offset_y": 2,
         "is_overlay": true
       },
@@ -347,7 +347,8 @@
         "is_head": false,
         "is_hand": false,
         "is_static": true,
-        "is_overlay": true
+        "is_overlay": true,
+        "offset_x": 1
       },
       {
         "file": "leg",
@@ -360,7 +361,7 @@
       },
       {
         "file": "leg_fur",
-        "offset_x": 6,
+        "offset_x": 7,
         "offset_y": 10,
         "is_background": false,
         "is_head": false,
@@ -379,7 +380,7 @@
       },
       {
         "file": "leg_fur",
-        "offset_x": 18,
+        "offset_x": 19,
         "offset_y": 10,
         "is_background": false,
         "is_head": false,

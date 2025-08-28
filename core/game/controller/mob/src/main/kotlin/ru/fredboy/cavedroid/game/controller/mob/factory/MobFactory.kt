@@ -6,6 +6,7 @@ import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.model.Mob
+import ru.fredboy.cavedroid.entity.mob.model.SheepMob
 import ru.fredboy.cavedroid.entity.mob.model.WalkingMob
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
@@ -27,6 +28,8 @@ class MobFactory @Inject constructor(
             MobBehaviorType.PASSIVE, MobBehaviorType.AGGRESSIVE -> WalkingMob(
                 params = mobParams,
             )
+
+            MobBehaviorType.SHEEP -> SheepMob(mobParams)
 
             else -> run {
                 Gdx.app.log(TAG, "Mobs of type ${mobParams.behaviorType} not yet supported")

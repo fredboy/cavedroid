@@ -1,36 +1,17 @@
 package ru.fredboy.cavedroid.entity.mob.model
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.utils.applyOrigin
 import ru.fredboy.cavedroid.common.utils.drawSprite
-import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
-import ru.fredboy.cavedroid.entity.mob.abstraction.MobBehavior
-import ru.fredboy.cavedroid.entity.mob.impl.AggressiveMobBehavior
-import ru.fredboy.cavedroid.entity.mob.impl.PassiveMobBehavior
 
-open class WalkingMob(
+class SheepMob(
     params: MobParams,
     direction: Direction = Direction.random(),
-) : Mob(direction, params, mapMobBehavior(params.behaviorType)) {
+) : WalkingMob(params, direction) {
 
-    override fun changeDir() {
-        switchDir()
-        controlVector.set(Vector2(direction.basis * speed, 0f))
-    }
-
-    override fun damage(damage: Int) {
-        super.damage(damage)
-
-        if (damage > 0) {
-            if (canJump) {
-                jump()
-            }
-        }
-    }
+    var hasFur: Boolean = true
 
     override fun draw(
         spriteBatch: SpriteBatch,
@@ -42,7 +23,7 @@ open class WalkingMob(
 
         val backgroundTintColor = tintColor.cpy().sub(Color(0xAAAAAA shl 8))
 
-        params.sprites.forEach { spriteData ->
+        params.sprites.filter { hasFur || !it.isOverlay }.forEach { spriteData ->
             val sprite = spriteData.sprite
 
             sprite.setFlip(looksRight(), sprite.isFlipY)
@@ -70,21 +51,6 @@ open class WalkingMob(
                 y = y + spriteData.offsetY,
                 rotation = animationValue,
             )
-        }
-    }
-
-    companion object {
-        private const val TAG = "WalkingMob"
-
-        private fun mapMobBehavior(behaviorType: MobBehaviorType): MobBehavior {
-            return when (behaviorType) {
-                MobBehaviorType.PASSIVE, MobBehaviorType.SHEEP -> PassiveMobBehavior()
-                MobBehaviorType.AGGRESSIVE -> AggressiveMobBehavior()
-                else -> {
-                    Gdx.app.error(TAG, "$behaviorType is not supported for Walking mob. Spawning as Passive")
-                    PassiveMobBehavior()
-                }
-            }
         }
     }
 }

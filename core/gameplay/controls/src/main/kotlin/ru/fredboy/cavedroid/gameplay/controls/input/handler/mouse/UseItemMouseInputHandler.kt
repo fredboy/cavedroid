@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.ifFalse
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -16,6 +17,7 @@ import ru.fredboy.cavedroid.gameplay.controls.action.placeToForegroundAction
 import ru.fredboy.cavedroid.gameplay.controls.action.placeblock.IPlaceBlockAction
 import ru.fredboy.cavedroid.gameplay.controls.action.useblock.IUseBlockAction
 import ru.fredboy.cavedroid.gameplay.controls.action.useitem.IUseItemAction
+import ru.fredboy.cavedroid.gameplay.controls.action.usemob.IUseMobAction
 import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
@@ -31,6 +33,7 @@ class UseItemMouseInputHandler @Inject constructor(
     private val useItemActionMap: Map<String, @JvmSuppressWildcards IUseItemAction>,
     private val placeBlockActionMap: Map<String, @JvmSuppressWildcards IPlaceBlockAction>,
     private val useBlockActionMap: Map<String, @JvmSuppressWildcards IUseBlockAction>,
+    private val useMobActionMap: Map<String, @JvmSuppressWildcards IUseMobAction>,
     private val gameWindowsManager: GameWindowsManager,
     private val gameWorld: GameWorld,
     private val textureRegions: GetTextureRegionByNameUseCase,
@@ -95,6 +98,15 @@ class UseItemMouseInputHandler @Inject constructor(
         )
     }
 
+    private fun tryUseMob(): Boolean {
+        val mob = mobController.mobs.firstOrNull { mob ->
+            mob.hitbox.contains(mobController.player.cursorX, mobController.player.cursorY) &&
+                mobController.player.position.cpy().sub(mob.position).len() <= MOB_HIT_RANGE
+        } ?: return false
+
+        return useMobActionMap[mob.params.key]?.perform(mob) ?: false
+    }
+
     private fun handleUp() {
         val player = mobController.player
         val item = player.activeItem.item
@@ -110,12 +122,17 @@ class UseItemMouseInputHandler @Inject constructor(
                 y = player.selectedY,
             )
         } else if (item is Item.Usable) {
-            useItemActionMap[item.useActionKey]?.perform(item, player.selectedX, player.selectedY)
-                ?: Gdx.app.error(TAG, "use item action ${item.useActionKey} not found")
+            val performed = useItemActionMap[item.useActionKey]?.perform(item, player.selectedX, player.selectedY)
+                ?: run {
+                    Gdx.app.error(TAG, "use item action ${item.useActionKey} not found")
+                    false
+                }
+
+            performed.ifFalse { tryUseMob() }
         } else if (item is Item.Food && player.health < player.maxHealth) {
             player.heal(item.heal)
             player.decreaseCurrentItemCount()
-        } else {
+        } else if (!tryUseMob()) {
             tryUseBlock()
         }
     }
@@ -138,5 +155,7 @@ class UseItemMouseInputHandler @Inject constructor(
     companion object {
         private const val TAG = "UseItemMouseInputActionHandler"
         private const val TOUCH_HOLD_TIME_SEC = 0.5f
+
+        private const val MOB_HIT_RANGE = 3f
     }
 }

@@ -17,10 +17,10 @@ class UseEmptyBucketAction @Inject constructor(
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
 ) : IUseItemAction {
 
-    override fun perform(item: Item.Usable, x: Int, y: Int) {
+    override fun perform(item: Item.Usable, x: Int, y: Int): Boolean {
         val foregroundBlock = gameWorld.getForeMap(x, y)
         if (!foregroundBlock.isFluid()) {
-            return
+            return false
         }
         gameWorld.resetForeMap(x, y)
 
@@ -31,6 +31,8 @@ class UseEmptyBucketAction @Inject constructor(
         }
 
         mobController.player.setCurrentInventorySlotItem(filled)
+
+        return true
     }
 
     companion object {

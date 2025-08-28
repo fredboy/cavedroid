@@ -24,11 +24,16 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
         Gdx.app.log(TAG, "Spawn controller task started")
         var spawnCount = 0
         if (!gameWorld.isDayTime() || mobController.mobs.size < maintainedMobsCount) {
-            val mobKeys = mobParamsRepository.getMobKeysByBehaviorType(
-                if (gameWorld.isDayTime()) MobBehaviorType.PASSIVE else MobBehaviorType.AGGRESSIVE,
-            )
+            val mobParams = mobParamsRepository.getAllParams()
+                .filter {
+                    if (gameWorld.isDayTime()) {
+                        it.behaviorType == MobBehaviorType.PASSIVE || it.behaviorType == MobBehaviorType.SHEEP
+                    } else {
+                        it.behaviorType == MobBehaviorType.AGGRESSIVE
+                    }
+                }
 
-            if (mobKeys.isNotEmpty()) {
+            if (mobParams.isNotEmpty()) {
                 for (x in 0..<gameWorld.width step SPAWN_CHUNK_SIZE) {
                     val spawnX = x + MathUtils.random(SPAWN_CHUNK_SIZE)
                     var y = 0
@@ -39,7 +44,7 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
                     }
 
                     if (gameWorld.getForeMap(spawnX, y).params.hasCollision) {
-                        mobFactory.create(spawnX.toFloat(), y.toFloat(), mobKeys.random())
+                        mobFactory.create(spawnX.toFloat(), y.toFloat(), mobParams.random().key)
                         spawnCount++
                     }
                 }

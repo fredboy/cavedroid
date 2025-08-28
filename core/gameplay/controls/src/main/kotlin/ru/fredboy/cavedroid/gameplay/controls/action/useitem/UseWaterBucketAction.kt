@@ -18,11 +18,12 @@ class UseWaterBucketAction @Inject constructor(
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
 ) : IUseItemAction {
 
-    override fun perform(item: Item.Usable, x: Int, y: Int) {
+    override fun perform(item: Item.Usable, x: Int, y: Int): Boolean {
         gameWorld.placeToForeground(x, y, getBlockByKeyUseCase["water"])
         if (!mobsController.player.gameMode.isCreative()) {
             mobsController.player.setCurrentInventorySlotItem(getItemByKeyUseCase["bucket_empty"])
         }
+        return true
     }
 
     companion object {

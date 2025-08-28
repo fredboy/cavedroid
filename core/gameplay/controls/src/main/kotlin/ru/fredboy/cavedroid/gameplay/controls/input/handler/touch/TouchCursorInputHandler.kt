@@ -21,6 +21,7 @@ import ru.fredboy.cavedroid.gameplay.controls.action.placeToForegroundAction
 import ru.fredboy.cavedroid.gameplay.controls.action.placeblock.IPlaceBlockAction
 import ru.fredboy.cavedroid.gameplay.controls.action.useblock.IUseBlockAction
 import ru.fredboy.cavedroid.gameplay.controls.action.useitem.IUseItemAction
+import ru.fredboy.cavedroid.gameplay.controls.action.usemob.IUseMobAction
 import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
@@ -39,6 +40,7 @@ class TouchCursorInputHandler @Inject constructor(
     private val placeBlockActionMap: Map<String, @JvmSuppressWildcards IPlaceBlockAction>,
     private val useBlockActionMap: Map<String, @JvmSuppressWildcards IUseBlockAction>,
     private val useItemActionMap: Map<String, @JvmSuppressWildcards IUseItemAction>,
+    private val useMobActionMap: Map<String, @JvmSuppressWildcards IUseMobAction>,
     private val getTextureRegionByNameUseCase: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
 
@@ -96,7 +98,7 @@ class TouchCursorInputHandler @Inject constructor(
     private fun tryHitMob(): Boolean {
         mobController.mobs.forEach { mob ->
             if (mob.position.dst(player.cursorX, player.cursorY) < 1f) {
-                player.hitMob(mob)
+                useMobActionMap[mob.params.key]?.perform(mob)?.takeIf { it } ?: player.hitMob(mob)
                 return true
             }
         }

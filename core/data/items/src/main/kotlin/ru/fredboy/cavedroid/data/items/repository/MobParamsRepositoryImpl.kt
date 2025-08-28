@@ -8,7 +8,6 @@ import kotlinx.serialization.modules.subclass
 import ru.fredboy.cavedroid.data.items.mapper.MobParamsMapper
 import ru.fredboy.cavedroid.data.items.model.DropAmountDto
 import ru.fredboy.cavedroid.data.items.model.MobParamsDto
-import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import javax.inject.Inject
@@ -51,11 +50,8 @@ class MobParamsRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getMobKeysByBehaviorType(mobBehaviorType: MobBehaviorType): List<String> {
-        return mobParamsMap.asSequence()
-            .filter { it.value.behaviorType == mobBehaviorType }
-            .map { it.key }
-            .toList()
+    override fun getAllParams(): List<MobParams> {
+        return mobParamsMap.values.toList()
     }
 
     override fun dispose() {

@@ -23,6 +23,7 @@ import ru.fredboy.cavedroid.generated.module.PlaceBlockActionsModule
 import ru.fredboy.cavedroid.generated.module.UpdateBlockActionsModule
 import ru.fredboy.cavedroid.generated.module.UseBlockActionsModule
 import ru.fredboy.cavedroid.generated.module.UseItemActionsModule
+import ru.fredboy.cavedroid.generated.module.UseMobActionsModule
 import ru.fredboy.cavedroid.generated.module.WorldRenderModule
 
 @GameScope
@@ -46,6 +47,7 @@ import ru.fredboy.cavedroid.generated.module.WorldRenderModule
         PhysicsModule::class,
         DropContactHandlerModule::class,
         MobContactHandlerModule::class,
+        UseMobActionsModule::class,
     ],
 )
 interface GameComponent {

@@ -1,7 +1,6 @@
 package ru.fredboy.cavedroid.domain.items.repository
 
 import com.badlogic.gdx.utils.Disposable
-import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
 
 interface MobParamsRepository : Disposable {
@@ -10,5 +9,5 @@ interface MobParamsRepository : Disposable {
 
     fun getMobParamsByKey(key: String): MobParams?
 
-    fun getMobKeysByBehaviorType(mobBehaviorType: MobBehaviorType): List<String>
+    fun getAllParams(): List<MobParams>
 }

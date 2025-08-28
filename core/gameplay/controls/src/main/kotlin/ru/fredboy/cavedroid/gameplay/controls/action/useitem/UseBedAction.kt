@@ -16,7 +16,7 @@ class UseBedAction @Inject constructor(
     private val getBlockByKeyUseCase: GetBlockByKeyUseCase,
 ) : IUseItemAction {
 
-    override fun perform(item: Item.Usable, x: Int, y: Int) {
+    override fun perform(item: Item.Usable, x: Int, y: Int): Boolean {
         val bedLeft = getBlockByKeyUseCase["bed_l"]
         val bedRight = getBlockByKeyUseCase["bed_r"]
 
@@ -24,7 +24,10 @@ class UseBedAction @Inject constructor(
             gameWorld.placeToForeground(x, y, bedLeft)
             gameWorld.placeToForeground(x + 1, y, bedRight)
             mobController.player.decreaseCurrentItemCount()
+            return true
         }
+
+        return false
     }
 
     companion object {

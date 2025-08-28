@@ -2,8 +2,10 @@ package ru.fredboy.cavedroid.data.save.mapper
 
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
+import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
+import ru.fredboy.cavedroid.entity.mob.model.SheepMob
 import ru.fredboy.cavedroid.entity.mob.model.WalkingMob
 import javax.inject.Inject
 
@@ -30,6 +32,7 @@ class WalkingMobMapper @Inject constructor(
         flyMode = mob.isFlyMode,
         maxHealth = mob.maxHealth,
         health = mob.health,
+        hasFur = (mob as? SheepMob)?.hasFur ?: false,
     )
 
     fun mapPassiveMob(
@@ -38,9 +41,15 @@ class WalkingMobMapper @Inject constructor(
     ): WalkingMob {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
-        return WalkingMob(
-            params = requireNotNull(mobParamsRepository.getMobParamsByKey(saveDataDto.key)),
-        ).apply {
+        val params = requireNotNull(mobParamsRepository.getMobParamsByKey(saveDataDto.key))
+
+        val mob = if (params.behaviorType == MobBehaviorType.SHEEP) {
+            SheepMob(params).apply { hasFur = saveDataDto.hasFur }
+        } else {
+            WalkingMob(params)
+        }
+
+        return mob.apply {
             spawn(saveDataDto.x, saveDataDto.y, mobPhysicsFactory)
             velocity.x = saveDataDto.velocityX
             velocity.y = saveDataDto.velocityY

@@ -133,6 +133,7 @@ sealed class SaveDataDto {
         override val flyMode: Boolean,
         override val maxHealth: Int,
         override val health: Int,
+        val hasFur: Boolean = false,
     ) : MobSaveDataDto()
 
     @Serializable

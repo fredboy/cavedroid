@@ -15,14 +15,16 @@ class UsePigSpawnEggAction @Inject constructor(
     private val mobFactory: MobFactory,
 ) : IUseItemAction {
 
-    override fun perform(item: Item.Usable, x: Int, y: Int) {
+    override fun perform(item: Item.Usable, x: Int, y: Int): Boolean {
         val mobKey = item.mobKey ?: run {
             Gdx.app.error(ACTION_KEY, "No mob key")
-            return
+            return false
         }
 
-        mobFactory.create(mobController.player.cursorX.toFloat(), mobController.player.cursorY.toFloat(), mobKey)
+        mobFactory.create(mobController.player.cursorX, mobController.player.cursorY, mobKey)
         mobController.player.decreaseCurrentItemCount()
+
+        return true
     }
 
     companion object {

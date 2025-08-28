@@ -42,6 +42,7 @@ class MobParamsMapper @Inject constructor(
             "passive" -> MobBehaviorType.PASSIVE
             "neutral" -> MobBehaviorType.NEUTRAL
             "aggressive" -> MobBehaviorType.AGGRESSIVE
+            "sheep" -> MobBehaviorType.SHEEP
 
             else -> MobBehaviorType.PASSIVE
         }

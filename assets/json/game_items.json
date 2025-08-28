@@ -2756,9 +2756,10 @@
     },
     "bucket_milk": {
       "name": "Milk Bucket",
-      "type": "food",
+      "type": "usable",
       "texture": "bucket_milk",
-      "heal": 6
+      "action_key": "use_milk_bucket",
+      "max_stack": 1
     },
     "spawn_egg_sheep": {
       "name": "Sheep Spawn Egg",
