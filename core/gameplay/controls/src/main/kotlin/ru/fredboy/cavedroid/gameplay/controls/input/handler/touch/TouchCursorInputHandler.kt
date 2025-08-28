@@ -208,6 +208,7 @@ class TouchCursorInputHandler @Inject constructor(
         val pastSelectedY = player.selectedY
 
         updateCursorPosition(action)
+        mobController.limitPlayerCursor()
         setPlayerDirectionToCursor()
 
         if (player.selectedX != pastSelectedX || player.selectedY != pastSelectedY) {

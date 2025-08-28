@@ -116,7 +116,7 @@
     "count": 4
   },
   "shears": {
-    "input": ["none", "iron_ingot", "none", "iron_ingot", "none", "none", "none", "none", "none"],
+    "input": ["iron_ingot", "none", "none", "none", "iron_ingot", "none", "none", "none", "none"],
     "count": 238
   },
   "bucket_empty": {

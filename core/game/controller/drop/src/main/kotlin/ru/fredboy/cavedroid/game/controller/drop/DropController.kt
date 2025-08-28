@@ -127,7 +127,7 @@ class DropController @Inject constructor(
 
                 toolLevel >= block.params.toolLevel
             }
-        } ?: false
+        } ?: (block.params.toolLevel == 0)
 
         block.getDropItem(getItemByKeyUseCase, toolRequirementMet)?.let { dropItem ->
             addDrop(
