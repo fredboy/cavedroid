@@ -150,5 +150,9 @@
   "bricks": {
     "input": ["brick", "brick", "none", "brick", "brick", "none", "none", "none", "none"],
     "count": 1
+  },
+  "door_wood": {
+    "input": ["planks.*", "planks.*", "none", "planks.*", "planks.*", "none", "planks.*", "planks.*", "none"],
+    "count": 3
   }
 }

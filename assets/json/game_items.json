@@ -5,7 +5,8 @@
       "transparent": true,
       "texture": "none",
       "meta": "none",
-      "casts_shadows": false
+      "casts_shadows": false,
+      "replaceable": true
     },
     "stone": {
       "hp": 450,
@@ -141,7 +142,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "replaceable": true
     },
     "sapling_spruce": {
       "collision": false,
@@ -158,7 +160,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "replaceable": true
     },
     "bedrock": {
       "texture": "bedrock"
@@ -172,7 +175,8 @@
       "frames": 16,
       "state": 0,
       "density": 10,
-      "casts_shadows": false
+      "casts_shadows": false,
+      "replaceable": true
     },
     "lava": {
       "collision": false,
@@ -186,7 +190,8 @@
       "casts_shadows": false,
       "light_info": {
         "light_distance": 15
-      }
+      },
+      "replaceable": true
     },
     "sand": {
       "hp": 45,
@@ -572,7 +577,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "replaceable": true
     },
     "deadbush": {
       "collision": false,
@@ -590,7 +596,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "replaceable": true
     },
     "bricks": {
       "hp": 600,
@@ -636,7 +643,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "replaceable": true
     },
     "rose": {
       "collision": false,
@@ -653,7 +661,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "replaceable": true
     },
     "mushroom_brown": {
       "collision": false,
@@ -670,7 +679,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "replaceable": true
     },
     "mushroom_red": {
       "collision": false,
@@ -687,7 +697,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "replaceable": true
     },
     "wool_colored_white": {
       "hp": 75,
@@ -1348,7 +1359,8 @@
       "frames": 16,
       "state": 1,
       "density": 10,
-      "casts_shadows": false
+      "casts_shadows": false,
+      "replaceable": true
     },
     "water_12": {
       "top": 4,
@@ -1362,7 +1374,8 @@
       "frames": 16,
       "state": 2,
       "density": 10,
-      "casts_shadows": false
+      "casts_shadows": false,
+      "replaceable": true
     },
     "water_8": {
       "top": 8,
@@ -1376,7 +1389,8 @@
       "frames": 16,
       "state": 3,
       "density": 10,
-      "casts_shadows": false
+      "casts_shadows": false,
+      "replaceable": true
     },
     "water_4": {
       "top": 12,
@@ -1390,7 +1404,8 @@
       "frames": 16,
       "state": 4,
       "density": 10,
-      "casts_shadows": false
+      "casts_shadows": false,
+      "replaceable": true
     },
     "lava_16": {
       "collision": false,
@@ -1405,7 +1420,8 @@
       "casts_shadows": false,
       "light_info": {
         "light_distance": 15
-      }
+      },
+      "replaceable": true
     },
     "lava_12": {
       "top": 4,
@@ -1423,7 +1439,8 @@
       "casts_shadows": false,
       "light_info": {
         "light_distance": 15
-      }
+      },
+      "replaceable": true
     },
     "lava_8": {
       "top": 8,
@@ -1441,7 +1458,8 @@
       "casts_shadows": false,
       "light_info": {
         "light_distance": 15
-      }
+      },
+      "replaceable": true
     },
     "lava_4": {
       "top": 12,
@@ -1459,7 +1477,8 @@
       "casts_shadows": false,
       "light_info": {
         "light_distance": 15
-      }
+      },
+      "replaceable": true
     },
     "obsidian": {
       "hp": 15000,
@@ -1496,7 +1515,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "replaceable": true
     },
     "snow_block": {
       "collision": true,
@@ -1580,6 +1600,174 @@
       "drop_info": [
         {
           "key": "torch",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
+    },
+    "door_wood_top_left_open": {
+      "hp": 270,
+      "collision": false,
+      "background": true,
+      "transparent": true,
+      "block_required": false,
+      "texture": "door_wood_upper",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "drop_info": [
+        {
+          "key": "door_wood",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
+    },
+    "door_wood_bottom_left_open": {
+      "hp": 270,
+      "collision": false,
+      "background": true,
+      "transparent": true,
+      "block_required": true,
+      "texture": "door_wood_upper",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "drop_info": [
+        {
+          "key": "door_wood",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
+    },
+    "door_wood_top_left_closed": {
+      "right": 14,
+      "sprite_right": 14,
+      "hp": 270,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "block_required": false,
+      "texture": "door_wood_upper",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "drop_info": [
+        {
+          "key": "door_wood",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
+    },
+    "door_wood_bottom_left_closed": {
+      "right": 14,
+      "sprite_right": 14,
+      "hp": 270,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "door_wood_upper",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "drop_info": [
+        {
+          "key": "door_wood",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
+    },
+    "door_wood_top_right_open": {
+      "hp": 270,
+      "collision": false,
+      "background": true,
+      "transparent": true,
+      "block_required": false,
+      "texture": "door_wood_upper",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "drop_info": [
+        {
+          "key": "door_wood",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
+    },
+    "door_wood_bottom_right_open": {
+      "hp": 270,
+      "collision": false,
+      "background": true,
+      "transparent": true,
+      "block_required": true,
+      "texture": "door_wood_upper",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "drop_info": [
+        {
+          "key": "door_wood",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
+    },
+    "door_wood_top_right_closed": {
+      "left": 14,
+      "sprite_left": 14,
+      "hp": 270,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "block_required": false,
+      "texture": "door_wood_upper",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "drop_info": [
+        {
+          "key": "door_wood",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
+    },
+    "door_wood_bottom_right_closed": {
+      "left": 14,
+      "sprite_left": 14,
+      "hp": 270,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "door_wood_upper",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "drop_info": [
+        {
+          "key": "door_wood",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2300,6 +2488,12 @@
       "origin_x": 0,
       "origin_y": 1,
       "heal": 4
+    },
+    "door_wood": {
+      "name": "Wooden Door",
+      "type": "usable",
+      "texture": "door_wood",
+      "action_key": "use_door_wood_item_action"
     }
   }
 }

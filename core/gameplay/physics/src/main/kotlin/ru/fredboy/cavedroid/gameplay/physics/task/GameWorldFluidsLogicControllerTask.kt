@@ -89,7 +89,7 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
 
     private fun fluidCanFlowThere(fluid: Block.Fluid, targetBlock: Block): Boolean {
         return targetBlock.isNone() ||
-            (!targetBlock.params.hasCollision && !targetBlock.isFluid()) ||
+            (targetBlock.params.replaceable && !targetBlock.isFluid()) ||
             (fluid::class == targetBlock::class && fluid.state < (targetBlock as Block.Fluid).state)
     }
 

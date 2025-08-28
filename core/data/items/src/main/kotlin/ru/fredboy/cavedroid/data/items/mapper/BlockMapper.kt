@@ -74,6 +74,7 @@ class BlockMapper @Inject constructor(
         castsShadows = dto.castShadows,
         lightInfo = mapLightInfo(dto.lightInfo),
         allowAttachToNeighbour = dto.allowAttachToNeighbour,
+        replaceable = dto.replaceable,
     )
 
     private fun mapLightInfo(info: BlockLightDto?): BlockLightInfo? {

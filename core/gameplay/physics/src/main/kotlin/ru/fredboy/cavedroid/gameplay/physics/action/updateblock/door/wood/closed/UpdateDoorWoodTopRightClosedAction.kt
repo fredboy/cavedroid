@@ -1,0 +1,27 @@
+package ru.fredboy.cavedroid.gameplay.physics.action.updateblock.door.wood.closed
+
+import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.items.usecase.GetBlockByKeyUseCase
+import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.gameplay.physics.action.annotation.BindUpdateBlockAction
+import ru.fredboy.cavedroid.gameplay.physics.action.updateblock.IUpdateBlockAction
+import javax.inject.Inject
+
+@GameScope
+@BindUpdateBlockAction(stringKey = UpdateDoorWoodTopRightClosedAction.BLOCK_KEY)
+class UpdateDoorWoodTopRightClosedAction @Inject constructor(
+    private val gameWorld: GameWorld,
+    private val getBlockByKeyUseCase: GetBlockByKeyUseCase,
+) : IUpdateBlockAction {
+
+    override fun update(x: Int, y: Int) {
+        val bottom = getBlockByKeyUseCase["door_wood_bottom_right_closed"]
+        if (gameWorld.getForeMap(x, y + 1) != bottom) {
+            gameWorld.resetForeMap(x, y)
+        }
+    }
+
+    companion object {
+        const val BLOCK_KEY = "door_wood_top_right_closed"
+    }
+}

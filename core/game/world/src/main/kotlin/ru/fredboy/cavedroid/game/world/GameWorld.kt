@@ -184,7 +184,7 @@ class GameWorld @Inject constructor(
     }
 
     fun canPlaceToForeground(x: Int, y: Int, value: Block): Boolean {
-        return !hasForeAt(x, y) || value.isNone() || !getForeMap(x, y).params.hasCollision
+        return !hasForeAt(x, y) || value.isNone() || getForeMap(x, y).params.replaceable
     }
 
     fun placeToForeground(

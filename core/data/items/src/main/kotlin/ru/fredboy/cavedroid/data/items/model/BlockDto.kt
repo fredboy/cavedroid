@@ -35,4 +35,5 @@ data class BlockDto(
     @SerialName("casts_shadows") val castShadows: Boolean = true,
     @SerialName("light_info") val lightInfo: BlockLightDto? = null,
     @SerialName("drop_info") val dropInfo: List<BlockDropInfoDto> = listOf(),
+    @SerialName("replaceable") val replaceable: Boolean = false,
 )
