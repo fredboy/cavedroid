@@ -113,6 +113,21 @@
         }
       ]
     },
+    "planks_birch": {
+      "hp": 180,
+      "texture": "planks_birch",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "planks_birch",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
+    },
     "crafting_table": {
       "hp": 180,
       "texture": "crafting_table",
@@ -155,6 +170,23 @@
       "drop_info": [
         {
           "key": "sapling_spruce",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "replaceable": true
+    },
+    "sapling_birch": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "sapling_birch",
+      "hp": 0,
+      "drop_info": [
+        {
+          "key": "sapling_birch",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -405,6 +437,65 @@
           "amount": {
             "type": "random_chance",
             "chance": 0.05,
+            "amount": 1
+          }
+        },
+        {
+          "key": "stick",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_range",
+            "min": 1,
+            "max": 2,
+            "chance": 0.02
+          }
+        }
+      ]
+    },
+    "log_birch": {
+      "hp": 180,
+      "texture": "log_birch",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "log_birch",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
+    },
+    "leaves_birch": {
+      "hp": 21,
+      "texture": "leaves_birch",
+      "tool_level": 1,
+      "tool_type": "shears",
+      "casts_shadows": false,
+      "drop_info": [
+        {
+          "key": "leaves_birch",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        },
+        {
+          "key": "sapling_birch",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.05,
+            "amount": 1
+          }
+        },
+        {
+          "key": "apple",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.01,
             "amount": 1
           }
         },
@@ -1181,6 +1272,50 @@
         }
       ]
     },
+    "birch_slab_bottom": {
+      "top": 8,
+      "sprite_top": 8,
+      "hp": 180,
+      "transparent": true,
+      "drop": "birch_slab",
+      "meta": "slab",
+      "texture": "planks_birch",
+      "full_block": "planks_birch",
+      "other_part": "birch_slab_top",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "birch_slab",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
+    },
+    "birch_slab_top": {
+      "bottom": 8,
+      "sprite_bottom": 8,
+      "hp": 180,
+      "transparent": true,
+      "drop": "birch_slab",
+      "meta": "slab",
+      "texture": "planks_birch",
+      "full_block": "planks_birch",
+      "other_part": "birch_slab_bottom",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "birch_slab",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
+    },
     "cobblestone_slab_bottom": {
       "top": 8,
       "sprite_top": 8,
@@ -1889,6 +2024,18 @@
       "texture": "planks_spruce",
       "burning_time": 15000
     },
+    "planks_birch": {
+      "name": "Birch Planks",
+      "type": "block",
+      "texture": "planks_birch",
+      "burning_time": 15000
+    },
+    "sapling_birch": {
+      "name": "Birch Sapling",
+      "type": "block",
+      "texture": "sapling_birch",
+      "burning_time": 5000
+    },
     "crafting_table": {
       "name": "Crafting Table",
       "type": "block",
@@ -1981,6 +2128,18 @@
       "name": "Spruce Leaves",
       "type": "block",
       "texture": "leaves_spruce"
+    },
+    "log_birch": {
+      "name": "Birch",
+      "type": "block",
+      "texture": "log_birch",
+      "burning_time": 15000,
+      "smelt_product": "charcoal"
+    },
+    "leaves_birch": {
+      "name": "Birch Leaves",
+      "type": "block",
+      "texture": "leaves_birch"
     },
     "glass": {
       "name": "Glass",
@@ -2178,6 +2337,14 @@
       "texture": "spruce_slab",
       "top_slab_block": "spruce_slab_top",
       "bottom_slab_block": "spruce_slab_bottom",
+      "burn_time": 7500
+    },
+    "birch_slab": {
+      "name": "Birch Slab",
+      "type": "slab",
+      "texture": "birch_slab",
+      "top_slab_block": "birch_slab_top",
+      "bottom_slab_block": "birch_slab_bottom",
       "burn_time": 7500
     },
     "cobblestone_slab": {
