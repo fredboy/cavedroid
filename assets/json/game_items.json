@@ -2572,6 +2572,16 @@
       "type": "usable",
       "texture": "door_wood",
       "action_key": "use_door_wood_item_action"
+    },
+    "bowl": {
+      "name": "Bowl",
+      "texture": "bowl"
+    },
+    "mushroom_stew": {
+      "name": "Mushroom Stew",
+      "type": "food",
+      "texture": "mushroom_stew",
+      "heal": 6
     }
   }
 }

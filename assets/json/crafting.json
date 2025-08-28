@@ -178,5 +178,13 @@
   "ladder": {
     "input": ["stick", "none", "stick", "stick", "stick", "stick", "stick", "none", "stick"],
     "count": 3
+  },
+  "bowl": {
+    "input": ["planks.*", "none", "planks.*", "none", "planks.*", "none", "none", "none", "none"],
+    "count": 4
+  },
+  "mushroom_stew": {
+    "input": ["mushroom_brown", "mushroom_red", "none", "none", "bowl", "none", "none", "none", "none"],
+    "count": 1
   }
 }
