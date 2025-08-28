@@ -154,5 +154,21 @@
   "door_wood": {
     "input": ["planks.*", "planks.*", "none", "planks.*", "planks.*", "none", "planks.*", "planks.*", "none"],
     "count": 3
+  },
+  "lapis_block": {
+    "input": ["lapis_lazuli", "lapis_lazuli", "lapis_lazuli", "lapis_lazuli", "lapis_lazuli", "lapis_lazuli", "lapis_lazuli", "lapis_lazuli", "lapis_lazuli"],
+    "count": 1
+  },
+  "gold_block": {
+    "input": ["gold_ingot", "gold_ingot", "gold_ingot", "gold_ingot", "gold_ingot", "gold_ingot", "gold_ingot", "gold_ingot", "gold_ingot"],
+    "count": 1
+  },
+  "iron_block": {
+    "input": ["iron_ingot", "iron_ingot", "iron_ingot", "iron_ingot", "iron_ingot", "iron_ingot", "iron_ingot", "iron_ingot", "iron_ingot"],
+    "count": 1
+  },
+  "diamond_block": {
+    "input": ["diamond", "diamond", "diamond", "diamond", "diamond", "diamond", "diamond", "diamond", "diamond"],
+    "count": 1
   }
 }
