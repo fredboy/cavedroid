@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.entity.mob.abstraction.BaseMobBehavior
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
+import ru.fredboy.cavedroid.entity.mob.model.SheepMob
 import ru.fredboy.cavedroid.entity.mob.model.WalkingMob
 
 class PassiveMobBehavior :
@@ -25,5 +26,9 @@ class PassiveMobBehavior :
         }
 
         swim = canSwim
+
+        if (this is SheepMob && MathUtils.randomBoolean(0.0001f)) {
+            hasFur = true
+        }
     }
 }

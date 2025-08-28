@@ -4,7 +4,9 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import ru.fredboy.cavedroid.common.utils.applyOrigin
 import ru.fredboy.cavedroid.common.utils.drawSprite
+import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
+import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 
 class SheepMob(
     params: MobParams,
@@ -12,6 +14,14 @@ class SheepMob(
 ) : WalkingMob(params, direction) {
 
     var hasFur: Boolean = true
+
+    override fun getDropItems(itemByKey: GetItemByKeyUseCase): List<InventoryItem> {
+        return if (hasFur) {
+            super.getDropItems(itemByKey)
+        } else {
+            emptyList()
+        }
+    }
 
     override fun draw(
         spriteBatch: SpriteBatch,
