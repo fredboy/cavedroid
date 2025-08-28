@@ -170,5 +170,13 @@
   "diamond_block": {
     "input": ["diamond", "diamond", "diamond", "diamond", "diamond", "diamond", "diamond", "diamond", "diamond"],
     "count": 1
+  },
+  "trapdoor_open": {
+    "input": ["planks.*", "planks.*", "planks.*", "planks.*", "planks.*", "planks.*", "none", "none", "none"],
+    "count": 2
+  },
+  "ladder": {
+    "input": ["stick", "none", "stick", "stick", "stick", "stick", "stick", "none", "stick"],
+    "count": 3
   }
 }

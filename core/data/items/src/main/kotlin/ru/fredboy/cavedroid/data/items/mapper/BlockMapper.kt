@@ -39,6 +39,7 @@ class BlockMapper @Inject constructor(
             "slab" -> Slab(commonBlockParams, requireNotNull(dto.fullBlock), requireNotNull(dto.otherPart))
             "furnace" -> Furnace(commonBlockParams)
             "chest" -> Chest(commonBlockParams)
+            "ladder" -> Block.Ladder(commonBlockParams, dto.density ?: 0f)
             "none" -> None(commonBlockParams)
             else -> Normal(commonBlockParams)
         }

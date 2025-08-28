@@ -247,6 +247,15 @@ sealed class Block {
         override val density: Float,
     ) : Fluid()
 
+    sealed class Climbable : Fluid() {
+        final override val state: Int = 0
+    }
+
+    data class Ladder(
+        override val params: CommonBlockParams,
+        override val density: Float,
+    ) : Climbable()
+
     companion object {
         private const val ANIMATION_FRAME_DURATION_MS = 100L
     }

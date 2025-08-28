@@ -1774,6 +1774,74 @@
           }
         }
       ]
+    },
+    "trapdoor_wood_open": {
+      "hp": 270,
+      "collision": false,
+      "background": true,
+      "transparent": true,
+      "block_required": false,
+      "texture": "trapdoor",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "meta": "ladder",
+      "density": 10,
+      "drop_info": [
+        {
+          "key": "trapdoor",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
+    },
+    "trapdoor_wood_closed": {
+      "bottom": 14,
+      "sprite_bottom": 14,
+      "hp": 270,
+      "collision": true,
+      "background": true,
+      "transparent": true,
+      "block_required": false,
+      "texture": "trapdoor",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "meta": "ladder",
+      "density": 10,
+      "drop_info": [
+        {
+          "key": "trapdoor",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
+    },
+    "ladder": {
+      "hp": 36,
+      "collision": false,
+      "background": true,
+      "transparent": true,
+      "block_required": false,
+      "texture": "ladder",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "meta": "ladder",
+      "density": 10,
+      "drop_info": [
+        {
+          "key": "ladder",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ]
     }
   },
   "items": {
@@ -2152,6 +2220,16 @@
       "name": "Snow Block",
       "type": "block",
       "texture": "snow"
+    },
+    "trapdoor_wood_open": {
+      "name": "Wooden Trapdoor",
+      "type": "block",
+      "texture": "trapdoor"
+    },
+    "ladder": {
+      "name": "Ladder",
+      "type": "block",
+      "texture": "ladder"
     },
     "stick": {
       "name": "Stick",
