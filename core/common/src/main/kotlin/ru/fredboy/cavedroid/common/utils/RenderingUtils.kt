@@ -78,6 +78,19 @@ fun colorFromHexString(hex: String): Color {
     return Color(rgba)
 }
 
+fun invertColor(rgba8888: Int): Int {
+    val r = rgba8888 shr 24 and 0xFF
+    val g = rgba8888 shr 16 and 0xFF
+    val b = rgba8888 shr 8 and 0xFF
+    val a = rgba8888 and 0xFF
+
+    val ri = 0xFF - r
+    val gi = 0xFF - g
+    val bi = 0xFF - b
+
+    return (ri shl 24) or (gi shl 16) or (bi shl 8) or a
+}
+
 fun SpriteBatch.withScissors(
     viewportWidth: Float,
     viewportHeight: Float,

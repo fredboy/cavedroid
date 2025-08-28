@@ -4,10 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
-import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
-import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindWorldRenderer
@@ -17,10 +14,8 @@ import javax.inject.Inject
 @BindWorldRenderer
 class PlayerCursorRenderer @Inject constructor(
     private val gameWorld: GameWorld,
-    private val applicationContextRepository: ApplicationContextRepository,
     private val mobController: MobController,
     private val mobAssetsRepository: MobAssetsRepository,
-    private val gameContextRepository: GameContextRepository,
 ) : IWorldRenderer {
 
     override val renderLayer get() = RENDER_LAYER
@@ -37,16 +32,6 @@ class PlayerCursorRenderer @Inject constructor(
                 /* width = */ 1f,
                 /* height = */ 1f,
             )
-        }
-
-        if (applicationContextRepository.isTouch() || gameContextRepository.shouldShowInfo()) {
-            mobAssetsRepository.getCrosshairSprite().let { crosshairSprite ->
-                spriteBatch.drawSprite(
-                    sprite = crosshairSprite,
-                    x = mobController.player.cursorX - crosshairSprite.width / 2,
-                    y = mobController.player.cursorY - crosshairSprite.height / 2,
-                )
-            }
         }
     }
 

@@ -12,6 +12,8 @@ val Float.meters get() = this / PIXELS_PER_METER
 
 val Int.meters get() = this.toFloat().meters
 
+val Float.pixels get() = this * PIXELS_PER_METER
+
 val Float.floor get() = floor(this)
 
 val Int.scaleToViewport: Float get() = this.toFloat() / DEFAULT_VIEWPORT_WIDTH
