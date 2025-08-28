@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.TimeUtils
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.utils.Vector2Proxy
+import ru.fredboy.cavedroid.domain.items.model.drop.DropAmount
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
@@ -271,7 +272,40 @@ abstract class Mob(
 
     open fun getDropItems(
         itemByKey: GetItemByKeyUseCase,
-    ): List<InventoryItem> = listOf(InventoryItem(itemByKey[params.dropInfo.itemKey], params.dropInfo.count))
+    ): List<InventoryItem> {
+        if (params.dropInfo.isEmpty()) {
+            return emptyList()
+        }
+
+        return buildList {
+            for (info in params.dropInfo) {
+                when (info.amount) {
+                    is DropAmount.ExactAmount -> {
+                        val exactAmount = info.amount as DropAmount.ExactAmount
+                        add(InventoryItem(itemByKey[info.itemKey], exactAmount.amount))
+                    }
+
+                    is DropAmount.RandomChance -> {
+                        val randomChanceAmount = info.amount as DropAmount.RandomChance
+                        if (MathUtils.randomBoolean(randomChanceAmount.chance)) {
+                            add(InventoryItem(itemByKey[info.itemKey], randomChanceAmount.amount))
+                        } else {
+                            continue
+                        }
+                    }
+
+                    is DropAmount.RandomRange -> {
+                        val randomRangeAmount = info.amount as DropAmount.RandomRange
+                        if (MathUtils.randomBoolean(randomRangeAmount.chance)) {
+                            add(InventoryItem(itemByKey[info.itemKey], randomRangeAmount.range.random()))
+                        } else {
+                            continue
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     abstract fun draw(spriteBatch: SpriteBatch, x: Float, y: Float, delta: Float)
 

@@ -5,7 +5,6 @@
     "height": 30,
     "speed": 4.317,
     "behavior": "player",
-    "drop": "none",
     "hp": 20,
     "sprites": [
       {
@@ -59,11 +58,21 @@
     "height": 30,
     "speed": 1.850,
     "behavior": "aggressive",
-    "drop": "rotten_flesh",
     "hp": 20,
     "animation_range": 15,
     "damage_to_player": 2,
     "takes_sun_damage": true,
+    "drop_info": [
+      {
+        "key": "rotten_flesh",
+        "amount": {
+          "type": "random_range",
+          "min": 1,
+          "max": 2,
+          "chance": 0.66
+        }
+      }
+    ],
     "sprites": [
       {
         "file": "hand",
@@ -121,8 +130,17 @@
     "speed": 3,
     "hp": 10,
     "behavior": "passive",
-    "drop": "porkchop_raw",
-    "drop_count": 1,
+    "drop_info": [
+      {
+        "key": "porkchop_raw",
+        "amount": {
+          "type": "random_range",
+          "min": 1,
+          "max": 3,
+          "chance": 1
+        }
+      }
+    ],
     "sprites": [
       {
         "file": "leg",
@@ -176,8 +194,26 @@
     "speed": 3,
     "hp": 10,
     "behavior": "passive",
-    "drop": "beef_raw",
-    "drop_count": 1,
+    "drop_info": [
+      {
+        "key": "beef_raw",
+        "amount": {
+          "type": "random_range",
+          "min": 1,
+          "max": 3,
+          "chance": 1
+        }
+      },
+      {
+        "key": "leather",
+        "amount": {
+          "type": "random_range",
+          "min": 1,
+          "max": 2,
+          "chance": 0.66
+        }
+      }
+    ],
     "sprites": [
       {
         "file": "leg",

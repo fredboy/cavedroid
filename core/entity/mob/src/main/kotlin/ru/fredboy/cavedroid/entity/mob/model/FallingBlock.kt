@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import ru.fredboy.cavedroid.common.utils.floor
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
-import ru.fredboy.cavedroid.domain.items.model.mob.MobDropInfo
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.impl.FallingBlockMobBehavior
@@ -37,10 +36,7 @@ class FallingBlock(
                 height = 0.9f,
                 speed = 0f,
                 behaviorType = MobBehaviorType.FALLING_BLOCK,
-                dropInfo = MobDropInfo(
-                    itemKey = "none",
-                    count = 0,
-                ),
+                dropInfo = emptyList(),
                 hp = Int.MAX_VALUE,
                 sprites = emptyList(),
                 animationRange = 0f,

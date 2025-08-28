@@ -2749,6 +2749,16 @@
       "type": "food",
       "texture": "mushroom_stew",
       "heal": 6
+    },
+    "leather": {
+      "name": "Leather",
+      "texture": "leather"
+    },
+    "bucket_milk": {
+      "name": "Milk Bucket",
+      "type": "food",
+      "texture": "bucket_milk",
+      "heal": 6
     }
   }
 }

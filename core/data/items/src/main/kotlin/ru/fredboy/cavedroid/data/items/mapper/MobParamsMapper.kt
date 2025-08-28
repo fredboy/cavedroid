@@ -1,21 +1,21 @@
 package ru.fredboy.cavedroid.data.items.mapper
 
 import com.badlogic.gdx.graphics.g2d.Sprite
+import dagger.Reusable
 import ru.fredboy.cavedroid.common.model.SpriteOrigin
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.data.items.model.MobParamsDto
 import ru.fredboy.cavedroid.data.items.model.MobSpriteDto
 import ru.fredboy.cavedroid.domain.assets.GameAssetsHolder
 import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
-import ru.fredboy.cavedroid.domain.items.model.mob.MobDropInfo
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
 import ru.fredboy.cavedroid.domain.items.model.mob.MobSprite
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@Reusable
 class MobParamsMapper @Inject constructor(
     private val gameAssetsHolder: GameAssetsHolder,
+    private val dropInfoMapper: DropInfoMapper,
 ) {
 
     fun map(key: String, dto: MobParamsDto): MobParams {
@@ -26,10 +26,7 @@ class MobParamsMapper @Inject constructor(
             height = dto.height.meters,
             speed = dto.speed,
             behaviorType = mapBehaviorType(dto.type),
-            dropInfo = MobDropInfo(
-                itemKey = dto.drop,
-                count = dto.dropCount,
-            ),
+            dropInfo = dto.dropInfo.mapNotNull { dropInfoMapper.mapDropInfo(it) },
             hp = dto.hp,
             sprites = dto.sprites.map { spriteDto -> mapMobSprite(key, spriteDto) },
             animationRange = dto.animationRange,

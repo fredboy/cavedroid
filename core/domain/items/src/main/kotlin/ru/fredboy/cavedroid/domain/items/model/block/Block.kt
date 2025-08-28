@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.utils.PIXELS_PER_METER
 import ru.fredboy.cavedroid.common.utils.colorFromHexString
 import ru.fredboy.cavedroid.common.utils.meters
+import ru.fredboy.cavedroid.domain.items.model.drop.DropAmount
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
@@ -157,11 +158,11 @@ sealed class Block {
             }
 
             when (info.amount) {
-                is BlockDropAmount.ExactAmount -> {
+                is DropAmount.ExactAmount -> {
                     return InventoryItem(itemByKey[info.itemKey], info.amount.amount)
                 }
 
-                is BlockDropAmount.RandomChance -> {
+                is DropAmount.RandomChance -> {
                     if (MathUtils.randomBoolean(info.amount.chance)) {
                         return InventoryItem(itemByKey[info.itemKey], info.amount.amount)
                     } else {
@@ -169,7 +170,7 @@ sealed class Block {
                     }
                 }
 
-                is BlockDropAmount.RandomRange -> {
+                is DropAmount.RandomRange -> {
                     if (MathUtils.randomBoolean(info.amount.chance)) {
                         return InventoryItem(itemByKey[info.itemKey], info.amount.range.random())
                     } else {

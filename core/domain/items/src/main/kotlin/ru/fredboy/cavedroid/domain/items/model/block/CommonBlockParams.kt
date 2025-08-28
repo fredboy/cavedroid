@@ -1,13 +1,14 @@
 package ru.fredboy.cavedroid.domain.items.model.block
 
 import com.badlogic.gdx.graphics.Texture
+import ru.fredboy.cavedroid.domain.items.model.drop.DropInfo
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 
 data class CommonBlockParams(
     val key: String,
     val collisionMargins: BlockInsets.Meters,
     val hitPoints: Int,
-    val dropInfo: List<BlockDropInfo>,
+    val dropInfo: List<DropInfo>,
     val hasCollision: Boolean,
     val isBackground: Boolean,
     val isTransparent: Boolean,

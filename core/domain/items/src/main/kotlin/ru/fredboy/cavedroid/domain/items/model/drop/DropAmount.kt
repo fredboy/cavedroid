@@ -1,18 +1,18 @@
-package ru.fredboy.cavedroid.domain.items.model.block
+package ru.fredboy.cavedroid.domain.items.model.drop
 
-sealed interface BlockDropAmount {
+sealed interface DropAmount {
 
     data class ExactAmount(
         val amount: Int,
-    ) : BlockDropAmount
+    ) : DropAmount
 
     data class RandomRange(
         val range: IntRange,
         val chance: Float,
-    ) : BlockDropAmount
+    ) : DropAmount
 
     data class RandomChance(
         val chance: Float,
         val amount: Int,
-    ) : BlockDropAmount
+    ) : DropAmount
 }
