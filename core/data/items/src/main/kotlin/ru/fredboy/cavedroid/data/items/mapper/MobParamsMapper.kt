@@ -69,6 +69,7 @@ class MobParamsMapper @Inject constructor(
             isHead = dto.isHead,
             isHand = dto.isHand,
             isStatic = dto.isStatic,
+            isOverlay = dto.isOverlay,
             offsetX = dto.offsetX.meters,
             offsetY = dto.offsetY.meters,
             origin = origin,

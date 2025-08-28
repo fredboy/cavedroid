@@ -259,5 +259,134 @@
         "is_static": false
       }
     ]
+  },
+  "sheep": {
+    "name": "Sheep",
+    "width": 22,
+    "height": 18,
+    "speed": 3,
+    "hp": 10,
+    "behavior": "passive",
+    "drop_info": [
+      {
+        "key": "wool_colored_white",
+        "amount": {
+          "type": "exact_amount",
+          "amount": 1
+        }
+      }
+    ],
+    "sprites": [
+      {
+        "file": "leg",
+        "offset_x": 6,
+        "offset_y": 10,
+        "is_background": true,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false
+      },
+      {
+        "file": "leg_fur",
+        "offset_x": 6,
+        "offset_y": 10,
+        "is_background": true,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false,
+        "is_overlay": true
+      },
+      {
+        "file": "leg",
+        "offset_x": 18,
+        "offset_y": 10,
+        "is_background": true,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false
+      },
+      {
+        "file": "leg_fur",
+        "offset_x": 18,
+        "offset_y": 10,
+        "is_background": true,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false,
+        "is_overlay": true
+      },
+      {
+        "file": "body",
+        "is_background": false,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": true,
+        "offset_x": 6,
+        "offset_y": 2
+      },
+      {
+        "file": "body_fur",
+        "is_background": false,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": true,
+        "offset_x": 6,
+        "offset_y": 2,
+        "is_overlay": true
+      },
+      {
+        "file": "head",
+        "is_background": false,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": true
+      },
+      {
+        "file": "head_fur",
+        "is_background": false,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": true,
+        "is_overlay": true
+      },
+      {
+        "file": "leg",
+        "offset_x": 6,
+        "offset_y": 10,
+        "is_background": false,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false
+      },
+      {
+        "file": "leg_fur",
+        "offset_x": 6,
+        "offset_y": 10,
+        "is_background": false,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false,
+        "is_overlay": true
+      },
+      {
+        "file": "leg",
+        "offset_x": 18,
+        "offset_y": 10,
+        "is_background": false,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false
+      },
+      {
+        "file": "leg_fur",
+        "offset_x": 18,
+        "offset_y": 10,
+        "is_background": false,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false,
+        "is_overlay": true
+      }
+    ]
   }
 }

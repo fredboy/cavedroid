@@ -10,6 +10,7 @@ data class MobSprite(
     val isBackground: Boolean,
     val isHand: Boolean,
     val isHead: Boolean,
+    val isOverlay: Boolean,
     val isStatic: Boolean,
     val origin: SpriteOrigin,
 )

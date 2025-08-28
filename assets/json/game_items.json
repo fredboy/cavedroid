@@ -2759,6 +2759,15 @@
       "type": "food",
       "texture": "bucket_milk",
       "heal": 6
+    },
+    "spawn_egg_sheep": {
+      "name": "Sheep Spawn Egg",
+      "type": "usable",
+      "texture": "spawn_egg",
+      "tint": "#EDE0D3",
+      "action_key": "use_spawn_egg",
+      "mob_key": "sheep",
+      "origin_x": 0.5
     }
   }
 }
