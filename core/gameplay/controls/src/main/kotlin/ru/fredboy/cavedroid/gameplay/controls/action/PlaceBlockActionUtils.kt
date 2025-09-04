@@ -8,12 +8,18 @@ import ru.fredboy.cavedroid.gameplay.controls.action.placeblock.PlaceBlockItemTo
 
 private const val TAG = "PlaceBlockActionUtils"
 
-fun Map<String, IPlaceBlockAction>.placeToForegroundAction(item: Item.Placeable, x: Int, y: Int) {
-    get(PlaceBlockItemToForegroundAction.ACTION_KEY)?.place(item, x, y)
-        ?: Gdx.app.error(TAG, "action place_foreground_block not found")
+fun Map<String, IPlaceBlockAction>.placeToForegroundAction(item: Item.Placeable, x: Int, y: Int): Boolean {
+    return get(PlaceBlockItemToForegroundAction.ACTION_KEY)?.place(item, x, y)
+        ?: run {
+            Gdx.app.error(TAG, "action place_foreground_block not found")
+            false
+        }
 }
 
-fun Map<String, IPlaceBlockAction>.placeToBackgroundAction(item: Item.Placeable, x: Int, y: Int) {
-    get(PlaceBlockItemToBackgroundAction.ACTION_KEY)?.place(item, x, y)
-        ?: Gdx.app.error(TAG, "action place_background_block not found")
+fun Map<String, IPlaceBlockAction>.placeToBackgroundAction(item: Item.Placeable, x: Int, y: Int): Boolean {
+    return get(PlaceBlockItemToBackgroundAction.ACTION_KEY)?.place(item, x, y)
+        ?: run {
+            Gdx.app.error(TAG, "action place_background_block not found")
+            false
+        }
 }

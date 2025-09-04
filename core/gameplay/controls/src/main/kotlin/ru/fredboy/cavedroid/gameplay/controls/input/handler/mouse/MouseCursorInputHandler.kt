@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @GameScope
 @BindMouseInputHandler
-class CursorMouseInputHandler @Inject constructor(
+class MouseCursorInputHandler @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
     private val mobController: MobController,

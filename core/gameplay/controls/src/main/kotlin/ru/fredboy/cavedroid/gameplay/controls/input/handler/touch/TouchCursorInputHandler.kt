@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.meters
+import ru.fredboy.cavedroid.common.utils.takeIfTrue
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -128,21 +129,30 @@ class TouchCursorInputHandler @Inject constructor(
         player.startHitting(false)
         player.stopHitting()
 
-        if (item is Item.Placeable) {
+        (item as? Item.Placeable)?.let {
             placeBlockActionMap.placeToForegroundAction(
                 item = item,
                 x = player.selectedX,
                 y = player.selectedY,
             )
-        } else if (item is Item.Usable) {
-            useItemActionMap[item.useActionKey]?.perform(item, player.selectedX, player.selectedY)
-                ?: Gdx.app.error(TAG, "use item action ${item.useActionKey} not found")
-        } else if (item is Item.Food && player.health < player.maxHealth) {
-            player.heal(item.heal)
-            player.decreaseCurrentItemCount()
-        } else {
-            tryUseBlock()
-        }
+        }?.takeIfTrue()
+            ?: (item as? Item.Usable)?.let {
+                useItemActionMap[item.useActionKey]?.perform(item, player.selectedX, player.selectedY)
+                    ?: run {
+                        Gdx.app.error(TAG, "use item action ${item.useActionKey} not found")
+                        false
+                    }
+            }?.takeIfTrue()
+            ?: (item as? Item.Food)?.let {
+                if (player.health < player.maxHealth) {
+                    player.heal(item.heal)
+                    player.decreaseCurrentItemCount()
+                    true
+                } else {
+                    false
+                }
+            }?.takeIfTrue()
+            ?: tryUseBlock()
     }
 
     private fun tryUseBlock() {

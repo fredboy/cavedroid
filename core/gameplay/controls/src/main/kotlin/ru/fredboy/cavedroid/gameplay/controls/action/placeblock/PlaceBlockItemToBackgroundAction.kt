@@ -14,9 +14,12 @@ class PlaceBlockItemToBackgroundAction @Inject constructor(
     private val mobController: MobController,
 ) : IPlaceBlockAction {
 
-    override fun place(placeable: Item.Placeable, x: Int, y: Int) {
-        if (gameWorld.placeToBackground(x, y, placeable.block)) {
+    override fun place(placeable: Item.Placeable, x: Int, y: Int): Boolean {
+        return if (gameWorld.placeToBackground(x, y, placeable.block)) {
             mobController.player.decreaseCurrentItemCount()
+            true
+        } else {
+            false
         }
     }
 
