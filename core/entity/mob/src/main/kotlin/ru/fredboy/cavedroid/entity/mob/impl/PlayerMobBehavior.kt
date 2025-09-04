@@ -95,7 +95,7 @@ class PlayerMobBehavior :
 
         hitBlock(worldAdapter)
         updateSight()
-        if (checkForAutojump()) {
+        if (checkForAutojump(worldAdapter)) {
             jump()
         }
 

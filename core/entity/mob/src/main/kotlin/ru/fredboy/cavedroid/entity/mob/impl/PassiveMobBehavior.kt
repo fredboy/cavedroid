@@ -13,7 +13,7 @@ class PassiveMobBehavior :
     ) {
 
     override fun WalkingMob.updateMob(worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, delta: Float) {
-        if (checkForAutojump()) {
+        if (checkForAutojump(worldAdapter)) {
             jump()
         }
 

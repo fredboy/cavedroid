@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.game.controller.mob.impl.physics
 
 import com.badlogic.gdx.physics.box2d.Contact
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.abstraction.AbstractContactHandler
