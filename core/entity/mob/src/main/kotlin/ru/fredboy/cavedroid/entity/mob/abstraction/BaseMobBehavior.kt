@@ -29,7 +29,8 @@ abstract class BaseMobBehavior<MOB : Mob>(
     }
 
     open fun MOB.checkForAutojump(worldAdapter: MobWorldAdapter): Boolean {
-        return controlVector.x != 0f && autojumpCounters[Direction.fromVector(controlVector).index] > 0 &&
+        return controlVector.x != 0f &&
+            autojumpCounters[Direction.fromVector(controlVector).index] > 0 &&
             checkAutojumpObstacle(worldAdapter)
     }
 
