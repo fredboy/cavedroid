@@ -9,6 +9,7 @@ import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageFrameCountUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageSpriteUseCase
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.entity.container.model.Furnace
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
@@ -21,6 +22,7 @@ abstract class BlocksRenderer(
     protected val containerController: ContainerController,
     protected val getBlockDamageFrameCount: GetBlockDamageFrameCountUseCase,
     protected val getBlockDamageSprite: GetBlockDamageSpriteUseCase,
+    protected val itemsRepository: ItemsRepository,
 ) : IWorldRenderer {
 
     protected abstract val background: Boolean
@@ -69,8 +71,15 @@ abstract class BlocksRenderer(
     ) {
         val foregroundBlock = gameWorld.getForeMap(x, y)
         val backgroundBlock = gameWorld.getBackMap(x, y)
+        val isDefaultBackground = backgroundBlock.isNone() && y >= gameWorld.generatorConfig.seaLevel
 
-        if (foregroundBlock.canSeeThrough && !backgroundBlock.isNone()) {
+        if (foregroundBlock.canSeeThrough && (!backgroundBlock.isNone() || isDefaultBackground)) {
+            val shapeColor = shapeRenderer.color.cpy()
+
+            if (isDefaultBackground) {
+                shapeRenderer.color.apply { a = 0.75f }
+            }
+
             val marginLeft = backgroundBlock.params.spriteMargins.left
             val marginTop = backgroundBlock.params.spriteMargins.top
 
@@ -80,12 +89,20 @@ abstract class BlocksRenderer(
                 /* width = */ backgroundBlock.width,
                 /* height = */ backgroundBlock.height,
             )
+
+            shapeRenderer.color = shapeColor
         }
     }
 
     protected fun drawBackMap(spriteBatch: SpriteBatch, x: Int, y: Int) {
         val foregroundBlock = gameWorld.getForeMap(x, y)
-        val backgroundBlock = gameWorld.getBackMap(x, y)
+        val backgroundBlock = gameWorld.getBackMap(x, y).let { block ->
+            if (block.isNone() && y >= gameWorld.generatorConfig.seaLevel) {
+                itemsRepository.getBlockByKey(gameWorld.generatorConfig.defaultBackgroundBlockKey)
+            } else {
+                block
+            }
+        }
 
         if (foregroundBlock.canSeeThrough && !backgroundBlock.isNone()) {
             if (backgroundBlock is Block.Furnace) {

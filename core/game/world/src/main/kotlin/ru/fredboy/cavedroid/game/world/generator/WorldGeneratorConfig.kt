@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.game.world.generator
 
 import com.badlogic.gdx.utils.TimeUtils
+import ru.fredboy.cavedroid.domain.items.model.block.Block
 
 data class WorldGeneratorConfig(
     val width: Int,
@@ -11,6 +12,7 @@ data class WorldGeneratorConfig(
     val biomes: List<Biome>,
     val minBiomeSize: Int,
     val seaLevel: Int,
+    val defaultBackgroundBlockKey: String,
 ) {
 
     companion object {
@@ -24,6 +26,7 @@ data class WorldGeneratorConfig(
             biomes = Biome.entries.toList(),
             minBiomeSize = 64,
             seaLevel = 192,
+            defaultBackgroundBlockKey = "stone",
         )
     }
 }
