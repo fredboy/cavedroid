@@ -1696,18 +1696,12 @@
     "chest": {
       "hp": 180,
       "collision": true,
-      "transparent": true,
+      "transparent": false,
       "drop": "chest",
       "texture": "chest",
       "tool_level": 0,
       "tool_type": "axe",
       "meta": "chest",
-      "top": 2,
-      "left": 1,
-      "right": 1,
-      "sprite_top": 2,
-      "sprite_left": 1,
-      "sprite_right": 1,
       "drop_info": [
         {
           "key": "chest",
