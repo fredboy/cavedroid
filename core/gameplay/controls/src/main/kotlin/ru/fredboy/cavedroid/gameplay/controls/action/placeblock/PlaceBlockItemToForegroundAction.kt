@@ -15,13 +15,15 @@ class PlaceBlockItemToForegroundAction @Inject constructor(
     private val mobController: MobController,
 ) : IPlaceBlockAction {
 
-    override fun place(placeable: Item.Placeable, x: Int, y: Int) {
-        if (placeable.isSlab()) {
+    override fun place(placeable: Item.Placeable, x: Int, y: Int): Boolean {
+        return if (placeable.isSlab()) {
             placeSlabAction.place(placeable, x, y)
+            true
+        } else if (gameWorld.placeToForeground(x, y, placeable.block)) {
+            mobController.player.decreaseCurrentItemCount()
+            true
         } else {
-            if (gameWorld.placeToForeground(x, y, placeable.block)) {
-                mobController.player.decreaseCurrentItemCount()
-            }
+            false
         }
     }
 

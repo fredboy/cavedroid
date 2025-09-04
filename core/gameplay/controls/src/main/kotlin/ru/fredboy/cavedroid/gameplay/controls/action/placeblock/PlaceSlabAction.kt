@@ -15,10 +15,10 @@ class PlaceSlabAction @Inject constructor(
     private val mobController: MobController,
 ) : IPlaceBlockAction {
 
-    override fun place(placeable: Item.Placeable, x: Int, y: Int) {
+    override fun place(placeable: Item.Placeable, x: Int, y: Int): Boolean {
         if (placeable !is Item.Slab) {
             Gdx.app.debug(TAG, "Place slab action called on ${placeable.params.key} which is not a slab")
-            return
+            return false
         }
 
         val slabPart = if ((
@@ -35,8 +35,11 @@ class PlaceSlabAction @Inject constructor(
             placeable.bottomPartBlock
         }
 
-        if (gameWorld.placeToForeground(x, y, slabPart)) {
+        return if (gameWorld.placeToForeground(x, y, slabPart)) {
             mobController.player.decreaseCurrentItemCount()
+            true
+        } else {
+            false
         }
     }
 

@@ -13,7 +13,7 @@ import ru.fredboy.cavedroid.gameplay.controls.input.IKeyboardInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
-import ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse.CursorMouseInputHandler
+import ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse.MouseCursorInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.mapper.KeyboardInputActionMapper
 import ru.fredboy.cavedroid.gameplay.controls.input.mapper.MouseInputActionMapper
 import javax.inject.Inject
@@ -24,7 +24,7 @@ class GameInputProcessor @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
     private val getTouchButtonsUseCase: GetTouchButtonsUseCase,
-    private val cursorMouseInputHandler: CursorMouseInputHandler,
+    private val mouseCursorInputHandler: MouseCursorInputHandler,
     private val mouseInputActionMapper: MouseInputActionMapper,
     private val keyboardInputActionMapper: KeyboardInputActionMapper,
     private val mouseInputHandlers: Set<@JvmSuppressWildcards IMouseInputHandler>,
@@ -264,7 +264,7 @@ class GameInputProcessor @Inject constructor(
             actionKey = MouseInputActionKey.None,
         )
 
-        cursorMouseInputHandler.handle(action)
+        mouseCursorInputHandler.handle(action)
     }
 
     companion object {
