@@ -18,6 +18,8 @@ import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.impl.PlayerAdapterImpl_Factory
 import java.util.*
 import javax.inject.Inject
+import kotlin.math.abs
+import kotlin.math.min
 
 @GameScope
 class MobController @Inject constructor(
@@ -99,30 +101,39 @@ class MobController @Inject constructor(
             cursorY = MathUtils.clamp(cursorY, 0f, mobWorldAdapter.height.toFloat())
 
             cursor.set(cursorX, cursorY)
+
+            if (cursor.isZero) {
+                return
+            }
+
             mobWorldAdapter.getBox2dWorld().rayCast(
                 { fixture, point, _, fraction ->
-                    if (fixture.userData !is Block) {
-                        return@rayCast -1f
-                    }
+                    val block = fixture.userData as? Block ?: return@rayCast -1f
 
                     val pointToCursor = cursor.cpy().sub(point)
 
-                    if (pointToCursor.len() < 0.5f) {
+                    val pointToCursorDX = abs(pointToCursor.x)
+                    val pointToCursorDY = abs(pointToCursor.y)
+
+                    if (pointToCursorDX < block.width / 2f && pointToCursorDY < block.height / 2f) {
                         return@rayCast -1f
                     }
 
-                    point.cpy().add(pointToCursor.nor().scl(0.5f))
-                        .run {
-                            cursorX = x
-                            cursorY = y
+                    point.cpy().apply {
+                        x += min(pointToCursorDX, block.width / 2f) * if (pointToCursor.x < 0) -1f else 1f
+                        y += min(pointToCursorDY, block.height / 2f) * if (pointToCursor.y < 0) -1f else 1f
 
-                            if (player.holdCursor) {
-                                player.cursorToPlayer.set(
-                                    player.cursorX - player.position.x,
-                                    player.cursorY - player.position.y,
-                                )
-                            }
+                        cursorX = x
+                        cursorY = y
+
+                        if (player.holdCursor) {
+                            player.cursorToPlayer.set(
+                                player.cursorX - player.position.x,
+                                player.cursorY - player.position.y,
+                            )
                         }
+                    }
+
                     return@rayCast fraction
                 },
                 position,
