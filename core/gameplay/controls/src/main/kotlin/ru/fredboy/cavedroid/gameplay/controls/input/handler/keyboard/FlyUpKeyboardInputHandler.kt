@@ -15,7 +15,7 @@ class FlyUpKeyboardInputHandler @Inject constructor(
 ) : IKeyboardInputHandler {
 
     override fun checkConditions(action: KeyboardInputAction): Boolean = action.actionKey is KeyboardInputActionKey.Up &&
-        !mobController.player.swim &&
+        !mobController.player.climb &&
         mobController.player.isFlyMode
 
     override fun handle(action: KeyboardInputAction) {

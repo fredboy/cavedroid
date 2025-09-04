@@ -1,7 +1,6 @@
 package ru.fredboy.cavedroid.game.world.generator
 
 import com.badlogic.gdx.utils.TimeUtils
-import ru.fredboy.cavedroid.domain.items.model.block.Block
 
 data class WorldGeneratorConfig(
     val width: Int,

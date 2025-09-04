@@ -23,8 +23,8 @@ class JumpKeyboardInputHandler @Inject constructor(
 
     override fun handle(action: KeyboardInputAction) {
         mobController.player.jump()
-        if (mobController.player.canSwim) {
-            mobController.player.swim = true
+        if (mobController.player.canClimb) {
+            mobController.player.climb = true
         }
     }
 }

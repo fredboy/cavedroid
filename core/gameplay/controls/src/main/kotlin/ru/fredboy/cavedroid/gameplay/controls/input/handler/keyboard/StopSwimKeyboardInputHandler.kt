@@ -18,9 +18,9 @@ class StopSwimKeyboardInputHandler @Inject constructor(
 
     override fun checkConditions(action: KeyboardInputAction): Boolean = action.actionKey is KeyboardInputActionKey.Up &&
         !action.isKeyDown &&
-        mobController.player.swim
+        mobController.player.climb
 
     override fun handle(action: KeyboardInputAction) {
-        mobController.player.swim = false
+        mobController.player.climb = false
     }
 }

@@ -28,7 +28,7 @@ interface MobWorldAdapter {
 
     fun getBox2dWorld(): World
 
-    fun getMediumLiquid(hitbox: Rectangle): Block.Fluid?
+    fun getClimbable(hitbox: Rectangle): Block.Climbable?
 
     fun getRayHandler(): RayHandler
 

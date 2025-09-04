@@ -36,7 +36,7 @@ class AggressiveMobBehavior :
             }
         }
 
-        swim = canSwim
+        climb = canSwim
     }
 
     companion object {

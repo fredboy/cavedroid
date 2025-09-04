@@ -39,7 +39,7 @@ class MobStepUpBlockContactHandler @Inject constructor() : AbstractContactHandle
 
         with(entityA as Mob) {
             // on the ground or swimming
-            if (!canJump && !swim) {
+            if (!canJump && !climb) {
                 return false
             }
 
