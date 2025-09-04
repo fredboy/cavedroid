@@ -43,7 +43,7 @@ class CrosshairRenderer @Inject constructor(
 
                 val pixmap = Pixmap.createFromFrameBuffer(
                     /* x = */ (x * (Gdx.graphics.width / viewport.width)).toInt(),
-                    /* y = */ (y * (Gdx.graphics.height / viewport.height)).toInt(),
+                    /* y = */ Gdx.graphics.height - (y * (Gdx.graphics.height / viewport.height)).toInt(),
                     /* w = */ 1,
                     /* h = */ 1,
                 )
@@ -57,6 +57,8 @@ class CrosshairRenderer @Inject constructor(
                     tint = Color(invertColor(pixmap.getPixel(0, 0))),
 
                 )
+
+                pixmap.dispose()
             }
         }
     }
