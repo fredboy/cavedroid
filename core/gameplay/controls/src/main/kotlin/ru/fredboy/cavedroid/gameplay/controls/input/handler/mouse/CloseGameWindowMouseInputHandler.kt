@@ -33,7 +33,7 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
 
     override fun checkConditions(action: MouseInputAction): Boolean = gameWindowsManager.currentWindowType != GameWindowType.NONE &&
         (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
-        action.actionKey.touchUp &&
+        !action.actionKey.touchUp &&
         !isInsideWindow(gameContextRepository, action, getCurrentWindowTexture())
 
     private fun getCurrentWindowTexture(): TextureRegion = when (val window = gameWindowsManager.currentWindowType) {
