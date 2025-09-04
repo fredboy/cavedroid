@@ -9,6 +9,7 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageFrameCountUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageSpriteUseCase
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
@@ -23,7 +24,15 @@ class BackgroundBlocksRenderer @Inject constructor(
     containerController: ContainerController,
     getBlockDamageFrameCount: GetBlockDamageFrameCountUseCase,
     getBlockDamageSprite: GetBlockDamageSpriteUseCase,
-) : BlocksRenderer(gameWorld, mobController, containerController, getBlockDamageFrameCount, getBlockDamageSprite) {
+    itemsRepository: ItemsRepository,
+) : BlocksRenderer(
+    gameWorld = gameWorld,
+    mobsController = mobController,
+    containerController = containerController,
+    getBlockDamageFrameCount = getBlockDamageFrameCount,
+    getBlockDamageSprite = getBlockDamageSprite,
+    itemsRepository = itemsRepository,
+) {
 
     override val renderLayer get() = RENDER_LAYER
 
