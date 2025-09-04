@@ -80,8 +80,8 @@ abstract class BlocksRenderer(
                 shapeRenderer.color.apply { a = 0.75f }
             }
 
-            val marginLeft = backgroundBlock.params.spriteMargins.left
-            val marginTop = backgroundBlock.params.spriteMargins.top
+            val marginLeft = backgroundBlock.params.spriteMarginsMeters.left
+            val marginTop = backgroundBlock.params.spriteMarginsMeters.top
 
             shapeRenderer.rect(
                 /* x = */ x.toFloat() + marginLeft,
