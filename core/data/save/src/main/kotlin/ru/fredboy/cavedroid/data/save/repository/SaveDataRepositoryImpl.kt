@@ -250,6 +250,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         }
 
         PixmapIO.writePNG(Gdx.files.absolute("$savesPath/$SCREENSHOT_FILE"), pixmap, Deflater.DEFAULT_COMPRESSION, true)
+        pixmap.dispose()
     }
 
     override fun getActualSaveDirName(
