@@ -19,10 +19,10 @@ class TurnOnFlyModeKeyboardInputHandler @Inject constructor(
 
     override fun checkConditions(action: KeyboardInputAction): Boolean = mobsController.player.gameMode.isCreative() &&
         action.actionKey is KeyboardInputActionKey.Up &&
-        !mobsController.player.swim &&
+        !mobsController.player.climb &&
         !mobsController.player.isFlyMode &&
         !mobsController.player.canJump &&
-        !mobsController.player.canSwim &&
+        !mobsController.player.canClimb &&
         action.isKeyDown &&
         (mobsController.player.controlMode == Player.ControlMode.WALK || !applicationContextRepository.isTouch())
 

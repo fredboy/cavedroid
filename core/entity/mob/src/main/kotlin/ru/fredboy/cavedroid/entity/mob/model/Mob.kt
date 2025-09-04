@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.TimeUtils
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.utils.Vector2Proxy
+import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.drop.DropAmount
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
@@ -87,9 +88,11 @@ abstract class Mob(
 
     private var pendingBodyTransform: Vector2? = null
 
-    var swim = false
+    var climb = false
 
     var canSwim = false
+
+    var canClimb = false
 
     var takingDamage = false
         set(value) {
@@ -224,14 +227,16 @@ abstract class Mob(
             return
         }
 
-        val liquid = mobWorldAdapter.getMediumLiquid(hitbox.apply { height *= .75f })
+        val climbable = mobWorldAdapter.getClimbable(hitbox.apply { height *= .75f })
+        val liquid = climbable as? Block.Fluid?
 
+        canClimb = climbable != null
         canSwim = liquid != null
 
-        val mediumResistance = liquid?.density ?: 0f
+        val mediumResistance = climbable?.climbSpeedFactor ?: 0f
         body.linearDamping = mediumResistance
 
-        body.gravityScale = 1f * if (swim && canSwim) -speed else 1f
+        body.gravityScale = 1f * if (climb && canClimb) -speed else 1f
     }
 
     fun applyPendingTransform(vector: Vector2) {

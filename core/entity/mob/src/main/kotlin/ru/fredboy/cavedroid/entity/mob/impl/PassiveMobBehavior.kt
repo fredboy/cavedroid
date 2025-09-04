@@ -25,7 +25,7 @@ class PassiveMobBehavior :
             }
         }
 
-        swim = canSwim
+        climb = canSwim
 
         if (this is SheepMob && MathUtils.randomBoolean(0.0001f)) {
             hasFur = true

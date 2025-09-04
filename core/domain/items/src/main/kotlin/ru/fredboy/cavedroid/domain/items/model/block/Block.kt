@@ -231,9 +231,12 @@ sealed class Block {
         val otherPartBlockKey: String,
     ) : Block()
 
-    sealed class Fluid : Block() {
+    sealed class Fluid : Climbable() {
         abstract val state: Int
         abstract val density: Float
+
+        override val climbSpeedFactor: Float
+            get() = density
     }
 
     data class Water(
@@ -248,13 +251,13 @@ sealed class Block {
         override val density: Float,
     ) : Fluid()
 
-    sealed class Climbable : Fluid() {
-        final override val state: Int = 0
+    sealed class Climbable : Block() {
+        abstract val climbSpeedFactor: Float
     }
 
     data class Ladder(
         override val params: CommonBlockParams,
-        override val density: Float,
+        override val climbSpeedFactor: Float,
     ) : Climbable()
 
     companion object {

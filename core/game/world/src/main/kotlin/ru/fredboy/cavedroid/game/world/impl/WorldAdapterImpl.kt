@@ -112,23 +112,27 @@ internal class WorldAdapterImpl @Inject constructor(
         return gameWorld.world
     }
 
-    override fun getMediumLiquid(hitbox: Rectangle): Block.Fluid? {
+    override fun getClimbable(hitbox: Rectangle): Block.Climbable? {
         val (startX, endX) = hitbox.x.toInt() to (hitbox.x + hitbox.width).toInt()
         val (startY, endY) = hitbox.y.toInt() to (hitbox.y + hitbox.height).toInt()
 
-        var medium: Block.Fluid? = null
+        var medium: Block.Climbable? = null
         for (x in startX..endX) {
             for (y in startY..endY) {
-                val block = (getForegroundBlock(x, y) as? Block.Fluid)
+                val block = (getForegroundBlock(x, y) as? Block.Climbable)
                     ?.takeIf { it.getRectangle(x, y).overlaps(hitbox) }
                     ?: continue
 
-                if (medium == null || medium.density < block.density) {
+                if (medium == null || medium.climbSpeedFactor < block.climbSpeedFactor) {
                     medium = block
                 }
             }
         }
         return medium
+    }
+
+    override fun getMediumLiquid(hitbox: Rectangle): Block.Fluid? {
+        return getClimbable(hitbox) as? Block.Fluid
     }
 
     override fun getRayHandler(): RayHandler {
