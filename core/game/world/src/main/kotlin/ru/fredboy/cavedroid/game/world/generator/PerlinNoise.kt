@@ -3,13 +3,12 @@ package ru.fredboy.cavedroid.game.world.generator
 import kotlin.math.floor
 import kotlin.random.Random
 
-class PerlinNoise(seed: Long) {
+class PerlinNoise(random: Random) {
 
     private val permutation = IntArray(512)
 
     init {
         val p = IntArray(256) { it }
-        val random = Random(seed)
         for (i in p.indices.reversed()) {
             val j = random.nextInt(i + 1)
             val tmp = p[i]

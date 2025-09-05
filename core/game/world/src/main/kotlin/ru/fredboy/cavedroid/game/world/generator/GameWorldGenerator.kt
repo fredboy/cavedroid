@@ -26,7 +26,7 @@ class GameWorldGenerator(
 
     private fun generateHeights(): IntArray {
         val result = IntArray(config.width)
-        val noise = PerlinNoise(config.seed)
+        val noise = PerlinNoise(random)
 
         val scale = 1.0
         val octaves = 4
