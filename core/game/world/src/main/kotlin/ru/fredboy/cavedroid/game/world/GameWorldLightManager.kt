@@ -7,9 +7,11 @@ import box2dLight.RayHandler
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.box2d.Filter
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
@@ -19,8 +21,9 @@ import javax.inject.Inject
 import kotlin.math.max
 
 @GameScope
-class GameWorldLightManager @Inject constructor() :
-    OnBlockPlacedListener,
+class GameWorldLightManager @Inject constructor(
+    private val gameContextRepository: GameContextRepository,
+) : OnBlockPlacedListener,
     OnBlockDestroyedListener,
     Disposable {
 
@@ -120,6 +123,18 @@ class GameWorldLightManager @Inject constructor() :
         }
         sunLight.direction = sunAngle
         sunLight.color = Color().apply { a = max(gameWorld.getSunlight(), 0.1f) }
+
+        val visibleWorld = gameContextRepository.getCameraContext().visibleWorld
+        blockLights.forEach { (_, light) ->
+            light.isActive = visibleWorld.overlaps(
+                Rectangle(
+                    light.x - light.distance,
+                    light.y - light.distance,
+                    light.distance * 2,
+                    light.distance * 2,
+                ),
+            )
+        }
     }
 
     companion object {
