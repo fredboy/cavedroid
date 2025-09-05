@@ -4,6 +4,7 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.game.world.GameWorldLightManager
 import javax.inject.Inject
 import kotlin.math.max
 
@@ -11,6 +12,7 @@ import kotlin.math.max
 class GameWorldMobDamageControllerTask @Inject constructor(
     private val mobController: MobController,
     private val gameWorld: GameWorld,
+    private val gameWorldLightManager: GameWorldLightManager,
 ) : BaseGameWorldControllerTask() {
 
     override fun exec() {
@@ -33,7 +35,7 @@ class GameWorldMobDamageControllerTask @Inject constructor(
                 mobController.player.damage(mob.params.damageToPlayer)
             }
 
-            if (mob.params.takesSunDamage && gameWorld.isDayTime()) {
+            if (mob.params.takesSunDamage && gameWorld.isDayTime() && gameWorldLightManager.isMobExposedToSun(mob)) {
                 mob.damage(SUN_DAMAGE)
             }
         }

@@ -17,6 +17,7 @@ import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
+import ru.fredboy.cavedroid.entity.mob.model.Mob
 import javax.inject.Inject
 import kotlin.math.max
 
@@ -113,6 +114,10 @@ class GameWorldLightManager @Inject constructor(
         _rayHandler = null
         _sunLight = null
         blockLights.clear()
+    }
+
+    fun isMobExposedToSun(mob: Mob): Boolean {
+        return sunLight.contains(mob.position.x, mob.position.y)
     }
 
     fun update() {

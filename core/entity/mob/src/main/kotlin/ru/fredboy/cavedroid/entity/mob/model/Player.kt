@@ -90,10 +90,6 @@ class Player(
         }
 
         super.damage(damage)
-
-        if (damage > 0 && canJump) {
-            jump()
-        }
     }
 
     override fun getDropItems(itemByKey: GetItemByKeyUseCase): List<InventoryItem> = inventory.items

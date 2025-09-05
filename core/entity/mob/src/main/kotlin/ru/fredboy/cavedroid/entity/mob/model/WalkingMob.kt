@@ -22,16 +22,6 @@ open class WalkingMob(
         controlVector.set(Vector2(direction.basis * speed, 0f))
     }
 
-    override fun damage(damage: Int) {
-        super.damage(damage)
-
-        if (damage > 0) {
-            if (canJump) {
-                jump()
-            }
-        }
-    }
-
     override fun draw(
         spriteBatch: SpriteBatch,
         x: Float,
