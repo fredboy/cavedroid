@@ -24,7 +24,8 @@ class GameScreen @Inject constructor(
     override val scaleFactor: Float
         get() = 0.5f
 
-    private var gameComponent: GameComponent? = null
+    var gameComponent: GameComponent? = null
+        private set
 
     private fun getGameContext(gameConfig: StartGameConfig): GameContext = GameContext(
         isLoadGame = gameConfig is StartGameConfig.Load,
@@ -75,12 +76,21 @@ class GameScreen @Inject constructor(
         gameComponent = getGameComponent(gameConfig)
     }
 
+    fun saveGame() {
+        val gameComponent = requireNotNull(gameComponent) {
+            "GameScreen#saveGame: gameComponent was not set before saveGame()"
+        }
+
+        gameComponent.gameRenderer.render(0f)
+        gameComponent.gameSaveHelper.saveGame(overwrite = true)
+    }
+
     override fun show() {
         val gameComponent = requireNotNull(gameComponent) {
             "GameScreen#show: gameComponent was not set before show"
         }
         gameComponent.gameProc.show()
-        render(1f / 60f)
+        gameComponent.gameRenderer.render(0f)
         gameComponent.gameSaveHelper.saveGame(overwrite = gameComponent.gameContextRepository.isLoadGame())
     }
 
@@ -108,9 +118,11 @@ class GameScreen @Inject constructor(
     }
 
     override fun pause() {
+        gameComponent?.gameProc?.onGamePaused()
     }
 
     override fun resume() {
+        gameComponent?.gameProc?.onGameResumed()
     }
 
     override fun hide() {
@@ -118,9 +130,5 @@ class GameScreen @Inject constructor(
 
     override fun onDispose() {
         resetGameComponent()
-    }
-
-    companion object {
-        private const val JOYSTICK_MARGIN = 16f
     }
 }

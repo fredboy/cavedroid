@@ -25,6 +25,7 @@ import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.gdx.game.GameScreen
 import ru.fredboy.cavedroid.gdx.menu.v2.MenuScreen
+import ru.fredboy.cavedroid.gdx.menu.v2.PauseMenuScreen
 import javax.inject.Singleton
 
 @Singleton
@@ -71,6 +72,8 @@ interface ApplicationComponent {
     val environmentTextureRegionsRepository: EnvironmentTextureRegionsRepository
 
     val menuScreen: MenuScreen
+
+    val pauseMenuScreen: PauseMenuScreen
 
     @Component.Builder
     interface Builder {

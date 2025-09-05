@@ -21,6 +21,7 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.about.aboutMenuView
 import ru.fredboy.cavedroid.gdx.menu.v2.view.attribution.AttributionMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.attribution.AttributionMenuViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.attribution.attributionMenuView
+import ru.fredboy.cavedroid.gdx.menu.v2.view.common.RootNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.DeleteWorldMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.DeleteWorldMenuViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.deleteWorldMenuView
@@ -36,6 +37,9 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.newgame.newGameMenuView
 import ru.fredboy.cavedroid.gdx.menu.v2.view.notice.NoticeMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.notice.NoticeMenuViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.notice.noticeMenuView
+import ru.fredboy.cavedroid.gdx.menu.v2.view.pause.PauseMenuNavKey
+import ru.fredboy.cavedroid.gdx.menu.v2.view.pause.PauseMenuViewModel
+import ru.fredboy.cavedroid.gdx.menu.v2.view.pause.pauseMenuView
 import ru.fredboy.cavedroid.gdx.menu.v2.view.settings.SettingsMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.settings.SettingsMenuViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.settings.settingsMenuView
@@ -48,6 +52,7 @@ import javax.inject.Inject
 class MenuNavigationController @Inject constructor(
     private val viewModelProviders: Set<@JvmSuppressWildcards ViewModelProvider<*, *>>,
     private val applicationContextRepository: ApplicationContextRepository,
+    private val rootNavKey: RootNavKey,
 ) : Disposable {
     private val viewport = ScalingViewport(
         Scaling.stretch,
@@ -71,7 +76,7 @@ class MenuNavigationController @Inject constructor(
         Scene2DSkin.defaultSkin = skin
     }
 
-    private val navBackStack = NavBackStack(MainMenuNavKey)
+    private val navBackStack = NavBackStack(rootNavKey)
 
     val navRootStage = NavRootStage(viewport, navBackStack) { navKey, cachedViewModel ->
         when (navKey) {
@@ -121,6 +126,11 @@ class MenuNavigationController @Inject constructor(
                 deleteWorldMenuView(viewModel)
             }
 
+            is PauseMenuNavKey -> {
+                val viewModel = findViewModel<PauseMenuNavKey, PauseMenuViewModel>(navKey, cachedViewModel)
+                pauseMenuView(viewModel)
+            }
+
             else -> throw IllegalStateException("Unknown key $navKey")
         }
     }
@@ -133,7 +143,10 @@ class MenuNavigationController @Inject constructor(
         navKey: K,
         cachedViewModel: ViewModel?,
     ): V {
-        val provider by lazy { viewModelProviders.first { it.viewModelClass == V::class } as ViewModelProvider<K, V> }
+        val provider by lazy {
+            @Suppress("UNCHECKED_CAST")
+            viewModelProviders.first { it.viewModelClass == V::class } as ViewModelProvider<K, V>
+        }
         return (cachedViewModel as? V) ?: provider.get(navKey, navBackStack)
     }
 

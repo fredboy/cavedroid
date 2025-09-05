@@ -93,6 +93,14 @@ public class GameProc implements Disposable {
         mGameRenderer.onResize();
     }
 
+    public void onGamePaused() {
+        mWorldLogicTimer.stop();
+    }
+
+    public void onGameResumed() {
+        mWorldLogicTimer.start();
+    }
+
     public void show() {
         Gdx.input.setInputProcessor(mGameInputProcessor);
     }

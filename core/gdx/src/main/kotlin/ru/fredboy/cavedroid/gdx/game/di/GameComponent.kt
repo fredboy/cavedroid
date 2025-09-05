@@ -11,6 +11,7 @@ import ru.fredboy.cavedroid.game.controller.drop.di.ControllerDropModule
 import ru.fredboy.cavedroid.game.controller.mob.di.MobControllerModule
 import ru.fredboy.cavedroid.game.world.di.GameWorldModule
 import ru.fredboy.cavedroid.gameplay.physics.di.PhysicsModule
+import ru.fredboy.cavedroid.gameplay.rendering.GameRenderer
 import ru.fredboy.cavedroid.gdx.di.ApplicationComponent
 import ru.fredboy.cavedroid.gdx.game.GameProc
 import ru.fredboy.cavedroid.gdx.game.GameSaveHelper
@@ -57,6 +58,8 @@ interface GameComponent {
     val gameContextRepository: GameContextRepository
 
     val gameSaveHelper: GameSaveHelper
+
+    val gameRenderer: GameRenderer
 
     @Component.Builder
     interface Builder {

@@ -16,26 +16,35 @@ import ru.fredboy.cavedroid.common.CaveDroidConstants
 @Scene2dDsl
 fun <S> KWidget<S>.menuButtonsTable(
     skin: Skin = Scene2DSkin.defaultSkin,
+    withBackground: Boolean = true,
+    withGameLogo: Boolean = true,
+    withVersion: Boolean = true,
     init: KTableWidget.() -> Unit = {},
 ): KTableWidget {
     return actor(KTableWidget(skin)) {
         setFillParent(true)
-        background(
-            TiledDrawable(
-                TextureRegionDrawable(
-                    skin.getRegion("background"),
+
+        if (withBackground) {
+            background(
+                TiledDrawable(
+                    TextureRegionDrawable(
+                        skin.getRegion("background"),
+                    ),
                 ),
-            ),
-        )
+            )
+        }
+
         pad(8f)
 
-        image("gamelogo").apply {
-            cell(
-                width = 600f,
-                height = 600f * drawable.minHeight / drawable.minWidth,
-            )
-            center()
-            top()
+        if (withGameLogo) {
+            image("gamelogo").apply {
+                cell(
+                    width = 600f,
+                    height = 600f * drawable.minHeight / drawable.minWidth,
+                )
+                center()
+                top()
+            }
         }
 
         row()
@@ -56,6 +65,8 @@ fun <S> KWidget<S>.menuButtonsTable(
             .left()
             .expandX()
 
-        label("CaveDroid ${CaveDroidConstants.VERSION}")
+        if (withVersion) {
+            label("CaveDroid ${CaveDroidConstants.VERSION}")
+        }
     }
 }

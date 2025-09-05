@@ -12,6 +12,7 @@ import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
 import ru.fredboy.cavedroid.gdx.di.ApplicationComponent
 import ru.fredboy.cavedroid.gdx.di.DaggerApplicationComponent
 import ru.fredboy.cavedroid.gdx.game.GameScreen
+import ru.fredboy.cavedroid.gdx.menu.v2.PauseMenuScreen
 
 class CaveDroidApplication(
     private val gameDataDirectoryPath: String,
@@ -69,15 +70,16 @@ class CaveDroidApplication(
 
     override fun dispose() {
         applicationComponent.menuScreen.dispose()
+        applicationComponent.pauseMenuScreen.dispose()
         applicationComponent.gameScreen.dispose()
         applicationComponent.disposeAssets()
     }
 
     override fun quitGame() {
-        (screen as? GameScreen)?.let { gameScreen ->
-            gameScreen.dispose()
-            setScreen(applicationComponent.menuScreen)
-        } ?: Gdx.app.error(TAG, "quitGame called when active screen is not Game")
+        applicationComponent.gameScreen.saveGame()
+        applicationComponent.gameScreen.dispose()
+        applicationComponent.pauseMenuScreen.dispose()
+        setScreen(applicationComponent.menuScreen)
     }
 
     override fun startGame(startGameConfig: StartGameConfig) {
@@ -98,6 +100,24 @@ class CaveDroidApplication(
 
     override fun triggerResize() {
         resize(Gdx.graphics.width, Gdx.graphics.height)
+    }
+
+    override fun pauseGame() {
+        if (screen !is GameScreen) {
+            Gdx.app.error(TAG, "Cannot pause when active screen is not game")
+            return
+        }
+        screen.pause()
+        setScreen(applicationComponent.pauseMenuScreen)
+    }
+
+    override fun resumeGame() {
+        if (screen !is PauseMenuScreen) {
+            Gdx.app.error(TAG, "Cannot resume when active screen is not pause menu")
+            return
+        }
+        setScreen(applicationComponent.gameScreen)
+        screen.resume()
     }
 
     companion object {

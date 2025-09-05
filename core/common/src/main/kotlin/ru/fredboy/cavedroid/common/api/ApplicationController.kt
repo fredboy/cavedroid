@@ -11,4 +11,8 @@ interface ApplicationController {
     fun exitGame()
 
     fun triggerResize()
+
+    fun resumeGame()
+
+    fun pauseGame()
 }
