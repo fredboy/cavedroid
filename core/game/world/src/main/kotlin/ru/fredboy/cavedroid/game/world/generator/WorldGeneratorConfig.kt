@@ -11,6 +11,7 @@ data class WorldGeneratorConfig(
     val biomes: List<Biome>,
     val minBiomeSize: Int,
     val seaLevel: Int,
+    val lavaLevel: Int,
     val defaultBackgroundBlockKey: String,
 ) {
 
@@ -20,11 +21,12 @@ data class WorldGeneratorConfig(
             width = 1024,
             height = 256,
             seed = TimeUtils.millis(),
-            maxSurfaceHeight = 208,
+            maxSurfaceHeight = 160,
             minSurfaceHeight = 64,
             biomes = Biome.entries.toList(),
             minBiomeSize = 64,
-            seaLevel = 192,
+            seaLevel = 128,
+            lavaLevel = 224,
             defaultBackgroundBlockKey = "stone",
         )
     }

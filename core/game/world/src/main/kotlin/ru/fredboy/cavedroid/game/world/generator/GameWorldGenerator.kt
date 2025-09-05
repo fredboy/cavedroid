@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.game.world.generator
 
-import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
@@ -355,7 +354,7 @@ class GameWorldGenerator(
     }
 
     private fun generateCaves() {
-        val iterations = 5
+        val iterations = 10
         val threshold = 2
 
         val caveMap = Array(config.width) { BooleanArray(config.height) }
@@ -365,12 +364,7 @@ class GameWorldGenerator(
                 if (y < heights[x]) {
                     caveMap[x][y] = false
                 } else {
-                    caveMap[x][y] = random.nextDouble() <
-                        MathUtils.clamp(
-                            (config.height - y).toDouble() / (config.height - heights[x]).toDouble(),
-                            0.25,
-                            0.9,
-                        )
+                    caveMap[x][y] = random.nextDouble() < 0.2
                 }
             }
         }
@@ -416,6 +410,19 @@ class GameWorldGenerator(
         return count
     }
 
+    private fun fillLava() {
+        val lava = itemsRepository.getBlockByKey("lava")
+
+        for (x in 0 until config.width) {
+            for (y in config.lavaLevel until config.height - 1) {
+                val block = foreMap[x][y]
+                if (block.isNone()) {
+                    foreMap[x][y] = lava
+                }
+            }
+        }
+    }
+
     /**
      * Generate world
      */
@@ -435,8 +442,8 @@ class GameWorldGenerator(
         }
 
         fillWater()
-
         generateCaves()
+        fillLava()
 
         return Pair(foreMap, backMap)
     }
