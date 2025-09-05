@@ -8,15 +8,19 @@ import com.badlogic.gdx.physics.box2d.ChainShape
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.model.ChunkUserData
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
+import java.util.LinkedList
 import javax.inject.Inject
 import kotlin.experimental.or
 
 @GameScope
-class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor() : GameWorldSolidBlockBodiesManager() {
+class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
+    private val itemsRepository: ItemsRepository,
+) : GameWorldSolidBlockBodiesManager() {
 
     override fun initialize() {
         for (x in 0..<gameWorld.width step CHUNK_SIZE) {
@@ -65,12 +69,12 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor() : GameWo
                         vertex.y -= position.y
                     }
 
-                if (vertices.isEmpty()) {
+                if (vertices.size < 2) {
                     return@forEach
                 }
 
                 val shape = ChainShape().apply {
-                    this.createLoop(vertices.toTypedArray())
+                    this.createChain(vertices.toTypedArray())
                 }
 
                 val fixtureDef = FixtureDef().apply {
@@ -96,7 +100,7 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor() : GameWo
     private fun traceOutline(cluster: Set<Pair<Int, Int>>): List<Vector2> {
         val start = cluster.minWith(compareBy({ it.first }, { it.second }))
 
-        val vertices = LinkedHashSet<Pair<Float, Float>>()
+        val vertices = LinkedList<Pair<Float, Float>>()
 
         var current = start
         var currentCorner = Corner.TOP_LEFT
@@ -104,7 +108,11 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor() : GameWo
         do {
             val block = gameWorld.getForeMap(current.first, current.second)
 
-            vertices.add(block.getCorner(current.first, current.second, currentCorner))
+            val corner = block.getCorner(current.first, current.second, currentCorner)
+
+            if (vertices.isEmpty() || corner != vertices.last()) {
+                vertices.add(corner)
+            }
 
             val next = when (currentCorner) {
                 Corner.TOP_LEFT -> Pair(current.first, current.second - 1)
@@ -131,7 +139,10 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor() : GameWo
             }
         } while (current != start || currentCorner != Corner.TOP_LEFT)
 
-        return vertices.map { (x, y) -> Vector2(x, y) }
+        return vertices.map { (x, y) -> Vector2(x, y) } + listOf(
+            gameWorld.getForeMap(start.first, start.second).getCorner(start.first, start.second, Corner.TOP_LEFT)
+                .let { (x, y) -> Vector2(x, y) },
+        )
     }
 
     private fun neighbourCoordinates(x: Int, y: Int): List<Pair<Int, Int>> {
@@ -151,6 +162,11 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor() : GameWo
         ).filter { (x, y) -> x in chunkHorizontal && y in chunkVertical }
     }
 
+    private fun getSolidBlockOrFallback(x: Int, y: Int): Block {
+        return gameWorld.getForeMap(x, y).takeIf { it.params.hasCollision }
+            ?: itemsRepository.fallbackBlock
+    }
+
     private fun getChunkData(chunkX: Int, chunkY: Int): Chunk {
         val clusters = mutableListOf<Cluster>()
         val blocksMap = mutableMapOf<Pair<Int, Int>, Block>()
@@ -160,15 +176,11 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor() : GameWo
 
         for (x in boundX) {
             for (y in boundY) {
-                val block = gameWorld.getForeMap(x, y)
+                val block = getSolidBlockOrFallback(x, y)
                 blocksMap[x to y] = block
 
-                if (!block.params.hasCollision) {
-                    continue
-                }
-
                 val neighbourCoordinates = neighbourCoordinates(x, y)
-                    .filter { gameWorld.getForeMap(it.first, it.second) == block }
+                    .filter { getSolidBlockOrFallback(it.first, it.second) == block }
                 val neighbourClusters = clusters.filter { cluster ->
                     neighbourCoordinates.any { it in cluster.points }
                 }
@@ -192,7 +204,12 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor() : GameWo
         }
 
         return Chunk(
-            clusters = clusters,
+            clusters = clusters.filter { cluster ->
+                cluster.points.none { (x, y) ->
+                    !cluster.block.params.hasCollision &&
+                        (x == boundX.first || x == boundX.last || y == boundY.first || y == boundY.last)
+                }
+            },
             userData = ChunkUserData(
                 boundX = boundX,
                 boundY = boundY,
