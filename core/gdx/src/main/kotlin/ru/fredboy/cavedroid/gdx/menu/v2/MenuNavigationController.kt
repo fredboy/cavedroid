@@ -21,6 +21,9 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.about.aboutMenuView
 import ru.fredboy.cavedroid.gdx.menu.v2.view.attribution.AttributionMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.attribution.AttributionMenuViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.attribution.attributionMenuView
+import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.DeleteWorldMenuNavKey
+import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.DeleteWorldMenuViewModel
+import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.deleteWorldMenuView
 import ru.fredboy.cavedroid.gdx.menu.v2.view.help.HelpMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.help.HelpMenuViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.help.helpMenuView
@@ -43,7 +46,7 @@ import javax.inject.Inject
 
 @MenuScope
 class MenuNavigationController @Inject constructor(
-    private val viewModelProviders: Set<@JvmSuppressWildcards ViewModelProvider<*>>,
+    private val viewModelProviders: Set<@JvmSuppressWildcards ViewModelProvider<*, *>>,
     private val applicationContextRepository: ApplicationContextRepository,
 ) : Disposable {
     private val viewport = ScalingViewport(
@@ -73,43 +76,49 @@ class MenuNavigationController @Inject constructor(
     val navRootStage = NavRootStage(viewport, navBackStack) { navKey, cachedViewModel ->
         when (navKey) {
             is MainMenuNavKey -> {
-                val viewModel = findViewModel<MainMenuViewModel>(navKey, cachedViewModel)
+                val viewModel = findViewModel<MainMenuNavKey, MainMenuViewModel>(navKey, cachedViewModel)
                 mainMenuView(viewModel)
             }
 
             is NewGameMenuNavKey -> {
-                val viewModel = findViewModel<NewGameMenuViewModel>(navKey, cachedViewModel)
+                val viewModel = findViewModel<NewGameMenuNavKey, NewGameMenuViewModel>(navKey, cachedViewModel)
                 newGameMenuView(viewModel)
             }
 
             is SettingsMenuNavKey -> {
-                val viewModel = findViewModel<SettingsMenuViewModel>(navKey, cachedViewModel)
+                val viewModel = findViewModel<SettingsMenuNavKey, SettingsMenuViewModel>(navKey, cachedViewModel)
                 settingsMenuView(viewModel)
             }
 
             is HelpMenuNavKey -> {
-                val viewModel = findViewModel<HelpMenuViewModel>(navKey, cachedViewModel)
+                val viewModel = findViewModel<HelpMenuNavKey, HelpMenuViewModel>(navKey, cachedViewModel)
                 helpMenuView(viewModel)
             }
 
             is AboutMenuNavKey -> {
-                val viewModel = findViewModel<AboutMenuViewModel>(navKey, cachedViewModel)
+                val viewModel = findViewModel<AboutMenuNavKey, AboutMenuViewModel>(navKey, cachedViewModel)
                 aboutMenuView(viewModel)
             }
 
             is AttributionMenuNavKey -> {
-                val viewModel = findViewModel<AttributionMenuViewModel>(navKey, cachedViewModel)
+                val viewModel = findViewModel<AttributionMenuNavKey, AttributionMenuViewModel>(navKey, cachedViewModel)
                 attributionMenuView(viewModel)
             }
 
             is NoticeMenuNavKey -> {
-                val viewModel = findViewModel<NoticeMenuViewModel>(navKey, cachedViewModel)
+                val viewModel = findViewModel<NoticeMenuNavKey, NoticeMenuViewModel>(navKey, cachedViewModel)
                 noticeMenuView(viewModel)
             }
 
             is SinglePlayerMenuNavKey -> {
-                val viewModel = findViewModel<SinglePlayerMenuViewModel>(navKey, cachedViewModel)
+                val viewModel =
+                    findViewModel<SinglePlayerMenuNavKey, SinglePlayerMenuViewModel>(navKey, cachedViewModel)
                 singlePlayerMenuView(viewModel)
+            }
+
+            is DeleteWorldMenuNavKey -> {
+                val viewModel = findViewModel<DeleteWorldMenuNavKey, DeleteWorldMenuViewModel>(navKey, cachedViewModel)
+                deleteWorldMenuView(viewModel)
             }
 
             else -> throw IllegalStateException("Unknown key $navKey")
@@ -120,9 +129,12 @@ class MenuNavigationController @Inject constructor(
         navBackStack.reset()
     }
 
-    private inline fun <reified V : Any> findViewModel(navKey: NavKey, cachedViewModel: ViewModel?): V {
-        return (cachedViewModel as? V) ?: viewModelProviders.first { it.viewModelClass == V::class }
-            .get(navKey, navBackStack) as V
+    private inline fun <reified K : NavKey, reified V : ViewModel> findViewModel(
+        navKey: K,
+        cachedViewModel: ViewModel?,
+    ): V {
+        val provider by lazy { viewModelProviders.first { it.viewModelClass == V::class } as ViewModelProvider<K, V> }
+        return (cachedViewModel as? V) ?: provider.get(navKey, navBackStack)
     }
 
     override fun dispose() {

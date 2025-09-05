@@ -19,6 +19,7 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.ViewModel
+import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.DeleteWorldMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.newgame.NewGameMenuNavKey
 
 class SinglePlayerMenuViewModel(
@@ -95,15 +96,7 @@ class SinglePlayerMenuViewModel(
     }
 
     fun onDeleteClick(save: SaveInfoVo) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                saveDataRepository.deleteSave(
-                    gameDataFolder = applicationContextRepository.getGameDirectory(),
-                    saveDir = save.directory,
-                )
-            }
-            reloadTrigger.emit(Trigger.LOAD_LIST)
-        }
+        navBackStack.push(DeleteWorldMenuNavKey(worldName = save.name, saveDirectory = save.directory))
     }
 
     fun onBackClick() {
