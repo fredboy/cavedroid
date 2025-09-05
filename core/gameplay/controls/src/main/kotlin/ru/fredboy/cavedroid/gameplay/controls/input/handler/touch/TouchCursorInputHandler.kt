@@ -129,13 +129,14 @@ class TouchCursorInputHandler @Inject constructor(
         player.startHitting(false)
         player.stopHitting()
 
-        (item as? Item.Placeable)?.let {
-            placeBlockActionMap.placeToForegroundAction(
-                item = item,
-                x = player.selectedX,
-                y = player.selectedY,
-            )
-        }?.takeIfTrue()
+        tryUseBlock().takeIfTrue()
+            ?: (item as? Item.Placeable)?.let {
+                placeBlockActionMap.placeToForegroundAction(
+                    item = item,
+                    x = player.selectedX,
+                    y = player.selectedY,
+                )
+            }?.takeIfTrue()
             ?: (item as? Item.Usable)?.let {
                 useItemActionMap[item.useActionKey]?.perform(item, player.selectedX, player.selectedY)
                     ?: run {
@@ -151,22 +152,21 @@ class TouchCursorInputHandler @Inject constructor(
                 } else {
                     false
                 }
-            }?.takeIfTrue()
-            ?: tryUseBlock()
+            }
     }
 
-    private fun tryUseBlock() {
+    private fun tryUseBlock(): Boolean {
         val block = gameWorld.getForeMap(mobController.player.selectedX, mobController.player.selectedY)
             .takeIf { !it.isNone() }
             ?: gameWorld.getBackMap(mobController.player.selectedX, mobController.player.selectedY)
                 .takeIf { !it.isNone() }
-            ?: return
+            ?: return false
 
-        useBlockActionMap[block.params.key]?.perform(
+        return useBlockActionMap[block.params.key]?.perform(
             block = block,
             x = mobController.player.selectedX,
             y = mobController.player.selectedY,
-        )
+        )?.let { true } ?: false
     }
 
     override fun checkConditions(action: MouseInputAction): Boolean {
