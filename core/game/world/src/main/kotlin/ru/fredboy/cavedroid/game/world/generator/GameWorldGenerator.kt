@@ -7,7 +7,6 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
-import kotlin.random.nextInt
 
 class GameWorldGenerator(
     private val config: WorldGeneratorConfig,
@@ -19,31 +18,25 @@ class GameWorldGenerator(
     private val foreMap by lazy { Array(config.width) { Array<Block>(config.height) { itemsRepository.fallbackBlock } } }
     private val backMap by lazy { Array(config.width) { Array<Block>(config.height) { itemsRepository.fallbackBlock } } }
 
-    private val heights by lazy { generateHeights() }
     private val biomesMap by lazy { generateBiomes() }
+    private val heights by lazy { generateHeights() }
 
     private val plainsPlants = listOf("dandelion", "rose", "tallgrass")
     private val mushrooms = listOf("mushroom_brown", "mushroom_red")
 
     private fun generateHeights(): IntArray {
-        val surfaceHeightRange = config.minSurfaceHeight..config.maxSurfaceHeight
         val result = IntArray(config.width)
+        val noise = PerlinNoise(config.seed)
 
-        result[0] = surfaceHeightRange.random(random)
+        val scale = 1.0
+        val octaves = 4
+        val amplitude = (config.maxSurfaceHeight - config.minSurfaceHeight) / 2.0
+        val baseHeight = (config.maxSurfaceHeight + config.minSurfaceHeight) / 2.0
 
-        for (x in 1..<config.width) {
-            val previous = result[x - 1]
-            var d = random.nextInt(-5, 6).let { if (it !in -4..4) it / abs(it) else 0 }
-
-            if (previous + d !in surfaceHeightRange) {
-                d = -d
-            }
-
-            if (result.lastIndex - x < abs(result[0] - previous) * 3) {
-                d = result[0].compareTo(previous).let { if (it != 0) it / abs(it) else 0 }
-            }
-
-            result[x] = result[x - 1] + d
+        for (x in 0 until config.width) {
+            val n = noise.periodicFractalNoise1D(x, config.width, scale, octaves)
+            val h = (baseHeight + (n - 0.5) * 2 * amplitude).toInt()
+            result[x] = h.coerceIn(config.minSurfaceHeight, config.maxSurfaceHeight)
         }
 
         return result
