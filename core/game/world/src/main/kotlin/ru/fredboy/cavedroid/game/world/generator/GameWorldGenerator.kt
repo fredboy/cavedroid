@@ -7,6 +7,7 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
+import kotlin.random.nextInt
 
 class GameWorldGenerator(
     private val config: WorldGeneratorConfig,
@@ -326,7 +327,20 @@ class GameWorldGenerator(
         }
     }
 
-    private fun generateOres(x: Int) {
+    private fun generateVein(x: Int, y: Int, size: Int, block: Block) {
+        val width = random.nextInt(1..size).takeIf { x + it < config.width } ?: (config.width - x - 1)
+        val height = random.nextInt(1..size).takeIf { y + it < config.height - 1 } ?: (config.height - y - 2)
+
+        for (ix in 0..width) {
+            for (iy in 0..height) {
+                if (random.nextDouble() < 0.5) {
+                    foreMap[x + ix][y + iy] = block
+                }
+            }
+        }
+    }
+
+    private fun generateOres() {
         val stone = itemsRepository.getBlockByKey("stone")
         val coal = itemsRepository.getBlockByKey("coal_ore")
         val iron = itemsRepository.getBlockByKey("iron_ore")
@@ -334,21 +348,24 @@ class GameWorldGenerator(
         val diamond = itemsRepository.getBlockByKey("diamond_ore")
         val lapis = itemsRepository.getBlockByKey("lapis_ore")
 
-        for (y in heights[x]..<config.height) {
-            val res = random.nextInt(10000)
+        for (x in 0..<config.width) {
+            for (y in heights[x]..<config.height) {
+                val res = random.nextInt(10000)
 
-            val h = config.height - y
-            val block = when {
-                res in 0..<25 && h < 16 -> diamond
-                res in 25..<50 && h < 32 -> gold
-                res in 50..<250 && h < 64 -> iron
-                res in 250..<450 && h < 128 -> coal
-                res in 450..<(450 + (25 - (abs(h - 16) * (25 / 16)))) -> lapis
-                else -> null
-            }
+                val h = config.height - y
+                val blockAndSize = when {
+                    res in 0..<25 && h < 32 -> diamond to 2
+                    res in 25..<50 && h < 64 -> gold to 3
+                    res in 50..<150 && h < 128 -> iron to 4
+                    res in 150..<300 && h < 192 -> coal to 4
+                    res in 300..<(300 + (32 - (abs(h - 16) * 2))) -> lapis to 4
+                    else -> null
+                }
 
-            if (block != null && foreMap[x][y] == stone) {
-                foreMap[x][y] = block
+                if (blockAndSize != null && foreMap[x][y] == stone) {
+                    val (block, size) = blockAndSize
+                    generateVein(x, y, size, block)
+                }
             }
         }
     }
@@ -442,10 +459,9 @@ class GameWorldGenerator(
                 Biome.DESERT -> desertBiome(x)
                 Biome.WINTER -> winterBiome(x)
             }
-
-            generateOres(x)
         }
 
+        generateOres()
         fillWater()
         generateCaves()
         fillLava()
