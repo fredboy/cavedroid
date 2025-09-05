@@ -15,7 +15,7 @@ class UpdateDirtAction @Inject constructor(
 ) : IUpdateBlockAction {
 
     override fun update(x: Int, y: Int) {
-        if (!gameWorld.getForeMap(x, y - 1).params.replaceable || MathUtils.randomBoolean(0.95f)) {
+        if (gameWorld.getForeMap(x, y - 1).run { !params.replaceable || isFluid() } || MathUtils.randomBoolean(0.95f)) {
             return
         }
 
