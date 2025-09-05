@@ -28,7 +28,7 @@ class GameWorldGenerator(
         val result = IntArray(config.width)
         val noise = PerlinNoise(random)
 
-        val scale = 1.0
+        val scale = 3.0
         val octaves = 4
         val amplitude = (config.maxSurfaceHeight - config.minSurfaceHeight) / 2.0
         val baseHeight = (config.maxSurfaceHeight + config.minSurfaceHeight) / 2.0
@@ -354,17 +354,17 @@ class GameWorldGenerator(
     }
 
     private fun generateCaves() {
-        val iterations = 10
-        val threshold = 2
+        val iterations = 5
+        val threshold = 3
 
         val caveMap = Array(config.width) { BooleanArray(config.height) }
 
         for (x in 0 until config.width) {
             for (y in 0 until config.height) {
-                if (y < heights[x]) {
-                    caveMap[x][y] = false
+                if (y < config.minSurfaceHeight) {
+                    caveMap[x][y] = true
                 } else {
-                    caveMap[x][y] = random.nextDouble() < 0.2
+                    caveMap[x][y] = random.nextDouble() < 0.5
                 }
             }
         }
@@ -387,7 +387,12 @@ class GameWorldGenerator(
         for (x in 0 until config.width) {
             for (y in heights[x] until config.height - 1) {
                 if (!caveMap[x][y]) {
-                    foreMap[x][y] = itemsRepository.fallbackBlock
+                    val filler = random.nextDouble()
+                    foreMap[x][y] = when {
+                        filler < 0.98 -> itemsRepository.fallbackBlock
+                        filler < 0.99 -> itemsRepository.getBlockByKey("water")
+                        else -> itemsRepository.getBlockByKey("lava")
+                    }
                 }
             }
         }
