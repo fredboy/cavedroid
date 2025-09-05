@@ -29,7 +29,7 @@ class GameWorldGenerator(
         val result = IntArray(config.width)
         val noise = PerlinNoise(random)
 
-        val scale = 3.0
+        val scale = 1.0
         val octaves = 4
         val amplitude = (config.maxSurfaceHeight - config.minSurfaceHeight) / 2.0
         val baseHeight = (config.maxSurfaceHeight + config.minSurfaceHeight) / 2.0
