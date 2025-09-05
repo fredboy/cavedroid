@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.game.world.generator
 
+import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
@@ -353,6 +354,68 @@ class GameWorldGenerator(
         }
     }
 
+    private fun generateCaves() {
+        val iterations = 5
+        val threshold = 2
+
+        val caveMap = Array(config.width) { BooleanArray(config.height) }
+
+        for (x in 0 until config.width) {
+            for (y in 0 until config.height) {
+                if (y < heights[x]) {
+                    caveMap[x][y] = false
+                } else {
+                    caveMap[x][y] = random.nextDouble() <
+                        MathUtils.clamp(
+                            (config.height - y).toDouble() / (config.height - heights[x]).toDouble(),
+                            0.25,
+                            0.9,
+                        )
+                }
+            }
+        }
+
+        repeat(iterations) {
+            val newMap = Array(config.width) { BooleanArray(config.height) }
+            for (x in 0 until config.width) {
+                for (y in heights[x] until config.height) {
+                    val solidNeighbors = countSolidNeighbors(caveMap, x, y)
+                    newMap[x][y] = if (solidNeighbors > threshold) true else false
+                }
+            }
+            for (x in 0 until config.width) {
+                for (y in heights[x] until config.height) {
+                    caveMap[x][y] = newMap[x][y]
+                }
+            }
+        }
+
+        for (x in 0 until config.width) {
+            for (y in heights[x] until config.height - 1) {
+                if (!caveMap[x][y]) {
+                    foreMap[x][y] = itemsRepository.fallbackBlock
+                }
+            }
+        }
+    }
+
+    private fun countSolidNeighbors(map: Array<BooleanArray>, cx: Int, cy: Int): Int {
+        var count = 0
+        for (dx in -1..1) {
+            for (dy in -1..1) {
+                if (dx == 0 && dy == 0) continue
+                val nx = cx + dx
+                val ny = cy + dy
+                if (nx in map.indices && ny in map[0].indices) {
+                    if (map[nx][ny]) count++
+                } else {
+                    count++
+                }
+            }
+        }
+        return count
+    }
+
     /**
      * Generate world
      */
@@ -372,6 +435,8 @@ class GameWorldGenerator(
         }
 
         fillWater()
+
+        generateCaves()
 
         return Pair(foreMap, backMap)
     }
