@@ -17,6 +17,8 @@ fun Stage.pauseMenuView(viewModel: PauseMenuViewModel) = viewModel.also {
             withGameLogo = false,
             withVersion = false,
         ) {
+            background(skin.getDrawable("shade_tile"))
+
             label(viewModel.getLocalizedString("pauseMenu")) {
                 setAlignment(Align.center)
             }.cell(
