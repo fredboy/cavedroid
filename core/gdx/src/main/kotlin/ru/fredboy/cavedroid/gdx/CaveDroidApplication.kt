@@ -56,7 +56,7 @@ class CaveDroidApplication(
                     isFullscreen = isFullscreen,
                     useDynamicCamera = preferencesStore.getPreference("dyncam").toBoolean(),
                     isAutoJumpEnabled = preferencesStore.getPreference("auto_jump").toBoolean(),
-                    locale = Locale(preferencesStore.getPreference("locale") ?: "en"),
+                    locale = Locale(preferencesStore.getPreference("locale") ?: Locale.getDefault().language),
                 ),
             )
             .applicationController(this)
