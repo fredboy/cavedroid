@@ -15,4 +15,5 @@ data class MobParams(
     val animationRange: Float,
     val damageToPlayer: Int,
     val takesSunDamage: Boolean,
+    val maxBreath: Int,
 )

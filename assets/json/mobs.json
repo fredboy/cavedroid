@@ -6,6 +6,7 @@
     "speed": 4.317,
     "behavior": "player",
     "hp": 20,
+    "breath": 20,
     "sprites": [
       {
         "file": "hand",
@@ -59,6 +60,7 @@
     "speed": 1.850,
     "behavior": "aggressive",
     "hp": 20,
+    "breath": -1,
     "animation_range": 15,
     "damage_to_player": 2,
     "takes_sun_damage": true,
@@ -129,6 +131,7 @@
     "height": 16,
     "speed": 3,
     "hp": 10,
+    "breath": 20,
     "behavior": "passive",
     "drop_info": [
       {
@@ -193,6 +196,7 @@
     "height": 22,
     "speed": 3,
     "hp": 10,
+    "breath": 20,
     "behavior": "passive",
     "drop_info": [
       {
@@ -266,6 +270,7 @@
     "height": 18,
     "speed": 3,
     "hp": 10,
+    "breath": 20,
     "behavior": "sheep",
     "drop_info": [
       {

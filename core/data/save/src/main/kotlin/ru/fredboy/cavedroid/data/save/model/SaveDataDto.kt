@@ -54,6 +54,7 @@ sealed class SaveDataDto {
         abstract val flyMode: Boolean
         abstract val maxHealth: Int
         abstract val health: Int
+        abstract val breath: Int?
     }
 
     @Serializable
@@ -134,6 +135,7 @@ sealed class SaveDataDto {
         override val maxHealth: Int,
         override val health: Int,
         val hasFur: Boolean = false,
+        override val breath: Int? = null,
     ) : MobSaveDataDto()
 
     @Serializable
@@ -155,6 +157,7 @@ sealed class SaveDataDto {
         override val maxHealth: Int,
         override val health: Int,
         val blockKey: String,
+        override val breath: Int? = null,
     ) : MobSaveDataDto()
 
     @Serializable
@@ -189,6 +192,7 @@ sealed class SaveDataDto {
         val spawnPointY: Float,
         val controlMode: ControlModeSaveDataDto,
         val activeSlot: Int,
+        override val breath: Int? = null,
     ) : MobSaveDataDto()
 
     @Serializable

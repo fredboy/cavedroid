@@ -16,4 +16,5 @@ data class MobParamsDto(
     @SerialName("takes_sun_damage") val takesSunDamage: Boolean = false,
     @SerialName("sprites") val sprites: List<MobSpriteDto>,
     @SerialName("drop_info") val dropInfo: List<DropInfoDto> = listOf(),
+    @SerialName("breath") val breath: Int,
 )

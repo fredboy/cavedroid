@@ -31,6 +31,7 @@ class FallingBlockMapper @Inject constructor(
         health = fallingBlock.health,
         blockKey = fallingBlock.block.params.key,
         key = fallingBlock.params.key,
+        breath = fallingBlock.breath,
     )
 
     fun mapFallingBlock(
@@ -50,6 +51,7 @@ class FallingBlockMapper @Inject constructor(
             direction = directionMapper.mapDirection(saveDataDto.direction)
             isFlyMode = saveDataDto.flyMode
             health = saveDataDto.health
+            breath = saveDataDto.breath ?: params.maxBreath
         }
     }
 

@@ -31,6 +31,15 @@ class GameWorldMobDamageControllerTask @Inject constructor(
                 }
             }
 
+            val isUnderWater = gameWorld.getForeMap(mob.mapX, mob.upperMapY)
+                .let { it.isWater() && it.getRectangle(mob.mapX, mob.upperMapY).overlaps(mob.hitbox) }
+
+            if (isUnderWater) {
+                mob.reduceBreath()
+            } else {
+                mob.restoreBreath()
+            }
+
             if (mob.behavior.attacksWhenPossible && mob.hitbox.overlaps(mobController.player.hitbox)) {
                 mobController.player.damage(mob.params.damageToPlayer)
             }

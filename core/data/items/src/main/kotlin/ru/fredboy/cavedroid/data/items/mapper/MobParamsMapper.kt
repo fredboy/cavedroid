@@ -32,6 +32,7 @@ class MobParamsMapper @Inject constructor(
             animationRange = dto.animationRange,
             damageToPlayer = dto.damageToPlayer,
             takesSunDamage = dto.takesSunDamage,
+            maxBreath = dto.breath,
         )
     }
 

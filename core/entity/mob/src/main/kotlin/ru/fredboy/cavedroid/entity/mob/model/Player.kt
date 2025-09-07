@@ -176,6 +176,7 @@ class Player(
         this.spawnPoint = spawnPoint
         isDead = false
         heal(maxHealth)
+        breath = params.maxBreath
         spawn(spawnPoint.x, spawnPoint.y, mobPhysicsFactory)
         cursorX = position.x
         cursorY = position.y

@@ -143,6 +143,28 @@
       "w": 9
     }
   },
+  "textures/breath":{
+    "bubble_whole": {
+      "w": 9
+    },
+    "bubble_half": {
+      "x": 9,
+      "w": 9
+    }
+  },
+  "textures/hunger":{
+    "food_whole": {
+      "w": 9
+    },
+    "food_half": {
+      "x": 9,
+      "w": 9
+    },
+    "food_empty": {
+      "x": 18,
+      "w": 9
+    }
+  },
   "joy_stick": {},
   "joy_background": {},
   "textures/inventory_char": {

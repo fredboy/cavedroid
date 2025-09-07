@@ -33,6 +33,7 @@ class WalkingMobMapper @Inject constructor(
         maxHealth = mob.maxHealth,
         health = mob.health,
         hasFur = (mob as? SheepMob)?.hasFur ?: false,
+        breath = mob.breath,
     )
 
     fun mapPassiveMob(
@@ -58,6 +59,7 @@ class WalkingMobMapper @Inject constructor(
             direction = directionMapper.mapDirection(saveDataDto.direction)
             isFlyMode = saveDataDto.flyMode
             health = saveDataDto.health
+            breath = saveDataDto.breath ?: params.maxBreath
         }
     }
 

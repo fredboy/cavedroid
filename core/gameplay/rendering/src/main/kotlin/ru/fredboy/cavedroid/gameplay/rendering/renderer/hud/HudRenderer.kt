@@ -32,6 +32,8 @@ class HudRenderer @Inject constructor(
     private val wholeHeartTexture get() = requireNotNull(textureRegions[WHOLE_HEART_KEY])
     private val emptyHeartTexture get() = requireNotNull(textureRegions[EMPTY_HEART_KEY])
     private val halfHeartTexture get() = requireNotNull(textureRegions[HALF_HEART_KEY])
+    private val wholeBubbleTexture get() = requireNotNull(textureRegions[WHOLE_BUBBLE_KEY])
+    private val halfBubbleTexture get() = requireNotNull(textureRegions[HALF_BUBBLE_KEY])
 
     private fun drawHealth(spriteBatch: SpriteBatch, x: Float, y: Float) {
         val player = mobController.player
@@ -54,6 +56,25 @@ class HudRenderer @Inject constructor(
                 spriteBatch.draw(halfHeart, x + i * wholeHeart.regionWidth, y)
             } else {
                 spriteBatch.draw(emptyHeart, x + i * wholeHeart.regionWidth, y)
+            }
+        }
+    }
+
+    private fun drawBreath(spriteBatch: SpriteBatch, x: Float, y: Float) {
+        val player = mobController.player
+
+        if (player.gameMode.isCreative()) {
+            return
+        }
+
+        val x = x - wholeBubbleTexture.regionWidth
+
+        if (player.breath < player.params.maxBreath) {
+            for (i in 0..<player.breath / 2) {
+                spriteBatch.draw(wholeBubbleTexture, x - i * wholeBubbleTexture.regionWidth, y)
+            }
+            if (player.breath % 2 == 1) {
+                spriteBatch.draw(halfBubbleTexture, x - (player.breath / 2) * wholeBubbleTexture.regionWidth, y)
             }
         }
     }
@@ -81,7 +102,8 @@ class HudRenderer @Inject constructor(
     private fun drawHotbarSelector(spriteBatch: SpriteBatch, hotbarX: Float) {
         spriteBatch.draw(
             /* region = */ hotbarSelectorTexture,
-            /* x = */ hotbarX - HotbarSelectorConfig.horizontalPadding +
+            /* x = */
+            hotbarX - HotbarSelectorConfig.horizontalPadding +
                 mobController.player.activeSlot * (HotbarConfig.itemSeparatorWidth + HotbarConfig.itemSlotSpace),
             /* y = */ -HotbarSelectorConfig.verticalPadding,
         )
@@ -93,6 +115,7 @@ class HudRenderer @Inject constructor(
 
         spriteBatch.draw(hotbar, hotbarX, 0f)
         drawHealth(spriteBatch, hotbarX, hotbarTexture.regionHeight.toFloat())
+        drawBreath(spriteBatch, hotbarX + hotbarTexture.regionWidth, hotbarTexture.regionHeight.toFloat())
         drawHotbarSelector(spriteBatch, hotbarX)
         drawHotbarItems(spriteBatch, shapeRenderer, hotbarX)
 
@@ -118,6 +141,8 @@ class HudRenderer @Inject constructor(
         private const val WHOLE_HEART_KEY = "heart_whole"
         private const val HALF_HEART_KEY = "heart_half"
         private const val EMPTY_HEART_KEY = "heart_empty"
+        private const val WHOLE_BUBBLE_KEY = "bubble_whole"
+        private const val HALF_BUBBLE_KEY = "bubble_half"
 
         private data object HotbarConfig {
             const val horizontalMargin = 3f

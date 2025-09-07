@@ -42,6 +42,7 @@ class FallingBlock(
                 animationRange = 0f,
                 damageToPlayer = 0,
                 takesSunDamage = false,
+                maxBreath = -1,
             )
         }
     }

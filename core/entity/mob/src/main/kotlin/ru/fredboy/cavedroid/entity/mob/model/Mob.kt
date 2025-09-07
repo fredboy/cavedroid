@@ -53,7 +53,7 @@ abstract class Mob(
     val controlVector = Vector2()
 
     val mapX get() = body.position.x.toInt()
-    val upperMapY get() = (body.position.y - width / 2).toInt()
+    val upperMapY get() = (body.position.y - height / 2).toInt()
     val middleMapY get() = body.position.y.toInt()
     val lowerMapY get() = (body.position.y + height / 2).toInt()
 
@@ -81,6 +81,8 @@ abstract class Mob(
         }
 
     var health = maxHealth
+
+    var breath = params.maxBreath
 
     var footContactCounter = 0
 
@@ -186,6 +188,20 @@ abstract class Mob(
 
     fun kill() {
         isDead = true
+    }
+
+    fun reduceBreath() {
+        if (breath > 0) {
+            breath--
+        } else if (breath == 0) {
+            damage(2)
+        }
+    }
+
+    fun restoreBreath() {
+        if (breath < params.maxBreath) {
+            breath++
+        }
     }
 
     open fun damage(damage: Int) {
