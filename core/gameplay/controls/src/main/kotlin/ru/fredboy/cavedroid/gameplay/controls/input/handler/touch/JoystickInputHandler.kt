@@ -49,7 +49,7 @@ class JoystickInputHandler @Inject constructor(
     private fun resetVelocity() {
         mobController.player.controlVector.x = 0f
 
-        if (mobController.player.isFlyMode) {
+        if (mobController.player.isFlyMode || mobController.player.canClimb) {
             mobController.player.controlVector.y = 0f
         }
     }
@@ -104,7 +104,7 @@ class JoystickInputHandler @Inject constructor(
 
         mobController.player.controlVector.x = joyVector.x
 
-        if (mobController.player.isFlyMode) {
+        if (mobController.player.isFlyMode || mobController.player.canClimb) {
             mobController.player.controlVector.y = joyVector.y
         }
     }

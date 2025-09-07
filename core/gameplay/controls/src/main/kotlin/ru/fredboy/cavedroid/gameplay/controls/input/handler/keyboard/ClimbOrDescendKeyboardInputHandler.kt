@@ -10,18 +10,28 @@ import javax.inject.Inject
 
 @GameScope
 @BindKeyboardInputHandler
-class SwimUpKeyboardInputHandler @Inject constructor(
+class ClimbOrDescendKeyboardInputHandler @Inject constructor(
     private val mobController: MobController,
 ) : IKeyboardInputHandler {
 
-    override fun checkConditions(action: KeyboardInputAction): Boolean = action.actionKey is KeyboardInputActionKey.Up &&
-        action.isKeyDown &&
-        !mobController.player.climb &&
-        mobController.player.canClimb &&
+    override fun checkConditions(action: KeyboardInputAction): Boolean = (
+        action.actionKey is KeyboardInputActionKey.Up ||
+            action.actionKey is KeyboardInputActionKey.Down
+        ) &&
         !mobController.player.canJump &&
         !mobController.player.isFlyMode
 
     override fun handle(action: KeyboardInputAction) {
-        mobController.player.climb = true
+        when (action.actionKey) {
+            is KeyboardInputActionKey.Up -> {
+                mobController.player.climb = action.isKeyDown && mobController.player.canClimb
+            }
+
+            is KeyboardInputActionKey.Down -> {
+                mobController.player.descend = action.isKeyDown && mobController.player.canClimb
+            }
+
+            else -> {}
+        }
     }
 }

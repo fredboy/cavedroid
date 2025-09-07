@@ -25,6 +25,7 @@ class MobOnGroundSensorToBlockContactHandler @Inject constructor() : AbstractCon
     override fun Mob.handleBeginContact(contact: Contact, entityB: Block) {
         footContactCounter++
         isFlyMode = false
+        descend = false
         controlVector.y = 0f
     }
 

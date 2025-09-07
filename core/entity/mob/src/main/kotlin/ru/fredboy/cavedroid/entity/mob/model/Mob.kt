@@ -90,6 +90,8 @@ abstract class Mob(
 
     var climb = false
 
+    var descend = false
+
     var canSwim = false
 
     var canClimb = false
@@ -236,7 +238,16 @@ abstract class Mob(
         val mediumResistance = climbable?.climbSpeedFactor ?: 0f
         body.linearDamping = mediumResistance
 
-        body.gravityScale = 1f * if (climb && canClimb) -speed else 1f
+        body.gravityScale = if (canClimb) {
+            when {
+                controlVector.y != 0f -> controlVector.y
+                climb -> -speed
+                descend -> speed
+                else -> 1f
+            }
+        } else {
+            1f
+        }
     }
 
     fun applyPendingTransform(vector: Vector2) {
@@ -255,7 +266,7 @@ abstract class Mob(
         if (!controlVector.isZero) {
             body.applyForceToCenter(controlVector, true)
             velocity.x = MathUtils.clamp(velocity.x, -abs(controlVector.x), abs(controlVector.x))
-            if (isFlyMode) {
+            if (isFlyMode || canClimb) {
                 velocity.y = MathUtils.clamp(velocity.y, -abs(controlVector.y), abs(controlVector.y))
             } else {
                 this@Mob.controlVector.y = 0f
