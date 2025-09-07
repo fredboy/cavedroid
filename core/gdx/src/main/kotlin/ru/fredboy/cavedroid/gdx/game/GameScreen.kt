@@ -68,6 +68,8 @@ class GameScreen @Inject constructor(
         resetGameComponent()
         gameComponent = getGameComponent(gameConfig).apply {
             gameProc.setPlayerGameMode(gameConfig.gameMode)
+            gameRenderer.render(0f)
+            gameSaveHelper.saveGame(false)
         }
     }
 
@@ -91,7 +93,6 @@ class GameScreen @Inject constructor(
         }
         gameComponent.gameProc.show()
         gameComponent.gameRenderer.render(0f)
-        gameComponent.gameSaveHelper.saveGame(overwrite = gameComponent.gameContextRepository.isLoadGame())
     }
 
     override fun render(delta: Float) {
