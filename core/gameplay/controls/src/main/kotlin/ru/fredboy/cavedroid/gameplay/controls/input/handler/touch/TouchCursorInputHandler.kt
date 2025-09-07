@@ -270,6 +270,6 @@ class TouchCursorInputHandler @Inject constructor(
 
     companion object {
         private const val TAG = "TouchWorldInputHandler"
-        private const val TOUCH_HOLD_TIME_SEC = 0.75f
+        private const val TOUCH_HOLD_TIME_SEC = 0.5f
     }
 }

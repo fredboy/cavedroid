@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.entity.mob.impl
 
+import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.item.Item
@@ -13,6 +14,8 @@ class PlayerMobBehavior :
     BaseMobBehavior<Player>(
         mobType = Player::class,
     ) {
+
+    private var creativeDestroyBlockMs = 0L
 
     private fun Block?.isHittable() = this != null && !isNone() && params.hitPoints >= 0
 
@@ -62,22 +65,24 @@ class PlayerMobBehavior :
             }
 
             GameMode.CREATIVE -> {
-                when (targetLayer) {
-                    Layer.FOREGROUND -> worldAdapter.destroyForegroundBlock(
-                        x = selectedX,
-                        y = selectedY,
-                        shouldDrop = false,
-                        destroyedByPlayer = true,
-                    )
+                if (TimeUtils.timeSinceMillis(creativeDestroyBlockMs) >= CREATIVE_DESTROY_TIMEOUT_MS) {
+                    when (targetLayer) {
+                        Layer.FOREGROUND -> worldAdapter.destroyForegroundBlock(
+                            x = selectedX,
+                            y = selectedY,
+                            shouldDrop = false,
+                            destroyedByPlayer = true,
+                        )
 
-                    Layer.BACKGROUND -> worldAdapter.destroyBackgroundBlock(
-                        x = selectedX,
-                        y = selectedY,
-                        shouldDrop = false,
-                        destroyedByPlayer = true,
-                    )
+                        Layer.BACKGROUND -> worldAdapter.destroyBackgroundBlock(
+                            x = selectedX,
+                            y = selectedY,
+                            shouldDrop = false,
+                            destroyedByPlayer = true,
+                        )
+                    }
+                    creativeDestroyBlockMs = TimeUtils.millis()
                 }
-                stopHitting()
             }
         }
     }
@@ -128,5 +133,9 @@ class PlayerMobBehavior :
         if (isHitting && isHittingWithDamage) {
             blockDamage += 60f * delta * blockDamageMultiplier
         }
+    }
+
+    companion object {
+        private const val CREATIVE_DESTROY_TIMEOUT_MS = 500L
     }
 }

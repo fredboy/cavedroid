@@ -103,8 +103,6 @@ class GameWorldLightManager @Inject constructor(
         val chunkX1 = blockX - blockX % CHUNK_SIZE
         val chunkY1 = blockY - blockY % CHUNK_SIZE
 
-        Gdx.app.debug(TAG, "Updating chunk X=$chunkX1 Y=$chunkY1")
-
         blockLights.remove(chunkX1 to chunkY1)?.let { lights ->
             lights.forEach { light ->
                 light.remove(true)
