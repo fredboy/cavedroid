@@ -7,13 +7,13 @@ import box2dLight.RayHandler
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Filter
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.neighbourCoordinates
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
-import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
@@ -25,7 +25,6 @@ import kotlin.math.max
 class GameWorldLightManager @Inject constructor(
     private val gameContextRepository: GameContextRepository,
 ) : OnBlockPlacedListener,
-    OnBlockDestroyedListener,
     Disposable {
 
     private var _gameWorld: GameWorld? = null
@@ -43,7 +42,7 @@ class GameWorldLightManager @Inject constructor(
     val rayHandler: RayHandler
         get() = requireNotNull(_rayHandler)
 
-    private val blockLights = mutableMapOf<Triple<Int, Int, Layer>, Light>()
+    private val blockLights = mutableMapOf<Pair<Int, Int>, List<Light>>()
 
     fun attachToGameWorld(gameWorld: GameWorld) {
         if (_gameWorld != null) {
@@ -63,51 +62,21 @@ class GameWorldLightManager @Inject constructor(
             setSoftnessLength(5f)
         }
 
-        for (x in 0 until gameWorld.width) {
-            for (y in 0 until gameWorld.height) {
-                onBlockPlaced(gameWorld.getForeMap(x, y), x, y, Layer.FOREGROUND)
-                onBlockPlaced(gameWorld.getBackMap(x, y), x, y, Layer.BACKGROUND)
+        for (x in 0..<gameWorld.width step CHUNK_SIZE) {
+            for (y in 0..<gameWorld.height step CHUNK_SIZE) {
+                updateChunk(x, y)
             }
         }
 
         gameWorld.addBlockPlacedListener(this)
-        gameWorld.addBlockDestroyedListener(this)
     }
 
     override fun onBlockPlaced(block: Block, x: Int, y: Int, layer: Layer) {
-        val lightInfo = block.params.lightInfo ?: return
-
-        blockLights[Triple(x, y, layer)] = PointLight(
-            rayHandler,
-            128,
-            Color().apply { a = lightInfo.lightBrightness },
-            lightInfo.lightDistance,
-            x + 0.5f,
-            y + 0.5f,
-        ).apply {
-            val filter = Filter().apply {
-                maskBits = PhysicsConstants.CATEGORY_OPAQUE
-            }
-            setContactFilter(filter)
-            setSoftnessLength(3f)
-        }
-    }
-
-    override fun onBlockDestroyed(
-        block: Block,
-        x: Int,
-        y: Int,
-        layer: Layer,
-        withDrop: Boolean,
-        destroyedByPlayer: Boolean,
-    ) {
-        val light = blockLights.remove(Triple(x, y, layer))
-        light?.remove(true)
+        updateChunk(x, y)
     }
 
     override fun dispose() {
         gameWorld.removeBlockPlacedListener(this)
-        gameWorld.removeBlockDestroyedListener(this)
         _gameWorld = null
 
         rayHandler.dispose()
@@ -128,21 +97,116 @@ class GameWorldLightManager @Inject constructor(
         }
         sunLight.direction = sunAngle
         sunLight.color = Color().apply { a = max(gameWorld.getSunlight(), 0.1f) }
+    }
 
-        val visibleWorld = gameContextRepository.getCameraContext().visibleWorld
-        blockLights.forEach { (_, light) ->
-            light.isActive = visibleWorld.overlaps(
-                Rectangle(
-                    light.x - light.distance,
-                    light.y - light.distance,
-                    light.distance * 2,
-                    light.distance * 2,
-                ),
-            )
+    private fun updateChunk(blockX: Int, blockY: Int) {
+        val chunkX1 = blockX - blockX % CHUNK_SIZE
+        val chunkY1 = blockY - blockY % CHUNK_SIZE
+
+        Gdx.app.debug(TAG, "Updating chunk X=$chunkX1 Y=$chunkY1")
+
+        blockLights.remove(chunkX1 to chunkY1)?.let { lights ->
+            lights.forEach { light ->
+                light.remove(true)
+            }
+        }
+
+        val clusters = getChunkData(chunkX1, chunkY1).clusters
+
+        blockLights[chunkX1 to chunkY1] = clusters.map { cluster ->
+            val lightInfo = cluster.block.params.lightInfo ?: return
+
+            val lightPosition = cluster.getLightPoint()
+
+            PointLight(
+                rayHandler,
+                128,
+                Color().apply { a = lightInfo.lightBrightness },
+                lightInfo.lightDistance,
+                lightPosition.x,
+                lightPosition.y,
+            ).apply {
+                val filter = Filter().apply {
+                    maskBits = PhysicsConstants.CATEGORY_OPAQUE
+                }
+                setContactFilter(filter)
+                setSoftnessLength(3f)
+            }
         }
     }
 
+    private fun Cluster.getLightPoint(): Vector2 {
+        val pointsSequence = points.asSequence()
+
+        val avgX = pointsSequence.map { it.first }.average()
+        val avgY = pointsSequence.map { it.second }.average()
+
+        val best = pointsSequence.minBy { (x, y) ->
+            val dx = x - avgX
+            val dy = y - avgY
+            dx * dx + dy * dy
+        }
+
+        return block.getRectangle(best.first, best.second).getCenter(Vector2())
+    }
+
+    private fun getLightSourceBlock(x: Int, y: Int): Block? {
+        return gameWorld.getForeMap(x, y).takeIf { it.params.lightInfo != null }
+            ?: gameWorld.getBackMap(x, y).takeIf { it.params.lightInfo != null }
+    }
+
+    private fun getChunkData(chunkX: Int, chunkY: Int): Chunk {
+        val clusters = mutableListOf<Cluster>()
+        val blocksMap = mutableMapOf<Pair<Int, Int>, Block>()
+
+        val boundX = chunkX until chunkX + CHUNK_SIZE
+        val boundY = chunkY until chunkY + CHUNK_SIZE
+
+        for (x in boundX) {
+            for (y in boundY) {
+                val block = getLightSourceBlock(x, y) ?: continue
+
+                blocksMap[x to y] = block
+
+                val neighbourCoordinates = neighbourCoordinates(x, y, CHUNK_SIZE)
+                    .filter { getLightSourceBlock(it.first, it.second)?.params?.lightInfo != null }
+                val neighbourClusters = clusters.filter { cluster ->
+                    neighbourCoordinates.any { it in cluster.points }
+                }
+                clusters.removeAll(neighbourClusters)
+
+                val merged = neighbourClusters
+                    .map(Cluster::points)
+                    .flatten()
+                    .takeIf { it.isNotEmpty() }
+                    ?.toMutableSet()
+                    ?: mutableSetOf()
+
+                merged.add(x to y)
+                clusters.add(
+                    Cluster(
+                        points = merged,
+                        block = block,
+                    ),
+                )
+            }
+        }
+
+        return Chunk(clusters)
+    }
+
+    private data class Chunk(
+        val clusters: List<Cluster>,
+    )
+
+    private data class Cluster(
+        val points: Set<Pair<Int, Int>>,
+        val block: Block,
+    )
+
     companion object {
         private const val TAG = "GameWorldLightManager"
+
+        private const val CHUNK_SIZE = 4
     }
 }

@@ -155,7 +155,13 @@ class GameWorld @Inject constructor(
             return
         }
 
-        getMap(x, y, layer)
+        val currentBlock = getMap(transformedX, y, layer)
+
+        if (currentBlock == value) {
+            return
+        }
+
+        currentBlock
             .takeIf { !it.isNone() }
             ?.let { currentBlock ->
                 notifyBlockDestroyed(transformedX, y, layer, currentBlock, dropOld, destroyedByPlayer)

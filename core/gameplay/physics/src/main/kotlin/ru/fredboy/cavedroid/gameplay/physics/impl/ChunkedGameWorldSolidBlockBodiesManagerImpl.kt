@@ -7,13 +7,14 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.ChainShape
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.neighbourCoordinates
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.model.ChunkUserData
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
-import java.util.LinkedList
+import java.util.*
 import javax.inject.Inject
 import kotlin.experimental.or
 
@@ -145,23 +146,6 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
         )
     }
 
-    private fun neighbourCoordinates(x: Int, y: Int): List<Pair<Int, Int>> {
-        val chunkX1 = x - x % CHUNK_SIZE
-        val chunkY1 = y - y % CHUNK_SIZE
-        val chunkX2 = chunkX1 + CHUNK_SIZE
-        val chunkY2 = chunkY1 + CHUNK_SIZE
-
-        val chunkHorizontal = chunkX1 until chunkX2
-        val chunkVertical = chunkY1 until chunkY2
-
-        return listOf(
-            (x - 1) to y,
-            (x + 1) to y,
-            x to y - 1,
-            x to y + 1,
-        ).filter { (x, y) -> x in chunkHorizontal && y in chunkVertical }
-    }
-
     private fun getSolidBlockOrFallback(x: Int, y: Int): Block {
         return gameWorld.getForeMap(x, y).takeIf { it.params.hasCollision }
             ?: itemsRepository.fallbackBlock
@@ -179,7 +163,7 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
                 val block = getSolidBlockOrFallback(x, y)
                 blocksMap[x to y] = block
 
-                val neighbourCoordinates = neighbourCoordinates(x, y)
+                val neighbourCoordinates = neighbourCoordinates(x, y, CHUNK_SIZE)
                     .filter { getSolidBlockOrFallback(it.first, it.second) == block }
                 val neighbourClusters = clusters.filter { cluster ->
                     neighbourCoordinates.any { it in cluster.points }
