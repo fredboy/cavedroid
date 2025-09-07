@@ -17,7 +17,7 @@ fun Stage.pauseMenuView(viewModel: PauseMenuViewModel) = viewModel.also {
             withGameLogo = false,
             withVersion = false,
         ) {
-            label("Pause Menu") {
+            label(viewModel.getLocalizedString("pauseMenu")) {
                 setAlignment(Align.center)
             }.cell(
                 expandX = true,
@@ -26,7 +26,7 @@ fun Stage.pauseMenuView(viewModel: PauseMenuViewModel) = viewModel.also {
 
             row()
 
-            textButton("Resume Game") {
+            textButton(viewModel.getLocalizedString("resumeGame")) {
                 onClick {
                     viewModel.onResumeClick()
                 }
@@ -34,7 +34,7 @@ fun Stage.pauseMenuView(viewModel: PauseMenuViewModel) = viewModel.also {
 
             row()
 
-            textButton("Settings") {
+            textButton(viewModel.getLocalizedString("settings")) {
                 onClick {
                     viewModel.onSettingsClick()
                 }
@@ -42,7 +42,7 @@ fun Stage.pauseMenuView(viewModel: PauseMenuViewModel) = viewModel.also {
 
             row()
 
-            textButton("Quit") {
+            textButton(viewModel.getLocalizedString("quit")) {
                 onClick {
                     viewModel.onQuitGameClick()
                 }

@@ -22,7 +22,7 @@ import ru.fredboy.cavedroid.common.CaveDroidConstants.MAX_SAVES_COUNT
 suspend fun Stage.singlePlayerMenuView(viewModel: SinglePlayerMenuViewModel) = viewModel.also {
     viewModel.stateFlow.collect { state ->
         when (state) {
-            is SinglePlayerMenuState.LoadingWorld -> loading()
+            is SinglePlayerMenuState.LoadingWorld -> loading(viewModel)
             is SinglePlayerMenuState.ShowList -> savesList(viewModel, state)
         }
     }
@@ -46,6 +46,7 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
                 table {
                     state.saves.takeIf { it.isNotEmpty() }?.onEach { save ->
                         saveItem(
+                            viewModel = viewModel,
                             saveInfo = save,
                             onLoad = { viewModel.onLoadClick(save) },
                             onDelete = { viewModel.onDeleteClick(save) },
@@ -57,7 +58,7 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
                         )
 
                         row()
-                    } ?: label("No worlds here yet... Try creating a new one")
+                    } ?: label(viewModel.getLocalizedString("noWorlds"))
                 }
             }.also { pane ->
                 setScrollFocus(pane)
@@ -71,7 +72,7 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
                 .bottom()
 
             table {
-                textButton("New") {
+                textButton(viewModel.getLocalizedString("newWorld")) {
                     onClick {
                         if (!isDisabled) {
                             viewModel.onNewGameClick()
@@ -85,7 +86,7 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
                     padRight = 16f,
                 )
 
-                textButton("Back") {
+                textButton(viewModel.getLocalizedString("back")) {
                     onClick { viewModel.onBackClick() }
                 }.cell(
                     width = 400f,
@@ -102,7 +103,7 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
 }
 
 @Scene2dDsl
-private fun Stage.loading() {
+private fun Stage.loading(viewModel: SinglePlayerMenuViewModel) {
     actors {
         table {
             setFillParent(true)
@@ -115,19 +116,20 @@ private fun Stage.loading() {
             )
             pad(8f)
 
-            label("Loading World...")
+            label(viewModel.getLocalizedString("loadingWorld"))
         }
     }
 }
 
 @Scene2dDsl
 private fun <S> KWidget<S>.saveItem(
+    viewModel: SinglePlayerMenuViewModel,
     saveInfo: SaveInfoVo,
     onLoad: () -> Unit,
     onDelete: () -> Unit,
 ): KTableWidget = table {
     background("shade_tile")
-    pad(16f)
+    pad(8f)
 
     imageButton {
         touchable = Touchable.disabled
@@ -155,7 +157,7 @@ private fun <S> KWidget<S>.saveItem(
                 growX = false,
                 fillX = false,
                 minWidth = 50f,
-                maxWidth = 300f,
+                maxWidth = 250f,
                 align = Align.left,
             )
 
@@ -168,7 +170,7 @@ private fun <S> KWidget<S>.saveItem(
         }.cell(
             expandX = true,
             fillX = true,
-            pad = 16f,
+            padLeft = 16f,
             align = Align.left,
         )
 
@@ -189,10 +191,10 @@ private fun <S> KWidget<S>.saveItem(
     table {
         defaults()
             .pad(16f)
-            .width(200f)
+            .width(300f)
             .height(60f)
 
-        val loadButton = textButton("Load") {
+        val loadButton = textButton(viewModel.getLocalizedString("load")) {
             isDisabled = !saveInfo.isSupported
 
             onClick {
@@ -207,7 +209,7 @@ private fun <S> KWidget<S>.saveItem(
 
         row()
 
-        textButton("Delete") {
+        textButton(viewModel.getLocalizedString("delete")) {
             onClick {
                 if (isDisabled) {
                     return@onClick

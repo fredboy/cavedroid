@@ -10,6 +10,7 @@ java.targetCompatibility = ApplicationInfo.sourceCompatibility
 dependencies {
     useCommonModule()
     useModule(":core:domain:assets")
+    useModule(":core:domain:configuration")
     useLibgdx()
     useKotlinxSerializationJson()
     useDagger()

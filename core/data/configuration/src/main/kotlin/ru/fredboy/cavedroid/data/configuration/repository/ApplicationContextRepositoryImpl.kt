@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.data.configuration.repository
 import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.data.configuration.store.ApplicationContextStore
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -64,5 +65,26 @@ class ApplicationContextRepositoryImpl @Inject constructor(
 
     override fun setAutoJumpEnabled(enabled: Boolean) {
         applicationContextStore.isAutoJumpEnabled = enabled
+    }
+
+    override fun getLocale(): Locale {
+        return applicationContextStore.locale
+    }
+
+    override fun setLocale(locale: Locale) {
+        if (locale !in SUPPORTED_LOCALES) {
+            Gdx.app.error("ApplicationContextRepositoryImpl", "Locale not supported: ${locale.language}")
+            return
+        }
+
+        applicationContextStore.locale = locale
+    }
+
+    override fun getSupportedLocales(): List<Locale> {
+        return SUPPORTED_LOCALES
+    }
+
+    companion object {
+        private val SUPPORTED_LOCALES = listOf(Locale("en"), Locale("ru"))
     }
 }

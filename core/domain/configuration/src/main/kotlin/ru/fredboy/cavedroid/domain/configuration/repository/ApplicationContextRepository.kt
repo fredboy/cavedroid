@@ -1,5 +1,7 @@
 package ru.fredboy.cavedroid.domain.configuration.repository
 
+import java.util.Locale
+
 interface ApplicationContextRepository {
 
     fun isDebug(): Boolean
@@ -30,4 +32,10 @@ interface ApplicationContextRepository {
 
     fun isAutoJumpEnabled(): Boolean
     fun setAutoJumpEnabled(enabled: Boolean)
+
+    fun getLocale(): Locale
+
+    fun setLocale(locale: Locale)
+
+    fun getSupportedLocales(): List<Locale>
 }

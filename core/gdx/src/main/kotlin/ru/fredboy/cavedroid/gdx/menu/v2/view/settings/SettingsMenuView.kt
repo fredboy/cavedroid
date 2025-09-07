@@ -14,7 +14,7 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
     viewModel.stateFlow.collect { state ->
         actors {
             menuButtonsTable {
-                textButton("Dynamic Camera: ${state.dynamicCamera.toToggleStateString()}") {
+                textButton(viewModel.getFormattedString("dynamicCamera", state.dynamicCamera.toToggleStateString())) {
                     onClick {
                         viewModel.onDynamicCameraClick(!state.dynamicCamera)
                     }
@@ -23,7 +23,7 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                 row()
 
                 if (Gdx.graphics.supportsDisplayModeChange()) {
-                    textButton("Fullscreen: ${state.fullscreen.toToggleStateString()}") {
+                    textButton(viewModel.getFormattedString("fullscreen", state.fullscreen.toToggleStateString())) {
                         onClick {
                             viewModel.onFullscreenClick(!state.fullscreen)
                         }
@@ -32,7 +32,7 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                     row()
                 }
 
-                textButton("Auto Jump: ${state.autoJump.toToggleStateString()}") {
+                textButton(viewModel.getFormattedString("autoJump", state.autoJump.toToggleStateString())) {
                     onClick {
                         viewModel.onAutoJumpClick(!state.autoJump)
                     }
@@ -40,7 +40,7 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
 
                 row()
 
-                textButton("Done") {
+                textButton(viewModel.getLocalizedString("done")) {
                     onClick {
                         viewModel.onDoneClick()
                     }

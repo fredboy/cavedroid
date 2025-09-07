@@ -52,7 +52,7 @@ fun Stage.attributionMenuView(viewModel: AttributionMenuViewModel) = viewModel.a
             row()
                 .bottom()
 
-            textButton("Back") {
+            textButton(viewModel.getLocalizedString("back")) {
                 onClick { viewModel.onBackClick() }
             }.cell(
                 width = 600f,

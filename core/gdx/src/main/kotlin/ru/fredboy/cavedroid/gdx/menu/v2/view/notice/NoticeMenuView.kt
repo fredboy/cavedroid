@@ -39,7 +39,7 @@ suspend fun Stage.noticeMenuView(viewModel: NoticeMenuViewModel) = viewModel.als
                     .bottom()
 
                 table {
-                    textButton("Copy") {
+                    textButton(viewModel.getLocalizedString("copy")) {
                         onClick { viewModel.onCopyClicked(state.notices) }
                     }.cell(
                         width = 400f,
@@ -47,7 +47,7 @@ suspend fun Stage.noticeMenuView(viewModel: NoticeMenuViewModel) = viewModel.als
                         padRight = 16f,
                     )
 
-                    textButton("Back") {
+                    textButton(viewModel.getLocalizedString("back")) {
                         onClick { viewModel.onBackClick() }
                     }.cell(
                         width = 400f,

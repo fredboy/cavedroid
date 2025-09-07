@@ -28,7 +28,7 @@ suspend fun Stage.deleteWorldMenuView(viewModel: DeleteWorldMenuViewModel) = vie
                         )
                         pad(8f)
 
-                        label("Deleting World...")
+                        label(viewModel.getLocalizedString("deletingWorld"))
                     }
                 }
             }
@@ -46,7 +46,7 @@ suspend fun Stage.deleteWorldMenuView(viewModel: DeleteWorldMenuViewModel) = vie
                         )
                         pad(8f)
 
-                        label("Delete '${state.worldName}'?") {
+                        label(viewModel.getFormattedString("deleteWorldWithName", state.worldName)) {
                             setAlignment(Align.center)
                         }.cell(
                             align = Align.center,
@@ -55,7 +55,7 @@ suspend fun Stage.deleteWorldMenuView(viewModel: DeleteWorldMenuViewModel) = vie
                         row()
 
                         table {
-                            textButton("Confirm") {
+                            textButton(viewModel.getLocalizedString("confirm")) {
                                 onClick { viewModel.onConfirmClick() }
                             }.cell(
                                 width = 400f,
@@ -63,7 +63,7 @@ suspend fun Stage.deleteWorldMenuView(viewModel: DeleteWorldMenuViewModel) = vie
                                 padRight = 16f,
                             )
 
-                            textButton("Cancel") {
+                            textButton(viewModel.getLocalizedString("cancel")) {
                                 onClick { viewModel.onCancelClick() }
                             }.cell(
                                 width = 400f,

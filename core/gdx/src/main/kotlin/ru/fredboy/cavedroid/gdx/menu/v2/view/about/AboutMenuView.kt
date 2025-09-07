@@ -59,7 +59,7 @@ fun Stage.aboutMenuView(viewModel: AboutMenuViewModel) = viewModel.also {
                 .bottom()
 
             table {
-                textButton("Go to GitHub") {
+                textButton(viewModel.getLocalizedString("goToGithub")) {
                     onClick { viewModel.onGithubClick() }
                 }.cell(
                     width = 400f,
@@ -67,7 +67,7 @@ fun Stage.aboutMenuView(viewModel: AboutMenuViewModel) = viewModel.also {
                     padRight = 16f,
                 )
 
-                textButton("Back") {
+                textButton(viewModel.getLocalizedString("back")) {
                     onClick { viewModel.onBackClick() }
                 }.cell(
                     width = 400f,

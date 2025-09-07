@@ -13,6 +13,7 @@ import ru.fredboy.cavedroid.gdx.di.ApplicationComponent
 import ru.fredboy.cavedroid.gdx.di.DaggerApplicationComponent
 import ru.fredboy.cavedroid.gdx.game.GameScreen
 import ru.fredboy.cavedroid.gdx.menu.v2.PauseMenuScreen
+import java.util.Locale
 
 class CaveDroidApplication(
     private val gameDataDirectoryPath: String,
@@ -55,6 +56,7 @@ class CaveDroidApplication(
                     isFullscreen = isFullscreen,
                     useDynamicCamera = preferencesStore.getPreference("dyncam").toBoolean(),
                     isAutoJumpEnabled = preferencesStore.getPreference("auto_jump").toBoolean(),
+                    locale = Locale(preferencesStore.getPreference("locale") ?: "en"),
                 ),
             )
             .applicationController(this)

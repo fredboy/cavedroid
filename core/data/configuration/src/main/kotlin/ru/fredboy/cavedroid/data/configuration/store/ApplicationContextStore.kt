@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.data.configuration.store
 
 import ru.fredboy.cavedroid.common.api.PreferencesStore
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -53,10 +54,18 @@ class ApplicationContextStore @Inject constructor(
             preferencesStore.setPreference(KEY_AUTO_JUMP_PREF, value.toString())
         }
 
+    var locale: Locale
+        get() = synchronized(lock) { applicationContext.locale }
+        set(value) = synchronized(lock) {
+            applicationContext.locale = value
+            preferencesStore.setPreference(KEY_LOCALE_PREF, value.language)
+        }
+
     private companion object {
         private const val KEY_FULLSCREEN_PREF = "fullscreen"
         private const val KEY_DYNAMIC_CAMERA_PREF = "dyncam"
         private const val KEY_SCREEN_SCALE_PREF = "screen_scale"
         private const val KEY_AUTO_JUMP_PREF = "auto_jump"
+        private const val KEY_LOCALE_PREF = "locale"
     }
 }

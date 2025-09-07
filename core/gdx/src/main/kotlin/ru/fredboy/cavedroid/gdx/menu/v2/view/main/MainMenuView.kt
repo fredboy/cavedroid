@@ -15,7 +15,7 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.common.menuButtonsTable
 fun Stage.mainMenuView(viewModel: MainMenuViewModel) = viewModel.also {
     actors {
         menuButtonsTable {
-            textButton("Single Player") {
+            textButton(viewModel.getLocalizedString("play")) {
                 onClick {
                     viewModel.onSinglePlayerClick()
                 }
@@ -23,7 +23,7 @@ fun Stage.mainMenuView(viewModel: MainMenuViewModel) = viewModel.also {
 
             row()
 
-            textButton("Settings") {
+            textButton(viewModel.getLocalizedString("settings")) {
                 onClick {
                     viewModel.onSettingsClick()
                 }
@@ -34,15 +34,20 @@ fun Stage.mainMenuView(viewModel: MainMenuViewModel) = viewModel.also {
 
             table {
                 imageButton {
-                    // placeholder
-                    isVisible = false
+                    image("lang")
+                        .cell(
+                            width = 40f,
+                            height = 40f,
+                        )
+
+                    onClick { viewModel.onLanguageClick() }
                 }.cell(
                     width = 60f,
                     height = 60f,
                     align = Align.right,
                 )
 
-                textButton("Exit") {
+                textButton(viewModel.getLocalizedString("exit")) {
                     onClick {
                         viewModel.onExitGameClick()
                     }

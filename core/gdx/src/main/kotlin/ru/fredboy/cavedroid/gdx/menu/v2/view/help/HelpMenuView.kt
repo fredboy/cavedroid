@@ -11,7 +11,7 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.common.menuButtonsTable
 fun Stage.helpMenuView(viewModel: HelpMenuViewModel) = viewModel.also {
     actors {
         menuButtonsTable {
-            textButton("About") {
+            textButton(viewModel.getLocalizedString("about")) {
                 onClick {
                     viewModel.onAboutClick()
                 }
@@ -19,7 +19,7 @@ fun Stage.helpMenuView(viewModel: HelpMenuViewModel) = viewModel.also {
 
             row()
 
-            textButton("Attribution") {
+            textButton(viewModel.getLocalizedString("attribution")) {
                 onClick {
                     viewModel.onAttributionClick()
                 }
@@ -27,7 +27,7 @@ fun Stage.helpMenuView(viewModel: HelpMenuViewModel) = viewModel.also {
 
             row()
 
-            textButton("Licenses") {
+            textButton(viewModel.getLocalizedString("licenses")) {
                 onClick {
                     viewModel.onLicensesClick()
                 }
@@ -35,7 +35,7 @@ fun Stage.helpMenuView(viewModel: HelpMenuViewModel) = viewModel.also {
 
             row()
 
-            textButton("Back") {
+            textButton(viewModel.getLocalizedString("back")) {
                 onClick {
                     viewModel.onBackClicked()
                 }

@@ -17,13 +17,13 @@ suspend fun Stage.newGameMenuView(viewModel: NewGameMenuViewModel) = viewModel.a
     viewModel.stateFlow.collect { state ->
         when (state) {
             is NewGameMenuState.Show -> show(viewModel)
-            is NewGameMenuState.Generating -> generating()
+            is NewGameMenuState.Generating -> generating(viewModel)
         }
     }
 }
 
 @Scene2dDsl
-private fun Stage.generating() {
+private fun Stage.generating(viewModel: NewGameMenuViewModel) {
     actors {
         table {
             setFillParent(true)
@@ -36,7 +36,7 @@ private fun Stage.generating() {
             )
             pad(8f)
 
-            label("Generating World...")
+            label(viewModel.getLocalizedString("generatingWorld"))
         }
     }
 }
@@ -46,11 +46,11 @@ fun Stage.show(viewModel: NewGameMenuViewModel) {
     viewModel.also {
         actors {
             menuButtonsTable {
-                val worldNameField = textField("New World")
+                val worldNameField = textField(viewModel.getLocalizedString("newWorld"))
 
                 row()
 
-                textButton("Creative") {
+                textButton(viewModel.getLocalizedString("creative")) {
                     onClick {
                         viewModel.onCreativeClick(worldNameField.text)
                     }
@@ -58,7 +58,7 @@ fun Stage.show(viewModel: NewGameMenuViewModel) {
 
                 row()
 
-                textButton("Survival") {
+                textButton(viewModel.getLocalizedString("survival")) {
                     onClick {
                         viewModel.onSurvivalClick(worldNameField.text)
                     }
@@ -66,7 +66,7 @@ fun Stage.show(viewModel: NewGameMenuViewModel) {
 
                 row()
 
-                textButton("Back") {
+                textButton(viewModel.getLocalizedString("back")) {
                     onClick {
                         viewModel.onBackClick()
                     }

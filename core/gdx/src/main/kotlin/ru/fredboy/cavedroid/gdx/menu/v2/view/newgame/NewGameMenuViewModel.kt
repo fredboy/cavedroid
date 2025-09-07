@@ -11,14 +11,16 @@ import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.utils.WorldNameSanitizer
+import ru.fredboy.cavedroid.domain.assets.repository.FontAssetsRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
-import ru.fredboy.cavedroid.gdx.menu.v2.navigation.ViewModel
+import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
 
 class NewGameMenuViewModel(
     private val applicationController: ApplicationController,
     private val worldNameSanitizer: WorldNameSanitizer,
     private val navBackStack: NavBackStack,
-) : ViewModel() {
+    fontAssetsRepository: FontAssetsRepository,
+) : BaseViewModel(fontAssetsRepository) {
 
     private val _stateFlow = MutableSharedFlow<NewGameMenuState>(replay = 0)
 
