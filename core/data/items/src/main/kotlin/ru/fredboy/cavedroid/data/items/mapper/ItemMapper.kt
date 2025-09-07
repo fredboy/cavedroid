@@ -1,20 +1,24 @@
 package ru.fredboy.cavedroid.data.items.mapper
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Sprite
 import ru.fredboy.cavedroid.common.model.SpriteOrigin
 import ru.fredboy.cavedroid.common.utils.colorFromHexString
 import ru.fredboy.cavedroid.data.items.model.ItemDto
 import ru.fredboy.cavedroid.data.items.repository.ItemsRepositoryImpl
+import ru.fredboy.cavedroid.domain.assets.repository.FontAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.usecase.GetItemTextureUseCase
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.item.CommonItemParams
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import java.util.MissingResourceException
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ItemMapper @Inject constructor(
     private val getItemTexture: GetItemTextureUseCase,
+    private val fontAssetsRepository: FontAssetsRepository,
 ) {
 
     fun map(key: String, dto: ItemDto, block: Block?, slabTopBlock: Block.Slab?, slabBottomBlock: Block.Slab?): Item {
@@ -98,17 +102,26 @@ class ItemMapper @Inject constructor(
         }
     }
 
-    private fun mapCommonParams(key: String, dto: ItemDto): CommonItemParams = CommonItemParams(
-        key = key,
-        name = dto.name,
-        inHandSpriteOrigin = SpriteOrigin(
-            x = dto.originX,
-            y = dto.origin_y,
-        ),
-        maxStack = dto.maxStack,
-        burningTimeMs = dto.burningTime,
-        smeltProductKey = dto.smeltProduct,
-    )
+    private fun mapCommonParams(key: String, dto: ItemDto): CommonItemParams {
+        val name = try {
+            fontAssetsRepository.getItemLocalizationBundle().get(key)
+        } catch (e: MissingResourceException) {
+            Gdx.app.error(TAG, "Missing Localization for item $key", e)
+            dto.name
+        }
+
+        return CommonItemParams(
+            key = key,
+            name = name,
+            inHandSpriteOrigin = SpriteOrigin(
+                x = dto.originX,
+                y = dto.origin_y,
+            ),
+            maxStack = dto.maxStack,
+            burningTimeMs = dto.burningTime,
+            smeltProductKey = dto.smeltProduct,
+        )
+    }
 
     private fun loadSprite(dto: ItemDto): Sprite? {
         if (dto.type == "none" || dto.type == "block" || dto.texture == ItemsRepositoryImpl.FALLBACK_ITEM_KEY) {
@@ -123,5 +136,9 @@ class ItemMapper @Inject constructor(
                     color = colorFromHexString(it)
                 }
             }
+    }
+
+    companion object {
+        private const val TAG = "ItemMapper"
     }
 }

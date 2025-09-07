@@ -20,6 +20,8 @@ internal class FontAssetsRepositoryImpl @Inject constructor(
 
     private var menuBundle: I18NBundle? = null
 
+    private var itemsBundle: I18NBundle? = null
+
     override fun getMenuLocalizationBundle(): I18NBundle {
         val locale = applicationContextRepository.getLocale()
 
@@ -29,6 +31,17 @@ internal class FontAssetsRepositoryImpl @Inject constructor(
         }
 
         return requireNotNull(menuBundle)
+    }
+
+    override fun getItemLocalizationBundle(): I18NBundle {
+        val locale = applicationContextRepository.getLocale()
+
+        if (locale != itemsBundle?.locale) {
+            loadLocalization()
+            itemsBundle?.locale?.let { applicationContextRepository.setLocale(it) }
+        }
+
+        return requireNotNull(itemsBundle)
     }
 
     override fun getStringWidth(string: String): Float {
@@ -60,15 +73,16 @@ internal class FontAssetsRepositoryImpl @Inject constructor(
     private fun loadLocalization() {
         val currentLocale = applicationContextRepository.getLocale()
         Gdx.app.debug(TAG, "Loading localization for locale $currentLocale")
-        val baseFileHandle = Gdx.files.internal(BASE_MENU_LOCALIZATION)
         I18NBundle.setSimpleFormatter(true)
-        menuBundle = I18NBundle.createBundle(baseFileHandle, currentLocale)
+        menuBundle = I18NBundle.createBundle(Gdx.files.internal(BASE_MENU_LOCALIZATION), currentLocale)
+        itemsBundle = I18NBundle.createBundle(Gdx.files.internal(BASE_ITEMS_LOCALIZATION), currentLocale)
     }
 
     companion object {
         private const val TAG = "FontAssetsRepositoryImpl"
         private const val FONT_FILE_PATH = "skin/f77.fnt"
         private const val BASE_MENU_LOCALIZATION = "i18n/CaveDroid_Menu"
+        private const val BASE_ITEMS_LOCALIZATION = "i18n/CaveDroid_Items"
         private const val FONT_SCALE = .375f
     }
 }

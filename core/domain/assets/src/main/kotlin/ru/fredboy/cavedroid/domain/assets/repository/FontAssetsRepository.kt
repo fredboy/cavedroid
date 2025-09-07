@@ -7,6 +7,8 @@ abstract class FontAssetsRepository : AssetsRepository() {
 
     abstract fun getMenuLocalizationBundle(): I18NBundle
 
+    abstract fun getItemLocalizationBundle(): I18NBundle
+
     abstract fun getStringWidth(string: String): Float
 
     abstract fun getStringHeight(string: String): Float
