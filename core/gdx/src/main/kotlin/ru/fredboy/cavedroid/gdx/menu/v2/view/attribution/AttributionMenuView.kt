@@ -37,8 +37,8 @@ fun Stage.attributionMenuView(viewModel: AttributionMenuViewModel) = viewModel.a
                         - On-screen Joystick – CC0 from OpenGameArt
                             https://opengameart.org/content/mmorpg-virtual-joysticks
 
-                        - Minecraft Font by JDGraphics – Public Domain
-                            https://www.fontspace.com/minecraft-font-f28180
+                        - F77 Minecraft Font by 123467 CC Creative Commons Attribution No Derivatives
+                            https://www.fontspace.com/f77-minecraft-font-f30628
                     """.trimIndent(),
                 ) {
                     wrap = true

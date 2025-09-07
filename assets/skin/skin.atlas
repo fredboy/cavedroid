@@ -1,19 +1,12 @@
 
 skin.png
-size: 1024, 1024
+size: 256, 256
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
-font
-  rotate: false
-  xy: 1, 255
-  size: 512, 512
-  orig: 512, 512
-  offset: 0, 0
-  index: -1
 background
   rotate: false
-  xy: 427, 237
+  xy: 1, 80
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -27,126 +20,126 @@ button_disabled
   index: -1
 button_disabled_square
   rotate: false
-  xy: 739, 747
+  xy: 203, 179
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 button_disabled_v
   rotate: false
-  xy: 515, 520
+  xy: 225, 53
   size: 20, 200
   orig: 20, 200
   offset: 0, 0
   index: -1
 button_down
   rotate: false
-  xy: 515, 747
+  xy: 1, 211
   size: 200, 20
   orig: 200, 20
   offset: 0, 0
   index: -1
 button_down_square
   rotate: false
-  xy: 1, 167
+  xy: 203, 157
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 button_hover
   rotate: false
-  xy: 1, 211
+  xy: 1, 189
   size: 200, 20
   orig: 200, 20
   offset: 0, 0
   index: -1
 button_hover_square
   rotate: false
-  xy: 23, 189
+  xy: 1, 98
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 button_up
   rotate: false
-  xy: 203, 233
+  xy: 1, 167
   size: 200, 20
   orig: 200, 20
   offset: 0, 0
   index: -1
 button_up_square
   rotate: false
-  xy: 225, 211
+  xy: 23, 120
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 checkbox_off
   rotate: false
-  xy: 717, 747
+  xy: 203, 233
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 checkbox_off_hover
   rotate: false
-  xy: 1, 189
+  xy: 1, 120
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 checkbox_on
   rotate: false
-  xy: 203, 211
+  xy: 166, 145
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 checkbox_on_hover
   rotate: false
-  xy: 405, 233
+  xy: 203, 211
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 cursor
   rotate: false
-  xy: 680, 727
+  xy: 188, 157
   size: 5, 8
   orig: 5, 8
   offset: 0, 0
   index: -1
 gamelogo
   rotate: false
-  xy: 515, 722
+  xy: 1, 142
   size: 163, 23
   orig: 163, 23
   offset: 0, 0
   index: -1
 help
   rotate: false
-  xy: 537, 704
+  xy: 45, 124
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 knob
   rotate: false
-  xy: 761, 747
+  xy: 247, 233
   size: 8, 20
   orig: 8, 20
   offset: 0, 0
   index: -1
 knob_h
   rotate: false
-  xy: 680, 737
+  xy: 203, 201
   size: 20, 8
   orig: 20, 8
   offset: 0, 0
   index: -1
 shade
   rotate: false
-  xy: 515, 502
+  xy: 23, 102
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

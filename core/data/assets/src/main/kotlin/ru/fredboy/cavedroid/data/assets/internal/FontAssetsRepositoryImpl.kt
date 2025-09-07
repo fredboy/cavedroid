@@ -40,7 +40,7 @@ internal class FontAssetsRepositoryImpl @Inject constructor() : FontAssetsReposi
     }
 
     companion object {
-        private const val FONT_FILE_PATH = "font.fnt"
+        private const val FONT_FILE_PATH = "skin/f77.fnt"
         private const val FONT_SCALE = .375f
     }
 }

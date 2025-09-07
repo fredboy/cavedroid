@@ -1,7 +1,7 @@
 {
 "com.badlogic.gdx.graphics.g2d.BitmapFont": {
-	"MinecraftFont": {
-		"file": "font.fnt",
+	"f77": {
+		"file": "f77.fnt",
 		"scaledSize": 16,
 		"markupEnabled": true,
 		"flip": false
@@ -49,7 +49,7 @@
 		"checkboxOff": "checkbox_off",
 		"checkboxOnOver": "checkbox_on_hover",
 		"checkboxOver": "checkbox_off_hover",
-		"font": "MinecraftFont"
+		"font": "f77"
 	}
 },
 "com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle": {
@@ -62,7 +62,7 @@
 },
 "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
 	"default": {
-		"font": "MinecraftFont"
+		"font": "f77"
 	}
 },
 "com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle": {
@@ -80,7 +80,7 @@
 },
 "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
 	"default": {
-		"font": "MinecraftFont",
+		"font": "f77",
 		"up": "button_up",
 		"down": "button_down",
 		"over": "button_hover",
@@ -90,7 +90,7 @@
 },
 "com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
 	"default": {
-		"font": "MinecraftFont",
+		"font": "f77",
 		"fontColor": "white",
 		"background": "shade_tile",
 		"cursor": "cursor",
@@ -106,7 +106,7 @@
 },
 "com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle": {
 	"default": {
-		"titleFont": "MinecraftFont"
+		"titleFont": "f77"
 	}
 }
 }
