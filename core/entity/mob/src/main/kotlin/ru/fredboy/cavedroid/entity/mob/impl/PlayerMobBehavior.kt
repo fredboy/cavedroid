@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.entity.mob.impl
 
 import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.model.GameMode
+import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.world.model.Layer
@@ -131,7 +132,10 @@ class PlayerMobBehavior :
         }
 
         if (isHitting && isHittingWithDamage) {
-            blockDamage += 60f * delta * blockDamageMultiplier
+            val waterFactor = worldAdapter.getForegroundBlock(mapX, upperMapY)
+                .let { it.isWater() && it.getRectangle(mapX, upperMapY).overlaps(hitbox) }
+                .ifTrue { 0.2f } ?: 1f
+            blockDamage += 60f * delta * blockDamageMultiplier * waterFactor
         }
     }
 

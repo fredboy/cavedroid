@@ -282,9 +282,9 @@ abstract class Mob(
         if (!controlVector.isZero) {
             body.applyForceToCenter(controlVector, true)
             velocity.x = MathUtils.clamp(velocity.x, -abs(controlVector.x), abs(controlVector.x))
-            if (isFlyMode || canClimb) {
+            if (isFlyMode) {
                 velocity.y = MathUtils.clamp(velocity.y, -abs(controlVector.y), abs(controlVector.y))
-            } else {
+            } else if (!canClimb) {
                 this@Mob.controlVector.y = 0f
             }
         } else if (!isFlyMode) {
