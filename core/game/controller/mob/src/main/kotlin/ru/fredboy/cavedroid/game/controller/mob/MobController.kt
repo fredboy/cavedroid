@@ -102,7 +102,7 @@ class MobController @Inject constructor(
 
             cursor.set(cursorX, cursorY)
 
-            if (cursor.isZero) {
+            if (position.dst2(cursor) < 0.001f) {
                 return
             }
 
