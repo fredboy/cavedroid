@@ -54,6 +54,8 @@ class TouchCursorInputHandler @Inject constructor(
     private val touchDownCoords = Vector2()
     private val touchDownCursorCoords = Vector2()
 
+    private val touchDownPlayerPos = Vector2()
+
     private var buttonHoldTask: Timer.Task? = null
 
     private fun cancelHold() {
@@ -192,6 +194,7 @@ class TouchCursorInputHandler @Inject constructor(
                 pointer = action.actionKey.pointer
                 touchDownCoords.set(action.screenX, action.screenY)
                 touchDownCursorCoords.set(player.cursorX, player.cursorY)
+                touchDownPlayerPos.set(player.position)
                 wasDragged = false
                 mobController.player.holdCursor = false
                 handleTouchDown(action)
@@ -231,8 +234,8 @@ class TouchCursorInputHandler @Inject constructor(
     private fun updateCursorPosition(action: MouseInputAction) {
         val moveX = action.screenX - touchDownCoords.x
         val moveY = action.screenY - touchDownCoords.y
-        val worldX = touchDownCursorCoords.x + moveX.meters
-        val worldY = touchDownCursorCoords.y + moveY.meters
+        val worldX = touchDownCursorCoords.x + moveX.meters + (player.position.x - touchDownPlayerPos.x)
+        val worldY = touchDownCursorCoords.y + moveY.meters + (player.position.y - touchDownPlayerPos.y)
 
         // when worldX < 0, need to subtract 1 to avoid negative zero
         val fixCycledWorld = if (worldX < 0) 1 else 0
