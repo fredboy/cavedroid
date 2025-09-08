@@ -34,7 +34,7 @@ abstract class BaseMobBehavior<MOB : Mob>(
             checkAutojumpObstacle(worldAdapter)
     }
 
-    private fun MOB.checkAutojumpObstacle(worldAdapter: MobWorldAdapter): Boolean {
+    protected fun MOB.checkAutojumpObstacle(worldAdapter: MobWorldAdapter): Boolean {
         val targetHitbox = hitbox.apply {
             x += Direction.fromVector(controlVector).basis
             y -= 1f

@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.entity.mob.impl
 
-import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.entity.mob.abstraction.BaseMobBehavior
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
@@ -12,28 +11,31 @@ class AggressiveMobBehavior :
         mobType = WalkingMob::class,
     ) {
 
+    private val passiveBehavior = PassiveMobBehavior()
+
     override val attacksWhenPossible: Boolean
         get() = true
 
     override fun WalkingMob.updateMob(worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, delta: Float) {
+        if (position.dst(playerAdapter.x, playerAdapter.y) > TRIGGER_DISTANCE) {
+            passiveBehavior.update(this, worldAdapter, playerAdapter, delta)
+            return
+        }
+
         if (checkForAutojump(worldAdapter)) {
             jump()
         }
 
-        if (position.dst(playerAdapter.x, playerAdapter.y) <= TRIGGER_DISTANCE) {
-            direction = if (playerAdapter.x > position.x) {
-                Direction.RIGHT
-            } else {
-                Direction.LEFT
-            }
+        direction = if (playerAdapter.x > position.x) {
+            Direction.RIGHT
+        } else {
+            Direction.LEFT
+        }
 
-            controlVector.x = speed * direction.basis
-        } else if (MathUtils.randomBoolean(delta)) {
-            if (velocity.x != 0f) {
-                velocity.x = 0f
-            } else {
-                changeDir()
-            }
+        controlVector.x = speed * direction.basis
+
+        if (!canClimb && controlVector.x != 0f && cliffEdgeCounters[Direction.fromVector(controlVector).index] <= 0) {
+            controlVector.x = 0f
         }
 
         climb = canSwim

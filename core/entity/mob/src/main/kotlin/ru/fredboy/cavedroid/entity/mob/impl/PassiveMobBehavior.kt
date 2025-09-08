@@ -18,8 +18,8 @@ class PassiveMobBehavior :
 
     private fun WalkingMob.getTargetBlock(worldAdapter: MobWorldAdapter): Pair<Int, Int>? {
         val x = ((position.x - WALK_RADIUS).toInt()..(position.x + WALK_RADIUS).toInt()).random()
-        var y = position.y.toInt() + 2
-        while (y > position.y - 2) {
+        var y = position.y.toInt() + WALK_RADIUS.toInt()
+        while (y > position.y - WALK_RADIUS) {
             if (worldAdapter.getForegroundBlock(x, y).params.hasCollision &&
                 !worldAdapter.getForegroundBlock(x, y - 1).params.hasCollision
             ) {
@@ -40,8 +40,13 @@ class PassiveMobBehavior :
             jump()
         }
 
-        if (targetCoordinates == null && (takingDamage || MathUtils.randomBoolean(0.001f))) {
+        if (!canClimb && controlVector.x != 0f && cliffEdgeCounters[Direction.fromVector(controlVector).index] <= 0) {
+            controlVector.x = 0f
+            targetCoordinates = null
+        } else if (targetCoordinates == null && (takingDamage || MathUtils.randomBoolean(0.001f))) {
             targetCoordinates = getTargetBlock(worldAdapter)
+        } else if (targetCoordinates != null && velocity.isZero && checkAutojumpObstacle(worldAdapter)) {
+            targetCoordinates = null
         }
 
         targetCoordinates?.let { (targetX, _) ->

@@ -35,6 +35,7 @@ class MobPhysicsFactoryImpl @Inject constructor(
         body.createFeetFixtures(mob.width, mob.height, physicsCategory)
         body.createGroundSensor(mob.width, mob.height)
         body.createAutoJumpSensor(mob.height)
+        body.createCliffEdgeSensor(mob.width, mob.height)
 
         return body
     }
@@ -166,6 +167,48 @@ class MobPhysicsFactoryImpl @Inject constructor(
         }.also { fixtureDef ->
             createFixture(fixtureDef).apply {
                 userData = ContactSensorType.MOB_SHOULD_JUMP_LEFT
+            }
+            sensorShapeL.dispose()
+        }
+    }
+
+    private fun Body.createCliffEdgeSensor(width: Float, height: Float) {
+        val sensorShapeL = PolygonShape().apply {
+            setAsBox(
+                0.125f,
+                1f,
+                Vector2(-width / 2f - 0.25f, height / 2f + 1f),
+                0f,
+            )
+        }
+
+        val sensorShapeR = PolygonShape().apply {
+            setAsBox(
+                0.125f,
+                1f,
+                Vector2(width / 2f + 0.25f, height / 2f + 1f),
+                0f,
+            )
+        }
+
+        FixtureDef().apply {
+            shape = sensorShapeR
+            isSensor = true
+            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
+        }.also { fixtureDef ->
+            createFixture(fixtureDef).apply {
+                userData = ContactSensorType.MOB_CLIFF_EDGE_RIGHT
+            }
+            sensorShapeR.dispose()
+        }
+
+        FixtureDef().apply {
+            shape = sensorShapeL
+            isSensor = true
+            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
+        }.also { fixtureDef ->
+            createFixture(fixtureDef).apply {
+                userData = ContactSensorType.MOB_CLIFF_EDGE_LEFT
             }
             sensorShapeL.dispose()
         }

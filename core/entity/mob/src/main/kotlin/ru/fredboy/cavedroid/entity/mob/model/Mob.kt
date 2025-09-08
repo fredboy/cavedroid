@@ -116,6 +116,8 @@ abstract class Mob(
 
     var autojumpCounters = IntArray(2)
 
+    var cliffEdgeCounters = IntArray(2)
+
     protected val tintColor: Color
         get() = if (takingDamage) {
             DAMAGE_TINT_COLOR
