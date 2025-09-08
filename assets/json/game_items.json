@@ -1919,7 +1919,7 @@
       "density": 10,
       "drop_info": [
         {
-          "key": "trapdoor",
+          "key": "trapdoor_wood_open",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1943,7 +1943,7 @@
       "density": 10,
       "drop_info": [
         {
-          "key": "trapdoor",
+          "key": "trapdoor_wood_open",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2045,7 +2045,8 @@
     "chest": {
       "name": "Chest",
       "type": "block",
-      "texture": "chest"
+      "texture": "chest",
+      "burning_time": 15000
     },
     "torch": {
       "name": "Torch",
@@ -2212,82 +2213,98 @@
     "wool_colored_white": {
       "name": "Wool",
       "type": "block",
-      "texture": "wool_colored_white"
+      "texture": "wool_colored_white",
+      "burning_time": 5000
     },
     "wool_colored_orange": {
       "name": "Wool",
       "type": "block",
-      "texture": "wool_colored_orange"
+      "texture": "wool_colored_orange",
+      "burning_time": 5000
     },
     "wool_colored_magenta": {
       "name": "Wool",
       "type": "block",
-      "texture": "wool_colored_magenta"
+      "texture": "wool_colored_magenta",
+      "burning_time": 5000
     },
     "wool_colored_light_blue": {
       "name": "Wool",
       "type": "block",
-      "texture": "wool_colored_light_blue"
+      "texture": "wool_colored_light_blue",
+      "burning_time": 5000
     },
     "wool_colored_yellow": {
       "name": "Wool",
       "type": "block",
-      "texture": "wool_colored_yellow"
+      "texture": "wool_colored_yellow",
+      "burning_time": 5000
     },
     "wool_colored_lime": {
       "name": "Wool",
       "type": "block",
-      "texture": "wool_colored_lime"
+      "texture": "wool_colored_lime",
+      "burning_time": 5000
     },
     "wool_colored_pink": {
       "name": "Wool",
       "type": "block",
-      "texture": "wool_colored_pink"
+      "texture": "wool_colored_pink",
+      "burning_time": 5000
     },
     "wool_colored_gray": {
       "name": "Wool",
       "type": "block",
-      "texture": "wool_colored_gray"
+      "texture": "wool_colored_gray",
+      "burning_time": 5000
     },
     "wool_colored_silver": {
       "name": "Wool",
       "type": "block",
-      "texture": "wool_colored_silver"
+      "texture": "wool_colored_silver",
+      "burning_time": 5000
     },
     "wool_colored_cyan": {
       "name": "Wool",
       "type": "block",
-      "texture": "wool_colored_cyan"
+      "texture": "wool_colored_cyan",
+      "burning_time": 5000
     },
     "wool_colored_purple": {
       "name": "Wool",
       "type": "block",
-      "texture": "wool_colored_purple"
+      "texture": "wool_colored_purple",
+      "burning_time": 5000
     },
     "wool_colored_blue": {
       "name": "Wool",
       "type": "block",
-      "texture": "wool_colored_blue"
+      "texture": "wool_colored_blue",
+      "burning_time": 5000
     },
     "wool_colored_brown": {
       "name": "Wool",
       "type": "block",
-      "texture": "wool_colored_brown"
+      "texture": "wool_colored_brown",
+      "burning_time": 5000
     },
     "wool_colored_green": {
       "name": "Wool",
       "type": "block",
-      "texture": "wool_colored_green"
+      "texture": "wool_colored_green",
+      "burning_time": 5000
     },
     "wool_colored_red": {
       "name": "Wool",
       "type": "block",
-      "texture": "wool_colored_red"
+      "texture": "wool_colored_red",
+      "burning_time": 5000
     },
     "wool_colored_black": {
       "name": "Wool",
       "type": "block",
-      "texture": "wool_colored_black"
+      "texture": "wool_colored_black",
+      "burning_time": 5000
     },
     "gold_block": {
       "name": "Gold Block",
@@ -2386,12 +2403,14 @@
     "trapdoor_wood_open": {
       "name": "Wooden Trapdoor",
       "type": "block",
-      "texture": "trapdoor"
+      "texture": "trapdoor",
+      "burning_time": 15000
     },
     "ladder": {
       "name": "Ladder",
       "type": "block",
-      "texture": "ladder"
+      "texture": "ladder",
+      "burning_time": 15000
     },
     "stick": {
       "name": "Stick",
@@ -2450,7 +2469,8 @@
       "texture": "wood_shovel",
       "origin_x": 0.125,
       "tool_level": 1,
-      "max_stack": 59
+      "max_stack": 59,
+      "burning_time": 10000
     },
     "stone_shovel": {
       "name": "Stone Shovel",
@@ -2733,11 +2753,13 @@
       "name": "Wooden Door",
       "type": "usable",
       "texture": "door_wood",
-      "action_key": "use_door_wood_item_action"
+      "action_key": "use_door_wood_item_action",
+      "burning_time": 10000
     },
     "bowl": {
       "name": "Bowl",
-      "texture": "bowl"
+      "texture": "bowl",
+      "burning_time": 5000
     },
     "mushroom_stew": {
       "name": "Mushroom Stew",
