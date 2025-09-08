@@ -80,7 +80,7 @@ internal class FontAssetsRepositoryImpl @Inject constructor(
 
     companion object {
         private const val TAG = "FontAssetsRepositoryImpl"
-        private const val FONT_FILE_PATH = "skin/f77.fnt"
+        private const val FONT_FILE_PATH = "skin/lanapixel.fnt"
         private const val BASE_MENU_LOCALIZATION = "i18n/CaveDroid_Menu"
         private const val BASE_ITEMS_LOCALIZATION = "i18n/CaveDroid_Items"
         private const val FONT_SCALE = .375f

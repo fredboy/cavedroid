@@ -59,7 +59,7 @@ CaveDroid is licensed under the **MIT License**. See [LICENSE](LICENSE) for deta
 
 - **Textures**: Pixel Perfection by XSSheep, licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
 - **On-screen joystick**: CC-0 from [OpenGameArt.org](https://opengameart.org/content/mmorpg-virtual-joysticks)
-- **Font**: F77 Minecraft Font by 123467, CC BY-ND ([FonstSpace](https://www.fontspace.com/f77-minecraft-font-f30628))
+- **Font**: LanaPixel by eishiya, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 - **Scripts**: Various scripts from Stack Overflow are distributed under their applicable licenses
 
 ---
