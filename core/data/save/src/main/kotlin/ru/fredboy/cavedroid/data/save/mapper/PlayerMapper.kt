@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.data.save.mapper
 
 import com.badlogic.gdx.math.Vector2
 import dagger.Reusable
+import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
@@ -16,6 +17,7 @@ class PlayerMapper @Inject constructor(
     private val controlModeMapper: ControlModeMapper,
     private val getFallbackItemUseCase: GetFallbackItemUseCase,
     private val mobParamsRepository: MobParamsRepository,
+    private val tooltipManager: TooltipManager,
 ) {
 
     fun mapSaveData(player: Player): SaveDataDto.PlayerSaveDataDto = SaveDataDto.PlayerSaveDataDto(
@@ -60,6 +62,7 @@ class PlayerMapper @Inject constructor(
 
         return Player(
             getFallbackItem = getFallbackItemUseCase,
+            tooltipManager = tooltipManager,
             params = requireNotNull(mobParamsRepository.getMobParamsByKey(saveDataDto.key)),
         ).apply {
             spawn(saveDataDto.x, saveDataDto.y, mobPhysicsFactory)

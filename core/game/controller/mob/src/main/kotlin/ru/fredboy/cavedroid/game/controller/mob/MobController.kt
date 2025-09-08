@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
@@ -29,6 +30,7 @@ class MobController @Inject constructor(
     private val mobPhysicsFactory: MobPhysicsFactory,
     private val dropQueue: DropQueue,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
+    private val tooltipManager: TooltipManager,
 ) : Disposable {
 
     // TODO: Do proper DI
@@ -40,6 +42,7 @@ class MobController @Inject constructor(
 
     var player = Player(
         getFallbackItem = getFallbackItemUseCase,
+        tooltipManager = tooltipManager,
         params = requireNotNull(mobParamsRepository.getMobParamsByKey("char")),
     )
         set(value) {

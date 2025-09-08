@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.drawSprite
+import ru.fredboy.cavedroid.common.utils.drawString
 import ru.fredboy.cavedroid.common.utils.withScissors
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
@@ -152,14 +153,27 @@ class FurnaceWindowRenderer @Inject constructor(
             }
         }
 
-        window.selectedItem?.drawSelected(
-            spriteBatch = spriteBatch,
-            font = getFont(),
-            x = Gdx.input.x * (viewport.width / Gdx.graphics.width),
-            y = Gdx.input.y * (viewport.height / Gdx.graphics.height),
-            getStringWidth = getStringWidth::invoke,
-            getStringHeight = getStringHeight::invoke,
-        )
+        window.selectedItem?.let { selectedItem ->
+            selectedItem.draw(
+                spriteBatch = spriteBatch,
+                shapeRenderer = shapeRenderer,
+                font = getFont(),
+                x = Gdx.input.x * (viewport.width / Gdx.graphics.width) - 10f,
+                y = Gdx.input.y * (viewport.height / Gdx.graphics.height) - 10f,
+                getStringWidth = getStringWidth::invoke,
+                getStringHeight = getStringHeight::invoke,
+                width = 20f,
+                height = 20f,
+            )
+
+            val itemName = selectedItem.item.params.name
+            spriteBatch.drawString(
+                font = getFont(),
+                str = itemName,
+                x = viewport.width / 2f - getStringWidth(itemName) / 2f,
+                y = windowY + windowTexture.regionHeight + getStringHeight(itemName),
+            )
+        }
     }
 
     companion object {

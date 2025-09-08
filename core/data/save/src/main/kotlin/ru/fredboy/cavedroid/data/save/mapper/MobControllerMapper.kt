@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.data.save.mapper
 
 import dagger.Reusable
+import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
@@ -21,6 +22,7 @@ class MobControllerMapper @Inject constructor(
     private val getFallbackItemUseCase: GetFallbackItemUseCase,
     private val mobParamsRepository: MobParamsRepository,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
+    private val tooltipManager: TooltipManager,
 ) {
 
     fun mapSaveData(mobController: MobController): SaveDataDto.MobControllerSaveDataDto = SaveDataDto.MobControllerSaveDataDto(
@@ -50,6 +52,7 @@ class MobControllerMapper @Inject constructor(
             mobPhysicsFactory = mobPhysicsFactory,
             dropQueue = dropQueue,
             getItemByKeyUseCase = getItemByKeyUseCase,
+            tooltipManager = tooltipManager,
         ).apply {
             (mobs as MutableList).addAll(
                 saveDataDto.mobs.mapNotNull { mob ->

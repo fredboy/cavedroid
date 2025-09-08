@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gdx.game.di
 import dagger.Module
 import dagger.Provides
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -96,6 +97,7 @@ object GameModule {
         mobPhysicsFactory: MobPhysicsFactory,
         dropQueue: DropQueue,
         getItemByKeyUseCase: GetItemByKeyUseCase,
+        tooltipManager: TooltipManager,
     ): MobController = if (gameContextRepository.isLoadGame()) {
         saveDataRepository.loadMobController(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
@@ -112,6 +114,7 @@ object GameModule {
             mobPhysicsFactory = mobPhysicsFactory,
             dropQueue = dropQueue,
             getItemByKeyUseCase = getItemByKeyUseCase,
+            tooltipManager = tooltipManager,
         )
     }
 

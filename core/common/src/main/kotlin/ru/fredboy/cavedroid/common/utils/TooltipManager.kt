@@ -1,10 +1,10 @@
-package ru.fredboy.cavedroid.game.window
+package ru.fredboy.cavedroid.common.utils
 
 import com.badlogic.gdx.utils.Timer
-import ru.fredboy.cavedroid.common.di.GameScope
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@GameScope
+@Singleton
 class TooltipManager @Inject constructor() {
 
     private val resetTask = object : Timer.Task() {

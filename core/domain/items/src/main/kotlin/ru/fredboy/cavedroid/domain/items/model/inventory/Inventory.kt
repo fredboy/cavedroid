@@ -14,6 +14,8 @@ class Inventory @JvmOverloads constructor(
 
     val items get() = _items.asList() as MutableList<InventoryItem>
 
+    private var onItemAddedListener: ((item: InventoryItem, slot: Int) -> Unit)? = null
+
     fun getAvailableSlotForItem(item: Item): Int {
         for (i in _items.indices) {
             val inventoryItem = _items[i]
@@ -45,6 +47,10 @@ class Inventory @JvmOverloads constructor(
         )
 
         _items[0] = item.toInventoryItem(item.params.maxStack)
+
+        for (i in _items.indices) {
+            onItemAddedListener?.invoke(items[i], i)
+        }
     }
 
     /**
@@ -66,6 +72,7 @@ class Inventory @JvmOverloads constructor(
             }
         } else {
             _items[slot] = pickingItem
+            onItemAddedListener?.invoke(pickingItem, slot)
             return true
         }
     }
@@ -83,6 +90,10 @@ class Inventory @JvmOverloads constructor(
         for (i in _items.indices) {
             _items[i] = fallbackItem.toInventoryItem()
         }
+    }
+
+    fun setOnItemAddedListener(onItemAddedListener: ((item: InventoryItem, slot: Int) -> Unit)?) {
+        this.onItemAddedListener = onItemAddedListener
     }
 
     companion object {

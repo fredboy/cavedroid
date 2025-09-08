@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Filter
 import ru.fredboy.cavedroid.common.model.GameMode
+import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.common.utils.applyOrigin
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.common.utils.meters
@@ -24,6 +25,7 @@ import ru.fredboy.cavedroid.entity.mob.impl.PlayerMobBehavior
 
 class Player(
     private val getFallbackItem: GetFallbackItemUseCase,
+    private val tooltipManager: TooltipManager,
     params: MobParams,
 ) : Mob(Direction.random(), params, PlayerMobBehavior()) {
 
@@ -33,6 +35,14 @@ class Player(
         size = INVENTORY_SIZE,
         fallbackItem = getFallbackItem(),
     )
+        set(value) {
+            value.setOnItemAddedListener { item, slot ->
+                if (slot == activeSlot) {
+                    tooltipManager.showHotbarTooltip(item.item.params.name)
+                }
+            }
+            field = value
+        }
 
     var gameMode = GameMode.SURVIVAL
 
@@ -64,6 +74,9 @@ class Player(
         get() = _activeSlot
         set(value) {
             if (value in 0..<HOTBAR_SIZE) {
+                if (value != _activeSlot) {
+                    tooltipManager.showHotbarTooltip(inventory.items[value].item.params.name)
+                }
                 _activeSlot = value
             }
         }

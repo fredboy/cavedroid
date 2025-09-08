@@ -11,13 +11,13 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.common.utils.drawString
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
-import ru.fredboy.cavedroid.game.window.TooltipManager
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.IHudRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.world.IWorldRenderer

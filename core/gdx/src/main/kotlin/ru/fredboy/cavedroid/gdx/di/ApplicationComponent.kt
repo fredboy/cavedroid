@@ -4,6 +4,7 @@ import dagger.BindsInstance
 import dagger.Component
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.PreferencesStore
+import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.data.assets.di.DataAssetsModule
 import ru.fredboy.cavedroid.data.configuration.di.ApplicationContextModule
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
@@ -74,6 +75,8 @@ interface ApplicationComponent {
     val menuScreen: MenuScreen
 
     val pauseMenuScreen: PauseMenuScreen
+
+    val tooltipManager: TooltipManager
 
     @Component.Builder
     interface Builder {

@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.game.window
 
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.entity.container.model.Chest
 import ru.fredboy.cavedroid.entity.container.model.Furnace

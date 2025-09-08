@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
 import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -12,7 +13,6 @@ import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsConfigs
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
-import ru.fredboy.cavedroid.game.window.TooltipManager
 import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey

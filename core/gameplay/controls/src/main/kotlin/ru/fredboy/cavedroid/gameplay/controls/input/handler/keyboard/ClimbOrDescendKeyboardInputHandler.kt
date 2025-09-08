@@ -17,7 +17,8 @@ class ClimbOrDescendKeyboardInputHandler @Inject constructor(
     override fun checkConditions(action: KeyboardInputAction): Boolean = (
         action.actionKey is KeyboardInputActionKey.Up ||
             action.actionKey is KeyboardInputActionKey.Down
-        ) && (action.isKeyDown == mobController.player.canClimb || !action.isKeyDown) &&
+        ) &&
+        (action.isKeyDown == mobController.player.canClimb || !action.isKeyDown) &&
         !mobController.player.canJump &&
         !mobController.player.isFlyMode
 
