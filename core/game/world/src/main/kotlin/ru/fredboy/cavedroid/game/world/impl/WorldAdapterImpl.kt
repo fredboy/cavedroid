@@ -142,4 +142,8 @@ internal class WorldAdapterImpl @Inject constructor(
     override fun isDayTime(): Boolean {
         return gameWorld.isDayTime()
     }
+
+    override fun canPlaceToForeground(x: Int, y: Int, value: Block): Boolean {
+        return gameWorld.canPlaceToForeground(x, y, value)
+    }
 }

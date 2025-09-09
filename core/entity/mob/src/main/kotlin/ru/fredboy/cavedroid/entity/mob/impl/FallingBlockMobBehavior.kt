@@ -11,8 +11,12 @@ class FallingBlockMobBehavior :
     ) {
 
     override fun FallingBlock.updateMob(worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, delta: Float) {
-        if (velocity.isZero) {
-            worldAdapter.setForegroundBlock(mapX, middleMapY, block)
+        if (velocity.get().isZero(0.001f)) {
+            if (worldAdapter.canPlaceToForeground(mapX, middleMapY, block)) {
+                worldAdapter.setForegroundBlock(mapX, middleMapY, block)
+            } else {
+                shouldDrop = true
+            }
             kill()
         }
     }

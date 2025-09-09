@@ -33,4 +33,6 @@ interface MobWorldAdapter {
     fun getRayHandler(): RayHandler
 
     fun isDayTime(): Boolean
+
+    fun canPlaceToForeground(x: Int, y: Int, value: Block): Boolean
 }
