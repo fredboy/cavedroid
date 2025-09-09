@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import ru.fredboy.cavedroid.common.utils.PIXELS_PER_METER
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.common.utils.drawString
 import ru.fredboy.cavedroid.domain.items.model.item.Item
@@ -108,24 +109,30 @@ class InventoryItem(
         }
 
         val sprite = item.sprite
+
+        val drawWidth = width?.let { (it / PIXELS_PER_METER) * sprite.regionWidth.toFloat() }
+            ?: sprite.regionWidth.toFloat()
+        val drawHeight = height?.let { (it / PIXELS_PER_METER) * sprite.regionHeight.toFloat() }
+            ?: sprite.regionHeight.toFloat()
+
         val placeableMarginTop = (item as? Item.Placeable)?.block?.params?.spriteMargins?.top ?: 0
         val placeableMarginLeft = (item as? Item.Placeable)?.block?.params?.spriteMargins?.left ?: 0
         spriteBatch.drawSprite(
             sprite = sprite,
             x = x + placeableMarginLeft,
             y = y + placeableMarginTop,
-            width = width ?: sprite.regionWidth.toFloat(),
-            height = height ?: sprite.regionHeight.toFloat(),
+            width = drawWidth,
+            height = drawHeight,
         )
 
         drawAmountOrConditionBar(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,
             font = font,
-            x = x,
-            y = y,
-            width = width ?: sprite.regionWidth.toFloat(),
-            height = height ?: sprite.regionHeight.toFloat(),
+            x = x + placeableMarginLeft,
+            y = y + placeableMarginTop,
+            width = drawWidth,
+            height = drawHeight,
             getStringWidth = getStringWidth,
             getStringHeight = getStringHeight,
         )
