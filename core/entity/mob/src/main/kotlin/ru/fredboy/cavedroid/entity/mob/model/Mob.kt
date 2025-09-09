@@ -1,7 +1,6 @@
 package ru.fredboy.cavedroid.entity.mob.model
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
@@ -99,7 +98,7 @@ abstract class Mob(
 
     var canClimb = false
 
-    var pendingSound: Sound? = null
+    private var stepping: Stepping? = null
 
     var takingDamage = false
         set(value) {
@@ -246,6 +245,22 @@ abstract class Mob(
         checkHealth()
     }
 
+    fun retrieveStepping(): Stepping? {
+        return stepping?.also {
+            stepping = null
+        }
+    }
+
+    fun stepOnBlock(block: Block) {
+        if (stepping == null || stepping?.let { TimeUtils.timeSinceMillis(it.timestamp) >= STEP_TIMEOUT_MS } ?: true) {
+            val time = TimeUtils.millis()
+            stepping = Stepping(
+                timestamp = time,
+                block = block,
+            )
+        }
+    }
+
     protected open fun applyMediumResistanceToBody(mobWorldAdapter: MobWorldAdapter) {
         if (isFlyMode) {
             body.linearDamping = 2f
@@ -376,6 +391,11 @@ abstract class Mob(
         }
     }
 
+    data class Stepping(
+        val timestamp: Long,
+        val block: Block,
+    )
+
     companion object {
         private const val TAG = "Mob"
 
@@ -389,5 +409,7 @@ abstract class Mob(
         private const val JUMP_VELOCITY = -5.05f
 
         private const val JUMP_COOLDOWN_MS = 500L
+
+        private const val STEP_TIMEOUT_MS = 500L
     }
 }

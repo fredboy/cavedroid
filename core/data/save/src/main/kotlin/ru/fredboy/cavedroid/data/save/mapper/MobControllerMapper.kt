@@ -12,6 +12,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.FallingBlock
 import ru.fredboy.cavedroid.entity.mob.model.WalkingMob
 import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.mob.MobSoundManager
 import javax.inject.Inject
 
 @Reusable
@@ -42,6 +43,7 @@ class MobControllerMapper @Inject constructor(
         mobWorldAdapter: MobWorldAdapter,
         mobPhysicsFactory: MobPhysicsFactory,
         dropQueue: DropQueue,
+        mobSoundManager: MobSoundManager,
     ): MobController {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
@@ -53,6 +55,7 @@ class MobControllerMapper @Inject constructor(
             dropQueue = dropQueue,
             getItemByKeyUseCase = getItemByKeyUseCase,
             tooltipManager = tooltipManager,
+            mobSoundManager = mobSoundManager,
         ).apply {
             (mobs as MutableList).addAll(
                 saveDataDto.mobs.mapNotNull { mob ->

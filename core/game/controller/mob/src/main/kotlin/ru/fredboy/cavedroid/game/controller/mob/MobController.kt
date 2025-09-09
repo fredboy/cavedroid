@@ -6,7 +6,6 @@ import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.common.utils.ifTrue
-import ru.fredboy.cavedroid.common.utils.playSoundAtPosition
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
@@ -32,6 +31,7 @@ class MobController @Inject constructor(
     private val dropQueue: DropQueue,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
     private val tooltipManager: TooltipManager,
+    private val mobSoundManager: MobSoundManager,
 ) : Disposable {
 
     // TODO: Do proper DI
@@ -54,6 +54,7 @@ class MobController @Inject constructor(
 
     init {
         respawnPlayer()
+        mobSoundManager.attachToMobController(this)
     }
 
     fun addMob(mob: Mob) {
@@ -68,20 +69,7 @@ class MobController @Inject constructor(
     fun update(delta: Float) {
         mobs.forEach { mob ->
             mob.update(mobWorldAdapter, playerAdapter, delta)
-
-            with(mob) {
-                pendingSound?.let { sound ->
-                    playSoundAtPosition(
-                        sound = sound,
-                        soundX = position.x,
-                        soundY = position.y,
-                        playerX = playerAdapter.x,
-                        playerY = playerAdapter.y,
-                    )
-
-                    pendingSound = null
-                }
-            }
+            mobSoundManager.makeStepSound(mob)
         }
         _mobs.removeAll { mob ->
             mob.isDead.ifTrue {
@@ -96,20 +84,7 @@ class MobController @Inject constructor(
 
     private fun updatePlayer(delta: Float) {
         player.update(mobWorldAdapter, playerAdapter, delta)
-
-        with(player) {
-            pendingSound?.let { sound ->
-                playSoundAtPosition(
-                    sound = sound,
-                    soundX = position.x,
-                    soundY = position.y,
-                    playerX = playerAdapter.x,
-                    playerY = playerAdapter.y,
-                )
-
-                pendingSound = null
-            }
-        }
+        mobSoundManager.makeStepSound(player)
 
         limitPlayerCursor()
 
@@ -196,6 +171,7 @@ class MobController @Inject constructor(
         mobs.forEach { it.dispose() }
         player.dispose()
         _mobs.clear()
+        mobSoundManager.dispose()
     }
 
     companion object {

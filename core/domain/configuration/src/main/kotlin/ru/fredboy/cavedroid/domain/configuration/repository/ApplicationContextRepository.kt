@@ -38,4 +38,8 @@ interface ApplicationContextRepository {
     fun setLocale(locale: Locale)
 
     fun getSupportedLocales(): List<Locale>
+
+    fun setSoundEnabled(enabled: Boolean)
+
+    fun isSoundEnabled(): Boolean
 }

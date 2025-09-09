@@ -9,14 +9,12 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
 
 class SettingsMenuViewModel(
-    private val applicationController: ApplicationController,
     private val navBackStack: NavBackStack,
     private val applicationContextRepository: ApplicationContextRepository,
     fontAssetsRepository: FontTextureAssetsRepository,
@@ -37,12 +35,18 @@ class SettingsMenuViewModel(
         .onStart { emit(applicationContextRepository.isAutoJumpEnabled()) }
         .distinctUntilChanged()
 
+    private val _soundFlow = MutableSharedFlow<Boolean>(replay = 0)
+    private val soundFlow: Flow<Boolean> = _soundFlow
+        .onStart { emit(applicationContextRepository.isSoundEnabled()) }
+        .distinctUntilChanged()
+
     val stateFlow: StateFlow<SettingsMenuState> = combine(
         dynamicCameraFlow,
         fullscreenFlow,
         autoJumpFlow,
-    ) { dynamicCamera, fullscreen, autoJump ->
-        SettingsMenuState(dynamicCamera, fullscreen, autoJump)
+        soundFlow,
+    ) { dynamicCamera, fullscreen, autoJump, sound ->
+        SettingsMenuState(dynamicCamera, fullscreen, autoJump, sound)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(500L),
@@ -54,6 +58,7 @@ class SettingsMenuViewModel(
             dynamicCamera = applicationContextRepository.useDynamicCamera(),
             fullscreen = applicationContextRepository.isFullscreen(),
             autoJump = applicationContextRepository.isAutoJumpEnabled(),
+            sound = applicationContextRepository.isSoundEnabled(),
         )
     }
 
@@ -69,11 +74,16 @@ class SettingsMenuViewModel(
         viewModelScope.launch { _autoJumpFlow.emit(autoJump) }
     }
 
+    fun onSoundClick(enabled: Boolean) {
+        viewModelScope.launch { _soundFlow.emit(enabled) }
+    }
+
     fun onDoneClick() {
         stateFlow.value.run {
             applicationContextRepository.setFullscreen(fullscreen)
             applicationContextRepository.setUseDynamicCamera(dynamicCamera)
             applicationContextRepository.setAutoJumpEnabled(autoJump)
+            applicationContextRepository.setSoundEnabled(sound)
         }
         navBackStack.pop()
     }

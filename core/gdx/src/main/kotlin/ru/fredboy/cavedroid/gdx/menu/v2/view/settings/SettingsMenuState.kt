@@ -4,4 +4,5 @@ data class SettingsMenuState(
     val dynamicCamera: Boolean,
     val fullscreen: Boolean,
     val autoJump: Boolean,
+    val sound: Boolean,
 )

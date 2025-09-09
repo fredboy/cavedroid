@@ -31,14 +31,8 @@ class MobOnGroundSensorToBlockContactHandler @Inject constructor(
         descend = false
         controlVector.y = 0f
 
-        if (velocity.isZero) {
-            return
-        }
-
-        entityB.params.material?.name?.lowercase()?.let { material ->
-            stepsSoundAssetsRepository.getStepSound(material)
-        }?.let { sound ->
-            pendingSound = sound
+        if (!velocity.isZero) {
+            stepOnBlock(entityB)
         }
     }
 

@@ -2,9 +2,11 @@ package ru.fredboy.cavedroid.gdx.menu.v2.view.settings
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.utils.Align
 import ktx.actors.onClick
 import ktx.scene2d.Scene2dDsl
 import ktx.scene2d.actors
+import ktx.scene2d.label
 import ktx.scene2d.textButton
 import ru.fredboy.cavedroid.common.utils.toToggleStateString
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.menuButtonsTable
@@ -13,7 +15,19 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.common.menuButtonsTable
 suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel.also {
     viewModel.stateFlow.collect { state ->
         actors {
-            menuButtonsTable {
+            menuButtonsTable(
+                withGameLogo = false,
+                withVersion = false,
+            ) {
+                label(viewModel.getLocalizedString("settings")) {
+                    setAlignment(Align.center)
+                }.cell(
+                    expandX = true,
+                    align = Align.center,
+                )
+
+                row()
+
                 textButton(viewModel.getFormattedString("dynamicCamera", state.dynamicCamera.toToggleStateString())) {
                     onClick {
                         viewModel.onDynamicCameraClick(!state.dynamicCamera)
@@ -35,6 +49,14 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                 textButton(viewModel.getFormattedString("autoJump", state.autoJump.toToggleStateString())) {
                     onClick {
                         viewModel.onAutoJumpClick(!state.autoJump)
+                    }
+                }
+
+                row()
+
+                textButton(viewModel.getFormattedString("enableSound", state.sound.toToggleStateString())) {
+                    onClick {
+                        viewModel.onSoundClick(!state.sound)
                     }
                 }
 

@@ -4,6 +4,7 @@ import dagger.BindsInstance
 import dagger.Component
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.PreferencesStore
+import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.data.assets.di.DataAssetsModule
 import ru.fredboy.cavedroid.data.configuration.di.ApplicationContextModule
@@ -25,7 +26,9 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
+import ru.fredboy.cavedroid.gdx.CaveDroidSoundPlayer
 import ru.fredboy.cavedroid.gdx.game.GameScreen
+import ru.fredboy.cavedroid.gdx.game.di.GameModule
 import ru.fredboy.cavedroid.gdx.menu.v2.MenuScreen
 import ru.fredboy.cavedroid.gdx.menu.v2.PauseMenuScreen
 import javax.inject.Singleton
@@ -37,6 +40,7 @@ import javax.inject.Singleton
         DataItemsModule::class,
         DataSaveModule::class,
         ApplicationContextModule::class,
+        ApplicationModule::class,
     ],
 )
 interface ApplicationComponent {
@@ -80,6 +84,8 @@ interface ApplicationComponent {
     val tooltipManager: TooltipManager
 
     val stepsSoundAssetsRepository: StepsSoundAssetsRepository
+
+    val soundPlayer: SoundPlayer
 
     @Component.Builder
     interface Builder {

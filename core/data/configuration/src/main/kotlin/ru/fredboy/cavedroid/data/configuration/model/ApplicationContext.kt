@@ -12,4 +12,5 @@ class ApplicationContext(
     internal var height: Float,
     internal var isAutoJumpEnabled: Boolean,
     internal var locale: Locale,
+    internal var soundEnabled: Boolean,
 )

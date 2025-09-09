@@ -84,6 +84,14 @@ class ApplicationContextRepositoryImpl @Inject constructor(
         return SUPPORTED_LOCALES
     }
 
+    override fun isSoundEnabled(): Boolean {
+        return applicationContextStore.isSoundEnabled
+    }
+
+    override fun setSoundEnabled(enabled: Boolean) {
+        applicationContextStore.isSoundEnabled = enabled
+    }
+
     companion object {
         private val SUPPORTED_LOCALES = listOf(Locale("en"), Locale("ru"))
     }

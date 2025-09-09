@@ -23,6 +23,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.mob.MobSoundManager
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.GameWorldContactListener
 import ru.fredboy.cavedroid.game.world.GameWorldLightManager
@@ -98,6 +99,7 @@ object GameModule {
         dropQueue: DropQueue,
         getItemByKeyUseCase: GetItemByKeyUseCase,
         tooltipManager: TooltipManager,
+        mobSoundManager: MobSoundManager,
     ): MobController = if (gameContextRepository.isLoadGame()) {
         saveDataRepository.loadMobController(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
@@ -105,6 +107,7 @@ object GameModule {
             mobWorldAdapter = mobWorldAdapter,
             mobPhysicsFactory = mobPhysicsFactory,
             dropQueue = dropQueue,
+            mobSoundManager = mobSoundManager,
         )
     } else {
         MobController(
@@ -115,6 +118,7 @@ object GameModule {
             dropQueue = dropQueue,
             getItemByKeyUseCase = getItemByKeyUseCase,
             tooltipManager = tooltipManager,
+            mobSoundManager = mobSoundManager,
         )
     }
 

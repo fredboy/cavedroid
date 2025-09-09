@@ -61,11 +61,19 @@ class ApplicationContextStore @Inject constructor(
             preferencesStore.setPreference(KEY_LOCALE_PREF, value.language)
         }
 
+    var isSoundEnabled: Boolean
+        get() = synchronized(lock) { applicationContext.soundEnabled }
+        set(value) = synchronized(lock) {
+            applicationContext.soundEnabled = value
+            preferencesStore.setPreference(KEY_SOUND_ENABLED_PREF, value.toString())
+        }
+
     private companion object {
         private const val KEY_FULLSCREEN_PREF = "fullscreen"
         private const val KEY_DYNAMIC_CAMERA_PREF = "dyncam"
         private const val KEY_SCREEN_SCALE_PREF = "screen_scale"
         private const val KEY_AUTO_JUMP_PREF = "auto_jump"
         private const val KEY_LOCALE_PREF = "locale"
+        private const val KEY_SOUND_ENABLED_PREF = "sound_enabled"
     }
 }

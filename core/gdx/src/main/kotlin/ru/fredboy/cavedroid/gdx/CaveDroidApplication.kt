@@ -57,6 +57,7 @@ class CaveDroidApplication(
                     useDynamicCamera = preferencesStore.getPreference("dyncam").toBoolean(),
                     isAutoJumpEnabled = preferencesStore.getPreference("auto_jump").toBoolean(),
                     locale = Locale(preferencesStore.getPreference("locale") ?: Locale.getDefault().language),
+                    soundEnabled = preferencesStore.getPreference("sound_enabled").toBoolean(),
                 ),
             )
             .applicationController(this)
