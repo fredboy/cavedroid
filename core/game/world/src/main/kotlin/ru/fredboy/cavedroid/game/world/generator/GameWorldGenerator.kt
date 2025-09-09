@@ -182,9 +182,8 @@ class GameWorldGenerator(
                     until = 8,
                 ) -> (surfaceHeight > config.seaLevel && random.nextInt(100) < 20).ifTrue {
                     clay
-                } ?: sand
+                } ?: (y < surfaceHeight + 3).ifTrue { sand } ?: sandstone
 
-                y < surfaceHeight + random.nextInt(0, 2) -> sandstone
                 else -> stone
             }
             backMap[x][y] = foreMap[x][y]
@@ -346,6 +345,8 @@ class GameWorldGenerator(
         val iron = itemsRepository.getBlockByKey("iron_ore")
         val gold = itemsRepository.getBlockByKey("gold_ore")
         val diamond = itemsRepository.getBlockByKey("diamond_ore")
+        val dirt = itemsRepository.getBlockByKey("dirt")
+        val gravel = itemsRepository.getBlockByKey("gravel")
         val lapis = itemsRepository.getBlockByKey("lapis_ore")
 
         for (x in 0..<config.width) {
@@ -354,11 +355,13 @@ class GameWorldGenerator(
 
                 val h = config.height - y
                 val blockAndSize = when {
-                    res in 0..<25 && h < 32 -> diamond to 2
-                    res in 25..<50 && h < 64 -> gold to 3
-                    res in 50..<150 && h < 128 -> iron to 4
-                    res in 150..<300 && h < 192 -> coal to 4
-                    res in 300..<(300 + (32 - (abs(h - 16) * 2))) -> lapis to 4
+                    res in 0..<50 && h < 32 -> diamond to 2
+                    res in 50..<100 && h < 64 -> gold to 3
+                    res in 100..<250 && h < 128 -> iron to 3
+                    res in 250..<400 && h > 32 && h < 192 -> coal to 3
+                    res in 400..<500 -> dirt to 4
+                    res in 500..<600 -> gravel to 4
+                    res in 600..<(600 + (32 - (abs(h - 16) * 2))) -> lapis to 4
                     else -> null
                 }
 
