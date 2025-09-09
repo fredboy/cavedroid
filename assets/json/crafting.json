@@ -152,7 +152,7 @@
     "count": 6
   },
   "stonebrick": {
-    "input": ["stone", "stone", "stone", "stone", "none", "none", "none", "none", "none"],
+    "input": ["stone", "stone", "none", "stone", "stone", "none", "none", "none", "none"],
     "count": 4
   },
   "stonebrick_slab": {
