@@ -13,52 +13,41 @@ import ktx.scene2d.table
 import ktx.scene2d.textButton
 
 @Scene2dDsl
-fun Stage.attributionMenuView(viewModel: AttributionMenuViewModel) = viewModel.also {
-    actors {
-        table {
-            setFillParent(true)
-            background(
-                TiledDrawable(
-                    TextureRegionDrawable(
-                        skin.getRegion("background"),
+suspend fun Stage.attributionMenuView(viewModel: AttributionMenuViewModel) = viewModel.also {
+    viewModel.stateFlow.collect { attributions ->
+        actors {
+            table {
+                setFillParent(true)
+                background(
+                    TiledDrawable(
+                        TextureRegionDrawable(
+                            skin.getRegion("background"),
+                        ),
                     ),
-                ),
-            )
-            pad(8f)
+                )
+                pad(8f)
 
-            scrollPane {
-                label(
-                    """
-                        Attributions
+                scrollPane {
+                    label(attributions) {
+                        wrap = true
+                    }
+                }.cell(
+                    expand = true,
+                    fill = true,
+                    align = Align.center,
+                )
 
-                        - Pixel Perfection by XSSheep – Creative Commons Attribution-ShareAlike 4.0
-                            https://creativecommons.org/licenses/by-sa/4.0/
+                row()
+                    .bottom()
 
-                        - On-screen Joystick – CC0 from OpenGameArt
-                            https://opengameart.org/content/mmorpg-virtual-joysticks
-
-                        - LanaPixel font by eishiya - CC BY 4.0
-                            https://opengameart.org/content/lanapixel-localization-friendly-pixel-font
-                    """.trimIndent(),
-                ) {
-                    wrap = true
-                }
-            }.cell(
-                expand = true,
-                fill = true,
-                align = Align.center,
-            )
-
-            row()
-                .bottom()
-
-            textButton(viewModel.getLocalizedString("back")) {
-                onClick { viewModel.onBackClick() }
-            }.cell(
-                width = 600f,
-                height = 60f,
-                pad = 16f,
-            )
+                textButton(viewModel.getLocalizedString("back")) {
+                    onClick { viewModel.onBackClick() }
+                }.cell(
+                    width = 600f,
+                    height = 60f,
+                    pad = 16f,
+                )
+            }
         }
     }
 }

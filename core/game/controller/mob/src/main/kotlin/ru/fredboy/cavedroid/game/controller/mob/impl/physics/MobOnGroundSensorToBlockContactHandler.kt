@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.game.controller.mob.impl.physics
 
 import com.badlogic.gdx.physics.box2d.Contact
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.abstraction.AbstractContactHandler
 import ru.fredboy.cavedroid.domain.world.model.ContactSensorType
@@ -11,7 +12,9 @@ import kotlin.reflect.KClass
 
 @GameScope
 @BindMobContactHandler
-class MobOnGroundSensorToBlockContactHandler @Inject constructor() : AbstractContactHandler<Mob, Block>() {
+class MobOnGroundSensorToBlockContactHandler @Inject constructor(
+    private val stepsSoundAssetsRepository: StepsSoundAssetsRepository,
+) : AbstractContactHandler<Mob, Block>() {
 
     override val sensorType: ContactSensorType?
         get() = ContactSensorType.MOB_ON_GROUND
@@ -27,6 +30,16 @@ class MobOnGroundSensorToBlockContactHandler @Inject constructor() : AbstractCon
         isFlyMode = false
         descend = false
         controlVector.y = 0f
+
+        if (velocity.isZero) {
+            return
+        }
+
+        entityB.params.material?.name?.lowercase()?.let { material ->
+            stepsSoundAssetsRepository.getStepSound(material)
+        }?.let { sound ->
+            pendingSound = sound
+        }
     }
 
     override fun Mob.handleEndContact(contact: Contact, entityB: Block) {

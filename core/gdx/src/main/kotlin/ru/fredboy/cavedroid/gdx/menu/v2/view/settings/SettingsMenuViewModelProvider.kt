@@ -2,7 +2,7 @@ package ru.fredboy.cavedroid.gdx.menu.v2.view.settings
 
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.di.MenuScope
-import ru.fredboy.cavedroid.domain.assets.repository.FontAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.BindViewModelProvider
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
@@ -15,7 +15,7 @@ import kotlin.reflect.KClass
 class SettingsMenuViewModelProvider @Inject constructor(
     private val applicationController: ApplicationController,
     private val applicationContextRepository: ApplicationContextRepository,
-    private val fontAssetsRepository: FontAssetsRepository,
+    private val fontAssetsRepository: FontTextureAssetsRepository,
 ) : ViewModelProvider<SettingsMenuNavKey, SettingsMenuViewModel> {
 
     override val viewModelClass: KClass<SettingsMenuViewModel>

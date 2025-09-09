@@ -1,12 +1,12 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.common
 
 import com.badlogic.gdx.Gdx
-import ru.fredboy.cavedroid.domain.assets.repository.FontAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.ViewModel
 import java.util.MissingResourceException
 
 abstract class BaseViewModel(
-    private val fontAssetsRepository: FontAssetsRepository,
+    private val fontAssetsRepository: FontTextureAssetsRepository,
 ) : ViewModel() {
 
     fun getLocalizedString(key: String, fallback: String = ""): String {

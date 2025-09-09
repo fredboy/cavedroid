@@ -1,7 +1,7 @@
 {
 "com.badlogic.gdx.graphics.g2d.BitmapFont": {
 	"lanapixel": {
-		"file": "lanapixel.fnt",
+		"file": "font/lanapixel.fnt",
 		"scaledSize": 16,
 		"markupEnabled": true,
 		"flip": false

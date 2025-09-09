@@ -1,7 +1,7 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.language
 
 import ru.fredboy.cavedroid.common.di.MenuScope
-import ru.fredboy.cavedroid.domain.assets.repository.FontAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.BindViewModelProvider
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
@@ -13,7 +13,7 @@ import kotlin.reflect.KClass
 @BindViewModelProvider
 class LanguageMenuViewModelProvider @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
-    private val fontAssetsRepository: FontAssetsRepository,
+    private val fontAssetsRepository: FontTextureAssetsRepository,
 ) : ViewModelProvider<LanguageMenuNavKey, LanguageMenuViewModel> {
 
     override val viewModelClass: KClass<LanguageMenuViewModel>

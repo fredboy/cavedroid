@@ -25,6 +25,7 @@ data class CommonBlockParams(
     val castsShadows: Boolean,
     val lightInfo: BlockLightInfo?,
     val replaceable: Boolean,
+    val material: BlockMaterial?,
 ) {
     val spriteMarginsMeters by lazy { spriteMargins.toMeters() }
 }

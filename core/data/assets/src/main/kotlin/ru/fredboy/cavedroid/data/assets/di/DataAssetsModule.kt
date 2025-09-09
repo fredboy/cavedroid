@@ -2,63 +2,70 @@ package ru.fredboy.cavedroid.data.assets.di
 
 import dagger.Binds
 import dagger.Module
-import ru.fredboy.cavedroid.data.assets.internal.BlockAssetsRepositoryImpl
-import ru.fredboy.cavedroid.data.assets.internal.BlockDamageAssetsRepositoryImpl
-import ru.fredboy.cavedroid.data.assets.internal.EnvironmentTextureRegionsRepositoryImpl
-import ru.fredboy.cavedroid.data.assets.internal.FontAssetsRepositoryImpl
-import ru.fredboy.cavedroid.data.assets.internal.ItemsAssetsRepositoryImpl
-import ru.fredboy.cavedroid.data.assets.internal.MobAssetsRepositoryImpl
-import ru.fredboy.cavedroid.data.assets.internal.TextureRegionsAssetsRepositoryImpl
-import ru.fredboy.cavedroid.data.assets.internal.TouchButtonsRepositoryImpl
-import ru.fredboy.cavedroid.domain.assets.repository.BlockAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.FontAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.ItemsAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.TextureRegionsAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.TouchButtonsAssetsRepository
+import ru.fredboy.cavedroid.data.assets.internal.BlockDamageTextureAssetsRepositoryImpl
+import ru.fredboy.cavedroid.data.assets.internal.BlockTextureAssetsRepositoryImpl
+import ru.fredboy.cavedroid.data.assets.internal.EnvironmentTextureRegionsRepositoryImplTexture
+import ru.fredboy.cavedroid.data.assets.internal.FontTextureAssetsRepositoryImpl
+import ru.fredboy.cavedroid.data.assets.internal.ItemsTextureAssetsRepositoryImpl
+import ru.fredboy.cavedroid.data.assets.internal.MobTextureAssetsRepositoryImpl
+import ru.fredboy.cavedroid.data.assets.internal.StepSoundsAssetsRepositoryImpl
+import ru.fredboy.cavedroid.data.assets.internal.TextureRegionsTextureAssetsRepositoryImpl
+import ru.fredboy.cavedroid.data.assets.internal.TouchButtonsRepositoryImplTexture
+import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.BlockTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
+import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.ItemsTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.MobTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.TextureRegionsTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.TouchButtonsTextureAssetsRepository
 
 @Module
 abstract class DataAssetsModule {
 
     @Binds
     internal abstract fun bindBlockDamageAssetsRepository(
-        impl: BlockDamageAssetsRepositoryImpl,
-    ): BlockDamageAssetsRepository
+        impl: BlockDamageTextureAssetsRepositoryImpl,
+    ): BlockDamageTextureAssetsRepository
 
     @Binds
     internal abstract fun bindMobAssetsRepository(
-        impl: MobAssetsRepositoryImpl,
-    ): MobAssetsRepository
+        impl: MobTextureAssetsRepositoryImpl,
+    ): MobTextureAssetsRepository
 
     @Binds
     internal abstract fun bindTextureRegionsAssetsRepository(
-        impl: TextureRegionsAssetsRepositoryImpl,
-    ): TextureRegionsAssetsRepository
+        impl: TextureRegionsTextureAssetsRepositoryImpl,
+    ): TextureRegionsTextureAssetsRepository
 
     @Binds
     internal abstract fun bindFontAssetsRepository(
-        impl: FontAssetsRepositoryImpl,
-    ): FontAssetsRepository
+        impl: FontTextureAssetsRepositoryImpl,
+    ): FontTextureAssetsRepository
 
     @Binds
     internal abstract fun bindBlockAssetsRepository(
-        impl: BlockAssetsRepositoryImpl,
-    ): BlockAssetsRepository
+        impl: BlockTextureAssetsRepositoryImpl,
+    ): BlockTextureAssetsRepository
 
     @Binds
     internal abstract fun bindItemsAssetsRepository(
-        impl: ItemsAssetsRepositoryImpl,
-    ): ItemsAssetsRepository
+        impl: ItemsTextureAssetsRepositoryImpl,
+    ): ItemsTextureAssetsRepository
 
     @Binds
     internal abstract fun bindTouchButtonsAssetsRepository(
-        impl: TouchButtonsRepositoryImpl,
-    ): TouchButtonsAssetsRepository
+        impl: TouchButtonsRepositoryImplTexture,
+    ): TouchButtonsTextureAssetsRepository
 
     @Binds
     internal abstract fun bindEnvironmentTextureRegionsAssetsRepository(
-        impl: EnvironmentTextureRegionsRepositoryImpl,
-    ): EnvironmentTextureRegionsRepository
+        impl: EnvironmentTextureRegionsRepositoryImplTexture,
+    ): EnvironmentTextureRegionsRepositoryTexture
+
+    @Binds
+    internal abstract fun bindStepsSoundAssetsRepository(
+        impl: StepSoundsAssetsRepositoryImpl,
+    ): StepsSoundAssetsRepository
 }

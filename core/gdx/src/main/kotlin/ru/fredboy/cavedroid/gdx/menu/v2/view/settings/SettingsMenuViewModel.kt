@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.fredboy.cavedroid.common.api.ApplicationController
-import ru.fredboy.cavedroid.domain.assets.repository.FontAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
@@ -19,7 +19,7 @@ class SettingsMenuViewModel(
     private val applicationController: ApplicationController,
     private val navBackStack: NavBackStack,
     private val applicationContextRepository: ApplicationContextRepository,
-    fontAssetsRepository: FontAssetsRepository,
+    fontAssetsRepository: FontTextureAssetsRepository,
 ) : BaseViewModel(fontAssetsRepository) {
 
     private val _dynamicCameraFlow = MutableSharedFlow<Boolean>(replay = 0)

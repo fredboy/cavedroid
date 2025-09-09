@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.removeFirst
-import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
@@ -25,7 +25,7 @@ class GameWorld @Inject constructor(
     private val itemsRepository: ItemsRepository,
     private val physicsController: GameWorldContactListener,
     private val gameWorldSolidBlockBodiesManager: GameWorldSolidBlockBodiesManager,
-    private val environmentTextureRegionsRepository: EnvironmentTextureRegionsRepository,
+    private val environmentTextureRegionsRepository: EnvironmentTextureRegionsRepositoryTexture,
     private val gameWorldLightManager: GameWorldLightManager,
     initialForeMap: Array<Array<Block>>?,
     initialBackMap: Array<Array<Block>>?,

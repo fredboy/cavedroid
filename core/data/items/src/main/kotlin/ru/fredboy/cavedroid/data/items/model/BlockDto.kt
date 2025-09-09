@@ -36,4 +36,5 @@ data class BlockDto(
     @SerialName("light_info") val lightInfo: BlockLightDto? = null,
     @SerialName("drop_info") val dropInfo: List<DropInfoDto> = listOf(),
     @SerialName("replaceable") val replaceable: Boolean = false,
+    @SerialName("material") val material: String? = null,
 )

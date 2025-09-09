@@ -10,14 +10,15 @@ import ru.fredboy.cavedroid.data.configuration.di.ApplicationContextModule
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
 import ru.fredboy.cavedroid.data.items.di.DataItemsModule
 import ru.fredboy.cavedroid.data.save.di.DataSaveModule
-import ru.fredboy.cavedroid.domain.assets.repository.BlockAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.FontAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.ItemsAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.TextureRegionsAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.TouchButtonsAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.BlockTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
+import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.ItemsTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.MobTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.TextureRegionsTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.TouchButtonsTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.usecase.DisposeAssetsUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.InitializeAssetsUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -48,19 +49,19 @@ interface ApplicationComponent {
 
     val applicationContextRepository: ApplicationContextRepository
 
-    val blockAssetsRepository: BlockAssetsRepository
+    val blockAssetsRepository: BlockTextureAssetsRepository
 
-    val blockDamageAssetsRepository: BlockDamageAssetsRepository
+    val blockDamageAssetsRepository: BlockDamageTextureAssetsRepository
 
-    val fontAssetsRepository: FontAssetsRepository
+    val fontAssetsRepository: FontTextureAssetsRepository
 
-    val mobAssetsRepository: MobAssetsRepository
+    val mobAssetsRepository: MobTextureAssetsRepository
 
-    val itemAssetsRepository: ItemsAssetsRepository
+    val itemAssetsRepository: ItemsTextureAssetsRepository
 
-    val textureRegionsAssetsRepository: TextureRegionsAssetsRepository
+    val textureRegionsAssetsRepository: TextureRegionsTextureAssetsRepository
 
-    val touchButtonsAssetsRepository: TouchButtonsAssetsRepository
+    val touchButtonsAssetsRepository: TouchButtonsTextureAssetsRepository
 
     val itemsRepository: ItemsRepository
 
@@ -70,13 +71,15 @@ interface ApplicationComponent {
 
     val mobParamsRepository: MobParamsRepository
 
-    val environmentTextureRegionsRepository: EnvironmentTextureRegionsRepository
+    val environmentTextureRegionsRepository: EnvironmentTextureRegionsRepositoryTexture
 
     val menuScreen: MenuScreen
 
     val pauseMenuScreen: PauseMenuScreen
 
     val tooltipManager: TooltipManager
+
+    val stepsSoundAssetsRepository: StepsSoundAssetsRepository
 
     @Component.Builder
     interface Builder {

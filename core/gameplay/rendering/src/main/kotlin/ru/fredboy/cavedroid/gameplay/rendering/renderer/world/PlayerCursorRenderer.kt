@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.MobTextureAssetsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindWorldRenderer
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class PlayerCursorRenderer @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobController: MobController,
-    private val mobAssetsRepository: MobAssetsRepository,
+    private val mobAssetsRepository: MobTextureAssetsRepository,
 ) : IWorldRenderer {
 
     override val renderLayer get() = RENDER_LAYER

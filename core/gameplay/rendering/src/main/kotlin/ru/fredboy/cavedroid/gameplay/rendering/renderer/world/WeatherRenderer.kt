@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.common.utils.meters
-import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindWorldRenderer
 import javax.inject.Inject
@@ -16,7 +16,7 @@ import kotlin.math.max
 @GameScope
 @BindWorldRenderer
 class WeatherRenderer @Inject constructor(
-    private val environmentTextureRegionsRepository: EnvironmentTextureRegionsRepository,
+    private val environmentTextureRegionsRepository: EnvironmentTextureRegionsRepositoryTexture,
     private val gameWorld: GameWorld,
 ) : IWorldRenderer {
 

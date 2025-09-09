@@ -7,26 +7,28 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import dagger.Reusable
 import ru.fredboy.cavedroid.domain.assets.model.TouchButton
 import ru.fredboy.cavedroid.domain.assets.repository.AssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.BlockAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.FontAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.ItemsAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.TextureRegionsAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.TouchButtonsAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.BlockTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
+import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.ItemsTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.MobTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.TextureRegionsTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.TouchButtonsTextureAssetsRepository
 import javax.inject.Inject
 
 @Reusable
 class GameAssetsHolder @Inject constructor(
-    private val blockAssetsRepository: BlockAssetsRepository,
-    private val blockDamageAssetsRepository: BlockDamageAssetsRepository,
-    private val fontAssetsRepository: FontAssetsRepository,
-    private val itemsAssetsRepository: ItemsAssetsRepository,
-    private val mobAssetsRepository: MobAssetsRepository,
-    private val textureRegionsAssetsRepository: TextureRegionsAssetsRepository,
-    private val touchButtonsAssetsRepository: TouchButtonsAssetsRepository,
-    private val environmentTextureRegionsRepository: EnvironmentTextureRegionsRepository,
+    private val blockAssetsRepository: BlockTextureAssetsRepository,
+    private val blockDamageAssetsRepository: BlockDamageTextureAssetsRepository,
+    private val fontAssetsRepository: FontTextureAssetsRepository,
+    private val itemsAssetsRepository: ItemsTextureAssetsRepository,
+    private val mobAssetsRepository: MobTextureAssetsRepository,
+    private val textureRegionsAssetsRepository: TextureRegionsTextureAssetsRepository,
+    private val touchButtonsAssetsRepository: TouchButtonsTextureAssetsRepository,
+    private val environmentTextureRegionsRepository: EnvironmentTextureRegionsRepositoryTexture,
+    private val stepsSoundAssetsRepository: StepsSoundAssetsRepository,
 ) {
 
     private val repositories = sequenceOf(
@@ -38,6 +40,7 @@ class GameAssetsHolder @Inject constructor(
         touchButtonsAssetsRepository,
         mobAssetsRepository,
         environmentTextureRegionsRepository,
+        stepsSoundAssetsRepository,
     )
 
     fun initializeRepository() {

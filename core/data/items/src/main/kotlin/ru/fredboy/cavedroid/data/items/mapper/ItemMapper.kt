@@ -6,7 +6,7 @@ import ru.fredboy.cavedroid.common.model.SpriteOrigin
 import ru.fredboy.cavedroid.common.utils.colorFromHexString
 import ru.fredboy.cavedroid.data.items.model.ItemDto
 import ru.fredboy.cavedroid.data.items.repository.ItemsRepositoryImpl
-import ru.fredboy.cavedroid.domain.assets.repository.FontAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.usecase.GetItemTextureUseCase
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.item.CommonItemParams
@@ -18,7 +18,7 @@ import javax.inject.Singleton
 @Singleton
 class ItemMapper @Inject constructor(
     private val getItemTexture: GetItemTextureUseCase,
-    private val fontAssetsRepository: FontAssetsRepository,
+    private val fontAssetsRepository: FontTextureAssetsRepository,
 ) {
 
     fun map(key: String, dto: ItemDto, block: Block?, slabTopBlock: Block.Slab?, slabBottomBlock: Block.Slab?): Item {

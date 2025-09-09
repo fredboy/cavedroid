@@ -10,7 +10,7 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.common.utils.invertColor
 import ru.fredboy.cavedroid.common.utils.pixels
-import ru.fredboy.cavedroid.domain.assets.repository.MobAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.MobTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @BindHudRenderer
 class CrosshairRenderer @Inject constructor(
     private val mobController: MobController,
-    private val mobAssetsRepository: MobAssetsRepository,
+    private val mobAssetsRepository: MobTextureAssetsRepository,
     private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
 ) : IHudRenderer {

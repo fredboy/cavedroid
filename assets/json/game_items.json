@@ -21,7 +21,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "grass": {
       "hp": 54,
@@ -36,7 +37,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "grass_snowed": {
       "hp": 54,
@@ -51,7 +53,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "dirt": {
       "hp": 45,
@@ -66,7 +69,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "dirt"
     },
     "cobblestone": {
       "hp": 600,
@@ -81,7 +85,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "planks_oak": {
       "hp": 180,
@@ -96,7 +101,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "planks_spruce": {
       "hp": 180,
@@ -111,7 +117,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "planks_birch": {
       "hp": 180,
@@ -126,7 +133,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "crafting_table": {
       "hp": 180,
@@ -141,7 +149,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "sapling_oak": {
       "collision": false,
@@ -158,7 +167,8 @@
           }
         }
       ],
-      "replaceable": true
+      "replaceable": true,
+      "material": "grass"
     },
     "sapling_spruce": {
       "collision": false,
@@ -176,7 +186,8 @@
           }
         }
       ],
-      "replaceable": true
+      "replaceable": true,
+      "material": "grass"
     },
     "sapling_birch": {
       "collision": false,
@@ -193,10 +204,12 @@
           }
         }
       ],
-      "replaceable": true
+      "replaceable": true,
+      "material": "grass"
     },
     "bedrock": {
-      "texture": "bedrock"
+      "texture": "bedrock",
+      "material": "stone"
     },
     "water": {
       "collision": false,
@@ -208,7 +221,8 @@
       "state": 0,
       "density": 10,
       "casts_shadows": false,
-      "replaceable": true
+      "replaceable": true,
+      "material": "water"
     },
     "lava": {
       "collision": false,
@@ -239,7 +253,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "dirt"
     },
     "gravel": {
       "hp": 54,
@@ -263,7 +278,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "dirt"
     },
     "gold_ore": {
       "hp": 900,
@@ -278,7 +294,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "iron_ore": {
       "hp": 900,
@@ -294,7 +311,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "coal_ore": {
       "hp": 900,
@@ -309,7 +327,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "diamond_ore": {
       "hp": 900,
@@ -324,7 +343,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "diamond_block": {
       "hp": 1500,
@@ -339,7 +359,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "log_oak": {
       "hp": 180,
@@ -354,7 +375,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "leaves_oak": {
       "hp": 21,
@@ -399,7 +421,8 @@
             "chance": 0.02
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "log_spruce": {
       "hp": 180,
@@ -414,7 +437,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "leaves_spruce": {
       "hp": 21,
@@ -450,7 +474,8 @@
             "chance": 0.02
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "log_birch": {
       "hp": 180,
@@ -465,7 +490,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "leaves_birch": {
       "hp": 21,
@@ -509,7 +535,8 @@
             "chance": 0.02
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "sponge": {
       "hp": 54,
@@ -524,13 +551,15 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "glass": {
       "hp": 27,
       "transparent": true,
       "texture": "glass",
-      "casts_shadows": false
+      "casts_shadows": false,
+      "material": "stone"
     },
     "lapis_ore": {
       "hp": 900,
@@ -547,7 +576,8 @@
             "chance": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "lapis_block": {
       "hp": 900,
@@ -562,7 +592,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "sandstone": {
       "hp": 240,
@@ -577,7 +608,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "noteblock": {
       "hp": 75,
@@ -593,7 +625,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "bed_l": {
       "hp": 21,
@@ -612,7 +645,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "bed_r": {
       "hp": 21,
@@ -631,7 +665,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "web": {
       "hp": 1200,
@@ -649,7 +684,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "tallgrass": {
       "collision": false,
@@ -669,7 +705,8 @@
           }
         }
       ],
-      "replaceable": true
+      "replaceable": true,
+      "material": "grass"
     },
     "deadbush": {
       "collision": false,
@@ -688,7 +725,8 @@
           }
         }
       ],
-      "replaceable": true
+      "replaceable": true,
+      "material": "grass"
     },
     "bricks": {
       "hp": 600,
@@ -703,7 +741,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "clay": {
       "hp": 54,
@@ -718,7 +757,8 @@
             "amount": 4
           }
         }
-      ]
+      ],
+      "material": "dirt"
     },
     "dandelion": {
       "collision": false,
@@ -735,7 +775,8 @@
           }
         }
       ],
-      "replaceable": true
+      "replaceable": true,
+      "material": "grass"
     },
     "rose": {
       "collision": false,
@@ -753,7 +794,8 @@
           }
         }
       ],
-      "replaceable": true
+      "replaceable": true,
+      "material": "grass"
     },
     "mushroom_brown": {
       "collision": false,
@@ -771,7 +813,8 @@
           }
         }
       ],
-      "replaceable": true
+      "replaceable": true,
+      "material": "grass"
     },
     "mushroom_red": {
       "collision": false,
@@ -789,7 +832,8 @@
           }
         }
       ],
-      "replaceable": true
+      "replaceable": true,
+      "material": "grass"
     },
     "wool_colored_white": {
       "hp": 75,
@@ -805,7 +849,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "wool_colored_orange": {
       "hp": 75,
@@ -821,7 +866,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "wool_colored_magenta": {
       "hp": 75,
@@ -837,7 +883,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "wool_colored_light_blue": {
       "hp": 75,
@@ -853,7 +900,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "wool_colored_yellow": {
       "hp": 75,
@@ -869,7 +917,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "wool_colored_lime": {
       "hp": 75,
@@ -885,7 +934,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "wool_colored_pink": {
       "hp": 75,
@@ -901,7 +951,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "wool_colored_gray": {
       "hp": 75,
@@ -917,7 +968,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "wool_colored_silver": {
       "hp": 75,
@@ -933,7 +985,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "wool_colored_cyan": {
       "hp": 75,
@@ -949,7 +1002,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "wool_colored_purple": {
       "hp": 75,
@@ -965,7 +1019,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "wool_colored_blue": {
       "hp": 75,
@@ -981,7 +1036,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "wool_colored_brown": {
       "hp": 75,
@@ -997,7 +1053,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "wool_colored_green": {
       "hp": 75,
@@ -1013,7 +1070,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "wool_colored_red": {
       "hp": 75,
@@ -1029,7 +1087,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "wool_colored_black": {
       "hp": 75,
@@ -1045,7 +1104,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "gold_block": {
       "hp": 900,
@@ -1061,7 +1121,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "metal"
     },
     "iron_block": {
       "hp": 1500,
@@ -1077,7 +1138,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "metal"
     },
     "stone_slab_bottom": {
       "top": 8,
@@ -1099,7 +1161,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "stone_slab_top": {
       "hp": 600,
@@ -1121,7 +1184,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "double_stone_slab": {
       "hp": 600,
@@ -1138,7 +1202,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "sandstone_slab_bottom": {
       "top": 8,
@@ -1160,7 +1225,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "sandstone_slab_top": {
       "bottom": 8,
@@ -1182,7 +1248,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "oak_slab_bottom": {
       "top": 8,
@@ -1204,7 +1271,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "oak_slab_top": {
       "bottom": 8,
@@ -1226,7 +1294,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "spruce_slab_bottom": {
       "top": 8,
@@ -1248,7 +1317,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "spruce_slab_top": {
       "bottom": 8,
@@ -1270,7 +1340,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "birch_slab_bottom": {
       "top": 8,
@@ -1292,7 +1363,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "birch_slab_top": {
       "bottom": 8,
@@ -1314,7 +1386,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "cobblestone_slab_bottom": {
       "top": 8,
@@ -1336,7 +1409,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "cobblestone_slab_top": {
       "bottom": 8,
@@ -1358,7 +1432,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "brick_slab_bottom": {
       "top": 8,
@@ -1380,7 +1455,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "brick_slab_top": {
       "bottom": 8,
@@ -1402,7 +1478,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "stonebrick": {
       "hp": 450,
@@ -1418,7 +1495,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "stonebrick_slab_bottom": {
       "top": 8,
@@ -1440,7 +1518,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "stonebrick_slab_top": {
       "bottom": 8,
@@ -1462,7 +1541,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "cactus": {
       "left": 1,
@@ -1483,7 +1563,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "water_16": {
       "collision": false,
@@ -1496,7 +1577,8 @@
       "state": 1,
       "density": 10,
       "casts_shadows": false,
-      "replaceable": true
+      "replaceable": true,
+      "material": "water"
     },
     "water_12": {
       "top": 4,
@@ -1511,7 +1593,8 @@
       "state": 2,
       "density": 10,
       "casts_shadows": false,
-      "replaceable": true
+      "replaceable": true,
+      "material": "water"
     },
     "water_8": {
       "top": 8,
@@ -1526,7 +1609,8 @@
       "state": 3,
       "density": 10,
       "casts_shadows": false,
-      "replaceable": true
+      "replaceable": true,
+      "material": "water"
     },
     "water_4": {
       "top": 12,
@@ -1541,7 +1625,8 @@
       "state": 4,
       "density": 10,
       "casts_shadows": false,
-      "replaceable": true
+      "replaceable": true,
+      "material": "water"
     },
     "lava_16": {
       "collision": false,
@@ -1630,7 +1715,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "snow": {
       "top": 14,
@@ -1652,7 +1738,8 @@
           }
         }
       ],
-      "replaceable": true
+      "replaceable": true,
+      "material": "grass"
     },
     "snow_block": {
       "collision": true,
@@ -1671,7 +1758,8 @@
             "amount": 4
           }
         }
-      ]
+      ],
+      "material": "grass"
     },
     "furnace": {
       "hp": 1050,
@@ -1692,7 +1780,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "stone"
     },
     "chest": {
       "hp": 180,
@@ -1711,7 +1800,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "torch": {
       "hp": 1,
@@ -1735,7 +1825,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "door_wood_top_left_open": {
       "hp": 270,
@@ -1755,7 +1846,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "door_wood_bottom_left_open": {
       "hp": 270,
@@ -1775,7 +1867,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "door_wood_top_left_closed": {
       "right": 14,
@@ -1797,7 +1890,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "door_wood_bottom_left_closed": {
       "right": 14,
@@ -1819,7 +1913,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "door_wood_top_right_open": {
       "hp": 270,
@@ -1839,7 +1934,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "door_wood_bottom_right_open": {
       "hp": 270,
@@ -1859,7 +1955,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "door_wood_top_right_closed": {
       "left": 14,
@@ -1881,7 +1978,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "door_wood_bottom_right_closed": {
       "left": 14,
@@ -1903,7 +2001,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "trapdoor_wood_open": {
       "hp": 270,
@@ -1925,7 +2024,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "trapdoor_wood_closed": {
       "bottom": 14,
@@ -1949,7 +2049,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     },
     "ladder": {
       "hp": 36,
@@ -1971,7 +2072,8 @@
             "amount": 1
           }
         }
-      ]
+      ],
+      "material": "wood"
     }
   },
   "items": {

@@ -18,6 +18,7 @@ import ru.fredboy.cavedroid.domain.items.model.block.Block.Water
 import ru.fredboy.cavedroid.domain.items.model.block.BlockAnimationInfo
 import ru.fredboy.cavedroid.domain.items.model.block.BlockInsets
 import ru.fredboy.cavedroid.domain.items.model.block.BlockLightInfo
+import ru.fredboy.cavedroid.domain.items.model.block.BlockMaterial
 import ru.fredboy.cavedroid.domain.items.model.block.CommonBlockParams
 import ru.fredboy.cavedroid.domain.items.model.drop.DropInfo
 import ru.fredboy.cavedroid.domain.items.model.item.Item
@@ -75,6 +76,7 @@ class BlockMapper @Inject constructor(
         lightInfo = mapLightInfo(dto.lightInfo),
         allowAttachToNeighbour = dto.allowAttachToNeighbour,
         replaceable = dto.replaceable,
+        material = mapMaterial(dto),
     )
 
     private fun mapLightInfo(info: BlockLightDto?): BlockLightInfo? {
@@ -94,6 +96,18 @@ class BlockMapper @Inject constructor(
         "shears" -> Item.Shears::class.java
 
         else -> null
+    }
+
+    private fun mapMaterial(dto: BlockDto): BlockMaterial? {
+        return when (dto.material) {
+            "dirt" -> BlockMaterial.DIRT
+            "grass" -> BlockMaterial.GRASS
+            "metal" -> BlockMaterial.METAL
+            "stone" -> BlockMaterial.STONE
+            "water" -> BlockMaterial.WATER
+            "wood" -> BlockMaterial.WOOD
+            else -> null
+        }
     }
 
     private fun mapBlockDropInfo(dto: BlockDto): List<DropInfo> {

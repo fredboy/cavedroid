@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.TooltipManager
-import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
@@ -127,7 +127,7 @@ object GameModule {
         itemsRepository: ItemsRepository,
         physicsController: GameWorldContactListener,
         gameWorldSolidBlockBodiesManager: GameWorldSolidBlockBodiesManager,
-        environmentTextureRegionsRepository: EnvironmentTextureRegionsRepository,
+        environmentTextureRegionsRepository: EnvironmentTextureRegionsRepositoryTexture,
         gameWorldLightManager: GameWorldLightManager,
     ): GameWorld {
         val mapData = if (gameContextRepository.isLoadGame()) {
