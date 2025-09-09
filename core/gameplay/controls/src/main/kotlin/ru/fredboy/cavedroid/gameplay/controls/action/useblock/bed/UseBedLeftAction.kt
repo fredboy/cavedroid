@@ -17,7 +17,12 @@ class UseBedLeftAction @Inject constructor(
 ) : IUseBlockAction {
 
     override fun perform(block: Block, x: Int, y: Int) {
-        mobController.player.spawnPoint = mobController.player.position
+        val sleepPoint = Vector2(
+            (x.toFloat() + (2f - mobController.player.width / 2f)) - mobController.player.position.x,
+            (y.toFloat() + 1 - mobController.player.height / 2f) - mobController.player.position.y,
+        )
+
+        mobController.player.spawnPoint = sleepPoint.cpy().add(mobController.player.position)
 
         if (gameWorld.isDayTime() ||
             !mobController.playerCanSleep() ||
@@ -28,12 +33,7 @@ class UseBedLeftAction @Inject constructor(
 
         gameWorld.skipNight()
         mobController.player.isInBed = true
-        mobController.player.applyPendingTransform(
-            Vector2(
-                (x.toFloat() + (2f - mobController.player.width / 2f)) - mobController.player.position.x,
-                (y.toFloat() + 1 - mobController.player.height / 2f) - mobController.player.position.y,
-            ),
-        )
+        mobController.player.applyPendingTransform(sleepPoint)
     }
 
     companion object {
