@@ -1,17 +1,17 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.attribution
 
 import ru.fredboy.cavedroid.common.di.MenuScope
-import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.BindViewModelProvider
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.ViewModelProvider
+import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
 @MenuScope
 @BindViewModelProvider
 class AttributionMenuViewModelProvider @Inject constructor(
-    private val fontAssetsRepository: FontTextureAssetsRepository,
+    private val baseViewModelDependencies: BaseViewModelDependencies,
 ) : ViewModelProvider<
     AttributionMenuNavKey,
     AttributionMenuViewModel,
@@ -21,6 +21,6 @@ class AttributionMenuViewModelProvider @Inject constructor(
         get() = AttributionMenuViewModel::class
 
     override fun get(navKey: AttributionMenuNavKey, navBackStack: NavBackStack): AttributionMenuViewModel {
-        return AttributionMenuViewModel(navBackStack, fontAssetsRepository)
+        return AttributionMenuViewModel(navBackStack, baseViewModelDependencies)
     }
 }

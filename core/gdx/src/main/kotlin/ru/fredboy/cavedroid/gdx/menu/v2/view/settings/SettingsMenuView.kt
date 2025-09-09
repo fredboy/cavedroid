@@ -3,13 +3,13 @@ package ru.fredboy.cavedroid.gdx.menu.v2.view.settings
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Align
-import ktx.actors.onClick
 import ktx.scene2d.Scene2dDsl
 import ktx.scene2d.actors
 import ktx.scene2d.label
 import ktx.scene2d.textButton
 import ru.fredboy.cavedroid.common.utils.toToggleStateString
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.menuButtonsTable
+import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 
 @Scene2dDsl
 suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel.also {
@@ -29,7 +29,7 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                 row()
 
                 textButton(viewModel.getFormattedString("dynamicCamera", state.dynamicCamera.toToggleStateString())) {
-                    onClick {
+                    onClickWithSound(viewModel) {
                         viewModel.onDynamicCameraClick(!state.dynamicCamera)
                     }
                 }
@@ -38,7 +38,7 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
 
                 if (Gdx.graphics.supportsDisplayModeChange()) {
                     textButton(viewModel.getFormattedString("fullscreen", state.fullscreen.toToggleStateString())) {
-                        onClick {
+                        onClickWithSound(viewModel) {
                             viewModel.onFullscreenClick(!state.fullscreen)
                         }
                     }
@@ -47,7 +47,7 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                 }
 
                 textButton(viewModel.getFormattedString("autoJump", state.autoJump.toToggleStateString())) {
-                    onClick {
+                    onClickWithSound(viewModel) {
                         viewModel.onAutoJumpClick(!state.autoJump)
                     }
                 }
@@ -55,7 +55,7 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                 row()
 
                 textButton(viewModel.getFormattedString("enableSound", state.sound.toToggleStateString())) {
-                    onClick {
+                    onClickWithSound(viewModel) {
                         viewModel.onSoundClick(!state.sound)
                     }
                 }
@@ -63,7 +63,7 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                 row()
 
                 textButton(viewModel.getLocalizedString("done")) {
-                    onClick {
+                    onClickWithSound(viewModel) {
                         viewModel.onDoneClick()
                     }
                 }

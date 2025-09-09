@@ -9,14 +9,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
-import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
+import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
 
 class NoticeMenuViewModel(
     private val navBackStack: NavBackStack,
-    fontAssetsRepository: FontTextureAssetsRepository,
-) : BaseViewModel(fontAssetsRepository) {
+    baseViewModelDependencies: BaseViewModelDependencies,
+) : BaseViewModel(baseViewModelDependencies) {
 
     private val _noticesFlow = MutableSharedFlow<String>()
 

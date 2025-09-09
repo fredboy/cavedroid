@@ -3,7 +3,6 @@ package ru.fredboy.cavedroid.gdx.menu.v2.view.newgame
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable
-import ktx.actors.onClick
 import ktx.scene2d.Scene2dDsl
 import ktx.scene2d.actors
 import ktx.scene2d.label
@@ -11,6 +10,7 @@ import ktx.scene2d.table
 import ktx.scene2d.textButton
 import ktx.scene2d.textField
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.menuButtonsTable
+import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 
 @Scene2dDsl
 suspend fun Stage.newGameMenuView(viewModel: NewGameMenuViewModel) = viewModel.also {
@@ -51,7 +51,7 @@ fun Stage.show(viewModel: NewGameMenuViewModel) {
                 row()
 
                 textButton(viewModel.getLocalizedString("creative")) {
-                    onClick {
+                    onClickWithSound(viewModel) {
                         viewModel.onCreativeClick(worldNameField.text)
                     }
                 }
@@ -59,7 +59,7 @@ fun Stage.show(viewModel: NewGameMenuViewModel) {
                 row()
 
                 textButton(viewModel.getLocalizedString("survival")) {
-                    onClick {
+                    onClickWithSound(viewModel) {
                         viewModel.onSurvivalClick(worldNameField.text)
                     }
                 }
@@ -67,7 +67,7 @@ fun Stage.show(viewModel: NewGameMenuViewModel) {
                 row()
 
                 textButton(viewModel.getLocalizedString("back")) {
-                    onClick {
+                    onClickWithSound(viewModel) {
                         viewModel.onBackClick()
                     }
                 }

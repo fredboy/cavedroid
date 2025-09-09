@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable
 import com.badlogic.gdx.utils.Align
-import ktx.actors.onClick
 import ktx.scene2d.Scene2dDsl
 import ktx.scene2d.actors
 import ktx.scene2d.image
@@ -12,6 +11,7 @@ import ktx.scene2d.label
 import ktx.scene2d.table
 import ktx.scene2d.textButton
 import ru.fredboy.cavedroid.common.CaveDroidConstants
+import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 
 @Scene2dDsl
 fun Stage.aboutMenuView(viewModel: AboutMenuViewModel) = viewModel.also {
@@ -60,7 +60,7 @@ fun Stage.aboutMenuView(viewModel: AboutMenuViewModel) = viewModel.also {
 
             table {
                 textButton(viewModel.getLocalizedString("goToGithub")) {
-                    onClick { viewModel.onGithubClick() }
+                    onClickWithSound(viewModel) { viewModel.onGithubClick() }
                 }.cell(
                     width = 400f,
                     height = 60f,
@@ -68,7 +68,7 @@ fun Stage.aboutMenuView(viewModel: AboutMenuViewModel) = viewModel.also {
                 )
 
                 textButton(viewModel.getLocalizedString("back")) {
-                    onClick { viewModel.onBackClick() }
+                    onClickWithSound(viewModel) { viewModel.onBackClick() }
                 }.cell(
                     width = 400f,
                     height = 60f,

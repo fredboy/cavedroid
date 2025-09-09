@@ -36,6 +36,14 @@ class CaveDroidSoundPlayer @Inject constructor(
         sound.play(volume, 1f, pan)
     }
 
+    override fun playUiSound(sound: Sound) {
+        if (!applicationContextRepository.isSoundEnabled()) {
+            return
+        }
+
+        sound.play(0.3f, 1f, 0f)
+    }
+
     companion object {
         private const val HEARING_DISTANCE = 16f
     }

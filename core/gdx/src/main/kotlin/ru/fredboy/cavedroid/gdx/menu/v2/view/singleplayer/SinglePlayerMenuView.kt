@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable
 import com.badlogic.gdx.utils.Align
-import ktx.actors.onClick
 import ktx.scene2d.KTableWidget
 import ktx.scene2d.KWidget
 import ktx.scene2d.Scene2dDsl
@@ -17,6 +16,7 @@ import ktx.scene2d.scrollPane
 import ktx.scene2d.table
 import ktx.scene2d.textButton
 import ru.fredboy.cavedroid.common.CaveDroidConstants.MAX_SAVES_COUNT
+import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 
 @Scene2dDsl
 suspend fun Stage.singlePlayerMenuView(viewModel: SinglePlayerMenuViewModel) = viewModel.also {
@@ -73,7 +73,7 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
 
             table {
                 textButton(viewModel.getLocalizedString("newWorld")) {
-                    onClick {
+                    onClickWithSound(viewModel) {
                         if (!isDisabled) {
                             viewModel.onNewGameClick()
                         }
@@ -87,7 +87,7 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
                 )
 
                 textButton(viewModel.getLocalizedString("back")) {
-                    onClick { viewModel.onBackClick() }
+                    onClickWithSound(viewModel) { viewModel.onBackClick() }
                 }.cell(
                     width = 400f,
                     height = 60f,
@@ -197,9 +197,9 @@ private fun <S> KWidget<S>.saveItem(
         val loadButton = textButton(viewModel.getLocalizedString("load")) {
             isDisabled = !saveInfo.isSupported
 
-            onClick {
+            onClickWithSound(viewModel) {
                 if (isDisabled) {
-                    return@onClick
+                    return@onClickWithSound
                 }
 
                 onLoad()
@@ -210,9 +210,9 @@ private fun <S> KWidget<S>.saveItem(
         row()
 
         textButton(viewModel.getLocalizedString("delete")) {
-            onClick {
+            onClickWithSound(viewModel) {
                 if (isDisabled) {
-                    return@onClick
+                    return@onClickWithSound
                 }
 
                 onDelete()

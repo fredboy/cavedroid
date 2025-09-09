@@ -1,12 +1,12 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld
 
 import ru.fredboy.cavedroid.common.di.MenuScope
-import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.BindViewModelProvider
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.ViewModelProvider
+import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
@@ -15,7 +15,7 @@ import kotlin.reflect.KClass
 class DeleteWorldMenuViewModelProvider @Inject constructor(
     private val saveDataRepository: SaveDataRepository,
     private val applicationContextRepository: ApplicationContextRepository,
-    private val fontAssetsRepository: FontTextureAssetsRepository,
+    private val baseViewModelDependencies: BaseViewModelDependencies,
 ) : ViewModelProvider<DeleteWorldMenuNavKey, DeleteWorldMenuViewModel> {
 
     override val viewModelClass: KClass<DeleteWorldMenuViewModel>
@@ -28,7 +28,7 @@ class DeleteWorldMenuViewModelProvider @Inject constructor(
             navBackStack = navBackStack,
             saveDirectory = navKey.saveDirectory,
             worldName = navKey.worldName,
-            fontAssetsRepository = fontAssetsRepository,
+            baseViewModelDependencies = baseViewModelDependencies,
         )
     }
 }

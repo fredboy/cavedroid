@@ -1,17 +1,16 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.common
 
 import com.badlogic.gdx.Gdx
-import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.ViewModel
-import java.util.MissingResourceException
+import java.util.*
 
 abstract class BaseViewModel(
-    private val fontAssetsRepository: FontTextureAssetsRepository,
+    private val dependencies: BaseViewModelDependencies,
 ) : ViewModel() {
 
     fun getLocalizedString(key: String, fallback: String = ""): String {
         return try {
-            fontAssetsRepository.getMenuLocalizationBundle().get(key)
+            dependencies.fontAssetsRepository.getMenuLocalizationBundle().get(key)
         } catch (e: MissingResourceException) {
             Gdx.app.error(TAG, "Missing string with key '$key'", e)
             fallback
@@ -20,11 +19,15 @@ abstract class BaseViewModel(
 
     fun getFormattedString(key: String, vararg args: String, fallback: String = ""): String {
         return try {
-            fontAssetsRepository.getMenuLocalizationBundle().format(key, *args)
+            dependencies.fontAssetsRepository.getMenuLocalizationBundle().format(key, *args)
         } catch (e: MissingResourceException) {
             Gdx.app.error(TAG, "Missing string with key '$key'", e)
             fallback
         }
+    }
+
+    fun playClickSound() {
+        dependencies.soundPlayer.playUiSound(dependencies.uiSoundAssetsRepository.getClickSound())
     }
 
     companion object {

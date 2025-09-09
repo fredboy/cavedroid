@@ -2,12 +2,12 @@ package ru.fredboy.cavedroid.gdx.menu.v2.view.pause
 
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Align
-import ktx.actors.onClick
 import ktx.scene2d.Scene2dDsl
 import ktx.scene2d.actors
 import ktx.scene2d.label
 import ktx.scene2d.textButton
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.menuButtonsTable
+import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 
 @Scene2dDsl
 fun Stage.pauseMenuView(viewModel: PauseMenuViewModel) = viewModel.also {
@@ -29,7 +29,7 @@ fun Stage.pauseMenuView(viewModel: PauseMenuViewModel) = viewModel.also {
             row()
 
             textButton(viewModel.getLocalizedString("resumeGame")) {
-                onClick {
+                onClickWithSound(viewModel) {
                     viewModel.onResumeClick()
                 }
             }
@@ -37,7 +37,7 @@ fun Stage.pauseMenuView(viewModel: PauseMenuViewModel) = viewModel.also {
             row()
 
             textButton(viewModel.getLocalizedString("settings")) {
-                onClick {
+                onClickWithSound(viewModel) {
                     viewModel.onSettingsClick()
                 }
             }
@@ -45,7 +45,7 @@ fun Stage.pauseMenuView(viewModel: PauseMenuViewModel) = viewModel.also {
             row()
 
             textButton(viewModel.getLocalizedString("quit")) {
-                onClick {
+                onClickWithSound(viewModel) {
                     viewModel.onQuitGameClick()
                 }
             }

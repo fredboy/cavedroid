@@ -4,12 +4,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable
 import com.badlogic.gdx.utils.Align
-import ktx.actors.onClick
 import ktx.scene2d.Scene2dDsl
 import ktx.scene2d.actors
 import ktx.scene2d.label
 import ktx.scene2d.table
 import ktx.scene2d.textButton
+import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 
 @Scene2dDsl
 suspend fun Stage.deleteWorldMenuView(viewModel: DeleteWorldMenuViewModel) = viewModel.also {
@@ -56,7 +56,7 @@ suspend fun Stage.deleteWorldMenuView(viewModel: DeleteWorldMenuViewModel) = vie
 
                         table {
                             textButton(viewModel.getLocalizedString("confirm")) {
-                                onClick { viewModel.onConfirmClick() }
+                                onClickWithSound(viewModel) { viewModel.onConfirmClick() }
                             }.cell(
                                 width = 400f,
                                 height = 60f,
@@ -64,7 +64,7 @@ suspend fun Stage.deleteWorldMenuView(viewModel: DeleteWorldMenuViewModel) = vie
                             )
 
                             textButton(viewModel.getLocalizedString("cancel")) {
-                                onClick { viewModel.onCancelClick() }
+                                onClickWithSound(viewModel) { viewModel.onCancelClick() }
                             }.cell(
                                 width = 400f,
                                 height = 60f,

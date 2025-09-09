@@ -2,12 +2,12 @@ package ru.fredboy.cavedroid.gdx.menu.v2.view.singleplayer
 
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.di.MenuScope
-import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.BindViewModelProvider
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.ViewModelProvider
+import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
@@ -17,7 +17,7 @@ class SinglePlayerMenuViewModelProvider @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
     private val applicationController: ApplicationController,
     private val saveDataRepository: SaveDataRepository,
-    private val fontAssetsRepository: FontTextureAssetsRepository,
+    private val baseViewModelDependencies: BaseViewModelDependencies,
 ) : ViewModelProvider<SinglePlayerMenuNavKey, SinglePlayerMenuViewModel> {
 
     override val viewModelClass: KClass<SinglePlayerMenuViewModel>
@@ -29,7 +29,7 @@ class SinglePlayerMenuViewModelProvider @Inject constructor(
             applicationController = applicationController,
             saveDataRepository = saveDataRepository,
             navBackStack = navBackStack,
-            fontAssetsRepository = fontAssetsRepository,
+            baseViewModelDependencies = baseViewModelDependencies,
         )
     }
 }

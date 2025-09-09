@@ -11,6 +11,7 @@ import ru.fredboy.cavedroid.data.assets.internal.MobTextureAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.StepSoundsAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.TextureRegionsTextureAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.TouchButtonsRepositoryImplTexture
+import ru.fredboy.cavedroid.data.assets.internal.UiSoundAssetsRepositoryImpl
 import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
@@ -20,6 +21,7 @@ import ru.fredboy.cavedroid.domain.assets.repository.MobTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.TextureRegionsTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.TouchButtonsTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.UiSoundAssetsRepository
 
 @Module
 abstract class DataAssetsModule {
@@ -68,4 +70,9 @@ abstract class DataAssetsModule {
     internal abstract fun bindStepsSoundAssetsRepository(
         impl: StepSoundsAssetsRepositoryImpl,
     ): StepsSoundAssetsRepository
+
+    @Binds
+    internal abstract fun bindUiSoundAssetsRepository(
+        impl: UiSoundAssetsRepositoryImpl,
+    ): UiSoundAssetsRepository
 }

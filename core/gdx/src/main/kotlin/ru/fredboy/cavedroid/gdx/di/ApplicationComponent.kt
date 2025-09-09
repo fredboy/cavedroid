@@ -20,15 +20,14 @@ import ru.fredboy.cavedroid.domain.assets.repository.MobTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.TextureRegionsTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.TouchButtonsTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.UiSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.usecase.DisposeAssetsUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.InitializeAssetsUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
-import ru.fredboy.cavedroid.gdx.CaveDroidSoundPlayer
 import ru.fredboy.cavedroid.gdx.game.GameScreen
-import ru.fredboy.cavedroid.gdx.game.di.GameModule
 import ru.fredboy.cavedroid.gdx.menu.v2.MenuScreen
 import ru.fredboy.cavedroid.gdx.menu.v2.PauseMenuScreen
 import javax.inject.Singleton
@@ -86,6 +85,8 @@ interface ApplicationComponent {
     val stepsSoundAssetsRepository: StepsSoundAssetsRepository
 
     val soundPlayer: SoundPlayer
+
+    val uiSoundAssetsRepository: UiSoundAssetsRepository
 
     @Component.Builder
     interface Builder {

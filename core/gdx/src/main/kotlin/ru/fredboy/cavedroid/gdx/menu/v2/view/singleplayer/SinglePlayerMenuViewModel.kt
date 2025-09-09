@@ -15,11 +15,11 @@ import kotlinx.coroutines.withContext
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.common.model.StartGameConfig
-import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
+import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
 import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.DeleteWorldMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.newgame.NewGameMenuNavKey
 
@@ -28,8 +28,8 @@ class SinglePlayerMenuViewModel(
     private val applicationController: ApplicationController,
     private val saveDataRepository: SaveDataRepository,
     private val navBackStack: NavBackStack,
-    fontAssetsRepository: FontTextureAssetsRepository,
-) : BaseViewModel(fontAssetsRepository) {
+    baseViewModelDependencies: BaseViewModelDependencies,
+) : BaseViewModel(baseViewModelDependencies) {
 
     private val loadedTextures = mutableListOf<Texture>()
 

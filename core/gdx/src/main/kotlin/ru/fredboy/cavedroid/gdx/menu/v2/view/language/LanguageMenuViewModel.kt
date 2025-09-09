@@ -1,16 +1,16 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.language
 
-import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
+import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
 import java.util.*
 
 class LanguageMenuViewModel(
     private val applicationContextRepository: ApplicationContextRepository,
     private val navBackStack: NavBackStack,
-    fontAssetsRepository: FontTextureAssetsRepository,
-) : BaseViewModel(fontAssetsRepository) {
+    baseViewModelDependencies: BaseViewModelDependencies,
+) : BaseViewModel(baseViewModelDependencies) {
 
     val locales get() = applicationContextRepository.getSupportedLocales()
 

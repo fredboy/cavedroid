@@ -6,11 +6,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
+import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
 
 class DeleteWorldMenuViewModel(
     private val saveDataRepository: SaveDataRepository,
@@ -18,8 +18,8 @@ class DeleteWorldMenuViewModel(
     private val navBackStack: NavBackStack,
     private val saveDirectory: String,
     worldName: String,
-    fontAssetsRepository: FontTextureAssetsRepository,
-) : BaseViewModel(fontAssetsRepository) {
+    baseViewModelDependencies: BaseViewModelDependencies,
+) : BaseViewModel(baseViewModelDependencies) {
 
     private val _stateFlow = MutableSharedFlow<DeleteWorldMenuState>(replay = 0)
 
