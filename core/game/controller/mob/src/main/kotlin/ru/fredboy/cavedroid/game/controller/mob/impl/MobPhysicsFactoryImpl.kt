@@ -14,13 +14,14 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import javax.inject.Inject
+import kotlin.experimental.or
 
 @GameScope
 class MobPhysicsFactoryImpl @Inject constructor(
     private val mobWorldAdapter: MobWorldAdapter,
 ) : MobPhysicsFactory {
 
-    override fun createBody(mob: Mob, x: Float, y: Float, physicsCategory: Short): Body {
+    override fun createBody(mob: Mob, x: Float, y: Float, physicsCategory: Short, collidesOwnCategory: Boolean): Body {
         val bodyDef = BodyDef().apply {
             type = BodyDef.BodyType.DynamicBody
             position.set(x, y)
@@ -31,8 +32,8 @@ class MobPhysicsFactoryImpl @Inject constructor(
             userData = mob
         }
 
-        body.createMainBodyFixture(mob.width, mob.height, physicsCategory)
-        body.createFeetFixtures(mob.width, mob.height, physicsCategory)
+        body.createMainBodyFixture(mob.width, mob.height, physicsCategory, collidesOwnCategory)
+        body.createFeetFixtures(mob.width, mob.height, physicsCategory, collidesOwnCategory)
         body.createGroundSensor(mob.width, mob.height)
         body.createAutoJumpSensor(mob.height)
         body.createCliffEdgeSensor(mob.width, mob.height)
@@ -40,7 +41,12 @@ class MobPhysicsFactoryImpl @Inject constructor(
         return body
     }
 
-    private fun Body.createMainBodyFixture(width: Float, height: Float, physicsCategory: Short) {
+    private fun Body.createMainBodyFixture(
+        width: Float,
+        height: Float,
+        physicsCategory: Short,
+        collidesOwnCategory: Boolean,
+    ) {
         val shapeHeight = if (height > width) {
             height - width
         } else {
@@ -55,16 +61,21 @@ class MobPhysicsFactoryImpl @Inject constructor(
             friction = .2f
             restitution = 0f
             filter.categoryBits = physicsCategory
-            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
+            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK or (physicsCategory.takeIf { collidesOwnCategory } ?: 0)
         }.also { fixtureDef ->
             createFixture(fixtureDef)
             bodyShape.dispose()
         }
     }
 
-    private fun Body.createFeetFixtures(width: Float, height: Float, physicsCategory: Short) {
+    private fun Body.createFeetFixtures(
+        width: Float,
+        height: Float,
+        physicsCategory: Short,
+        collidesOwnCategory: Boolean,
+    ) {
         if (height > width) {
-            return createSingleFootFixture(width, height, physicsCategory)
+            return createSingleFootFixture(width, height, physicsCategory, collidesOwnCategory)
         }
 
         val footRadius = width / 4f
@@ -79,7 +90,7 @@ class MobPhysicsFactoryImpl @Inject constructor(
             friction = 1f
             restitution = 0f
             filter.categoryBits = physicsCategory
-            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
+            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK or (physicsCategory.takeIf { collidesOwnCategory } ?: 0)
         }.also { fixtureDef ->
             fixtureDef.shape = leftShape
             createFixture(fixtureDef)
@@ -91,7 +102,12 @@ class MobPhysicsFactoryImpl @Inject constructor(
         }
     }
 
-    fun Body.createSingleFootFixture(width: Float, height: Float, physicsCategory: Short) {
+    fun Body.createSingleFootFixture(
+        width: Float,
+        height: Float,
+        physicsCategory: Short,
+        collidesOwnCategory: Boolean,
+    ) {
         val footRadius = width / 2f
         val footX = 0f
         val footY = height / 2f - footRadius
@@ -102,7 +118,7 @@ class MobPhysicsFactoryImpl @Inject constructor(
             friction = 1f
             restitution = 0f
             filter.categoryBits = physicsCategory
-            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK
+            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK or (physicsCategory.takeIf { collidesOwnCategory } ?: 0)
         }.also { fixtureDef ->
             fixtureDef.shape = footShape
             createFixture(fixtureDef)

@@ -128,6 +128,9 @@ abstract class Mob(
     open val physicsCategory: Short
         get() = PhysicsConstants.CATEGORY_MOB
 
+    open val collidesOwnCategory: Boolean
+        get() = false
+
     open fun spawn(x: Float, y: Float, factory: MobPhysicsFactory) {
         if (_body != null) {
             Gdx.app.error(

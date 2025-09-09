@@ -5,12 +5,17 @@ import ru.fredboy.cavedroid.common.utils.floor
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
+import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.impl.FallingBlockMobBehavior
 
 class FallingBlock(
     val block: Block,
 ) : Mob(Direction.RIGHT, getParams(block), FallingBlockMobBehavior()) {
+
+    override val physicsCategory get() = PhysicsConstants.CATEGORY_FALLING_BLOCK
+
+    override val collidesOwnCategory: Boolean get() = true
 
     override fun changeDir() = Unit
 

@@ -5,5 +5,5 @@ import ru.fredboy.cavedroid.entity.mob.model.Mob
 
 interface MobPhysicsFactory {
 
-    fun createBody(mob: Mob, x: Float, y: Float, physicsCategory: Short): Body
+    fun createBody(mob: Mob, x: Float, y: Float, physicsCategory: Short, collidesOwnCategory: Boolean = false): Body
 }
