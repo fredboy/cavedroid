@@ -18,7 +18,7 @@ class UseBedRightAction @Inject constructor(
 
     override fun perform(block: Block, x: Int, y: Int) {
         val sleepPoint = Vector2(
-            (x.toFloat() + (2f - mobController.player.width / 2f)) - mobController.player.position.x,
+            (x.toFloat() + (1f - mobController.player.width / 2f)) - mobController.player.position.x,
             (y.toFloat() + 1 - mobController.player.height / 2f) - mobController.player.position.y,
         )
 
