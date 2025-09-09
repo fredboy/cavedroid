@@ -2,8 +2,10 @@ package ru.fredboy.cavedroid.data.save.mapper
 
 import com.badlogic.gdx.math.Vector2
 import dagger.Reusable
+import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
+import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
@@ -18,6 +20,8 @@ class PlayerMapper @Inject constructor(
     private val getFallbackItemUseCase: GetFallbackItemUseCase,
     private val mobParamsRepository: MobParamsRepository,
     private val tooltipManager: TooltipManager,
+    private val soundPlayer: SoundPlayer,
+    private val stepsSoundAssetsRepository: StepsSoundAssetsRepository,
 ) {
 
     fun mapSaveData(player: Player): SaveDataDto.PlayerSaveDataDto = SaveDataDto.PlayerSaveDataDto(
@@ -64,6 +68,8 @@ class PlayerMapper @Inject constructor(
             getFallbackItem = getFallbackItemUseCase,
             tooltipManager = tooltipManager,
             params = requireNotNull(mobParamsRepository.getMobParamsByKey(saveDataDto.key)),
+            soundPlayer = soundPlayer,
+            stepsSoundAssetsRepository = stepsSoundAssetsRepository,
         ).apply {
             spawn(saveDataDto.x, saveDataDto.y, mobPhysicsFactory)
             velocity.x = saveDataDto.velocityX

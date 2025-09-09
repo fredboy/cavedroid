@@ -19,6 +19,7 @@ class CaveDroidSoundPlayer @Inject constructor(
         soundY: Float,
         playerX: Float,
         playerY: Float,
+        pitch: Float,
     ) {
         if (!applicationContextRepository.isSoundEnabled()) {
             return
@@ -33,7 +34,7 @@ class CaveDroidSoundPlayer @Inject constructor(
 
         val pan = MathUtils.clamp(dx / maxHearingDistance, -1f, 1f)
 
-        sound.play(volume, 1f, pan)
+        sound.play(volume, pitch, pan)
     }
 
     override fun playUiSound(sound: Sound) {

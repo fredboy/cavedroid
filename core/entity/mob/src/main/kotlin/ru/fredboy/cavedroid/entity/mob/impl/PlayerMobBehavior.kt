@@ -1,8 +1,10 @@
 package ru.fredboy.cavedroid.entity.mob.impl
 
 import com.badlogic.gdx.utils.TimeUtils
+import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.common.utils.ifTrue
+import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.world.model.Layer
@@ -11,12 +13,16 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Player
 
-class PlayerMobBehavior :
-    BaseMobBehavior<Player>(
-        mobType = Player::class,
-    ) {
+class PlayerMobBehavior(
+    private val soundPlayer: SoundPlayer,
+    private val stepsSoundAssetsRepository: StepsSoundAssetsRepository,
+) : BaseMobBehavior<Player>(
+    mobType = Player::class,
+) {
 
     private var creativeDestroyBlockMs = 0L
+
+    private var lastBreakSoundPlayedDelta = 0f
 
     private fun Block?.isHittable() = this != null && !isNone() && params.hitPoints >= 0
 
@@ -136,10 +142,28 @@ class PlayerMobBehavior :
                 .let { it.isWater() && it.getRectangle(mapX, upperMapY).overlaps(hitbox) }
                 .ifTrue { 0.2f } ?: 1f
             blockDamage += 60f * delta * blockDamageMultiplier * waterFactor
+            lastBreakSoundPlayedDelta += delta
+
+            if (lastBreakSoundPlayedDelta >= BREAK_SOUND_INTERVAL) {
+                lastBreakSoundPlayedDelta = 0f
+                targetBlock.params.material?.name?.lowercase()?.also { material ->
+                    val sound = stepsSoundAssetsRepository.getStepSound(material) ?: return@also
+                    soundPlayer.playSoundAtPosition(
+                        sound = sound,
+                        soundX = cursorX,
+                        soundY = cursorY,
+                        playerX = position.x,
+                        playerY = position.y,
+                        pitch = blockDamage / targetBlock.params.hitPoints + 1f,
+                    )
+                }
+            }
         }
     }
 
     companion object {
         private const val CREATIVE_DESTROY_TIMEOUT_MS = 500L
+
+        private const val BREAK_SOUND_INTERVAL = 0.2f
     }
 }

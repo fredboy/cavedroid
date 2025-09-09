@@ -2,9 +2,11 @@ package ru.fredboy.cavedroid.gdx.game.di
 
 import dagger.Module
 import dagger.Provides
+import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
+import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
@@ -100,6 +102,8 @@ object GameModule {
         getItemByKeyUseCase: GetItemByKeyUseCase,
         tooltipManager: TooltipManager,
         mobSoundManager: MobSoundManager,
+        soundPlayer: SoundPlayer,
+        stepsSoundAssetsRepository: StepsSoundAssetsRepository,
     ): MobController = if (gameContextRepository.isLoadGame()) {
         saveDataRepository.loadMobController(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
@@ -119,6 +123,8 @@ object GameModule {
             getItemByKeyUseCase = getItemByKeyUseCase,
             tooltipManager = tooltipManager,
             mobSoundManager = mobSoundManager,
+            soundPlayer = soundPlayer,
+            stepsSoundAssetsRepository = stepsSoundAssetsRepository,
         )
     }
 

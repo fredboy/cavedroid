@@ -7,11 +7,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Filter
+import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.common.utils.applyOrigin
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.common.utils.meters
+import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.items.model.inventory.Inventory
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
@@ -27,7 +29,10 @@ class Player(
     private val getFallbackItem: GetFallbackItemUseCase,
     private val tooltipManager: TooltipManager,
     params: MobParams,
-) : Mob(Direction.random(), params, PlayerMobBehavior()) {
+    soundPlayer: SoundPlayer,
+    stepsSoundAssetsRepository: StepsSoundAssetsRepository,
+
+) : Mob(Direction.random(), params, PlayerMobBehavior(soundPlayer, stepsSoundAssetsRepository)) {
 
     var spawnPoint: Vector2? = null
 

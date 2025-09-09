@@ -1,8 +1,10 @@
 package ru.fredboy.cavedroid.data.save.mapper
 
 import dagger.Reusable
+import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
+import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
@@ -24,6 +26,8 @@ class MobControllerMapper @Inject constructor(
     private val mobParamsRepository: MobParamsRepository,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
     private val tooltipManager: TooltipManager,
+    private val soundPlayer: SoundPlayer,
+    private val stepsSoundAssetsRepository: StepsSoundAssetsRepository,
 ) {
 
     fun mapSaveData(mobController: MobController): SaveDataDto.MobControllerSaveDataDto = SaveDataDto.MobControllerSaveDataDto(
@@ -56,6 +60,8 @@ class MobControllerMapper @Inject constructor(
             getItemByKeyUseCase = getItemByKeyUseCase,
             tooltipManager = tooltipManager,
             mobSoundManager = mobSoundManager,
+            soundPlayer = soundPlayer,
+            stepsSoundAssetsRepository = stepsSoundAssetsRepository,
         ).apply {
             (mobs as MutableList).addAll(
                 saveDataDto.mobs.mapNotNull { mob ->
