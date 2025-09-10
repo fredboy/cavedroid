@@ -1,3 +1,5 @@
+-printmapping build/reports/proguard-mapping.txt
+
 # Keep main entry point
 -keep class ru.fredboy.cavedroid.desktop.DesktopLauncher {
     public static void main(java.lang.String[]);

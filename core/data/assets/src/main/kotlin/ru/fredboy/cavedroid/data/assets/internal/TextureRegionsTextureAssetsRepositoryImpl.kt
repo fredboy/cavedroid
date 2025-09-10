@@ -25,7 +25,7 @@ internal class TextureRegionsTextureAssetsRepositoryImpl @Inject constructor() :
             val texture = loadTexture("$fileName.png")
 
             if (fileData.isEmpty()) {
-                regions[fileName.split(File.separator).last()] = flippedRegion(
+                regions[fileName.split('/').last()] = flippedRegion(
                     texture = texture,
                     x = 0,
                     y = 0,
