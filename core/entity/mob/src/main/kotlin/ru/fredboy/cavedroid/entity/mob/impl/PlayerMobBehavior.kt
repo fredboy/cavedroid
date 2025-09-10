@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.entity.mob.impl
 
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.model.GameMode
@@ -37,6 +38,20 @@ class PlayerMobBehavior(
         }
     }
 
+    private fun Player.playBlockHitSound(targetBlock: Block, pitch: Float = 2f) {
+        targetBlock.params.material?.name?.lowercase()?.also { material ->
+            val sound = stepsSoundAssetsRepository.getStepSound(material) ?: return@also
+            soundPlayer.playSoundAtPosition(
+                sound = sound,
+                soundX = cursorX,
+                soundY = cursorY,
+                playerX = position.x,
+                playerY = position.y,
+                pitch = MathUtils.clamp(pitch, 0.5f, 2f),
+            )
+        }
+    }
+
     private fun Player.hitBlock(worldAdapter: MobWorldAdapter) {
         if (!isHitting || !isHittingWithDamage) {
             return
@@ -47,6 +62,11 @@ class PlayerMobBehavior(
 
         when (gameMode) {
             GameMode.SURVIVAL -> {
+                if (lastBreakSoundPlayedDelta >= BREAK_SOUND_INTERVAL || blockDamage >= targetBlock.params.hitPoints) {
+                    lastBreakSoundPlayedDelta = 0f
+                    playBlockHitSound(targetBlock, blockDamage / targetBlock.params.hitPoints + 1f)
+                }
+
                 if (blockDamage >= targetBlock.params.hitPoints) {
                     if (activeItem.item.isTool()) {
                         decreaseCurrentItemCount()
@@ -73,6 +93,7 @@ class PlayerMobBehavior(
 
             GameMode.CREATIVE -> {
                 if (TimeUtils.timeSinceMillis(creativeDestroyBlockMs) >= CREATIVE_DESTROY_TIMEOUT_MS) {
+                    playBlockHitSound(targetBlock, 2f)
                     when (targetLayer) {
                         Layer.FOREGROUND -> worldAdapter.destroyForegroundBlock(
                             x = selectedX,
@@ -143,21 +164,6 @@ class PlayerMobBehavior(
                 .ifTrue { 0.2f } ?: 1f
             blockDamage += 60f * delta * blockDamageMultiplier * waterFactor
             lastBreakSoundPlayedDelta += delta
-
-            if (lastBreakSoundPlayedDelta >= BREAK_SOUND_INTERVAL) {
-                lastBreakSoundPlayedDelta = 0f
-                targetBlock.params.material?.name?.lowercase()?.also { material ->
-                    val sound = stepsSoundAssetsRepository.getStepSound(material) ?: return@also
-                    soundPlayer.playSoundAtPosition(
-                        sound = sound,
-                        soundX = cursorX,
-                        soundY = cursorY,
-                        playerX = position.x,
-                        playerY = position.y,
-                        pitch = blockDamage / targetBlock.params.hitPoints + 1f,
-                    )
-                }
-            }
         }
     }
 
