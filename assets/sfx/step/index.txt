@@ -1,0 +1,7 @@
+dirt
+grass
+lava
+metal
+stone
+water
+wood

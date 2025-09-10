@@ -1,0 +1,5 @@
+char
+cow
+pig
+sheep
+zombie

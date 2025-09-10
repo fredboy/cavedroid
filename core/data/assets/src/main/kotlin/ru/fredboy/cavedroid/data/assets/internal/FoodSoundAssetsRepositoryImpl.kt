@@ -12,11 +12,7 @@ internal class FoodSoundAssetsRepositoryImpl @Inject constructor() : FoodSoundAs
     private var foodSounds: List<Sound>? = null
 
     override fun initialize() {
-        foodSounds = Gdx.files.internal(DROP_POP_PATH).list { file ->
-            file.extension == "ogg"
-        }.map { soundHandle ->
-            loadSound(soundHandle)
-        }
+        foodSounds = Gdx.files.internal(DROP_POP_PATH).loadAllSounds()
     }
 
     override fun getFoodSound(): Sound? {

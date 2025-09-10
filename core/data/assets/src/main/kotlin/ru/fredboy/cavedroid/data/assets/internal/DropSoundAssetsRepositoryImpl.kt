@@ -12,11 +12,7 @@ internal class DropSoundAssetsRepositoryImpl @Inject constructor() : DropSoundAs
     private var dropSounds: List<Sound>? = null
 
     override fun initialize() {
-        dropSounds = Gdx.files.internal(DROP_POP_PATH).list { file ->
-            file.extension == "ogg"
-        }.map { soundHandle ->
-            loadSound(soundHandle)
-        }
+        dropSounds = Gdx.files.internal(DROP_POP_PATH).loadAllSounds()
     }
 
     override fun getDropPopSound(): Sound? {

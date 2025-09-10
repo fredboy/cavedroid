@@ -28,24 +28,15 @@ internal class MobSoundAssetsRepositoryImpl @Inject constructor() : MobSoundAsse
     }
 
     override fun initialize() {
-        Gdx.files.internal(MOB_SFX_DIRECTORY).list().forEach { mobDir ->
-            mobIdleSoundsMap[mobDir.name()] = mobDir.child(IDLE).list { file ->
-                file.extension == "ogg"
-            }.map { soundHandle ->
-                loadSound(soundHandle)
-            }
+        val mobSfxDir = Gdx.files.internal(MOB_SFX_DIRECTORY)
+        val indexFile = Gdx.files.internal(INDEX_FILE)
 
-            mobHitSoundsMap[mobDir.name()] = mobDir.child(HIT).list { file ->
-                file.extension == "ogg"
-            }.map { soundHandle ->
-                loadSound(soundHandle)
-            }
+        indexFile.readString().split("\n").forEach { mobKey ->
+            val mobDir = mobSfxDir.child(mobKey).takeIf { it.exists() } ?: return@forEach
 
-            mobDeathSoundMap[mobDir.name()] = mobDir.child(DEATH).list { file ->
-                file.extension == "ogg"
-            }.map { soundHandle ->
-                loadSound(soundHandle)
-            }
+            mobIdleSoundsMap[mobKey] = mobDir.child(IDLE).loadAllSounds()
+            mobHitSoundsMap[mobKey] = mobDir.child(HIT).loadAllSounds()
+            mobDeathSoundMap[mobKey] = mobDir.child(DEATH).loadAllSounds()
         }
     }
 
@@ -58,6 +49,7 @@ internal class MobSoundAssetsRepositoryImpl @Inject constructor() : MobSoundAsse
 
     companion object {
         private const val MOB_SFX_DIRECTORY = "sfx/mob"
+        private const val INDEX_FILE = "$MOB_SFX_DIRECTORY/index.txt"
         private const val HIT = "hit"
         private const val IDLE = "idle"
         private const val DEATH = "death"

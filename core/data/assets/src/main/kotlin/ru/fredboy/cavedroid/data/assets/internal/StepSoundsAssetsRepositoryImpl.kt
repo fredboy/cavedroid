@@ -12,12 +12,12 @@ internal class StepSoundsAssetsRepositoryImpl @Inject constructor() : StepsSound
     private val soundsMap = mutableMapOf<String, List<Sound>>()
 
     override fun initialize() {
-        Gdx.files.internal(STEPS_DIRECTORY).list().forEach { materialDir ->
-            soundsMap[materialDir.name()] = materialDir.list { file ->
-                file.extension == "ogg"
-            }.map { soundHandle ->
-                loadSound(soundHandle)
-            }
+        val stepsDir = Gdx.files.internal(STEPS_DIRECTORY)
+        val indexFile = Gdx.files.internal(INDEX_FILE)
+
+        indexFile.readString().split("\n").forEach { material ->
+            val materialDir = stepsDir.child(material).takeIf { it.exists() } ?: return@forEach
+            soundsMap[material] = materialDir.loadAllSounds()
         }
     }
 
@@ -32,5 +32,7 @@ internal class StepSoundsAssetsRepositoryImpl @Inject constructor() : StepsSound
 
     companion object {
         private const val STEPS_DIRECTORY = "sfx/step"
+
+        private const val INDEX_FILE = "$STEPS_DIRECTORY/index.txt"
     }
 }
