@@ -75,10 +75,11 @@ class MobController @Inject constructor(
     fun update(delta: Float) {
         mobs.forEach { mob ->
             mob.update(mobWorldAdapter, playerAdapter, delta)
-            mobSoundManager.makeStepSound(mob)
+            mobSoundManager.makeSound(mob)
         }
         _mobs.removeAll { mob ->
             mob.isDead.ifTrue {
+                mobSoundManager.makeSound(mob)
                 dropQueue.offerItems(mob.position.x, mob.position.y, mob.getDropItems(getItemByKeyUseCase))
                 mob.dispose()
                 true
@@ -90,7 +91,7 @@ class MobController @Inject constructor(
 
     private fun updatePlayer(delta: Float) {
         player.update(mobWorldAdapter, playerAdapter, delta)
-        mobSoundManager.makeStepSound(player)
+        mobSoundManager.makeSound(player)
 
         limitPlayerCursor()
 

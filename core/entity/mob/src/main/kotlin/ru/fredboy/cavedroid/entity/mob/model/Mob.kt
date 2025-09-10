@@ -98,7 +98,10 @@ abstract class Mob(
 
     var canClimb = false
 
-    private var stepping: Stepping? = null
+    var makingSound: SoundType? = null
+        private set
+
+    private var lastStepTimeMs = 0L
 
     var takingDamage = false
         set(value) {
@@ -109,6 +112,7 @@ abstract class Mob(
                 if (resetTask != null && resetTask.isScheduled) {
                     resetTask.cancel()
                 } else {
+                    makingSound = SoundType.Hit
                     resetTask = ResetTakeDamageTask()
                 }
                 Timer.schedule(resetTask, DAMAGE_TINT_TIMEOUT_S)
@@ -195,6 +199,7 @@ abstract class Mob(
 
     fun kill() {
         isDead = true
+        makingSound = SoundType.Death
     }
 
     fun reduceBreath() {
@@ -245,17 +250,16 @@ abstract class Mob(
         checkHealth()
     }
 
-    fun retrieveStepping(): Stepping? {
-        return stepping?.also {
-            stepping = null
+    fun retrieveSound(): SoundType? {
+        return makingSound?.also {
+            makingSound = null
         }
     }
 
     fun stepOnBlock(block: Block) {
-        if (stepping == null || stepping?.let { TimeUtils.timeSinceMillis(it.timestamp) >= STEP_TIMEOUT_MS } ?: true) {
-            val time = TimeUtils.millis()
-            stepping = Stepping(
-                timestamp = time,
+        if (makingSound == null && TimeUtils.timeSinceMillis(lastStepTimeMs) >= STEP_TIMEOUT_MS) {
+            lastStepTimeMs = TimeUtils.millis()
+            makingSound = SoundType.Stepping(
                 block = block,
             )
         }
@@ -294,6 +298,10 @@ abstract class Mob(
     }
 
     fun update(mobWorldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, delta: Float) {
+        if (makingSound == null && MathUtils.randomBoolean(0.001f)) {
+            makingSound = SoundType.Idle
+        }
+
         pendingBodyTransform?.let { transform ->
             body.setTransform(transform.add(position), 0f)
             pendingBodyTransform = null
@@ -391,10 +399,17 @@ abstract class Mob(
         }
     }
 
-    data class Stepping(
-        val timestamp: Long,
-        val block: Block,
-    )
+    sealed interface SoundType {
+        data class Stepping(
+            val block: Block,
+        ) : SoundType
+
+        data object Idle : SoundType
+
+        data object Hit : SoundType
+
+        data object Death : SoundType
+    }
 
     companion object {
         private const val TAG = "Mob"
@@ -410,6 +425,6 @@ abstract class Mob(
 
         private const val JUMP_COOLDOWN_MS = 500L
 
-        private const val STEP_TIMEOUT_MS = 500L
+        private const val STEP_TIMEOUT_MS = 100L
     }
 }

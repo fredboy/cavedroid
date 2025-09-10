@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.game.controller.mob
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.assets.repository.MobSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import javax.inject.Inject
@@ -10,6 +11,7 @@ import javax.inject.Inject
 @GameScope
 class MobSoundManager @Inject constructor(
     private val stepsSoundAssetsRepository: StepsSoundAssetsRepository,
+    private val mobSoundAssetsRepository: MobSoundAssetsRepository,
     private val soundPlayer: SoundPlayer,
 ) : Disposable {
 
@@ -21,10 +23,19 @@ class MobSoundManager @Inject constructor(
         _mobController = mobController
     }
 
-    fun makeStepSound(mob: Mob) {
-        val stepping = mob.retrieveStepping() ?: return
-        val material = stepping.block.params.material?.name?.lowercase() ?: return
-        val sound = stepsSoundAssetsRepository.getStepSound(material) ?: return
+    fun makeSound(mob: Mob) {
+        val soundType = mob.retrieveSound() ?: return
+
+        val sound = when (soundType) {
+            is Mob.SoundType.Stepping -> soundType.block.params.material?.name?.lowercase()
+                ?.let { material -> stepsSoundAssetsRepository.getStepSound(material) }
+
+            is Mob.SoundType.Idle -> mobSoundAssetsRepository.getIdleSound(mob.params.key)
+
+            is Mob.SoundType.Hit -> mobSoundAssetsRepository.getHitSound(mob.params.key)
+
+            is Mob.SoundType.Death -> mobSoundAssetsRepository.getDeathSound(mob.params.key)
+        } ?: return
 
         soundPlayer.playSoundAtPosition(
             sound = sound,

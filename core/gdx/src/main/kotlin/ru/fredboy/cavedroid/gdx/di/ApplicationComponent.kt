@@ -16,6 +16,7 @@ import ru.fredboy.cavedroid.domain.assets.repository.BlockTextureAssetsRepositor
 import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
 import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.ItemsTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.MobSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.MobTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.TextureRegionsTextureAssetsRepository
@@ -87,6 +88,8 @@ interface ApplicationComponent {
     val soundPlayer: SoundPlayer
 
     val uiSoundAssetsRepository: UiSoundAssetsRepository
+
+    val mobSoundAssetsRepository: MobSoundAssetsRepository
 
     @Component.Builder
     interface Builder {
