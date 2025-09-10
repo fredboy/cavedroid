@@ -5,6 +5,7 @@ import dagger.Provides
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.TooltipManager
+import ru.fredboy.cavedroid.domain.assets.repository.DropSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
 import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -44,6 +45,8 @@ object GameModule {
         dropQueue: DropQueue,
         playerAdapter: PlayerAdapter,
         getItemByKeyUseCase: GetItemByKeyUseCase,
+        dropSoundAssetsRepository: DropSoundAssetsRepository,
+        soundPlayer: SoundPlayer,
     ): DropController = if (gameContextRepository.isLoadGame()) {
         saveDataRepository.loadDropController(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
@@ -58,6 +61,8 @@ object GameModule {
             dropQueue = dropQueue,
             playerAdapter = playerAdapter,
             getItemByKeyUseCase = getItemByKeyUseCase,
+            dropSoundAssetsRepository = dropSoundAssetsRepository,
+            soundPlayer = soundPlayer,
         )
     }
 

@@ -13,6 +13,7 @@ import ru.fredboy.cavedroid.data.items.di.DataItemsModule
 import ru.fredboy.cavedroid.data.save.di.DataSaveModule
 import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.DropSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
 import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.ItemsTextureAssetsRepository
@@ -90,6 +91,8 @@ interface ApplicationComponent {
     val uiSoundAssetsRepository: UiSoundAssetsRepository
 
     val mobSoundAssetsRepository: MobSoundAssetsRepository
+
+    val dropSoundAssetsRepository: DropSoundAssetsRepository
 
     @Component.Builder
     interface Builder {

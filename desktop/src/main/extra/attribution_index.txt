@@ -1,4 +1,5 @@
 joy/attribution.txt
+sfx/drop/pop/attribution.txt
 sfx/menu/button/attribution.txt
 sfx/mob/char/attribution.txt
 sfx/mob/cow/attribution.txt
@@ -6,6 +7,7 @@ sfx/mob/pig/attribution.txt
 sfx/mob/sheep/attribution.txt
 sfx/mob/zombie/death/attribution.txt
 sfx/mob/zombie/hit/attribution.txt
+sfx/mob/zombie/idle/attribution.txt
 sfx/step/dirt/attribution.txt
 sfx/step/grass/attribution.txt
 sfx/step/metal/attribution.txt

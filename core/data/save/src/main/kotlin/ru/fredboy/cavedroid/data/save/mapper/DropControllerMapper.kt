@@ -1,7 +1,9 @@
 package ru.fredboy.cavedroid.data.save.mapper
 
 import dagger.Reusable
+import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
+import ru.fredboy.cavedroid.domain.assets.repository.DropSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
@@ -13,6 +15,8 @@ import javax.inject.Inject
 class DropControllerMapper @Inject constructor(
     private val dropMapper: DropMapper,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
+    private val dropSoundAssetsRepository: DropSoundAssetsRepository,
+    private val soundPlayer: SoundPlayer,
 ) {
 
     fun mapSaveData(dropController: DropController): SaveDataDto.DropControllerSaveDataDto = SaveDataDto.DropControllerSaveDataDto(
@@ -36,6 +40,8 @@ class DropControllerMapper @Inject constructor(
             dropQueue = dropQueue,
             getItemByKeyUseCase = getItemByKeyUseCase,
             playerAdapter = playerAdapter,
+            dropSoundAssetsRepository = dropSoundAssetsRepository,
+            soundPlayer = soundPlayer,
         )
     }
 

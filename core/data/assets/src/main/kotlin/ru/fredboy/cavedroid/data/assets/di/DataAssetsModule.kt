@@ -4,6 +4,7 @@ import dagger.Binds
 import dagger.Module
 import ru.fredboy.cavedroid.data.assets.internal.BlockDamageTextureAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.BlockTextureAssetsRepositoryImpl
+import ru.fredboy.cavedroid.data.assets.internal.DropSoundAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.EnvironmentTextureRegionsRepositoryImplTexture
 import ru.fredboy.cavedroid.data.assets.internal.FontTextureAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.ItemsTextureAssetsRepositoryImpl
@@ -15,6 +16,7 @@ import ru.fredboy.cavedroid.data.assets.internal.TouchButtonsRepositoryImplTextu
 import ru.fredboy.cavedroid.data.assets.internal.UiSoundAssetsRepositoryImpl
 import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.DropSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
 import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.ItemsTextureAssetsRepository
@@ -82,4 +84,9 @@ abstract class DataAssetsModule {
     internal abstract fun bindMobSoundAssetsRepository(
         impl: MobSoundAssetsRepositoryImpl,
     ): MobSoundAssetsRepository
+
+    @Binds
+    internal abstract fun bindDropSoundAssetsRepository(
+        impl: DropSoundAssetsRepositoryImpl,
+    ): DropSoundAssetsRepository
 }

@@ -3,8 +3,10 @@ package ru.fredboy.cavedroid.game.controller.drop
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.TimeUtils
+import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.ifTrue
+import ru.fredboy.cavedroid.domain.assets.repository.DropSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
@@ -24,6 +26,8 @@ class DropController @Inject constructor(
     private val dropQueue: DropQueue,
     private val playerAdapter: PlayerAdapter,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
+    private val dropSoundAssetsRepository: DropSoundAssetsRepository,
+    private val soundPlayer: SoundPlayer,
 ) : OnBlockDestroyedListener {
 
     private val drops = LinkedList<Drop>()
@@ -34,7 +38,9 @@ class DropController @Inject constructor(
         initialDrop: Collection<Drop>,
         playerAdapter: PlayerAdapter,
         getItemByKeyUseCase: GetItemByKeyUseCase,
-    ) : this(dropWorldAdapter, dropQueue, playerAdapter, getItemByKeyUseCase) {
+        dropSoundAssetsRepository: DropSoundAssetsRepository,
+        soundPlayer: SoundPlayer,
+    ) : this(dropWorldAdapter, dropQueue, playerAdapter, getItemByKeyUseCase, dropSoundAssetsRepository, soundPlayer) {
         drops.addAll(initialDrop.filterNot { drop -> drop.item.isNone() })
     }
 
@@ -85,6 +91,17 @@ class DropController @Inject constructor(
         }
     }
 
+    private fun playPickUpSound(drop: Drop) {
+        val sound = dropSoundAssetsRepository.getDropPopSound() ?: return
+        soundPlayer.playSoundAtPosition(
+            sound = sound,
+            soundX = drop.position.x,
+            soundY = drop.position.y,
+            playerX = playerAdapter.x,
+            playerY = playerAdapter.y,
+        )
+    }
+
     @Suppress("unused")
     fun update(delta: Float) {
         drainDropQueue()
@@ -94,6 +111,9 @@ class DropController @Inject constructor(
         while (iterator.hasNext()) {
             val drop = iterator.next()
             if (drop.isPickedUp || TimeUtils.timeSinceMillis(drop.timestamp) > DROP_TTL_ML) {
+                if (drop.isPickedUp) {
+                    playPickUpSound(drop)
+                }
                 drop.dispose()
                 iterator.remove()
             } else {

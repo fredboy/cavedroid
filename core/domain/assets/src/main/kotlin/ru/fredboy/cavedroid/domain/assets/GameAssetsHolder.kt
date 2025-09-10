@@ -9,6 +9,7 @@ import ru.fredboy.cavedroid.domain.assets.model.TouchButton
 import ru.fredboy.cavedroid.domain.assets.repository.AssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.DropSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
 import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.ItemsTextureAssetsRepository
@@ -33,6 +34,7 @@ class GameAssetsHolder @Inject constructor(
     private val stepsSoundAssetsRepository: StepsSoundAssetsRepository,
     private val uiSoundAssetsRepository: UiSoundAssetsRepository,
     private val mobSoundAssetsRepository: MobSoundAssetsRepository,
+    private val dropSoundAssetsRepository: DropSoundAssetsRepository,
 ) {
 
     private val repositories = sequenceOf(
@@ -47,6 +49,7 @@ class GameAssetsHolder @Inject constructor(
         stepsSoundAssetsRepository,
         uiSoundAssetsRepository,
         mobSoundAssetsRepository,
+        dropSoundAssetsRepository,
     )
 
     fun initializeRepository() {
