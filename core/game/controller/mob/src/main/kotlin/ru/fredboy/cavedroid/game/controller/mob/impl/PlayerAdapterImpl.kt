@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.game.controller.mob.impl
 
 import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Direction
@@ -51,6 +52,9 @@ class PlayerAdapterImpl @Inject constructor(
 
     override val speed: Float
         get() = player.speed
+
+    override val gameMode: GameMode
+        get() = player.gameMode
 
     override fun decreaseCurrentItemCount(amount: Int) {
         player.decreaseCurrentItemCount(amount)

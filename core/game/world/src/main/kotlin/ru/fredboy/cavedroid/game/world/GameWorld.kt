@@ -37,6 +37,8 @@ class GameWorld @Inject constructor(
     val height: Int
 
     var currentGameTime = DAY_DURATION_SEC * 0.125f
+    var totalGameTimeSec = currentGameTime
+    var lastSpawnGameTime = 0f
 
     var moonPhase = 0
 
@@ -279,6 +281,7 @@ class GameWorld @Inject constructor(
 
     fun update(delta: Float) {
         currentGameTime += (delta * timeMultiplier)
+        totalGameTimeSec += (delta * timeMultiplier)
 
         if (currentGameTime >= DAY_DURATION_SEC) {
             currentGameTime -= DAY_DURATION_SEC

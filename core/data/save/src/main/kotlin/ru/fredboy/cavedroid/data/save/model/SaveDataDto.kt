@@ -210,5 +210,7 @@ sealed class SaveDataDto {
         val gameTime: Float,
         val moonPhase: Int,
         val gameMode: GameMode,
+        val totalGameTime: Float? = null,
+        val lastSpawnGameTime: Float? = null,
     ) : SaveDataDto()
 }

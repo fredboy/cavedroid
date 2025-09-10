@@ -166,6 +166,8 @@ object GameModule {
             mapData?.let {
                 this.currentGameTime = mapData.gameTime
                 this.moonPhase = mapData.moonPhase
+                this.totalGameTimeSec = mapData.totalGameTime
+                this.lastSpawnGameTime = mapData.lastSpawnGameTime
             }
         }
     }

@@ -7,6 +7,8 @@ data class GameMapSaveData(
     val backMap: Array<Array<Block>>?,
     val gameTime: Float,
     val moonPhase: Int,
+    val totalGameTime: Float,
+    val lastSpawnGameTime: Float,
 ) {
 
     override fun equals(other: Any?): Boolean {

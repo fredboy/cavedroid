@@ -182,6 +182,8 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             backMap = backMap,
             gameTime = meta.gameTime,
             moonPhase = meta.moonPhase,
+            totalGameTime = meta.totalGameTime ?: meta.gameTime,
+            lastSpawnGameTime = meta.lastSpawnGameTime ?: 0f,
         )
     }
 

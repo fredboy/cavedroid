@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.entity.mob.abstraction
 
 import com.badlogic.gdx.math.Vector2
+import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.entity.mob.model.Direction
 import ru.fredboy.cavedroid.entity.mob.model.Player
@@ -26,6 +27,8 @@ interface PlayerAdapter {
     val controlVector: Vector2
 
     val speed: Float
+
+    val gameMode: GameMode
 
     fun decreaseCurrentItemCount(amount: Int = 1)
 }

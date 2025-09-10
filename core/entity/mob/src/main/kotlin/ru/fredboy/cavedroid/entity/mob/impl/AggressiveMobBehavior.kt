@@ -17,7 +17,7 @@ class AggressiveMobBehavior :
         get() = true
 
     override fun WalkingMob.updateMob(worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, delta: Float) {
-        if (position.dst(playerAdapter.x, playerAdapter.y) > TRIGGER_DISTANCE) {
+        if (playerAdapter.gameMode.isCreative() || position.dst(playerAdapter.x, playerAdapter.y) > TRIGGER_DISTANCE) {
             passiveBehavior.update(this, worldAdapter, playerAdapter, delta)
             return
         }

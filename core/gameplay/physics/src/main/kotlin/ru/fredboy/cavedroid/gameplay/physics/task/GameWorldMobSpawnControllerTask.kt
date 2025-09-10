@@ -50,6 +50,7 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
                 }
             }
         }
+        gameWorld.lastSpawnGameTime = gameWorld.totalGameTimeSec
         Gdx.app.log(TAG, "Spawn controller task finished. Spawn count: $spawnCount")
     }
 

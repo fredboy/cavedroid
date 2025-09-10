@@ -69,7 +69,9 @@ public class GameProc implements Disposable {
                 GameWorldMobSpawnControllerTask.SPAWN_INTERVAL_SEC,
                 GameWorldMobSpawnControllerTask.SPAWN_INTERVAL_SEC);
 
-        if (!gameContextRepository.isLoadGame()) {
+        if (!gameContextRepository.isLoadGame() ||
+                mGameWorld.getTotalGameTimeSec() - mGameWorld.getLastSpawnGameTime()
+                        > GameWorldMobSpawnControllerTask.SPAWN_INTERVAL_SEC) {
             gameWorldMobSpawnControllerTask.exec();
         }
 
