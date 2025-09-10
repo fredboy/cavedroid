@@ -1,4 +1,6 @@
 import com.android.build.gradle.internal.tasks.factory.dependsOn
+import java.nio.file.Files
+import java.nio.file.StandardOpenOption
 
 plugins {
     kotlin("jvm")
@@ -92,7 +94,39 @@ tasks.register<Copy>("copyLicenseReport") {
     rename { "notices.txt" }
 }
 
-tasks.assemble.dependsOn("copyLicenseReport")
+tasks.register("generateAttributionIndex") {
+    group = "assets"
+    description = "Scans assets/ for attribution.txt files and generates attribution_index.txt"
+
+    val assetsDir = layout.projectDirectory.dir("../assets").asFile.toPath().toRealPath()
+    val extraDir = layout.projectDirectory.dir("extra")
+    val outputFile = extraDir.file("attribution_index.txt")
+
+    inputs.dir(assetsDir)
+    outputs.file(outputFile)
+
+    doLast {
+        val attributions = Files.walk(assetsDir)
+            .filter { Files.isRegularFile(it) && it.fileName.toString().equals("attribution.txt", ignoreCase = true) }
+            .map { assetsDir.relativize(it).toString().replace("\\", "/") }
+            .sorted()
+            .toList()
+
+        val content = attributions.joinToString("\n")
+        Files.writeString(
+            outputFile.asFile.toPath(),
+            content,
+            StandardOpenOption.CREATE,
+            StandardOpenOption.TRUNCATE_EXISTING,
+            StandardOpenOption.WRITE,
+        )
+    }
+}
+
+tasks.assemble.apply {
+    dependsOn("copyLicenseReport")
+    dependsOn("generateAttributionIndex")
+}
 
 robovm {
     isIosSkipSigning = true

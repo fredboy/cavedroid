@@ -2,6 +2,8 @@ import com.android.build.gradle.internal.tasks.factory.dependsOn
 import io.github.fourlastor.construo.Target
 import proguard.gradle.ProGuardTask
 import java.io.FileInputStream
+import java.nio.file.Files
+import java.nio.file.StandardOpenOption
 import java.util.Properties
 import kotlin.apply
 
@@ -119,7 +121,47 @@ tasks.register<Copy>("copyLicenseReport") {
     rename { "notices.txt" }
 }
 
-tasks.processResources.dependsOn("copyLicenseReport")
+tasks.register("generateAttributionIndex") {
+    group = "assets"
+    description = "Scans assets/ for attribution.txt files and generates attribution_index.txt"
+
+    val assetsDir = layout.projectDirectory.dir("src/main/resources").asFile.toPath().toRealPath()
+    val extraDir = layout.projectDirectory.dir("src/main/extra")
+    val outputFile = extraDir.file("attribution_index.txt")
+
+    inputs.dir(assetsDir)
+    outputs.file(outputFile)
+
+    doLast {
+        val attributions = Files.walk(assetsDir)
+            .filter { Files.isRegularFile(it) && it.fileName.toString().equals("attribution.txt", ignoreCase = true) }
+            .map { assetsDir.relativize(it).toString().replace("\\", "/") } // relative path
+            .sorted()
+            .toList()
+
+        if (attributions.isEmpty()) {
+            println("No attribution.txt files found in $assetsDir")
+        } else {
+            println("✅Found attribution files:")
+            attributions.forEach { println(" - $it") }
+        }
+
+        val content = attributions.joinToString("\n")
+        Files.writeString(
+            outputFile.asFile.toPath(),
+            content,
+            StandardOpenOption.CREATE,
+            StandardOpenOption.TRUNCATE_EXISTING,
+            StandardOpenOption.WRITE,
+        )
+        println("📄attribution_index.txt generated with ${attributions.size} entries.")
+    }
+}
+
+tasks.processResources.apply {
+    dependsOn("copyLicenseReport")
+    dependsOn("generateAttributionIndex")
+}
 
 construo {
     name.set("cavedroid")

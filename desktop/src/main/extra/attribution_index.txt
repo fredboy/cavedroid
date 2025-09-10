@@ -1,0 +1,9 @@
+joy/attribution.txt
+sfx/menu/button/attribution.txt
+sfx/step/dirt/attribution.txt
+sfx/step/grass/attribution.txt
+sfx/step/metal/attribution.txt
+sfx/step/stone/attribution.txt
+sfx/step/water/attribution.txt
+sfx/step/wood/attribution.txt
+textures/attribution.txt
