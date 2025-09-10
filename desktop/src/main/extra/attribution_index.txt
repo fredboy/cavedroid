@@ -14,4 +14,5 @@ sfx/step/metal/attribution.txt
 sfx/step/stone/attribution.txt
 sfx/step/water/attribution.txt
 sfx/step/wood/attribution.txt
+skin/font/attribution.txt
 textures/attribution.txt
