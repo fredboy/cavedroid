@@ -11,6 +11,7 @@ sfx/mob/zombie/hit/attribution.txt
 sfx/mob/zombie/idle/attribution.txt
 sfx/step/dirt/attribution.txt
 sfx/step/grass/attribution.txt
+sfx/step/lava/attribution.txt
 sfx/step/metal/attribution.txt
 sfx/step/stone/attribution.txt
 sfx/step/water/attribution.txt
