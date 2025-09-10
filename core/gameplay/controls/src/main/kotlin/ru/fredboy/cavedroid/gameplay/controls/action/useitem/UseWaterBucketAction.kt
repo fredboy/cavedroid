@@ -1,6 +1,8 @@
 package ru.fredboy.cavedroid.gameplay.controls.action.useitem
 
+import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.usecase.GetBlockByKeyUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
@@ -13,15 +15,36 @@ import javax.inject.Inject
 @BindUseItemAction(UseWaterBucketAction.ACTION_KEY)
 class UseWaterBucketAction @Inject constructor(
     private val gameWorld: GameWorld,
-    private val mobsController: MobController,
+    private val mobController: MobController,
     private val getBlockByKeyUseCase: GetBlockByKeyUseCase,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
+    private val stepsSoundAssetsRepository: StepsSoundAssetsRepository,
+    private val soundPlayer: SoundPlayer,
 ) : IUseItemAction {
 
     override fun perform(item: Item.Usable, x: Int, y: Int): Boolean {
-        gameWorld.placeToForeground(x, y, getBlockByKeyUseCase["water"])
-        if (!mobsController.player.gameMode.isCreative()) {
-            mobsController.player.setCurrentInventorySlotItem(getItemByKeyUseCase["bucket_empty"])
+        val water = getBlockByKeyUseCase["water"]
+
+        if (!gameWorld.canPlaceToForeground(x, y, water)) {
+            return false
+        }
+
+        gameWorld.placeToForeground(x, y, water)
+
+        water.params.material?.name?.lowercase()
+            ?.let { material -> stepsSoundAssetsRepository.getStepSound(material) }
+            ?.let { sound ->
+                soundPlayer.playSoundAtPosition(
+                    sound = sound,
+                    soundX = x.toFloat(),
+                    soundY = y.toFloat(),
+                    playerX = mobController.player.position.x,
+                    playerY = mobController.player.position.y,
+                )
+            }
+
+        if (!mobController.player.gameMode.isCreative()) {
+            mobController.player.setCurrentInventorySlotItem(getItemByKeyUseCase["bucket_empty"])
         }
         return true
     }

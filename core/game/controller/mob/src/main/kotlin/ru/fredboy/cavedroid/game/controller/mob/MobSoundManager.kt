@@ -6,6 +6,7 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.repository.MobSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.entity.mob.model.Mob
+import ru.fredboy.cavedroid.entity.mob.model.Player
 import javax.inject.Inject
 
 @GameScope
@@ -24,6 +25,7 @@ class MobSoundManager @Inject constructor(
     }
 
     fun makeSound(mob: Mob) {
+        if (mob !is Player) return
         val soundType = mob.retrieveSound() ?: return
 
         val sound = when (soundType) {

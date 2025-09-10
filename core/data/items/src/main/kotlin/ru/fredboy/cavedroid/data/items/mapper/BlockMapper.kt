@@ -106,6 +106,7 @@ class BlockMapper @Inject constructor(
             "stone" -> BlockMaterial.STONE
             "water" -> BlockMaterial.WATER
             "wood" -> BlockMaterial.WOOD
+            "lava" -> BlockMaterial.LAVA
             else -> null
         }
     }

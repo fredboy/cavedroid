@@ -1,6 +1,8 @@
 package ru.fredboy.cavedroid.gameplay.controls.action.useitem
 
+import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.usecase.GetBlockByKeyUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
@@ -16,10 +18,30 @@ class UseLavaBucketAction @Inject constructor(
     private val mobController: MobController,
     private val getBlockByKeyUseCase: GetBlockByKeyUseCase,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
+    private val stepsSoundAssetsRepository: StepsSoundAssetsRepository,
+    private val soundPlayer: SoundPlayer,
 ) : IUseItemAction {
 
     override fun perform(item: Item.Usable, x: Int, y: Int): Boolean {
-        gameWorld.placeToForeground(x, y, getBlockByKeyUseCase["lava"])
+        val lava = getBlockByKeyUseCase["lava"]
+
+        if (!gameWorld.canPlaceToForeground(x, y, lava)) {
+            return false
+        }
+
+        gameWorld.placeToForeground(x, y, lava)
+
+        lava.params.material?.name?.lowercase()
+            ?.let { material -> stepsSoundAssetsRepository.getStepSound(material) }
+            ?.let { sound ->
+                soundPlayer.playSoundAtPosition(
+                    sound = sound,
+                    soundX = x.toFloat(),
+                    soundY = y.toFloat(),
+                    playerX = mobController.player.position.x,
+                    playerY = mobController.player.position.y,
+                )
+            }
 
         if (!mobController.player.gameMode.isCreative()) {
             mobController.player.setCurrentInventorySlotItem(getItemByKeyUseCase["bucket_empty"])

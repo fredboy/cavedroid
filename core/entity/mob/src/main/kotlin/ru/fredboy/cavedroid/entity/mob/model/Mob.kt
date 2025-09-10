@@ -102,6 +102,7 @@ abstract class Mob(
         private set
 
     private var lastStepTimeMs = 0L
+    private var lastSplashTimeMs = 0L
 
     var takingDamage = false
         set(value) {
@@ -275,6 +276,11 @@ abstract class Mob(
         val climbable = mobWorldAdapter.getClimbable(hitbox.apply { height *= .75f })
         val liquid = climbable as? Block.Fluid?
 
+        if (!canSwim && liquid != null && TimeUtils.timeSinceMillis(lastSplashTimeMs) > SPLASH_TIMEOUT_MS) {
+            lastSplashTimeMs = TimeUtils.millis()
+            stepOnBlock(liquid)
+        }
+
         canClimb = climbable != null
         canSwim = liquid != null
 
@@ -426,5 +432,6 @@ abstract class Mob(
         private const val JUMP_COOLDOWN_MS = 500L
 
         private const val STEP_TIMEOUT_MS = 100L
+        private const val SPLASH_TIMEOUT_MS = 1000L
     }
 }

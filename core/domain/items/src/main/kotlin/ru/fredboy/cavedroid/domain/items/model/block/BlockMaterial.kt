@@ -7,4 +7,5 @@ enum class BlockMaterial {
     WOOD,
     WATER,
     GRASS,
+    LAVA,
 }
