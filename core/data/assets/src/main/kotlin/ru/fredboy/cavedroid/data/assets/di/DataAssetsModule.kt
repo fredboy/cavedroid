@@ -7,6 +7,7 @@ import ru.fredboy.cavedroid.data.assets.internal.BlockTextureAssetsRepositoryImp
 import ru.fredboy.cavedroid.data.assets.internal.DropSoundAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.EnvironmentTextureRegionsRepositoryImplTexture
 import ru.fredboy.cavedroid.data.assets.internal.FontTextureAssetsRepositoryImpl
+import ru.fredboy.cavedroid.data.assets.internal.FoodSoundAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.ItemsTextureAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.MobSoundAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.MobTextureAssetsRepositoryImpl
@@ -19,6 +20,7 @@ import ru.fredboy.cavedroid.domain.assets.repository.BlockTextureAssetsRepositor
 import ru.fredboy.cavedroid.domain.assets.repository.DropSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
 import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.FoodSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.ItemsTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.MobSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.MobTextureAssetsRepository
@@ -89,4 +91,9 @@ abstract class DataAssetsModule {
     internal abstract fun bindDropSoundAssetsRepository(
         impl: DropSoundAssetsRepositoryImpl,
     ): DropSoundAssetsRepository
+
+    @Binds
+    internal abstract fun bindFoodSoundAssetsRepository(
+        impl: FoodSoundAssetsRepositoryImpl,
+    ): FoodSoundAssetsRepository
 }

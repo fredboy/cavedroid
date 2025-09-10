@@ -2,8 +2,10 @@ package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Timer
+import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.takeIfTrue
+import ru.fredboy.cavedroid.domain.assets.repository.FoodSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -38,6 +40,8 @@ class UseItemMouseInputHandler @Inject constructor(
     private val gameWorld: GameWorld,
     private val textureRegions: GetTextureRegionByNameUseCase,
     private val applicationContextRepository: ApplicationContextRepository,
+    private val foodSoundAssetsRepository: FoodSoundAssetsRepository,
+    private val soundPlayer: SoundPlayer,
 ) : IMouseInputHandler {
 
     private var buttonHoldTask: Timer.Task? = null
@@ -107,6 +111,17 @@ class UseItemMouseInputHandler @Inject constructor(
         return useMobActionMap[mob.params.key]?.perform(mob) ?: false
     }
 
+    private fun playFoodSound() {
+        val sound = foodSoundAssetsRepository.getFoodSound() ?: return
+        soundPlayer.playSoundAtPosition(
+            sound = sound,
+            soundX = mobController.player.position.x,
+            soundY = mobController.player.position.x,
+            playerX = mobController.player.position.x,
+            playerY = mobController.player.position.x,
+        )
+    }
+
     private fun handleUp() {
         val player = mobController.player
         val item = player.activeItem.item
@@ -133,6 +148,7 @@ class UseItemMouseInputHandler @Inject constructor(
             }?.takeIfTrue()
             ?: (item as? Item.Food)?.let {
                 if (player.health < player.maxHealth) {
+                    playFoodSound()
                     player.heal(item.heal)
                     player.decreaseCurrentItemCount()
                     true

@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Timer
+import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.common.utils.takeIfTrue
+import ru.fredboy.cavedroid.domain.assets.repository.FoodSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -43,6 +45,8 @@ class TouchCursorInputHandler @Inject constructor(
     private val useItemActionMap: Map<String, @JvmSuppressWildcards IUseItemAction>,
     private val useMobActionMap: Map<String, @JvmSuppressWildcards IUseMobAction>,
     private val getTextureRegionByNameUseCase: GetTextureRegionByNameUseCase,
+    private val foodSoundAssetsRepository: FoodSoundAssetsRepository,
+    private val soundPlayer: SoundPlayer,
 ) : IMouseInputHandler {
 
     private val player get() = mobController.player
@@ -108,6 +112,17 @@ class TouchCursorInputHandler @Inject constructor(
         return false
     }
 
+    private fun playFoodSound() {
+        val sound = foodSoundAssetsRepository.getFoodSound() ?: return
+        soundPlayer.playSoundAtPosition(
+            sound = sound,
+            soundX = mobController.player.position.x,
+            soundY = mobController.player.position.x,
+            playerX = mobController.player.position.x,
+            playerY = mobController.player.position.x,
+        )
+    }
+
     private fun handleUp() {
         val player = mobController.player
         val item = player.activeItem.item
@@ -148,6 +163,7 @@ class TouchCursorInputHandler @Inject constructor(
             }?.takeIfTrue()
             ?: (item as? Item.Food)?.let {
                 if (player.health < player.maxHealth) {
+                    playFoodSound()
                     player.heal(item.heal)
                     player.decreaseCurrentItemCount()
                     true
