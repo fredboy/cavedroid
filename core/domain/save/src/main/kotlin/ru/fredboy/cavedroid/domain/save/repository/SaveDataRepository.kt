@@ -10,10 +10,12 @@ import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
+import ru.fredboy.cavedroid.entity.projectile.abstraction.ProjectileWorldAdapter
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.mob.MobSoundManager
+import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.world.GameWorld
 
 interface SaveDataRepository {
@@ -32,6 +34,7 @@ interface SaveDataRepository {
         mobController: MobController,
         containerController: ContainerController,
         gameWorld: GameWorld,
+        projectileController: ProjectileController,
     )
 
     fun loadMap(
@@ -63,6 +66,13 @@ interface SaveDataRepository {
         dropQueue: DropQueue,
         mobSoundManager: MobSoundManager,
     ): MobController
+
+    fun loadProjectileController(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        projectileWorldAdapter: ProjectileWorldAdapter,
+        dropQueue: DropQueue,
+    ): ProjectileController
 
     fun getSavesInfo(gameDataFolder: String): List<GameSaveInfo>
 

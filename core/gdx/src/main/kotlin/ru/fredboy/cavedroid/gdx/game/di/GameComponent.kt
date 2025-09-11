@@ -21,6 +21,7 @@ import ru.fredboy.cavedroid.generated.module.KeyboardInputHandlersModule
 import ru.fredboy.cavedroid.generated.module.MobContactHandlerModule
 import ru.fredboy.cavedroid.generated.module.MouseInputHandlersModule
 import ru.fredboy.cavedroid.generated.module.PlaceBlockActionsModule
+import ru.fredboy.cavedroid.generated.module.ProjectileContactHandlerModule
 import ru.fredboy.cavedroid.generated.module.UpdateBlockActionsModule
 import ru.fredboy.cavedroid.generated.module.UseBlockActionsModule
 import ru.fredboy.cavedroid.generated.module.UseItemActionsModule
@@ -49,6 +50,7 @@ import ru.fredboy.cavedroid.generated.module.WorldRenderModule
         DropContactHandlerModule::class,
         MobContactHandlerModule::class,
         UseMobActionsModule::class,
+        ProjectileContactHandlerModule::class,
     ],
 )
 interface GameComponent {

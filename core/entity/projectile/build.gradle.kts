@@ -11,6 +11,6 @@ dependencies {
     useDagger()
 
     useCommonModule()
-    useDomainModules()
-    useEntityModules()
+    useModule(":core:domain:items")
+    useModule(":core:domain:world")
 }

@@ -82,7 +82,7 @@ class DebugRenderer @Inject constructor(
 
     private fun drawDebugInfo(spriteBatch: SpriteBatch) {
         debugInfoStringsProvider.getDebugStrings().forEachIndexed { index, str ->
-            spriteBatch.drawString(getFont(), str, 0f, index * 12f)
+            spriteBatch.drawString(getFont(), str, 0f, index * 10f)
         }
     }
 

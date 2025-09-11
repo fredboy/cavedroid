@@ -5,6 +5,7 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
 import javax.inject.Inject
@@ -16,6 +17,7 @@ class DebugInfoStringsProvider @Inject constructor(
     private val containerController: ContainerController,
     private val gameWorld: GameWorld,
     private val gameWorldSolidBlockBodiesManager: GameWorldSolidBlockBodiesManager,
+    private val projectileController: ProjectileController,
 ) {
 
     fun getDebugStrings(): List<String> {
@@ -41,6 +43,7 @@ class DebugInfoStringsProvider @Inject constructor(
             "Player fly mode: ${player.isFlyMode}",
             "Static bodies: ${gameWorldSolidBlockBodiesManager.bodies.size}",
             "Fixtures: ${gameWorld.world.fixtureCount}",
+            "Projectiles: ${projectileController.projectiles.size}",
         )
     }
 }

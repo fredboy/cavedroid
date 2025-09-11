@@ -9,6 +9,7 @@ import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepositor
 import ru.fredboy.cavedroid.game.controller.container.ContainerController;
 import ru.fredboy.cavedroid.game.controller.drop.DropController;
 import ru.fredboy.cavedroid.game.controller.mob.MobController;
+import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController;
 import ru.fredboy.cavedroid.game.world.GameWorld;
 import ru.fredboy.cavedroid.gameplay.controls.GameInputProcessor;
 import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldBlocksLogicControllerTask;
@@ -32,6 +33,7 @@ public class GameProc implements Disposable {
     private final GameWorldMobSpawnControllerTask mGameWorldMobSpawnControllerTask;
     private final GameInputProcessor mGameInputProcessor;
     private final GameWorld mGameWorld;
+    private final ProjectileController mProjectileController;
 
     private final Timer mWorldLogicTimer = new Timer();
 
@@ -46,7 +48,8 @@ public class GameProc implements Disposable {
                     GameWorldMobDamageControllerTask gameWorldMobDamageControllerTask,
                     GameWorldMobSpawnControllerTask gameWorldMobSpawnControllerTask,
                     GameInputProcessor gameInputProcessor,
-                    GameWorld gameWorld
+                    GameWorld gameWorld,
+                    ProjectileController projectileController
     ) {
         mGameRenderer = gameRenderer;
         mMobsController = mobsController;
@@ -58,6 +61,7 @@ public class GameProc implements Disposable {
         mGameWorldMobSpawnControllerTask = gameWorldMobSpawnControllerTask;
         mGameInputProcessor = gameInputProcessor;
         mGameWorld = gameWorld;
+        mProjectileController = projectileController;
 
         mWorldLogicTimer.scheduleTask(gameWorldFluidsLogicControllerTask, 0,
                 GameWorldFluidsLogicControllerTask.FLUID_UPDATE_INTERVAL_SEC);
@@ -86,6 +90,7 @@ public class GameProc implements Disposable {
         mGameWorld.update(delta);
         mMobsController.update(delta);
         mDropController.update(delta);
+        mProjectileController.update(delta);
         mGameInputProcessor.update(delta);
         mGameRenderer.render(delta);
         mContainerController.update(delta);
@@ -116,6 +121,7 @@ public class GameProc implements Disposable {
         mWorldLogicTimer.stop();
 
         mGameRenderer.dispose();
+        mProjectileController.dispose();
         mDropController.dispose();
         mMobsController.dispose();
         mContainerController.dispose();

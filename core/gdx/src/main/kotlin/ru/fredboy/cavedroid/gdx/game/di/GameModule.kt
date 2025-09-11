@@ -23,10 +23,12 @@ import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
+import ru.fredboy.cavedroid.entity.projectile.abstraction.ProjectileWorldAdapter
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.mob.MobSoundManager
+import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.GameWorldContactListener
 import ru.fredboy.cavedroid.game.world.GameWorldLightManager
@@ -131,6 +133,30 @@ object GameModule {
             soundPlayer = soundPlayer,
             stepsSoundAssetsRepository = stepsSoundAssetsRepository,
         )
+    }
+
+    @Provides
+    @GameScope
+    fun provideProjectileController(
+        applicationContextRepository: ApplicationContextRepository,
+        gameContextRepository: GameContextRepository,
+        saveDataRepository: SaveDataRepository,
+        projectileWorldAdapter: ProjectileWorldAdapter,
+        dropQueue: DropQueue,
+    ): ProjectileController {
+        return if (gameContextRepository.isLoadGame()) {
+            saveDataRepository.loadProjectileController(
+                gameDataFolder = applicationContextRepository.getGameDirectory(),
+                saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
+                projectileWorldAdapter = projectileWorldAdapter,
+                dropQueue = dropQueue,
+            )
+        } else {
+            ProjectileController(
+                projectileWorldAdapter = projectileWorldAdapter,
+                dropQueue = dropQueue,
+            )
+        }
     }
 
     @Provides

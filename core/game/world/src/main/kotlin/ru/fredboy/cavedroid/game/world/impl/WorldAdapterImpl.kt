@@ -15,6 +15,7 @@ import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
 import ru.fredboy.cavedroid.entity.container.model.ContainerCoordinates
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
+import ru.fredboy.cavedroid.entity.projectile.abstraction.ProjectileWorldAdapter
 import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 import kotlin.reflect.KClass
@@ -26,7 +27,8 @@ internal class WorldAdapterImpl @Inject constructor(
     private val mobParamsRepository: MobParamsRepository,
 ) : DropWorldAdapter,
     ContainerWorldAdapter,
-    MobWorldAdapter {
+    MobWorldAdapter,
+    ProjectileWorldAdapter {
 
     override val height: Int
         get() = gameWorld.height

@@ -232,9 +232,9 @@ abstract class Mob(
         }
 
         health -= damage
-        checkHealth()
-
         takingDamage = true
+
+        checkHealth()
     }
 
     fun heal(heal: Int) {

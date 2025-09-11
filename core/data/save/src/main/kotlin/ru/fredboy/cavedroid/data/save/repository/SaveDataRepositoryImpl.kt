@@ -15,6 +15,7 @@ import ru.fredboy.cavedroid.data.save.mapper.ContainerControllerMapper
 import ru.fredboy.cavedroid.data.save.mapper.DropControllerMapper
 import ru.fredboy.cavedroid.data.save.mapper.GameSaveInfoMapper
 import ru.fredboy.cavedroid.data.save.mapper.MobControllerMapper
+import ru.fredboy.cavedroid.data.save.mapper.ProjectileControllerMapper
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
@@ -29,10 +30,12 @@ import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
+import ru.fredboy.cavedroid.entity.projectile.abstraction.ProjectileWorldAdapter
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.mob.MobSoundManager
+import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import java.nio.ByteBuffer
 import java.util.zip.Deflater
@@ -47,6 +50,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     private val containerControllerMapper: ContainerControllerMapper,
     private val mobControllerMapper: MobControllerMapper,
     private val gameSaveInfoMapper: GameSaveInfoMapper,
+    private val projectileControllerMapper: ProjectileControllerMapper,
 ) : SaveDataRepository {
 
     private fun Int.toByteArray(): ByteArray = ByteBuffer.allocate(Int.SIZE_BYTES)
@@ -285,21 +289,25 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         mobController: MobController,
         containerController: ContainerController,
         gameWorld: GameWorld,
+        projectileController: ProjectileController,
     ) {
         val savesPath = getSavePath(gameDataFolder, saveGameDirectory)
 
         val dropFile = Gdx.files.absolute("$savesPath/$DROP_FILE")
         val mobsFile = Gdx.files.absolute("$savesPath/$MOBS_FILE")
         val containersFile = Gdx.files.absolute("$savesPath/$CONTAINERS_FILE")
+        val projectilesFile = Gdx.files.absolute("$savesPath/$PROJECTILES_FILE")
 
         val dropBytes = ProtoBuf.encodeToByteArray(dropControllerMapper.mapSaveData(dropController))
         val mobsBytes = ProtoBuf.encodeToByteArray(mobControllerMapper.mapSaveData(mobController))
         val containersBytes =
             ProtoBuf.encodeToByteArray(containerControllerMapper.mapSaveData(containerController))
+        val projectilesBytes = ProtoBuf.encodeToByteArray(projectileControllerMapper.mapSaveData(projectileController))
 
         dropFile.writeBytes(dropBytes, false)
         mobsFile.writeBytes(mobsBytes, false)
         containersFile.writeBytes(containersBytes, false)
+        projectilesFile.writeBytes(projectilesBytes, false)
 
         saveMap(gameWorld, savesPath)
 
@@ -385,6 +393,34 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             }
     }
 
+    override fun loadProjectileController(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        projectileWorldAdapter: ProjectileWorldAdapter,
+        dropQueue: DropQueue,
+    ): ProjectileController {
+        val savesPath = getSavePath(gameDataFolder, saveGameDirectory)
+        val projectilesFile = Gdx.files.absolute("$savesPath/$PROJECTILES_FILE")
+
+        if (!projectilesFile.exists()) {
+            return ProjectileController(
+                projectileWorldAdapter = projectileWorldAdapter,
+                dropQueue = dropQueue,
+            )
+        }
+
+        val projectilesBytes = projectilesFile.readBytes()
+
+        return ProtoBuf.decodeFromByteArray<SaveDataDto.ProjectileControllerSaveDataDto>(projectilesBytes)
+            .let { saveData ->
+                projectileControllerMapper.mapProjectileController(
+                    saveDataDto = saveData,
+                    projectileWorldAdapter = projectileWorldAdapter,
+                    dropQueue = dropQueue,
+                )
+            }
+    }
+
     private fun getSavePath(
         gameDataFolder: String,
         saveGameDirectory: String,
@@ -447,6 +483,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         private const val MAP_SAVE_VERSION: UByte = 6u
         private const val SAVES_DIR = "saves"
         private const val DROP_FILE = "drop.dat"
+        private const val PROJECTILES_FILE = "projectiles.dat"
         private const val MOBS_FILE = "mobs.dat"
         private const val CONTAINERS_FILE = "containers.dat"
         private const val DICT_FILE = "dict"

@@ -7,6 +7,7 @@ import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
@@ -19,6 +20,7 @@ class GameSaveHelper @Inject constructor(
     private val gameWorld: GameWorld,
     private val containerController: ContainerController,
     private val saveDataRepository: SaveDataRepository,
+    private val projectileController: ProjectileController,
 ) {
 
     fun saveGame(overwrite: Boolean) {
@@ -38,6 +40,7 @@ class GameSaveHelper @Inject constructor(
             mobController = mobController,
             containerController = containerController,
             gameWorld = gameWorld,
+            projectileController = projectileController,
         )
     }
 }

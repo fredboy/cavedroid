@@ -61,7 +61,8 @@ class MobPhysicsFactoryImpl @Inject constructor(
             friction = .2f
             restitution = 0f
             filter.categoryBits = physicsCategory
-            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK or (physicsCategory.takeIf { collidesOwnCategory } ?: 0)
+            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK or PhysicsConstants.CATEGORY_PROJECTILE or
+                (physicsCategory.takeIf { collidesOwnCategory } ?: 0)
         }.also { fixtureDef ->
             createFixture(fixtureDef)
             bodyShape.dispose()

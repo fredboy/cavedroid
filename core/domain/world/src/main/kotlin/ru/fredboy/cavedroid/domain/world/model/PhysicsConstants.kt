@@ -6,4 +6,5 @@ object PhysicsConstants {
     const val CATEGORY_DROP: Short = (1 shl 2).toShort()
     const val CATEGORY_OPAQUE: Short = (1 shl 3).toShort()
     const val CATEGORY_FALLING_BLOCK = (1 shl 4).toShort()
+    const val CATEGORY_PROJECTILE = (1 shl 5).toShort()
 }

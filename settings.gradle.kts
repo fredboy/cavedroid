@@ -30,6 +30,7 @@ include("core:domain:save")
 include("core:entity:container")
 include("core:entity:drop")
 include("core:entity:mob")
+include("core:entity:projectile")
 
 /**
  * Game scope modules
@@ -40,6 +41,7 @@ include("core:game")
 include("core:game:controller:drop")
 include("core:game:controller:container")
 include("core:game:controller:mob")
+include("core:game:controller:projectile")
 
 // ui windows module
 include("core:game:window")

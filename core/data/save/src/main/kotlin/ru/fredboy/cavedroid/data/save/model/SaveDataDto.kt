@@ -111,9 +111,29 @@ sealed class SaveDataDto {
     ) : RectangleObjectSaveDataDto()
 
     @Serializable
+    data class ProjectileSaveDataDto(
+        override val version: Int,
+        override val x: Float,
+        override val y: Float,
+        override val width: Float,
+        override val height: Float,
+        override val velocityX: Float,
+        override val velocityY: Float,
+        val itemKey: String,
+        val damage: Int,
+        val dropOnGround: Boolean,
+    ) : RectangleObjectSaveDataDto()
+
+    @Serializable
     data class DropControllerSaveDataDto(
         override val version: Int,
         val drops: List<DropSaveDataDto>,
+    ) : SaveDataDto()
+
+    @Serializable
+    data class ProjectileControllerSaveDataDto(
+        override val version: Int,
+        val projectiles: List<ProjectileSaveDataDto>,
     ) : SaveDataDto()
 
     @Serializable

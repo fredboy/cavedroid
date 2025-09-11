@@ -5,6 +5,7 @@ import dagger.Module
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
+import ru.fredboy.cavedroid.entity.projectile.abstraction.ProjectileWorldAdapter
 import ru.fredboy.cavedroid.game.world.impl.WorldAdapterImpl
 
 @Module
@@ -18,4 +19,7 @@ abstract class GameWorldModule {
 
     @Binds
     internal abstract fun bindDropWorldAdapter(impl: WorldAdapterImpl): DropWorldAdapter
+
+    @Binds
+    internal abstract fun bindProjectileWorldAdapter(impl: WorldAdapterImpl): ProjectileWorldAdapter
 }
