@@ -19,6 +19,7 @@ import ru.fredboy.cavedroid.data.save.mapper.ProjectileControllerMapper
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.domain.save.model.GameMapSaveData
 import ru.fredboy.cavedroid.domain.save.model.GameSaveInfo
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
@@ -30,6 +31,7 @@ import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
 import ru.fredboy.cavedroid.entity.projectile.abstraction.ProjectileWorldAdapter
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
@@ -51,6 +53,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     private val mobControllerMapper: MobControllerMapper,
     private val gameSaveInfoMapper: GameSaveInfoMapper,
     private val projectileControllerMapper: ProjectileControllerMapper,
+    private val getItemByKeyUseCase: GetItemByKeyUseCase,
 ) : SaveDataRepository {
 
     private fun Int.toByteArray(): ByteArray = ByteBuffer.allocate(Int.SIZE_BYTES)
@@ -376,6 +379,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         mobPhysicsFactory: MobPhysicsFactory,
         dropQueue: DropQueue,
         mobSoundManager: MobSoundManager,
+        projectileAdapter: ProjectileAdapter,
     ): MobController {
         val savesPath = getSavePath(gameDataFolder, saveGameDirectory)
         val mobsFile = Gdx.files.absolute("$savesPath/$MOBS_FILE")
@@ -389,6 +393,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
                     mobPhysicsFactory = mobPhysicsFactory,
                     dropQueue = dropQueue,
                     mobSoundManager = mobSoundManager,
+                    projectileAdapter = projectileAdapter,
                 )
             }
     }
@@ -404,6 +409,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
 
         if (!projectilesFile.exists()) {
             return ProjectileController(
+                getItemByKeyUseCase = getItemByKeyUseCase,
                 projectileWorldAdapter = projectileWorldAdapter,
                 dropQueue = dropQueue,
             )

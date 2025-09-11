@@ -21,6 +21,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobBehavior
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -314,7 +315,7 @@ abstract class Mob(
         pendingBodyTransform = vector
     }
 
-    fun update(mobWorldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, delta: Float) {
+    fun update(mobWorldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, projectileAdapter: ProjectileAdapter, delta: Float) {
         if (isPullingBow) {
             bowCharge += delta
         }
@@ -328,7 +329,7 @@ abstract class Mob(
             pendingBodyTransform = null
         }
 
-        behavior.update(this, mobWorldAdapter, playerAdapter, delta)
+        behavior.update(this, mobWorldAdapter, playerAdapter, projectileAdapter, delta)
 
         applyMediumResistanceToBody(mobWorldAdapter)
         if (!controlVector.isZero) {

@@ -26,10 +26,10 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
         if (!gameWorld.isDayTime() || mobController.mobs.size < maintainedMobsCount) {
             val mobParams = mobParamsRepository.getAllParams()
                 .filter {
-                    if (gameWorld.isDayTime()) {
-                        it.behaviorType == MobBehaviorType.PASSIVE || it.behaviorType == MobBehaviorType.SHEEP
-                    } else {
-                        it.behaviorType == MobBehaviorType.AGGRESSIVE
+                    when (it.behaviorType) {
+                        MobBehaviorType.PASSIVE, MobBehaviorType.SHEEP -> gameWorld.isDayTime()
+                        MobBehaviorType.AGGRESSIVE, MobBehaviorType.ARCHER -> !gameWorld.isDayTime()
+                        else -> false
                     }
                 }
 

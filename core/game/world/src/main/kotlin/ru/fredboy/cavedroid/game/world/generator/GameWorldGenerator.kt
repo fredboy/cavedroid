@@ -409,7 +409,8 @@ class GameWorldGenerator(
                 if (!caveMap[x][y]) {
                     val filler = random.nextDouble()
                     foreMap[x][y] = when {
-                        filler < 0.98 -> itemsRepository.fallbackBlock
+                        filler < 0.95 -> itemsRepository.fallbackBlock
+                        filler < 0.98 -> itemsRepository.getBlockByKey("web")
                         filler < 0.99 -> itemsRepository.getBlockByKey("water")
                         else -> itemsRepository.getBlockByKey("lava")
                     }

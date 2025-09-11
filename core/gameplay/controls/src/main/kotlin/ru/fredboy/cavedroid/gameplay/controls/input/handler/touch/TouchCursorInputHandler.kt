@@ -75,6 +75,11 @@ class TouchCursorInputHandler @Inject constructor(
     private fun handleHold() {
         cancelHold()
 
+        if (mobController.player.canShootBow()) {
+            mobController.player.isPullingBow = true
+            return
+        }
+
         val selectedX = mobController.player.selectedX
         val selectedY = mobController.player.selectedY
 
@@ -98,11 +103,6 @@ class TouchCursorInputHandler @Inject constructor(
     }
 
     private fun handleDown() {
-        if (mobController.player.canShootBow()) {
-            mobController.player.isPullingBow = true
-            return
-        }
-
         cancelHold()
         buttonHoldTask = object : Timer.Task() {
             override fun run() {

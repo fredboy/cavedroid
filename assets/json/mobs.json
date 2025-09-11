@@ -457,5 +457,95 @@
         "is_static": true
       }
     ]
+  },
+  "skeleton": {
+    "name": "Skeleton",
+    "width": 8,
+    "height": 30,
+    "speed": 1.850,
+    "behavior": "archer",
+    "hp": 20,
+    "breath": -1,
+    "animation_range": 15,
+    "damage_to_player": 2,
+    "takes_sun_damage": true,
+    "drop_info": [
+      {
+        "key": "bone",
+        "amount": {
+          "type": "random_range",
+          "min": 1,
+          "max": 2,
+          "chance": 0.66
+        }
+      },
+      {
+        "key": "arrow",
+        "amount": {
+          "type": "random_range",
+          "min": 1,
+          "max": 2,
+          "chance": 0.66
+        }
+      },
+      {
+        "key": "bow",
+        "amount": {
+          "type": "random_range",
+          "min": 2,
+          "max": 64,
+          "chance": 0.2
+        }
+      }
+    ],
+    "sprites": [
+      {
+        "file": "hand",
+        "offset_x": -6,
+        "offset_y": 8,
+        "is_background": true,
+        "is_hand": true,
+        "is_static": true,
+        "origin_x": 1,
+        "origin_y": 0.5
+      },
+      {
+        "file": "leg",
+        "offset_x": 2,
+        "offset_y": 20,
+        "is_background": true,
+        "is_static": false
+      },
+      {
+        "file": "head",
+        "is_background": false,
+        "is_head": true,
+        "is_static": true,
+        "origin_y": 1
+      },
+      {
+        "file": "body",
+        "offset_x": 2,
+        "offset_y": 8,
+        "is_background": false
+      },
+      {
+        "file": "leg",
+        "offset_x": 2,
+        "offset_y": 20,
+        "is_background": false,
+        "is_static": false
+      },
+      {
+        "file": "hand",
+        "offset_x": -6,
+        "offset_y": 8,
+        "is_background": false,
+        "is_hand": true,
+        "is_static": true,
+        "origin_x": 1,
+        "origin_y": 0.5
+      }
+    ]
   }
 }

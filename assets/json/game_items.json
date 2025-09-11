@@ -2950,6 +2950,19 @@
       "max_stack": 384,
       "state_sprites": ["bow_pulling_0", "bow_pulling_1", "bow_pulling_2"],
       "origin_x": 0.5
+    },
+    "bone": {
+      "name": "Bone",
+      "texture": "bone"
+    },
+    "spawn_egg_skeleton": {
+      "name": "Skeleton Spawn Egg",
+      "type": "usable",
+      "texture": "spawn_egg",
+      "tint": "#FFFFFF",
+      "action_key": "use_spawn_egg",
+      "mob_key": "skeleton",
+      "origin_x": 0.5
     }
   }
 }

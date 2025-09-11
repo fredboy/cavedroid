@@ -9,6 +9,7 @@ import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepositor
 import ru.fredboy.cavedroid.game.controller.container.di.ControllerContainerModule
 import ru.fredboy.cavedroid.game.controller.drop.di.ControllerDropModule
 import ru.fredboy.cavedroid.game.controller.mob.di.MobControllerModule
+import ru.fredboy.cavedroid.game.controller.projectile.di.ProjectileControllerModule
 import ru.fredboy.cavedroid.game.world.di.GameWorldModule
 import ru.fredboy.cavedroid.gameplay.physics.di.PhysicsModule
 import ru.fredboy.cavedroid.gameplay.rendering.GameRenderer
@@ -51,6 +52,7 @@ import ru.fredboy.cavedroid.generated.module.WorldRenderModule
         MobContactHandlerModule::class,
         UseMobActionsModule::class,
         ProjectileContactHandlerModule::class,
+        ProjectileControllerModule::class,
     ],
 )
 interface GameComponent {

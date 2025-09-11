@@ -23,6 +23,7 @@ import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
 import ru.fredboy.cavedroid.entity.projectile.abstraction.ProjectileWorldAdapter
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
@@ -111,6 +112,7 @@ object GameModule {
         mobSoundManager: MobSoundManager,
         soundPlayer: SoundPlayer,
         stepsSoundAssetsRepository: StepsSoundAssetsRepository,
+        projectileAdapter: ProjectileAdapter,
     ): MobController = if (gameContextRepository.isLoadGame()) {
         saveDataRepository.loadMobController(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
@@ -119,6 +121,7 @@ object GameModule {
             mobPhysicsFactory = mobPhysicsFactory,
             dropQueue = dropQueue,
             mobSoundManager = mobSoundManager,
+            projectileAdapter = projectileAdapter,
         )
     } else {
         MobController(
@@ -132,6 +135,7 @@ object GameModule {
             mobSoundManager = mobSoundManager,
             soundPlayer = soundPlayer,
             stepsSoundAssetsRepository = stepsSoundAssetsRepository,
+            projectileAdapter = projectileAdapter,
         )
     }
 
@@ -143,6 +147,7 @@ object GameModule {
         saveDataRepository: SaveDataRepository,
         projectileWorldAdapter: ProjectileWorldAdapter,
         dropQueue: DropQueue,
+        getItemByKeyUseCase: GetItemByKeyUseCase,
     ): ProjectileController {
         return if (gameContextRepository.isLoadGame()) {
             saveDataRepository.loadProjectileController(
@@ -153,6 +158,7 @@ object GameModule {
             )
         } else {
             ProjectileController(
+                getItemByKeyUseCase = getItemByKeyUseCase,
                 projectileWorldAdapter = projectileWorldAdapter,
                 dropQueue = dropQueue,
             )

@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
+import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
+import ru.fredboy.cavedroid.entity.mob.model.ArcherMob
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.model.SheepMob
 import ru.fredboy.cavedroid.entity.mob.model.WalkingMob
@@ -16,6 +18,7 @@ class MobFactory @Inject constructor(
     private val mobController: MobController,
     private val mobParamsRepository: MobParamsRepository,
     private val mobPhysicsFactory: MobPhysicsFactory,
+    private val getItemByKeyUseCase: GetItemByKeyUseCase,
 ) {
 
     fun create(x: Float, y: Float, mobKey: String): Mob? {
@@ -30,6 +33,8 @@ class MobFactory @Inject constructor(
             )
 
             MobBehaviorType.SHEEP -> SheepMob(mobParams)
+
+            MobBehaviorType.ARCHER -> ArcherMob(getItemByKeyUseCase, mobParams)
 
             else -> run {
                 Gdx.app.log(TAG, "Mobs of type ${mobParams.behaviorType} not yet supported")

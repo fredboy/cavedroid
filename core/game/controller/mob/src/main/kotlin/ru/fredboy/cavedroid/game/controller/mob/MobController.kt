@@ -16,6 +16,7 @@ import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.impl.PlayerAdapterImpl_Factory
@@ -36,6 +37,7 @@ class MobController @Inject constructor(
     private val mobSoundManager: MobSoundManager,
     private val soundPlayer: SoundPlayer,
     private val stepsSoundAssetsRepository: StepsSoundAssetsRepository,
+    private val projectileAdapter: ProjectileAdapter,
 ) : Disposable {
 
     // TODO: Do proper DI
@@ -74,7 +76,7 @@ class MobController @Inject constructor(
 
     fun update(delta: Float) {
         mobs.forEach { mob ->
-            mob.update(mobWorldAdapter, playerAdapter, delta)
+            mob.update(mobWorldAdapter, playerAdapter, projectileAdapter, delta)
             mobSoundManager.makeSound(mob)
         }
         _mobs.removeAll { mob ->
@@ -90,7 +92,7 @@ class MobController @Inject constructor(
     }
 
     private fun updatePlayer(delta: Float) {
-        player.update(mobWorldAdapter, playerAdapter, delta)
+        player.update(mobWorldAdapter, playerAdapter, projectileAdapter, delta)
         mobSoundManager.makeSound(player)
 
         limitPlayerCursor()

@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.entity.mob.abstraction.BaseMobBehavior
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Direction
 import ru.fredboy.cavedroid.entity.mob.model.SheepMob
 import ru.fredboy.cavedroid.entity.mob.model.WalkingMob
@@ -35,7 +36,7 @@ class PassiveMobBehavior :
         return x to y
     }
 
-    override fun WalkingMob.updateMob(worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, delta: Float) {
+    override fun WalkingMob.updateMob(worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, projectileAdapter: ProjectileAdapter, delta: Float) {
         if (checkForAutojump(worldAdapter)) {
             jump()
         }

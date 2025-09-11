@@ -12,6 +12,7 @@ import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.entity.mob.abstraction.BaseMobBehavior
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Player
 
 class PlayerMobBehavior(
@@ -115,7 +116,7 @@ class PlayerMobBehavior(
         }
     }
 
-    override fun Player.updateMob(worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, delta: Float) {
+    override fun Player.updateMob(worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, projectileAdapter: ProjectileAdapter, delta: Float) {
         if (isPullingBow && !canShootBow()) {
             isPullingBow = false
         }

@@ -7,4 +7,5 @@ enum class MobBehaviorType {
     NEUTRAL,
     AGGRESSIVE,
     SHEEP,
+    ARCHER,
 }

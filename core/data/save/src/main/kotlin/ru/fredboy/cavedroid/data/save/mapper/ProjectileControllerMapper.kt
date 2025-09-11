@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.data.save.mapper
 
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
+import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.projectile.abstraction.ProjectileWorldAdapter
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
@@ -10,6 +11,7 @@ import javax.inject.Inject
 @Reusable
 class ProjectileControllerMapper @Inject constructor(
     private val projectileMapper: ProjectileMapper,
+    private val getItemByKeyUseCase: GetItemByKeyUseCase,
 ) {
 
     fun mapSaveData(projectileController: ProjectileController): SaveDataDto.ProjectileControllerSaveDataDto {
@@ -30,6 +32,7 @@ class ProjectileControllerMapper @Inject constructor(
             initialProjectiles = saveDataDto.projectiles.map {
                 projectileMapper.mapProjectile(it, projectileWorldAdapter)
             },
+            getItemByKeyUseCase = getItemByKeyUseCase,
             projectileWorldAdapter = projectileWorldAdapter,
             dropQueue = dropQueue,
         )
