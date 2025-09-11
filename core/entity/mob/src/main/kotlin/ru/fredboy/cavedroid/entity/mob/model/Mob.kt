@@ -22,6 +22,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import kotlin.math.abs
+import kotlin.math.min
 
 abstract class Mob(
     var direction: Direction,
@@ -124,6 +125,16 @@ abstract class Mob(
     var autojumpCounters = IntArray(2)
 
     var cliffEdgeCounters = IntArray(2)
+
+    var isPullingBow = false
+        set(value) {
+            if (value != field) {
+                bowCharge = 0f
+            }
+            field = value
+        }
+    var bowCharge = 0f
+    val bowState get() = (min(1f, bowCharge / BOW_PULL_TIME_S) * 2).toInt()
 
     protected val tintColor: Color
         get() = if (takingDamage) {
@@ -304,6 +315,10 @@ abstract class Mob(
     }
 
     fun update(mobWorldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, delta: Float) {
+        if (isPullingBow) {
+            bowCharge += delta
+        }
+
         if (makingSound == null && MathUtils.randomBoolean(0.001f)) {
             makingSound = SoundType.Idle
         }
@@ -433,5 +448,7 @@ abstract class Mob(
 
         private const val STEP_TIMEOUT_MS = 100L
         private const val SPLASH_TIMEOUT_MS = 1000L
+
+        private const val BOW_PULL_TIME_S = 1f
     }
 }

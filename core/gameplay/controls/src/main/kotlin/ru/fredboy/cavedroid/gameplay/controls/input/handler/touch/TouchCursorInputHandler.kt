@@ -13,9 +13,12 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.entity.mob.model.Direction
 import ru.fredboy.cavedroid.entity.mob.model.Player
+import ru.fredboy.cavedroid.entity.projectile.model.Projectile
 import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.world.GameWorld
@@ -47,6 +50,8 @@ class TouchCursorInputHandler @Inject constructor(
     private val getTextureRegionByNameUseCase: GetTextureRegionByNameUseCase,
     private val foodSoundAssetsRepository: FoodSoundAssetsRepository,
     private val soundPlayer: SoundPlayer,
+    private val projectileController: ProjectileController,
+    private val getItemByKeyUseCase: GetItemByKeyUseCase,
 ) : IMouseInputHandler {
 
     private val player get() = mobController.player
@@ -93,6 +98,11 @@ class TouchCursorInputHandler @Inject constructor(
     }
 
     private fun handleDown() {
+        if (mobController.player.canShootBow()) {
+            mobController.player.isPullingBow = true
+            return
+        }
+
         cancelHold()
         buttonHoldTask = object : Timer.Task() {
             override fun run() {
@@ -123,9 +133,33 @@ class TouchCursorInputHandler @Inject constructor(
         )
     }
 
+    private fun shootBow() {
+        projectileController.addProjectile(
+            projectile = Projectile(
+                item = getItemByKeyUseCase["arrow"],
+                damage = 1 + (mobController.player.bowState * 3),
+                width = 1f,
+                height = 0.25f,
+                dropOnGround = true,
+            ),
+            x = mobController.player.position.x + mobController.player.direction.basis,
+            y = mobController.player.position.y - mobController.player.height / 3f,
+            velocity = Vector2.X.cpy()
+                .setAngleDeg(mobController.player.headRotation + 180f * (1 - mobController.player.direction.index))
+                .scl(300f * ((mobController.player.bowState.toFloat() + 1f) / 3f)),
+        )
+        mobController.player.isPullingBow = false
+        mobController.player.decreaseArrows()
+        mobController.player.decreaseCurrentItemCount()
+    }
+
     private fun handleUp() {
         val player = mobController.player
         val item = player.activeItem.item
+
+        if (player.isPullingBow) {
+            shootBow()
+        }
 
         player.stopHitting()
 

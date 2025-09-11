@@ -43,6 +43,7 @@ class Player(
         set(value) {
             value.setOnItemAddedListener { item, slot ->
                 if (slot == activeSlot) {
+                    isPullingBow = false
                     tooltipManager.showHotbarTooltip(item.item.params.name)
                 }
             }
@@ -78,6 +79,7 @@ class Player(
     var activeSlot
         get() = _activeSlot
         set(value) {
+            isPullingBow = false
             if (value in 0..<HOTBAR_SIZE) {
                 if (value != _activeSlot) {
                     tooltipManager.showHotbarTooltip(inventory.items[value].item.params.name)
@@ -99,6 +101,12 @@ class Player(
 
             field = value
         }
+
+    fun canShootBow(): Boolean {
+        return !isInBed &&
+            activeItem.item is Item.Bow &&
+            (inventory.items.any { it.item.params.key == "arrow" && it.amount > 0 } || gameMode.isCreative())
+    }
 
     override fun changeDir() = Unit
 
@@ -152,9 +160,17 @@ class Player(
             } else if (spriteData.isHead) {
                 headRotation
             } else if (spriteData.isHand && spriteData.isBackground) {
-                backHandAnim
+                if (isPullingBow) {
+                    headRotation - 90f * direction.basis
+                } else {
+                    backHandAnim
+                }
             } else if (spriteData.isHand) {
-                frontHandAnim
+                if (isPullingBow) {
+                    headRotation - 90f * direction.basis
+                } else {
+                    frontHandAnim
+                }
             } else if (spriteData.isBackground) {
                 anim
             } else {
@@ -192,6 +208,7 @@ class Player(
 
     fun respawn(spawnPoint: Vector2, mobPhysicsFactory: MobPhysicsFactory) {
         this.spawnPoint = spawnPoint
+        isPullingBow = false
         isDead = false
         heal(maxHealth)
         breath = params.maxBreath
@@ -228,6 +245,8 @@ class Player(
     }
 
     fun startHitting(withDamage: Boolean = true) {
+        isPullingBow = false
+
         if (isHitting) {
             return
         }
@@ -266,19 +285,39 @@ class Player(
         }
     }
 
+    fun decreaseArrows() {
+        if (gameMode.isCreative()) {
+            return
+        }
+
+        val index = inventory.items.indexOfFirst { it.item.params.key == "arrow" }
+
+        inventory.items[index].subtract()
+
+        if (inventory.items[index].amount == 0) {
+            inventory.items[index] = getFallbackItem().toInventoryItem()
+        }
+    }
+
     fun setCurrentInventorySlotItem(item: Item) {
         inventory.items[activeSlot] = item.toInventoryItem()
     }
 
     private fun drawItem(spriteBatch: SpriteBatch, handLength: Float, x: Float, y: Float, handAnim: Float) {
         val item = activeItem.item.takeIf { !it.isNone() } ?: return
-        val itemSprite = item.sprite
+        val itemSprite = if (item is Item.Bow && isPullingBow) {
+            item.stateSprites[bowState]
+        } else {
+            item.sprite
+        }
         val isSmallSprite = !item.isTool() || item.isShears()
         val originalWidth = itemSprite.width
         val originalHeight = itemSprite.height
 
         if (isSmallSprite) {
             itemSprite.setSize(SMALL_ITEM_SIZE, SMALL_ITEM_SIZE)
+        } else {
+            itemSprite.setSize(1f, 1f)
         }
 
         val spriteOrigin = item.params.inHandSpriteOrigin

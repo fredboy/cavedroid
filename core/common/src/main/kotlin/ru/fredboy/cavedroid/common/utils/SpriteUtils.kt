@@ -21,9 +21,9 @@ fun SpriteBatch.drawSprite(
 ) {
     val oldColor = sprite.color
 
-    origin?.applyToSprite(sprite)
     sprite.setPosition(x, y)
     sprite.setSize(width, height)
+    origin?.applyToSprite(sprite)
     sprite.rotation = rotation
     tint?.let(sprite::setColor)
 

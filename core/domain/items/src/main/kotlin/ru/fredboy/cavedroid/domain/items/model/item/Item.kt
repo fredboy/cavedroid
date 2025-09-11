@@ -137,6 +137,16 @@ sealed class Item {
         override val level: Int,
     ) : Tool()
 
+    data class Bow(
+        override val params: CommonItemParams,
+        override val sprite: Sprite,
+        val stateSprites: List<Sprite>,
+    ) : Tool() {
+        override val mobDamageMultiplier: Float = 1f
+        override val blockDamageMultiplier: Float = 1f
+        override val level: Int = 1
+    }
+
     data class Food(
         override val params: CommonItemParams,
         override val sprite: Sprite,

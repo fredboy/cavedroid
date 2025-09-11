@@ -116,6 +116,10 @@ class PlayerMobBehavior(
     }
 
     override fun Player.updateMob(worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, delta: Float) {
+        if (isPullingBow && !canShootBow()) {
+            isPullingBow = false
+        }
+
         if (isInBed) {
             if (worldAdapter.isDayTime()) {
                 isInBed = false

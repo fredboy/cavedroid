@@ -25,4 +25,8 @@ data class SpriteOrigin(
     fun applyToSprite(sprite: Sprite) {
         sprite.setOrigin(sprite.width * x, sprite.height * y)
     }
+
+    companion object {
+        val CENTER = SpriteOrigin(0.5f, 0.5f)
+    }
 }

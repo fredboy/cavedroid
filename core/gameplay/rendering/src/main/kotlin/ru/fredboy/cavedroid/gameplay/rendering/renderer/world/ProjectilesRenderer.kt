@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.model.SpriteOrigin
 import ru.fredboy.cavedroid.common.utils.cycledInsideWorld
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
@@ -29,6 +30,8 @@ class ProjectilesRenderer @Inject constructor(
                     y = projectileRect.y,
                     width = projectileRect.width,
                     height = projectileRect.height,
+                    rotation = projectile.velocity.get().angleDeg(),
+                    origin = SpriteOrigin.CENTER,
                 )
             }
         }

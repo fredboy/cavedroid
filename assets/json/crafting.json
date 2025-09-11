@@ -198,5 +198,13 @@
   "mushroom_stew": {
     "input": ["mushroom_brown", "mushroom_red", "none", "none", "bowl", "none", "none", "none", "none"],
     "count": 1
+  },
+  "arrow": {
+    "input": ["flint", "none", "none", "stick", "none", "none", "feather", "none", "none"],
+    "count": 4
+  },
+  "bow": {
+    "input": ["none", "stick", "string", "stick", "none", "string", "none", "stick", "string"],
+    "count": 384
   }
 }

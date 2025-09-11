@@ -680,6 +680,15 @@
       "drop_info": [
         {
           "key": "web",
+          "requires_tools": true,
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        },
+        {
+          "key": "string",
+          "requires_tools": false,
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2892,6 +2901,54 @@
       "tint": "#EDE0D3",
       "action_key": "use_spawn_egg",
       "mob_key": "sheep",
+      "origin_x": 0.5
+    },
+    "chicken_raw": {
+      "name": "Raw Chicken",
+      "type": "food",
+      "texture": "chicken_raw",
+      "heal": 2,
+      "smelt_product": "chicken_cooked"
+    },
+    "chicken_cooked": {
+      "name": "Cooked Chicken",
+      "type": "food",
+      "texture": "chicken_cooked",
+      "heal": 6
+    },
+    "spawn_egg_chicken": {
+      "name": "Chicken Spawn Egg",
+      "type": "usable",
+      "texture": "spawn_egg",
+      "tint": "#CCCCCC",
+      "action_key": "use_spawn_egg",
+      "mob_key": "chicken",
+      "origin_x": 0.5
+    },
+    "egg": {
+      "name": "Egg",
+      "type": "usable",
+      "texture": "egg",
+      "action_key": "use_egg_action"
+    },
+    "feather": {
+      "name": "Feather",
+      "texture": "feather"
+    },
+    "arrow": {
+      "name": "Arrow",
+      "texture": "arrow"
+    },
+    "string": {
+      "name": "String",
+      "texture": "string"
+    },
+    "bow": {
+      "name": "Bow",
+      "type": "bow",
+      "texture": "bow",
+      "max_stack": 384,
+      "state_sprites": ["bow_pulling_0", "bow_pulling_1", "bow_pulling_2"],
       "origin_x": 0.5
     }
   }

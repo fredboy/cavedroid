@@ -11,7 +11,7 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetItemTextureUseCase
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.item.CommonItemParams
 import ru.fredboy.cavedroid.domain.items.model.item.Item
-import java.util.MissingResourceException
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -94,6 +94,12 @@ class ItemMapper @Inject constructor(
                 heal = requireNotNull(dto.heal),
             )
 
+            "bow" -> Item.Bow(
+                params = params,
+                sprite = requireNotNull(loadSprite(dto)),
+                stateSprites = requireNotNull(loadStateSprites(dto)),
+            )
+
             "none" -> Item.None(
                 params = params,
             )
@@ -136,6 +142,26 @@ class ItemMapper @Inject constructor(
                     color = colorFromHexString(it)
                 }
             }
+    }
+
+    private fun loadStateSprites(dto: ItemDto): List<Sprite>? {
+        if (dto.stateSprites == null || dto.stateSprites.isEmpty()) {
+            return null
+        }
+
+        return dto.stateSprites.mapNotNull { textureName ->
+            if (textureName == ItemsRepositoryImpl.FALLBACK_ITEM_KEY) {
+                return@mapNotNull null
+            }
+
+            val texture = getItemTexture[textureName]
+            Sprite(texture).apply {
+                flip(false, true)
+                dto.tint?.let {
+                    color = colorFromHexString(it)
+                }
+            }
+        }.takeIf { it.isNotEmpty() }
     }
 
     companion object {

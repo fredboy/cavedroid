@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
@@ -10,7 +11,10 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
+import ru.fredboy.cavedroid.entity.projectile.model.Projectile
 import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.world.GameWorld
@@ -42,6 +46,8 @@ class UseItemMouseInputHandler @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
     private val foodSoundAssetsRepository: FoodSoundAssetsRepository,
     private val soundPlayer: SoundPlayer,
+    private val getItemByKeyUseCase: GetItemByKeyUseCase,
+    private val projectileController: ProjectileController,
 ) : IMouseInputHandler {
 
     private var buttonHoldTask: Timer.Task? = null
@@ -79,6 +85,11 @@ class UseItemMouseInputHandler @Inject constructor(
     }
 
     private fun handleDown() {
+        if (mobController.player.canShootBow()) {
+            mobController.player.isPullingBow = true
+            return
+        }
+
         cancelHold()
         buttonHoldTask = object : Timer.Task() {
             override fun run() {
@@ -125,6 +136,7 @@ class UseItemMouseInputHandler @Inject constructor(
     private fun handleUp() {
         val player = mobController.player
         val item = player.activeItem.item
+        player.isPullingBow = false
         cancelHold()
 
         player.startHitting(false)
@@ -158,6 +170,26 @@ class UseItemMouseInputHandler @Inject constructor(
             }?.takeIfTrue()
     }
 
+    private fun shootBow() {
+        projectileController.addProjectile(
+            projectile = Projectile(
+                item = getItemByKeyUseCase["arrow"],
+                damage = 1 + (mobController.player.bowState * 3),
+                width = 1f,
+                height = 0.25f,
+                dropOnGround = true,
+            ),
+            x = mobController.player.position.x + mobController.player.direction.basis,
+            y = mobController.player.position.y - mobController.player.height / 3f,
+            velocity = Vector2.X.cpy()
+                .setAngleDeg(mobController.player.headRotation + 180f * (1 - mobController.player.direction.index))
+                .scl(300f * ((mobController.player.bowState.toFloat() + 1f) / 3f)),
+        )
+        mobController.player.isPullingBow = false
+        mobController.player.decreaseArrows()
+        mobController.player.decreaseCurrentItemCount()
+    }
+
     override fun handle(action: MouseInputAction) {
         if (action.actionKey !is MouseInputActionKey.Right) {
             if (buttonHoldTask?.isScheduled == true) {
@@ -166,8 +198,12 @@ class UseItemMouseInputHandler @Inject constructor(
             return
         }
 
-        if (action.actionKey.touchUp && buttonHoldTask?.isScheduled == true) {
-            handleUp()
+        if (action.actionKey.touchUp) {
+            if (buttonHoldTask?.isScheduled == true) {
+                handleUp()
+            } else if (mobController.player.isPullingBow) {
+                shootBow()
+            }
         } else if (!action.actionKey.touchUp) {
             handleDown()
         }
