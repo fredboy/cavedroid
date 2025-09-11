@@ -394,5 +394,68 @@
         "is_overlay": true
       }
     ]
+  },
+  "chicken": {
+    "name": "Chicken",
+    "width": 16,
+    "height": 16,
+    "speed": 3,
+    "hp": 4,
+    "breath": 20,
+    "behavior": "passive",
+    "drop_info": [
+      {
+        "key": "chicken_raw",
+        "amount": {
+          "type": "exact_amount",
+          "amount": 1
+        }
+      },
+      {
+        "key": "feather",
+        "amount": {
+          "type": "random_range",
+          "min": 1,
+          "max": 2,
+          "chance": 0.66
+        }
+      }
+    ],
+    "sprites": [
+      {
+        "file": "leg",
+        "offset_x": 10,
+        "offset_y": 8,
+        "is_background": true,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false
+      },
+      {
+        "file": "leg",
+        "offset_x": 10,
+        "offset_y": 8,
+        "is_background": false,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": false
+      },
+      {
+        "file": "body",
+        "is_background": false,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": true,
+        "offset_x": 8,
+        "offset_y": 2
+      },
+      {
+        "file": "head",
+        "is_background": false,
+        "is_head": false,
+        "is_hand": false,
+        "is_static": true
+      }
+    ]
   }
 }
