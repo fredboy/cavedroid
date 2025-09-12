@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.entity.mob.impl
 
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.entity.mob.abstraction.BaseMobBehavior
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
@@ -36,7 +37,12 @@ class PassiveMobBehavior :
         return x to y
     }
 
-    override fun WalkingMob.updateMob(worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, projectileAdapter: ProjectileAdapter, delta: Float) {
+    override fun WalkingMob.updateMob(
+        worldAdapter: MobWorldAdapter,
+        playerAdapter: PlayerAdapter,
+        projectileAdapter: ProjectileAdapter,
+        delta: Float,
+    ) {
         if (checkForAutojump(worldAdapter)) {
             jump()
         }
@@ -68,9 +74,25 @@ class PassiveMobBehavior :
 
         climb = canSwim
 
-        if (this is SheepMob && MathUtils.randomBoolean(0.0001f)) {
-            hasFur = true
+        if (MathUtils.randomBoolean(0.00005f)) {
+            when {
+                this is SheepMob -> hasFur = true
+                params.key == "chicken" -> dropEgg(projectileAdapter)
+            }
         }
+    }
+
+    private fun WalkingMob.dropEgg(projectileAdapter: ProjectileAdapter) {
+        projectileAdapter.addProjectile(
+            itemKey = "egg",
+            damage = 0,
+            dropOnGround = true,
+            x = position.x - width,
+            y = position.y,
+            width = 0.5f,
+            height = 0.5f,
+            velocity = Vector2.Zero,
+        )
     }
 
     companion object {

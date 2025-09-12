@@ -32,7 +32,7 @@ class ProjectileToBlockContactHandler @Inject constructor(
 
         isOnGround = true
 
-        if (item.params.key == "egg" && MathUtils.randomBoolean(0.125f)) {
+        if (!dropOnGround && item.params.key == "egg" && MathUtils.randomBoolean(0.125f)) {
             val spawnPoint = velocity.get().cpy().nor().scl(-1f)
             mobFactory.create(
                 x = position.x + spawnPoint.x,
