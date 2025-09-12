@@ -37,4 +37,5 @@ data class BlockDto(
     @SerialName("drop_info") val dropInfo: List<DropInfoDto> = listOf(),
     @SerialName("replaceable") val replaceable: Boolean = false,
     @SerialName("material") val material: String? = null,
+    @SerialName("action_sound_key") val actionSoundKey: String? = null,
 )

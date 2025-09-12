@@ -670,7 +670,9 @@
       "material": "wood"
     },
     "web": {
-      "hp": 1200,
+      "meta": "web",
+      "density": 80,
+      "hp": 120,
       "collision": false,
       "transparent": true,
       "texture": "web",
@@ -680,7 +682,7 @@
       "drop_info": [
         {
           "key": "web",
-          "requires_tools": true,
+          "requires_tool": true,
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -688,7 +690,7 @@
         },
         {
           "key": "string",
-          "requires_tools": false,
+          "requires_tool": false,
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1815,7 +1817,8 @@
           }
         }
       ],
-      "material": "wood"
+      "material": "wood",
+      "action_sound_key": "door/open"
     },
     "torch": {
       "hp": 1,
@@ -1861,7 +1864,8 @@
           }
         }
       ],
-      "material": "wood"
+      "material": "wood",
+      "action_sound_key": "door/close"
     },
     "door_wood_bottom_left_open": {
       "hp": 270,
@@ -1882,7 +1886,8 @@
           }
         }
       ],
-      "material": "wood"
+      "material": "wood",
+      "action_sound_key": "door/close"
     },
     "door_wood_top_left_closed": {
       "right": 14,
@@ -1905,7 +1910,8 @@
           }
         }
       ],
-      "material": "wood"
+      "material": "wood",
+      "action_sound_key": "door/open"
     },
     "door_wood_bottom_left_closed": {
       "right": 14,
@@ -1928,7 +1934,8 @@
           }
         }
       ],
-      "material": "wood"
+      "material": "wood",
+      "action_sound_key": "door/open"
     },
     "door_wood_top_right_open": {
       "hp": 270,
@@ -1949,7 +1956,8 @@
           }
         }
       ],
-      "material": "wood"
+      "material": "wood",
+      "action_sound_key": "door/close"
     },
     "door_wood_bottom_right_open": {
       "hp": 270,
@@ -1970,7 +1978,8 @@
           }
         }
       ],
-      "material": "wood"
+      "material": "wood",
+      "action_sound_key": "door/close"
     },
     "door_wood_top_right_closed": {
       "left": 14,
@@ -1993,7 +2002,8 @@
           }
         }
       ],
-      "material": "wood"
+      "material": "wood",
+      "action_sound_key": "door/open"
     },
     "door_wood_bottom_right_closed": {
       "left": 14,
@@ -2016,7 +2026,8 @@
           }
         }
       ],
-      "material": "wood"
+      "material": "wood",
+      "action_sound_key": "door/open"
     },
     "trapdoor_wood_open": {
       "hp": 270,
@@ -2039,11 +2050,12 @@
           }
         }
       ],
-      "material": "wood"
+      "material": "wood",
+      "action_sound_key": "door/close"
     },
     "trapdoor_wood_closed": {
-      "bottom": 14,
-      "sprite_bottom": 14,
+      "bottom": 12,
+      "sprite_bottom": 12,
       "hp": 270,
       "collision": true,
       "background": true,
@@ -2064,7 +2076,8 @@
           }
         }
       ],
-      "material": "wood"
+      "material": "wood",
+      "action_sound_key": "door/open"
     },
     "ladder": {
       "hp": 36,

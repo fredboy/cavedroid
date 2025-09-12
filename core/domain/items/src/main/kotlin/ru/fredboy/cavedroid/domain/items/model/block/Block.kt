@@ -260,6 +260,11 @@ sealed class Block {
         override val climbSpeedFactor: Float,
     ) : Climbable()
 
+    data class Web(
+        override val params: CommonBlockParams,
+        override val climbSpeedFactor: Float,
+    ) : Climbable()
+
     companion object {
         private const val ANIMATION_FRAME_DURATION_MS = 100L
     }

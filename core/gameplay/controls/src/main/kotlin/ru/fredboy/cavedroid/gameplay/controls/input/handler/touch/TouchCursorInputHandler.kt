@@ -8,6 +8,7 @@ import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.common.utils.takeIfTrue
+import ru.fredboy.cavedroid.domain.assets.repository.BlockActionSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.FoodSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -52,6 +53,7 @@ class TouchCursorInputHandler @Inject constructor(
     private val soundPlayer: SoundPlayer,
     private val projectileController: ProjectileController,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
+    private val blockActionSoundAssetsRepository: BlockActionSoundAssetsRepository,
 ) : IMouseInputHandler {
 
     private val player get() = mobController.player
@@ -218,7 +220,20 @@ class TouchCursorInputHandler @Inject constructor(
             block = block,
             x = mobController.player.selectedX,
             y = mobController.player.selectedY,
-        )?.let { true } ?: false
+        )?.let {
+            block.params.actionSoundKey?.let { key ->
+                blockActionSoundAssetsRepository.getBlockActionSound(key)?.let { sound ->
+                    soundPlayer.playSoundAtPosition(
+                        sound = sound,
+                        soundX = mobController.player.cursorX,
+                        soundY = mobController.player.cursorY,
+                        playerX = mobController.player.position.x,
+                        playerY = mobController.player.position.y,
+                    )
+                }
+            }
+            true
+        } ?: false
     }
 
     override fun checkConditions(action: MouseInputAction): Boolean {

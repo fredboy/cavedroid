@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.takeIfTrue
+import ru.fredboy.cavedroid.domain.assets.repository.BlockActionSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.FoodSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -48,6 +49,7 @@ class UseItemMouseInputHandler @Inject constructor(
     private val soundPlayer: SoundPlayer,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
     private val projectileController: ProjectileController,
+    private val blockActionSoundAssetsRepository: BlockActionSoundAssetsRepository,
 ) : IMouseInputHandler {
 
     private var buttonHoldTask: Timer.Task? = null
@@ -110,7 +112,20 @@ class UseItemMouseInputHandler @Inject constructor(
             block = block,
             x = mobController.player.selectedX,
             y = mobController.player.selectedY,
-        )?.let { true } ?: false
+        )?.let {
+            block.params.actionSoundKey?.let { key ->
+                blockActionSoundAssetsRepository.getBlockActionSound(key)?.let { sound ->
+                    soundPlayer.playSoundAtPosition(
+                        sound = sound,
+                        soundX = mobController.player.cursorX,
+                        soundY = mobController.player.cursorY,
+                        playerX = mobController.player.position.x,
+                        playerY = mobController.player.position.y,
+                    )
+                }
+            }
+            true
+        } ?: false
     }
 
     private fun tryUseMob(): Boolean {

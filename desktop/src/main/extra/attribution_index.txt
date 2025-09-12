@@ -1,4 +1,5 @@
 joy/attribution.txt
+sfx/action/door/attribution.txt
 sfx/drop/pop/attribution.txt
 sfx/food/attribution.txt
 sfx/menu/button/attribution.txt

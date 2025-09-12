@@ -40,6 +40,7 @@ class BlockMapper @Inject constructor(
             "furnace" -> Furnace(commonBlockParams)
             "chest" -> Chest(commonBlockParams)
             "ladder" -> Block.Ladder(commonBlockParams, dto.density ?: 0f)
+            "web" -> Block.Web(commonBlockParams, requireNotNull(dto.density))
             "none" -> None(commonBlockParams)
             else -> Normal(commonBlockParams)
         }
@@ -77,6 +78,7 @@ class BlockMapper @Inject constructor(
         allowAttachToNeighbour = dto.allowAttachToNeighbour,
         replaceable = dto.replaceable,
         material = mapMaterial(dto),
+        actionSoundKey = dto.actionSoundKey,
     )
 
     private fun mapLightInfo(info: BlockLightDto?): BlockLightInfo? {

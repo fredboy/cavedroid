@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.data.assets.di
 
 import dagger.Binds
 import dagger.Module
+import ru.fredboy.cavedroid.data.assets.internal.BlockActionSoundAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.BlockDamageTextureAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.BlockTextureAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.DropSoundAssetsRepositoryImpl
@@ -15,6 +16,7 @@ import ru.fredboy.cavedroid.data.assets.internal.StepSoundsAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.TextureRegionsTextureAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.TouchButtonsRepositoryImplTexture
 import ru.fredboy.cavedroid.data.assets.internal.UiSoundAssetsRepositoryImpl
+import ru.fredboy.cavedroid.domain.assets.repository.BlockActionSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.DropSoundAssetsRepository
@@ -96,4 +98,9 @@ abstract class DataAssetsModule {
     internal abstract fun bindFoodSoundAssetsRepository(
         impl: FoodSoundAssetsRepositoryImpl,
     ): FoodSoundAssetsRepository
+
+    @Binds
+    internal abstract fun bindBlockActionSoundAssetsRepository(
+        impl: BlockActionSoundAssetsRepositoryImpl,
+    ): BlockActionSoundAssetsRepository
 }
