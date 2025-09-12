@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gdx.menu.v2.view.language
 
 import ru.fredboy.cavedroid.common.di.MenuScope
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.BindViewModelProvider
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
 import ru.fredboy.cavedroid.gdx.menu.v2.navigation.ViewModelProvider
@@ -14,6 +15,7 @@ import kotlin.reflect.KClass
 class LanguageMenuViewModelProvider @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
     private val baseViewModelDependencies: BaseViewModelDependencies,
+    private val itemsRepository: ItemsRepository,
 ) : ViewModelProvider<LanguageMenuNavKey, LanguageMenuViewModel> {
 
     override val viewModelClass: KClass<LanguageMenuViewModel>
@@ -24,6 +26,7 @@ class LanguageMenuViewModelProvider @Inject constructor(
             applicationContextRepository = applicationContextRepository,
             navBackStack = navBackStack,
             baseViewModelDependencies = baseViewModelDependencies,
+            itemsRepository = itemsRepository,
         )
     }
 }

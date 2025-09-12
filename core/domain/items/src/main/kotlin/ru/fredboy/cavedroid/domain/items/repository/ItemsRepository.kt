@@ -24,4 +24,6 @@ interface ItemsRepository : Disposable {
     fun getCraftingResult(input: List<Item>): InventoryItem
 
     fun getAllItems(): Collection<Item>
+
+    fun reload()
 }

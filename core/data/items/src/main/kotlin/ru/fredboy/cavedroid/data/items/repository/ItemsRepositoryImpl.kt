@@ -169,6 +169,11 @@ internal class ItemsRepositoryImpl @Inject constructor(
         craftingRecipes.clear()
     }
 
+    override fun reload() {
+        dispose()
+        initialize()
+    }
+
     companion object {
         private const val TAG = "ItemsRepositoryImpl"
 
