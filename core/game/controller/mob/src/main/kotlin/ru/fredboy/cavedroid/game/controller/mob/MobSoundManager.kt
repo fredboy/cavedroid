@@ -35,6 +35,7 @@ class MobSoundManager @Inject constructor(
             is Mob.SoundType.Hit -> mobSoundAssetsRepository.getHitSound(mob.params.key)
 
             is Mob.SoundType.Death -> mobSoundAssetsRepository.getDeathSound(mob.params.key)
+                ?: mobSoundAssetsRepository.getHitSound(mob.params.key)
         } ?: return
 
         soundPlayer.playSoundAtPosition(

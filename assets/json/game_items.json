@@ -697,7 +697,7 @@
           }
         }
       ],
-      "material": "stone"
+      "material": "web"
     },
     "tallgrass": {
       "collision": false,
