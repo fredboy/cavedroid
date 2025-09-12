@@ -5,23 +5,22 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
-import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
+import ru.fredboy.cavedroid.entity.mob.MobQueue
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobFactory
 import ru.fredboy.cavedroid.entity.mob.model.ArcherMob
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.model.SheepMob
 import ru.fredboy.cavedroid.entity.mob.model.WalkingMob
-import ru.fredboy.cavedroid.game.controller.mob.MobController
 import javax.inject.Inject
 
 @GameScope
-class MobFactory @Inject constructor(
-    private val mobController: MobController,
+class MobFactoryImpl @Inject constructor(
     private val mobParamsRepository: MobParamsRepository,
-    private val mobPhysicsFactory: MobPhysicsFactory,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
-) {
+    private val mobQueue: MobQueue,
+) : MobFactory {
 
-    fun create(x: Float, y: Float, mobKey: String): Mob? {
+    override fun create(x: Float, y: Float, mobKey: String): Mob? {
         val mobParams = mobParamsRepository.getMobParamsByKey(mobKey) ?: run {
             Gdx.app.error(TAG, "No mob params found for $mobKey")
             return null
@@ -41,8 +40,7 @@ class MobFactory @Inject constructor(
                 null
             }
         }?.also { mob ->
-            mob.spawn(x + 0.5f, y - mobParams.height, mobPhysicsFactory)
-            mobController.addMob(mob)
+            mobQueue.offerMob(x, y, mob)
         }
     }
 

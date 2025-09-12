@@ -39,16 +39,16 @@ public class GameProc implements Disposable {
 
     @Inject
     public GameProc(GameContextRepository gameContextRepository,
-                    GameRenderer gameRenderer,
+                    GameWorld gameWorld,
                     MobController mobsController,
                     DropController dropController,
+                    GameRenderer gameRenderer,
                     ContainerController containerController,
                     GameWorldFluidsLogicControllerTask gameWorldFluidsLogicControllerTask,
                     GameWorldBlocksLogicControllerTask gameWorldBlocksLogicControllerTask,
                     GameWorldMobDamageControllerTask gameWorldMobDamageControllerTask,
                     GameWorldMobSpawnControllerTask gameWorldMobSpawnControllerTask,
                     GameInputProcessor gameInputProcessor,
-                    GameWorld gameWorld,
                     ProjectileController projectileController
     ) {
         mGameRenderer = gameRenderer;

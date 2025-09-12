@@ -14,6 +14,7 @@ import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.entity.drop.DropQueue
+import ru.fredboy.cavedroid.entity.mob.MobQueue
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
@@ -38,6 +39,7 @@ class MobController @Inject constructor(
     private val soundPlayer: SoundPlayer,
     private val stepsSoundAssetsRepository: StepsSoundAssetsRepository,
     private val projectileAdapter: ProjectileAdapter,
+    private val mobQueue: MobQueue,
 ) : Disposable {
 
     // TODO: Do proper DI
@@ -74,7 +76,17 @@ class MobController @Inject constructor(
         _mobs.remove(mob)
     }
 
+    private fun drainMobQueue() {
+        while (mobQueue.queue.isNotEmpty()) {
+            val qMob = mobQueue.queue.poll()
+            qMob.mob.spawn(qMob.x, qMob.y, mobPhysicsFactory)
+            addMob(qMob.mob)
+        }
+    }
+
     fun update(delta: Float) {
+        drainMobQueue()
+
         mobs.forEach { mob ->
             mob.update(mobWorldAdapter, playerAdapter, projectileAdapter, delta)
             mobSoundManager.makeSound(mob)

@@ -20,6 +20,7 @@ import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
 import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.MobQueue
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
@@ -113,6 +114,7 @@ object GameModule {
         soundPlayer: SoundPlayer,
         stepsSoundAssetsRepository: StepsSoundAssetsRepository,
         projectileAdapter: ProjectileAdapter,
+        mobQueue: MobQueue,
     ): MobController = if (gameContextRepository.isLoadGame()) {
         saveDataRepository.loadMobController(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
@@ -122,6 +124,7 @@ object GameModule {
             dropQueue = dropQueue,
             mobSoundManager = mobSoundManager,
             projectileAdapter = projectileAdapter,
+            mobQueue = mobQueue,
         )
     } else {
         MobController(
@@ -136,6 +139,7 @@ object GameModule {
             soundPlayer = soundPlayer,
             stepsSoundAssetsRepository = stepsSoundAssetsRepository,
             projectileAdapter = projectileAdapter,
+            mobQueue = mobQueue,
         )
     }
 

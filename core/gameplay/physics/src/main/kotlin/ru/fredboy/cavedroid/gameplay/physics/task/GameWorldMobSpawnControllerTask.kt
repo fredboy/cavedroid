@@ -5,8 +5,8 @@ import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobFactory
 import ru.fredboy.cavedroid.game.controller.mob.MobController
-import ru.fredboy.cavedroid.game.controller.mob.factory.MobFactory
 import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
@@ -38,13 +38,14 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
                     val spawnX = x + MathUtils.random(SPAWN_CHUNK_SIZE)
                     var y = 0
                     while (++y < gameWorld.generatorConfig.seaLevel) {
-                        if (gameWorld.getForeMap(spawnX, y).params.hasCollision) {
+                        if (gameWorld.getForeMap(spawnX, y).params.let { it.hasCollision && it.key in SPAWN_BLOCKS }) {
                             break
                         }
                     }
 
                     if (gameWorld.getForeMap(spawnX, y).params.hasCollision) {
-                        mobFactory.create(spawnX.toFloat(), y.toFloat(), mobParams.random().key)
+                        val params = mobParams.random()
+                        mobFactory.create(spawnX.toFloat(), y.toFloat() - params.height / 2f, params.key)
                         spawnCount++
                     }
                 }
@@ -58,6 +59,8 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
         private const val TAG = "GameWorldMobSpawnControllerTask"
 
         private const val SPAWN_CHUNK_SIZE = 64
+
+        private val SPAWN_BLOCKS = setOf("dirt", "grass", "grass_snowed", "sand", "stone")
 
         const val SPAWN_INTERVAL_SEC = GameWorld.DAY_DURATION_SEC / 4f
     }

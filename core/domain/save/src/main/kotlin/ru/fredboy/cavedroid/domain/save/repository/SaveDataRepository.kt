@@ -7,6 +7,7 @@ import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
 import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.MobQueue
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
@@ -67,6 +68,7 @@ interface SaveDataRepository {
         dropQueue: DropQueue,
         mobSoundManager: MobSoundManager,
         projectileAdapter: ProjectileAdapter,
+        mobQueue: MobQueue,
     ): MobController
 
     fun loadProjectileController(

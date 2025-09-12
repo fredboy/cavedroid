@@ -9,6 +9,7 @@ import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.entity.drop.DropQueue
+import ru.fredboy.cavedroid.entity.mob.MobQueue
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
@@ -50,6 +51,7 @@ class MobControllerMapper @Inject constructor(
         dropQueue: DropQueue,
         mobSoundManager: MobSoundManager,
         projectileAdapter: ProjectileAdapter,
+        mobQueue: MobQueue,
     ): MobController {
         saveDataDto.verifyVersion(SAVE_DATA_VERSION)
 
@@ -65,6 +67,7 @@ class MobControllerMapper @Inject constructor(
             soundPlayer = soundPlayer,
             stepsSoundAssetsRepository = stepsSoundAssetsRepository,
             projectileAdapter = projectileAdapter,
+            mobQueue = mobQueue,
         ).apply {
             (mobs as MutableList).addAll(
                 saveDataDto.mobs.mapNotNull { mob ->

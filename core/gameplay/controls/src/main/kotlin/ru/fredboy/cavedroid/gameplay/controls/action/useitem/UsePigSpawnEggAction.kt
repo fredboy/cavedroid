@@ -3,8 +3,8 @@ package ru.fredboy.cavedroid.gameplay.controls.action.useitem
 import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobFactory
 import ru.fredboy.cavedroid.game.controller.mob.MobController
-import ru.fredboy.cavedroid.game.controller.mob.factory.MobFactory
 import ru.fredboy.cavedroid.gameplay.controls.action.annotation.BindUseItemAction
 import javax.inject.Inject
 
