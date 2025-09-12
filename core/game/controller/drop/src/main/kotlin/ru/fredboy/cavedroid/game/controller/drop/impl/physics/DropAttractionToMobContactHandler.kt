@@ -34,5 +34,6 @@ class DropAttractionToMobContactHandler @Inject constructor() : AbstractContactH
 
     override fun Drop.handleEndContact(contact: Contact, entityB: Mob) {
         controlVector.setZero()
+        velocity.get().setZero()
     }
 }

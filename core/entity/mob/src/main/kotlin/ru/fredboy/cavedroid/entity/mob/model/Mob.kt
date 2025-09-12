@@ -291,7 +291,7 @@ abstract class Mob(
         if (!canSwim && liquid != null && TimeUtils.timeSinceMillis(lastSplashTimeMs) > SPLASH_TIMEOUT_MS) {
             lastSplashTimeMs = TimeUtils.millis()
             stepOnBlock(liquid)
-        } else if (climbable != null && !velocity.isZero) {
+        } else if (liquid == null && climbable != null && !velocity.isZero) {
             stepOnBlock(climbable)
         }
 
@@ -454,7 +454,7 @@ abstract class Mob(
 
         private const val JUMP_COOLDOWN_MS = 500L
 
-        private const val STEP_TIMEOUT_MS = 500L
+        private const val STEP_TIMEOUT_MS = 200L
         private const val SPLASH_TIMEOUT_MS = 1000L
 
         private const val BOW_PULL_TIME_S = 1f
