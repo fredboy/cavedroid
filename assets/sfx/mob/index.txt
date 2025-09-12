@@ -3,3 +3,5 @@ cow
 pig
 sheep
 zombie
+chicken
+skeleton
