@@ -5,6 +5,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
+import ru.fredboy.cavedroid.common.utils.removeFirst
 import ru.fredboy.cavedroid.data.items.mapper.BlockMapper
 import ru.fredboy.cavedroid.data.items.mapper.ItemMapper
 import ru.fredboy.cavedroid.data.items.model.BlockDto
@@ -13,15 +14,14 @@ import ru.fredboy.cavedroid.data.items.model.DropAmountDto
 import ru.fredboy.cavedroid.data.items.model.GameItemsDto
 import ru.fredboy.cavedroid.data.items.model.ItemDto
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.items.model.craft.CraftingEntry
 import ru.fredboy.cavedroid.domain.items.model.craft.CraftingRecipe
-import ru.fredboy.cavedroid.domain.items.model.craft.CraftingResult
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.collections.LinkedHashMap
 
 @Singleton
 internal class ItemsRepositoryImpl @Inject constructor(
@@ -33,7 +33,7 @@ internal class ItemsRepositoryImpl @Inject constructor(
 
     private val blocksMap = LinkedHashMap<String, Block>()
     private val itemsMap = LinkedHashMap<String, Item>()
-    private val craftingRecipes = LinkedList<CraftingRecipe>()
+    private val craftingRecipes = LinkedList<CraftingEntry>()
 
     override lateinit var fallbackBlock: Block.None
         private set
@@ -88,9 +88,15 @@ internal class ItemsRepositoryImpl @Inject constructor(
         }
 
         jsonMap.forEach { (key, value) ->
-            craftingRecipes += CraftingRecipe(
-                input = value.input.map(::Regex),
-                output = CraftingResult(getItemByKey(key), value.count),
+            craftingRecipes += CraftingEntry(
+                recipes = value.recipes.map { recipe ->
+                    CraftingRecipe(
+                        input = recipe.input.map { it?.let(::Regex) },
+                        isShapeless = recipe.shapeless,
+                        amount = recipe.count,
+                    )
+                },
+                result = getItemByKey(key),
             )
         }
     }
@@ -140,23 +146,96 @@ internal class ItemsRepositoryImpl @Inject constructor(
 
     override fun <T : Block> getBlocksByType(type: Class<T>): List<T> = blocksMap.values.filterIsInstance(type)
 
-    override fun getCraftingResult(input: List<Item>): InventoryItem {
-        val startIndex = input.indexOfFirst { !it.isNone() }.takeIf { it >= 0 }
-            ?: return fallbackItem.toInventoryItem()
+    private fun mirrorPattern(pattern: List<Regex?>): List<Regex?> {
+        return pattern.chunked(3)
+            .map { it.reversed() }
+            .flatten()
+    }
 
-        val output = craftingRecipes.firstOrNull { rec ->
-            for (i in rec.input.indices) {
-                if (startIndex + i >= input.size) {
-                    return@firstOrNull rec.input.subList(i, rec.input.size).all { it.matches("none") }
-                }
-                if (!input[startIndex + i].params.key.matches(rec.input[i])) {
-                    return@firstOrNull false
+    private fun patternMatches(input: List<Item>, pattern: List<Regex?>): Boolean {
+        val inputHeight = input.chunked(3)
+            .dropWhile { it.all { item -> item.isNone() } }
+            .dropLastWhile { it.all { item -> item.isNone() } }
+            .size
+
+        val inputWidth = input.asSequence()
+            .chunked(3)
+            .map { row ->
+                row.dropWhile { it.isNone() }
+                    .dropLastWhile { it.isNone() }
+            }
+            .maxOf { row -> row.size }
+
+        var droppedInput = 0
+        val input = input.dropWhile {
+            if (droppedInput < (3 - inputHeight) * 3 + (3 - inputWidth) && it.isNone()) {
+                droppedInput++
+                true
+            } else {
+                false
+            }
+        }
+
+        val patternHeight = pattern.chunked(3)
+            .dropWhile { it.all { item -> item == null } }
+            .dropLastWhile { it.all { item -> item == null } }
+            .size
+        val patternWidth = pattern.asSequence()
+            .chunked(3)
+            .map { row ->
+                row.dropWhile { it == null }
+                    .dropLastWhile { it == null }
+            }
+            .maxOf { row -> row.size }
+
+        var droppedPattern = 0
+        val pattern = pattern.dropWhile {
+            if (droppedPattern < (3 - patternHeight) * 3 + (3 - patternWidth) && it == null) {
+                droppedPattern++
+                true
+            } else {
+                false
+            }
+        }
+
+        if (droppedInput % 3 > 3 - patternWidth) {
+            return false
+        }
+
+        for (i in pattern.indices) {
+            val inputItem = input.getOrNull(i) ?: fallbackItem
+            val patternItem = pattern[i]
+
+            if (patternItem?.let { regex -> !inputItem.params.key.matches(regex) } ?: !inputItem.isNone()) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun shapelessMatches(input: List<Item>, pattern: List<Regex?>): Boolean {
+        val inputKeys = input.filter { !it.isNone() }.map { it.params.key }.toMutableList()
+        val patternKeys = pattern.filterNotNull()
+        if (inputKeys.size != patternKeys.size) return false
+        for (key in patternKeys) {
+            if (!inputKeys.removeFirst { it.matches(key) }) return false
+        }
+        return inputKeys.isEmpty()
+    }
+
+    override fun getCraftingResult(input: List<Item>): InventoryItem {
+        for (entry in craftingRecipes) {
+            for (recipe in entry.recipes) {
+                if (recipe.isShapeless) {
+                    if (shapelessMatches(input, recipe.input)) return entry.result.toInventoryItem(recipe.amount)
+                } else {
+                    if (patternMatches(input, recipe.input) || patternMatches(input, mirrorPattern(recipe.input))) {
+                        return entry.result.toInventoryItem(recipe.amount)
+                    }
                 }
             }
-            return@firstOrNull true
-        }?.output
-
-        return output?.toInventoryItem() ?: fallbackItem.toInventoryItem()
+        }
+        return fallbackItem.toInventoryItem()
     }
 
     override fun getAllItems(): Collection<Item> = itemsMap.values

@@ -4,6 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CraftingDto(
-    val input: List<String>,
-    val count: Int = 1,
+    val recipes: List<CraftingRecipeDto>,
 )

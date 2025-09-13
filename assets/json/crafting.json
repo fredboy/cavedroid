@@ -1,210 +1,1009 @@
 {
   "planks_oak": {
-    "input": ["log_oak", "none", "none", "none", "none", "none", "none", "none", "none"],
-    "count": 4
+    "recipes": [
+      {
+        "input": [
+          "log_oak",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 4
+      }
+    ]
   },
   "planks_spruce": {
-    "input": ["log_spruce", "none", "none", "none", "none", "none", "none", "none", "none"],
-    "count": 4
+    "recipes": [
+      {
+        "input": [
+          "log_spruce",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 4
+      }
+    ]
   },
   "planks_birch": {
-    "input": ["log_birch", "none", "none", "none", "none", "none", "none", "none", "none"],
-    "count": 4
+    "recipes": [
+      {
+        "input": [
+          "log_birch",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 4
+      }
+    ]
   },
   "stick": {
-    "input": ["planks.*", "none", "none", "planks.*", "none", "none", "none", "none", "none"],
-    "count": 4
+    "recipes": [
+      {
+        "input": [
+          "planks.*",
+          null,
+          null,
+          "planks.*",
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 4
+      }
+    ]
   },
   "wood_pickaxe": {
-    "input": ["planks.*", "planks.*", "planks.*", "none", "stick", "none", "none", "stick", "none"],
-    "count": 59
+    "recipes": [
+      {
+        "input": [
+          "planks.*",
+          "planks.*",
+          "planks.*",
+          null,
+          "stick",
+          null,
+          null,
+          "stick",
+          null
+        ],
+        "shapeless": false,
+        "count": 59
+      }
+    ]
   },
   "wood_axe": {
-    "input": ["planks.*", "planks.*", "none", "planks.*", "stick", "none", "none", "stick", "none"],
-    "count": 60
+    "recipes": [
+      {
+        "input": [
+          "planks.*",
+          "planks.*",
+          null,
+          "planks.*",
+          "stick",
+          null,
+          null,
+          "stick",
+          null
+        ],
+        "shapeless": false,
+        "count": 60
+      }
+    ]
   },
   "wood_sword": {
-    "input": ["planks.*", "none", "none", "planks.*", "none", "none", "stick", "none", "none"],
-    "count": 60
+    "recipes": [
+      {
+        "input": [
+          "planks.*",
+          null,
+          null,
+          "planks.*",
+          null,
+          null,
+          "stick",
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 60
+      }
+    ]
   },
   "wood_shovel": {
-    "input": ["planks.*", "none", "none", "stick", "none", "none", "stick", "none", "none"],
-    "count": 59
+    "recipes": [
+      {
+        "input": [
+          "planks.*",
+          null,
+          null,
+          "stick",
+          null,
+          null,
+          "stick",
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 59
+      }
+    ]
   },
   "stone_pickaxe": {
-    "input": ["cobblestone", "cobblestone", "cobblestone", "none", "stick", "none", "none", "stick", "none"],
-    "count": 131
+    "recipes": [
+      {
+        "input": [
+          "cobblestone",
+          "cobblestone",
+          "cobblestone",
+          null,
+          "stick",
+          null,
+          null,
+          "stick",
+          null
+        ],
+        "shapeless": false,
+        "count": 131
+      }
+    ]
   },
   "stone_axe": {
-    "input": ["cobblestone", "cobblestone", "none", "cobblestone", "stick", "none", "none", "stick", "none"],
-    "count": 131
+    "recipes": [
+      {
+        "input": [
+          "cobblestone",
+          "cobblestone",
+          null,
+          "cobblestone",
+          "stick",
+          null,
+          null,
+          "stick",
+          null
+        ],
+        "shapeless": false,
+        "count": 131
+      }
+    ]
   },
   "stone_sword": {
-    "input": ["cobblestone", "none", "none", "cobblestone", "none", "none", "stick", "none", "none"],
-    "count": 132
+    "recipes": [
+      {
+        "input": [
+          "cobblestone",
+          null,
+          null,
+          "cobblestone",
+          null,
+          null,
+          "stick",
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 132
+      }
+    ]
   },
   "stone_shovel": {
-    "input": ["cobblestone", "none", "none", "stick", "none", "none", "stick", "none", "none"],
-    "count": 131
+    "recipes": [
+      {
+        "input": [
+          "cobblestone",
+          null,
+          null,
+          "stick",
+          null,
+          null,
+          "stick",
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 131
+      }
+    ]
   },
   "iron_pickaxe": {
-    "input": ["iron_ingot", "iron_ingot", "iron_ingot", "none", "stick", "none", "none", "stick", "none"],
-    "count": 251
+    "recipes": [
+      {
+        "input": [
+          "iron_ingot",
+          "iron_ingot",
+          "iron_ingot",
+          null,
+          "stick",
+          null,
+          null,
+          "stick",
+          null
+        ],
+        "shapeless": false,
+        "count": 251
+      }
+    ]
   },
   "iron_axe": {
-    "input": ["iron_ingot", "iron_ingot", "none", "iron_ingot", "stick", "none", "none", "stick", "none"],
-    "count": 250
+    "recipes": [
+      {
+        "input": [
+          "iron_ingot",
+          "iron_ingot",
+          null,
+          "iron_ingot",
+          "stick",
+          null,
+          null,
+          "stick",
+          null
+        ],
+        "shapeless": false,
+        "count": 250
+      }
+    ]
   },
   "iron_sword": {
-    "input": ["iron_ingot", "none", "none", "iron_ingot", "none", "none", "stick", "none", "none"],
-    "count": 251
+    "recipes": [
+      {
+        "input": [
+          "iron_ingot",
+          null,
+          null,
+          "iron_ingot",
+          null,
+          null,
+          "stick",
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 251
+      }
+    ]
   },
   "iron_shovel": {
-    "input": ["iron_ingot", "none", "none", "stick", "none", "none", "stick", "none", "none"],
-    "count": 250
+    "recipes": [
+      {
+        "input": [
+          "iron_ingot",
+          null,
+          null,
+          "stick",
+          null,
+          null,
+          "stick",
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 250
+      }
+    ]
   },
   "gold_pickaxe": {
-    "input": ["gold_ingot", "gold_ingot", "gold_ingot", "none", "stick", "none", "none", "stick", "none"],
-    "count": 33
+    "recipes": [
+      {
+        "input": [
+          "gold_ingot",
+          "gold_ingot",
+          "gold_ingot",
+          null,
+          "stick",
+          null,
+          null,
+          "stick",
+          null
+        ],
+        "shapeless": false,
+        "count": 33
+      }
+    ]
   },
   "gold_axe": {
-    "input": ["gold_ingot", "gold_ingot", "none", "gold_ingot", "stick", "none", "none", "stick", "none"],
-    "count": 32
+    "recipes": [
+      {
+        "input": [
+          "gold_ingot",
+          "gold_ingot",
+          null,
+          "gold_ingot",
+          "stick",
+          null,
+          null,
+          "stick",
+          null
+        ],
+        "shapeless": false,
+        "count": 32
+      }
+    ]
   },
   "gold_sword": {
-    "input": ["gold_ingot", "none", "none", "gold_ingot", "none", "none", "stick", "none", "none"],
-    "count": 33
+    "recipes": [
+      {
+        "input": [
+          "gold_ingot",
+          null,
+          null,
+          "gold_ingot",
+          null,
+          null,
+          "stick",
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 33
+      }
+    ]
   },
   "gold_shovel": {
-    "input": ["gold_ingot", "none", "none", "stick", "none", "none", "stick", "none", "none"],
-    "count": 32
+    "recipes": [
+      {
+        "input": [
+          "gold_ingot",
+          null,
+          null,
+          "stick",
+          null,
+          null,
+          "stick",
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 32
+      }
+    ]
   },
   "diamond_pickaxe": {
-    "input": ["diamond", "diamond", "diamond", "none", "stick", "none", "none", "stick", "none"],
-    "count": 1562
+    "recipes": [
+      {
+        "input": [
+          "diamond",
+          "diamond",
+          "diamond",
+          null,
+          "stick",
+          null,
+          null,
+          "stick",
+          null
+        ],
+        "shapeless": false,
+        "count": 1562
+      }
+    ]
   },
   "diamond_axe": {
-    "input": ["diamond", "diamond", "none", "diamond", "stick", "none", "none", "stick", "none"],
-    "count": 1561
+    "recipes": [
+      {
+        "input": [
+          "diamond",
+          "diamond",
+          null,
+          "diamond",
+          "stick",
+          null,
+          null,
+          "stick",
+          null
+        ],
+        "shapeless": false,
+        "count": 1561
+      }
+    ]
   },
   "diamond_sword": {
-    "input": ["diamond", "none", "none", "diamond", "none", "none", "stick", "none", "none"],
-    "count": 1562
+    "recipes": [
+      {
+        "input": [
+          "diamond",
+          null,
+          null,
+          "diamond",
+          null,
+          null,
+          "stick",
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1562
+      }
+    ]
   },
   "diamond_shovel": {
-    "input": ["diamond", "none", "none", "stick", "none", "none", "stick", "none", "none"],
-    "count": 1561
+    "recipes": [
+      {
+        "input": [
+          "diamond",
+          null,
+          null,
+          "stick",
+          null,
+          null,
+          "stick",
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1561
+      }
+    ]
   },
   "snow_block": {
-    "input": ["snowball", "snowball", "none", "snowball", "snowball", "none", "none", "none", "none"],
-    "count": 1
+    "recipes": [
+      {
+        "input": [
+          "snowball",
+          "snowball",
+          null,
+          "snowball",
+          "snowball",
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   },
   "crafting_table": {
-    "input": ["planks.*", "planks.*", "none", "planks.*", "planks.*", "none", "none", "none", "none"]
+    "recipes": [
+      {
+        "input": [
+          "planks.*",
+          "planks.*",
+          null,
+          "planks.*",
+          "planks.*",
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   },
   "furnace": {
-    "input": ["cobblestone", "cobblestone", "cobblestone", "cobblestone", "none", "cobblestone", "cobblestone", "cobblestone", "cobblestone"]
+    "recipes": [
+      {
+        "input": [
+          "cobblestone",
+          "cobblestone",
+          "cobblestone",
+          "cobblestone",
+          null,
+          "cobblestone",
+          "cobblestone",
+          "cobblestone",
+          "cobblestone"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   },
   "chest": {
-    "input": ["planks_.*", "planks_.*", "planks_.*", "planks_.*", "none", "planks_.*", "planks_.*", "planks_.*", "planks_.*"]
+    "recipes": [
+      {
+        "input": [
+          "planks_.*",
+          "planks_.*",
+          "planks_.*",
+          "planks_.*",
+          null,
+          "planks_.*",
+          "planks_.*",
+          "planks_.*",
+          "planks_.*"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   },
   "bed": {
-    "input": ["wool_.*", "wool_.*", "wool_.*", "planks_.*", "planks_.*", "planks_.*", "none", "none", "none"]
+    "recipes": [
+      {
+        "input": [
+          "wool_.*",
+          "wool_.*",
+          "wool_.*",
+          "planks_.*",
+          "planks_.*",
+          "planks_.*",
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   },
   "torch": {
-    "input": ["(coal|charcoal)", "none", "none", "stick", "none", "none", "none", "none", "none"],
-    "count": 4
+    "recipes": [
+      {
+        "input": [
+          "(coal|charcoal)",
+          null,
+          null,
+          "stick",
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 4
+      }
+    ]
   },
   "shears": {
-    "input": ["iron_ingot", "none", "none", "none", "iron_ingot", "none", "none", "none", "none"],
-    "count": 238
+    "recipes": [
+      {
+        "input": [
+          "iron_ingot",
+          null,
+          null,
+          null,
+          "iron_ingot",
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 238
+      }
+    ]
   },
   "bucket_empty": {
-    "input": ["iron_ingot", "none", "iron_ingot", "none", "iron_ingot", "none", "none", "none", "none"],
-    "count": 1
+    "recipes": [
+      {
+        "input": [
+          "iron_ingot",
+          null,
+          "iron_ingot",
+          null,
+          "iron_ingot",
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   },
   "stone_slab": {
-    "input": ["stone", "stone", "stone", "none", "none", "none", "none", "none", "none"],
-    "count": 6
+    "recipes": [
+      {
+        "input": [
+          "stone",
+          "stone",
+          "stone",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 6
+      }
+    ]
   },
   "sandstone_slab": {
-    "input": ["sandstone", "sandstone", "sandstone", "none", "none", "none", "none", "none", "none"],
-    "count": 6
+    "recipes": [
+      {
+        "input": [
+          "sandstone",
+          "sandstone",
+          "sandstone",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 6
+      }
+    ]
   },
   "oak_slab": {
-    "input": ["planks_oak", "planks_oak", "planks_oak", "none", "none", "none", "none", "none", "none"],
-    "count": 6
+    "recipes": [
+      {
+        "input": [
+          "planks_oak",
+          "planks_oak",
+          "planks_oak",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 6
+      }
+    ]
   },
   "spruce_slab": {
-    "input": ["planks_spruce", "planks_spruce", "planks_spruce", "none", "none", "none", "none", "none", "none"],
-    "count": 6
+    "recipes": [
+      {
+        "input": [
+          "planks_spruce",
+          "planks_spruce",
+          "planks_spruce",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 6
+      }
+    ]
   },
   "birch_slab": {
-    "input": ["planks_birch", "planks_birch", "planks_birch", "none", "none", "none", "none", "none", "none"],
-    "count": 6
+    "recipes": [
+      {
+        "input": [
+          "planks_birch",
+          "planks_birch",
+          "planks_birch",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 6
+      }
+    ]
   },
   "cobblestone_slab": {
-    "input": ["cobblestone", "cobblestone", "cobblestone", "none", "none", "none", "none", "none", "none"],
-    "count": 6
+    "recipes": [
+      {
+        "input": [
+          "cobblestone",
+          "cobblestone",
+          "cobblestone",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 6
+      }
+    ]
   },
   "brick_slab": {
-    "input": ["bricks", "bricks", "bricks", "none", "none", "none", "none", "none", "none"],
-    "count": 6
+    "recipes": [
+      {
+        "input": [
+          "bricks",
+          "bricks",
+          "bricks",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 6
+      }
+    ]
   },
   "stonebrick": {
-    "input": ["stone", "stone", "none", "stone", "stone", "none", "none", "none", "none"],
-    "count": 4
+    "recipes": [
+      {
+        "input": [
+          "stone",
+          "stone",
+          null,
+          "stone",
+          "stone",
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 4
+      }
+    ]
   },
   "stonebrick_slab": {
-    "input": ["stonebrick", "stonebrick", "stonebrick", "none", "none", "none", "none", "none", "none"],
-    "count": 6
+    "recipes": [
+      {
+        "input": [
+          "stonebrick",
+          "stonebrick",
+          "stonebrick",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 6
+      }
+    ]
   },
   "bricks": {
-    "input": ["brick", "brick", "none", "brick", "brick", "none", "none", "none", "none"],
-    "count": 1
+    "recipes": [
+      {
+        "input": [
+          "brick",
+          "brick",
+          null,
+          "brick",
+          "brick",
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   },
   "door_wood": {
-    "input": ["planks.*", "planks.*", "none", "planks.*", "planks.*", "none", "planks.*", "planks.*", "none"],
-    "count": 3
+    "recipes": [
+      {
+        "input": [
+          "planks.*",
+          "planks.*",
+          null,
+          "planks.*",
+          "planks.*",
+          null,
+          "planks.*",
+          "planks.*",
+          null
+        ],
+        "shapeless": false,
+        "count": 3
+      }
+    ]
   },
   "lapis_block": {
-    "input": ["lapis_lazuli", "lapis_lazuli", "lapis_lazuli", "lapis_lazuli", "lapis_lazuli", "lapis_lazuli", "lapis_lazuli", "lapis_lazuli", "lapis_lazuli"],
-    "count": 1
+    "recipes": [
+      {
+        "input": [
+          "lapis_lazuli",
+          "lapis_lazuli",
+          "lapis_lazuli",
+          "lapis_lazuli",
+          "lapis_lazuli",
+          "lapis_lazuli",
+          "lapis_lazuli",
+          "lapis_lazuli",
+          "lapis_lazuli"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   },
   "gold_block": {
-    "input": ["gold_ingot", "gold_ingot", "gold_ingot", "gold_ingot", "gold_ingot", "gold_ingot", "gold_ingot", "gold_ingot", "gold_ingot"],
-    "count": 1
+    "recipes": [
+      {
+        "input": [
+          "gold_ingot",
+          "gold_ingot",
+          "gold_ingot",
+          "gold_ingot",
+          "gold_ingot",
+          "gold_ingot",
+          "gold_ingot",
+          "gold_ingot",
+          "gold_ingot"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   },
   "iron_block": {
-    "input": ["iron_ingot", "iron_ingot", "iron_ingot", "iron_ingot", "iron_ingot", "iron_ingot", "iron_ingot", "iron_ingot", "iron_ingot"],
-    "count": 1
+    "recipes": [
+      {
+        "input": [
+          "iron_ingot",
+          "iron_ingot",
+          "iron_ingot",
+          "iron_ingot",
+          "iron_ingot",
+          "iron_ingot",
+          "iron_ingot",
+          "iron_ingot",
+          "iron_ingot"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   },
   "diamond_block": {
-    "input": ["diamond", "diamond", "diamond", "diamond", "diamond", "diamond", "diamond", "diamond", "diamond"],
-    "count": 1
+    "recipes": [
+      {
+        "input": [
+          "diamond",
+          "diamond",
+          "diamond",
+          "diamond",
+          "diamond",
+          "diamond",
+          "diamond",
+          "diamond",
+          "diamond"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   },
   "trapdoor_wood_open": {
-    "input": ["planks.*", "planks.*", "planks.*", "planks.*", "planks.*", "planks.*", "none", "none", "none"],
-    "count": 2
+    "recipes": [
+      {
+        "input": [
+          "planks.*",
+          "planks.*",
+          "planks.*",
+          "planks.*",
+          "planks.*",
+          "planks.*",
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 2
+      }
+    ]
   },
   "ladder": {
-    "input": ["stick", "none", "stick", "stick", "stick", "stick", "stick", "none", "stick"],
-    "count": 3
+    "recipes": [
+      {
+        "input": [
+          "stick",
+          null,
+          "stick",
+          "stick",
+          "stick",
+          "stick",
+          "stick",
+          null,
+          "stick"
+        ],
+        "shapeless": false,
+        "count": 3
+      }
+    ]
   },
   "bowl": {
-    "input": ["planks.*", "none", "planks.*", "none", "planks.*", "none", "none", "none", "none"],
-    "count": 4
+    "recipes": [
+      {
+        "input": [
+          "planks.*",
+          null,
+          "planks.*",
+          null,
+          "planks.*",
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 4
+      }
+    ]
   },
   "mushroom_stew": {
-    "input": ["mushroom_brown", "mushroom_red", "none", "none", "bowl", "none", "none", "none", "none"],
-    "count": 1
+    "recipes": [
+      {
+        "input": [
+          "mushroom_brown",
+          "mushroom_red",
+          "bowl",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
   },
   "arrow": {
-    "input": ["flint", "none", "none", "stick", "none", "none", "feather", "none", "none"],
-    "count": 4
+    "recipes": [
+      {
+        "input": [
+          "flint",
+          null,
+          null,
+          "stick",
+          null,
+          null,
+          "feather",
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 4
+      }
+    ]
   },
   "bow": {
-    "input": ["string", "stick", "none", "string", "none", "stick", "string", "stick", "none"],
-    "count": 384
+    "recipes": [
+      {
+        "input": [
+          "string",
+          "stick",
+          null,
+          "string",
+          null,
+          "stick",
+          "string",
+          "stick",
+          null
+        ],
+        "shapeless": false,
+        "count": 384
+      }
+    ]
   }
 }
