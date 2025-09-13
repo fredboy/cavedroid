@@ -37,6 +37,7 @@ class WalkingMobMapper @Inject constructor(
         health = mob.health,
         hasFur = (mob as? SheepMob)?.hasFur ?: false,
         breath = mob.breath,
+        woolColor = (mob as? SheepMob)?.woolToColor?.first,
     )
 
     fun mapPassiveMob(
@@ -48,7 +49,12 @@ class WalkingMobMapper @Inject constructor(
         val params = requireNotNull(mobParamsRepository.getMobParamsByKey(saveDataDto.key))
 
         val mob = when (params.behaviorType) {
-            MobBehaviorType.SHEEP -> SheepMob(params).apply { hasFur = saveDataDto.hasFur }
+            MobBehaviorType.SHEEP -> SheepMob(params).apply {
+                hasFur = saveDataDto.hasFur
+                woolToColor = SheepMob.FUR_COLORS_MAP.values.firstOrNull { (wool, _) -> wool == saveDataDto.woolColor }
+                    ?: SheepMob.FUR_COLORS_MAP.values.first()
+            }
+
             MobBehaviorType.ARCHER -> ArcherMob(getItemByKeyUseCase, params)
             else -> WalkingMob(params)
         }

@@ -156,6 +156,7 @@ sealed class SaveDataDto {
         override val health: Int,
         val hasFur: Boolean = false,
         override val breath: Int? = null,
+        val woolColor: String? = null,
     ) : MobSaveDataDto()
 
     @Serializable

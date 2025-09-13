@@ -983,15 +983,15 @@
       ],
       "material": "grass"
     },
-    "wool_colored_silver": {
+    "wool_colored_light_gray": {
       "hp": 75,
-      "drop": "wool_colored_silver",
-      "texture": "wool_colored_silver",
+      "drop": "wool_colored_light_gray",
+      "texture": "wool_colored_light_gray",
       "tool_level": 0,
       "tool_type": "shears",
       "drop_info": [
         {
-          "key": "wool_colored_silver",
+          "key": "wool_colored_light_gray",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2387,10 +2387,10 @@
       "texture": "wool_colored_gray",
       "burning_time": 5000
     },
-    "wool_colored_silver": {
+    "wool_colored_light_gray": {
       "name": "Wool",
       "type": "block",
-      "texture": "wool_colored_silver",
+      "texture": "wool_colored_light_gray",
       "burning_time": 5000
     },
     "wool_colored_cyan": {
@@ -2517,7 +2517,8 @@
     "cactus": {
       "name": "Cactus",
       "type": "block",
-      "texture": "cactus"
+      "texture": "cactus",
+      "smelt_product": "dye_green"
     },
     "obsidian": {
       "name": "Obsidian",
@@ -2961,7 +2962,11 @@
       "type": "bow",
       "texture": "bow",
       "max_stack": 384,
-      "state_sprites": ["bow_pulling_0", "bow_pulling_1", "bow_pulling_2"],
+      "state_sprites": [
+        "bow_pulling_0",
+        "bow_pulling_1",
+        "bow_pulling_2"
+      ],
       "origin_x": 0.5
     },
     "bone": {
@@ -2976,6 +2981,76 @@
       "action_key": "use_spawn_egg",
       "mob_key": "skeleton",
       "origin_x": 0.5
+    },
+    "bone_meal": {
+      "name": "Bone Meal",
+      "type": "usable",
+      "texture": "bone_meal",
+      "action_key": "use_bone_meal_action"
+    },
+    "dye_white": {
+      "name": "White Dye",
+      "texture": "dye_white"
+    },
+    "dye_orange": {
+      "name": "Orange Dye",
+      "texture": "dye_orange"
+    },
+    "dye_magenta": {
+      "name": "Magenta Dye",
+      "texture": "dye_magenta"
+    },
+    "dye_light_blue": {
+      "name": "Light Blue Dye",
+      "texture": "dye_light_blue"
+    },
+    "dye_yellow": {
+      "name": "Yellow Dye",
+      "texture": "dye_yellow"
+    },
+    "dye_lime": {
+      "name": "Lime Dye",
+      "texture": "dye_lime"
+    },
+    "dye_pink": {
+      "name": "Pink Dye",
+      "texture": "dye_pink"
+    },
+    "dye_gray": {
+      "name": "Gray Dye",
+      "texture": "dye_gray"
+    },
+    "dye_light_gray": {
+      "name": "Light Gray Dye",
+      "texture": "dye_light_gray"
+    },
+    "dye_cyan": {
+      "name": "Cyan Dye",
+      "texture": "dye_cyan"
+    },
+    "dye_purple": {
+      "name": "Purple Dye",
+      "texture": "dye_purple"
+    },
+    "dye_blue": {
+      "name": "Blue Dye",
+      "texture": "dye_blue"
+    },
+    "dye_brown": {
+      "name": "Brown Dye",
+      "texture": "dye_brown"
+    },
+    "dye_green": {
+      "name": "Green Dye",
+      "texture": "dye_green"
+    },
+    "dye_red": {
+      "name": "Red Dye",
+      "texture": "dye_red"
+    },
+    "dye_black": {
+      "name": "Black Dye",
+      "texture": "dye_black"
     }
   }
 }

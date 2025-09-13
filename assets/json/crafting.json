@@ -1005,5 +1005,483 @@
         "count": 384
       }
     ]
+  },
+  "bone_meal": {
+    "recipes": [
+      {
+        "input": [
+          "bone",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "dye_white": {
+    "recipes": [
+      {
+        "input": [
+          "bone_meal",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "dye_light_gray": {
+    "recipes": [
+      {
+        "input": [
+          "dye_white",
+          "dye_gray",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 2
+      }
+    ]
+  },
+  "dye_gray": {
+    "recipes": [
+      {
+        "input": [
+          "dye_white",
+          "dye_black",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 2
+      }
+    ]
+  },
+  "dye_black": {
+    "recipes": [
+      {
+        "input": [
+          "(coal|charcoal)",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "dye_brown": {
+    "recipes": [
+      {
+        "input": [
+          "dye_red",
+          "dye_green",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 2
+      }
+    ]
+  },
+  "dye_red": {
+    "recipes": [
+      {
+        "input": [
+          "rose",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "dye_yellow": {
+    "recipes": [
+      {
+        "input": [
+          "dandelion",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "dye_orange": {
+    "recipes": [
+      {
+        "input": [
+          "dye_red",
+          "dye_yellow",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 2
+      }
+    ]
+  },
+  "dye_lime": {
+    "recipes": [
+      {
+        "input": [
+          "dye_white",
+          "dye_green",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 2
+      }
+    ]
+  },
+  "dye_cyan": {
+    "recipes": [
+      {
+        "input": [
+          "dye_blue",
+          "dye_green",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 2
+      }
+    ]
+  },
+  "dye_light_blue": {
+    "recipes": [
+      {
+        "input": [
+          "dye_blue",
+          "dye_white",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 2
+      }
+    ]
+  },
+  "dye_blue": {
+    "recipes": [
+      {
+        "input": [
+          "lapis_lazuli",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "dye_purple": {
+    "recipes": [
+      {
+        "input": [
+          "dye_blue",
+          "dye_red",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 2
+      }
+    ]
+  },
+  "dye_magenta": {
+    "recipes": [
+      {
+        "input": [
+          "dye_purple",
+          "dye_pink",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 2
+      },
+      {
+        "input": [
+          "dye_red",
+          "dye_blue",
+          "dye_white",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 3
+      },
+      {
+        "input": [
+          "dye_red",
+          "dye_blue",
+          "dye_pink",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 3
+      }
+    ]
+  },
+  "dye_pink": {
+    "recipes": [
+      {
+        "input": [
+          "dye_white",
+          "dye_red",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 2
+      }
+    ]
+  },
+  "wool_colored_white": {
+    "recipes": [
+      {
+        "input": ["wool_.*", "dye_white", null, null, null, null, null, null, null],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "wool_colored_black": {
+    "recipes": [
+      {
+        "input": ["wool_.*", "dye_black", null, null, null, null, null, null, null],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "wool_colored_gray": {
+    "recipes": [
+      {
+        "input": ["wool_.*", "dye_gray", null, null, null, null, null, null, null],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "wool_colored_light_gray": {
+    "recipes": [
+      {
+        "input": ["wool_.*", "dye_light_gray", null, null, null, null, null, null, null],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "wool_colored_red": {
+    "recipes": [
+      {
+        "input": ["wool_.*", "dye_red", null, null, null, null, null, null, null],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "wool_colored_orange": {
+    "recipes": [
+      {
+        "input": ["wool_.*", "dye_orange", null, null, null, null, null, null, null],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "wool_colored_yellow": {
+    "recipes": [
+      {
+        "input": ["wool_.*", "dye_yellow", null, null, null, null, null, null, null],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "wool_colored_lime": {
+    "recipes": [
+      {
+        "input": ["wool_.*", "dye_lime", null, null, null, null, null, null, null],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "wool_colored_green": {
+    "recipes": [
+      {
+        "input": ["wool_.*", "dye_green", null, null, null, null, null, null, null],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "wool_colored_cyan": {
+    "recipes": [
+      {
+        "input": ["wool_.*", "dye_cyan", null, null, null, null, null, null, null],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "wool_colored_light_blue": {
+    "recipes": [
+      {
+        "input": ["wool_.*", "dye_light_blue", null, null, null, null, null, null, null],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "wool_colored_blue": {
+    "recipes": [
+      {
+        "input": ["wool_.*", "dye_blue", null, null, null, null, null, null, null],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "wool_colored_purple": {
+    "recipes": [
+      {
+        "input": ["wool_.*", "dye_purple", null, null, null, null, null, null, null],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "wool_colored_magenta": {
+    "recipes": [
+      {
+        "input": ["wool_.*", "dye_magenta", null, null, null, null, null, null, null],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "wool_colored_pink": {
+    "recipes": [
+      {
+        "input": ["wool_.*", "dye_pink", null, null, null, null, null, null, null],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "wool_colored_brown": {
+    "recipes": [
+      {
+        "input": ["wool_.*", "dye_brown", null, null, null, null, null, null, null],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
   }
 }

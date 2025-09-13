@@ -293,7 +293,7 @@
       },
       {
         "file": "leg_fur",
-        "offset_x": 7,
+        "offset_x": 6,
         "offset_y": 10,
         "is_background": true,
         "is_head": false,
@@ -312,7 +312,7 @@
       },
       {
         "file": "leg_fur",
-        "offset_x": 19,
+        "offset_x": 18,
         "offset_y": 10,
         "is_background": true,
         "is_head": false,
@@ -335,7 +335,7 @@
         "is_head": false,
         "is_hand": false,
         "is_static": true,
-        "offset_x": 7,
+        "offset_x": 6,
         "offset_y": 2,
         "is_overlay": true
       },
@@ -366,7 +366,7 @@
       },
       {
         "file": "leg_fur",
-        "offset_x": 7,
+        "offset_x": 6,
         "offset_y": 10,
         "is_background": false,
         "is_head": false,
@@ -385,7 +385,7 @@
       },
       {
         "file": "leg_fur",
-        "offset_x": 19,
+        "offset_x": 18,
         "offset_y": 10,
         "is_background": false,
         "is_head": false,
