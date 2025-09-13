@@ -77,7 +77,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
     ) {
         val selectedItem = window.selectedItem
 
-        if (!selectedItem.isNoneOrNull() &&
+        if (items[index].isNoneOrNull() || !selectedItem.isNoneOrNull() &&
             (
                 selectedItem.item != items[index].item ||
                     !selectedItem.canBeAdded(items[index].amount)
