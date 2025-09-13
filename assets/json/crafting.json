@@ -204,7 +204,7 @@
     "count": 4
   },
   "bow": {
-    "input": ["none", "stick", "string", "stick", "none", "string", "none", "stick", "string"],
+    "input": ["string", "stick", "none", "string", "none", "stick", "string", "stick", "none"],
     "count": 384
   }
 }
