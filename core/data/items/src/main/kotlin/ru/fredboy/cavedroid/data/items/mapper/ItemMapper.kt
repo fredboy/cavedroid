@@ -1,12 +1,12 @@
 package ru.fredboy.cavedroid.data.items.mapper
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Sprite
 import ru.fredboy.cavedroid.common.model.SpriteOrigin
 import ru.fredboy.cavedroid.common.utils.colorFromHexString
 import ru.fredboy.cavedroid.data.items.model.ItemDto
 import ru.fredboy.cavedroid.data.items.repository.ItemsRepositoryImpl
 import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.WearableTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.usecase.GetItemTextureUseCase
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.item.CommonItemParams
@@ -19,6 +19,7 @@ import javax.inject.Singleton
 class ItemMapper @Inject constructor(
     private val getItemTexture: GetItemTextureUseCase,
     private val fontAssetsRepository: FontTextureAssetsRepository,
+    private val wearableTextureAssetsRepository: WearableTextureAssetsRepository,
 ) {
 
     fun map(key: String, dto: ItemDto, block: Block?, slabTopBlock: Block.Slab?, slabBottomBlock: Block.Slab?): Item {
@@ -43,6 +44,7 @@ class ItemMapper @Inject constructor(
                 mobDamageMultiplier = dto.mobDamageMultiplier,
                 blockDamageMultiplier = dto.blockDamageMultiplier,
                 level = requireNotNull(dto.toolLevel),
+                durability = requireNotNull(dto.durability),
             )
 
             "sword" -> Item.Sword(
@@ -51,6 +53,7 @@ class ItemMapper @Inject constructor(
                 mobDamageMultiplier = dto.mobDamageMultiplier,
                 blockDamageMultiplier = dto.blockDamageMultiplier,
                 level = requireNotNull(dto.toolLevel),
+                durability = requireNotNull(dto.durability),
             )
 
             "pickaxe" -> Item.Pickaxe(
@@ -59,6 +62,7 @@ class ItemMapper @Inject constructor(
                 mobDamageMultiplier = dto.mobDamageMultiplier,
                 blockDamageMultiplier = dto.blockDamageMultiplier,
                 level = requireNotNull(dto.toolLevel),
+                durability = requireNotNull(dto.durability),
             )
 
             "axe" -> Item.Axe(
@@ -67,6 +71,7 @@ class ItemMapper @Inject constructor(
                 mobDamageMultiplier = dto.mobDamageMultiplier,
                 blockDamageMultiplier = dto.blockDamageMultiplier,
                 level = requireNotNull(dto.toolLevel),
+                durability = requireNotNull(dto.durability),
             )
 
             "shears" -> Item.Shears(
@@ -75,6 +80,7 @@ class ItemMapper @Inject constructor(
                 mobDamageMultiplier = dto.mobDamageMultiplier,
                 blockDamageMultiplier = dto.blockDamageMultiplier,
                 level = requireNotNull(dto.toolLevel),
+                durability = requireNotNull(dto.durability),
             )
 
             "block" -> Item.Block(
@@ -98,6 +104,39 @@ class ItemMapper @Inject constructor(
                 params = params,
                 sprite = requireNotNull(loadSprite(dto)),
                 stateSprites = requireNotNull(loadStateSprites(dto)),
+                durability = requireNotNull(dto.durability),
+            )
+
+            "helmet" -> Item.Helmet(
+                params = params,
+                sprite = requireNotNull(loadSprite(dto)),
+                protection = requireNotNull(dto.protection),
+                wearableSprites = loadWearableSprites(dto),
+                durability = requireNotNull(dto.durability),
+            )
+
+            "chestplate" -> Item.Chestplate(
+                params = params,
+                sprite = requireNotNull(loadSprite(dto)),
+                protection = requireNotNull(dto.protection),
+                wearableSprites = loadWearableSprites(dto),
+                durability = requireNotNull(dto.durability),
+            )
+
+            "leggings" -> Item.Leggings(
+                params = params,
+                sprite = requireNotNull(loadSprite(dto)),
+                protection = requireNotNull(dto.protection),
+                wearableSprites = loadWearableSprites(dto),
+                durability = requireNotNull(dto.durability),
+            )
+
+            "boots" -> Item.Boots(
+                params = params,
+                sprite = requireNotNull(loadSprite(dto)),
+                protection = requireNotNull(dto.protection),
+                wearableSprites = loadWearableSprites(dto),
+                durability = requireNotNull(dto.durability),
             )
 
             "none" -> Item.None(
@@ -111,8 +150,8 @@ class ItemMapper @Inject constructor(
     private fun mapCommonParams(key: String, dto: ItemDto): CommonItemParams {
         val name = try {
             fontAssetsRepository.getItemLocalizationBundle().get(key)
-        } catch (e: MissingResourceException) {
-            Gdx.app.error(TAG, "Missing Localization for item $key", e)
+        } catch (_: MissingResourceException) {
+            println("$key=${dto.name}")
             dto.name
         }
 
@@ -142,6 +181,14 @@ class ItemMapper @Inject constructor(
                     color = colorFromHexString(it)
                 }
             }
+    }
+
+    private fun loadWearableSprites(dto: ItemDto): Item.WearableSprites {
+        return Item.WearableSprites(
+            side = wearableTextureAssetsRepository.getSideSprite(dto.texture),
+            front = wearableTextureAssetsRepository.getFrontSprite(dto.texture),
+            tint = dto.tint?.let(::colorFromHexString),
+        )
     }
 
     private fun loadStateSprites(dto: ItemDto): List<Sprite>? {

@@ -22,18 +22,13 @@ class UseSheepAction @Inject constructor(
             return false
         }
 
-        val used = dyeSheep(mob).takeIf { it } ?: useShears(mob)
-
-        if (used) {
-            mobController.player.decreaseCurrentItemCount()
-        }
-
-        return used
+        return dyeSheep(mob).takeIf { it } ?: useShears(mob)
     }
 
     private fun dyeSheep(mob: SheepMob): Boolean {
         val woolToColor = SheepMob.FUR_COLORS_MAP[mobController.player.activeItem.item.params.key] ?: return false
         mob.woolToColor = woolToColor
+        mobController.player.decreaseCurrentItemCount()
         return true
     }
 
@@ -46,10 +41,12 @@ class UseSheepAction @Inject constructor(
         dropController.addDrop(
             x = mob.position.x,
             y = mob.position.y,
-            item = itemsRepository.getItemByKey(mob.woolToColor.first),
-            count = (2..3).random(),
+            inventoryItem = itemsRepository.getItemByKey(mob.woolToColor.first).toInventoryItem(
+                amount = (2..3).random(),
+            ),
         )
 
+        mobController.player.durateActiveDurable()
         return true
     }
 

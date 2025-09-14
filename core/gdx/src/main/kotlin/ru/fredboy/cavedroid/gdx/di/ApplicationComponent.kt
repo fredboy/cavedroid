@@ -25,6 +25,7 @@ import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.TextureRegionsTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.TouchButtonsTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.UiSoundAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.WearableTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.usecase.DisposeAssetsUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.InitializeAssetsUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -99,6 +100,8 @@ interface ApplicationComponent {
     val foodSoundAssetsRepository: FoodSoundAssetsRepository
 
     val blockSoundAssetsRepository: BlockActionSoundAssetsRepository
+
+    val wearableTextureAssetsRepository: WearableTextureAssetsRepository
 
     @Component.Builder
     interface Builder {

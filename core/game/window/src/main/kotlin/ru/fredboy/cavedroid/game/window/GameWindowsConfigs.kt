@@ -47,6 +47,9 @@ object GameWindowsConfigs {
 
         const val craftResultOffsetX = 154f
         const val craftResultOffsetY = 28f
+
+        const val armorGridOffsetX = 8f
+        const val armorGridOffsetY = 8f
     }
 
     data object Crafting {

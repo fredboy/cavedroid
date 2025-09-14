@@ -83,6 +83,24 @@ internal class ItemsRepositoryImpl @Inject constructor(
         val jsonString = Gdx.files.internal("json/crafting.json").readString()
         val jsonMap = JsonFormat.decodeFromString<Map<String, CraftingDto>>(jsonString)
 
+        val newMap = jsonMap.mapValues { entry ->
+            val item = getItemByKey(entry.key)
+
+            if (item is Item.Durable) {
+                entry.value.copy(
+                    recipes = entry.value.recipes.map { dto ->
+                        dto.copy(
+                            count = 1,
+                        )
+                    },
+                )
+            } else {
+                entry.value
+            }
+        }
+
+        println(JsonFormat.encodeToString(newMap))
+
         if (jsonMap.isNotEmpty() && itemsMap.isEmpty()) {
             throw IllegalStateException("items should be loaded before crafting")
         }
@@ -223,14 +241,24 @@ internal class ItemsRepositoryImpl @Inject constructor(
         return inputKeys.isEmpty()
     }
 
-    override fun getCraftingResult(input: List<Item>): InventoryItem {
+    override fun getCraftingResult(input: List<InventoryItem>): InventoryItem {
+        val inputItems = input.map { it.item }
+        val inputTotalDurability = input.sumOf { if (it.item is Item.Durable) it.durability else 0 }
+
         for (entry in craftingRecipes) {
             for (recipe in entry.recipes) {
                 if (recipe.isShapeless) {
-                    if (shapelessMatches(input, recipe.input)) return entry.result.toInventoryItem(recipe.amount)
+                    if (shapelessMatches(inputItems, recipe.input)) {
+                        return entry.result.toInventoryItem(recipe.amount, inputTotalDurability)
+                    }
                 } else {
-                    if (patternMatches(input, recipe.input) || patternMatches(input, mirrorPattern(recipe.input))) {
-                        return entry.result.toInventoryItem(recipe.amount)
+                    if (patternMatches(inputItems, recipe.input) ||
+                        patternMatches(
+                            input = inputItems,
+                            pattern = mirrorPattern(recipe.input),
+                        )
+                    ) {
+                        return entry.result.toInventoryItem(recipe.amount, inputTotalDurability)
                     }
                 }
             }

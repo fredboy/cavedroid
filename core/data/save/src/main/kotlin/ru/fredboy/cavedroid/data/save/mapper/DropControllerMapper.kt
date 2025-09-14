@@ -46,6 +46,6 @@ class DropControllerMapper @Inject constructor(
     }
 
     companion object {
-        private const val SAVE_DATA_VERSION = 3
+        private const val SAVE_DATA_VERSION = 4
     }
 }

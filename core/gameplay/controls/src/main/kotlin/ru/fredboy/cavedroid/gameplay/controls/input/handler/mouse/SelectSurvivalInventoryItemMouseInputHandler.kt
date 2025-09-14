@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
+import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @GameScope
 @BindMouseInputHandler
-class SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
+class
+SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
     private val gameContextRepository: GameContextRepository,
     private val gameWindowsManager: GameWindowsManager,
     private val mobController: MobController,
@@ -52,6 +54,23 @@ class SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
         updateCraftResult(window)
     }
 
+    private fun handleInsideArmorCell(action: MouseInputAction, armorCell: Int) {
+        val window = gameWindowsManager.currentWindow as SurvivalInventoryWindow
+        val selectedItem = window.selectedItem
+
+        if (selectedItem != null &&
+            !selectedItem.item.isNone() &&
+            !mobController.player.wearingArmor.getCellType(armorCell).isInstance(selectedItem.item) &&
+            selectedItem.amount != 0
+        ) {
+            return
+        }
+
+        handleInsidePlaceableCell(action, mobController.player.wearingArmor.items, window, armorCell)
+
+        updateCraftResult(window)
+    }
+
     private fun handleInsideCraftResult(action: MouseInputAction) {
         val window = gameWindowsManager.currentWindow as SurvivalInventoryWindow
 
@@ -76,6 +95,9 @@ class SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
         val yOnCraft = (yOnWindow - GameWindowsConfigs.Survival.craftOffsetY) /
             GameWindowsConfigs.Survival.itemsGridRowHeight
 
+        val armorCell = (yOnWindow - GameWindowsConfigs.Survival.armorGridOffsetY) /
+            GameWindowsConfigs.Survival.itemsGridRowHeight
+
         val isInsideInventoryGrid = xOnGrid >= 0 &&
             xOnGrid < GameWindowsConfigs.Survival.itemsInRow &&
             yOnGrid >= 0 &&
@@ -91,12 +113,21 @@ class SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
             yOnWindow > GameWindowsConfigs.Survival.craftResultOffsetY &&
             yOnWindow < GameWindowsConfigs.Survival.craftResultOffsetY + GameWindowsConfigs.Survival.itemsGridRowHeight
 
+        val isInsideArmorGrid = Rectangle(
+            GameWindowsConfigs.Survival.armorGridOffsetX,
+            GameWindowsConfigs.Survival.armorGridOffsetY,
+            GameWindowsConfigs.Survival.itemsGridColWidth,
+            GameWindowsConfigs.Survival.itemsGridRowHeight * mobController.player.wearingArmor.items.size,
+        ).contains(xOnWindow, yOnWindow)
+
         if (isInsideInventoryGrid) {
             handleInsideInventoryGrid(action, xOnGrid.toInt(), yOnGrid.toInt())
         } else if (isInsideCraftGrid) {
             handleInsideCraft(action, xOnCraft.toInt(), yOnCraft.toInt())
         } else if (isInsideCraftResult) {
             handleInsideCraftResult(action)
+        } else if (isInsideArmorGrid) {
+            handleInsideArmorCell(action, armorCell.toInt())
         }
     }
 }

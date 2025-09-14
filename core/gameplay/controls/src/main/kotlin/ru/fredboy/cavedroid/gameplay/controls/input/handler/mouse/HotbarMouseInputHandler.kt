@@ -50,8 +50,7 @@ class HotbarMouseInputHandler @Inject constructor(
         dropController.addDrop(
             x = playerX + DROP_DISTANCE * mobController.player.direction.basis,
             y = playerY,
-            item = item,
-            count = amount,
+            inventoryItem = item.toInventoryItem(amount),
             initialForce = Vector2(50f * mobController.player.direction.basis, -50f),
         )
     }
@@ -70,7 +69,7 @@ class HotbarMouseInputHandler @Inject constructor(
         val player = mobController.player
         val actionSlot = getActionSlot(action)
         val currentItem = player.inventory.items[actionSlot]
-        val dropAmount = if (currentItem.item.isTool()) currentItem.amount else 1
+        val dropAmount = if (currentItem.item is Item.Tool || currentItem.item is Item.Armor) currentItem.amount else 1
 
         createDrop(currentItem.item, player.position.x, player.position.y, dropAmount)
         player.inventory.decreaseItemAmount(actionSlot, dropAmount)

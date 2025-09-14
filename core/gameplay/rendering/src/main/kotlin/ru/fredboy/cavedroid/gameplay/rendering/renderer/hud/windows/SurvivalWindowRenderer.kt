@@ -107,6 +107,20 @@ class SurvivalWindowRenderer @Inject constructor(
             getStringHeight = getStringHeight,
         )
 
+        drawItemsGrid(
+            spriteBatch = spriteBatch,
+            shapeRenderer = shapeRenderer,
+            font = getFont(),
+            gridX = windowX + GameWindowsConfigs.Survival.armorGridOffsetX,
+            gridY = windowY + GameWindowsConfigs.Survival.armorGridOffsetY,
+            items = mobController.player.wearingArmor.items,
+            itemsInRow = 1,
+            cellWidth = GameWindowsConfigs.Survival.itemsGridColWidth,
+            cellHeight = GameWindowsConfigs.Survival.itemsGridRowHeight,
+            getStringWidth = getStringWidth,
+            getStringHeight = getStringHeight,
+        )
+
         window.craftResult.draw(
             spriteBatch = spriteBatch,
             shapeRenderer = shapeRenderer,

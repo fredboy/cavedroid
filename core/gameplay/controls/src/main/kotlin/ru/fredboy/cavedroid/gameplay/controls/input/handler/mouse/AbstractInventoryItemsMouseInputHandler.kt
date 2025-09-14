@@ -33,7 +33,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         (action.actionKey.touchUp || action.actionKey is MouseInputActionKey.Screen)
 
     protected fun updateCraftResult(window: AbstractInventoryWindowWithCraftGrid) {
-        window.craftResult = itemsRepository.getCraftingResult(window.craftingItems.map(InventoryItem::item))
+        window.craftResult = itemsRepository.getCraftingResult(window.craftingItems)
     }
 
     private fun reduceCraftItems(window: AbstractInventoryWindowWithCraftGrid) {

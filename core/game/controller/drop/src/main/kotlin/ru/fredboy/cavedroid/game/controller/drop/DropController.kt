@@ -68,12 +68,12 @@ class DropController @Inject constructor(
         drops.add(drop)
     }
 
-    fun addDrop(x: Float, y: Float, item: Item, count: Int, initialForce: Vector2? = null) {
-        addDrop(Drop(item, count), x, y, initialForce)
+    fun addDrop(x: Float, y: Float, item: Item, count: Int, durability: Int, initialForce: Vector2? = null) {
+        addDrop(Drop(item, count, durability), x, y, initialForce)
     }
 
     fun addDrop(x: Float, y: Float, inventoryItem: InventoryItem, initialForce: Vector2? = null) {
-        addDrop(x, y, inventoryItem.item, inventoryItem.amount, initialForce)
+        addDrop(x, y, inventoryItem.item, inventoryItem.amount, inventoryItem.durability, initialForce)
     }
 
     fun forEach(action: (Drop) -> Unit) {
@@ -155,6 +155,7 @@ class DropController @Inject constructor(
                 y = y + .5f,
                 item = dropItem.item,
                 count = dropItem.amount,
+                durability = dropItem.durability,
                 initialForce = getRandomInitialForce(),
             )
         }

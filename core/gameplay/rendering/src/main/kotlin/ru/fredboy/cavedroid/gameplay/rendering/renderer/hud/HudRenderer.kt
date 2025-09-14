@@ -34,6 +34,9 @@ class HudRenderer @Inject constructor(
     private val halfHeartTexture get() = requireNotNull(textureRegions[HALF_HEART_KEY])
     private val wholeBubbleTexture get() = requireNotNull(textureRegions[WHOLE_BUBBLE_KEY])
     private val halfBubbleTexture get() = requireNotNull(textureRegions[HALF_BUBBLE_KEY])
+    private val wholeShieldTexture get() = requireNotNull(textureRegions[WHOLE_SHIELD_KEY])
+    private val emptyShieldTexture get() = requireNotNull(textureRegions[EMPTY_SHIELD_KEY])
+    private val halfShieldTexture get() = requireNotNull(textureRegions[HALF_SHIELD_KEY])
 
     private fun drawHealth(spriteBatch: SpriteBatch, x: Float, y: Float) {
         val player = mobController.player
@@ -79,6 +82,28 @@ class HudRenderer @Inject constructor(
         }
     }
 
+    private fun drawArmor(spriteBatch: SpriteBatch, x: Float, y: Float) {
+        val player = mobController.player
+        val protection = player.wearingArmor.getTotalProtection()
+
+        if (player.gameMode.isCreative() || protection <= 0) {
+            return
+        }
+
+        val totalShields = player.maxHealth / 2
+        val wholeShields = protection / 2
+
+        for (i in 0..<totalShields) {
+            if (i < wholeShields) {
+                spriteBatch.draw(wholeShieldTexture, x + i * wholeShieldTexture.regionWidth, y)
+            } else if (i == wholeShields && protection % 2 == 1) {
+                spriteBatch.draw(halfShieldTexture, x + i * wholeShieldTexture.regionWidth, y)
+            } else {
+                spriteBatch.draw(emptyShieldTexture, x + i * wholeShieldTexture.regionWidth, y)
+            }
+        }
+    }
+
     private fun drawHotbarItems(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, hotbarX: Float) {
         mobController.player.inventory.items.asSequence().take(HotbarConfig.hotbarCells)
             .forEachIndexed { index, item ->
@@ -116,6 +141,11 @@ class HudRenderer @Inject constructor(
         spriteBatch.draw(hotbar, hotbarX, 0f)
         drawHealth(spriteBatch, hotbarX, hotbarTexture.regionHeight.toFloat())
         drawBreath(spriteBatch, hotbarX + hotbarTexture.regionWidth, hotbarTexture.regionHeight.toFloat())
+        drawArmor(
+            spriteBatch = spriteBatch,
+            x = hotbarX,
+            y = hotbarTexture.regionHeight.toFloat() + wholeHeartTexture.regionHeight.toFloat() + 1f,
+        )
         drawHotbarSelector(spriteBatch, hotbarX)
         drawHotbarItems(spriteBatch, shapeRenderer, hotbarX)
 
@@ -143,6 +173,9 @@ class HudRenderer @Inject constructor(
         private const val EMPTY_HEART_KEY = "heart_empty"
         private const val WHOLE_BUBBLE_KEY = "bubble_whole"
         private const val HALF_BUBBLE_KEY = "bubble_half"
+        private const val WHOLE_SHIELD_KEY = "shield_whole"
+        private const val HALF_SHIELD_KEY = "shield_half"
+        private const val EMPTY_SHIELD_KEY = "shield_empty"
 
         private data object HotbarConfig {
             const val horizontalMargin = 3f

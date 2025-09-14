@@ -2,7 +2,7 @@ package ru.fredboy.cavedroid.gameplay.controls.input.handler.keyboard
 
 import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.window.GameWindowType
@@ -26,25 +26,23 @@ class DropItemKeyboardInputHandler @Inject constructor(
         gameWindowsManager.currentWindowType == GameWindowType.NONE &&
         !playerAdapter.activeItem.item.isNone()
 
-    private fun createDrop(item: Item, playerX: Float, playerY: Float, amount: Int) {
+    private fun createDrop(item: InventoryItem, playerX: Float, playerY: Float) {
         dropController.addDrop(
             x = playerX + DROP_DISTANCE * playerAdapter.direction.basis,
             y = playerY,
-            item = item,
-            count = amount,
+            inventoryItem = item.copy(),
             initialForce = Vector2(50f * playerAdapter.direction.basis, -50f),
         )
     }
 
     override fun handle(action: KeyboardInputAction) {
         val currentItem = playerAdapter.activeItem
-        val dropAmount = if (currentItem.item.isTool()) currentItem.amount else 1
+        val dropAmount = 1
 
         createDrop(
-            item = currentItem.item,
+            item = currentItem,
             playerX = playerAdapter.x,
             playerY = playerAdapter.y - playerAdapter.height / 2,
-            amount = dropAmount,
         )
         playerAdapter.decreaseCurrentItemCount(dropAmount)
     }

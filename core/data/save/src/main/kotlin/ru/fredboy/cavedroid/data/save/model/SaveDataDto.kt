@@ -62,6 +62,7 @@ sealed class SaveDataDto {
         override val version: Int,
         val itemKey: String,
         val amount: Int,
+        val durability: Int? = null,
     ) : SaveDataDto()
 
     @Serializable
@@ -105,8 +106,7 @@ sealed class SaveDataDto {
         override val height: Float,
         override val velocityX: Float,
         override val velocityY: Float,
-        val itemKey: String,
-        val amount: Int,
+        val item: InventoryItemSaveDataDto,
         val pickedUp: Boolean,
     ) : RectangleObjectSaveDataDto()
 
@@ -214,6 +214,7 @@ sealed class SaveDataDto {
         val controlMode: ControlModeSaveDataDto,
         val activeSlot: Int,
         override val breath: Int? = null,
+        val wearingArmor: InventorySaveDataDto? = null,
     ) : MobSaveDataDto()
 
     @Serializable

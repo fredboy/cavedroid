@@ -24,7 +24,7 @@ class Drop(
     val inventoryItem: InventoryItem,
 ) : Disposable {
 
-    constructor(item: Item, amount: Int = 1) : this(InventoryItem(item, amount))
+    constructor(item: Item, amount: Int = 1, durability: Int = 1) : this(InventoryItem(item, amount, durability))
 
     private var _body: Body? = null
 

@@ -202,7 +202,7 @@ class UseItemMouseInputHandler @Inject constructor(
         )
         mobController.player.isPullingBow = false
         mobController.player.decreaseArrows()
-        mobController.player.decreaseCurrentItemCount()
+        mobController.player.durateActiveDurable()
     }
 
     override fun handle(action: MouseInputAction) {

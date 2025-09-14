@@ -15,6 +15,7 @@ class InventoryItemMapper @Inject constructor(
         version = SAVE_DATA_VERSION,
         itemKey = inventoryItem.item.params.key,
         amount = inventoryItem.amount,
+        durability = inventoryItem.durability,
     )
 
     fun mapInventoryItem(saveDataDto: SaveDataDto.InventoryItemSaveDataDto): InventoryItem {
@@ -23,6 +24,7 @@ class InventoryItemMapper @Inject constructor(
         return InventoryItem(
             item = getItemByKeyUseCase[saveDataDto.itemKey],
             _amount = saveDataDto.amount,
+            _durability = saveDataDto.durability ?: 1,
         )
     }
 

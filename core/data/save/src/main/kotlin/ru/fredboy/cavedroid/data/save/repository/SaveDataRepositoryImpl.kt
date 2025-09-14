@@ -489,7 +489,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     companion object {
         private const val TAG = "SaveDataRepositoryImpl"
 
-        private const val MAP_SAVE_VERSION: UByte = 6u
+        private const val MAP_SAVE_VERSION: UByte = 7u
         private const val SAVES_DIR = "saves"
         private const val DROP_FILE = "drop.dat"
         private const val PROJECTILES_FILE = "projectiles.dat"

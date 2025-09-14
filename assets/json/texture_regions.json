@@ -165,6 +165,19 @@
       "w": 9
     }
   },
+  "textures/armor":{
+    "shield_whole": {
+      "w": 9
+    },
+    "shield_half": {
+      "x": 9,
+      "w": 9
+    },
+    "shield_empty": {
+      "x": 18,
+      "w": 9
+    }
+  },
   "joy/joy_stick": {},
   "joy/joy_background": {},
   "textures/inventory_char": {

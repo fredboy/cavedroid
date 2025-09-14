@@ -70,7 +70,7 @@ class PlayerMobBehavior(
 
                 if (blockDamage >= targetBlock.params.hitPoints) {
                     if (activeItem.item.isTool()) {
-                        decreaseCurrentItemCount()
+                        durateActiveDurable()
                     }
 
                     when (targetLayer) {

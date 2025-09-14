@@ -111,7 +111,9 @@ class MobController @Inject constructor(
 
         if (player.isDead) {
             dropQueue.offerInventory(player.position.x, player.position.y, player.inventory)
+            dropQueue.offerItems(player.position.x, player.position.y, player.wearingArmor.items.toList())
             player.inventory.clear()
+            player.wearingArmor.clear()
             player.dispose()
             respawnPlayer()
         }

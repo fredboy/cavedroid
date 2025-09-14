@@ -56,6 +56,7 @@ class PlayerMapper @Inject constructor(
         controlMode = controlModeMapper.mapSaveData(player.controlMode),
         activeSlot = player.activeSlot,
         breath = player.breath,
+        wearingArmor = inventoryMapper.mapSaveData(player.wearingArmor),
     )
 
     fun mapPlayer(
@@ -93,6 +94,7 @@ class PlayerMapper @Inject constructor(
             spawnPoint = Vector2(saveDataDto.spawnPointX, saveDataDto.spawnPointY)
             activeSlot = saveDataDto.activeSlot
             breath = saveDataDto.breath ?: params.maxBreath
+            wearingArmor = saveDataDto.wearingArmor?.let(inventoryMapper::mapWearingArmor) ?: wearingArmor
         }
     }
 

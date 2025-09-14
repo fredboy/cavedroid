@@ -90,7 +90,7 @@
           null
         ],
         "shapeless": false,
-        "count": 59
+        "count": 1
       }
     ]
   },
@@ -109,7 +109,7 @@
           null
         ],
         "shapeless": false,
-        "count": 60
+        "count": 1
       }
     ]
   },
@@ -128,7 +128,7 @@
           null
         ],
         "shapeless": false,
-        "count": 60
+        "count": 1
       }
     ]
   },
@@ -147,7 +147,7 @@
           null
         ],
         "shapeless": false,
-        "count": 59
+        "count": 1
       }
     ]
   },
@@ -166,7 +166,7 @@
           null
         ],
         "shapeless": false,
-        "count": 131
+        "count": 1
       }
     ]
   },
@@ -185,7 +185,7 @@
           null
         ],
         "shapeless": false,
-        "count": 131
+        "count": 1
       }
     ]
   },
@@ -204,7 +204,7 @@
           null
         ],
         "shapeless": false,
-        "count": 132
+        "count": 1
       }
     ]
   },
@@ -223,7 +223,7 @@
           null
         ],
         "shapeless": false,
-        "count": 131
+        "count": 1
       }
     ]
   },
@@ -242,7 +242,7 @@
           null
         ],
         "shapeless": false,
-        "count": 251
+        "count": 1
       }
     ]
   },
@@ -261,7 +261,7 @@
           null
         ],
         "shapeless": false,
-        "count": 250
+        "count": 1
       }
     ]
   },
@@ -280,7 +280,7 @@
           null
         ],
         "shapeless": false,
-        "count": 251
+        "count": 1
       }
     ]
   },
@@ -299,7 +299,7 @@
           null
         ],
         "shapeless": false,
-        "count": 250
+        "count": 1
       }
     ]
   },
@@ -318,7 +318,7 @@
           null
         ],
         "shapeless": false,
-        "count": 33
+        "count": 1
       }
     ]
   },
@@ -337,7 +337,7 @@
           null
         ],
         "shapeless": false,
-        "count": 32
+        "count": 1
       }
     ]
   },
@@ -356,7 +356,7 @@
           null
         ],
         "shapeless": false,
-        "count": 33
+        "count": 1
       }
     ]
   },
@@ -375,7 +375,7 @@
           null
         ],
         "shapeless": false,
-        "count": 32
+        "count": 1
       }
     ]
   },
@@ -394,7 +394,7 @@
           null
         ],
         "shapeless": false,
-        "count": 1562
+        "count": 1
       }
     ]
   },
@@ -413,7 +413,7 @@
           null
         ],
         "shapeless": false,
-        "count": 1561
+        "count": 1
       }
     ]
   },
@@ -432,7 +432,7 @@
           null
         ],
         "shapeless": false,
-        "count": 1562
+        "count": 1
       }
     ]
   },
@@ -451,7 +451,7 @@
           null
         ],
         "shapeless": false,
-        "count": 1561
+        "count": 1
       }
     ]
   },
@@ -584,7 +584,7 @@
           null
         ],
         "shapeless": false,
-        "count": 238
+        "count": 1
       }
     ]
   },
@@ -1002,7 +1002,7 @@
           null
         ],
         "shapeless": false,
-        "count": 384
+        "count": 1
       }
     ]
   },
@@ -1343,7 +1343,17 @@
   "wool_colored_white": {
     "recipes": [
       {
-        "input": ["wool_.*", "dye_white", null, null, null, null, null, null, null],
+        "input": [
+          "wool_.*",
+          "dye_white",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "shapeless": true,
         "count": 1
       }
@@ -1352,7 +1362,17 @@
   "wool_colored_black": {
     "recipes": [
       {
-        "input": ["wool_.*", "dye_black", null, null, null, null, null, null, null],
+        "input": [
+          "wool_.*",
+          "dye_black",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "shapeless": true,
         "count": 1
       }
@@ -1361,7 +1381,17 @@
   "wool_colored_gray": {
     "recipes": [
       {
-        "input": ["wool_.*", "dye_gray", null, null, null, null, null, null, null],
+        "input": [
+          "wool_.*",
+          "dye_gray",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "shapeless": true,
         "count": 1
       }
@@ -1370,7 +1400,17 @@
   "wool_colored_light_gray": {
     "recipes": [
       {
-        "input": ["wool_.*", "dye_light_gray", null, null, null, null, null, null, null],
+        "input": [
+          "wool_.*",
+          "dye_light_gray",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "shapeless": true,
         "count": 1
       }
@@ -1379,7 +1419,17 @@
   "wool_colored_red": {
     "recipes": [
       {
-        "input": ["wool_.*", "dye_red", null, null, null, null, null, null, null],
+        "input": [
+          "wool_.*",
+          "dye_red",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "shapeless": true,
         "count": 1
       }
@@ -1388,7 +1438,17 @@
   "wool_colored_orange": {
     "recipes": [
       {
-        "input": ["wool_.*", "dye_orange", null, null, null, null, null, null, null],
+        "input": [
+          "wool_.*",
+          "dye_orange",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "shapeless": true,
         "count": 1
       }
@@ -1397,7 +1457,17 @@
   "wool_colored_yellow": {
     "recipes": [
       {
-        "input": ["wool_.*", "dye_yellow", null, null, null, null, null, null, null],
+        "input": [
+          "wool_.*",
+          "dye_yellow",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "shapeless": true,
         "count": 1
       }
@@ -1406,7 +1476,17 @@
   "wool_colored_lime": {
     "recipes": [
       {
-        "input": ["wool_.*", "dye_lime", null, null, null, null, null, null, null],
+        "input": [
+          "wool_.*",
+          "dye_lime",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "shapeless": true,
         "count": 1
       }
@@ -1415,7 +1495,17 @@
   "wool_colored_green": {
     "recipes": [
       {
-        "input": ["wool_.*", "dye_green", null, null, null, null, null, null, null],
+        "input": [
+          "wool_.*",
+          "dye_green",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "shapeless": true,
         "count": 1
       }
@@ -1424,7 +1514,17 @@
   "wool_colored_cyan": {
     "recipes": [
       {
-        "input": ["wool_.*", "dye_cyan", null, null, null, null, null, null, null],
+        "input": [
+          "wool_.*",
+          "dye_cyan",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "shapeless": true,
         "count": 1
       }
@@ -1433,7 +1533,17 @@
   "wool_colored_light_blue": {
     "recipes": [
       {
-        "input": ["wool_.*", "dye_light_blue", null, null, null, null, null, null, null],
+        "input": [
+          "wool_.*",
+          "dye_light_blue",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "shapeless": true,
         "count": 1
       }
@@ -1442,7 +1552,17 @@
   "wool_colored_blue": {
     "recipes": [
       {
-        "input": ["wool_.*", "dye_blue", null, null, null, null, null, null, null],
+        "input": [
+          "wool_.*",
+          "dye_blue",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "shapeless": true,
         "count": 1
       }
@@ -1451,7 +1571,17 @@
   "wool_colored_purple": {
     "recipes": [
       {
-        "input": ["wool_.*", "dye_purple", null, null, null, null, null, null, null],
+        "input": [
+          "wool_.*",
+          "dye_purple",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "shapeless": true,
         "count": 1
       }
@@ -1460,7 +1590,17 @@
   "wool_colored_magenta": {
     "recipes": [
       {
-        "input": ["wool_.*", "dye_magenta", null, null, null, null, null, null, null],
+        "input": [
+          "wool_.*",
+          "dye_magenta",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "shapeless": true,
         "count": 1
       }
@@ -1469,7 +1609,17 @@
   "wool_colored_pink": {
     "recipes": [
       {
-        "input": ["wool_.*", "dye_pink", null, null, null, null, null, null, null],
+        "input": [
+          "wool_.*",
+          "dye_pink",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "shapeless": true,
         "count": 1
       }
@@ -1478,10 +1628,1297 @@
   "wool_colored_brown": {
     "recipes": [
       {
-        "input": ["wool_.*", "dye_brown", null, null, null, null, null, null, null],
+        "input": [
+          "wool_.*",
+          "dye_brown",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_leather_brown": {
+    "recipes": [
+      {
+        "input": [
+          "leather",
+          "leather",
+          "leather",
+          "leather",
+          null,
+          "leather",
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      },
+      {
+        "input": [
+          "helmet_leather_.*",
+          "dye_brown",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_leather_brown": {
+    "recipes": [
+      {
+        "input": [
+          "leather",
+          null,
+          "leather",
+          "leather",
+          "leather",
+          "leather",
+          "leather",
+          "leather",
+          "leather"
+        ],
+        "shapeless": false,
+        "count": 1
+      },
+      {
+        "input": [
+          "chestplate_leather_.*",
+          "dye_brown",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_leather_brown": {
+    "recipes": [
+      {
+        "input": [
+          "leather",
+          "leather",
+          "leather",
+          "leather",
+          null,
+          "leather",
+          "leather",
+          null,
+          "leather"
+        ],
+        "shapeless": false,
+        "count": 1
+      },
+      {
+        "input": [
+          "leggings_leather_.*",
+          "dye_brown",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "boots_leather_brown": {
+    "recipes": [
+      {
+        "input": [
+          "leather",
+          null,
+          "leather",
+          "leather",
+          null,
+          "leather",
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      },
+      {
+        "input": [
+          "boots_leather_.*",
+          "dye_brown",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_leather_white": {
+    "recipes": [
+      {
+        "input": [
+          "helmet_leather_.*",
+          "dye_white",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_leather_black": {
+    "recipes": [
+      {
+        "input": [
+          "helmet_leather_.*",
+          "dye_black",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_leather_gray": {
+    "recipes": [
+      {
+        "input": [
+          "helmet_leather_.*",
+          "dye_gray",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_leather_light_gray": {
+    "recipes": [
+      {
+        "input": [
+          "helmet_leather_.*",
+          "dye_light_gray",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_leather_red": {
+    "recipes": [
+      {
+        "input": [
+          "helmet_leather_.*",
+          "dye_red",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_leather_orange": {
+    "recipes": [
+      {
+        "input": [
+          "helmet_leather_.*",
+          "dye_orange",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_leather_yellow": {
+    "recipes": [
+      {
+        "input": [
+          "helmet_leather_.*",
+          "dye_yellow",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_leather_lime": {
+    "recipes": [
+      {
+        "input": [
+          "helmet_leather_.*",
+          "dye_lime",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_leather_green": {
+    "recipes": [
+      {
+        "input": [
+          "helmet_leather_.*",
+          "dye_green",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_leather_cyan": {
+    "recipes": [
+      {
+        "input": [
+          "helmet_leather_.*",
+          "dye_cyan",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_leather_light_blue": {
+    "recipes": [
+      {
+        "input": [
+          "helmet_leather_.*",
+          "dye_light_blue",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_leather_blue": {
+    "recipes": [
+      {
+        "input": [
+          "helmet_leather_.*",
+          "dye_blue",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_leather_purple": {
+    "recipes": [
+      {
+        "input": [
+          "helmet_leather_.*",
+          "dye_purple",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_leather_magenta": {
+    "recipes": [
+      {
+        "input": [
+          "helmet_leather_.*",
+          "dye_magenta",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_leather_pink": {
+    "recipes": [
+      {
+        "input": [
+          "helmet_leather_.*",
+          "dye_pink",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_leather_white": {
+    "recipes": [
+      {
+        "input": [
+          "chestplate_leather_.*",
+          "dye_white",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_leather_black": {
+    "recipes": [
+      {
+        "input": [
+          "chestplate_leather_.*",
+          "dye_black",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_leather_gray": {
+    "recipes": [
+      {
+        "input": [
+          "chestplate_leather_.*",
+          "dye_gray",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_leather_light_gray": {
+    "recipes": [
+      {
+        "input": [
+          "chestplate_leather_.*",
+          "dye_light_gray",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_leather_red": {
+    "recipes": [
+      {
+        "input": [
+          "chestplate_leather_.*",
+          "dye_red",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_leather_orange": {
+    "recipes": [
+      {
+        "input": [
+          "chestplate_leather_.*",
+          "dye_orange",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_leather_yellow": {
+    "recipes": [
+      {
+        "input": [
+          "chestplate_leather_.*",
+          "dye_yellow",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_leather_lime": {
+    "recipes": [
+      {
+        "input": [
+          "chestplate_leather_.*",
+          "dye_lime",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_leather_green": {
+    "recipes": [
+      {
+        "input": [
+          "chestplate_leather_.*",
+          "dye_green",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_leather_cyan": {
+    "recipes": [
+      {
+        "input": [
+          "chestplate_leather_.*",
+          "dye_cyan",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_leather_light_blue": {
+    "recipes": [
+      {
+        "input": [
+          "chestplate_leather_.*",
+          "dye_light_blue",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_leather_blue": {
+    "recipes": [
+      {
+        "input": [
+          "chestplate_leather_.*",
+          "dye_blue",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_leather_purple": {
+    "recipes": [
+      {
+        "input": [
+          "chestplate_leather_.*",
+          "dye_purple",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_leather_magenta": {
+    "recipes": [
+      {
+        "input": [
+          "chestplate_leather_.*",
+          "dye_magenta",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_leather_pink": {
+    "recipes": [
+      {
+        "input": [
+          "chestplate_leather_.*",
+          "dye_pink",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_leather_white": {
+    "recipes": [
+      {
+        "input": [
+          "leggings_leather_.*",
+          "dye_white",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_leather_black": {
+    "recipes": [
+      {
+        "input": [
+          "leggings_leather_.*",
+          "dye_black",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_leather_gray": {
+    "recipes": [
+      {
+        "input": [
+          "leggings_leather_.*",
+          "dye_gray",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_leather_light_gray": {
+    "recipes": [
+      {
+        "input": [
+          "leggings_leather_.*",
+          "dye_light_gray",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_leather_red": {
+    "recipes": [
+      {
+        "input": [
+          "leggings_leather_.*",
+          "dye_red",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_leather_orange": {
+    "recipes": [
+      {
+        "input": [
+          "leggings_leather_.*",
+          "dye_orange",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_leather_yellow": {
+    "recipes": [
+      {
+        "input": [
+          "leggings_leather_.*",
+          "dye_yellow",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_leather_lime": {
+    "recipes": [
+      {
+        "input": [
+          "leggings_leather_.*",
+          "dye_lime",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_leather_green": {
+    "recipes": [
+      {
+        "input": [
+          "leggings_leather_.*",
+          "dye_green",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_leather_cyan": {
+    "recipes": [
+      {
+        "input": [
+          "leggings_leather_.*",
+          "dye_cyan",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_leather_light_blue": {
+    "recipes": [
+      {
+        "input": [
+          "leggings_leather_.*",
+          "dye_light_blue",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_leather_blue": {
+    "recipes": [
+      {
+        "input": [
+          "leggings_leather_.*",
+          "dye_blue",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_leather_purple": {
+    "recipes": [
+      {
+        "input": [
+          "leggings_leather_.*",
+          "dye_purple",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_leather_magenta": {
+    "recipes": [
+      {
+        "input": [
+          "leggings_leather_.*",
+          "dye_magenta",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_leather_pink": {
+    "recipes": [
+      {
+        "input": [
+          "leggings_leather_.*",
+          "dye_pink",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "boots_leather_white": {
+    "recipes": [
+      {
+        "input": [
+          "boots_leather_.*",
+          "dye_white",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "boots_leather_black": {
+    "recipes": [
+      {
+        "input": [
+          "boots_leather_.*",
+          "dye_black",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "boots_leather_gray": {
+    "recipes": [
+      {
+        "input": [
+          "boots_leather_.*",
+          "dye_gray",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "boots_leather_light_gray": {
+    "recipes": [
+      {
+        "input": [
+          "boots_leather_.*",
+          "dye_light_gray",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "boots_leather_red": {
+    "recipes": [
+      {
+        "input": [
+          "boots_leather_.*",
+          "dye_red",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "boots_leather_orange": {
+    "recipes": [
+      {
+        "input": [
+          "boots_leather_.*",
+          "dye_orange",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "boots_leather_yellow": {
+    "recipes": [
+      {
+        "input": [
+          "boots_leather_.*",
+          "dye_yellow",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "boots_leather_lime": {
+    "recipes": [
+      {
+        "input": [
+          "boots_leather_.*",
+          "dye_lime",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "boots_leather_green": {
+    "recipes": [
+      {
+        "input": [
+          "boots_leather_.*",
+          "dye_green",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "boots_leather_cyan": {
+    "recipes": [
+      {
+        "input": [
+          "boots_leather_.*",
+          "dye_cyan",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "boots_leather_light_blue": {
+    "recipes": [
+      {
+        "input": [
+          "boots_leather_.*",
+          "dye_light_blue",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "boots_leather_blue": {
+    "recipes": [
+      {
+        "input": [
+          "boots_leather_.*",
+          "dye_blue",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "boots_leather_purple": {
+    "recipes": [
+      {
+        "input": [
+          "boots_leather_.*",
+          "dye_purple",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "boots_leather_magenta": {
+    "recipes": [
+      {
+        "input": [
+          "boots_leather_.*",
+          "dye_magenta",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "boots_leather_pink": {
+    "recipes": [
+      {
+        "input": [
+          "boots_leather_.*",
+          "dye_pink",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
         "shapeless": true,
         "count": 1
       }
     ]
   }
 }
+

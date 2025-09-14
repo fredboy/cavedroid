@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import dagger.Reusable
 import ru.fredboy.cavedroid.domain.assets.model.TouchButton
 import ru.fredboy.cavedroid.domain.assets.repository.AssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.BlockActionSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.DropSoundAssetsRepository
@@ -20,6 +21,7 @@ import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.TextureRegionsTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.TouchButtonsTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.UiSoundAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.WearableTextureAssetsRepository
 import javax.inject.Inject
 
 @Reusable
@@ -37,6 +39,8 @@ class GameAssetsHolder @Inject constructor(
     private val mobSoundAssetsRepository: MobSoundAssetsRepository,
     private val dropSoundAssetsRepository: DropSoundAssetsRepository,
     private val foodSoundAssetsRepository: FoodSoundAssetsRepository,
+    private val blockActionSoundAssetsRepository: BlockActionSoundAssetsRepository,
+    private val wearableTextureAssetsRepository: WearableTextureAssetsRepository,
 ) {
 
     private val repositories = sequenceOf(
@@ -53,6 +57,8 @@ class GameAssetsHolder @Inject constructor(
         mobSoundAssetsRepository,
         dropSoundAssetsRepository,
         foodSoundAssetsRepository,
+        blockActionSoundAssetsRepository,
+        wearableTextureAssetsRepository,
     )
 
     fun initializeRepository() {

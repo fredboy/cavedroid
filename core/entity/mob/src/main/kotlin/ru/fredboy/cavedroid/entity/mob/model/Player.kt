@@ -50,6 +50,8 @@ class Player(
             field = value
         }
 
+    var wearingArmor = WearingArmor(getFallbackItem())
+
     var gameMode = GameMode.SURVIVAL
 
     var cursorX = 0f
@@ -115,10 +117,20 @@ class Player(
             return
         }
 
-        super.damage(damage)
+        val protection = wearingArmor.getTotalProtection()
+        val reduction = minOf(0.8f, protection * 0.04f)
+        val reducedDamage = (damage * (1f - reduction)).toInt()
+
+        if (reducedDamage > 0) {
+            wearingArmor.damageArmorPieces()
+        }
+
+        super.damage(reducedDamage)
     }
 
-    override fun getDropItems(itemByKey: GetItemByKeyUseCase): List<InventoryItem> = inventory.items
+    override fun getDropItems(itemByKey: GetItemByKeyUseCase): List<InventoryItem> {
+        return inventory.items + wearingArmor.items
+    }
 
     override fun draw(spriteBatch: SpriteBatch, x: Float, y: Float, delta: Float) {
         updateAnimation(delta)
@@ -266,7 +278,7 @@ class Player(
         startHitting(false)
         val activeTool = activeItem.item as? Item.Tool
         if (activeTool != null) {
-            decreaseCurrentItemCount()
+            durateActiveDurable()
         }
         val damage = 1 * (activeTool?.mobDamageMultiplier ?: 1f)
         mob.damage(damage.toInt())
@@ -279,6 +291,18 @@ class Player(
         }
 
         activeItem.subtract(amount)
+
+        if (activeItem.amount <= 0) {
+            setCurrentInventorySlotItem(getFallbackItem())
+        }
+    }
+
+    fun durateActiveDurable(amount: Int = 1) {
+        if (gameMode.isCreative()) {
+            return
+        }
+
+        activeItem.durate(amount)
 
         if (activeItem.amount <= 0) {
             setCurrentInventorySlotItem(getFallbackItem())

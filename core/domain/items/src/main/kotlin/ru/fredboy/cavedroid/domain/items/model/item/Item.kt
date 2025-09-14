@@ -1,9 +1,11 @@
 package ru.fredboy.cavedroid.domain.items.model.item
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Sprite
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
+import kotlin.math.min
 import ru.fredboy.cavedroid.domain.items.model.block.Block as DomainBlockModel
 
 @OptIn(ExperimentalContracts::class)
@@ -52,18 +54,67 @@ sealed class Item {
     }
 
     @JvmOverloads
-    fun toInventoryItem(amount: Int = 1): InventoryItem = InventoryItem(this, amount)
+    fun toInventoryItem(amount: Int = 1, durability: Int = 1): InventoryItem {
+        val durability = if (durability == 0) {
+            (this as? Durable)?.durability ?: 1
+        } else {
+            durability
+        }
+
+        return InventoryItem(this, amount, min(durability, (this as? Durable)?.durability ?: 1))
+    }
 
     data class Normal(
         override val params: CommonItemParams,
         override val sprite: Sprite,
     ) : Item()
 
-    sealed class Tool : Item() {
+    sealed class Durable : Item() {
+        abstract val durability: Int
+    }
+
+    sealed class Tool : Durable() {
         abstract val mobDamageMultiplier: Float
         abstract val blockDamageMultiplier: Float
         abstract val level: Int
     }
+
+    sealed class Armor : Durable() {
+        abstract val protection: Int
+        abstract val wearableSprites: WearableSprites
+    }
+
+    data class Helmet(
+        override val params: CommonItemParams,
+        override val sprite: Sprite,
+        override val protection: Int,
+        override val wearableSprites: WearableSprites,
+        override val durability: Int,
+    ) : Armor()
+
+    data class Chestplate(
+        override val params: CommonItemParams,
+        override val sprite: Sprite,
+        override val protection: Int,
+        override val wearableSprites: WearableSprites,
+        override val durability: Int,
+    ) : Armor()
+
+    data class Leggings(
+        override val params: CommonItemParams,
+        override val sprite: Sprite,
+        override val protection: Int,
+        override val wearableSprites: WearableSprites,
+        override val durability: Int,
+    ) : Armor()
+
+    data class Boots(
+        override val params: CommonItemParams,
+        override val sprite: Sprite,
+        override val protection: Int,
+        override val wearableSprites: WearableSprites,
+        override val durability: Int,
+    ) : Armor()
 
     sealed class Placeable : Item() {
         abstract val block: DomainBlockModel
@@ -103,6 +154,7 @@ sealed class Item {
         override val mobDamageMultiplier: Float,
         override val blockDamageMultiplier: Float,
         override val level: Int,
+        override val durability: Int,
     ) : Tool()
 
     data class Shovel(
@@ -111,6 +163,7 @@ sealed class Item {
         override val mobDamageMultiplier: Float,
         override val blockDamageMultiplier: Float,
         override val level: Int,
+        override val durability: Int,
     ) : Tool()
 
     data class Axe(
@@ -119,6 +172,7 @@ sealed class Item {
         override val mobDamageMultiplier: Float,
         override val blockDamageMultiplier: Float,
         override val level: Int,
+        override val durability: Int,
     ) : Tool()
 
     data class Pickaxe(
@@ -127,6 +181,7 @@ sealed class Item {
         override val mobDamageMultiplier: Float,
         override val blockDamageMultiplier: Float,
         override val level: Int,
+        override val durability: Int,
     ) : Tool()
 
     data class Shears(
@@ -135,11 +190,13 @@ sealed class Item {
         override val mobDamageMultiplier: Float,
         override val blockDamageMultiplier: Float,
         override val level: Int,
+        override val durability: Int,
     ) : Tool()
 
     data class Bow(
         override val params: CommonItemParams,
         override val sprite: Sprite,
+        override val durability: Int,
         val stateSprites: List<Sprite>,
     ) : Tool() {
         override val mobDamageMultiplier: Float = 1f
@@ -152,4 +209,10 @@ sealed class Item {
         override val sprite: Sprite,
         val heal: Int,
     ) : Item()
+
+    data class WearableSprites(
+        val side: Sprite,
+        val front: Sprite,
+        val tint: Color?,
+    )
 }

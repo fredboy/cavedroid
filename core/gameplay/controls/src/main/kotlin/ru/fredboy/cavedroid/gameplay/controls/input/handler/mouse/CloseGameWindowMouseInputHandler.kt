@@ -49,10 +49,11 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
         val selectedItem = gameWindowsManager.currentWindow?.selectedItem
         if (selectedItem != null) {
             dropController.addDrop(
-                /* x = */ mobController.player.position.x + (2f * mobController.player.direction.basis),
-                /* y = */ mobController.player.position.y,
-                /* item = */ selectedItem.item,
-                /* count = */ selectedItem.amount,
+                x = mobController.player.position.x + (2f * mobController.player.direction.basis),
+                y = mobController.player.position.y,
+                item = selectedItem.item,
+                count = selectedItem.amount,
+                durability = selectedItem.durability,
             )
             gameWindowsManager.currentWindow?.selectedItem = null
         }

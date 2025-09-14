@@ -14,6 +14,7 @@ import kotlin.contracts.contract
 class InventoryItem(
     val item: Item,
     _amount: Int = 1,
+    _durability: Int = 1,
 ) {
 
     var amount = _amount
@@ -22,6 +23,19 @@ class InventoryItem(
                 0
             } else {
                 value
+            }
+        }
+
+    var durability = _durability
+        set(value) {
+            field = if (value < 0) {
+                0
+            } else {
+                value
+            }
+
+            if (field == 0) {
+                amount = 0
             }
         }
 
@@ -39,6 +53,18 @@ class InventoryItem(
         }
 
         add(-count)
+    }
+
+    fun durate(count: Int = 1) {
+        if (item !is Item.Durable) {
+            return
+        }
+
+        if (count < 0) {
+            throw IllegalArgumentException("Can't durate negative amount")
+        }
+
+        durability -= count
     }
 
     fun canBeAdded(count: Int = 1): Boolean = amount + count <= item.params.maxStack
@@ -65,32 +91,32 @@ class InventoryItem(
         getStringWidth: (String) -> Float,
         getStringHeight: (String) -> Float,
     ) {
-        if (amount < 2) {
-            return
-        }
-
-        if (item.isTool()) {
+        if (item is Item.Durable) {
             spriteBatch.end()
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
             shapeRenderer.color = Color.GREEN
             shapeRenderer.rect(
                 /* x = */ x,
                 /* y = */ y + height - 2,
-                /* width = */ width * (amount.toFloat() / item.params.maxStack.toFloat()),
+                /* width = */ width * (durability.toFloat() / item.durability.toFloat()),
                 /* height = */ 2f,
             )
             shapeRenderer.end()
             spriteBatch.begin()
-        } else {
-            val amountString = amount.toString()
-            drawAmountText(
-                spriteBatch = spriteBatch,
-                font = font,
-                text = amountString,
-                x = x + width - getStringWidth(amountString),
-                y = y + height - getStringHeight(amountString),
-            )
         }
+
+        if (amount < 2) {
+            return
+        }
+
+        val amountString = amount.toString()
+        drawAmountText(
+            spriteBatch = spriteBatch,
+            font = font,
+            text = amountString,
+            x = x + width - getStringWidth(amountString),
+            y = y + height - getStringHeight(amountString),
+        )
     }
 
     fun draw(
@@ -135,6 +161,14 @@ class InventoryItem(
             height = drawHeight,
             getStringWidth = getStringWidth,
             getStringHeight = getStringHeight,
+        )
+    }
+
+    fun copy(): InventoryItem {
+        return InventoryItem(
+            item = item,
+            _amount = amount,
+            _durability = durability,
         )
     }
 

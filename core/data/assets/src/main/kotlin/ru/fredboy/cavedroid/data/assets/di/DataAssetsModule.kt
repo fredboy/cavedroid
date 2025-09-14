@@ -16,6 +16,7 @@ import ru.fredboy.cavedroid.data.assets.internal.StepSoundsAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.TextureRegionsTextureAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.TouchButtonsRepositoryImplTexture
 import ru.fredboy.cavedroid.data.assets.internal.UiSoundAssetsRepositoryImpl
+import ru.fredboy.cavedroid.data.assets.internal.WearableTextureAssetsRepositoryImpl
 import ru.fredboy.cavedroid.domain.assets.repository.BlockActionSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockTextureAssetsRepository
@@ -30,6 +31,7 @@ import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.TextureRegionsTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.TouchButtonsTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.UiSoundAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.WearableTextureAssetsRepository
 
 @Module
 abstract class DataAssetsModule {
@@ -103,4 +105,9 @@ abstract class DataAssetsModule {
     internal abstract fun bindBlockActionSoundAssetsRepository(
         impl: BlockActionSoundAssetsRepositoryImpl,
     ): BlockActionSoundAssetsRepository
+
+    @Binds
+    internal abstract fun bindWearableTextureAssetsRepository(
+        impl: WearableTextureAssetsRepositoryImpl,
+    ): WearableTextureAssetsRepository
 }

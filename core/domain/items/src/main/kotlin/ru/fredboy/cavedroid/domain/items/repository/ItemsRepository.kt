@@ -21,7 +21,7 @@ interface ItemsRepository : Disposable {
 
     fun <T : Block> getBlocksByType(type: Class<T>): List<T>
 
-    fun getCraftingResult(input: List<Item>): InventoryItem
+    fun getCraftingResult(input: List<InventoryItem>): InventoryItem
 
     fun getAllItems(): Collection<Item>
 
