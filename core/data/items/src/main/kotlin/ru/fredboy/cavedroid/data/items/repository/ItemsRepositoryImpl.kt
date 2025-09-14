@@ -83,24 +83,6 @@ internal class ItemsRepositoryImpl @Inject constructor(
         val jsonString = Gdx.files.internal("json/crafting.json").readString()
         val jsonMap = JsonFormat.decodeFromString<Map<String, CraftingDto>>(jsonString)
 
-        val newMap = jsonMap.mapValues { entry ->
-            val item = getItemByKey(entry.key)
-
-            if (item is Item.Durable) {
-                entry.value.copy(
-                    recipes = entry.value.recipes.map { dto ->
-                        dto.copy(
-                            count = 1,
-                        )
-                    },
-                )
-            } else {
-                entry.value
-            }
-        }
-
-        println(JsonFormat.encodeToString(newMap))
-
         if (jsonMap.isNotEmpty() && itemsMap.isEmpty()) {
             throw IllegalStateException("items should be loaded before crafting")
         }

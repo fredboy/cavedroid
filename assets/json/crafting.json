@@ -2919,6 +2919,234 @@
         "count": 1
       }
     ]
+  },
+  "helmet_iron": {
+    "recipes": [
+      {
+        "input": [
+          "iron_ingot",
+          "iron_ingot",
+          "iron_ingot",
+          "iron_ingot",
+          null,
+          "iron_ingot",
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_iron": {
+    "recipes": [
+      {
+        "input": [
+          "iron_ingot",
+          null,
+          "iron_ingot",
+          "iron_ingot",
+          "iron_ingot",
+          "iron_ingot",
+          "iron_ingot",
+          "iron_ingot",
+          "iron_ingot"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_iron": {
+    "recipes": [
+      {
+        "input": [
+          "iron_ingot",
+          "iron_ingot",
+          "iron_ingot",
+          "iron_ingot",
+          null,
+          "iron_ingot",
+          "iron_ingot",
+          null,
+          "iron_ingot"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "boots_iron": {
+    "recipes": [
+      {
+        "input": [
+          "iron_ingot",
+          null,
+          "iron_ingot",
+          "iron_ingot",
+          null,
+          "iron_ingot",
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_diamond": {
+    "recipes": [
+      {
+        "input": [
+          "diamond",
+          "diamond",
+          "diamond",
+          "diamond",
+          null,
+          "diamond",
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_diamond": {
+    "recipes": [
+      {
+        "input": [
+          "diamond",
+          null,
+          "diamond",
+          "diamond",
+          "diamond",
+          "diamond",
+          "diamond",
+          "diamond",
+          "diamond"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_diamond": {
+    "recipes": [
+      {
+        "input": [
+          "diamond",
+          "diamond",
+          "diamond",
+          "diamond",
+          null,
+          "diamond",
+          "diamond",
+          null,
+          "diamond"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "boots_diamond": {
+    "recipes": [
+      {
+        "input": [
+          "diamond",
+          null,
+          "diamond",
+          "diamond",
+          null,
+          "diamond",
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "helmet_gold": {
+    "recipes": [
+      {
+        "input": [
+          "gold_ingot",
+          "gold_ingot",
+          "gold_ingot",
+          "gold_ingot",
+          null,
+          "gold_ingot",
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "chestplate_gold": {
+    "recipes": [
+      {
+        "input": [
+          "gold_ingot",
+          null,
+          "gold_ingot",
+          "gold_ingot",
+          "gold_ingot",
+          "gold_ingot",
+          "gold_ingot",
+          "gold_ingot",
+          "gold_ingot"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "leggings_gold": {
+    "recipes": [
+      {
+        "input": [
+          "gold_ingot",
+          "gold_ingot",
+          "gold_ingot",
+          "gold_ingot",
+          null,
+          "gold_ingot",
+          "gold_ingot",
+          null,
+          "gold_ingot"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "boots_gold": {
+    "recipes": [
+      {
+        "input": [
+          "gold_ingot",
+          null,
+          "gold_ingot",
+          "gold_ingot",
+          null,
+          "gold_ingot",
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   }
 }
 

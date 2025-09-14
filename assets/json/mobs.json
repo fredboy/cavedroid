@@ -21,6 +21,24 @@
               "slot": 1,
               "file": "armor_hand_leather"
             }
+          ],
+          "iron": [
+            {
+              "slot": 1,
+              "file": "armor_hand_iron"
+            }
+          ],
+          "gold": [
+            {
+              "slot": 1,
+              "file": "armor_hand_gold"
+            }
+          ],
+          "diamond": [
+            {
+              "slot": 1,
+              "file": "armor_hand_diamond"
+            }
           ]
         }
       },
@@ -40,6 +58,36 @@
               "slot": 3,
               "file": "armor_boot_leather"
             }
+          ],
+          "iron": [
+            {
+              "slot": 2,
+              "file": "armor_leg_iron"
+            },
+            {
+              "slot": 3,
+              "file": "armor_boot_iron"
+            }
+          ],
+          "gold": [
+            {
+              "slot": 2,
+              "file": "armor_leg_gold"
+            },
+            {
+              "slot": 3,
+              "file": "armor_boot_gold"
+            }
+          ],
+          "diamond": [
+            {
+              "slot": 2,
+              "file": "armor_leg_diamond"
+            },
+            {
+              "slot": 3,
+              "file": "armor_boot_diamond"
+            }
           ]
         }
       },
@@ -55,6 +103,24 @@
               "slot": 0,
               "file": "armor_head_leather"
             }
+          ],
+          "iron": [
+            {
+              "slot": 0,
+              "file": "armor_head_iron"
+            }
+          ],
+          "gold": [
+            {
+              "slot": 0,
+              "file": "armor_head_gold"
+            }
+          ],
+          "diamond": [
+            {
+              "slot": 0,
+              "file": "armor_head_diamond"
+            }
           ]
         }
       },
@@ -68,6 +134,24 @@
             {
               "slot": 1,
               "file": "armor_body_leather"
+            }
+          ],
+          "iron": [
+            {
+              "slot": 1,
+              "file": "armor_body_iron"
+            }
+          ],
+          "gold": [
+            {
+              "slot": 1,
+              "file": "armor_body_gold"
+            }
+          ],
+          "diamond": [
+            {
+              "slot": 1,
+              "file": "armor_body_diamond"
             }
           ]
         }
@@ -88,6 +172,36 @@
               "slot": 3,
               "file": "armor_boot_leather"
             }
+          ],
+          "iron": [
+            {
+              "slot": 2,
+              "file": "armor_leg_iron"
+            },
+            {
+              "slot": 3,
+              "file": "armor_boot_iron"
+            }
+          ],
+          "gold": [
+            {
+              "slot": 2,
+              "file": "armor_leg_gold"
+            },
+            {
+              "slot": 3,
+              "file": "armor_boot_gold"
+            }
+          ],
+          "diamond": [
+            {
+              "slot": 2,
+              "file": "armor_leg_diamond"
+            },
+            {
+              "slot": 3,
+              "file": "armor_boot_diamond"
+            }
           ]
         }
       },
@@ -103,6 +217,24 @@
             {
               "slot": 1,
               "file": "armor_hand_leather"
+            }
+          ],
+          "iron": [
+            {
+              "slot": 1,
+              "file": "armor_hand_iron"
+            }
+          ],
+          "gold": [
+            {
+              "slot": 1,
+              "file": "armor_hand_gold"
+            }
+          ],
+          "diamond": [
+            {
+              "slot": 1,
+              "file": "armor_hand_diamond"
             }
           ]
         }

@@ -3113,7 +3113,6 @@
       "durability": 65,
       "armor_material": "leather"
     },
-
     "helmet_leather_orange": {
       "name": "Orange Leather Helmet",
       "type": "helmet",
@@ -3726,6 +3725,114 @@
       "max_stack": 1,
       "durability": 65,
       "armor_material": "leather"
+    },
+    "helmet_iron": {
+      "name": "Iron Helmet",
+      "type": "helmet",
+      "texture": "armor_helmet_iron",
+      "protection": 2,
+      "max_stack": 1,
+      "durability": 165,
+      "armor_material": "iron"
+    },
+    "chestplate_iron": {
+      "name": "Iron Chestplate",
+      "type": "chestplate",
+      "texture": "armor_chestplate_iron",
+      "protection": 6,
+      "max_stack": 1,
+      "durability": 240,
+      "armor_material": "iron"
+    },
+    "leggings_iron": {
+      "name": "Iron Leggings",
+      "type": "leggings",
+      "texture": "armor_leggings_iron",
+      "protection": 5,
+      "max_stack": 1,
+      "durability": 225,
+      "armor_material": "iron"
+    },
+    "boots_iron": {
+      "name": "Iron Boots",
+      "type": "boots",
+      "texture": "armor_boots_iron",
+      "protection": 2,
+      "max_stack": 1,
+      "durability": 195,
+      "armor_material": "iron"
+    },
+    "helmet_gold": {
+      "name": "Gold Helmet",
+      "type": "helmet",
+      "texture": "armor_helmet_gold",
+      "protection": 2,
+      "max_stack": 1,
+      "durability": 77,
+      "armor_material": "gold"
+    },
+    "chestplate_gold": {
+      "name": "Gold Chestplate",
+      "type": "chestplate",
+      "texture": "armor_chestplate_gold",
+      "protection": 5,
+      "max_stack": 1,
+      "durability": 112,
+      "armor_material": "gold"
+    },
+    "leggings_gold": {
+      "name": "Gold Leggings",
+      "type": "leggings",
+      "texture": "armor_leggings_gold",
+      "protection": 3,
+      "max_stack": 1,
+      "durability": 105,
+      "armor_material": "gold"
+    },
+    "boots_gold": {
+      "name": "Gold Boots",
+      "type": "boots",
+      "texture": "armor_boots_gold",
+      "protection": 1,
+      "max_stack": 1,
+      "durability": 91,
+      "armor_material": "gold"
+    },
+    "helmet_diamond": {
+      "name": "Diamond Helmet",
+      "type": "helmet",
+      "texture": "armor_helmet_diamond",
+      "protection": 3,
+      "max_stack": 1,
+      "durability": 363,
+      "armor_material": "diamond"
+    },
+    "chestplate_diamond": {
+      "name": "Diamond Chestplate",
+      "type": "chestplate",
+      "texture": "armor_chestplate_diamond",
+      "protection": 8,
+      "max_stack": 1,
+      "durability": 528,
+      "armor_material": "diamond"
+    },
+    "leggings_diamond": {
+      "name": "Diamond Leggings",
+      "type": "leggings",
+      "texture": "armor_leggings_diamond",
+      "protection": 6,
+      "max_stack": 1,
+      "durability": 495,
+      "armor_material": "diamond"
+    },
+    "boots_diamond": {
+      "name": "Diamond Boots",
+      "type": "boots",
+      "texture": "armor_boots_diamond",
+      "protection": 3,
+      "max_stack": 1,
+      "durability": 429,
+      "armor_material": "diamond"
     }
   }
 }
