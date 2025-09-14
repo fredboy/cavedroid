@@ -159,12 +159,12 @@ sealed class Block {
 
             when (info.amount) {
                 is DropAmount.ExactAmount -> {
-                    return InventoryItem(itemByKey[info.itemKey], info.amount.amount)
+                    return info.toInventoryItem(itemByKey)
                 }
 
                 is DropAmount.RandomChance -> {
                     if (MathUtils.randomBoolean(info.amount.chance)) {
-                        return InventoryItem(itemByKey[info.itemKey], info.amount.amount)
+                        return info.toInventoryItem(itemByKey)
                     } else {
                         continue
                     }
@@ -172,7 +172,7 @@ sealed class Block {
 
                 is DropAmount.RandomRange -> {
                     if (MathUtils.randomBoolean(info.amount.chance)) {
-                        return InventoryItem(itemByKey[info.itemKey], info.amount.range.random())
+                        return info.toInventoryItem(itemByKey)
                     } else {
                         continue
                     }

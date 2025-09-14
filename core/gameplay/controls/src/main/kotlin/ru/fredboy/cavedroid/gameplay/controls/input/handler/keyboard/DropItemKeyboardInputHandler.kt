@@ -26,11 +26,11 @@ class DropItemKeyboardInputHandler @Inject constructor(
         gameWindowsManager.currentWindowType == GameWindowType.NONE &&
         !playerAdapter.activeItem.item.isNone()
 
-    private fun createDrop(item: InventoryItem, playerX: Float, playerY: Float) {
+    private fun createDrop(item: InventoryItem, playerX: Float, playerY: Float, dropAmount: Int) {
         dropController.addDrop(
             x = playerX + DROP_DISTANCE * playerAdapter.direction.basis,
             y = playerY,
-            inventoryItem = item.copy(),
+            inventoryItem = item.copy().apply { amount = dropAmount },
             initialForce = Vector2(50f * playerAdapter.direction.basis, -50f),
         )
     }
@@ -43,6 +43,7 @@ class DropItemKeyboardInputHandler @Inject constructor(
             item = currentItem,
             playerX = playerAdapter.x,
             playerY = playerAdapter.y - playerAdapter.height / 2,
+            dropAmount = dropAmount,
         )
         playerAdapter.decreaseCurrentItemCount(dropAmount)
     }

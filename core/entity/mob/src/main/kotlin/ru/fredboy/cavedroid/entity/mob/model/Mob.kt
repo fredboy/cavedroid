@@ -373,14 +373,13 @@ abstract class Mob(
             for (info in params.dropInfo) {
                 when (info.amount) {
                     is DropAmount.ExactAmount -> {
-                        val exactAmount = info.amount as DropAmount.ExactAmount
-                        add(InventoryItem(itemByKey[info.itemKey], exactAmount.amount))
+                        add(info.toInventoryItem(itemByKey))
                     }
 
                     is DropAmount.RandomChance -> {
                         val randomChanceAmount = info.amount as DropAmount.RandomChance
                         if (MathUtils.randomBoolean(randomChanceAmount.chance)) {
-                            add(InventoryItem(itemByKey[info.itemKey], randomChanceAmount.amount))
+                            add(info.toInventoryItem(itemByKey))
                         } else {
                             continue
                         }
@@ -389,7 +388,7 @@ abstract class Mob(
                     is DropAmount.RandomRange -> {
                         val randomRangeAmount = info.amount as DropAmount.RandomRange
                         if (MathUtils.randomBoolean(randomRangeAmount.chance)) {
-                            add(InventoryItem(itemByKey[info.itemKey], randomRangeAmount.range.random()))
+                            add(info.toInventoryItem(itemByKey))
                         } else {
                             continue
                         }
