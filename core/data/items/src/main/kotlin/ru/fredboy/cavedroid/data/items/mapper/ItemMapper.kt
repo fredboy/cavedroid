@@ -111,32 +111,32 @@ class ItemMapper @Inject constructor(
                 params = params,
                 sprite = requireNotNull(loadSprite(dto)),
                 protection = requireNotNull(dto.protection),
-                wearableSprites = loadWearableSprites(dto),
                 durability = requireNotNull(dto.durability),
+                material = requireNotNull(dto.armorMaterial),
             )
 
             "chestplate" -> Item.Chestplate(
                 params = params,
                 sprite = requireNotNull(loadSprite(dto)),
                 protection = requireNotNull(dto.protection),
-                wearableSprites = loadWearableSprites(dto),
                 durability = requireNotNull(dto.durability),
+                material = requireNotNull(dto.armorMaterial),
             )
 
             "leggings" -> Item.Leggings(
                 params = params,
                 sprite = requireNotNull(loadSprite(dto)),
                 protection = requireNotNull(dto.protection),
-                wearableSprites = loadWearableSprites(dto),
                 durability = requireNotNull(dto.durability),
+                material = requireNotNull(dto.armorMaterial),
             )
 
             "boots" -> Item.Boots(
                 params = params,
                 sprite = requireNotNull(loadSprite(dto)),
                 protection = requireNotNull(dto.protection),
-                wearableSprites = loadWearableSprites(dto),
                 durability = requireNotNull(dto.durability),
+                material = requireNotNull(dto.armorMaterial),
             )
 
             "none" -> Item.None(
@@ -165,6 +165,7 @@ class ItemMapper @Inject constructor(
             maxStack = dto.maxStack,
             burningTimeMs = dto.burningTime,
             smeltProductKey = dto.smeltProduct,
+            tint = dto.tint?.let { colorFromHexString(it) },
         )
     }
 
@@ -181,14 +182,6 @@ class ItemMapper @Inject constructor(
                     color = colorFromHexString(it)
                 }
             }
-    }
-
-    private fun loadWearableSprites(dto: ItemDto): Item.WearableSprites {
-        return Item.WearableSprites(
-            side = wearableTextureAssetsRepository.getSideSprite(dto.texture),
-            front = wearableTextureAssetsRepository.getFrontSprite(dto.texture),
-            tint = dto.tint?.let(::colorFromHexString),
-        )
     }
 
     private fun loadStateSprites(dto: ItemDto): List<Sprite>? {

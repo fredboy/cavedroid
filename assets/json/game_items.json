@@ -3080,7 +3080,8 @@
       "protection": 1,
       "tint": "#FFFFFF",
       "max_stack": 1,
-      "durability": 55
+      "durability": 55,
+      "armor_material": "leather"
     },
     "chestplate_leather_white": {
       "name": "White Leather Chestplate",
@@ -3089,7 +3090,8 @@
       "protection": 3,
       "tint": "#FFFFFF",
       "max_stack": 1,
-      "durability": 80
+      "durability": 80,
+      "armor_material": "leather"
     },
     "leggings_leather_white": {
       "name": "White Leather Leggings",
@@ -3098,7 +3100,8 @@
       "protection": 2,
       "tint": "#FFFFFF",
       "max_stack": 1,
-      "durability": 75
+      "durability": 75,
+      "armor_material": "leather"
     },
     "boots_leather_white": {
       "name": "White Leather Boots",
@@ -3107,7 +3110,8 @@
       "protection": 1,
       "tint": "#FFFFFF",
       "max_stack": 1,
-      "durability": 65
+      "durability": 65,
+      "armor_material": "leather"
     },
 
     "helmet_leather_orange": {
@@ -3117,7 +3121,8 @@
       "protection": 1,
       "tint": "#F9801D",
       "max_stack": 1,
-      "durability": 55
+      "durability": 55,
+      "armor_material": "leather"
     },
     "chestplate_leather_orange": {
       "name": "Orange Leather Chestplate",
@@ -3126,7 +3131,8 @@
       "protection": 3,
       "tint": "#F9801D",
       "max_stack": 1,
-      "durability": 80
+      "durability": 80,
+      "armor_material": "leather"
     },
     "leggings_leather_orange": {
       "name": "Orange Leather Leggings",
@@ -3135,7 +3141,8 @@
       "protection": 2,
       "tint": "#F9801D",
       "max_stack": 1,
-      "durability": 75
+      "durability": 75,
+      "armor_material": "leather"
     },
     "boots_leather_orange": {
       "name": "Orange Leather Boots",
@@ -3144,7 +3151,8 @@
       "protection": 1,
       "tint": "#F9801D",
       "max_stack": 1,
-      "durability": 65
+      "durability": 65,
+      "armor_material": "leather"
     },
 
     "helmet_leather_magenta": {
@@ -3154,7 +3162,8 @@
       "protection": 1,
       "tint": "#C74EBD",
       "max_stack": 1,
-      "durability": 55
+      "durability": 55,
+      "armor_material": "leather"
     },
     "chestplate_leather_magenta": {
       "name": "Magenta Leather Chestplate",
@@ -3163,7 +3172,8 @@
       "protection": 3,
       "tint": "#C74EBD",
       "max_stack": 1,
-      "durability": 80
+      "durability": 80,
+      "armor_material": "leather"
     },
     "leggings_leather_magenta": {
       "name": "Magenta Leather Leggings",
@@ -3172,7 +3182,8 @@
       "protection": 2,
       "tint": "#C74EBD",
       "max_stack": 1,
-      "durability": 75
+      "durability": 75,
+      "armor_material": "leather"
     },
     "boots_leather_magenta": {
       "name": "Magenta Leather Boots",
@@ -3181,7 +3192,8 @@
       "protection": 1,
       "tint": "#C74EBD",
       "max_stack": 1,
-      "durability": 65
+      "durability": 65,
+      "armor_material": "leather"
     },
 
     "helmet_leather_light_blue": {
@@ -3191,7 +3203,8 @@
       "protection": 1,
       "tint": "#3AB3DA",
       "max_stack": 1,
-      "durability": 55
+      "durability": 55,
+      "armor_material": "leather"
     },
     "chestplate_leather_light_blue": {
       "name": "Light Blue Leather Chestplate",
@@ -3200,7 +3213,8 @@
       "protection": 3,
       "tint": "#3AB3DA",
       "max_stack": 1,
-      "durability": 80
+      "durability": 80,
+      "armor_material": "leather"
     },
     "leggings_leather_light_blue": {
       "name": "Light Blue Leather Leggings",
@@ -3209,7 +3223,8 @@
       "protection": 2,
       "tint": "#3AB3DA",
       "max_stack": 1,
-      "durability": 75
+      "durability": 75,
+      "armor_material": "leather"
     },
     "boots_leather_light_blue": {
       "name": "Light Blue Leather Boots",
@@ -3218,7 +3233,8 @@
       "protection": 1,
       "tint": "#3AB3DA",
       "max_stack": 1,
-      "durability": 65
+      "durability": 65,
+      "armor_material": "leather"
     },
 
     "helmet_leather_yellow": {
@@ -3228,7 +3244,8 @@
       "protection": 1,
       "tint": "#FED83D",
       "max_stack": 1,
-      "durability": 55
+      "durability": 55,
+      "armor_material": "leather"
     },
     "chestplate_leather_yellow": {
       "name": "Yellow Leather Chestplate",
@@ -3237,7 +3254,8 @@
       "protection": 3,
       "tint": "#FED83D",
       "max_stack": 1,
-      "durability": 80
+      "durability": 80,
+      "armor_material": "leather"
     },
     "leggings_leather_yellow": {
       "name": "Yellow Leather Leggings",
@@ -3246,7 +3264,8 @@
       "protection": 2,
       "tint": "#FED83D",
       "max_stack": 1,
-      "durability": 75
+      "durability": 75,
+      "armor_material": "leather"
     },
     "boots_leather_yellow": {
       "name": "Yellow Leather Boots",
@@ -3255,7 +3274,8 @@
       "protection": 1,
       "tint": "#FED83D",
       "max_stack": 1,
-      "durability": 65
+      "durability": 65,
+      "armor_material": "leather"
     },
 
     "helmet_leather_lime": {
@@ -3265,7 +3285,8 @@
       "protection": 1,
       "tint": "#80C71F",
       "max_stack": 1,
-      "durability": 55
+      "durability": 55,
+      "armor_material": "leather"
     },
     "chestplate_leather_lime": {
       "name": "Lime Leather Chestplate",
@@ -3274,7 +3295,8 @@
       "protection": 3,
       "tint": "#80C71F",
       "max_stack": 1,
-      "durability": 80
+      "durability": 80,
+      "armor_material": "leather"
     },
     "leggings_leather_lime": {
       "name": "Lime Leather Leggings",
@@ -3283,7 +3305,8 @@
       "protection": 2,
       "tint": "#80C71F",
       "max_stack": 1,
-      "durability": 75
+      "durability": 75,
+      "armor_material": "leather"
     },
     "boots_leather_lime": {
       "name": "Lime Leather Boots",
@@ -3292,7 +3315,8 @@
       "protection": 1,
       "tint": "#80C71F",
       "max_stack": 1,
-      "durability": 65
+      "durability": 65,
+      "armor_material": "leather"
     },
 
     "helmet_leather_pink": {
@@ -3302,7 +3326,8 @@
       "protection": 1,
       "tint": "#F38BAA",
       "max_stack": 1,
-      "durability": 55
+      "durability": 55,
+      "armor_material": "leather"
     },
     "chestplate_leather_pink": {
       "name": "Pink Leather Chestplate",
@@ -3311,7 +3336,8 @@
       "protection": 3,
       "tint": "#F38BAA",
       "max_stack": 1,
-      "durability": 80
+      "durability": 80,
+      "armor_material": "leather"
     },
     "leggings_leather_pink": {
       "name": "Pink Leather Leggings",
@@ -3320,7 +3346,8 @@
       "protection": 2,
       "tint": "#F38BAA",
       "max_stack": 1,
-      "durability": 75
+      "durability": 75,
+      "armor_material": "leather"
     },
     "boots_leather_pink": {
       "name": "Pink Leather Boots",
@@ -3329,7 +3356,8 @@
       "protection": 1,
       "tint": "#F38BAA",
       "max_stack": 1,
-      "durability": 65
+      "durability": 65,
+      "armor_material": "leather"
     },
 
     "helmet_leather_gray": {
@@ -3339,7 +3367,8 @@
       "protection": 1,
       "tint": "#474F52",
       "max_stack": 1,
-      "durability": 55
+      "durability": 55,
+      "armor_material": "leather"
     },
     "chestplate_leather_gray": {
       "name": "Gray Leather Chestplate",
@@ -3348,7 +3377,8 @@
       "protection": 3,
       "tint": "#474F52",
       "max_stack": 1,
-      "durability": 80
+      "durability": 80,
+      "armor_material": "leather"
     },
     "leggings_leather_gray": {
       "name": "Gray Leather Leggings",
@@ -3357,7 +3387,8 @@
       "protection": 2,
       "tint": "#474F52",
       "max_stack": 1,
-      "durability": 75
+      "durability": 75,
+      "armor_material": "leather"
     },
     "boots_leather_gray": {
       "name": "Gray Leather Boots",
@@ -3366,7 +3397,8 @@
       "protection": 1,
       "tint": "#474F52",
       "max_stack": 1,
-      "durability": 65
+      "durability": 65,
+      "armor_material": "leather"
     },
 
     "helmet_leather_light_gray": {
@@ -3376,7 +3408,8 @@
       "protection": 1,
       "tint": "#9D9D97",
       "max_stack": 1,
-      "durability": 55
+      "durability": 55,
+      "armor_material": "leather"
     },
     "chestplate_leather_light_gray": {
       "name": "Light Gray Leather Chestplate",
@@ -3385,7 +3418,8 @@
       "protection": 3,
       "tint": "#9D9D97",
       "max_stack": 1,
-      "durability": 80
+      "durability": 80,
+      "armor_material": "leather"
     },
     "leggings_leather_light_gray": {
       "name": "Light Gray Leather Leggings",
@@ -3394,7 +3428,8 @@
       "protection": 2,
       "tint": "#9D9D97",
       "max_stack": 1,
-      "durability": 75
+      "durability": 75,
+      "armor_material": "leather"
     },
     "boots_leather_light_gray": {
       "name": "Light Gray Leather Boots",
@@ -3403,7 +3438,8 @@
       "protection": 1,
       "tint": "#9D9D97",
       "max_stack": 1,
-      "durability": 65
+      "durability": 65,
+      "armor_material": "leather"
     },
 
     "helmet_leather_cyan": {
@@ -3413,7 +3449,8 @@
       "protection": 1,
       "tint": "#169C9C",
       "max_stack": 1,
-      "durability": 55
+      "durability": 55,
+      "armor_material": "leather"
     },
     "chestplate_leather_cyan": {
       "name": "Cyan Leather Chestplate",
@@ -3422,7 +3459,8 @@
       "protection": 3,
       "tint": "#169C9C",
       "max_stack": 1,
-      "durability": 80
+      "durability": 80,
+      "armor_material": "leather"
     },
     "leggings_leather_cyan": {
       "name": "Cyan Leather Leggings",
@@ -3431,7 +3469,8 @@
       "protection": 2,
       "tint": "#169C9C",
       "max_stack": 1,
-      "durability": 75
+      "durability": 75,
+      "armor_material": "leather"
     },
     "boots_leather_cyan": {
       "name": "Cyan Leather Boots",
@@ -3440,7 +3479,8 @@
       "protection": 1,
       "tint": "#169C9C",
       "max_stack": 1,
-      "durability": 65
+      "durability": 65,
+      "armor_material": "leather"
     },
 
     "helmet_leather_purple": {
@@ -3450,7 +3490,8 @@
       "protection": 1,
       "tint": "#8932B8",
       "max_stack": 1,
-      "durability": 55
+      "durability": 55,
+      "armor_material": "leather"
     },
     "chestplate_leather_purple": {
       "name": "Purple Leather Chestplate",
@@ -3459,7 +3500,8 @@
       "protection": 3,
       "tint": "#8932B8",
       "max_stack": 1,
-      "durability": 80
+      "durability": 80,
+      "armor_material": "leather"
     },
     "leggings_leather_purple": {
       "name": "Purple Leather Leggings",
@@ -3468,7 +3510,8 @@
       "protection": 2,
       "tint": "#8932B8",
       "max_stack": 1,
-      "durability": 75
+      "durability": 75,
+      "armor_material": "leather"
     },
     "boots_leather_purple": {
       "name": "Purple Leather Boots",
@@ -3477,7 +3520,8 @@
       "protection": 1,
       "tint": "#8932B8",
       "max_stack": 1,
-      "durability": 65
+      "durability": 65,
+      "armor_material": "leather"
     },
 
     "helmet_leather_blue": {
@@ -3487,7 +3531,8 @@
       "protection": 1,
       "tint": "#3C44AA",
       "max_stack": 1,
-      "durability": 55
+      "durability": 55,
+      "armor_material": "leather"
     },
     "chestplate_leather_blue": {
       "name": "Blue Leather Chestplate",
@@ -3496,7 +3541,8 @@
       "protection": 3,
       "tint": "#3C44AA",
       "max_stack": 1,
-      "durability": 80
+      "durability": 80,
+      "armor_material": "leather"
     },
     "leggings_leather_blue": {
       "name": "Blue Leather Leggings",
@@ -3505,7 +3551,8 @@
       "protection": 2,
       "tint": "#3C44AA",
       "max_stack": 1,
-      "durability": 75
+      "durability": 75,
+      "armor_material": "leather"
     },
     "boots_leather_blue": {
       "name": "Blue Leather Boots",
@@ -3514,9 +3561,9 @@
       "protection": 1,
       "tint": "#3C44AA",
       "max_stack": 1,
-      "durability": 65
+      "durability": 65,
+      "armor_material": "leather"
     },
-
     "helmet_leather_brown": {
       "name": "Brown Leather Helmet",
       "type": "helmet",
@@ -3524,7 +3571,8 @@
       "protection": 1,
       "tint": "#835432",
       "max_stack": 1,
-      "durability": 55
+      "durability": 55,
+      "armor_material": "leather"
     },
     "chestplate_leather_brown": {
       "name": "Brown Leather Chestplate",
@@ -3533,7 +3581,8 @@
       "protection": 3,
       "tint": "#835432",
       "max_stack": 1,
-      "durability": 80
+      "durability": 80,
+      "armor_material": "leather"
     },
     "leggings_leather_brown": {
       "name": "Brown Leather Leggings",
@@ -3542,7 +3591,8 @@
       "protection": 2,
       "tint": "#835432",
       "max_stack": 1,
-      "durability": 75
+      "durability": 75,
+      "armor_material": "leather"
     },
     "boots_leather_brown": {
       "name": "Brown Leather Boots",
@@ -3551,7 +3601,8 @@
       "protection": 1,
       "tint": "#835432",
       "max_stack": 1,
-      "durability": 65
+      "durability": 65,
+      "armor_material": "leather"
     },
 
     "helmet_leather_green": {
@@ -3561,7 +3612,8 @@
       "protection": 1,
       "tint": "#5E7C16",
       "max_stack": 1,
-      "durability": 55
+      "durability": 55,
+      "armor_material": "leather"
     },
     "chestplate_leather_green": {
       "name": "Green Leather Chestplate",
@@ -3570,7 +3622,8 @@
       "protection": 3,
       "tint": "#5E7C16",
       "max_stack": 1,
-      "durability": 80
+      "durability": 80,
+      "armor_material": "leather"
     },
     "leggings_leather_green": {
       "name": "Green Leather Leggings",
@@ -3579,7 +3632,8 @@
       "protection": 2,
       "tint": "#5E7C16",
       "max_stack": 1,
-      "durability": 75
+      "durability": 75,
+      "armor_material": "leather"
     },
     "boots_leather_green": {
       "name": "Green Leather Boots",
@@ -3588,7 +3642,8 @@
       "protection": 1,
       "tint": "#5E7C16",
       "max_stack": 1,
-      "durability": 65
+      "durability": 65,
+      "armor_material": "leather"
     },
 
     "helmet_leather_red": {
@@ -3598,7 +3653,8 @@
       "protection": 1,
       "tint": "#B02E26",
       "max_stack": 1,
-      "durability": 55
+      "durability": 55,
+      "armor_material": "leather"
     },
     "chestplate_leather_red": {
       "name": "Red Leather Chestplate",
@@ -3607,7 +3663,8 @@
       "protection": 3,
       "tint": "#B02E26",
       "max_stack": 1,
-      "durability": 80
+      "durability": 80,
+      "armor_material": "leather"
     },
     "leggings_leather_red": {
       "name": "Red Leather Leggings",
@@ -3616,7 +3673,8 @@
       "protection": 2,
       "tint": "#B02E26",
       "max_stack": 1,
-      "durability": 75
+      "durability": 75,
+      "armor_material": "leather"
     },
     "boots_leather_red": {
       "name": "Red Leather Boots",
@@ -3625,7 +3683,8 @@
       "protection": 1,
       "tint": "#B02E26",
       "max_stack": 1,
-      "durability": 65
+      "durability": 65,
+      "armor_material": "leather"
     },
 
     "helmet_leather_black": {
@@ -3635,7 +3694,8 @@
       "protection": 1,
       "tint": "#1D1D21",
       "max_stack": 1,
-      "durability": 55
+      "durability": 55,
+      "armor_material": "leather"
     },
     "chestplate_leather_black": {
       "name": "Black Leather Chestplate",
@@ -3644,7 +3704,8 @@
       "protection": 3,
       "tint": "#1D1D21",
       "max_stack": 1,
-      "durability": 80
+      "durability": 80,
+      "armor_material": "leather"
     },
     "leggings_leather_black": {
       "name": "Black Leather Leggings",
@@ -3653,7 +3714,8 @@
       "protection": 2,
       "tint": "#1D1D21",
       "max_stack": 1,
-      "durability": 75
+      "durability": 75,
+      "armor_material": "leather"
     },
     "boots_leather_black": {
       "name": "Black Leather Boots",
@@ -3662,7 +3724,8 @@
       "protection": 1,
       "tint": "#1D1D21",
       "max_stack": 1,
-      "durability": 65
+      "durability": 65,
+      "armor_material": "leather"
     }
   }
 }

@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.domain.items.model.item
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Sprite
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import kotlin.contracts.ExperimentalContracts
@@ -81,39 +80,39 @@ sealed class Item {
 
     sealed class Armor : Durable() {
         abstract val protection: Int
-        abstract val wearableSprites: WearableSprites
+        abstract val material: String
     }
 
     data class Helmet(
         override val params: CommonItemParams,
         override val sprite: Sprite,
         override val protection: Int,
-        override val wearableSprites: WearableSprites,
         override val durability: Int,
+        override val material: String,
     ) : Armor()
 
     data class Chestplate(
         override val params: CommonItemParams,
         override val sprite: Sprite,
         override val protection: Int,
-        override val wearableSprites: WearableSprites,
         override val durability: Int,
+        override val material: String,
     ) : Armor()
 
     data class Leggings(
         override val params: CommonItemParams,
         override val sprite: Sprite,
         override val protection: Int,
-        override val wearableSprites: WearableSprites,
         override val durability: Int,
+        override val material: String,
     ) : Armor()
 
     data class Boots(
         override val params: CommonItemParams,
         override val sprite: Sprite,
         override val protection: Int,
-        override val wearableSprites: WearableSprites,
         override val durability: Int,
+        override val material: String,
     ) : Armor()
 
     sealed class Placeable : Item() {
@@ -209,10 +208,4 @@ sealed class Item {
         override val sprite: Sprite,
         val heal: Int,
     ) : Item()
-
-    data class WearableSprites(
-        val side: Sprite,
-        val front: Sprite,
-        val tint: Color?,
-    )
 }

@@ -13,4 +13,11 @@ data class MobSprite(
     val isOverlay: Boolean,
     val isStatic: Boolean,
     val origin: SpriteOrigin,
-)
+    val armorDataByMaterial: Map<String, List<Armor>>?,
+) {
+
+    data class Armor(
+        val slot: Int,
+        val sprite: Sprite,
+    )
+}

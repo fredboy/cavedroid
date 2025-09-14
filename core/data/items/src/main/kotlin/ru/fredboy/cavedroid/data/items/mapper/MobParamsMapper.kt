@@ -76,6 +76,18 @@ class MobParamsMapper @Inject constructor(
             offsetX = dto.offsetX.meters,
             offsetY = dto.offsetY.meters,
             origin = origin,
+            armorDataByMaterial = dto.armorByMaterial?.mapValues { entry ->
+                entry.value.map { (slot, file) ->
+                    MobSprite.Armor(
+                        slot = slot,
+                        sprite = gameAssetsHolder.getMobTexture(mobKey, file).let { texture ->
+                            Sprite(texture).apply {
+                                flip(false, true)
+                            }
+                        },
+                    )
+                }
+            },
         )
     }
 }

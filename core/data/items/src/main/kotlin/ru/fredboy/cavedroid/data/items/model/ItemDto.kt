@@ -25,4 +25,5 @@ data class ItemDto(
     @SerialName("state_sprites") val stateSprites: List<String>? = null,
     @SerialName("protection") val protection: Int? = null,
     @SerialName("durability") val durability: Int? = null,
+    @SerialName("armor_material") val armorMaterial: String? = null,
 )

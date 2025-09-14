@@ -14,34 +14,82 @@
         "offset_y": 8,
         "is_background": true,
         "is_hand": true,
-        "is_static": false
+        "is_static": false,
+        "armor_by_material": {
+          "leather": [
+            {
+              "slot": 1,
+              "file": "armor_hand_leather"
+            }
+          ]
+        }
       },
       {
         "file": "leg",
         "offset_x": 2,
-        "offset_y": 20,
+        "offset_y": 18,
         "is_background": true,
-        "is_static": false
+        "is_static": false,
+        "armor_by_material": {
+          "leather": [
+            {
+              "slot": 2,
+              "file": "armor_leg_leather"
+            },
+            {
+              "slot": 3,
+              "file": "armor_boot_leather"
+            }
+          ]
+        }
       },
       {
         "file": "head",
         "is_background": false,
         "is_head": true,
         "is_static": false,
-        "origin_y": 1
+        "origin_y": 1,
+        "armor_by_material": {
+          "leather": [
+            {
+              "slot": 0,
+              "file": "armor_head_leather"
+            }
+          ]
+        }
       },
       {
         "file": "body",
         "offset_x": 2,
         "offset_y": 8,
-        "is_background": false
+        "is_background": false,
+        "armor_by_material": {
+          "leather": [
+            {
+              "slot": 1,
+              "file": "armor_body_leather"
+            }
+          ]
+        }
       },
       {
         "file": "leg",
         "offset_x": 2,
-        "offset_y": 20,
+        "offset_y": 18,
         "is_background": false,
-        "is_static": false
+        "is_static": false,
+        "armor_by_material": {
+          "leather": [
+            {
+              "slot": 2,
+              "file": "armor_leg_leather"
+            },
+            {
+              "slot": 3,
+              "file": "armor_boot_leather"
+            }
+          ]
+        }
       },
       {
         "file": "hand",
@@ -49,7 +97,15 @@
         "offset_y": 8,
         "is_background": false,
         "is_hand": true,
-        "is_static": false
+        "is_static": false,
+        "armor_by_material": {
+          "leather": [
+            {
+              "slot": 1,
+              "file": "armor_hand_leather"
+            }
+          ]
+        }
       }
     ]
   },

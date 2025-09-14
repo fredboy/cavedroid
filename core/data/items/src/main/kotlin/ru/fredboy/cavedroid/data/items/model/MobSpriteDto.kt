@@ -15,4 +15,12 @@ data class MobSpriteDto(
     @SerialName("offset_y") val offsetY: Float = 0f,
     @SerialName("origin_x") val originX: Float = 0.5f,
     @SerialName("origin_y") val originY: Float = 0f,
-)
+    @SerialName("armor_by_material") val armorByMaterial: Map<String, List<ArmorDto>>? = null,
+) {
+
+    @Serializable
+    data class ArmorDto(
+        @SerialName("slot") val slot: Int,
+        @SerialName("file") val file: String,
+    )
+}

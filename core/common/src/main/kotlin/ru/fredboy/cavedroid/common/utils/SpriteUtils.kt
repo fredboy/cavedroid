@@ -19,13 +19,13 @@ fun SpriteBatch.drawSprite(
     tint: Color? = null,
     origin: SpriteOrigin? = null,
 ) {
-    val oldColor = sprite.color
+    val oldColor = sprite.color.cpy()
 
     sprite.setPosition(x, y)
     sprite.setSize(width, height)
     origin?.applyToSprite(sprite)
     sprite.rotation = rotation
-    tint?.let(sprite::setColor)
+    tint?.let { sprite.color = sprite.color.mul(tint) }
 
     sprite.draw(this)
 

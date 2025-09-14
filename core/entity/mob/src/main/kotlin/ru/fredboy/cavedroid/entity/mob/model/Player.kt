@@ -113,13 +113,13 @@ class Player(
     override fun changeDir() = Unit
 
     override fun damage(damage: Int) {
-        if (gameMode.isCreative()) {
+        if (gameMode.isCreative() || damage == 0) {
             return
         }
 
         val protection = wearingArmor.getTotalProtection()
         val reduction = minOf(0.8f, protection * 0.04f)
-        val reducedDamage = (damage * (1f - reduction)).toInt()
+        val reducedDamage = (damage * (1f - reduction)).toInt().coerceAtLeast(1)
 
         if (reducedDamage > 0) {
             wearingArmor.damageArmorPieces()
@@ -153,16 +153,28 @@ class Player(
         params.sprites.forEach { spriteData ->
             val sprite = spriteData.sprite
 
+            val armorSprites = wearingArmor.items.mapIndexedNotNull { index, item ->
+                spriteData.armorDataByMaterial?.get((item.item as? Item.Armor)?.material)
+                    ?.firstOrNull { (slot, _) ->
+                        slot == index
+                    }
+                    ?.sprite?.to(item.item)
+            }
+
             sprite.setFlip(looksRight(), sprite.isFlipY)
+            armorSprites.onEach { it.first.setFlip(looksRight(), it.first.isFlipY) }
 
             if (!isInBed) {
                 sprite.applyOrigin(spriteData.origin)
+                armorSprites.onEach { it.first.applyOrigin(spriteData.origin) }
             }
 
             if (spriteData.isBackground) {
                 sprite.color = backgroundTintColor
+                armorSprites.onEach { it.first.color = backgroundTintColor }
             } else {
                 sprite.color = tintColor
+                armorSprites.onEach { it.first.color = tintColor }
             }
 
             val animationValue = if (isInBed) {
@@ -205,7 +217,22 @@ class Player(
                 drawItem(spriteBatch, sprite.height, x, y, animationValue)
             }
 
-            spriteBatch.drawSprite(sprite, spriteX, spriteY, animationValue)
+            spriteBatch.drawSprite(
+                sprite = sprite,
+                x = spriteX,
+                y = spriteY,
+                rotation = animationValue,
+            )
+
+            armorSprites.forEach { (armorSprite, armorItem) ->
+                spriteBatch.drawSprite(
+                    sprite = armorSprite,
+                    x = spriteX,
+                    y = spriteY,
+                    rotation = animationValue,
+                    tint = armorItem.params.tint,
+                )
+            }
 
             if (spriteData.isHand && spriteData.isBackground && looksLeft()) {
                 drawItem(spriteBatch, sprite.height, x, y, -animationValue)
