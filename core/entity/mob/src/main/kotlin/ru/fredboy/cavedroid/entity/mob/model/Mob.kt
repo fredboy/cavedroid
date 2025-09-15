@@ -288,11 +288,11 @@ abstract class Mob(
         val climbable = mobWorldAdapter.getClimbable(hitbox.apply { height *= .75f })
         val liquid = climbable as? Block.Fluid?
 
-        if (!canSwim && liquid != null && TimeUtils.timeSinceMillis(lastSplashTimeMs) > SPLASH_TIMEOUT_MS) {
-            lastSplashTimeMs = TimeUtils.millis()
-            stepOnBlock(liquid)
-        } else if (liquid == null && climbable != null && !velocity.isZero) {
-            stepOnBlock(climbable)
+        if (TimeUtils.timeSinceMillis(lastSplashTimeMs) > SPLASH_TIMEOUT_MS) {
+            if (!canSwim && liquid != null || liquid == null && climbable != null && !velocity.isZero) {
+                lastSplashTimeMs = TimeUtils.millis()
+                stepOnBlock(climbable)
+            }
         }
 
         canClimb = climbable != null
@@ -454,7 +454,7 @@ abstract class Mob(
         private const val JUMP_COOLDOWN_MS = 500L
 
         private const val STEP_TIMEOUT_MS = 200L
-        private const val SPLASH_TIMEOUT_MS = 1000L
+        private const val SPLASH_TIMEOUT_MS = 750L
 
         private const val BOW_PULL_TIME_S = 1f
     }
