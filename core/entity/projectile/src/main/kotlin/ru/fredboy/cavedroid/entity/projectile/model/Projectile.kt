@@ -85,6 +85,7 @@ class Projectile(
     }
 
     fun update(projectileWorldAdapter: ProjectileWorldAdapter, delta: Float) {
+        body.setTransform(position, velocity.get().angleRad())
         if (position.y > projectileWorldAdapter.height) {
             isOnGround = true
         }
