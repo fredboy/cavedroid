@@ -930,6 +930,120 @@
       }
     ]
   },
+  "raw_iron_block": {
+    "recipes": [
+      {
+        "input": [
+          "iron_raw",
+          "iron_raw",
+          "iron_raw",
+          "iron_raw",
+          "iron_raw",
+          "iron_raw",
+          "iron_raw",
+          "iron_raw",
+          "iron_raw"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "iron_raw": {
+    "recipes": [
+      {
+        "input": [
+          "raw_iron_block",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 9
+      }
+    ]
+  },
+  "raw_gold_block": {
+    "recipes": [
+      {
+        "input": [
+          "gold_raw",
+          "gold_raw",
+          "gold_raw",
+          "gold_raw",
+          "gold_raw",
+          "gold_raw",
+          "gold_raw",
+          "gold_raw",
+          "gold_raw"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "gold_raw": {
+    "recipes": [
+      {
+        "input": [
+          "raw_gold_block",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 9
+      }
+    ]
+  },
+  "coal_block": {
+    "recipes": [
+      {
+        "input": [
+          "coal",
+          "coal",
+          "coal",
+          "coal",
+          "coal",
+          "coal",
+          "coal",
+          "coal",
+          "coal"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "coal": {
+    "recipes": [
+      {
+        "input": [
+          "coal_block",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 9
+      }
+    ]
+  },
   "diamond_block": {
     "recipes": [
       {

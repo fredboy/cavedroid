@@ -289,7 +289,7 @@
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "gold_ore",
+          "key": "gold_raw",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -306,7 +306,7 @@
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "iron_ore",
+          "key": "iron_raw",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1152,6 +1152,57 @@
         }
       ],
       "material": "metal"
+    },
+    "raw_gold_block": {
+      "hp": 1500,
+      "drop": "raw_gold_block",
+      "texture": "raw_gold_block",
+      "tool_level": 3,
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "raw_gold_block",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "metal"
+    },
+    "raw_iron_block": {
+      "hp": 1500,
+      "drop": "raw_iron_block",
+      "texture": "raw_iron_block",
+      "tool_level": 2,
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "raw_iron_block",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "metal"
+    },
+    "coal_block": {
+      "hp": 1500,
+      "drop": "coal_block",
+      "texture": "coal_block",
+      "tool_level": 1,
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "coal_block",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "stone"
     },
     "stone_slab_bottom": {
       "top": 8,
@@ -2444,6 +2495,22 @@
       "name": "Iron Block",
       "type": "block",
       "texture": "iron_block"
+    },
+    "raw_gold_block": {
+      "name": "Raw Gold Block",
+      "type": "block",
+      "texture": "raw_gold_block"
+    },
+    "raw_iron_block": {
+      "name": "Raw Iron Block",
+      "type": "block",
+      "texture": "raw_iron_block"
+    },
+    "coal_block": {
+      "name": "Coal Block",
+      "type": "block",
+      "texture": "coal_block",
+      "burning_time": 800000
     },
     "diamond_block": {
       "name": "Diamond Block",
@@ -3833,6 +3900,16 @@
       "max_stack": 1,
       "durability": 429,
       "armor_material": "diamond"
+    },
+    "iron_raw": {
+      "name": "Raw Iron",
+      "texture": "iron_raw",
+      "smelt_product": "iron_ingot"
+    },
+    "gold_raw": {
+      "name": "Raw Gold",
+      "texture": "gold_raw",
+      "smelt_product": "gold_ingot"
     }
   }
 }
