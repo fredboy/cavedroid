@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem.Companion.isNoneOrNull
@@ -12,7 +13,6 @@ import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindowWithCra
 import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
-import ru.fredboy.cavedroid.gameplay.controls.input.isInsideWindow
 
 abstract class AbstractInventoryItemsMouseInputHandler(
     private val gameContextRepository: GameContextRepository,
@@ -23,14 +23,21 @@ abstract class AbstractInventoryItemsMouseInputHandler(
 
     protected abstract val windowTexture: TextureRegion
 
-    override fun checkConditions(action: MouseInputAction): Boolean = gameWindowsManager.currentWindowType == windowType &&
-        isInsideWindow(gameContextRepository, action, windowTexture) &&
-        (
-            action.actionKey is MouseInputActionKey.Left ||
-                action.actionKey is MouseInputActionKey.Right ||
-                action.actionKey is MouseInputActionKey.Screen
+    protected abstract fun getWindowRect(viewport: Rectangle): Rectangle
+
+    override fun checkConditions(action: MouseInputAction): Boolean {
+        return gameWindowsManager.currentWindowType == windowType &&
+            getWindowRect(gameContextRepository.getCameraContext().viewport).contains(
+                action.screenX,
+                action.screenY,
             ) &&
-        (action.actionKey.touchUp || action.actionKey is MouseInputActionKey.Screen)
+            (
+                action.actionKey is MouseInputActionKey.Left ||
+                    action.actionKey is MouseInputActionKey.Right ||
+                    action.actionKey is MouseInputActionKey.Screen
+                ) &&
+            (action.actionKey.touchUp || action.actionKey is MouseInputActionKey.Screen)
+    }
 
     protected fun updateCraftResult(window: AbstractInventoryWindowWithCraftGrid) {
         window.craftResult = itemsRepository.getCraftingResult(window.craftingItems)

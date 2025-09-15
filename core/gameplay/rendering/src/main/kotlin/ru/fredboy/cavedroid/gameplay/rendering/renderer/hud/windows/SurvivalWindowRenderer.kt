@@ -13,6 +13,7 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowsConfigs
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
@@ -30,6 +31,7 @@ class SurvivalWindowRenderer @Inject constructor(
     private val getStringHeight: GetStringHeightUseCase,
     private val getFont: GetFontUseCase,
     private val wearableTextureAssetsRepository: WearableTextureAssetsRepository,
+    private val itemsRepository: ItemsRepository,
 ) : AbstractWindowRenderer(),
     IHudRenderer {
 
@@ -73,8 +75,20 @@ class SurvivalWindowRenderer @Inject constructor(
         val windowTexture = survivalWindowTexture
         val window = gameWindowsManager.currentWindow as SurvivalInventoryWindow
 
-        val windowX = viewport.width / 2 - windowTexture.regionWidth / 2
+        val windowX = viewport.width / 2 - if (!window.recipeBookActive) windowTexture.regionWidth / 2 else 0
         val windowY = viewport.height / 2 - windowTexture.regionHeight / 2
+
+        if (window.recipeBookActive) {
+            drawRecipeBook(
+                spriteBatch = spriteBatch,
+                getTextureRegionByNameUseCase = textureRegions,
+                itemsRepository = itemsRepository,
+                font = getFont(),
+                viewport = viewport,
+                window = window,
+                getStringWidth = getStringWidth,
+            )
+        }
 
         spriteBatch.draw(windowTexture, windowX, windowY)
 
@@ -107,6 +121,28 @@ class SurvivalWindowRenderer @Inject constructor(
                 .take(GameWindowsConfigs.Survival.hotbarCells)
                 .asIterable(),
             itemsInRow = GameWindowsConfigs.Survival.hotbarCells,
+            cellWidth = GameWindowsConfigs.Survival.itemsGridColWidth,
+            cellHeight = GameWindowsConfigs.Survival.itemsGridRowHeight,
+            getStringWidth = getStringWidth,
+            getStringHeight = getStringHeight,
+        )
+
+        drawItemsGrid(
+            spriteBatch = spriteBatch,
+            shapeRenderer = shapeRenderer,
+            font = getFont(),
+            gridX = windowX + GameWindowsConfigs.Survival.craftOffsetX,
+            gridY = windowY + GameWindowsConfigs.Survival.craftOffsetY,
+            items = window.getPhantomRecipe(itemsRepository)
+                .asSequence()
+                .mapIndexedNotNull { index, it ->
+                    if (index % 3 > 1 || index / 3 > 1) {
+                        null
+                    } else {
+                        it
+                    }
+                }.asIterable(),
+            itemsInRow = GameWindowsConfigs.Survival.craftGridSize,
             cellWidth = GameWindowsConfigs.Survival.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Survival.itemsGridRowHeight,
             getStringWidth = getStringWidth,
@@ -156,6 +192,14 @@ class SurvivalWindowRenderer @Inject constructor(
             getStringWidth = getStringWidth::invoke,
             getStringHeight = getStringHeight::invoke,
         )
+
+        getRecipeButtonTextureRegion(textureRegions, window)?.let { recipeButtonTexture ->
+            spriteBatch.draw(
+                recipeButtonTexture,
+                windowX + GameWindowsConfigs.Survival.recipeButtonX,
+                windowY + GameWindowsConfigs.Survival.recipeButtonY,
+            )
+        }
 
         window.selectedItem?.let { selectedItem ->
             selectedItem.draw(

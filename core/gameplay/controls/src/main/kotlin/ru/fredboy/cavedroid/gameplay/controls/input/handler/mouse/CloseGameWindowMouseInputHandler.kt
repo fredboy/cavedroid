@@ -1,6 +1,8 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -8,11 +10,11 @@ import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
+import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindowWithCraftGrid
 import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.annotation.BindMouseInputHandler
-import ru.fredboy.cavedroid.gameplay.controls.input.isInsideWindow
 import javax.inject.Inject
 
 @GameScope
@@ -31,10 +33,32 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
     private val furnaceInventoryTexture get() = requireNotNull(textureRegions["furnace"])
     private val chestInventoryTexture get() = requireNotNull(textureRegions["chest"])
 
-    override fun checkConditions(action: MouseInputAction): Boolean = gameWindowsManager.currentWindowType != GameWindowType.NONE &&
-        (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
-        !action.actionKey.touchUp &&
-        !isInsideWindow(gameContextRepository, action, getCurrentWindowTexture())
+    override fun checkConditions(action: MouseInputAction): Boolean {
+        return gameWindowsManager.currentWindowType != GameWindowType.NONE &&
+            (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
+            !action.actionKey.touchUp &&
+            !getWindowRect(gameContextRepository.getCameraContext().viewport).contains(action.screenX, action.screenY)
+    }
+
+    private fun getWindowRect(viewport: Rectangle): Rectangle {
+        val windowTexture = getCurrentWindowTexture()
+
+        val window = gameWindowsManager.currentWindow as? AbstractInventoryWindowWithCraftGrid
+        val recipeBookWidth = textureRegions["recipe_book"]
+            ?.takeIf { window?.recipeBookActive == true }
+            ?.regionWidth
+            ?.toFloat()
+            ?: 0f
+
+        return Rectangle(
+            0f,
+            0f,
+            recipeBookWidth + windowTexture.regionWidth.toFloat(),
+            windowTexture.regionHeight.toFloat(),
+        ).apply {
+            setCenter(viewport.getCenter(Vector2()))
+        }
+    }
 
     private fun getCurrentWindowTexture(): TextureRegion = when (val window = gameWindowsManager.currentWindowType) {
         GameWindowType.CREATIVE_INVENTORY -> creativeInventoryTexture

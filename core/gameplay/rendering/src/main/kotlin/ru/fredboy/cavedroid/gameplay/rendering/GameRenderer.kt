@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector3
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.TooltipManager
@@ -37,15 +36,6 @@ class GameRenderer @Inject constructor(
 
     private val worldRenderers = _worldRenderers.sortedBy { it.renderLayer }
     private val hudRenderers = _hudRenderers.sortedBy { it.renderLayer }
-
-    private val debugRenderer = Box2DDebugRenderer(
-        /* drawBodies = */ true,
-        /* drawJoints = */ false,
-        /* drawAABBs = */ false,
-        /* drawInactiveBodies = */ false,
-        /* drawVelocities = */ false,
-        /* drawContacts = */ true,
-    )
 
     private val camera = OrthographicCamera()
         .apply {
@@ -202,10 +192,6 @@ class GameRenderer @Inject constructor(
         hudRenderers.forEach { renderer -> renderer.draw(spriter, shaper, hudCameraViewport, delta) }
         handleMousePosition()
         spriter.end()
-
-        if (gameContextRepository.shouldShowInfo()) {
-            debugRenderer.render(gameWorld.world, camera.combined)
-        }
     }
 
     fun resetCameraToPlayer() {

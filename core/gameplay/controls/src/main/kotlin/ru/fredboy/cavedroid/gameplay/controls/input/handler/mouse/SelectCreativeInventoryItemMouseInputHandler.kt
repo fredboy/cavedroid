@@ -1,5 +1,7 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
+import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -12,7 +14,6 @@ import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.annotation.BindMouseInputHandler
-import ru.fredboy.cavedroid.gameplay.controls.input.isInsideWindow
 import javax.inject.Inject
 
 @GameScope
@@ -27,11 +28,26 @@ class SelectCreativeInventoryItemMouseInputHandler @Inject constructor(
 
     private val creativeInventoryTexture get() = requireNotNull(textureRegions["creative"])
 
-    override fun checkConditions(action: MouseInputAction): Boolean = gameWindowsManager.currentWindowType == GameWindowType.CREATIVE_INVENTORY &&
-        !gameWindowsManager.isDragging &&
-        (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
-        action.actionKey.touchUp &&
-        isInsideWindow(gameContextRepository, action, creativeInventoryTexture)
+    override fun checkConditions(action: MouseInputAction): Boolean {
+        return gameWindowsManager.currentWindowType == GameWindowType.CREATIVE_INVENTORY &&
+            !gameWindowsManager.isDragging &&
+            (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
+            action.actionKey.touchUp &&
+            Rectangle(
+                0f,
+                0f,
+                creativeInventoryTexture.regionWidth.toFloat(),
+                creativeInventoryTexture.regionHeight.toFloat(),
+            )
+                .apply {
+                    setCenter(
+                        gameContextRepository.getCameraContext().viewport.getCenter(
+                            Vector2(),
+                        ),
+                    )
+                }
+                .contains(action.screenX, action.screenY)
+    }
 
     override fun handle(action: MouseInputAction) {
         val creativeTexture = creativeInventoryTexture

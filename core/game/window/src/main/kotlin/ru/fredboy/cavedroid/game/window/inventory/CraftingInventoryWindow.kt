@@ -8,6 +8,9 @@ class CraftingInventoryWindow(
     itemsRepository: ItemsRepository,
 ) : AbstractInventoryWindowWithCraftGrid(itemsRepository) {
 
+    override val gridSize: Int
+        get() = 3
+
     override val type = GameWindowType.CRAFTING_TABLE
 
     override var selectedItem: InventoryItem? = null

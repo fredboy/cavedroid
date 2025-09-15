@@ -183,5 +183,45 @@
   "textures/inventory_char": {
     "inventory_char": {}
   },
-  "crosshair": {}
+  "crosshair": {},
+  "textures/recipe_button": {
+    "recipe_button_off": {
+      "w": 22,
+      "h": 19
+    },
+    "recipe_button_on": {
+      "y": 19,
+      "w": 22,
+      "h": 19
+    }
+  },
+  "textures/recipe_book": {
+    "recipe_book": {
+      "w": 148,
+      "h": 167
+    },
+    "recipe_available": {
+      "y": 167,
+      "w": 25,
+      "h": 25
+    },
+    "recipe_unavailable": {
+      "x": 25,
+      "y": 167,
+      "w": 25,
+      "h": 25
+    },
+    "recipe_next": {
+      "x": 50,
+      "y": 167,
+      "w": 12,
+      "h": 11
+    },
+    "recipe_prev": {
+      "x": 62,
+      "y": 167,
+      "w": 12,
+      "h": 11
+    }
+  }
 }

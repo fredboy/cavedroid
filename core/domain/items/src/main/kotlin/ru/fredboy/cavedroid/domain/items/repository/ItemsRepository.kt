@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.domain.items.repository
 
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.items.model.craft.CraftingEntry
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 
@@ -24,6 +25,8 @@ interface ItemsRepository : Disposable {
     fun getCraftingResult(input: List<InventoryItem>): InventoryItem
 
     fun getAllItems(): Collection<Item>
+
+    fun getAllCraftingRecipes(): Collection<CraftingEntry>
 
     fun reload()
 }

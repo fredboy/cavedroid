@@ -835,6 +835,25 @@
       }
     ]
   },
+  "lapis_lazuli": {
+    "recipes": [
+      {
+        "input": [
+          "lapis_block",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 9
+      }
+    ]
+  },
   "gold_block": {
     "recipes": [
       {
@@ -851,6 +870,25 @@
         ],
         "shapeless": false,
         "count": 1
+      }
+    ]
+  },
+  "gold_ingot": {
+    "recipes": [
+      {
+        "input": [
+          "gold_block",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 9
       }
     ]
   },
@@ -873,6 +911,25 @@
       }
     ]
   },
+  "iron_ingot": {
+    "recipes": [
+      {
+        "input": [
+          "iron_block",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 9
+      }
+    ]
+  },
   "diamond_block": {
     "recipes": [
       {
@@ -889,6 +946,25 @@
         ],
         "shapeless": false,
         "count": 1
+      }
+    ]
+  },
+  "diamond": {
+    "recipes": [
+      {
+        "input": [
+          "diamond_block",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 9
       }
     ]
   },

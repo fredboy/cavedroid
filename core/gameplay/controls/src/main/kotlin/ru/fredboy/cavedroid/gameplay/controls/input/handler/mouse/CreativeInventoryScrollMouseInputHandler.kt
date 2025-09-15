@@ -1,6 +1,8 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -8,12 +10,12 @@ import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepositor
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
+import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindowWithCraftGrid
 import ru.fredboy.cavedroid.game.window.inventory.CreativeInventoryWindow
 import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.annotation.BindMouseInputHandler
-import ru.fredboy.cavedroid.gameplay.controls.input.isInsideWindow
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -32,14 +34,25 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
     private var dragStartY = 0f
 
     override fun checkConditions(action: MouseInputAction): Boolean {
+        val recipeBookActive = (gameWindowsManager.currentWindow as? AbstractInventoryWindowWithCraftGrid)
+            ?.recipeBookActive ?: false
         return gameWindowsManager.currentWindowType == GameWindowType.CREATIVE_INVENTORY &&
             (
                 gameWindowsManager.isDragging ||
-                    isInsideWindow(
-                        gameContextRepository,
-                        action,
-                        creativeInventoryTexture,
+                    Rectangle(
+                        0f,
+                        0f,
+                        creativeInventoryTexture.regionWidth.toFloat(),
+                        creativeInventoryTexture.regionHeight.toFloat(),
                     )
+                        .apply {
+                            setCenter(
+                                gameContextRepository.getCameraContext().viewport.getCenter(
+                                    Vector2(),
+                                ),
+                            )
+                        }
+                        .contains(action.screenX, action.screenY)
                 ) &&
             (
                 checkStartDragConditions(action) ||

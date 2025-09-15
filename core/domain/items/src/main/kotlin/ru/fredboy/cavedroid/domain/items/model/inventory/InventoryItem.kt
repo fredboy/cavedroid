@@ -149,19 +149,22 @@ class InventoryItem(
             y = y + placeableMarginTop,
             width = drawWidth,
             height = drawHeight,
+            tint = if (amount == 0) Color.WHITE.cpy().apply { a = 0.5f } else null,
         )
 
-        drawAmountOrConditionBar(
-            spriteBatch = spriteBatch,
-            shapeRenderer = shapeRenderer,
-            font = font,
-            x = x + placeableMarginLeft,
-            y = y + placeableMarginTop,
-            width = drawWidth,
-            height = drawHeight,
-            getStringWidth = getStringWidth,
-            getStringHeight = getStringHeight,
-        )
+        if (amount > 1 || durability > 1) {
+            drawAmountOrConditionBar(
+                spriteBatch = spriteBatch,
+                shapeRenderer = shapeRenderer,
+                font = font,
+                x = x + placeableMarginLeft,
+                y = y + placeableMarginTop,
+                width = drawWidth,
+                height = drawHeight,
+                getStringWidth = getStringWidth,
+                getStringHeight = getStringHeight,
+            )
+        }
     }
 
     fun copy(): InventoryItem {

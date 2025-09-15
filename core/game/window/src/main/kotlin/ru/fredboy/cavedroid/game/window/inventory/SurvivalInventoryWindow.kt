@@ -8,6 +8,9 @@ class SurvivalInventoryWindow(
     itemsRepository: ItemsRepository,
 ) : AbstractInventoryWindowWithCraftGrid(itemsRepository) {
 
+    override val gridSize: Int
+        get() = 2
+
     override val type = GameWindowType.SURVIVAL_INVENTORY
 
     override var selectedItem: InventoryItem? = null

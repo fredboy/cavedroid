@@ -254,6 +254,8 @@ internal class ItemsRepositoryImpl @Inject constructor(
 
     override fun getAllItems(): Collection<Item> = itemsMap.values
 
+    override fun getAllCraftingRecipes(): Collection<CraftingEntry> = craftingRecipes
+
     override fun dispose() {
         _initialized = false
 

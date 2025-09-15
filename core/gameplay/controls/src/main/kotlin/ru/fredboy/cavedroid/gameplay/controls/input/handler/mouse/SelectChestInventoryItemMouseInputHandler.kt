@@ -1,5 +1,7 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
+import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -29,6 +31,17 @@ class SelectChestInventoryItemMouseInputHandler @Inject constructor(
 ) {
 
     override val windowTexture get() = requireNotNull(textureRegions["chest"])
+
+    override fun getWindowRect(viewport: Rectangle): Rectangle {
+        return Rectangle(
+            0f,
+            0f,
+            windowTexture.regionWidth.toFloat(),
+            windowTexture.regionHeight.toFloat(),
+        ).apply {
+            setCenter(viewport.getCenter(Vector2()))
+        }
+    }
 
     private fun handleInsideContentGrid(action: MouseInputAction, xOnGrid: Int, yOnGrid: Int) {
         val window = gameWindowsManager.currentWindow as ChestInventoryWindow

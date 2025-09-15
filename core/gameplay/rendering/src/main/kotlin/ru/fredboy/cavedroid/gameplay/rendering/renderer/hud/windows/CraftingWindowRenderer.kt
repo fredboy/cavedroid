@@ -10,6 +10,7 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowsConfigs
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
@@ -26,6 +27,7 @@ class CraftingWindowRenderer @Inject constructor(
     private val getStringWidth: GetStringWidthUseCase,
     private val getStringHeight: GetStringHeightUseCase,
     private val getFont: GetFontUseCase,
+    private val itemsRepository: ItemsRepository,
 ) : AbstractWindowRenderer(),
     IHudRenderer {
 
@@ -37,8 +39,20 @@ class CraftingWindowRenderer @Inject constructor(
         val windowTexture = craftingWindowTexture
         val window = gameWindowsManager.currentWindow as CraftingInventoryWindow
 
-        val windowX = viewport.width / 2 - windowTexture.regionWidth / 2
+        val windowX = viewport.width / 2 - if (!window.recipeBookActive) windowTexture.regionWidth / 2 else 0
         val windowY = viewport.height / 2 - windowTexture.regionHeight / 2
+
+        if (window.recipeBookActive) {
+            drawRecipeBook(
+                spriteBatch = spriteBatch,
+                getTextureRegionByNameUseCase = textureRegions,
+                itemsRepository = itemsRepository,
+                font = getFont(),
+                viewport = viewport,
+                window = window,
+                getStringWidth = getStringWidth,
+            )
+        }
 
         spriteBatch.draw(windowTexture, windowX, windowY)
 
@@ -81,6 +95,20 @@ class CraftingWindowRenderer @Inject constructor(
             font = getFont(),
             gridX = windowX + GameWindowsConfigs.Crafting.craftOffsetX,
             gridY = windowY + GameWindowsConfigs.Crafting.craftOffsetY,
+            items = window.getPhantomRecipe(itemsRepository),
+            itemsInRow = GameWindowsConfigs.Crafting.craftGridSize,
+            cellWidth = GameWindowsConfigs.Crafting.itemsGridColWidth,
+            cellHeight = GameWindowsConfigs.Crafting.itemsGridRowHeight,
+            getStringWidth = getStringWidth,
+            getStringHeight = getStringHeight,
+        )
+
+        drawItemsGrid(
+            spriteBatch = spriteBatch,
+            shapeRenderer = shapeRenderer,
+            font = getFont(),
+            gridX = windowX + GameWindowsConfigs.Crafting.craftOffsetX,
+            gridY = windowY + GameWindowsConfigs.Crafting.craftOffsetY,
             items = window.craftingItems,
             itemsInRow = GameWindowsConfigs.Crafting.craftGridSize,
             cellWidth = GameWindowsConfigs.Crafting.itemsGridColWidth,
@@ -98,6 +126,14 @@ class CraftingWindowRenderer @Inject constructor(
             getStringWidth = getStringWidth::invoke,
             getStringHeight = getStringHeight::invoke,
         )
+
+        getRecipeButtonTextureRegion(textureRegions, window)?.let { recipeButtonTexture ->
+            spriteBatch.draw(
+                recipeButtonTexture,
+                windowX + GameWindowsConfigs.Crafting.recipeButtonX,
+                windowY + GameWindowsConfigs.Crafting.recipeButtonY,
+            )
+        }
 
         window.selectedItem?.let { selectedItem ->
             selectedItem.draw(

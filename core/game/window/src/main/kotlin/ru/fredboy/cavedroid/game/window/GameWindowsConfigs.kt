@@ -54,6 +54,11 @@ object GameWindowsConfigs {
 
         const val craftGridSize = 2
 
+        const val recipeButtonX = 76f
+        const val recipeButtonY = 27f
+        const val recipeButtonWidth = 22f
+        const val recipeButtonHeight = 19f
+
         const val craftOffsetX = 98f
         const val craftOffsetY = 18f
 
@@ -84,6 +89,11 @@ object GameWindowsConfigs {
 
         const val craftResultOffsetX = 124f
         const val craftResultOffsetY = 36f
+
+        const val recipeButtonX = 6f
+        const val recipeButtonY = 34f
+        const val recipeButtonWidth = 22f
+        const val recipeButtonHeight = 19f
     }
 
     data object Furnace {
@@ -135,5 +145,22 @@ object GameWindowsConfigs {
 
         const val contentsInRow = 9
         const val contentsInCol = 3
+    }
+
+    data object RecipeBook {
+        const val gridWidth = 5
+        const val gridHeight = 5
+        const val pageSize = gridWidth * gridHeight
+
+        const val gridX = 12f
+        const val gridY = 12f
+
+        const val cellSize = 25f
+
+        const val prevX = 28f
+        const val prevY = 143f
+
+        const val nextX = 98f
+        const val nextY = 143f
     }
 }
