@@ -107,7 +107,7 @@ SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
     }
 
     private fun handleInsideCraftResult(action: MouseInputAction) {
-        if (!action.actionKey.touchUp) {
+        if (action.actionKey.touchUp) {
             return
         }
 
