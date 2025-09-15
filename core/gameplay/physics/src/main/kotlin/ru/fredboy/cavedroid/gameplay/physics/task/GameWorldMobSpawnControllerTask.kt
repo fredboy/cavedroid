@@ -21,7 +21,11 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
     private val maintainedMobsCount = gameWorld.width / SPAWN_CHUNK_SIZE
 
     override fun exec() {
-        Gdx.app.log(TAG, "Spawn controller task started")
+        Gdx.app.log(
+            TAG,
+            "Spawn controller task started. " +
+                "Current time: ${gameWorld.totalGameTimeSec}. Last spawn time: ${gameWorld.lastSpawnGameTime}",
+        )
         var spawnCount = 0
         if (!gameWorld.isDayTime() || mobController.mobs.size < maintainedMobsCount) {
             val mobParams = mobParamsRepository.getAllParams()

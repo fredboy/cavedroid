@@ -224,6 +224,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             gameTime = gameWorld.currentGameTime,
             moonPhase = gameWorld.moonPhase,
             gameMode = gameMode,
+            lastSpawnGameTime = gameWorld.lastSpawnGameTime,
         )
 
         val bytes = ProtoBuf.encodeToByteArray(worldSaveDataDto)
