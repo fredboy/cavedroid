@@ -157,7 +157,7 @@ object GameWindowsConfigs {
 
         const val cellSize = 25f
 
-        const val prevX = 28f
+        const val prevX = 38f
         const val prevY = 143f
 
         const val nextX = 98f
