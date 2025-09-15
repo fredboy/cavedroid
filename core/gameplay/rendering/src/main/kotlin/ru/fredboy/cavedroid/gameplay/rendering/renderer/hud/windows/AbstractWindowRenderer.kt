@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.common.utils.drawString
+import ru.fredboy.cavedroid.common.utils.pixels
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
@@ -120,12 +121,15 @@ abstract class AbstractWindowRenderer {
                 }
 
                 spriteBatch.draw(texture, bookX + gridX + x * cellSize, bookY + gridY + y * cellSize)
+
+                val drawRect = (result as? Item.Placeable)?.block?.getSpriteRectangle(0, 0)
+                    ?: Rectangle(0f, 0f, 1f, 1f)
                 spriteBatch.drawSprite(
                     sprite = result.sprite,
-                    x = bookX + gridX + x * cellSize + (cellSize / 2f - 8f),
-                    y = bookY + gridY + y * cellSize + (cellSize / 2f - 8f),
-                    width = 16f,
-                    height = 16f,
+                    x = bookX + gridX + x * cellSize + (cellSize / 2f - 8f) + drawRect.x.pixels,
+                    y = bookY + gridY + y * cellSize + (cellSize / 2f - 8f) + drawRect.y.pixels,
+                    width = drawRect.width.pixels,
+                    height = drawRect.height.pixels,
                 )
             }
 
