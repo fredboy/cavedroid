@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.data.assets.internal
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Sprite
 import ru.fredboy.cavedroid.domain.assets.repository.WearableTextureAssetsRepository
 import javax.inject.Inject
@@ -8,22 +9,22 @@ import javax.inject.Singleton
 @Singleton
 class WearableTextureAssetsRepositoryImpl @Inject constructor() : WearableTextureAssetsRepository() {
 
-    private val sideSpritesMap = mutableMapOf<String, Sprite>()
+    private val frontSpritesMap = mutableMapOf<String, Sprite?>()
 
-    private val frontSpritesMap = mutableMapOf<String, Sprite>()
-
-    override fun getSideSprite(name: String): Sprite {
-        return sideSpritesMap[name]
-            ?: flippedSprite(loadTexture("textures/equipment/${name}_side.png")).also { sprite ->
-                sideSpritesMap[name] = sprite
+    override fun getFrontSprite(material: String, slot: Int): Sprite? {
+        val key = "$material/$slot"
+        return if (frontSpritesMap.containsKey(key)) {
+            frontSpritesMap[key]
+        } else {
+            try {
+                flippedSprite(loadTexture("textures/equipment/$key.png"))
+            } catch (e: Exception) {
+                Gdx.app.error(TAG, "Couldn't load wearable sprite", e)
+                null
+            }?.also { sprite ->
+                frontSpritesMap[key] = sprite
             }
-    }
-
-    override fun getFrontSprite(name: String): Sprite {
-        return frontSpritesMap[name]
-            ?: flippedSprite(loadTexture("textures/equipment/${name}_front.png")).also { sprite ->
-                sideSpritesMap[name] = sprite
-            }
+        }
     }
 
     override fun initialize() {
@@ -32,5 +33,10 @@ class WearableTextureAssetsRepositoryImpl @Inject constructor() : WearableTextur
 
     override fun dispose() {
         super.dispose()
+        frontSpritesMap.clear()
+    }
+
+    companion object {
+        private const val TAG = "WearableTextureAssetsRepositoryImpl"
     }
 }

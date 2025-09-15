@@ -40,6 +40,18 @@ object GameWindowsConfigs {
         const val portraitWidth = 48f
         const val portraitHeight = 68f
 
+        const val helmX = 8f
+        const val helmY = 0f
+
+        const val chestX = 0f
+        const val chestY = 16f
+
+        const val pantX = 8f
+        const val pantY = 36f
+
+        const val bootX = 8f
+        const val bootY = 50f
+
         const val craftGridSize = 2
 
         const val craftOffsetX = 98f

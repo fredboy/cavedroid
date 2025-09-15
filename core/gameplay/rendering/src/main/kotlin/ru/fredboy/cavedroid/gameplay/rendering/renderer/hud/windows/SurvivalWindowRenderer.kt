@@ -1,15 +1,18 @@
 package ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.windows
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.drawString
+import ru.fredboy.cavedroid.domain.assets.repository.WearableTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowsConfigs
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
@@ -26,6 +29,7 @@ class SurvivalWindowRenderer @Inject constructor(
     private val getStringWidth: GetStringWidthUseCase,
     private val getStringHeight: GetStringHeightUseCase,
     private val getFont: GetFontUseCase,
+    private val wearableTextureAssetsRepository: WearableTextureAssetsRepository,
 ) : AbstractWindowRenderer(),
     IHudRenderer {
 
@@ -41,6 +45,28 @@ class SurvivalWindowRenderer @Inject constructor(
             (GameWindowsConfigs.Survival.portraitHeight / 2 - inventoryCharTexture.regionHeight / 2)
 
         spriteBatch.draw(inventoryCharTexture, portraitX, portraitY)
+
+        val armorSprites = mobController.player.wearingArmor.items.mapIndexedNotNull { slot, item ->
+            val armorPiece = item.item as? Item.Armor ?: return@mapIndexedNotNull null
+            val material = armorPiece.material
+
+            val (armorX, armorY) = when (armorPiece) {
+                is Item.Helmet -> GameWindowsConfigs.Survival.run { helmX to helmY }
+                is Item.Chestplate -> GameWindowsConfigs.Survival.run { chestX to chestY }
+                is Item.Leggings -> GameWindowsConfigs.Survival.run { pantX to pantY }
+                is Item.Boots -> GameWindowsConfigs.Survival.run { bootX to bootY }
+            }
+
+            wearableTextureAssetsRepository.getFrontSprite(material, slot)
+                ?.apply {
+                    setPosition(portraitX + armorX, portraitY + armorY)
+                    setColor(armorPiece.params.tint ?: Color.WHITE)
+                }
+        }
+
+        armorSprites.forEach { sprite ->
+            sprite.draw(spriteBatch)
+        }
     }
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
