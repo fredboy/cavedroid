@@ -153,7 +153,13 @@ class SelectCraftingInventoryItemMouseInputHandler @Inject constructor(
     }
 
     private fun handleInsideCraftResult(action: MouseInputAction) {
+        if (!action.actionKey.touchUp) {
+            return
+        }
+
         val window = gameWindowsManager.currentWindow as CraftingInventoryWindow
+
+        window.selectedRecipe = -1
 
         handleInsideCraftResultCell(action, window.craftResultList, window, 0)
 
