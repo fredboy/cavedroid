@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.gameplay.rendering.renderer.hud
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -89,6 +90,8 @@ class DebugRenderer @Inject constructor(
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
         if (gameContextRepository.shouldShowInfo()) {
             drawDebugInfo(spriteBatch)
+        } else {
+            spriteBatch.drawString(getFont(), "FPS: ${Gdx.graphics.framesPerSecond}", 0f, 0f)
         }
 
         if (gameContextRepository.shouldShowMap()) {
