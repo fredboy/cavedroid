@@ -245,7 +245,11 @@ internal class ItemsRepositoryImpl @Inject constructor(
                 }
             }
         }
-        return fallbackItem.toInventoryItem()
+
+        return inputItems.filter { it !is Item.None }
+            .takeIf { it.size >= 2 && it.all { item -> item is Item.Durable && item == it.first() } }
+            ?.first()?.toInventoryItem(durability = inputTotalDurability)
+            ?: fallbackItem.toInventoryItem()
     }
 
     override fun getAllItems(): Collection<Item> = itemsMap.values

@@ -682,7 +682,7 @@
           "type": "random_range",
           "min": 2,
           "max": 64,
-          "chance": 0.2
+          "chance": 0.02
         }
       }
     ],
