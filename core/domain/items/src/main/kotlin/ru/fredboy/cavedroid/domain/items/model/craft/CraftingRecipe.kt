@@ -9,6 +9,7 @@ data class CraftingRecipe(
     val input: List<Regex?>,
     val isShapeless: Boolean,
     val amount: Int,
+    val isHidden: Boolean,
 ) {
 
     fun getHeight(): Int {

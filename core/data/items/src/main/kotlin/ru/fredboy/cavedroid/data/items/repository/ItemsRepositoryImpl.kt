@@ -94,6 +94,7 @@ internal class ItemsRepositoryImpl @Inject constructor(
                         input = recipe.input.map { it?.let(::Regex) },
                         isShapeless = recipe.shapeless,
                         amount = recipe.count,
+                        isHidden = recipe.hidden,
                     )
                 },
                 result = getItemByKey(key),

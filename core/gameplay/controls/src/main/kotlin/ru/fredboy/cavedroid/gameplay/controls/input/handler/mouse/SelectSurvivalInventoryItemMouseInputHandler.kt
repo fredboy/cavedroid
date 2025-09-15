@@ -224,12 +224,13 @@ SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
             GameWindowsConfigs.Survival.itemsGridRowHeight * mobController.player.wearingArmor.items.size,
         ).contains(xOnWindow, yOnWindow)
 
-        val isInsideRecipeButton = action.actionKey.touchUp && Rectangle(
-            GameWindowsConfigs.Survival.recipeButtonX,
-            GameWindowsConfigs.Survival.recipeButtonY,
-            GameWindowsConfigs.Survival.recipeButtonWidth,
-            GameWindowsConfigs.Survival.recipeButtonHeight,
-        ).contains(xOnWindow, yOnWindow)
+        val isInsideRecipeButton = action.actionKey.touchUp &&
+            Rectangle(
+                GameWindowsConfigs.Survival.recipeButtonX,
+                GameWindowsConfigs.Survival.recipeButtonY,
+                GameWindowsConfigs.Survival.recipeButtonWidth,
+                GameWindowsConfigs.Survival.recipeButtonHeight,
+            ).contains(xOnWindow, yOnWindow)
 
         val isInsideRecipeBook = window.recipeBookActive &&
             getRecipeBookRect()

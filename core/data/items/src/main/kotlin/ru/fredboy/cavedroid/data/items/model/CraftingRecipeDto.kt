@@ -7,4 +7,5 @@ data class CraftingRecipeDto(
     val input: List<String?>,
     val shapeless: Boolean,
     val count: Int,
+    val hidden: Boolean = false,
 )

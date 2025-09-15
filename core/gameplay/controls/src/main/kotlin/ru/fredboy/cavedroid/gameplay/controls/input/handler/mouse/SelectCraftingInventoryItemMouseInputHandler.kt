@@ -198,12 +198,13 @@ class SelectCraftingInventoryItemMouseInputHandler @Inject constructor(
             yOnWindow > GameWindowsConfigs.Crafting.craftResultOffsetY &&
             yOnWindow < GameWindowsConfigs.Crafting.craftResultOffsetY + GameWindowsConfigs.Crafting.itemsGridRowHeight
 
-        val isInsideRecipeButton = action.actionKey.touchUp && Rectangle(
-            GameWindowsConfigs.Crafting.recipeButtonX,
-            GameWindowsConfigs.Crafting.recipeButtonY,
-            GameWindowsConfigs.Crafting.recipeButtonWidth,
-            GameWindowsConfigs.Crafting.recipeButtonHeight,
-        ).contains(xOnWindow, yOnWindow)
+        val isInsideRecipeButton = action.actionKey.touchUp &&
+            Rectangle(
+                GameWindowsConfigs.Crafting.recipeButtonX,
+                GameWindowsConfigs.Crafting.recipeButtonY,
+                GameWindowsConfigs.Crafting.recipeButtonWidth,
+                GameWindowsConfigs.Crafting.recipeButtonHeight,
+            ).contains(xOnWindow, yOnWindow)
 
         val isInsideRecipeBook = window.recipeBookActive &&
             getRecipeBookRect()

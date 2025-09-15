@@ -38,12 +38,10 @@ abstract class AbstractInventoryWindowWithCraftGrid(
     fun getAvailableCraftingRecipes(itemsRepository: ItemsRepository): Sequence<Pair<CraftingRecipe, Item>> {
         return itemsRepository.getAllCraftingRecipes()
             .asSequence()
-            .mapNotNull { (recipes, result) ->
-                val recipe = recipes.firstOrNull {
-                    it.getWidth() <= gridSize && it.getHeight() <= gridSize
-                } ?: return@mapNotNull null
-
-                recipe to result
+            .flatMap { (recipes, result) ->
+                recipes
+                    .filter { !it.isHidden && it.getWidth() <= gridSize && it.getHeight() <= gridSize }
+                    .map { it to result }
             }
     }
 
