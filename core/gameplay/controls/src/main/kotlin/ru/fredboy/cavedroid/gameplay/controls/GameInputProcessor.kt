@@ -9,6 +9,8 @@ import ru.fredboy.cavedroid.domain.assets.model.TouchButton
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
+import ru.fredboy.cavedroid.game.window.GameWindowType
+import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.gameplay.controls.input.IKeyboardInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
@@ -29,6 +31,7 @@ class GameInputProcessor @Inject constructor(
     private val keyboardInputActionMapper: KeyboardInputActionMapper,
     private val mouseInputHandlers: Set<@JvmSuppressWildcards IMouseInputHandler>,
     private val keyboardInputHandlers: Set<@JvmSuppressWildcards IKeyboardInputHandler>,
+    private val gameWindowsManager: GameWindowsManager,
 ) : InputProcessor {
 
     private var touchDownX = 0f
@@ -188,6 +191,10 @@ class GameInputProcessor @Inject constructor(
         )
 
     private fun getTouchedKey(touchX: Float, touchY: Float): TouchButton {
+        if (gameWindowsManager.currentWindowType != GameWindowType.NONE) {
+            return nullButton
+        }
+
         for (entry in getTouchButtonsUseCase().entries) {
             val button = entry.value
             if (button.rectangleOnScreen.contains(touchX, touchY)) {

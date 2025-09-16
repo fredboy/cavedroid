@@ -16,6 +16,7 @@ import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.annotation.BindMouseInputHandler
 import javax.inject.Inject
+import kotlin.math.max
 
 @GameScope
 @BindMouseInputHandler
@@ -44,19 +45,23 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
         val windowTexture = getCurrentWindowTexture()
 
         val window = gameWindowsManager.currentWindow as? AbstractInventoryWindowWithCraftGrid
-        val recipeBookWidth = textureRegions["recipe_book"]
+        val (recipeBookWidth, recipeBookHeight) = textureRegions["recipe_book"]
             ?.takeIf { window?.recipeBookActive == true }
-            ?.regionWidth
-            ?.toFloat()
-            ?: 0f
+            ?.run { regionWidth.toFloat() to regionHeight.toFloat() }
+            ?: (0f to 0f)
 
         return Rectangle(
             0f,
             0f,
             recipeBookWidth + windowTexture.regionWidth.toFloat(),
-            windowTexture.regionHeight.toFloat(),
+            max(windowTexture.regionHeight.toFloat(), recipeBookHeight),
         ).apply {
-            setCenter(viewport.getCenter(Vector2()))
+            if (window?.recipeBookActive != true) {
+                setCenter(viewport.getCenter(Vector2()))
+            } else {
+                x = viewport.width / 2f - recipeBookWidth
+                y = viewport.height / 2f - height / 2f
+            }
         }
     }
 
