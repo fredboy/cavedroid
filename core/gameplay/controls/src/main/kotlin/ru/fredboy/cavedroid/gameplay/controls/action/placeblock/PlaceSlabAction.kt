@@ -35,6 +35,13 @@ class PlaceSlabAction @Inject constructor(
             placeable.bottomPartBlock
         }
 
+        val blockRect = slabPart.getRectangle(x, y)
+        if (mobController.player.hitbox.overlaps(blockRect) ||
+            mobController.mobs.any { mob -> mob.hitbox.overlaps(blockRect) }
+        ) {
+            return false
+        }
+
         return if (gameWorld.placeToForeground(x, y, slabPart)) {
             mobController.player.decreaseCurrentItemCount()
             true

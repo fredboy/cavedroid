@@ -2,6 +2,8 @@ package ru.fredboy.cavedroid.gameplay.physics.task
 
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.GameWorldLightManager
@@ -40,6 +42,10 @@ class GameWorldMobDamageControllerTask @Inject constructor(
                 mob.restoreBreath()
             }
 
+            if (mob.isHeadInsideSolidBlock(gameWorld)) {
+                mob.damage(4)
+            }
+
             if (mob.behavior.attacksWhenPossible && mob.hitbox.overlaps(mobController.player.hitbox)) {
                 mobController.player.damage(mob.params.damageToPlayer)
             }
@@ -47,6 +53,15 @@ class GameWorldMobDamageControllerTask @Inject constructor(
             if (mob.params.takesSunDamage && gameWorld.isDayTime() && gameWorldLightManager.isMobExposedToSun(mob)) {
                 mob.damage(SUN_DAMAGE)
             }
+        }
+    }
+
+    private fun Mob.isHeadInsideSolidBlock(gameWorld: GameWorld): Boolean {
+        val x = (position.x + direction.basis * (width / 2f - 0.125f)).toInt()
+        val y = (position.y - height / 2f + 0.125f).toInt()
+
+        return gameWorld.getForeMap(x, y).let { block ->
+            block.params.hasCollision && block.getRectangle(x, y).overlaps(hitbox)
         }
     }
 

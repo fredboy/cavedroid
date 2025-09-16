@@ -21,9 +21,18 @@ class PlaceBlockItemToForegroundAction @Inject constructor(
 ) : IPlaceBlockAction {
 
     override fun place(placeable: Item.Placeable, x: Int, y: Int): Boolean {
-        return if (placeable.isSlab()) {
-            placeSlabAction.place(placeable, x, y)
-        } else if (gameWorld.placeToForeground(x, y, placeable.block)) {
+        if (placeable.isSlab()) {
+            return placeSlabAction.place(placeable, x, y)
+        }
+
+        val blockRect = placeable.block.getRectangle(x, y)
+        if (mobController.player.hitbox.overlaps(blockRect) ||
+            mobController.mobs.any { mob -> mob.hitbox.overlaps(blockRect) }
+        ) {
+            return false
+        }
+
+        return if (gameWorld.placeToForeground(x, y, placeable.block)) {
             mobController.player.decreaseCurrentItemCount()
             true
         } else {
