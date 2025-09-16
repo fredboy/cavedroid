@@ -16,6 +16,7 @@ import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindowWithCraftGrid
 import ru.fredboy.cavedroid.game.window.inventory.CraftingInventoryWindow
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
+import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.annotation.BindMouseInputHandler
 import javax.inject.Inject
 import kotlin.math.max
@@ -153,7 +154,7 @@ class SelectCraftingInventoryItemMouseInputHandler @Inject constructor(
     }
 
     private fun handleInsideCraftResult(action: MouseInputAction) {
-        if (action.actionKey.touchUp) {
+        if (action.actionKey is MouseInputActionKey.Screen && action.actionKey.touchUp) {
             return
         }
 
