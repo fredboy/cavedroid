@@ -8,9 +8,14 @@ CaveDroid is a **2D Minecraft-inspired game** for Android, Desktop (Windows, Lin
 Explore, mine, and build in a looped world.
 
 <details>
-  <summary>Screenshot</summary>
+  <summary>Screenshots</summary>
 
-![Screenshot](https://fredboy.ru/pub/cavedroid/screenshot.png)
+![Screenshot 1](https://fredboy.ru/pub/cavedroid/screenshots/screenshot_01.png)
+![Screenshot 2](https://fredboy.ru/pub/cavedroid/screenshots/screenshot_02.png)
+![Screenshot 3](https://fredboy.ru/pub/cavedroid/screenshots/screenshot_03.png)
+![Screenshot 4](https://fredboy.ru/pub/cavedroid/screenshots/screenshot_04.png)
+![Screenshot 5](https://fredboy.ru/pub/cavedroid/screenshots/screenshot_05.png)
+![Screenshot 6](https://fredboy.ru/pub/cavedroid/screenshots/screenshot_06.png)
 
 </details>
 
