@@ -162,11 +162,6 @@ class GameRenderer @Inject constructor(
         return MIDNIGHT_COLOR.cpy().lerp(NOON_COLOR, gameWorld.getSunlight())
     }
 
-    private fun renderLights() {
-        gameWorld.rayHandler.setCombinedMatrix(camera)
-        gameWorld.rayHandler.updateAndRender()
-    }
-
     fun render(delta: Float) {
         updateCameraPosition(delta)
 
@@ -187,7 +182,8 @@ class GameRenderer @Inject constructor(
         worldRenderers.forEach { renderer -> renderer.draw(spriter, shaper, cameraViewport, delta) }
         spriter.end()
 
-        renderLights()
+        gameWorld.rayHandler.setCombinedMatrix(camera)
+        gameWorld.rayHandler.render()
 
         spriter.projectionMatrix = hudCamera.combined
         shaper.projectionMatrix = hudCamera.combined
@@ -219,8 +215,6 @@ class GameRenderer @Inject constructor(
     }
 
     companion object {
-        private const val DYNAMIC_CAMERA_DELAY_MS = 500L
-
         private val MIDNIGHT_COLOR = Color(0f, 0f, 0.1f, 1f)
         private val NOON_COLOR = Color(0.4f, 0.7f, 1f, 1f)
     }

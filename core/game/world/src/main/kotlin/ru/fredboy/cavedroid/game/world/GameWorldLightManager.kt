@@ -4,6 +4,7 @@ import box2dLight.DirectionalLight
 import box2dLight.Light
 import box2dLight.PointLight
 import box2dLight.RayHandler
+import box2dLight.publicUpdate
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
@@ -97,6 +98,12 @@ class GameWorldLightManager @Inject constructor(
         }
         sunLight.direction = sunAngle
         sunLight.color = Color().apply { a = max(gameWorld.getSunlight(), 0.1f) }
+        sunLight.publicUpdate()
+        gameContextRepository.getCameraContext().visibleWorld.let { visibleWorld ->
+            blockLights.asSequence()
+                .flatMap { it.value }
+                .forEach { it.publicUpdate() }
+        }
     }
 
     private fun updateChunk(blockX: Int, blockY: Int) {
@@ -129,6 +136,8 @@ class GameWorldLightManager @Inject constructor(
                 }
                 setContactFilter(filter)
                 setSoftnessLength(3f)
+                isStaticLight = true
+                update()
             }
         }
     }
