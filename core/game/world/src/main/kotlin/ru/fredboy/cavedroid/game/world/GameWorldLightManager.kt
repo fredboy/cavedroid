@@ -102,6 +102,7 @@ class GameWorldLightManager @Inject constructor(
         gameContextRepository.getCameraContext().visibleWorld.let { visibleWorld ->
             blockLights.asSequence()
                 .flatMap { it.value }
+                .filter { visibleWorld.contains(it.position) }
                 .forEach { it.publicUpdate() }
         }
     }
