@@ -340,12 +340,11 @@ abstract class Mob(
 
         applyMediumResistanceToBody(mobWorldAdapter)
         if (!controlVector.isZero) {
-            body.applyForceToCenter(controlVector, true)
-            velocity.x = MathUtils.clamp(velocity.x, -abs(controlVector.x), abs(controlVector.x))
+            velocity.x = controlVector.x
             if (isFlyMode) {
-                velocity.y = MathUtils.clamp(velocity.y, -abs(controlVector.y), abs(controlVector.y))
+                velocity.y = controlVector.y
             } else if (!canClimb) {
-                this@Mob.controlVector.y = 0f
+                controlVector.y = 0f
             }
         } else if (!isFlyMode) {
             body.linearVelocity = body.linearVelocity.cpy().apply { x = 0f }
