@@ -31,6 +31,23 @@ Explore, mine, and build in a looped world.
 
 ---
 
+## Controls
+
+| Action | Touch / Mobile | Keyboard / Mouse |
+|--------|----------------|-----------------|
+| Move left/right | Drag **joystick** on left half | **A / D** |
+| Jump | Tap left side or press **jump button** | **Space** (jump mid-air in Creative = fly) |
+| Move cursor / aim | Drag on right side | Move **mouse** |
+| Break block | Hold right side | **LMB** while aiming at block |
+| Place block (background layer) | Hold right side while aiming empty cell | **RMB** while aiming empty space |
+| Activate / Use / Place active block | Tap right side | **RMB click** |
+| Attack mob | Tap while aiming at mob | **LMB click** |
+| Open inventory | Chest button | **E** |
+| Inventory: pick up / move | Drag-n-drop, tap | Click to pick up, Right-click for half stack or place single item |
+| Inventory: move single item (touch) | Hold item with one finger + tap target cell with another | N/A |
+
+---
+
 ## Binary Releases
 
 You can download APK and JAR builds from [the releases page](https://github.com/fredboy/cavedroid/releases).
