@@ -25,9 +25,12 @@ class PlaceBlockItemToForegroundAction @Inject constructor(
             return placeSlabAction.place(placeable, x, y)
         }
 
-        val blockRect = placeable.block.getRectangle(x, y)
-        if (mobController.player.hitbox.overlaps(blockRect) ||
-            mobController.mobs.any { mob -> mob.hitbox.overlaps(blockRect) }
+        val blockRect by lazy { placeable.block.getRectangle(x, y) }
+        if (placeable.block.params.hasCollision &&
+            (
+                mobController.player.hitbox.overlaps(blockRect) ||
+                    mobController.mobs.any { mob -> mob.hitbox.overlaps(blockRect) }
+                )
         ) {
             return false
         }
