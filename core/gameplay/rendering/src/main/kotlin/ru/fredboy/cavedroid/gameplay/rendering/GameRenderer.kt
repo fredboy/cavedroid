@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.badlogic.gdx.utils.Disposable
-import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.common.utils.drawString
@@ -180,25 +179,7 @@ class GameRenderer @Inject constructor(
             /* width = */ camera.viewportWidth,
             /* height = */ camera.viewportHeight,
         )
-        val renderTimes = worldRenderers.map { renderer ->
-            val startTime = TimeUtils.nanoTime()
-            renderer.draw(spriter, shaper, cameraViewport, delta)
-            val endTime = TimeUtils.nanoTime()
-            renderer to (endTime - startTime)
-        }
-
-        val total = renderTimes.sumOf { it.second }.toFloat()
-        println(
-            """
-                World renderers report:
-                Total time: ${total / 1000000} ms
-                Details:${
-                renderTimes.joinToString(separator = "\n\t", prefix = "\n\t") { (renderer, time) ->
-                    "${renderer::class.simpleName!!}: ${time.toFloat() / total * 100f} % ($time)"
-                }
-            }
-            """.trimIndent(),
-        )
+        worldRenderers.forEach { renderer -> renderer.draw(spriter, shaper, cameraViewport, delta) }
 
         spriter.end()
 

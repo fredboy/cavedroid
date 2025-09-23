@@ -292,7 +292,7 @@ class GameWorld @Inject constructor(
             skipNight = false
         }
 
-        gameWorldLightManager.update()
+        gameWorldLightManager.update(delta)
 
         box2dAccumulator += delta
         while (box2dAccumulator >= PHYSICS_STEP_DELTA) {
