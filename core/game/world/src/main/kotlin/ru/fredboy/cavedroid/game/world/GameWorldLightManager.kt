@@ -34,6 +34,8 @@ class GameWorldLightManager @Inject constructor(
 
     private var _sunLight: DirectionalLight? = null
 
+    private var updateAccumulator = 0f
+
     private val gameWorld: GameWorld
         get() = requireNotNull(_gameWorld)
 
@@ -55,7 +57,7 @@ class GameWorldLightManager @Inject constructor(
 
         _rayHandler = RayHandler(gameWorld.world)
 
-        _sunLight = DirectionalLight(rayHandler, 512, Color().apply { a = 1f }, 90.1f).apply {
+        _sunLight = DirectionalLight(rayHandler, 64, Color().apply { a = 1f }, 90.1f).apply {
             val filter = Filter().apply {
                 maskBits = PhysicsConstants.CATEGORY_OPAQUE
             }
@@ -100,7 +102,15 @@ class GameWorldLightManager @Inject constructor(
         return sunLight.contains(mob.position.x, mob.position.y)
     }
 
-    fun update() {
+    fun update(delta: Float) {
+        updateAccumulator += delta
+
+        if (updateAccumulator < SUN_UPDATE_FREQUENCY) {
+            return
+        }
+
+        updateAccumulator = 0f
+
         var sunAngle = (gameWorld.getNormalizedTime() * 30f + 75f)
         if (sunAngle >= 120f) sunAngle -= 60f
         if (MathUtils.isEqual(90f, sunAngle, 0.1f)) {
@@ -219,5 +229,7 @@ class GameWorldLightManager @Inject constructor(
         private const val TAG = "GameWorldLightManager"
 
         private const val CHUNK_SIZE = 4
+
+        private const val SUN_UPDATE_FREQUENCY = 1f
     }
 }
