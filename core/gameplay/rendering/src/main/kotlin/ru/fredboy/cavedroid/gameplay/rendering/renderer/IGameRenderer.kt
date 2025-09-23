@@ -3,8 +3,9 @@ package ru.fredboy.cavedroid.gameplay.rendering.renderer
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.utils.Disposable
 
-interface IGameRenderer {
+interface IGameRenderer : Disposable {
 
     val renderLayer: Int
 
@@ -17,4 +18,6 @@ interface IGameRenderer {
         viewport: Rectangle,
         delta: Float,
     )
+
+    override fun dispose() = Unit
 }

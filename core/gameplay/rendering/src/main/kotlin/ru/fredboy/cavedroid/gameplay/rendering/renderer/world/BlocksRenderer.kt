@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.model.SpriteOrigin
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageFrameCountUseCase
@@ -15,6 +16,9 @@ import ru.fredboy.cavedroid.entity.container.model.Furnace
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.gameplay.rendering.utils.ChunkFrameBuffer
+import ru.fredboy.cavedroid.gameplay.rendering.utils.RenderingTool
+import kotlin.math.floor
 
 abstract class BlocksRenderer(
     protected val gameWorld: GameWorld,
@@ -68,6 +72,8 @@ abstract class BlocksRenderer(
         shapeRenderer: ShapeRenderer,
         x: Int,
         y: Int,
+        drawX: Float,
+        drawY: Float,
     ) {
         val foregroundBlock = gameWorld.getForeMap(x, y)
         val backgroundBlock = gameWorld.getBackMap(x, y)
@@ -84,8 +90,8 @@ abstract class BlocksRenderer(
             val marginTop = backgroundBlock.params.spriteMarginsMeters.top
 
             shapeRenderer.rect(
-                /* x = */ x.toFloat() + marginLeft,
-                /* y = */ y.toFloat() + marginTop,
+                /* x = */ drawX + marginLeft,
+                /* y = */ drawY + marginTop,
                 /* width = */ backgroundBlock.width,
                 /* height = */ backgroundBlock.height,
             )
@@ -94,7 +100,7 @@ abstract class BlocksRenderer(
         }
     }
 
-    protected fun drawBackMap(spriteBatch: SpriteBatch, x: Int, y: Int) {
+    protected fun drawBackMap(spriteBatch: SpriteBatch, x: Int, y: Int, drawX: Float, drawY: Float) {
         val foregroundBlock = gameWorld.getForeMap(x, y)
         val backgroundBlock = gameWorld.getBackMap(x, y).let { block ->
             if (block.isNone() && y >= gameWorld.generatorConfig.seaLevel) {
@@ -107,35 +113,42 @@ abstract class BlocksRenderer(
         if (foregroundBlock.canSeeThrough && !backgroundBlock.isNone()) {
             if (backgroundBlock is Block.Furnace) {
                 val furnace = containerController.getContainer(x, y, Layer.BACKGROUND.z) as? Furnace
-                backgroundBlock.draw(spriteBatch, x.toFloat(), y.toFloat(), furnace?.isActive ?: false)
+                backgroundBlock.draw(spriteBatch, drawX, drawY, furnace?.isActive ?: false)
             } else {
-                backgroundBlock.draw(spriteBatch, x.toFloat(), y.toFloat())
+                backgroundBlock.draw(spriteBatch, drawX, drawY)
             }
         }
     }
 
-    protected fun drawForeMap(spriteBatch: SpriteBatch, x: Int, y: Int) {
+    protected fun drawForeMap(spriteBatch: SpriteBatch, x: Int, y: Int, drawX: Float, drawY: Float) {
         val foregroundBlock = gameWorld.getForeMap(x, y)
 
         if (!foregroundBlock.isNone() && foregroundBlock.params.isBackground == background) {
             if (foregroundBlock is Block.Furnace) {
                 val furnace = containerController.getContainer(x, y, Layer.FOREGROUND.z) as? Furnace
-                foregroundBlock.draw(spriteBatch, x.toFloat(), y.toFloat(), furnace?.isActive ?: false)
+                foregroundBlock.draw(spriteBatch, drawX, drawY, furnace?.isActive ?: false)
             } else if (foregroundBlock.params.allowAttachToNeighbour) {
-                drawAttachedToNeighbour(spriteBatch, foregroundBlock, x, y)
+                drawAttachedToNeighbour(spriteBatch, foregroundBlock, x, y, drawX, drawY)
             } else {
-                foregroundBlock.draw(spriteBatch, x.toFloat(), y.toFloat())
+                foregroundBlock.draw(spriteBatch, drawX, drawY)
             }
         }
     }
 
-    private fun drawAttachedToNeighbour(spriteBatch: SpriteBatch, block: Block, x: Int, y: Int) {
+    private fun drawAttachedToNeighbour(
+        spriteBatch: SpriteBatch,
+        block: Block,
+        x: Int,
+        y: Int,
+        drawX: Float,
+        drawY: Float,
+    ) {
         val bottom = gameWorld.getForeMap(x, y + 1)
         val left = gameWorld.getForeMap(x - 1, y)
         val right = gameWorld.getForeMap(x + 1, y)
 
         if (bottom.params.hasCollision) {
-            block.draw(spriteBatch, x.toFloat(), y.toFloat())
+            block.draw(spriteBatch, drawX, drawY)
             return
         }
 
@@ -147,11 +160,38 @@ abstract class BlocksRenderer(
 
         spriteBatch.drawSprite(
             sprite = block.sprite,
-            x = x.toFloat() + 0.6f * (rotation / -45f),
-            y = y.toFloat(),
+            x = drawX + 0.6f * (rotation / -45f),
+            y = drawY,
             rotation = rotation,
             origin = SpriteOrigin(0.5f, 1f),
         )
+    }
+
+    protected fun <Renderer : RenderingTool> drawChunks(
+        spriteBatch: SpriteBatch,
+        viewport: Rectangle,
+        chunks: MutableMap<Pair<Int, Int>, ChunkFrameBuffer<Renderer>>,
+        chunkFactory: (Int, Int) -> ChunkFrameBuffer<Renderer>,
+        drawFunction: (Renderer, Int, Int, Float, Float) -> Unit,
+    ) {
+        val minChunkX = floor(viewport.x / ChunkFrameBuffer.CHUNK_SIZE).toInt()
+        val maxChunkX = floor((viewport.x + viewport.width) / ChunkFrameBuffer.CHUNK_SIZE).toInt()
+        val minChunkY = floor(viewport.y / ChunkFrameBuffer.CHUNK_SIZE).toInt()
+        val maxChunkY = floor((viewport.y + viewport.height) / ChunkFrameBuffer.CHUNK_SIZE).toInt()
+
+        for (cx in minChunkX..maxChunkX) {
+            for (cy in minChunkY..maxChunkY) {
+                val key = cx to cy
+                val chunk = chunks.getOrPut(key) { chunkFactory(cx, cy) }
+
+                chunk.render(
+                    spriteBatch = spriteBatch,
+                    drawFunction = drawFunction,
+                )
+            }
+        }
+
+        drawBlockDamage(spriteBatch)
     }
 
     companion object {
