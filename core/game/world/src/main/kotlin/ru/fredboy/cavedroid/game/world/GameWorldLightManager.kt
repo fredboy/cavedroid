@@ -74,6 +74,7 @@ class GameWorldLightManager @Inject constructor(
 
     override fun onBlockPlaced(block: Block, x: Int, y: Int, layer: Layer) {
         updateChunk(x, y)
+        updateVisibleLights()
     }
 
     override fun dispose() {
@@ -84,6 +85,15 @@ class GameWorldLightManager @Inject constructor(
         _rayHandler = null
         _sunLight = null
         blockLights.clear()
+    }
+
+    private fun updateVisibleLights() {
+        gameContextRepository.getCameraContext().visibleWorld.let { visibleWorld ->
+            blockLights.asSequence()
+                .flatMap { it.value }
+                .filter { visibleWorld.contains(it.position) }
+                .forEach { it.publicUpdate() }
+        }
     }
 
     fun isMobExposedToSun(mob: Mob): Boolean {
@@ -99,12 +109,6 @@ class GameWorldLightManager @Inject constructor(
         sunLight.direction = sunAngle
         sunLight.color = Color().apply { a = max(gameWorld.getSunlight(), 0.1f) }
         sunLight.publicUpdate()
-        gameContextRepository.getCameraContext().visibleWorld.let { visibleWorld ->
-            blockLights.asSequence()
-                .flatMap { it.value }
-                .filter { visibleWorld.contains(it.position) }
-                .forEach { it.publicUpdate() }
-        }
     }
 
     private fun updateChunk(blockX: Int, blockY: Int) {
@@ -138,7 +142,6 @@ class GameWorldLightManager @Inject constructor(
                 setContactFilter(filter)
                 setSoftnessLength(3f)
                 isStaticLight = true
-                update()
             }
         }
     }

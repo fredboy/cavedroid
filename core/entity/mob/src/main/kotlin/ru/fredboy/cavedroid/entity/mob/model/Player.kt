@@ -260,8 +260,8 @@ class Player(
         sight = PointLight(
             mobWorldAdapter.getRayHandler(),
             128,
-            Color().apply { a = 0.9f },
-            8f,
+            Color().apply { a = 0.7f },
+            4f,
             position.x,
             position.y,
         ).apply {
