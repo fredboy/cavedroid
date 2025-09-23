@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.badlogic.gdx.utils.Disposable
+import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.common.utils.drawString
@@ -179,7 +180,26 @@ class GameRenderer @Inject constructor(
             /* width = */ camera.viewportWidth,
             /* height = */ camera.viewportHeight,
         )
-        worldRenderers.forEach { renderer -> renderer.draw(spriter, shaper, cameraViewport, delta) }
+        val renderTimes = worldRenderers.map { renderer ->
+            val startTime = TimeUtils.nanoTime()
+            renderer.draw(spriter, shaper, cameraViewport, delta)
+            val endTime = TimeUtils.nanoTime()
+            renderer to (endTime - startTime)
+        }
+
+        val total = renderTimes.sumOf { it.second }.toFloat()
+        println(
+            """
+                World renderers report:
+                Total time: ${total / 1000000} ms
+                Details:${
+                renderTimes.joinToString(separator = "\n\t", prefix = "\n\t") { (renderer, time) ->
+                    "${renderer::class.simpleName!!}: ${time.toFloat() / total * 100f} % ($time)"
+                }
+            }
+            """.trimIndent(),
+        )
+
         spriter.end()
 
         gameWorld.rayHandler.setCombinedMatrix(camera)
@@ -212,6 +232,8 @@ class GameRenderer @Inject constructor(
     override fun dispose() {
         spriter.dispose()
         shaper.dispose()
+        worldRenderers.forEach { renderer -> renderer.dispose() }
+        hudRenderers.forEach { renderer -> renderer.dispose() }
     }
 
     companion object {

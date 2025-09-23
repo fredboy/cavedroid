@@ -12,6 +12,8 @@ import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindWorldRenderer
+import ru.fredboy.cavedroid.gameplay.rendering.utils.ChunkFrameBuffer
+import ru.fredboy.cavedroid.gameplay.rendering.utils.RenderingTool
 import javax.inject.Inject
 
 @GameScope
@@ -36,11 +38,30 @@ class ForegroundBlocksRenderer @Inject constructor(
 
     override val background = false
 
+    private val chunks = mutableMapOf<Pair<Int, Int>, ChunkFrameBuffer<RenderingTool.SpriteBatch>>()
+
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
+        drawChunks(
+            spriteBatch = spriteBatch,
+            viewport = viewport,
+            chunks = chunks,
+            chunkFactory = { x, y -> ChunkFrameBuffer(x, y, gameWorld, RenderingTool.SpriteBatch()) },
+            drawFunction = { batch, x, y, drawX, drawY -> drawForeMap(batch.spriteBatch, x, y, drawX, drawY) },
+        )
+
         forEachBlockInArea(viewport) { x, y ->
-            drawForeMap(spriteBatch, x, y)
+            if (gameWorld.getForeMap(x, y).params.animationInfo != null) {
+                drawForeMap(spriteBatch, x, y, x.toFloat(), y.toFloat())
+            }
         }
+
         drawBlockDamage(spriteBatch)
+    }
+
+    override fun dispose() {
+        super.dispose()
+        chunks.forEach { (_, chunk) -> chunk.dispose() }
+        chunks.clear()
     }
 
     companion object {

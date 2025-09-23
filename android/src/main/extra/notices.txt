@@ -89,13 +89,7 @@ POM License: The Apache Software License, Version 2.0 - http://www.apache.org/li
 
 --------------------------------------------------------------------------------
 
-12. Group: androidx.multidex  Name: multidex  Version: 2.0.0
-
-POM License: The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-
---------------------------------------------------------------------------------
-
-13. Group: androidx.profileinstaller  Name: profileinstaller  Version: 1.3.0
+12. Group: androidx.profileinstaller  Name: profileinstaller  Version: 1.3.0
 
 POM Project URL: https://developer.android.com/jetpack/androidx/releases/profileinstaller#1.3.0
 
@@ -103,7 +97,7 @@ POM License: The Apache Software License, Version 2.0 - http://www.apache.org/li
 
 --------------------------------------------------------------------------------
 
-14. Group: androidx.startup  Name: startup-runtime  Version: 1.1.1
+13. Group: androidx.startup  Name: startup-runtime  Version: 1.1.1
 
 POM Project URL: https://developer.android.com/jetpack/androidx/releases/startup#1.1.1
 
@@ -111,7 +105,7 @@ POM License: The Apache Software License, Version 2.0 - http://www.apache.org/li
 
 --------------------------------------------------------------------------------
 
-15. Group: androidx.tracing  Name: tracing  Version: 1.0.0
+14. Group: androidx.tracing  Name: tracing  Version: 1.0.0
 
 POM Project URL: https://developer.android.com/jetpack/androidx/releases/tracing#1.0.0
 
@@ -119,9 +113,17 @@ POM License: The Apache Software License, Version 2.0 - http://www.apache.org/li
 
 --------------------------------------------------------------------------------
 
-16. Group: androidx.versionedparcelable  Name: versionedparcelable  Version: 1.1.1
+15. Group: androidx.versionedparcelable  Name: versionedparcelable  Version: 1.1.1
 
 POM Project URL: http://developer.android.com/tools/extras/support-library.html
+
+POM License: The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
+
+--------------------------------------------------------------------------------
+
+16. Group: com.badlogicgames.ashley  Name: ashley  Version: 1.7.4
+
+POM Project URL: https://github.com/libgdx/ashley
 
 POM License: The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
 
@@ -592,5 +594,5 @@ POM License: MIT License - https://github.com/fredboy/automultibind/blob/master/
 --------------------------------------------------------------------------------
 
 
-This report was generated at Tue Sep 23 00:29:52 NOVT 2025.
+This report was generated at Wed Sep 24 05:08:18 NOVT 2025.
 

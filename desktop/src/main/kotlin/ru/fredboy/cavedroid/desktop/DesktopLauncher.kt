@@ -27,7 +27,7 @@ internal object DesktopLauncher {
             )
             setTitle("CaveDroid")
             setWindowedMode(960, 540)
-            useVsync(true)
+            useVsync(false)
         }
 
         var touch = false
