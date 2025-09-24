@@ -1,15 +1,7 @@
 
-Dependency License Report for desktop beta-0.14.2
+Dependency License Report for desktop beta-0.14.3
 
-1. Group: com.badlogicgames.ashley  Name: ashley  Version: 1.7.4
-
-POM Project URL: https://github.com/libgdx/ashley
-
-POM License: The Apache Software License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.txt
-
---------------------------------------------------------------------------------
-
-2. Group: com.badlogicgames.box2dlights  Name: box2dlights  Version: 1.5
+1. Group: com.badlogicgames.box2dlights  Name: box2dlights  Version: 1.5
 
 POM Project URL: http://github.com/libgdx/box2dlights
 
@@ -17,7 +9,7 @@ POM License: Apache Licence 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 
 --------------------------------------------------------------------------------
 
-3. Group: com.badlogicgames.gdx  Name: gdx  Version: 1.13.1
+2. Group: com.badlogicgames.gdx  Name: gdx  Version: 1.13.1
 
 POM Project URL: https://github.com/libgdx/libgdx
 
@@ -25,7 +17,7 @@ POM License: The Apache Software License, Version 2.0 - http://www.apache.org/li
 
 --------------------------------------------------------------------------------
 
-4. Group: com.badlogicgames.gdx  Name: gdx-backend-lwjgl3  Version: 1.13.1
+3. Group: com.badlogicgames.gdx  Name: gdx-backend-lwjgl3  Version: 1.13.1
 
 POM Project URL: https://github.com/libgdx/libgdx
 
@@ -33,7 +25,7 @@ POM License: The Apache Software License, Version 2.0 - http://www.apache.org/li
 
 --------------------------------------------------------------------------------
 
-5. Group: com.badlogicgames.gdx  Name: gdx-box2d  Version: 1.13.1
+4. Group: com.badlogicgames.gdx  Name: gdx-box2d  Version: 1.13.1
 
 POM Project URL: https://github.com/libgdx/libgdx
 
@@ -41,7 +33,7 @@ POM License: The Apache Software License, Version 2.0 - http://www.apache.org/li
 
 --------------------------------------------------------------------------------
 
-6. Group: com.badlogicgames.gdx  Name: gdx-box2d-platform  Version: 1.13.1
+5. Group: com.badlogicgames.gdx  Name: gdx-box2d-platform  Version: 1.13.1
 
 POM Project URL: https://github.com/libgdx/libgdx
 
@@ -49,7 +41,7 @@ POM License: The Apache Software License, Version 2.0 - http://www.apache.org/li
 
 --------------------------------------------------------------------------------
 
-7. Group: com.badlogicgames.gdx  Name: gdx-jnigen-loader  Version: 2.5.2
+6. Group: com.badlogicgames.gdx  Name: gdx-jnigen-loader  Version: 2.5.2
 
 POM Project URL: https://github.com/libgdx/gdx-jnigen
 
@@ -57,7 +49,7 @@ POM License: The Apache Software License, Version 2.0 - http://www.apache.org/li
 
 --------------------------------------------------------------------------------
 
-8. Group: com.badlogicgames.gdx  Name: gdx-platform  Version: 1.13.1
+7. Group: com.badlogicgames.gdx  Name: gdx-platform  Version: 1.13.1
 
 POM Project URL: https://github.com/libgdx/libgdx
 
@@ -65,7 +57,7 @@ POM License: The Apache Software License, Version 2.0 - http://www.apache.org/li
 
 --------------------------------------------------------------------------------
 
-9. Group: com.badlogicgames.jlayer  Name: jlayer  Version: 1.0.1-gdx
+8. Group: com.badlogicgames.jlayer  Name: jlayer  Version: 1.0.1-gdx
 
 POM Project URL: http://github.com/libgdx/jlayer-gdx
 
@@ -73,7 +65,7 @@ POM License: GNU Lesser General Public License (LGPL), Version 2.1 - http://www.
 
 --------------------------------------------------------------------------------
 
-10. Group: com.google.dagger  Name: dagger  Version: 2.57
+9. Group: com.google.dagger  Name: dagger  Version: 2.57
 
 POM Project URL: https://github.com/google/dagger
 
@@ -81,7 +73,7 @@ POM License: Apache 2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 
 --------------------------------------------------------------------------------
 
-11. Group: io.github.libktx  Name: ktx-actors  Version: 1.13.1-rc1
+10. Group: io.github.libktx  Name: ktx-actors  Version: 1.13.1-rc1
 
 POM Project URL: https://libktx.github.io/
 
@@ -89,7 +81,7 @@ POM License: CC0-1.0 - https://creativecommons.org/publicdomain/zero/1.0/
 
 --------------------------------------------------------------------------------
 
-12. Group: io.github.libktx  Name: ktx-scene2d  Version: 1.13.1-rc1
+11. Group: io.github.libktx  Name: ktx-scene2d  Version: 1.13.1-rc1
 
 POM Project URL: https://libktx.github.io/
 
@@ -97,7 +89,7 @@ POM License: CC0-1.0 - https://creativecommons.org/publicdomain/zero/1.0/
 
 --------------------------------------------------------------------------------
 
-13. Group: jakarta.inject  Name: jakarta.inject-api  Version: 2.0.1
+12. Group: jakarta.inject  Name: jakarta.inject-api  Version: 2.0.1
 
 Manifest Project URL: https://www.eclipse.org
 
@@ -361,7 +353,7 @@ None
 None
 --------------------------------------------------------------------------------
 
-14. Group: javax.inject  Name: javax.inject  Version: 1
+13. Group: javax.inject  Name: javax.inject  Version: 1
 
 POM Project URL: http://code.google.com/p/atinject/
 
@@ -369,7 +361,7 @@ POM License: The Apache Software License, Version 2.0 - http://www.apache.org/li
 
 --------------------------------------------------------------------------------
 
-15. Group: org.jcraft  Name: jorbis  Version: 0.0.17
+14. Group: org.jcraft  Name: jorbis  Version: 0.0.17
 
 POM Project URL: http://www.jcraft.com/jorbis
 
@@ -377,7 +369,7 @@ POM License: GNU Lesser General Public License - http://www.gnu.org/copyleft/les
 
 --------------------------------------------------------------------------------
 
-16. Group: org.jetbrains  Name: annotations  Version: 23.0.0
+15. Group: org.jetbrains  Name: annotations  Version: 23.0.0
 
 POM Project URL: https://github.com/JetBrains/java-annotations
 
@@ -385,7 +377,7 @@ POM License: The Apache Software License, Version 2.0 - https://www.apache.org/l
 
 --------------------------------------------------------------------------------
 
-17. Group: org.jetbrains.kotlin  Name: kotlin-stdlib  Version: 2.2.10
+16. Group: org.jetbrains.kotlin  Name: kotlin-stdlib  Version: 2.2.10
 
 POM Project URL: https://kotlinlang.org/
 
@@ -393,7 +385,7 @@ POM License: The Apache License, Version 2.0 - http://www.apache.org/licenses/LI
 
 --------------------------------------------------------------------------------
 
-18. Group: org.jetbrains.kotlinx  Name: kotlinx-coroutines-bom  Version: 1.10.2
+17. Group: org.jetbrains.kotlinx  Name: kotlinx-coroutines-bom  Version: 1.10.2
 
 POM Project URL: https://github.com/Kotlin/kotlinx.coroutines
 
@@ -401,7 +393,7 @@ POM License: Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 
 --------------------------------------------------------------------------------
 
-19. Group: org.jetbrains.kotlinx  Name: kotlinx-coroutines-core  Version: 1.10.2
+18. Group: org.jetbrains.kotlinx  Name: kotlinx-coroutines-core  Version: 1.10.2
 
 POM Project URL: https://github.com/Kotlin/kotlinx.coroutines
 
@@ -409,7 +401,7 @@ POM License: Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 
 --------------------------------------------------------------------------------
 
-20. Group: org.jetbrains.kotlinx  Name: kotlinx-coroutines-core-jvm  Version: 1.10.2
+19. Group: org.jetbrains.kotlinx  Name: kotlinx-coroutines-core-jvm  Version: 1.10.2
 
 POM Project URL: https://github.com/Kotlin/kotlinx.coroutines
 
@@ -417,7 +409,7 @@ POM License: Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 
 --------------------------------------------------------------------------------
 
-21. Group: org.jetbrains.kotlinx  Name: kotlinx-serialization-bom  Version: 1.9.0
+20. Group: org.jetbrains.kotlinx  Name: kotlinx-serialization-bom  Version: 1.9.0
 
 POM Project URL: https://github.com/Kotlin/kotlinx.serialization
 
@@ -425,7 +417,7 @@ POM License: Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 
 --------------------------------------------------------------------------------
 
-22. Group: org.jetbrains.kotlinx  Name: kotlinx-serialization-core  Version: 1.9.0
+21. Group: org.jetbrains.kotlinx  Name: kotlinx-serialization-core  Version: 1.9.0
 
 POM Project URL: https://github.com/Kotlin/kotlinx.serialization
 
@@ -433,7 +425,7 @@ POM License: Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 
 --------------------------------------------------------------------------------
 
-23. Group: org.jetbrains.kotlinx  Name: kotlinx-serialization-core-jvm  Version: 1.9.0
+22. Group: org.jetbrains.kotlinx  Name: kotlinx-serialization-core-jvm  Version: 1.9.0
 
 POM Project URL: https://github.com/Kotlin/kotlinx.serialization
 
@@ -441,7 +433,7 @@ POM License: Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 
 --------------------------------------------------------------------------------
 
-24. Group: org.jetbrains.kotlinx  Name: kotlinx-serialization-json  Version: 1.9.0
+23. Group: org.jetbrains.kotlinx  Name: kotlinx-serialization-json  Version: 1.9.0
 
 POM Project URL: https://github.com/Kotlin/kotlinx.serialization
 
@@ -449,7 +441,7 @@ POM License: Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 
 --------------------------------------------------------------------------------
 
-25. Group: org.jetbrains.kotlinx  Name: kotlinx-serialization-json-jvm  Version: 1.9.0
+24. Group: org.jetbrains.kotlinx  Name: kotlinx-serialization-json-jvm  Version: 1.9.0
 
 POM Project URL: https://github.com/Kotlin/kotlinx.serialization
 
@@ -457,7 +449,7 @@ POM License: Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 
 --------------------------------------------------------------------------------
 
-26. Group: org.jetbrains.kotlinx  Name: kotlinx-serialization-protobuf  Version: 1.9.0
+25. Group: org.jetbrains.kotlinx  Name: kotlinx-serialization-protobuf  Version: 1.9.0
 
 POM Project URL: https://github.com/Kotlin/kotlinx.serialization
 
@@ -465,7 +457,7 @@ POM License: Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 
 --------------------------------------------------------------------------------
 
-27. Group: org.jetbrains.kotlinx  Name: kotlinx-serialization-protobuf-jvm  Version: 1.9.0
+26. Group: org.jetbrains.kotlinx  Name: kotlinx-serialization-protobuf-jvm  Version: 1.9.0
 
 POM Project URL: https://github.com/Kotlin/kotlinx.serialization
 
@@ -473,7 +465,7 @@ POM License: Apache-2.0 - https://www.apache.org/licenses/LICENSE-2.0.txt
 
 --------------------------------------------------------------------------------
 
-28. Group: org.jspecify  Name: jspecify  Version: 1.0.0
+27. Group: org.jspecify  Name: jspecify  Version: 1.0.0
 
 Manifest Project URL: https://jspecify.dev/docs/start-here
 
@@ -483,7 +475,7 @@ POM License: The Apache License, Version 2.0 - http://www.apache.org/licenses/LI
 
 --------------------------------------------------------------------------------
 
-29. Group: org.lwjgl  Name: lwjgl  Version: 3.3.3
+28. Group: org.lwjgl  Name: lwjgl  Version: 3.3.3
 
 POM Project URL: https://www.lwjgl.org
 
@@ -491,7 +483,7 @@ POM License: BSD-3-Clause - https://www.lwjgl.org/license
 
 --------------------------------------------------------------------------------
 
-30. Group: org.lwjgl  Name: lwjgl-glfw  Version: 3.3.3
+29. Group: org.lwjgl  Name: lwjgl-glfw  Version: 3.3.3
 
 POM Project URL: https://www.lwjgl.org
 
@@ -499,7 +491,7 @@ POM License: BSD-3-Clause - https://www.lwjgl.org/license
 
 --------------------------------------------------------------------------------
 
-31. Group: org.lwjgl  Name: lwjgl-jemalloc  Version: 3.3.3
+30. Group: org.lwjgl  Name: lwjgl-jemalloc  Version: 3.3.3
 
 POM Project URL: https://www.lwjgl.org
 
@@ -507,7 +499,7 @@ POM License: BSD-3-Clause - https://www.lwjgl.org/license
 
 --------------------------------------------------------------------------------
 
-32. Group: org.lwjgl  Name: lwjgl-openal  Version: 3.3.3
+31. Group: org.lwjgl  Name: lwjgl-openal  Version: 3.3.3
 
 POM Project URL: https://www.lwjgl.org
 
@@ -515,7 +507,7 @@ POM License: BSD-3-Clause - https://www.lwjgl.org/license
 
 --------------------------------------------------------------------------------
 
-33. Group: org.lwjgl  Name: lwjgl-opengl  Version: 3.3.3
+32. Group: org.lwjgl  Name: lwjgl-opengl  Version: 3.3.3
 
 POM Project URL: https://www.lwjgl.org
 
@@ -523,7 +515,7 @@ POM License: BSD-3-Clause - https://www.lwjgl.org/license
 
 --------------------------------------------------------------------------------
 
-34. Group: org.lwjgl  Name: lwjgl-stb  Version: 3.3.3
+33. Group: org.lwjgl  Name: lwjgl-stb  Version: 3.3.3
 
 POM Project URL: https://www.lwjgl.org
 
@@ -531,7 +523,7 @@ POM License: BSD-3-Clause - https://www.lwjgl.org/license
 
 --------------------------------------------------------------------------------
 
-35. Group: ru.fredboy  Name: automultibind-annotations  Version: 1.0.4
+34. Group: ru.fredboy  Name: automultibind-annotations  Version: 1.0.4
 
 POM Project URL: https://github.com/fredboy/automultibind
 
@@ -540,5 +532,5 @@ POM License: MIT License - https://github.com/fredboy/automultibind/blob/master/
 --------------------------------------------------------------------------------
 
 
-This report was generated at Wed Sep 24 01:51:03 NOVT 2025.
+This report was generated at Wed Sep 24 07:12:29 NOVT 2025.
 
