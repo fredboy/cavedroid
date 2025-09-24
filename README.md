@@ -59,7 +59,7 @@ You can download APK and JAR builds from [the releases page](https://github.com/
 ### Android
 
 ```bash
-./gradlew android:assemble
+./gradlew android:assembleDebug
 ```
 
 ### Desktop
@@ -68,7 +68,29 @@ You can download APK and JAR builds from [the releases page](https://github.com/
 ./gradlew desktop:dist
 ```
 
-On Windows, use `gradlew.bat` instead of `./gradlew`
+On Windows, use `gradlew.bat` instead of `./gradlew`, though it will fail because of symlinks used to reference assets
+directory, so some tweaks are required.
+
+## Setting up the keystore for signing
+
+To build an android release and enable the `desktop:generateSignedJar` task for release builds,
+you need a `keystore.properties` file in the root of the project.
+
+Create a file named `keystore.properties` with the following properties:
+
+```properties
+# Path to your Java keystore file
+releaseKeystorePath=/path/to/your/keystore.jks
+
+# Keystore password
+releaseKeystorePassword=yourKeystorePassword
+
+# Alias of the key to use
+releaseKeyAlias=yourKeyAlias
+
+# Password for the key
+releaseKeyPassword=yourKeyPassword
+```
 
 ---
 
@@ -83,6 +105,7 @@ CaveDroid is licensed under the **MIT License**. See [LICENSE](LICENSE) for deta
 - **On-screen joystick**: CC-0 from [OpenGameArt.org](https://opengameart.org/content/mmorpg-virtual-joysticks)
 - **Font**: LanaPixel by eishiya, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 - **Scripts**: Various scripts from Stack Overflow are distributed under their applicable licenses
+- **Attributions**: Licensed assets have an `attribution.txt` file in their directories with applicable attributions.
 
 ---
 
