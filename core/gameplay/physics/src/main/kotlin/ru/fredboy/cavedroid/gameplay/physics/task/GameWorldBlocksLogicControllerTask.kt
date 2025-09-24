@@ -1,6 +1,8 @@
 package ru.fredboy.cavedroid.gameplay.physics.task
 
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
+import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.physics.action.getRequiresBlockAction
@@ -15,6 +17,20 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
 ) : BaseGameWorldControllerTask() {
 
     private var currentRelativeChunk = 0
+
+    private val dirtyChunks = mutableSetOf<Int>()
+
+    private val onBlockPlacedListener = OnBlockPlacedListener { _, x, _, layer ->
+        if (layer == Layer.BACKGROUND) {
+            return@OnBlockPlacedListener
+        }
+
+        dirtyChunks.add(x - (x % CHUNK_WIDTH))
+    }
+
+    init {
+        gameWorld.addBlockPlacedListener(onBlockPlacedListener)
+    }
 
     private fun getChunkStart(): Int {
         val playerX = mobController.player.mapX
@@ -41,9 +57,13 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
     override fun exec() {
         val startX = getChunkStart()
 
-        for (y in gameWorld.height downTo 0) {
-            for (x in startX..<startX + CHUNK_WIDTH) {
-                updateBlock(x, y)
+        if (startX in dirtyChunks) {
+            dirtyChunks.remove(startX)
+
+            for (y in gameWorld.height downTo 0) {
+                for (x in startX..<startX + CHUNK_WIDTH) {
+                    updateBlock(x, y)
+                }
             }
         }
 
