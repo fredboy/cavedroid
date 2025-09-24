@@ -1,9 +1,8 @@
-CaveDroid is a 2D Minecraft-inspired game for Android.
+CaveDroid is a 2D Minecraft-inspired game.
 
 Features
 
 - 2D world, looped horizontally
 - Craft, mine, and explore
 - Procedurally generated world
-- Cross-platform: Android, Desktop (Windows/Linux/macOS), iOS (untested)
 - Single-player mode (multiplayer not available yet)
