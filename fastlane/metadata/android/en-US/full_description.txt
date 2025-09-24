@@ -1,8 +1,11 @@
-CaveDroid is a 2D Minecraft-inspired game.
+<p>This game is an early beta sandbox survival adventure set in a two dimansional procedurally generated voxel world. Players can explore diverse landscapes, including caves and biomes, gather resources, craft tools, armor, and food, and build structures to survive. The world features a day/night cycle, dynamic lighting, fluids, and interactive mobs.</p>
 
-Features
-
-- 2D world, looped horizontally
-- Craft, mine, and explore
-- Procedurally generated world
-- Single-player mode (multiplayer not available yet)
+<p><strong>Features include:</strong></p>
+<ul>
+  <li>Procedural world generation with ores, caves, hills, and biomes.</li>
+  <li>Crafting system with recipes for tools, armor, and consumables.</li>
+  <li>Animals and hostile mobs with unique behaviors and drops.</li>
+  <li>Dynamic lighting, fluids, and smooth terrain rendering.</li>
+  <li>Player actions including building, mining, crafting, combat, and exploration.</li>
+  <li>Inventory and survival systems, including food, health, and equipment.</li>
+</ul>
