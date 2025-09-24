@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 new_version=$1
 
 sed -i 's/\(const val versionName = \)\".*\"/\1\"'"$new_version"'\"/g' buildSrc/src/main/kotlin/ApplicationInfo.kt
