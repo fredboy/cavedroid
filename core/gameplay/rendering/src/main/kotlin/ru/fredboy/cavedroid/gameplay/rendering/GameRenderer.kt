@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.common.utils.drawString
+import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -38,14 +39,16 @@ class GameRenderer @Inject constructor(
     private val worldRenderers = _worldRenderers.sortedBy { it.renderLayer }
     private val hudRenderers = _hudRenderers.sortedBy { it.renderLayer }
 
-    private val debugRenderer = Box2DDebugRenderer(
-        /* drawBodies = */ true,
-        /* drawJoints = */ false,
-        /* drawAABBs = */ false,
-        /* drawInactiveBodies = */ false,
-        /* drawVelocities = */ false,
-        /* drawContacts = */ true,
-    )
+    private val debugRenderer = ifTrue(applicationContextRepository.isDebug()) {
+        Box2DDebugRenderer(
+            /* drawBodies = */ true,
+            /* drawJoints = */ false,
+            /* drawAABBs = */ false,
+            /* drawInactiveBodies = */ false,
+            /* drawVelocities = */ false,
+            /* drawContacts = */ true,
+        )
+    }
 
     private val camera = OrthographicCamera()
         .apply {
@@ -201,7 +204,7 @@ class GameRenderer @Inject constructor(
         spriter.end()
 
         if (gameContextRepository.shouldShowInfo()) {
-            debugRenderer.render(gameWorld.world, camera.combined)
+            debugRenderer?.render(gameWorld.world, camera.combined)
         }
     }
 
@@ -213,6 +216,7 @@ class GameRenderer @Inject constructor(
     override fun dispose() {
         spriter.dispose()
         shaper.dispose()
+        debugRenderer?.dispose()
         worldRenderers.forEach { renderer -> renderer.dispose() }
         hudRenderers.forEach { renderer -> renderer.dispose() }
     }

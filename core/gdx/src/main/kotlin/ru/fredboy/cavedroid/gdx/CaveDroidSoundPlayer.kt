@@ -32,6 +32,9 @@ class CaveDroidSoundPlayer @Inject constructor(
 
         val volume = 1.0f - (distance / maxHearingDistance)
 
+        if (volume <= 0f) {
+            return
+        }
         val pan = MathUtils.clamp(dx / maxHearingDistance, -1f, 1f)
 
         sound.play(volume, pitch, pan)

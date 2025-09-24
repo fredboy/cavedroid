@@ -230,6 +230,6 @@ class GameWorldLightManager @Inject constructor(
 
         private const val CHUNK_SIZE = 4
 
-        private const val SUN_UPDATE_FREQUENCY = 1f
+        private const val SUN_UPDATE_FREQUENCY = 1f / 10f
     }
 }

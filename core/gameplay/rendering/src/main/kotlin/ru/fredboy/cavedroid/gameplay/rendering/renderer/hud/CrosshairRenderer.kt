@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.drawSprite
-import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.common.utils.invertColor
 import ru.fredboy.cavedroid.common.utils.pixels
 import ru.fredboy.cavedroid.domain.assets.repository.MobTextureAssetsRepository
@@ -54,9 +53,10 @@ class CrosshairRenderer @Inject constructor(
                 val x = (mobController.player.cursorX - gameContextRepository.getCameraContext().visibleWorld.x).pixels
                 val y = (mobController.player.cursorY - gameContextRepository.getCameraContext().visibleWorld.y).pixels
 
-                val tintColor = ifTrue(Gdx.graphics.framesPerSecond > 100) {
-                    getTintColor(x, y, viewport)
-                }
+                val tintColor = null
+//                    ifTrue(Gdx.graphics.framesPerSecond > 100) {
+//                        getTintColor(x, y, viewport)
+//                    }
 
                 spriteBatch.drawSprite(
                     sprite = crosshairSprite,
