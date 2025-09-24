@@ -10,12 +10,12 @@ Explore, mine, and build in a looped world.
 <details>
   <summary>Screenshots</summary>
 
-![Screenshot 1](https://fredboy.ru/pub/cavedroid/screenshots/screenshot_01.png)
-![Screenshot 2](https://fredboy.ru/pub/cavedroid/screenshots/screenshot_02.png)
-![Screenshot 3](https://fredboy.ru/pub/cavedroid/screenshots/screenshot_03.png)
-![Screenshot 4](https://fredboy.ru/pub/cavedroid/screenshots/screenshot_04.png)
-![Screenshot 5](https://fredboy.ru/pub/cavedroid/screenshots/screenshot_05.png)
-![Screenshot 6](https://fredboy.ru/pub/cavedroid/screenshots/screenshot_06.png)
+![Screenshot 1](fastlane/metadata/android/en-US/images/phoneScreenshots/1.png)
+![Screenshot 2](fastlane/metadata/android/en-US/images/phoneScreenshots/2.png)
+![Screenshot 3](fastlane/metadata/android/en-US/images/phoneScreenshots/3.png)
+![Screenshot 4](fastlane/metadata/android/en-US/images/phoneScreenshots/4.png)
+![Screenshot 5](fastlane/metadata/android/en-US/images/phoneScreenshots/5.png)
+![Screenshot 6](fastlane/metadata/android/en-US/images/phoneScreenshots/6.png)
 
 </details>
 
