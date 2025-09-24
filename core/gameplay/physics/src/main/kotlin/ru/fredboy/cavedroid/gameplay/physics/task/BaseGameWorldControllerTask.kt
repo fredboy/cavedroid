@@ -1,9 +1,12 @@
 package ru.fredboy.cavedroid.gameplay.physics.task
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Timer
 
-abstract class BaseGameWorldControllerTask : Timer.Task() {
+abstract class BaseGameWorldControllerTask :
+    Timer.Task(),
+    Disposable {
 
     @Volatile
     private var isRunning = false
@@ -30,6 +33,7 @@ abstract class BaseGameWorldControllerTask : Timer.Task() {
     final override fun cancel() {
         Gdx.app.log(this::class.simpleName, "Blocking cancel() call!")
         shutdownBlocking()
+        dispose()
     }
 
     final override fun run() {
@@ -46,6 +50,10 @@ abstract class BaseGameWorldControllerTask : Timer.Task() {
                 lock.notifyAll()
             }
         }
+    }
+
+    override fun dispose() {
+        // no-op by default
     }
 
     abstract fun exec()

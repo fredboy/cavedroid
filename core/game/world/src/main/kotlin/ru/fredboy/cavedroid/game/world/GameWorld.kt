@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.game.world
 
 import box2dLight.RayHandler
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
@@ -128,8 +129,14 @@ class GameWorld @Inject constructor(
     }
 
     private fun notifyBlockPlaced(x: Int, y: Int, layer: Layer, value: Block) {
-        onBlockPlacedListeners.forEach { listener ->
-            listener.get()?.onBlockPlaced(value, x, y, layer)
+        onBlockPlacedListeners.removeAll { listener ->
+            listener.get()?.let {
+                it.onBlockPlaced(value, x, y, layer)
+                return@removeAll false
+            }
+
+            Gdx.app.error(TAG, "An empty OnBlockPlacedListener weak reference was removed!")
+            true
         }
     }
 
@@ -141,8 +148,14 @@ class GameWorld @Inject constructor(
         withDrop: Boolean,
         destroyedByPlayer: Boolean,
     ) {
-        onBlockDestroyedListeners.forEach { listener ->
-            listener.get()?.onBlockDestroyed(value, x, y, layer, withDrop, destroyedByPlayer)
+        onBlockDestroyedListeners.removeAll { listener ->
+            listener.get()?.let {
+                it.onBlockDestroyed(value, x, y, layer, withDrop, destroyedByPlayer)
+                return@removeAll false
+            }
+
+            Gdx.app.error(TAG, "An empty OnBlockDestroyedListener weak reference was removed!")
+            true
         }
     }
 

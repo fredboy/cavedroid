@@ -12,7 +12,7 @@ class FallingBlockMobBehavior :
     ) {
 
     override fun FallingBlock.updateMob(worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, projectileAdapter: ProjectileAdapter, delta: Float) {
-        if (velocity.get().isZero(0.001f)) {
+        if (footContactCounter > 0 && velocity.get().isZero(0.001f)) {
             if (worldAdapter.canPlaceToForeground(mapX, middleMapY, block)) {
                 worldAdapter.setForegroundBlock(mapX, middleMapY, block)
             } else {

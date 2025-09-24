@@ -1,6 +1,8 @@
 package ru.fredboy.cavedroid.gameplay.physics.task
 
+import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -25,7 +27,10 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
             return@OnBlockPlacedListener
         }
 
-        dirtyChunks.add(x - (x % CHUNK_WIDTH))
+        val chunkX = x - (x % CHUNK_WIDTH)
+        dirtyChunks.add(chunkX).ifTrue {
+            Gdx.app.debug(TAG, "Marking chunk as dirty: $chunkX")
+        }
     }
 
     init {
@@ -65,9 +70,16 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
                     updateBlock(x, y)
                 }
             }
+
+            Gdx.app.debug(TAG, "Chunk $startX updated!")
         }
 
         currentRelativeChunk = (currentRelativeChunk + 1) % CHUNKS
+    }
+
+    override fun dispose() {
+        super.dispose()
+        gameWorld.removeBlockPlacedListener(onBlockPlacedListener)
     }
 
     companion object {

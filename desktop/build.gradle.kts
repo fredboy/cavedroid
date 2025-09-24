@@ -142,7 +142,7 @@ tasks.register("generateAttributionIndex") {
         if (attributions.isEmpty()) {
             println("No attribution.txt files found in $assetsDir")
         } else {
-            println("✅Found attribution files:")
+            println("Found attribution files:")
             attributions.forEach { println(" - $it") }
         }
 
@@ -154,7 +154,7 @@ tasks.register("generateAttributionIndex") {
             StandardOpenOption.TRUNCATE_EXISTING,
             StandardOpenOption.WRITE,
         )
-        println("📄attribution_index.txt generated with ${attributions.size} entries.")
+        println("attribution_index.txt generated with ${attributions.size} entries.")
     }
 }
 

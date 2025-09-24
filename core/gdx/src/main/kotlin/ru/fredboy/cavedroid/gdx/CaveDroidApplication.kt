@@ -64,7 +64,11 @@ class CaveDroidApplication(
             .preferencesStore(preferencesStore)
             .build()
 
-        Gdx.app.logLevel = Application.LOG_DEBUG
+        Gdx.app.logLevel = if (isDebug) {
+            Application.LOG_DEBUG
+        } else {
+            Application.LOG_INFO
+        }
 
         Gdx.files.absolute(gameDataDirectoryPath).mkdirs()
         applicationComponent.initializeAssets()
