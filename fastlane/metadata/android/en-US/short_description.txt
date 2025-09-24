@@ -1,1 +1,1 @@
-A 2D Minecraft-inspired game.
+Explore, craft, and survive in a procedurally generated 2D world.
