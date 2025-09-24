@@ -30,7 +30,7 @@ private val keystoreProperties = if (keystorePropertiesFile.exists()) {
 sourceSets {
     main {
         resources {
-            srcDirs("src/main/extra")
+            srcDirs("build/generated/extraRes")
         }
     }
 }
@@ -117,7 +117,7 @@ tasks.register<Copy>("copyLicenseReport") {
     dependsOn("generateLicenseReport")
 
     from("build/reports/dependency-license/THIRD-PARTY-NOTICES.txt")
-    into("src/main/extra")
+    into("build/generated/extraRes")
     rename { "notices.txt" }
 }
 
@@ -126,7 +126,9 @@ tasks.register("generateAttributionIndex") {
     description = "Scans assets/ for attribution.txt files and generates attribution_index.txt"
 
     val assetsDir = layout.projectDirectory.dir("src/main/resources").asFile.toPath().toRealPath()
-    val extraDir = layout.projectDirectory.dir("src/main/extra")
+    val extraDir = layout.projectDirectory.dir("build/generated/extraRes").apply {
+        asFile.mkdirs()
+    }
     val outputFile = extraDir.file("attribution_index.txt")
 
     inputs.dir(assetsDir)
@@ -135,7 +137,7 @@ tasks.register("generateAttributionIndex") {
     doLast {
         val attributions = Files.walk(assetsDir)
             .filter { Files.isRegularFile(it) && it.fileName.toString().equals("attribution.txt", ignoreCase = true) }
-            .map { assetsDir.relativize(it).toString().replace("\\", "/") } // relative path
+            .map { assetsDir.relativize(it).toString().replace("\\", "/") }
             .sorted()
             .toList()
 

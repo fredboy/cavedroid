@@ -1,4 +1,5 @@
 import com.github.jk1.license.render.TextReportRenderer
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     ktlintGradle
@@ -31,6 +32,28 @@ allprojects {
 
     ktlint {
         version.set("1.6.0")
+    }
+
+    plugins.withId("org.jetbrains.kotlin.jvm") {
+        plugins.withId("org.jetbrains.kotlin.jvm") {
+            extensions.configure<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension> {
+                jvmToolchain {
+                    languageVersion.set(JavaLanguageVersion.of(17))
+                }
+            }
+
+            extensions.configure<JavaPluginExtension> {
+                toolchain {
+                    languageVersion.set(JavaLanguageVersion.of(17))
+                }
+            }
+
+            tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+                compilerOptions {
+                    jvmTarget.set(JvmTarget.JVM_17)
+                }
+            }
+        }
     }
 
     licenseReport {

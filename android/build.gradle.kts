@@ -1,4 +1,5 @@
 import com.android.build.gradle.internal.tasks.factory.dependsOn
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.nio.file.Files
 import java.nio.file.StandardOpenOption
@@ -29,7 +30,7 @@ android {
         named("main") {
             jniLibs.srcDir("libs")
             assets {
-                srcDirs("src/main/assets", "src/main/extra")
+                srcDirs("src/main/assets", "build/generated/extraRes")
             }
         }
 
@@ -91,6 +92,12 @@ android {
     buildFeatures {
         buildConfig = true
     }
+
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
+    }
 }
 
 // called every time gradle gets executed, takes the native dependencies of
@@ -127,7 +134,7 @@ tasks.register<Copy>("copyLicenseReport") {
     dependsOn("generateLicenseReport")
 
     from("build/reports/dependency-license/THIRD-PARTY-NOTICES.txt")
-    into("src/main/extra")
+    into("build/generated/extraRes")
     rename { "notices.txt" }
 }
 
@@ -142,7 +149,9 @@ tasks.register("generateAttributionIndex") {
     description = "Scans assets/ for attribution.txt files and generates attribution_index.txt"
 
     val assetsDir = layout.projectDirectory.dir("src/main/assets").asFile.toPath().toRealPath()
-    val extraDir = layout.projectDirectory.dir("src/main/extra")
+    val extraDir = layout.projectDirectory.dir("build/generated/extraRes").apply {
+        asFile.mkdirs()
+    }
     val outputFile = extraDir.file("attribution_index.txt")
 
     inputs.dir(assetsDir)

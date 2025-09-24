@@ -14,7 +14,7 @@
             <skipPngCrush>true</skipPngCrush>
         </resource>
         <resource>
-            <directory>extra</directory>
+            <directory>build/generated/extraRes</directory>
         </resource>
         <resource>
             <directory>data</directory>

@@ -90,7 +90,7 @@ tasks.register<Copy>("copyLicenseReport") {
     dependsOn("generateLicenseReport")
 
     from("build/reports/dependency-license/THIRD-PARTY-NOTICES.txt")
-    into("extra")
+    into("build/generated/extraRes")
     rename { "notices.txt" }
 }
 
@@ -99,7 +99,9 @@ tasks.register("generateAttributionIndex") {
     description = "Scans assets/ for attribution.txt files and generates attribution_index.txt"
 
     val assetsDir = layout.projectDirectory.dir("../assets").asFile.toPath().toRealPath()
-    val extraDir = layout.projectDirectory.dir("extra")
+    val extraDir = layout.projectDirectory.dir("build/generated/extraRes").apply {
+        asFile.mkdirs()
+    }
     val outputFile = extraDir.file("attribution_index.txt")
 
     inputs.dir(assetsDir)
