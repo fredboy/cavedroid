@@ -83,13 +83,6 @@ tasks.register<ProGuardTask>("proguard") {
 }
 
 tasks.register<Jar>("generateSignedJar") {
-    requireNotNull(keystoreProperties) { "keystore.properties missing" }
-
-    val storeFile = requireNotNull(keystoreProperties["releaseKeystorePath"]?.let(::file))
-    val storePassword = requireNotNull(keystoreProperties["releaseKeystorePassword"]?.toString())
-    val keyAlias = requireNotNull(keystoreProperties["releaseKeyAlias"]?.toString())
-    val keyPassword = requireNotNull(keystoreProperties["releaseKeyPassword"]?.toString())
-
     dependsOn("proguard")
 
     val proguardJar = layout.buildDirectory.file("libs/release-${ApplicationInfo.versionName}.jar").get().asFile
@@ -99,6 +92,13 @@ tasks.register<Jar>("generateSignedJar") {
     destinationDirectory.set(layout.buildDirectory.dir("libs"))
 
     doLast {
+        requireNotNull(keystoreProperties) { "keystore.properties missing" }
+
+        val storeFile = requireNotNull(keystoreProperties["releaseKeystorePath"]?.let(::file))
+        val storePassword = requireNotNull(keystoreProperties["releaseKeystorePassword"]?.toString())
+        val keyAlias = requireNotNull(keystoreProperties["releaseKeyAlias"]?.toString())
+        val keyPassword = requireNotNull(keystoreProperties["releaseKeyPassword"]?.toString())
+
         ant.withGroovyBuilder {
             val signedJar = archiveFile.get().asFile
 
