@@ -105,7 +105,7 @@ class MouseCursorInputHandler @Inject constructor(
 
         if (!applicationContextRepository.isTouch()) {
             handleMouse(action)
-            mobController.limitPlayerCursor()
+            mobController.rayCastPlayerCursor()
         }
 
         if (player.selectedX != pastSelectedX || player.selectedY != pastSelectedY) {

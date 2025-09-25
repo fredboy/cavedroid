@@ -14,6 +14,7 @@ import ru.fredboy.cavedroid.common.utils.applyOrigin
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
+import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.inventory.Inventory
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
@@ -24,6 +25,8 @@ import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.impl.PlayerMobBehavior
+import kotlin.math.abs
+import kotlin.math.min
 
 class Player(
     private val getFallbackItem: GetFallbackItemUseCase,
@@ -354,6 +357,61 @@ class Player(
         inventory.items[activeSlot] = item.toInventoryItem()
     }
 
+    fun rayCastCursor(mobWorldAdapter: MobWorldAdapter, onCallback: () -> Unit = {}) {
+        val cursor = Vector2(cursorX, cursorY)
+        if (gameMode.isSurvival()) {
+            val plToCursor = cursor
+                .sub(position)
+                .limit2(SURVIVAL_CURSOR_RANGE_2)
+
+            cursorX = position.x + plToCursor.x
+            cursorY = position.y + plToCursor.y
+        }
+
+        cursorY = MathUtils.clamp(cursorY, 0f, mobWorldAdapter.height.toFloat())
+
+        cursor.set(cursorX, cursorY)
+
+        if (position.dst2(cursor) < 0.001f) {
+            return
+        }
+
+        mobWorldAdapter.getBox2dWorld().rayCast(
+            { fixture, point, _, fraction ->
+                val block = fixture.userData as? Block ?: return@rayCast -1f
+
+                val pointToCursor = cursor.cpy().sub(point)
+
+                val pointToCursorDX = abs(pointToCursor.x)
+                val pointToCursorDY = abs(pointToCursor.y)
+
+                if (pointToCursorDX < block.width / 2f && pointToCursorDY < block.height / 2f) {
+                    return@rayCast -1f
+                }
+
+                point.cpy().apply {
+                    x += min(pointToCursorDX, block.width / 2f) * if (pointToCursor.x < 0) -1f else 1f
+                    y += min(pointToCursorDY, block.height / 2f) * if (pointToCursor.y < 0) -1f else 1f
+
+                    cursorX = x
+                    cursorY = y
+
+                    if (holdCursor) {
+                        cursorToPlayer.set(
+                            cursorX - position.x,
+                            cursorY - position.y,
+                        )
+                    }
+                }
+
+                onCallback()
+                return@rayCast fraction
+            },
+            position,
+            cursor,
+        )
+    }
+
     private fun drawItem(spriteBatch: SpriteBatch, handLength: Float, x: Float, y: Float, handAnim: Float) {
         val item = activeItem.item.takeIf { !it.isNone() } ?: return
         val itemSprite = if (item is Item.Bow && isPullingBow) {
@@ -444,5 +502,7 @@ class Player(
 
         private const val SMALL_ITEM_SIZE = .5f
         private const val HAND_ITEM_ANGLE_DEG = 30f
+
+        private const val SURVIVAL_CURSOR_RANGE_2 = 36f
     }
 }

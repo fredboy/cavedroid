@@ -1,14 +1,11 @@
 package ru.fredboy.cavedroid.game.controller.mob
 
-import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
-import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
@@ -21,10 +18,8 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.impl.PlayerAdapterImpl_Factory
-import java.util.*
+import java.util.LinkedList
 import javax.inject.Inject
-import kotlin.math.abs
-import kotlin.math.min
 
 @GameScope
 class MobController @Inject constructor(
@@ -107,8 +102,6 @@ class MobController @Inject constructor(
         player.update(mobWorldAdapter, playerAdapter, projectileAdapter, delta)
         mobSoundManager.makeSound(player)
 
-        limitPlayerCursor()
-
         if (player.isDead) {
             dropQueue.offerInventory(player.position.x, player.position.y, player.inventory)
             dropQueue.offerItems(player.position.x, player.position.y, player.wearingArmor.items.toList())
@@ -119,60 +112,8 @@ class MobController @Inject constructor(
         }
     }
 
-    fun limitPlayerCursor() {
-        with(player) {
-            val cursor = Vector2(cursorX, cursorY)
-            if (gameMode.isSurvival()) {
-                val plToCursor = cursor
-                    .sub(position)
-                    .limit2(SURVIVAL_CURSOR_RANGE_2)
-
-                cursorX = position.x + plToCursor.x
-                cursorY = position.y + plToCursor.y
-            }
-
-            cursorY = MathUtils.clamp(cursorY, 0f, mobWorldAdapter.height.toFloat())
-
-            cursor.set(cursorX, cursorY)
-
-            if (position.dst2(cursor) < 0.001f) {
-                return
-            }
-
-            mobWorldAdapter.getBox2dWorld().rayCast(
-                { fixture, point, _, fraction ->
-                    val block = fixture.userData as? Block ?: return@rayCast -1f
-
-                    val pointToCursor = cursor.cpy().sub(point)
-
-                    val pointToCursorDX = abs(pointToCursor.x)
-                    val pointToCursorDY = abs(pointToCursor.y)
-
-                    if (pointToCursorDX < block.width / 2f && pointToCursorDY < block.height / 2f) {
-                        return@rayCast -1f
-                    }
-
-                    point.cpy().apply {
-                        x += min(pointToCursorDX, block.width / 2f) * if (pointToCursor.x < 0) -1f else 1f
-                        y += min(pointToCursorDY, block.height / 2f) * if (pointToCursor.y < 0) -1f else 1f
-
-                        cursorX = x
-                        cursorY = y
-
-                        if (player.holdCursor) {
-                            player.cursorToPlayer.set(
-                                player.cursorX - player.position.x,
-                                player.cursorY - player.position.y,
-                            )
-                        }
-                    }
-
-                    return@rayCast fraction
-                },
-                position,
-                cursor,
-            )
-        }
+    fun rayCastPlayerCursor(onCallback: () -> Unit = {}) {
+        player.rayCastCursor(mobWorldAdapter, onCallback)
     }
 
     fun respawnPlayer() {
@@ -195,9 +136,5 @@ class MobController @Inject constructor(
         player.dispose()
         _mobs.clear()
         mobSoundManager.dispose()
-    }
-
-    companion object {
-        private const val SURVIVAL_CURSOR_RANGE_2 = 36f
     }
 }

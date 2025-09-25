@@ -117,7 +117,12 @@ class PlayerMobBehavior(
         }
     }
 
-    override fun Player.updateMob(worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, projectileAdapter: ProjectileAdapter, delta: Float) {
+    override fun Player.updateMob(
+        worldAdapter: MobWorldAdapter,
+        playerAdapter: PlayerAdapter,
+        projectileAdapter: ProjectileAdapter,
+        delta: Float,
+    ) {
         sight?.publicUpdate()
 
         if (isPullingBow && !canShootBow()) {
@@ -143,6 +148,7 @@ class PlayerMobBehavior(
         if (holdCursor) {
             cursorX = position.x + cursorToPlayer.x
             cursorY = position.y + cursorToPlayer.y
+            rayCastCursor(worldAdapter)
         }
 
         if (gameMode.isCreative()) {
