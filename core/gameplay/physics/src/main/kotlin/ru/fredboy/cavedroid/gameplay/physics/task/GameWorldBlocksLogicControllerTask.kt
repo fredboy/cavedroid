@@ -125,6 +125,6 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
 
         private const val CHUNK_SIZE = 16
 
-        const val WORLD_BLOCKS_LOGIC_UPDATE_INTERVAL_SEC = .1f
+        const val WORLD_BLOCKS_LOGIC_UPDATE_INTERVAL_SEC = 0.25f
     }
 }
