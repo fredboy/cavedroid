@@ -129,9 +129,9 @@ class TouchCursorInputHandler @Inject constructor(
         soundPlayer.playSoundAtPosition(
             sound = sound,
             soundX = mobController.player.position.x,
-            soundY = mobController.player.position.x,
+            soundY = mobController.player.position.y,
             playerX = mobController.player.position.x,
-            playerY = mobController.player.position.x,
+            playerY = mobController.player.position.y,
         )
     }
 
