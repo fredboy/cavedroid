@@ -29,13 +29,17 @@ class DropAttractionToMobContactHandler @Inject constructor() : AbstractContactH
         }
 
         val toPlayer = entityB.position.cpy().sub(position)
-        controlVector.set(toPlayer.nor().scl(50f))
+        controlVector.set(toPlayer.nor().scl(10f))
         body.isBullet = true
     }
 
     override fun Drop.handleEndContact(contact: Contact, entityB: Mob) {
-        body.isBullet = false
-        controlVector.setZero()
-        velocity.get().setZero()
+        if (isPickedUp || entityB !is Player) {
+            return
+        }
+
+        if (entityB.inventory.pickUpItem(inventoryItem)) {
+            isPickedUp = true
+        }
     }
 }

@@ -156,9 +156,8 @@ class Drop(
 
         val scaledControl = getControlVectorWithAppliedResistance(dropWorldAdapter)
         if (!scaledControl.isZero) {
-            body.applyForceToCenter(scaledControl, true)
-            velocity.x = MathUtils.clamp(velocity.x, -abs(scaledControl.x), abs(scaledControl.x))
-            velocity.y = MathUtils.clamp(velocity.y, -abs(scaledControl.y), abs(scaledControl.y))
+            velocity.x = controlVector.x
+            velocity.y = controlVector.y
         }
 
         val overlappingBlock = dropWorldAdapter.getForegroundBlock(
