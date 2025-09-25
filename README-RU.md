@@ -105,7 +105,8 @@ CaveDroid распространяется под лицензией **MIT**. П
 - **Экранный джойстик**: CC-0 с [OpenGameArt.org](https://opengameart.org/content/mmorpg-virtual-joysticks)
 - **Шрифт**: LanaPixel от eishiya, лицензия [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 - **Скрипты**: Разные скрипты с Stack Overflow, распространяются под соответствующими лицензиями
-- **Атрибуции**: Лицензированные ассеты содержат файл `attribution.txt` с нужными упоминаниями.
+
+Лицензированные ассеты содержат файл `attribution.txt` с нужными упоминаниями.
 
 ---
 

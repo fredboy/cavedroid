@@ -107,7 +107,8 @@ CaveDroid is licensed under the **MIT License**. See [LICENSE](LICENSE) for deta
 - **On-screen joystick**: CC-0 from [OpenGameArt.org](https://opengameart.org/content/mmorpg-virtual-joysticks)
 - **Font**: LanaPixel by eishiya, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 - **Scripts**: Various scripts from Stack Overflow are distributed under their applicable licenses
-- **Attributions**: Licensed assets have an `attribution.txt` file in their directories with applicable attributions.
+
+Licensed assets have an `attribution.txt` file in their directories with applicable attributions.
 
 ---
 
