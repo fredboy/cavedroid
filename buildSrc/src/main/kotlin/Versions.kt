@@ -93,6 +93,8 @@ object Versions {
      * Construo
      *
      * A gradle plugin to cross compile jvm projects
+     *
+     * [Source](https://github.com/fourlastor-alexandria/construo)
      */
     const val construo = "1.7.1"
 
@@ -100,6 +102,8 @@ object Versions {
      * Gradle License Report
      *
      *  A plugin for generating reports about the licenses of third party software using Gradle
+     *
+     *  [Source](https://github.com/jk1/Gradle-License-Report)
      */
     const val licenseReportPlugin = "2.9"
 }

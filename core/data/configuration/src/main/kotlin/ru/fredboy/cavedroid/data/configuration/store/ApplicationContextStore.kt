@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.data.configuration.store
 
+import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
 import ru.fredboy.cavedroid.common.api.PreferencesStore
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
 import java.util.Locale
@@ -25,14 +26,14 @@ class ApplicationContextStore @Inject constructor(
         get() = synchronized(lock) { applicationContext.isFullscreen }
         set(value) = synchronized(lock) {
             applicationContext.isFullscreen = value
-            preferencesStore.setPreference(KEY_FULLSCREEN_PREF, value.toString())
+            preferencesStore.setPreference(PreferenceKeys.FULLSCREEN, value.toString())
         }
 
     var useDynamicCamera: Boolean
         get() = synchronized(lock) { applicationContext.useDynamicCamera }
         set(value) = synchronized(lock) {
             applicationContext.useDynamicCamera = value
-            preferencesStore.setPreference(KEY_DYNAMIC_CAMERA_PREF, value.toString())
+            preferencesStore.setPreference(PreferenceKeys.DYNAMIC_CAMERA, value.toString())
         }
 
     var gameDirectory: String
@@ -51,29 +52,20 @@ class ApplicationContextStore @Inject constructor(
         get() = synchronized(lock) { applicationContext.isAutoJumpEnabled }
         set(value) = synchronized(lock) {
             applicationContext.isAutoJumpEnabled = value
-            preferencesStore.setPreference(KEY_AUTO_JUMP_PREF, value.toString())
+            preferencesStore.setPreference(PreferenceKeys.AUTO_JUMP, value.toString())
         }
 
     var locale: Locale
         get() = synchronized(lock) { applicationContext.locale }
         set(value) = synchronized(lock) {
             applicationContext.locale = value
-            preferencesStore.setPreference(KEY_LOCALE_PREF, value.language)
+            preferencesStore.setPreference(PreferenceKeys.LOCALE, value.language)
         }
 
     var isSoundEnabled: Boolean
         get() = synchronized(lock) { applicationContext.soundEnabled }
         set(value) = synchronized(lock) {
             applicationContext.soundEnabled = value
-            preferencesStore.setPreference(KEY_SOUND_ENABLED_PREF, value.toString())
+            preferencesStore.setPreference(PreferenceKeys.SOUND_ENABLED, value.toString())
         }
-
-    private companion object {
-        private const val KEY_FULLSCREEN_PREF = "fullscreen"
-        private const val KEY_DYNAMIC_CAMERA_PREF = "dyncam"
-        private const val KEY_SCREEN_SCALE_PREF = "screen_scale"
-        private const val KEY_AUTO_JUMP_PREF = "auto_jump"
-        private const val KEY_LOCALE_PREF = "locale"
-        private const val KEY_SOUND_ENABLED_PREF = "sound_enabled"
-    }
 }

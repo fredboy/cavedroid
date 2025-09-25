@@ -36,7 +36,7 @@ sourceSets {
 }
 
 tasks.register<JavaExec>("run") {
-    dependsOn("build")
+    dependsOn("assemble")
     mainClass = desktopLauncherClassName
     classpath = sourceSets["main"].runtimeClasspath
     workingDir = sourceSets["main"].resources.sourceDirectories.first()
@@ -44,7 +44,7 @@ tasks.register<JavaExec>("run") {
 }
 
 tasks.register<JavaExec>("runTouch") {
-    dependsOn("build")
+    dependsOn("assemble")
     mainClass = desktopLauncherClassName
     classpath = sourceSets["main"].runtimeClasspath
     workingDir = sourceSets["main"].resources.sourceDirectories.first()
@@ -52,7 +52,7 @@ tasks.register<JavaExec>("runTouch") {
 }
 
 tasks.register<Jar>("dist") {
-    dependsOn("build")
+    dependsOn("assemble")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes["Main-Class"] = desktopLauncherClassName
@@ -187,7 +187,7 @@ construo {
         create<Target.Windows>("winX64") {
             architecture.set(Target.Architecture.X86_64)
             jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.16%2B8/OpenJDK17U-jdk_x64_windows_hotspot_17.0.16_8.zip")
-            useGpuHint.set(false)
+            icon.set(project.file("src/main/resources/icons/icon512.png"))
         }
     }
 }
@@ -195,6 +195,7 @@ construo {
 dependencies {
     useCommonModule()
     useGdxModule()
+    useKotlinxCoroutines()
 
     implementation(Dependencies.LibGDX.gdx)
     implementation(Dependencies.LibGDX.Desktop.backend)

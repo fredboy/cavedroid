@@ -277,7 +277,7 @@ class GameInputProcessor @Inject constructor(
     companion object {
         private const val TAG = "GameInputProcessor"
 
-        private const val DRAG_THRESHOLD = 0.5f
+        private const val DRAG_THRESHOLD = 1f
 
         private val nullButton = TouchButton(Rectangle(), -1, true)
     }

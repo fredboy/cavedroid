@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gdx
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
+import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.PreferencesStore
 import ru.fredboy.cavedroid.common.model.StartGameConfig
@@ -21,9 +22,10 @@ class CaveDroidApplication(
     private val isDebug: Boolean,
     private val preferencesStore: PreferencesStore,
 ) : Game(),
+    CaveDroidApplicationDecorator,
     ApplicationController {
 
-    lateinit var applicationComponent: ApplicationComponent
+    override lateinit var applicationComponent: ApplicationComponent
         private set
 
     private fun initFullscreenMode(isFullscreen: Boolean) {
@@ -34,7 +36,10 @@ class CaveDroidApplication(
         if (isFullscreen) {
             Gdx.graphics.setFullscreenMode(Gdx.graphics.displayMode)
         } else {
-            Gdx.graphics.setWindowedMode(960, 540)
+            Gdx.graphics.setWindowedMode(
+                preferencesStore.getPreference(PreferenceKeys.WINDOW_WIDTH_KEY)?.toIntOrNull() ?: 960,
+                preferencesStore.getPreference(PreferenceKeys.WINDOW_HEIGHT_KEY)?.toIntOrNull() ?: 540,
+            )
         }
     }
 
@@ -42,7 +47,7 @@ class CaveDroidApplication(
         val width = DEFAULT_VIEWPORT_WIDTH
         val height = width / Gdx.graphics.ratio
 
-        val isFullscreen = preferencesStore.getPreference("fullscreen").toBoolean()
+        val isFullscreen = preferencesStore.getPreference(PreferenceKeys.FULLSCREEN).toBoolean()
         initFullscreenMode(isFullscreen)
 
         applicationComponent = DaggerApplicationComponent.builder()
@@ -54,10 +59,13 @@ class CaveDroidApplication(
                     width = width,
                     height = height,
                     isFullscreen = isFullscreen,
-                    useDynamicCamera = preferencesStore.getPreference("dyncam").toBoolean(),
-                    isAutoJumpEnabled = preferencesStore.getPreference("auto_jump").toBoolean(),
-                    locale = Locale(preferencesStore.getPreference("locale") ?: Locale.getDefault().language),
-                    soundEnabled = preferencesStore.getPreference("sound_enabled").toBoolean(),
+                    useDynamicCamera = preferencesStore.getPreference(PreferenceKeys.DYNAMIC_CAMERA).toBoolean(),
+                    isAutoJumpEnabled = preferencesStore.getPreference(PreferenceKeys.AUTO_JUMP).toBoolean(),
+                    locale = Locale(
+                        preferencesStore.getPreference(PreferenceKeys.LOCALE)
+                            ?: Locale.getDefault().language,
+                    ),
+                    soundEnabled = preferencesStore.getPreference(PreferenceKeys.SOUND_ENABLED).toBoolean(),
                 ),
             )
             .applicationController(this)
@@ -126,6 +134,10 @@ class CaveDroidApplication(
         setScreen(applicationComponent.gameScreen)
         screen.resume()
     }
+
+    fun getPreferencesStore() = preferencesStore
+
+    override fun getDelegate() = this
 
     companion object {
         private const val TAG = "CaveDroidApplication"

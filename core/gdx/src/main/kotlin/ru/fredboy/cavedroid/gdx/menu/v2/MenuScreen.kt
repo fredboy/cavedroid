@@ -2,10 +2,10 @@ package ru.fredboy.cavedroid.gdx.menu.v2
 
 import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
-import ru.fredboy.cavedroid.gdx.CaveDroidApplication
 import ru.fredboy.cavedroid.gdx.base.BaseScreen
 import ru.fredboy.cavedroid.gdx.menu.di.DaggerMenuComponent
 import ru.fredboy.cavedroid.gdx.menu.v2.view.main.MainMenuNavKey
+import ru.fredboy.cavedroid.gdx.utils.applicationComponent
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,7 +20,7 @@ class MenuScreen @Inject constructor(
 
     init {
         val menuComponent = DaggerMenuComponent.builder()
-            .applicationComponent((Gdx.app.applicationListener as CaveDroidApplication).applicationComponent)
+            .applicationComponent(Gdx.app.applicationListener.applicationComponent)
             .rootNavKey(MainMenuNavKey)
             .build()
 

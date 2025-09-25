@@ -8,10 +8,10 @@ import ru.fredboy.cavedroid.data.configuration.model.GameContext
 import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
-import ru.fredboy.cavedroid.gdx.CaveDroidApplication
 import ru.fredboy.cavedroid.gdx.base.BaseScreen
 import ru.fredboy.cavedroid.gdx.game.di.DaggerGameComponent
 import ru.fredboy.cavedroid.gdx.game.di.GameComponent
+import ru.fredboy.cavedroid.gdx.utils.applicationComponent
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -54,7 +54,7 @@ class GameScreen @Inject constructor(
         val gameContext = getGameContext(gameConfig)
 
         return DaggerGameComponent.builder()
-            .applicationComponent((Gdx.app.applicationListener as CaveDroidApplication).applicationComponent)
+            .applicationComponent(Gdx.app.applicationListener.applicationComponent)
             .gameContext(gameContext)
             .build()
     }

@@ -6,6 +6,8 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 import com.badlogic.gdx.utils.Os
 import com.badlogic.gdx.utils.SharedLibraryLoader
 import org.lwjgl.system.Configuration
+import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
+import ru.fredboy.cavedroid.desktop.utils.SaveSizePrefsGameDecorator
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
 
 internal object DesktopLauncher {
@@ -18,6 +20,8 @@ internal object DesktopLauncher {
 
         val config = Lwjgl3ApplicationConfiguration()
 
+        val preferencesStore = DesktopPreferencesStore()
+
         with(config) {
             setWindowIcon(
                 /* fileType = */ Files.FileType.Internal,
@@ -26,13 +30,15 @@ internal object DesktopLauncher {
                 "icons/icon128.png",
             )
             setTitle("CaveDroid")
-            setWindowedMode(960, 540)
+            setWindowedMode(
+                preferencesStore.getPreference(PreferenceKeys.WINDOW_WIDTH_KEY)?.toIntOrNull() ?: 960,
+                preferencesStore.getPreference(PreferenceKeys.WINDOW_HEIGHT_KEY)?.toIntOrNull() ?: 540,
+            )
             useVsync(true)
         }
 
         var touch = false
         var debug = false
-        var assetsPath: String? = null
 
         for (anArg in arg) {
             if (anArg == "--touch") {
@@ -42,22 +48,15 @@ internal object DesktopLauncher {
             if (anArg == "--debug") {
                 debug = true
             }
-
-            if (anArg.startsWith("--assets")) {
-                val splitArg: Array<String> = anArg.split("=".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-                if (splitArg.size >= 2) {
-                    assetsPath = splitArg[1]
-                }
-            }
         }
 
         val caveGame = CaveDroidApplication(
             gameDataDirectoryPath = System.getProperty("user.home") + "/.cavedroid",
             isTouchScreen = touch,
             isDebug = debug,
-            preferencesStore = DesktopPreferencesStore(),
+            preferencesStore = preferencesStore,
         )
 
-        Lwjgl3Application(caveGame, config)
+        Lwjgl3Application(SaveSizePrefsGameDecorator(caveGame), config)
     }
 }

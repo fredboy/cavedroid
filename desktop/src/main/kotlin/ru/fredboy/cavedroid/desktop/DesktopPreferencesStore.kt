@@ -5,7 +5,7 @@ import java.util.prefs.Preferences
 
 class DesktopPreferencesStore : PreferencesStore {
 
-    private val prefs = Preferences.userNodeForPackage(DesktopPreferencesStore::class.java)
+    private val prefs = Preferences.userNodeForPackage(DesktopLauncher::class.java)
 
     override fun getPreference(key: String): String? = prefs.get(key, null)
 
