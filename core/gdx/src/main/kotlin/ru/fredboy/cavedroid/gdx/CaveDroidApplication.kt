@@ -59,13 +59,14 @@ class CaveDroidApplication(
                     width = width,
                     height = height,
                     isFullscreen = isFullscreen,
-                    useDynamicCamera = preferencesStore.getPreference(PreferenceKeys.DYNAMIC_CAMERA).toBoolean(),
-                    isAutoJumpEnabled = preferencesStore.getPreference(PreferenceKeys.AUTO_JUMP).toBoolean(),
-                    locale = Locale(
-                        preferencesStore.getPreference(PreferenceKeys.LOCALE)
-                            ?: Locale.getDefault().language,
-                    ),
-                    soundEnabled = preferencesStore.getPreference(PreferenceKeys.SOUND_ENABLED).toBoolean(),
+                    useDynamicCamera = preferencesStore.getPreference(PreferenceKeys.DYNAMIC_CAMERA)
+                        ?.toBooleanStrictOrNull() ?: false,
+                    isAutoJumpEnabled = preferencesStore.getPreference(PreferenceKeys.AUTO_JUMP)
+                        ?.toBooleanStrictOrNull() ?: true,
+                    locale = preferencesStore.getPreference(PreferenceKeys.LOCALE)
+                        ?.let(::Locale) ?: Locale.getDefault(),
+                    soundEnabled = preferencesStore.getPreference(PreferenceKeys.SOUND_ENABLED)
+                        ?.toBooleanStrictOrNull() ?: true,
                 ),
             )
             .applicationController(this)
