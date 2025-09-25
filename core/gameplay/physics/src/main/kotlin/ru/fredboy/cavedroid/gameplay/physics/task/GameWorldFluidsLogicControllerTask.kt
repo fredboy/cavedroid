@@ -143,11 +143,12 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
 
     private fun fluidUpdater() {
         val midScreen = mobController.player.mapX
+        val yRange = 16 downTo -16
 
-        for (y in gameWorld.height - 1 downTo 0) {
+        for (y in yRange) {
             for (x in 0..<min(gameWorld.width / 2, 32)) {
-                updateFluids(midScreen + x, y)
-                updateFluids(midScreen - x, y)
+                updateFluids(midScreen + x, y + mobController.player.middleMapY)
+                updateFluids(midScreen - x, y + mobController.player.middleMapY)
             }
         }
 
