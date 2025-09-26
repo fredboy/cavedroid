@@ -77,6 +77,7 @@ class Projectile(
 
         bodyShape.dispose()
 
+        body.gravityScale = 0.25f
         body.applyForceToCenter(velocity.cpy(), true)
     }
 

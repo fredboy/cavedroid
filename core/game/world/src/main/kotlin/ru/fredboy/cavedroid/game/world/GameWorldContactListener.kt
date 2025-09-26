@@ -93,7 +93,7 @@ class GameWorldContactListener @Inject constructor(
 
             // fall damage
             if (sensorType == null && mob != null && block != null) {
-                mob.damage(max((mob.velocity.y.pow(2f) / 19.6f).roundToInt() - 3, 0))
+                mob.damage(max((mob.velocity.y.pow(2f) / (gameWorld.world.gravity.y * 2f)).roundToInt() - 3, 0))
             }
 
             val (handler, entityA, entityB) = findContactHandler(contact) ?: return

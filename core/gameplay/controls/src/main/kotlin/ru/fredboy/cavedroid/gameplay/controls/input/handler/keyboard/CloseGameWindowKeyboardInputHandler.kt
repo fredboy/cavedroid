@@ -26,13 +26,11 @@ class CloseGameWindowKeyboardInputHandler @Inject constructor(
     override fun handle(action: KeyboardInputAction) {
         val selectedItem = gameWindowsManager.currentWindow?.selectedItem
         if (selectedItem != null) {
-            for (i in 1..selectedItem.amount) {
-                dropController.addDrop(
-                    /* x = */ player.x + (32f * player.direction.basis),
-                    /* y = */ player.y,
-                    /* item = */ selectedItem,
-                )
-            }
+            dropController.addDrop(
+                /* x = */ player.x + (2f * player.direction.basis),
+                /* y = */ player.y,
+                /* item = */ selectedItem.copy(),
+            )
             gameWindowsManager.currentWindow?.selectedItem = null
         }
         gameWindowsManager.closeWindow()

@@ -8,6 +8,7 @@ import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.impl.FallingBlockMobBehavior
 
@@ -42,6 +43,11 @@ class FallingBlock(
         } else {
             emptyList()
         }
+    }
+
+    override fun spawn(x: Float, y: Float, factory: MobPhysicsFactory) {
+        super.spawn(x, y, factory)
+        body.gravityScale = 0.5f
     }
 
     companion object {

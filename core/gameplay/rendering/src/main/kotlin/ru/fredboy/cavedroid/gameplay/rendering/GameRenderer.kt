@@ -189,6 +189,10 @@ class GameRenderer @Inject constructor(
         gameWorld.rayHandler.setCombinedMatrix(camera)
         gameWorld.rayHandler.render()
 
+        if (gameContextRepository.shouldShowInfo()) {
+            debugRenderer?.render(gameWorld.world, camera.combined)
+        }
+
         spriter.projectionMatrix = hudCamera.combined
         shaper.projectionMatrix = hudCamera.combined
 
@@ -202,10 +206,6 @@ class GameRenderer @Inject constructor(
         hudRenderers.forEach { renderer -> renderer.draw(spriter, shaper, hudCameraViewport, delta) }
         handleMousePosition()
         spriter.end()
-
-        if (gameContextRepository.shouldShowInfo()) {
-            debugRenderer?.render(gameWorld.world, camera.combined)
-        }
     }
 
     fun resetCameraToPlayer() {

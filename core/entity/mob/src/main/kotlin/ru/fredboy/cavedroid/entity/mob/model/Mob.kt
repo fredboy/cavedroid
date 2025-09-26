@@ -304,8 +304,8 @@ abstract class Mob(
         body.gravityScale = if (canClimb) {
             when {
                 controlVector.y != 0f -> controlVector.y
-                climb -> -speed
-                descend -> speed
+                climb -> -2f
+                descend -> 2f
                 else -> 1f
             }
         } else {
@@ -347,7 +347,7 @@ abstract class Mob(
                 controlVector.y = 0f
             }
         } else if (!isFlyMode) {
-            body.linearVelocity = body.linearVelocity.cpy().apply { x = 0f }
+            velocity.x = 0f
         }
 
         if (position.x > mobWorldAdapter.width) {
@@ -448,7 +448,7 @@ abstract class Mob(
         private const val DAMAGE_TINT_TIMEOUT_S = 0.5f
         private val DAMAGE_TINT_COLOR = Color((0xff8080 shl 8) or 0xFF)
 
-        private const val JUMP_VELOCITY = -5.05f
+        private const val JUMP_VELOCITY = -8.6f
 
         private const val JUMP_COOLDOWN_MS = 500L
 

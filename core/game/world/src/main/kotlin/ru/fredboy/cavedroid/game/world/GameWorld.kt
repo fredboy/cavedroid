@@ -45,7 +45,7 @@ class GameWorld @Inject constructor(
 
     val generatorConfig = WorldGeneratorConfig.getDefault()
 
-    val world: World = World(Vector2(0f, 9.8f), false)
+    val world: World = World(Vector2(0f, 32f), false)
 
     val rayHandler: RayHandler
         get() = gameWorldLightManager.rayHandler

@@ -54,9 +54,9 @@ class MouseCursorInputHandler @Inject constructor(
 
         player.headRotation = getPlayerHeadRotation(worldX, worldY)
 
-        if (worldX.toInt() < player.position.x.toInt()) {
+        if (worldX < player.position.x) {
             player.direction = Direction.LEFT
-        } else if (worldX.toInt() > player.position.x.toInt()) {
+        } else if (worldX > player.position.x) {
             player.direction = Direction.RIGHT
         }
     }
