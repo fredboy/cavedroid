@@ -52,7 +52,7 @@ class PassiveMobBehavior :
             targetCoordinates = null
         } else if (targetCoordinates == null && (takingDamage || MathUtils.randomBoolean(0.001f))) {
             targetCoordinates = getTargetBlock(worldAdapter)
-        } else if (targetCoordinates != null && velocity.isZero && checkAutojumpObstacle(worldAdapter)) {
+        } else if (targetCoordinates != null && checkAutojumpObstacle(worldAdapter)) {
             targetCoordinates = null
         }
 

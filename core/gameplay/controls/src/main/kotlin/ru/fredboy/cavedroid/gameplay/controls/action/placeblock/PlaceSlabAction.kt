@@ -17,7 +17,7 @@ class PlaceSlabAction @Inject constructor(
 
     override fun place(placeable: Item.Placeable, x: Int, y: Int): Boolean {
         if (placeable !is Item.Slab) {
-            Gdx.app.debug(TAG, "Place slab action called on ${placeable.params.key} which is not a slab")
+            Gdx.app.log(TAG, "Place slab action called on ${placeable.params.key} which is not a slab")
             return false
         }
 

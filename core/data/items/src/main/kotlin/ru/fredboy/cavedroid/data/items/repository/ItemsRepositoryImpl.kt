@@ -116,7 +116,7 @@ internal class ItemsRepositoryImpl @Inject constructor(
 
     override fun initialize() {
         if (_initialized) {
-            Gdx.app.debug(TAG, "Attempted to init when already initialized")
+            Gdx.app.log(TAG, "Attempted to init when already initialized")
             return
         }
 
