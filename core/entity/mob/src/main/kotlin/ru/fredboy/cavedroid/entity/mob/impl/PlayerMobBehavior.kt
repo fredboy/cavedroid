@@ -164,12 +164,13 @@ class PlayerMobBehavior(
 
         var blockDamageMultiplier = 1f
         (activeItem.item as? Item.Tool)?.let { currentTool ->
-            if (currentTool.javaClass == targetBlock.params.toolType &&
+            blockDamageMultiplier = if (currentTool.javaClass == targetBlock.params.toolType &&
                 currentTool.level >= targetBlock.params.toolLevel
             ) {
-                blockDamageMultiplier = 2f * currentTool.level
+                2f * currentTool.level * currentTool.blockDamageMultiplier
+            } else {
+                0.5f
             }
-            blockDamageMultiplier *= currentTool.blockDamageMultiplier
         }
 
         if (isHitting && isHittingWithDamage) {
