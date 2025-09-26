@@ -32,5 +32,6 @@ abstract class BaseViewModel(
 
     companion object {
         private const val TAG = "BaseViewModel"
+private val logger = co.touchlab.kermit.Logger.withTag(TAG)
     }
 }

@@ -17,7 +17,7 @@ class PlaceSlabAction @Inject constructor(
 
     override fun place(placeable: Item.Placeable, x: Int, y: Int): Boolean {
         if (placeable !is Item.Slab) {
-            Gdx.app.log(TAG, "Place slab action called on ${placeable.params.key} which is not a slab")
+            logger.w { "Place slab action called on ${placeable.params.key} which is not a slab" }
             return false
         }
 
@@ -52,6 +52,7 @@ class PlaceSlabAction @Inject constructor(
 
     companion object {
         private const val TAG = "PlaceSlabAction"
+private val logger = co.touchlab.kermit.Logger.withTag(TAG)
         const val ACTION_KEY = "place_slab"
     }
 }

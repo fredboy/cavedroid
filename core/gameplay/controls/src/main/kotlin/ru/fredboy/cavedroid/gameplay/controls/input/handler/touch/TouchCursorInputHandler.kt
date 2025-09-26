@@ -193,7 +193,7 @@ class TouchCursorInputHandler @Inject constructor(
             ?: (item as? Item.Usable)?.let {
                 useItemActionMap[item.useActionKey]?.perform(item, player.selectedX, player.selectedY)
                     ?: run {
-                        Gdx.app.error(TAG, "use item action ${item.useActionKey} not found")
+                        logger.w { "use item action ${item.useActionKey} not found" }
                         false
                     }
             }?.takeIfTrue()
@@ -342,6 +342,7 @@ class TouchCursorInputHandler @Inject constructor(
 
     companion object {
         private const val TAG = "TouchWorldInputHandler"
+private val logger = co.touchlab.kermit.Logger.withTag(TAG)
         private const val TOUCH_HOLD_TIME_SEC = 0.5f
     }
 }

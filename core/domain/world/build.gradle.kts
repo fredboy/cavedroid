@@ -11,6 +11,6 @@ dependencies {
     useLibgdx()
     useDagger()
 
-    useCommonModule()
+    useCommonLibs()
     useModule(":core:domain:items")
 }

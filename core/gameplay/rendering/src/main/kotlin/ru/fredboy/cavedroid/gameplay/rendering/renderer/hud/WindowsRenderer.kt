@@ -36,12 +36,13 @@ class WindowsRenderer @Inject constructor(
             GameWindowType.FURNACE -> furnaceWindowRenderer.draw(spriteBatch, shapeRenderer, viewport, delta)
             GameWindowType.CHEST -> chestWindowRenderer.draw(spriteBatch, shapeRenderer, viewport, delta)
             GameWindowType.NONE -> return
-            else -> Gdx.app.error(TAG, "Cannot draw window: ${windowType.name}")
+            else -> logger.e { "Cannot draw window: ${windowType.name}" }
         }
     }
 
     companion object {
         private const val TAG = "WindowsRenderer"
+private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         const val RENDER_LAYER = 100600
     }

@@ -106,4 +106,13 @@ object Versions {
      *  [Source](https://github.com/jk1/Gradle-License-Report)
      */
     const val licenseReportPlugin = "2.9"
+
+    /**
+     * Kermit
+     *
+     * A Kotlin Multiplatform centralized logging utility.
+     *
+     * [Source](https://github.com/touchlab/Kermit)
+     */
+    const val kermit = "2.0.8"
 }

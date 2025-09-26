@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.entity.mob.model
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
@@ -66,6 +65,7 @@ open class WalkingMob(
 
     companion object {
         private const val TAG = "WalkingMob"
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         private fun mapMobBehavior(behaviorType: MobBehaviorType): MobBehavior {
             return when (behaviorType) {
@@ -73,7 +73,7 @@ open class WalkingMob(
                 MobBehaviorType.AGGRESSIVE -> AggressiveMobBehavior()
                 MobBehaviorType.ARCHER -> ArcherMobBehavior()
                 else -> {
-                    Gdx.app.error(TAG, "$behaviorType is not supported for Walking mob. Spawning as Passive")
+                    logger.w { "$behaviorType is not supported for Walking mob. Spawning as Passive" }
                     PassiveMobBehavior()
                 }
             }

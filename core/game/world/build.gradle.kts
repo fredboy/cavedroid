@@ -10,7 +10,7 @@ dependencies {
     useLibgdx()
     useDagger()
 
-    useCommonModule()
+    useCommonLibs()
     useDomainModules()
     useEntityModules()
 }

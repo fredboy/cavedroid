@@ -1,7 +1,6 @@
 package ru.fredboy.cavedroid.entity.container.model
 
 import box2dLight.Light
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -94,7 +93,7 @@ class Furnace(
 
         currentFuel?.let { curFuel ->
             val burningTimeMs = curFuel.params.burningTimeMs ?: run {
-                Gdx.app.error(TAG, "Burning item has no burning time. Item : ${curFuel.params.key}")
+                logger.e { "Burning item has no burning time. Item : ${curFuel.params.key}" }
                 return
             }
 
@@ -148,6 +147,7 @@ class Furnace(
     companion object {
         private const val SIZE = 3
         private const val TAG = "Furnace"
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         const val FUEL_INDEX = 0
         const val INPUT_INDEX = 1

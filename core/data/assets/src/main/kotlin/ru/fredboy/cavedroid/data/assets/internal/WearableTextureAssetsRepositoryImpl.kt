@@ -38,5 +38,6 @@ class WearableTextureAssetsRepositoryImpl @Inject constructor() : WearableTextur
 
     companion object {
         private const val TAG = "WearableTextureAssetsRepositoryImpl"
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
     }
 }

@@ -8,5 +8,5 @@ java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
     useLibgdx()
-    useCommonModule()
+    useCommonLibs()
 }

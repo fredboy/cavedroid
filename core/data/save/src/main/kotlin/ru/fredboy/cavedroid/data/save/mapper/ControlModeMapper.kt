@@ -24,7 +24,7 @@ class ControlModeMapper @Inject constructor() {
             0 -> Player.ControlMode.WALK
             1 -> Player.ControlMode.CURSOR
             else -> {
-                Gdx.app.error(TAG, "Unknown control mode value: ${saveDataDto.value}")
+                logger.e { "Unknown control mode value: ${saveDataDto.value}" }
                 Player.ControlMode.CURSOR
             }
         }
@@ -32,6 +32,7 @@ class ControlModeMapper @Inject constructor() {
 
     companion object {
         private const val TAG = "ControlModeMapper"
+private val logger = co.touchlab.kermit.Logger.withTag(TAG)
         private const val SAVE_DATA_VERSION = 3
     }
 }

@@ -36,6 +36,7 @@ internal class BlockActionSoundAssetsRepositoryImpl @Inject constructor() : Bloc
 
     companion object {
         private const val TAG = "BlockActionSoundAssetsRepositoryImpl"
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
         private const val BLOCK_ACTION_SOUND_PATH = "sfx/action"
     }
 }

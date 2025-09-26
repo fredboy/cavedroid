@@ -193,9 +193,8 @@ construo {
 }
 
 dependencies {
-    useCommonModule()
+    useCommonLibs()
     useGdxModule()
-    useKotlinxCoroutines()
 
     implementation(Dependencies.LibGDX.gdx)
     implementation(Dependencies.LibGDX.Desktop.backend)

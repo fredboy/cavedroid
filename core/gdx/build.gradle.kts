@@ -11,9 +11,8 @@ dependencies {
     useLibgdx()
     useLibKtx()
     useDagger()
-    useKotlinxCoroutines()
 
-    useCommonModule()
+    useCommonLibs()
     useDataModules()
     useDomainModules()
     useDomainSaveModule()

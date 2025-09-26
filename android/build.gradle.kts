@@ -181,7 +181,7 @@ tasks.preBuild.apply {
 }
 
 dependencies {
-    useCommonModule()
+    useCommonLibs()
     useGdxModule()
 
     implementation(Dependencies.LibGDX.gdx)

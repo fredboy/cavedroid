@@ -22,7 +22,7 @@ class MobFactoryImpl @Inject constructor(
 
     override fun create(x: Float, y: Float, mobKey: String): Mob? {
         val mobParams = mobParamsRepository.getMobParamsByKey(mobKey) ?: run {
-            Gdx.app.error(TAG, "No mob params found for $mobKey")
+            logger.e { "No mob params found for $mobKey" }
             return null
         }
 
@@ -36,7 +36,7 @@ class MobFactoryImpl @Inject constructor(
             MobBehaviorType.ARCHER -> ArcherMob(getItemByKeyUseCase, mobParams)
 
             else -> run {
-                Gdx.app.log(TAG, "Mobs of type ${mobParams.behaviorType} not yet supported")
+                logger.w { "Mobs of type ${mobParams.behaviorType} not yet supported" }
                 null
             }
         }?.also { mob ->
@@ -46,5 +46,6 @@ class MobFactoryImpl @Inject constructor(
 
     companion object {
         private const val TAG = "MobFactory"
+private val logger = co.touchlab.kermit.Logger.withTag(TAG)
     }
 }

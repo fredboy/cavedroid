@@ -206,5 +206,6 @@ class ItemMapper @Inject constructor(
 
     companion object {
         private const val TAG = "ItemMapper"
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
     }
 }

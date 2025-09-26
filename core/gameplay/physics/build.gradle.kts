@@ -11,7 +11,7 @@ dependencies {
     useDagger()
     useAutomultibind()
 
-    useCommonModule()
+    useCommonLibs()
     useDomainModules()
     useEntityModules()
     useGameModules()

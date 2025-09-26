@@ -169,7 +169,7 @@ class UseItemMouseInputHandler @Inject constructor(
             ?: (item as? Item.Usable)?.let {
                 useItemActionMap[item.useActionKey]?.perform(item, player.selectedX, player.selectedY)
                     ?: run {
-                        Gdx.app.error(TAG, "use item action ${item.useActionKey} not found")
+                        logger.w { "use item action ${item.useActionKey} not found" }
                         false
                     }
             }?.takeIfTrue()
@@ -226,6 +226,7 @@ class UseItemMouseInputHandler @Inject constructor(
 
     companion object {
         private const val TAG = "UseItemMouseInputActionHandler"
+private val logger = co.touchlab.kermit.Logger.withTag(TAG)
         private const val TOUCH_HOLD_TIME_SEC = 0.5f
 
         private const val MOB_HIT_RANGE = 3f

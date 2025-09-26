@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.desktop.utils
 
-import com.badlogic.gdx.Gdx
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -21,7 +20,7 @@ class SaveSizePrefsGameDecorator(
 
     override fun resize(width: Int, height: Int) {
         scope.launch {
-            Gdx.app.debug(TAG, "Saving size preference: $width x $height")
+            logger.d { "Saving size preference: $width x $height" }
             withContext(Dispatchers.IO) {
                 preferencesStore.setPreference(CaveDroidConstants.PreferenceKeys.WINDOW_WIDTH_KEY, width.toString())
                 preferencesStore.setPreference(CaveDroidConstants.PreferenceKeys.WINDOW_HEIGHT_KEY, height.toString())
@@ -38,5 +37,6 @@ class SaveSizePrefsGameDecorator(
 
     companion object {
         private const val TAG = "SaveSizePrefsGameDecorator"
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
     }
 }

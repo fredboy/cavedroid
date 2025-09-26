@@ -41,5 +41,6 @@ class GameContextStore @Inject constructor(
 
     companion object {
         private const val TAG = "GameConfigurationStore"
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
     }
 }

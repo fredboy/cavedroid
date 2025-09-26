@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.entity.projectile.model
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
@@ -46,7 +45,7 @@ class Projectile(
 
     fun spawn(x: Float, y: Float, velocity: Vector2, world: World) {
         if (_body != null) {
-            Gdx.app.error(TAG, "spawn called on projectile of type ${item.params.key} when body was already set!")
+            logger.w { "spawn called on projectile of type ${item.params.key} when body was already set!" }
             return
         }
 
@@ -99,5 +98,6 @@ class Projectile(
 
     companion object {
         private const val TAG = "Projectile"
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
     }
 }

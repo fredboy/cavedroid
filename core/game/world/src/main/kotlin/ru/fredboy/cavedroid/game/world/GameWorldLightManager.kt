@@ -49,7 +49,7 @@ class GameWorldLightManager @Inject constructor(
 
     fun attachToGameWorld(gameWorld: GameWorld) {
         if (_gameWorld != null) {
-            Gdx.app.error(TAG, "GameWorldLightManager already attached")
+            logger.w { "GameWorldLightManager already attached" }
             return
         }
 
@@ -227,6 +227,7 @@ class GameWorldLightManager @Inject constructor(
 
     companion object {
         private const val TAG = "GameWorldLightManager"
+private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         private const val CHUNK_SIZE = 4
 

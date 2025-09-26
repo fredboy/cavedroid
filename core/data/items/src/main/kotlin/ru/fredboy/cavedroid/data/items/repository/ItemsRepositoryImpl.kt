@@ -70,7 +70,7 @@ internal class ItemsRepositoryImpl @Inject constructor(
                     slabBottomBlock = blocksMap[dto.bottomSlabBlock] as? Block.Slab,
                 )
             } catch (e: Exception) {
-                Gdx.app.error(TAG, "Failed to map item $key. Reason: ${e.message}")
+                logger.e { "Failed to map item $key. Reason: ${e.message}" }
                 e.printStackTrace()
             }
         }
@@ -116,7 +116,7 @@ internal class ItemsRepositoryImpl @Inject constructor(
 
     override fun initialize() {
         if (_initialized) {
-            Gdx.app.log(TAG, "Attempted to init when already initialized")
+            logger.w { "Attempted to init when already initialized" }
             return
         }
 
@@ -272,6 +272,7 @@ internal class ItemsRepositoryImpl @Inject constructor(
 
     companion object {
         private const val TAG = "ItemsRepositoryImpl"
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         private val JsonFormat = Json {
             serializersModule = SerializersModule {

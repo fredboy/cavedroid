@@ -235,7 +235,7 @@ abstract class Mob(
         }
 
         if (damage < 0) {
-            Gdx.app.error(TAG, "Damage can't be negative!")
+            logger.w { "Damage can't be negative!" }
             return
         }
 
@@ -440,6 +440,7 @@ abstract class Mob(
 
     companion object {
         private const val TAG = "Mob"
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         @JvmStatic
         protected val DEFAULT_ANIMATION_SPEED = 360f

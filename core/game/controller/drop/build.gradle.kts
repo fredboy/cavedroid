@@ -11,7 +11,7 @@ dependencies {
     useLibgdx()
     useDagger()
 
-    useCommonModule()
+    useCommonLibs()
     useDomainModules()
     useModule(":core:entity:drop")
     useModule(":core:entity:mob")

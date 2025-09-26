@@ -135,7 +135,7 @@ class GameWorld @Inject constructor(
                 return@removeAll false
             }
 
-            Gdx.app.error(TAG, "An empty OnBlockPlacedListener weak reference was removed!")
+            logger.w("An empty OnBlockPlacedListener weak reference was removed!")
             true
         }
     }
@@ -154,7 +154,7 @@ class GameWorld @Inject constructor(
                 return@removeAll false
             }
 
-            Gdx.app.error(TAG, "An empty OnBlockDestroyedListener weak reference was removed!")
+            logger.w { "An empty OnBlockDestroyedListener weak reference was removed!" }
             true
         }
     }
@@ -323,6 +323,7 @@ class GameWorld @Inject constructor(
 
     companion object {
         private const val TAG = "GameWorld"
+private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         private const val PHYSICS_STEP_DELTA = 1f / 60f
 

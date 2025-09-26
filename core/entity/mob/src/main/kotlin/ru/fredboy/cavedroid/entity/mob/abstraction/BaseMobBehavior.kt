@@ -52,5 +52,6 @@ abstract class BaseMobBehavior<MOB : Mob>(
 
     companion object {
         private const val TAG = "BaseMobBehavior"
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
     }
 }

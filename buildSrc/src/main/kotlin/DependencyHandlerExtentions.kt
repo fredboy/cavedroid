@@ -13,6 +13,12 @@ fun DependencyHandler.useCommonModule() {
     useModule(":core:common")
 }
 
+fun DependencyHandler.useCommonLibs() {
+    useCommonModule()
+    useKermit()
+    useKotlinxCoroutines()
+}
+
 fun DependencyHandler.useDataModules() {
     useModule(":core:data:assets")
     useModule(":core:data:configuration")
@@ -88,4 +94,8 @@ fun DependencyHandler.useKotlinxSerializationProtobuf() {
 
 fun DependencyHandler.useKotlinxCoroutines() {
     implementation(Dependencies.Kotlin.coroutinesCore)
+}
+
+fun DependencyHandler.useKermit() {
+    implementation(Dependencies.kermit)
 }

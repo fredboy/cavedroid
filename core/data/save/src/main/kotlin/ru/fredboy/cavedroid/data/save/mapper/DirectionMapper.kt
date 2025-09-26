@@ -24,7 +24,7 @@ class DirectionMapper @Inject constructor() {
             0 -> Direction.LEFT
             1 -> Direction.RIGHT
             else -> {
-                Gdx.app.error(TAG, "Unknown direction value: ${saveDataDto.value}")
+                logger.e { "Unknown direction value: ${saveDataDto.value}" }
                 Direction.RIGHT
             }
         }
@@ -32,6 +32,7 @@ class DirectionMapper @Inject constructor() {
 
     companion object {
         private const val TAG = "DirectionMapper"
+private val logger = co.touchlab.kermit.Logger.withTag(TAG)
         private const val SAVE_DATA_VERSION = 3
     }
 }

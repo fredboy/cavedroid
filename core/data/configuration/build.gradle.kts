@@ -9,6 +9,6 @@ java.targetCompatibility = ApplicationInfo.sourceCompatibility
 dependencies {
     useDagger()
     useLibgdx()
-    useCommonModule()
+    useCommonLibs()
     useModule(":core:domain:configuration")
 }

@@ -7,6 +7,7 @@ object Dependencies {
 
         object Box2d {
             const val box2d = "com.badlogicgames.gdx:gdx-box2d:${Versions.gdx}"
+
             object Natives {
                 object Android {
                     const val armeabi = "com.badlogicgames.gdx:gdx-box2d-platform:${Versions.gdx}:natives-armeabi-v7a"
@@ -19,6 +20,7 @@ object Dependencies {
                 const val ios = "com.badlogicgames.gdx:gdx-box2d-platform:${Versions.gdx}:natives-ios"
             }
         }
+
         object Android {
             const val backend = "com.badlogicgames.gdx:gdx-backend-android:${Versions.gdx}"
 
@@ -78,4 +80,6 @@ object Dependencies {
     const val androidGradlePlugin = "com.android.tools.build:gradle:${Versions.agp}"
 
     const val proGuardPlugin = "com.guardsquare:proguard-gradle:${Versions.proGuard}"
+
+    const val kermit = "co.touchlab:kermit:${Versions.kermit}"
 }

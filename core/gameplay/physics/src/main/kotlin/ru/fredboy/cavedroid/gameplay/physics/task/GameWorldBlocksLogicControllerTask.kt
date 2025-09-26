@@ -75,7 +75,7 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
         synchronized(queueLock) {
             neighbors.forEach { neighborCoords ->
                 dirtyChunks.offer(neighborCoords).ifTrue {
-                    Gdx.app.debug(TAG, "Marking chunk as dirty: $neighborCoords. Reason: $reason")
+                    logger.v { "Marking chunk as dirty: $neighborCoords. Reason: $reason" }
                 }
             }
         }
@@ -101,7 +101,7 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
             dirtyChunks.poll()
         } ?: return
 
-        Gdx.app.debug(TAG, "Updating chunk ($startX, $startY)")
+        logger.v { "Updating chunk ($startX, $startY)" }
 
         val updateCalls = sequence {
             for (y in startY + CHUNK_SIZE - 1 downTo startY) {
@@ -111,7 +111,7 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
             }
         }.count { it }
 
-        Gdx.app.debug(TAG, "Chunk ($startX, $startY) updated with $updateCalls update() calls")
+        logger.v { "Chunk ($startX, $startY) updated with $updateCalls update() calls" }
     }
 
     override fun dispose() {
@@ -122,6 +122,7 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
 
     companion object {
         private const val TAG = "GameWorldBlocksLogicControllerTask"
+private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         private const val CHUNK_SIZE = 16
 

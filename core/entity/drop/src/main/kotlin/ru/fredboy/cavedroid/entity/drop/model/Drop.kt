@@ -18,7 +18,6 @@ import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.world.model.ContactSensorType
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
-import kotlin.math.abs
 
 class Drop(
     val inventoryItem: InventoryItem,
@@ -189,6 +188,7 @@ class Drop(
 
     companion object {
         private const val TAG = "Drop"
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
         private const val MAGNET_DISTANCE = 1f
         const val DROP_SIZE = .5f
     }

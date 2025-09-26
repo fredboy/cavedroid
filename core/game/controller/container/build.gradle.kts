@@ -10,7 +10,7 @@ dependencies {
     useLibgdx()
     useDagger()
 
-    useCommonModule()
+    useCommonLibs()
     useModule(":core:domain:items")
     useModule(":core:domain:world")
     useModule(":core:entity:container")

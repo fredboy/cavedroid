@@ -276,6 +276,7 @@ class GameInputProcessor @Inject constructor(
 
     companion object {
         private const val TAG = "GameInputProcessor"
+private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         private const val DRAG_THRESHOLD = 1f
 

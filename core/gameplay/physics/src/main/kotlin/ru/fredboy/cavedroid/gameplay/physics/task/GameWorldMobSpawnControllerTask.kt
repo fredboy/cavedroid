@@ -21,11 +21,11 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
     private val maintainedMobsCount = gameWorld.width / SPAWN_CHUNK_SIZE
 
     override fun exec() {
-        Gdx.app.log(
-            TAG,
+        logger.i {
             "Spawn controller task started. " +
-                "Current time: ${gameWorld.totalGameTimeSec}. Last spawn time: ${gameWorld.lastSpawnGameTime}",
-        )
+                "Current time: ${gameWorld.totalGameTimeSec}. Last spawn time: ${gameWorld.lastSpawnGameTime}"
+        }
+
         var spawnCount = 0
         if (!gameWorld.isDayTime() || mobController.mobs.size < maintainedMobsCount) {
             val mobParams = mobParamsRepository.getAllParams()
@@ -56,11 +56,12 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
             }
         }
         gameWorld.lastSpawnGameTime = gameWorld.totalGameTimeSec
-        Gdx.app.log(TAG, "Spawn controller task finished. Spawn count: $spawnCount")
+        logger.i { "Spawn controller task finished. Spawn count: $spawnCount" }
     }
 
     companion object {
         private const val TAG = "GameWorldMobSpawnControllerTask"
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         private const val SPAWN_CHUNK_SIZE = 64
 

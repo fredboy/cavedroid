@@ -72,7 +72,7 @@ internal class FontTextureAssetsRepositoryImpl @Inject constructor(
 
     private fun loadLocalization() {
         val currentLocale = applicationContextRepository.getLocale()
-        Gdx.app.log(TAG, "Loading localization for locale $currentLocale")
+        logger.i { "Loading localization for locale $currentLocale" }
         I18NBundle.setSimpleFormatter(true)
         menuBundle = I18NBundle.createBundle(Gdx.files.internal(BASE_MENU_LOCALIZATION), currentLocale)
         itemsBundle = I18NBundle.createBundle(Gdx.files.internal(BASE_ITEMS_LOCALIZATION), currentLocale)
@@ -80,6 +80,7 @@ internal class FontTextureAssetsRepositoryImpl @Inject constructor(
 
     companion object {
         private const val TAG = "FontAssetsRepositoryImpl"
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
         private const val FONT_FILE_PATH = "skin/font//lanapixel.fnt"
         private const val BASE_MENU_LOCALIZATION = "i18n/CaveDroid_Menu"
         private const val BASE_ITEMS_LOCALIZATION = "i18n/CaveDroid_Items"

@@ -7,7 +7,7 @@ java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
-    useCommonModule()
+    useCommonLibs()
     useLibgdx()
     useDagger()
 }

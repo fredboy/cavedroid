@@ -120,7 +120,7 @@ class CaveDroidApplication(
 
     override fun pauseGame() {
         if (screen !is GameScreen) {
-            Gdx.app.error(TAG, "Cannot pause when active screen is not game")
+            logger.w { "Cannot pause when active screen is not game" }
             return
         }
         screen.pause()
@@ -129,7 +129,7 @@ class CaveDroidApplication(
 
     override fun resumeGame() {
         if (screen !is PauseMenuScreen) {
-            Gdx.app.error(TAG, "Cannot resume when active screen is not pause menu")
+            logger.w { "Cannot resume when active screen is not pause menu" }
             return
         }
         setScreen(applicationComponent.gameScreen)
@@ -142,5 +142,6 @@ class CaveDroidApplication(
 
     companion object {
         private const val TAG = "CaveDroidApplication"
+private val logger = co.touchlab.kermit.Logger.withTag(TAG)
     }
 }

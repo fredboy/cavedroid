@@ -28,7 +28,7 @@ class MobParamsRepositoryImpl @Inject constructor(
 
     override fun initialize() {
         if (_initialized) {
-            Gdx.app.log(TAG, "Attempted to init when already initialized")
+            logger.w { "Attempted to init when already initialized" }
             return
         }
 
@@ -45,7 +45,7 @@ class MobParamsRepositoryImpl @Inject constructor(
 
     override fun getMobParamsByKey(key: String): MobParams? {
         return mobParamsMap[key] ?: run {
-            Gdx.app.error(TAG, "No such mob: '$key'")
+            logger.e { "No such mob: '$key'" }
             null
         }
     }
@@ -60,7 +60,8 @@ class MobParamsRepositoryImpl @Inject constructor(
     }
 
     companion object {
-        private val TAG = MobParamsRepositoryImpl::class.java.simpleName
+        private const val TAG = "MobParamsRepositoryImpl"
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         private val JsonFormat = Json {
             serializersModule = SerializersModule {

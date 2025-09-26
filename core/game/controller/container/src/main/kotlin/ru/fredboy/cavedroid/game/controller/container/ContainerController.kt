@@ -2,7 +2,6 @@ package ru.fredboy.cavedroid.game.controller.container
 
 import box2dLight.Light
 import box2dLight.PointLight
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.physics.box2d.Filter
 import ru.fredboy.cavedroid.common.di.GameScope
@@ -80,7 +79,7 @@ class ContainerController @Inject constructor(
             val (coordinates, container) = iterator.next()
 
             if (!containerWorldAdapter.checkContainerAtCoordinates(coordinates, container.type)) {
-                Gdx.app.log(TAG, "Removing orphaned ${container::class.simpleName} at $coordinates")
+                logger.w { "Removing orphaned ${container::class.simpleName} at $coordinates" }
                 iterator.remove()
             } else {
                 container.update(getItemByKeyUseCase)
@@ -136,5 +135,6 @@ class ContainerController @Inject constructor(
 
     companion object {
         private const val TAG = "ContainerControllerImpl"
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
     }
 }
