@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.desktop
 
+import co.touchlab.kermit.Severity
 import com.badlogic.gdx.Files
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
@@ -39,6 +40,7 @@ internal object DesktopLauncher {
 
         var touch = false
         var debug = false
+        var verbose = false
 
         for (anArg in arg) {
             if (anArg == "--touch") {
@@ -48,6 +50,10 @@ internal object DesktopLauncher {
             if (anArg == "--debug") {
                 debug = true
             }
+
+            if (anArg == "--verbose") {
+                verbose = true
+            }
         }
 
         val caveGame = CaveDroidApplication(
@@ -55,6 +61,11 @@ internal object DesktopLauncher {
             isTouchScreen = touch,
             isDebug = debug,
             preferencesStore = preferencesStore,
+            loggingSeverity = when {
+                verbose -> Severity.Verbose
+                debug -> Severity.Debug
+                else -> Severity.Info
+            },
         )
 
         Lwjgl3Application(SaveSizePrefsGameDecorator(caveGame), config)

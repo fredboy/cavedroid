@@ -1,5 +1,7 @@
 package ru.fredboy.cavedroid.gdx
 
+import co.touchlab.kermit.Logger
+import co.touchlab.kermit.Severity
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
@@ -21,9 +23,14 @@ class CaveDroidApplication(
     private val isTouchScreen: Boolean,
     private val isDebug: Boolean,
     private val preferencesStore: PreferencesStore,
+    loggingSeverity: Severity = Severity.Info,
 ) : Game(),
     CaveDroidApplicationDecorator,
     ApplicationController {
+
+    init {
+        Logger.setMinSeverity(loggingSeverity)
+    }
 
     override lateinit var applicationComponent: ApplicationComponent
         private set
@@ -72,12 +79,6 @@ class CaveDroidApplication(
             .applicationController(this)
             .preferencesStore(preferencesStore)
             .build()
-
-        Gdx.app.logLevel = if (isDebug) {
-            Application.LOG_DEBUG
-        } else {
-            Application.LOG_INFO
-        }
 
         Gdx.files.absolute(gameDataDirectoryPath).mkdirs()
         applicationComponent.initializeAssets()
