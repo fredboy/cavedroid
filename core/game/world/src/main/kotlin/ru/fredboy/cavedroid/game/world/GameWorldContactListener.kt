@@ -119,6 +119,6 @@ class GameWorldContactListener @Inject constructor(
 
     companion object {
         private const val TAG = "GamePhysicsController"
-private val logger = co.touchlab.kermit.Logger.withTag(TAG)
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
     }
 }

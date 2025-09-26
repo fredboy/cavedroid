@@ -1,7 +1,6 @@
 package ru.fredboy.cavedroid.game.world
 
 import box2dLight.RayHandler
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
@@ -323,7 +322,7 @@ class GameWorld @Inject constructor(
 
     companion object {
         private const val TAG = "GameWorld"
-private val logger = co.touchlab.kermit.Logger.withTag(TAG)
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         private const val PHYSICS_STEP_DELTA = 1f / 60f
 

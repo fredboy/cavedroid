@@ -5,7 +5,6 @@ import box2dLight.Light
 import box2dLight.PointLight
 import box2dLight.RayHandler
 import box2dLight.publicUpdate
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
@@ -227,7 +226,7 @@ class GameWorldLightManager @Inject constructor(
 
     companion object {
         private const val TAG = "GameWorldLightManager"
-private val logger = co.touchlab.kermit.Logger.withTag(TAG)
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         private const val CHUNK_SIZE = 4
 

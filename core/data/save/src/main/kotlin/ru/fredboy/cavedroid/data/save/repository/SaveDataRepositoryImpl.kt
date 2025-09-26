@@ -489,7 +489,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
 
     companion object {
         private const val TAG = "SaveDataRepositoryImpl"
-private val logger = co.touchlab.kermit.Logger.withTag(TAG)
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         private const val MAP_SAVE_VERSION: UByte = 7u
         private const val SAVES_DIR = "saves"

@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.gameplay.physics.task
 
-import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.UniqueQueue
 import ru.fredboy.cavedroid.common.utils.ifTrue
@@ -122,7 +121,7 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
 
     companion object {
         private const val TAG = "GameWorldBlocksLogicControllerTask"
-private val logger = co.touchlab.kermit.Logger.withTag(TAG)
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         private const val CHUNK_SIZE = 16
 

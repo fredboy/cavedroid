@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.gameplay.controls.action
 
-import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.gameplay.controls.action.placeblock.IPlaceBlockAction
 import ru.fredboy.cavedroid.gameplay.controls.action.placeblock.PlaceBlockItemToBackgroundAction

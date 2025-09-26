@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.touch
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Timer
@@ -342,7 +341,7 @@ class TouchCursorInputHandler @Inject constructor(
 
     companion object {
         private const val TAG = "TouchWorldInputHandler"
-private val logger = co.touchlab.kermit.Logger.withTag(TAG)
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
         private const val TOUCH_HOLD_TIME_SEC = 0.5f
     }
 }

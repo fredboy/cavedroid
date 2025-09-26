@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.data.save.mapper
 
-import com.badlogic.gdx.Gdx
 import dagger.Reusable
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.entity.mob.model.Direction
@@ -32,7 +31,7 @@ class DirectionMapper @Inject constructor() {
 
     companion object {
         private const val TAG = "DirectionMapper"
-private val logger = co.touchlab.kermit.Logger.withTag(TAG)
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
         private const val SAVE_DATA_VERSION = 3
     }
 }

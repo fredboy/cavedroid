@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.gameplay.physics.task
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType

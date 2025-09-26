@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.game.controller.mob.factory
 
-import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
@@ -46,6 +45,6 @@ class MobFactoryImpl @Inject constructor(
 
     companion object {
         private const val TAG = "MobFactory"
-private val logger = co.touchlab.kermit.Logger.withTag(TAG)
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
     }
 }

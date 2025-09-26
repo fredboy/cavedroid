@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.gameplay.rendering.renderer.hud
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
@@ -42,7 +41,7 @@ class WindowsRenderer @Inject constructor(
 
     companion object {
         private const val TAG = "WindowsRenderer"
-private val logger = co.touchlab.kermit.Logger.withTag(TAG)
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         const val RENDER_LAYER = 100600
     }

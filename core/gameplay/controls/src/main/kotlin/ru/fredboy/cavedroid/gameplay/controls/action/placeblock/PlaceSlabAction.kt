@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.gameplay.controls.action.placeblock
 
-import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -52,7 +51,7 @@ class PlaceSlabAction @Inject constructor(
 
     companion object {
         private const val TAG = "PlaceSlabAction"
-private val logger = co.touchlab.kermit.Logger.withTag(TAG)
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
         const val ACTION_KEY = "place_slab"
     }
 }

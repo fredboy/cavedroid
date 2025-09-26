@@ -142,6 +142,6 @@ class CaveDroidApplication(
 
     companion object {
         private const val TAG = "CaveDroidApplication"
-private val logger = co.touchlab.kermit.Logger.withTag(TAG)
+        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
     }
 }
