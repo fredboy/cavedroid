@@ -1,0 +1,51 @@
+## beta-0.14.4 (2025-09-26)
+
+*  Update README.md 
+*  Fix button sound 
+*  Lights fixes 
+*  Optimize blocks rendering using freame buffer 
+*  Rendering optimization 
+*  Only update dirty chunks 
+*  Update version 
+*  Fix world update, enable vsync, minor optimizations 
+*  Update version 
+*  Fix button sound 
+*  Lights fixes 
+*  Optimize blocks rendering using freame buffer 
+*  Rendering optimization 
+*  Only update dirty chunks 
+*  Update version 
+*  Fix world update, enable vsync, minor optimizations 
+*  Update version 
+*  Move generated assets to build/ dirs and use jvm 17 toolchain 
+*  Lazy check for keystore.properties 
+*  Update README.md 
+*  Add fastlane metadata 
+*  Add changelog to fastlane on release 
+*  Change description 
+*  Update short_description.txt 
+*  Update full_description.txt 
+*  Update short_description.txt 
+*  Delete desktop/src/main/extra directory 
+*  Delete ios/extra directory 
+*  Split update chunks vertically 
+*  Segment fluid chunks vertically 
+*  Increase block logic interval 
+*  Save window size preference on desktop 
+*  Add arch to release archives 
+*  Fix drop magnetism and picking 
+*  Fix eating sound position 
+*  Add README translation 
+*  Fix cursor ray casting 
+*  Set default preferences 
+*  Update READMEs 
+*  Physics adjustments 
+*  Fix tools hel break wrong blocks 
+*  Adjust log levels 
+*  Add kermit for logs 
+*  Fix mobs not moveng 
+*  Ktlint format 
+*  Add log levels 
+*  Bump minsdk 
+
+
