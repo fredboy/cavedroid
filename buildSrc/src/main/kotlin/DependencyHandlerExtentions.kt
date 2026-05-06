@@ -13,6 +13,10 @@ fun DependencyHandler.useCommonModule() {
     useModule(":core:common")
 }
 
+fun DependencyHandler.useMvvmModule() {
+    useModule(":core:common:mvvm")
+}
+
 fun DependencyHandler.useCommonLibs() {
     useCommonModule()
     useKermit()

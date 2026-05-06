@@ -8,13 +8,14 @@ import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Scaling
 import com.badlogic.gdx.utils.viewport.ScalingViewport
 import ktx.scene2d.Scene2DSkin
+import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.common.di.MenuScope
+import ru.fredboy.cavedroid.common.mvvm.NavBackStack
+import ru.fredboy.cavedroid.common.mvvm.NavKey
+import ru.fredboy.cavedroid.common.mvvm.NavRootStage
+import ru.fredboy.cavedroid.common.mvvm.ViewModel
+import ru.fredboy.cavedroid.common.mvvm.ViewModelProvider
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
-import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
-import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavKey
-import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavRootStage
-import ru.fredboy.cavedroid.gdx.menu.v2.navigation.ViewModel
-import ru.fredboy.cavedroid.gdx.menu.v2.navigation.ViewModelProvider
 import ru.fredboy.cavedroid.gdx.menu.v2.view.about.AboutMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.about.AboutMenuViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.about.aboutMenuView
@@ -81,7 +82,7 @@ class MenuNavigationController @Inject constructor(
 
     private val navBackStack = NavBackStack(rootNavKey)
 
-    val navRootStage = NavRootStage(viewport, navBackStack) { navKey, cachedViewModel ->
+    val navRootStage = NavRootStage(viewport, navBackStack, GdxMainDispatcher) { navKey, cachedViewModel ->
         when (navKey) {
             is MainMenuNavKey -> {
                 val viewModel = findViewModel<MainMenuNavKey, MainMenuViewModel>(navKey, cachedViewModel)

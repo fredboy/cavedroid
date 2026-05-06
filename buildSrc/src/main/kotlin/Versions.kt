@@ -115,4 +115,20 @@ object Versions {
      * [Source](https://github.com/touchlab/Kermit)
      */
     const val kermit = "2.0.8"
+
+    /**
+     * JUnit Jupiter (JUnit 5)
+     *
+     * [Source](https://github.com/junit-team/junit5)
+     */
+    const val junit = "5.11.4"
+
+    /**
+     * MockK
+     *
+     * Kotlin mocking library.
+     *
+     * [Source](https://github.com/mockk/mockk)
+     */
+    const val mockk = "1.13.13"
 }

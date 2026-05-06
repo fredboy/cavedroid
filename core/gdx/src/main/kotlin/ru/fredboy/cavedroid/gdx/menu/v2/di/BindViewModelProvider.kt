@@ -1,6 +1,7 @@
-package ru.fredboy.cavedroid.gdx.menu.v2.navigation
+package ru.fredboy.cavedroid.gdx.menu.v2.di
 
 import ru.fredboy.automultibind.annotations.BindsIntoSet
+import ru.fredboy.cavedroid.common.mvvm.ViewModelProvider
 
 @BindsIntoSet(
     interfaceClass = ViewModelProvider::class,

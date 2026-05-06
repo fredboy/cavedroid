@@ -2,11 +2,11 @@ package ru.fredboy.cavedroid.gdx.menu.v2.view.singleplayer
 
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.di.MenuScope
+import ru.fredboy.cavedroid.common.mvvm.NavBackStack
+import ru.fredboy.cavedroid.common.mvvm.ViewModelProvider
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
-import ru.fredboy.cavedroid.gdx.menu.v2.navigation.BindViewModelProvider
-import ru.fredboy.cavedroid.gdx.menu.v2.navigation.NavBackStack
-import ru.fredboy.cavedroid.gdx.menu.v2.navigation.ViewModelProvider
+import ru.fredboy.cavedroid.gdx.menu.v2.di.BindViewModelProvider
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
 import javax.inject.Inject
 import kotlin.reflect.KClass

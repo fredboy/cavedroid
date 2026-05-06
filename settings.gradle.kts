@@ -6,6 +6,7 @@ include("ios")
  * Global modules
  */
 include("core:common")
+include("core:common:mvvm")
 
 /**
  * Data modules

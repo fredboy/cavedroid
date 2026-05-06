@@ -1,4 +1,4 @@
-package ru.fredboy.cavedroid.gdx.menu.v2.navigation
+package ru.fredboy.cavedroid.common.mvvm
 
 import com.badlogic.gdx.utils.Disposable
 import kotlinx.coroutines.CoroutineScope

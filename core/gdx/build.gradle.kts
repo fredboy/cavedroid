@@ -13,6 +13,7 @@ dependencies {
     useDagger()
 
     useCommonLibs()
+    useMvvmModule()
     useDataModules()
     useDomainModules()
     useDomainSaveModule()

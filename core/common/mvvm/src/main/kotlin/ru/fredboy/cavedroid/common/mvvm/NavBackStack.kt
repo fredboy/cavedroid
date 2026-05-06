@@ -1,4 +1,4 @@
-package ru.fredboy.cavedroid.gdx.menu.v2.navigation
+package ru.fredboy.cavedroid.common.mvvm
 
 import java.util.Stack
 
@@ -7,11 +7,11 @@ class NavBackStack(
 ) {
     private val stack = Stack<NavKey>().apply { push(initial) }
 
-    private var _navRootStage: NavRootStage? = null
+    private var host: NavStageHost? = null
 
     fun push(key: NavKey) {
         stack.push(key).also {
-            _navRootStage?.onStackChanged(key)
+            host?.onStackChanged(key)
         }
     }
 
@@ -21,23 +21,23 @@ class NavBackStack(
         }
 
         val popped = stack.pop()
-        _navRootStage?.onStackChanged(stack.peek(), popped)
+        host?.onStackChanged(stack.peek(), popped)
     }
 
     fun reset() {
         while (stack.size > 1) {
-            _navRootStage?.clearViewModelFor(stack.pop())
+            host?.clearViewModelFor(stack.pop())
         }
 
-        _navRootStage?.onStackChanged(stack.peek())
+        host?.onStackChanged(stack.peek())
     }
 
     fun hasKey(key: NavKey): Boolean {
         return key in stack
     }
 
-    fun attachNavRootStage(navRootStage: NavRootStage) {
-        _navRootStage = navRootStage
-        navRootStage.onStackChanged(stack.peek())
+    internal fun attachHost(host: NavStageHost) {
+        this.host = host
+        host.onStackChanged(stack.peek())
     }
 }

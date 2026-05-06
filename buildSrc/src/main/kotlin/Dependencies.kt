@@ -59,6 +59,7 @@ object Dependencies {
         const val bom = "org.jetbrains.kotlin:kotlin-bom:${Versions.kotlin}"
         const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
         const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinxCoroutines}"
+        const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinxCoroutines}"
 
         object Serialization {
             const val json = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlinxSerialization}"
@@ -82,4 +83,11 @@ object Dependencies {
     const val proGuardPlugin = "com.guardsquare:proguard-gradle:${Versions.proGuard}"
 
     const val kermit = "co.touchlab:kermit:${Versions.kermit}"
+
+    object Test {
+        const val junitJupiter = "org.junit.jupiter:junit-jupiter:${Versions.junit}"
+        const val junitJupiterEngine = "org.junit.jupiter:junit-jupiter-engine:${Versions.junit}"
+        const val junitPlatformLauncher = "org.junit.platform:junit-platform-launcher"
+        const val mockk = "io.mockk:mockk:${Versions.mockk}"
+    }
 }
