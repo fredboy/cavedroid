@@ -61,7 +61,7 @@ class Player(
     var cursorX = 0f
     var cursorY = 0f
 
-    var holdCursor = false
+    var holdCursor = true
     var cursorToPlayer = Vector2()
 
     val selectedX get() = cursorX.toInt()
