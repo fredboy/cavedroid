@@ -13,4 +13,5 @@ class ApplicationContext(
     internal var isAutoJumpEnabled: Boolean,
     internal var locale: Locale,
     internal var soundEnabled: Boolean,
+    internal var isOnboardingShown: Boolean,
 )

@@ -92,6 +92,12 @@ class ApplicationContextRepositoryImpl @Inject constructor(
         applicationContextStore.isSoundEnabled = enabled
     }
 
+    override fun isOnboardingShown(): Boolean = applicationContextStore.isOnboardingShown
+
+    override fun setOnboardingShown(shown: Boolean) {
+        applicationContextStore.isOnboardingShown = shown
+    }
+
     companion object {
         private val SUPPORTED_LOCALES = listOf(Locale("en"), Locale("ru"))
     }

@@ -74,6 +74,8 @@ class CaveDroidApplication(
                         ?.let(::Locale) ?: Locale.getDefault(),
                     soundEnabled = preferencesStore.getPreference(PreferenceKeys.SOUND_ENABLED)
                         ?.toBooleanStrictOrNull() ?: true,
+                    isOnboardingShown = preferencesStore.getPreference(PreferenceKeys.ONBOARDING_SHOWN)
+                        ?.toBooleanStrictOrNull() ?: false,
                 ),
             )
             .applicationController(this)

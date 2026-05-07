@@ -51,11 +51,11 @@ class SaveSizePrefsGameDecorator(
                     withContext(Dispatchers.IO) {
                         preferencesStore.setPreference(
                             key = CaveDroidConstants.PreferenceKeys.WINDOW_WIDTH_KEY,
-                            value = width.toString()
+                            value = width.toString(),
                         )
                         preferencesStore.setPreference(
                             key = CaveDroidConstants.PreferenceKeys.WINDOW_HEIGHT_KEY,
-                            value = height.toString()
+                            value = height.toString(),
                         )
                     }
                 }

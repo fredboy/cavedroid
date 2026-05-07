@@ -9,6 +9,8 @@ abstract class FontTextureAssetsRepository : TextureAssetsRepository() {
 
     abstract fun getItemLocalizationBundle(): I18NBundle
 
+    abstract fun getOnboardingLocalizationBundle(): I18NBundle
+
     abstract fun getStringWidth(string: String): Float
 
     abstract fun getStringHeight(string: String): Float

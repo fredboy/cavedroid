@@ -23,5 +23,7 @@ object CaveDroidConstants {
         const val WINDOW_WIDTH_KEY = "window_width"
 
         const val WINDOW_HEIGHT_KEY = "window_height"
+
+        const val ONBOARDING_SHOWN = "onboarding_shown"
     }
 }

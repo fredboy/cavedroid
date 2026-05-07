@@ -42,4 +42,8 @@ interface ApplicationContextRepository {
     fun setSoundEnabled(enabled: Boolean)
 
     fun isSoundEnabled(): Boolean
+
+    fun isOnboardingShown(): Boolean
+
+    fun setOnboardingShown(shown: Boolean)
 }

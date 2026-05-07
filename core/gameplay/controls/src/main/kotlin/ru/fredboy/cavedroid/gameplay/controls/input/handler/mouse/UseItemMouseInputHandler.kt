@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Timer
+import ru.fredboy.cavedroid.common.api.OnboardingEvents
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.takeIfTrue
@@ -50,6 +51,7 @@ class UseItemMouseInputHandler @Inject constructor(
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
     private val projectileController: ProjectileController,
     private val blockActionSoundAssetsRepository: BlockActionSoundAssetsRepository,
+    private val onboardingEvents: OnboardingEvents,
 ) : IMouseInputHandler {
 
     private var buttonHoldTask: Timer.Task? = null
@@ -78,11 +80,14 @@ class UseItemMouseInputHandler @Inject constructor(
         player.stopHitting()
 
         if (item is Item.Placeable) {
-            placeBlockActionMap.placeToBackgroundAction(
+            val placed = placeBlockActionMap.placeToBackgroundAction(
                 item = item,
                 x = player.selectedX,
                 y = player.selectedY,
             )
+            if (placed) {
+                onboardingEvents.notifyPlace()
+            }
         }
     }
 
@@ -164,7 +169,7 @@ class UseItemMouseInputHandler @Inject constructor(
                     item = item,
                     x = player.selectedX,
                     y = player.selectedY,
-                )
+                ).also { placed -> if (placed) onboardingEvents.notifyPlace() }
             }?.takeIfTrue()
             ?: (item as? Item.Usable)?.let {
                 useItemActionMap[item.useActionKey]?.perform(item, player.selectedX, player.selectedY)

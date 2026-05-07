@@ -22,6 +22,8 @@ internal class FontTextureAssetsRepositoryImpl @Inject constructor(
 
     private var itemsBundle: I18NBundle? = null
 
+    private var onboardingBundle: I18NBundle? = null
+
     override fun getMenuLocalizationBundle(): I18NBundle {
         val locale = applicationContextRepository.getLocale()
 
@@ -42,6 +44,17 @@ internal class FontTextureAssetsRepositoryImpl @Inject constructor(
         }
 
         return requireNotNull(itemsBundle)
+    }
+
+    override fun getOnboardingLocalizationBundle(): I18NBundle {
+        val locale = applicationContextRepository.getLocale()
+
+        if (locale != onboardingBundle?.locale) {
+            loadLocalization()
+            onboardingBundle?.locale?.let { applicationContextRepository.setLocale(it) }
+        }
+
+        return requireNotNull(onboardingBundle)
     }
 
     override fun getStringWidth(string: String): Float {
@@ -76,6 +89,7 @@ internal class FontTextureAssetsRepositoryImpl @Inject constructor(
         I18NBundle.setSimpleFormatter(true)
         menuBundle = I18NBundle.createBundle(Gdx.files.internal(BASE_MENU_LOCALIZATION), currentLocale)
         itemsBundle = I18NBundle.createBundle(Gdx.files.internal(BASE_ITEMS_LOCALIZATION), currentLocale)
+        onboardingBundle = I18NBundle.createBundle(Gdx.files.internal(BASE_ONBOARDING_LOCALIZATION), currentLocale)
     }
 
     companion object {
@@ -84,6 +98,7 @@ internal class FontTextureAssetsRepositoryImpl @Inject constructor(
         private const val FONT_FILE_PATH = "skin/font//lanapixel.fnt"
         private const val BASE_MENU_LOCALIZATION = "i18n/CaveDroid_Menu"
         private const val BASE_ITEMS_LOCALIZATION = "i18n/CaveDroid_Items"
+        private const val BASE_ONBOARDING_LOCALIZATION = "i18n/CaveDroid_Onboarding"
         private const val FONT_SCALE = .375f
     }
 }

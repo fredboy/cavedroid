@@ -53,6 +53,7 @@ import ru.fredboy.cavedroid.generated.module.WorldRenderModule
         UseMobActionsModule::class,
         ProjectileContactHandlerModule::class,
         ProjectileControllerModule::class,
+        OnboardingModule::class,
     ],
 )
 interface GameComponent {
