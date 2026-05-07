@@ -22,6 +22,9 @@ class Joystick(
     var pointer = 0
         private set
 
+    var rawDistance = 0f
+        private set
+
     private val stickVector = Vector2()
 
     private var activateTimeMs = 0L
@@ -55,6 +58,7 @@ class Joystick(
 
         stickVector.x = touchX - centerX
         stickVector.y = touchY - centerY
+        rawDistance = stickVector.len()
         stickVector.clamp(0f, RADIUS)
 
         activeX = centerX + stickVector.x
@@ -68,5 +72,6 @@ class Joystick(
         const val RADIUS = 48f
         const val SIZE = RADIUS * 2
         const val STICK_SIZE = 32f
+        const val SPRINT_DISTANCE = RADIUS + STICK_SIZE / 2f
     }
 }

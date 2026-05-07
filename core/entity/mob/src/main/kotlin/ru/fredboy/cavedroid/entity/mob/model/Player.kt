@@ -71,6 +71,9 @@ class Player(
     var blockDamage = 0f
 
     var isSprinting: Boolean = false
+        set(value) {
+            field = value && foodLevel > SPRINT_FOOD_FLOOR
+        }
 
     override val effectiveSpeedMultiplier: Float
         get() = if (isSprinting && !isFlyMode) SPRINT_SPEED_MULTIPLIER else 1f
@@ -167,6 +170,10 @@ class Player(
     fun tickHunger(delta: Float) {
         if (gameMode.isCreative()) {
             return
+        }
+
+        if (foodLevel <= SPRINT_FOOD_FLOOR) {
+            isSprinting = false
         }
 
         if (isSprinting && !isFlyMode) {
@@ -597,6 +604,7 @@ class Player(
         const val EXHAUSTION_PER_BLOCK_BREAK_TICK = 0.005f
 
         private const val SPRINT_SPEED_MULTIPLIER = 1.3f
+        private const val SPRINT_FOOD_FLOOR = 6
 
         private const val INITIAL_SATURATION = 5f
         private const val MAX_EXHAUSTION = 40f
