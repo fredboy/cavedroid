@@ -2898,13 +2898,15 @@
       "type": "food",
       "texture": "porkchop_raw",
       "heal": 3,
+      "saturation": 1.8,
       "smelt_product": "porkchop_cooked"
     },
     "porkchop_cooked": {
       "name": "Cooked Porkchop",
       "type": "food",
       "texture": "porkchop_cooked",
-      "heal": 8
+      "heal": 8,
+      "saturation": 12.8
     },
     "spawn_egg_cow": {
       "name": "Cow Spawn Egg",
@@ -2920,13 +2922,15 @@
       "type": "food",
       "texture": "beef_raw",
       "heal": 3,
+      "saturation": 1.8,
       "smelt_product": "beef_cooked"
     },
     "beef_cooked": {
       "name": "Cooked Beef",
       "type": "food",
       "texture": "beef_cooked",
-      "heal": 8
+      "heal": 8,
+      "saturation": 12.8
     },
     "spawn_egg_zombie": {
       "name": "Zombie Spawn Egg",
@@ -2943,7 +2947,8 @@
       "texture": "rotten_flesh",
       "origin_x": 0,
       "origin_y": 1,
-      "heal": -2
+      "heal": 4,
+      "saturation": 0.8
     },
     "flint": {
       "name": "Flint",
@@ -2964,7 +2969,8 @@
       "texture": "apple",
       "origin_x": 0,
       "origin_y": 1,
-      "heal": 4
+      "heal": 4,
+      "saturation": 2.4
     },
     "door_wood": {
       "name": "Wooden Door",
@@ -2982,7 +2988,8 @@
       "name": "Mushroom Stew",
       "type": "food",
       "texture": "mushroom_stew",
-      "heal": 6
+      "heal": 6,
+      "saturation": 7.2
     },
     "leather": {
       "name": "Leather",
@@ -3009,13 +3016,15 @@
       "type": "food",
       "texture": "chicken_raw",
       "heal": 2,
+      "saturation": 1.2,
       "smelt_product": "chicken_cooked"
     },
     "chicken_cooked": {
       "name": "Cooked Chicken",
       "type": "food",
       "texture": "chicken_cooked",
-      "heal": 6
+      "heal": 6,
+      "saturation": 7.2
     },
     "spawn_egg_chicken": {
       "name": "Chicken Spawn Egg",

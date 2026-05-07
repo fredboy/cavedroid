@@ -26,6 +26,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.impl.PlayerMobBehavior
 import kotlin.math.abs
+import kotlin.math.max
 import kotlin.math.min
 
 class Player(
@@ -68,6 +69,18 @@ class Player(
 
     var controlMode = ControlMode.CURSOR
     var blockDamage = 0f
+
+    var isSprinting: Boolean = false
+
+    override val effectiveSpeedMultiplier: Float
+        get() = if (isSprinting && !isFlyMode) SPRINT_SPEED_MULTIPLIER else 1f
+
+    var foodLevel: Int = MAX_FOOD_LEVEL
+    var saturationLevel: Float = INITIAL_SATURATION
+    var exhaustionLevel: Float = 0f
+    var foodTickTimer: Int = 0
+
+    private var hungerTickAccumulator: Float = 0f
 
     var isHitting = false
     var isHittingWithDamage = false
@@ -120,6 +133,8 @@ class Player(
             return
         }
 
+        addExhaustion(EXHAUSTION_PER_DAMAGE)
+
         val protection = wearingArmor.getTotalProtection()
         val reduction = minOf(0.8f, protection * 0.04f)
         val reducedDamage = (damage * (1f - reduction)).toInt().coerceAtLeast(1)
@@ -129,6 +144,77 @@ class Player(
         }
 
         super.damage(reducedDamage)
+    }
+
+    fun addExhaustion(amount: Float) {
+        if (gameMode.isCreative()) return
+        exhaustionLevel = min(MAX_EXHAUSTION, exhaustionLevel + amount)
+    }
+
+    fun eat(food: Int, saturation: Float) {
+        foodLevel = MathUtils.clamp(foodLevel + food, 0, MAX_FOOD_LEVEL)
+        saturationLevel = min(foodLevel.toFloat(), saturationLevel + saturation)
+    }
+
+    fun resetHunger() {
+        foodLevel = MAX_FOOD_LEVEL
+        saturationLevel = INITIAL_SATURATION
+        exhaustionLevel = 0f
+        foodTickTimer = 0
+        hungerTickAccumulator = 0f
+    }
+
+    fun tickHunger(delta: Float) {
+        if (gameMode.isCreative()) {
+            return
+        }
+
+        if (isSprinting && !isFlyMode) {
+            addExhaustion(EXHAUSTION_PER_BLOCK_SPRINT * abs(velocity.x) * delta)
+        }
+
+        hungerTickAccumulator += delta
+        while (hungerTickAccumulator >= HUNGER_TICK_INTERVAL_S) {
+            hungerTickAccumulator -= HUNGER_TICK_INTERVAL_S
+            runHungerTick()
+        }
+    }
+
+    private fun runHungerTick() {
+        if (exhaustionLevel >= EXHAUSTION_DRAIN_THRESHOLD) {
+            exhaustionLevel -= EXHAUSTION_DRAIN_THRESHOLD
+            if (saturationLevel > 0f) {
+                saturationLevel = max(0f, saturationLevel - 1f)
+            } else {
+                foodLevel = max(0, foodLevel - 1)
+            }
+        }
+
+        when {
+            foodLevel >= NATURAL_REGEN_FOOD_THRESHOLD && health < maxHealth -> {
+                foodTickTimer++
+                val fastRegen = foodLevel >= MAX_FOOD_LEVEL && saturationLevel > 0f
+                if (fastRegen && foodTickTimer >= FAST_REGEN_TICK_INTERVAL) {
+                    heal(1)
+                    addExhaustion(EXHAUSTION_PER_REGEN_HEAL)
+                    foodTickTimer = 0
+                } else if (!fastRegen && foodTickTimer >= NATURAL_REGEN_TICK_INTERVAL) {
+                    heal(1)
+                    addExhaustion(EXHAUSTION_PER_REGEN_HEAL)
+                    foodTickTimer = 0
+                }
+            }
+
+            foodLevel <= 0 && health > STARVATION_HEALTH_FLOOR -> {
+                foodTickTimer++
+                if (foodTickTimer >= STARVATION_TICK_INTERVAL) {
+                    super.damage(1)
+                    foodTickTimer = 0
+                }
+            }
+
+            else -> foodTickTimer = 0
+        }
     }
 
     override fun getDropItems(itemByKey: GetItemByKeyUseCase): List<InventoryItem> {
@@ -252,8 +338,10 @@ class Player(
         this.spawnPoint = spawnPoint
         isPullingBow = false
         isDead = false
+        isSprinting = false
         heal(maxHealth)
         breath = params.maxBreath
+        resetHunger()
         spawn(spawnPoint.x, spawnPoint.y, mobPhysicsFactory)
         cursorX = position.x
         cursorY = position.y
@@ -312,6 +400,7 @@ class Player(
         }
         val damage = 1 * (activeTool?.mobDamageMultiplier ?: 1f)
         mob.damage(damage.toInt())
+        addExhaustion(EXHAUSTION_PER_ATTACK)
         stopHitting()
     }
 
@@ -497,6 +586,28 @@ class Player(
     companion object {
         const val HOTBAR_SIZE = 9
         const val INVENTORY_SIZE = 36
+
+        const val MAX_FOOD_LEVEL = 20
+        const val EXHAUSTION_PER_BLOCK_SPRINT = 0.1f
+        const val EXHAUSTION_PER_JUMP = 0.05f
+        const val EXHAUSTION_PER_SPRINT_JUMP = 0.2f
+        const val EXHAUSTION_PER_ATTACK = 0.1f
+        const val EXHAUSTION_PER_DAMAGE = 0.1f
+        const val EXHAUSTION_PER_REGEN_HEAL = 6f
+        const val EXHAUSTION_PER_BLOCK_BREAK_TICK = 0.005f
+
+        private const val SPRINT_SPEED_MULTIPLIER = 1.3f
+
+        private const val INITIAL_SATURATION = 5f
+        private const val MAX_EXHAUSTION = 40f
+        private const val EXHAUSTION_DRAIN_THRESHOLD = 4f
+
+        private const val HUNGER_TICK_INTERVAL_S = 1f / 20f
+        private const val NATURAL_REGEN_FOOD_THRESHOLD = 18
+        private const val NATURAL_REGEN_TICK_INTERVAL = 80
+        private const val FAST_REGEN_TICK_INTERVAL = 10
+        private const val STARVATION_TICK_INTERVAL = 80
+        private const val STARVATION_HEALTH_FLOOR = 1
 
         private val HIT_ANIMATION_RANGE = 30f..90f
 

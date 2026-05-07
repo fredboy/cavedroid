@@ -98,6 +98,7 @@ class ItemMapper @Inject constructor(
                 params = params,
                 sprite = requireNotNull(loadSprite(dto)),
                 heal = requireNotNull(dto.heal),
+                saturation = dto.saturation,
             )
 
             "bow" -> Item.Bow(

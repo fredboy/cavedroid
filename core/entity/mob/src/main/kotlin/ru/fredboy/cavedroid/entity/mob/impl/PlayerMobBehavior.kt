@@ -139,6 +139,12 @@ class PlayerMobBehavior(
             }
         }
 
+        tickHunger(delta)
+
+        if (controlVector.x == 0f) {
+            isSprinting = false
+        }
+
         hitBlock(worldAdapter)
         updateSight()
         if (checkForAutojump(worldAdapter)) {
@@ -179,6 +185,7 @@ class PlayerMobBehavior(
                 .ifTrue { 0.2f } ?: 1f
             blockDamage += 60f * delta * blockDamageMultiplier * waterFactor
             lastBreakSoundPlayedDelta += delta
+            addExhaustion(Player.EXHAUSTION_PER_BLOCK_BREAK_TICK * delta * MINECRAFT_TICKS_PER_SECOND)
         }
     }
 
@@ -186,5 +193,7 @@ class PlayerMobBehavior(
         private const val CREATIVE_DESTROY_TIMEOUT_MS = 500L
 
         private const val BREAK_SOUND_INTERVAL = 0.2f
+
+        private const val MINECRAFT_TICKS_PER_SECOND = 20f
     }
 }

@@ -12,6 +12,7 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
+import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.entity.projectile.model.Projectile
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
@@ -172,10 +173,10 @@ class UseItemMouseInputHandler @Inject constructor(
                         false
                     }
             }?.takeIfTrue()
-            ?: (item as? Item.Food)?.let {
-                if (player.health < player.maxHealth) {
+            ?: (item as? Item.Food)?.let { food ->
+                if (player.foodLevel < Player.MAX_FOOD_LEVEL) {
                     playFoodSound()
-                    player.heal(item.heal)
+                    player.eat(food.heal, food.saturation)
                     player.decreaseCurrentItemCount()
                     true
                 } else {

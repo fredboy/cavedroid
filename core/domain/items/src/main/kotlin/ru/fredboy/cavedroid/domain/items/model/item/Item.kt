@@ -207,5 +207,6 @@ sealed class Item {
         override val params: CommonItemParams,
         override val sprite: Sprite,
         val heal: Int,
+        val saturation: Float,
     ) : Item()
 }

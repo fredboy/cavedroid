@@ -10,6 +10,7 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindHudRenderer
 import javax.inject.Inject
@@ -34,6 +35,9 @@ class HudRenderer @Inject constructor(
     private val halfHeartTexture get() = requireNotNull(textureRegions[HALF_HEART_KEY])
     private val wholeBubbleTexture get() = requireNotNull(textureRegions[WHOLE_BUBBLE_KEY])
     private val halfBubbleTexture get() = requireNotNull(textureRegions[HALF_BUBBLE_KEY])
+    private val wholeFoodTexture get() = requireNotNull(textureRegions[WHOLE_FOOD_KEY])
+    private val halfFoodTexture get() = requireNotNull(textureRegions[HALF_FOOD_KEY])
+    private val emptyFoodTexture get() = requireNotNull(textureRegions[EMPTY_FOOD_KEY])
     private val wholeShieldTexture get() = requireNotNull(textureRegions[WHOLE_SHIELD_KEY])
     private val emptyShieldTexture get() = requireNotNull(textureRegions[EMPTY_SHIELD_KEY])
     private val halfShieldTexture get() = requireNotNull(textureRegions[HALF_SHIELD_KEY])
@@ -59,6 +63,32 @@ class HudRenderer @Inject constructor(
                 spriteBatch.draw(halfHeart, x + i * wholeHeart.regionWidth, y)
             } else {
                 spriteBatch.draw(emptyHeart, x + i * wholeHeart.regionWidth, y)
+            }
+        }
+    }
+
+    private fun drawHunger(spriteBatch: SpriteBatch, x: Float, y: Float) {
+        val player = mobController.player
+
+        if (player.gameMode.isCreative()) {
+            return
+        }
+
+        val foodWhole = wholeFoodTexture
+        val foodHalf = halfFoodTexture
+        val foodEmpty = emptyFoodTexture
+
+        val totalFoods = Player.MAX_FOOD_LEVEL / 2
+        val wholeFoods = player.foodLevel / 2
+
+        for (i in 0..<totalFoods) {
+            val drawX = x - (i + 1) * foodWhole.regionWidth
+            if (i < wholeFoods) {
+                spriteBatch.draw(foodWhole, drawX, y)
+            } else if (i == wholeFoods && player.foodLevel % 2 == 1) {
+                spriteBatch.draw(foodHalf, drawX, y)
+            } else {
+                spriteBatch.draw(foodEmpty, drawX, y)
             }
         }
     }
@@ -139,12 +169,15 @@ class HudRenderer @Inject constructor(
         val hotbarX = viewport.width / 2 - hotbar.regionWidth / 2
 
         spriteBatch.draw(hotbar, hotbarX, 0f)
-        drawHealth(spriteBatch, hotbarX, hotbarTexture.regionHeight.toFloat())
-        drawBreath(spriteBatch, hotbarX + hotbarTexture.regionWidth, hotbarTexture.regionHeight.toFloat())
+        val firstRowY = hotbarTexture.regionHeight.toFloat()
+        val secondRowY = firstRowY + wholeHeartTexture.regionHeight.toFloat() + 1f
+        drawHealth(spriteBatch, hotbarX, firstRowY)
+        drawHunger(spriteBatch, hotbarX + hotbarTexture.regionWidth, firstRowY)
+        drawBreath(spriteBatch, hotbarX + hotbarTexture.regionWidth, secondRowY)
         drawArmor(
             spriteBatch = spriteBatch,
             x = hotbarX,
-            y = hotbarTexture.regionHeight.toFloat() + wholeHeartTexture.regionHeight.toFloat() + 1f,
+            y = secondRowY,
         )
         drawHotbarSelector(spriteBatch, hotbarX)
         drawHotbarItems(spriteBatch, shapeRenderer, hotbarX)
@@ -173,6 +206,9 @@ class HudRenderer @Inject constructor(
         private const val EMPTY_HEART_KEY = "heart_empty"
         private const val WHOLE_BUBBLE_KEY = "bubble_whole"
         private const val HALF_BUBBLE_KEY = "bubble_half"
+        private const val WHOLE_FOOD_KEY = "food_whole"
+        private const val HALF_FOOD_KEY = "food_half"
+        private const val EMPTY_FOOD_KEY = "food_empty"
         private const val WHOLE_SHIELD_KEY = "shield_whole"
         private const val HALF_SHIELD_KEY = "shield_half"
         private const val EMPTY_SHIELD_KEY = "shield_empty"

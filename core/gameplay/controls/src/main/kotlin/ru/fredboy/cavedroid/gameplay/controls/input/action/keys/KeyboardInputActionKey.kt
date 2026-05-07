@@ -9,6 +9,8 @@ sealed interface KeyboardInputActionKey {
 
     data object Crouch : KeyboardInputActionKey
 
+    data object Sprint : KeyboardInputActionKey
+
     data object DropItem : KeyboardInputActionKey
 
     data object SwitchControlsMode : KeyboardInputActionKey
