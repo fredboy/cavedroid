@@ -34,11 +34,47 @@ All Gradle tasks run via `./gradlew` (use `gradlew.bat` on Windows — note that
 ./gradlew ktlintFormat                 # auto-format
 ./gradlew buildSrc:ktlintCheck         # CI also runs this for buildSrc
 
+# Tests (JUnit Jupiter)
+./gradlew test                         # run tests across all modules
+./gradlew :core:common:test            # run a single module's tests
+
 # Generate THIRD-PARTY notices (auto-runs as part of processResources/preBuild)
 ./gradlew generateLicenseReport
 ```
 
-There is **no test suite** in this repo — don't claim to have run tests.
+### Tests
+
+The repo is incrementally growing a unit test suite. Tests live alongside the
+production code under `src/test/kotlin/...` in modules that have opted in.
+Conventions, derived from the existing tests in `core/common/mvvm` and
+`core/common`:
+
+- **JUnit Jupiter** (5.x) — `useJUnitPlatform()` is required in the module's
+  `tasks.test {}` block. Add it explicitly when introducing tests to a new
+  module — it is not enabled by default by the Kotlin JVM plugin.
+- **mockk** for test doubles. Avoid instantiating libGDX classes that need a GL
+  context (`Stage`, `RayHandler`, `PointLight`, etc.) in unit tests — either
+  mock them or extract the logic under test into a pure helper.
+- **kotlinx-coroutines-test** for `runTest` when the unit under test launches
+  coroutines (see `core/common/mvvm`).
+- Test dependencies are referenced through `Dependencies.Test.*` and
+  `Dependencies.Kotlin.coroutinesTest`. Add the standard block to the module's
+  `build.gradle.kts`:
+
+  ```kotlin
+  testImplementation(Dependencies.Test.junitJupiter)
+  testRuntimeOnly(Dependencies.Test.junitJupiterEngine)
+  testRuntimeOnly(Dependencies.Test.junitPlatformLauncher)
+  testImplementation(Dependencies.Test.mockk)              // optional
+  testImplementation(Dependencies.Kotlin.coroutinesTest)    // optional
+
+  tasks.test { useJUnitPlatform() }
+  ```
+
+When the SUT is heavy (Box2D bodies, RayHandler, Stage), prefer extracting the
+testable logic into a pure helper in `core:common` and unit-testing the helper.
+Game-loop / rendering behavior is still verified manually via
+`./gradlew desktop:run`.
 
 ### Release flow
 

@@ -11,6 +11,8 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Filter
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.effectiveMirrorBand
+import ru.fredboy.cavedroid.common.utils.mirrorSidesFor
 import ru.fredboy.cavedroid.common.utils.neighbourCoordinates
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -45,6 +47,11 @@ class GameWorldLightManager @Inject constructor(
         get() = requireNotNull(_rayHandler)
 
     private val blockLights = mutableMapOf<Pair<Int, Int>, List<Light>>()
+
+    private val mirrorBlockLights = mutableMapOf<Triple<Int, Int, Int>, List<Light>>()
+
+    private val mirrorBand: Int
+        get() = effectiveMirrorBand(MIRROR_BAND_BLOCKS, gameWorld.width)
 
     fun attachToGameWorld(gameWorld: GameWorld) {
         if (_gameWorld != null) {
@@ -86,12 +93,12 @@ class GameWorldLightManager @Inject constructor(
         _rayHandler = null
         _sunLight = null
         blockLights.clear()
+        mirrorBlockLights.clear()
     }
 
     private fun updateVisibleLights() {
         gameContextRepository.getCameraContext().visibleWorld.let { visibleWorld ->
-            blockLights.asSequence()
-                .flatMap { it.value }
+            (blockLights.asSequence().flatMap { it.value } + mirrorBlockLights.asSequence().flatMap { it.value })
                 .filter { visibleWorld.contains(it.position) }
                 .forEach { it.publicUpdate() }
         }
@@ -132,8 +139,33 @@ class GameWorldLightManager @Inject constructor(
 
         val clusters = getChunkData(chunkX1, chunkY1).clusters
 
-        blockLights[chunkX1 to chunkY1] = clusters.map { cluster ->
-            val lightInfo = cluster.block.params.lightInfo ?: return
+        blockLights[chunkX1 to chunkY1] = buildLights(clusters, xOffset = 0f)
+
+        mirrorSidesFor(chunkX1, gameWorld.width, mirrorBand).forEach { sideSign ->
+            updateMirrorChunk(chunkX1, chunkY1, sideSign, clusters)
+        }
+    }
+
+    private fun updateMirrorChunk(
+        chunkX1: Int,
+        chunkY1: Int,
+        sideSign: Int,
+        clusters: List<Cluster>,
+    ) {
+        val key = Triple(chunkX1, chunkY1, sideSign)
+
+        mirrorBlockLights.remove(key)?.let { lights ->
+            lights.forEach { light ->
+                light.remove(true)
+            }
+        }
+
+        mirrorBlockLights[key] = buildLights(clusters, (sideSign * gameWorld.width).toFloat())
+    }
+
+    private fun buildLights(clusters: List<Cluster>, xOffset: Float): List<Light> {
+        return clusters.mapNotNull { cluster ->
+            val lightInfo = cluster.block.params.lightInfo ?: return@mapNotNull null
 
             val lightPosition = cluster.getLightPoint()
 
@@ -142,7 +174,7 @@ class GameWorldLightManager @Inject constructor(
                 128,
                 Color().apply { a = lightInfo.lightBrightness },
                 lightInfo.lightDistance,
-                lightPosition.x,
+                lightPosition.x + xOffset,
                 lightPosition.y,
             ).apply {
                 val filter = Filter().apply {
@@ -229,6 +261,8 @@ class GameWorldLightManager @Inject constructor(
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         private const val CHUNK_SIZE = 4
+
+        private const val MIRROR_BAND_BLOCKS = 64
 
         private const val SUN_UPDATE_FREQUENCY = 1f / 10f
     }

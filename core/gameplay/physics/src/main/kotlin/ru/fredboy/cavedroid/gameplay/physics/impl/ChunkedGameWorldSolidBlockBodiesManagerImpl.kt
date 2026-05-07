@@ -7,6 +7,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.ChainShape
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.effectiveMirrorBand
+import ru.fredboy.cavedroid.common.utils.mirrorSidesFor
 import ru.fredboy.cavedroid.common.utils.neighbourCoordinates
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
@@ -23,12 +25,14 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
     private val itemsRepository: ItemsRepository,
 ) : GameWorldSolidBlockBodiesManager() {
 
+    private val _mirrorBodies = mutableMapOf<Triple<Int, Int, Int>, Body>()
+
+    private val mirrorBand: Int
+        get() = effectiveMirrorBand(MIRROR_BAND_BLOCKS, gameWorld.width)
+
     override fun initialize() {
         for (x in 0..<gameWorld.width step CHUNK_SIZE) {
             for (y in 0..<gameWorld.height step CHUNK_SIZE) {
-                createBody(x, y).let { body ->
-                    _bodies[x to y] = body
-                }
                 updateChunk(x, y)
             }
         }
@@ -47,6 +51,12 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
         updateChunk(x, y)
     }
 
+    override fun dispose() {
+        _mirrorBodies.values.forEach { body -> body.world.destroyBody(body) }
+        _mirrorBodies.clear()
+        super.dispose()
+    }
+
     private fun updateChunk(blockX: Int, blockY: Int) {
         val chunkX1 = blockX - blockX % CHUNK_SIZE
         val chunkY1 = blockY - blockY % CHUNK_SIZE
@@ -55,46 +65,76 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
             world.destroyBody(body)
         }
 
-        val body = createBody(chunkX1, chunkY1)
-        _bodies[chunkX1 to chunkY1] = body
-
         val (clusters, userData) = getChunkData(chunkX1, chunkY1)
 
-        body.apply {
-            this.userData = userData
+        val body = createBody(chunkX1, chunkY1, xOffset = 0)
+        _bodies[chunkX1 to chunkY1] = body
+        populateBodyFixtures(body, clusters, userData, xOffset = 0)
 
-            clusters.forEach { cluster ->
-                val vertices = traceOutline(cluster.points)
-                    .onEach { vertex ->
-                        vertex.x -= position.x
-                        vertex.y -= position.y
-                    }
+        mirrorSidesFor(chunkX1, gameWorld.width, mirrorBand).forEach { sideSign ->
+            updateMirrorChunk(chunkX1, chunkY1, sideSign, clusters, userData)
+        }
+    }
 
-                if (vertices.size < 2) {
-                    return@forEach
+    private fun updateMirrorChunk(
+        chunkX1: Int,
+        chunkY1: Int,
+        sideSign: Int,
+        clusters: List<Cluster>,
+        userData: ChunkUserData,
+    ) {
+        val key = Triple(chunkX1, chunkY1, sideSign)
+
+        _mirrorBodies.remove(key)?.let { body ->
+            world.destroyBody(body)
+        }
+
+        val xOffset = sideSign * gameWorld.width
+        val body = createBody(chunkX1, chunkY1, xOffset)
+        _mirrorBodies[key] = body
+        populateBodyFixtures(body, clusters, userData, xOffset)
+    }
+
+    private fun populateBodyFixtures(
+        body: Body,
+        clusters: List<Cluster>,
+        userData: ChunkUserData,
+        xOffset: Int,
+    ) {
+        body.userData = userData
+
+        clusters.forEach { cluster ->
+            val vertices = traceOutline(cluster.points)
+                .onEach { vertex ->
+                    vertex.x += xOffset.toFloat()
+                    vertex.x -= body.position.x
+                    vertex.y -= body.position.y
                 }
 
-                val shape = ChainShape().apply {
-                    this.createChain(vertices.toTypedArray())
-                }
-
-                val fixtureDef = FixtureDef().apply {
-                    this.shape = shape
-                    density = 1f
-                    friction = 0f
-                    restitution = 0f
-                    filter.categoryBits = PhysicsConstants.CATEGORY_BLOCK
-
-                    if (cluster.block.params.castsShadows) {
-                        filter.categoryBits = filter.categoryBits or PhysicsConstants.CATEGORY_OPAQUE
-                    }
-                }
-
-                body.createFixture(fixtureDef).apply {
-                    this.userData = cluster.block
-                }
-                shape.dispose()
+            if (vertices.size < 2) {
+                return@forEach
             }
+
+            val shape = ChainShape().apply {
+                this.createChain(vertices.toTypedArray())
+            }
+
+            val fixtureDef = FixtureDef().apply {
+                this.shape = shape
+                density = 1f
+                friction = 0f
+                restitution = 0f
+                filter.categoryBits = PhysicsConstants.CATEGORY_BLOCK
+
+                if (cluster.block.params.castsShadows) {
+                    filter.categoryBits = filter.categoryBits or PhysicsConstants.CATEGORY_OPAQUE
+                }
+            }
+
+            body.createFixture(fixtureDef).apply {
+                this.userData = cluster.block
+            }
+            shape.dispose()
         }
     }
 
@@ -202,8 +242,8 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
         )
     }
 
-    private fun createBody(x: Int, y: Int): Body {
-        val rect = Rectangle(x.toFloat(), y.toFloat(), CHUNK_SIZE.toFloat(), CHUNK_SIZE.toFloat())
+    private fun createBody(x: Int, y: Int, xOffset: Int): Body {
+        val rect = Rectangle((x + xOffset).toFloat(), y.toFloat(), CHUNK_SIZE.toFloat(), CHUNK_SIZE.toFloat())
 
         val bodyDef = BodyDef().apply {
             type = BodyDef.BodyType.StaticBody
@@ -257,5 +297,6 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
 
     companion object {
         private const val CHUNK_SIZE = 16
+        private const val MIRROR_BAND_BLOCKS = 80
     }
 }
