@@ -165,7 +165,15 @@ class GameRenderer @Inject constructor(
     }
 
     private fun getSkyColor(): Color {
-        return MIDNIGHT_COLOR.cpy().lerp(NOON_COLOR, gameWorld.getSunlight())
+        val color = MIDNIGHT_COLOR.cpy().lerp(NOON_COLOR, gameWorld.getSunlight())
+        val intensity = gameWorld.weatherIntensity
+        if (intensity > 0f) {
+            val factor = 1f - intensity * (1f - RAIN_SKY_DARKENING)
+            color.r *= factor
+            color.g *= factor
+            color.b *= factor
+        }
+        return color
     }
 
     fun render(delta: Float) {
@@ -234,5 +242,7 @@ class GameRenderer @Inject constructor(
     companion object {
         private val MIDNIGHT_COLOR = Color(0f, 0f, 0.1f, 1f)
         private val NOON_COLOR = Color(0.4f, 0.7f, 1f, 1f)
+
+        private const val RAIN_SKY_DARKENING = 0.3f
     }
 }

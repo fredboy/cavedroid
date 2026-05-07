@@ -15,6 +15,10 @@ internal class EnvironmentTextureRegionsRepositoryImplTexture @Inject constructo
 
     private var moonPhases: Array<Sprite>? = null
 
+    private var rainTexture: Texture? = null
+
+    private var snowTexture: Texture? = null
+
     override fun getSunSprite(): Sprite {
         return requireNotNull(sunSprite)
     }
@@ -24,16 +28,18 @@ internal class EnvironmentTextureRegionsRepositoryImplTexture @Inject constructo
         return requireNotNull(moonPhases)[phase]
     }
 
-    override fun getRainSprite(frame: Int): Sprite {
-        TODO("Not yet implemented")
-    }
+    override fun getRainTexture(): Texture = requireNotNull(rainTexture)
 
-    override fun getSnowSprite(frame: Int): Sprite {
-        TODO("Not yet implemented")
-    }
+    override fun getSnowTexture(): Texture = requireNotNull(snowTexture)
 
     override fun getMoonPhasesCount(): Int {
         return MOON_PHASES
+    }
+
+    private fun loadScrollingTexture(name: String): Texture {
+        return resolveTexture(name, "textures/environment", texturesCache).apply {
+            setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat)
+        }
     }
 
     override fun initialize() {
@@ -49,6 +55,9 @@ internal class EnvironmentTextureRegionsRepositoryImplTexture @Inject constructo
                 height = 96,
             )
         }
+
+        rainTexture = loadScrollingTexture("rain")
+        snowTexture = loadScrollingTexture("snow")
     }
 
     override fun dispose() {
@@ -56,6 +65,8 @@ internal class EnvironmentTextureRegionsRepositoryImplTexture @Inject constructo
         texturesCache.clear()
         sunSprite = null
         moonPhases = null
+        rainTexture = null
+        snowTexture = null
     }
 
     companion object {

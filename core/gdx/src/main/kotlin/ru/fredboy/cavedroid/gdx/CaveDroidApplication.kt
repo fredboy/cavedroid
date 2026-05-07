@@ -97,7 +97,6 @@ class CaveDroidApplication(
     override fun quitGame() {
         applicationComponent.gameScreen.saveGame()
         applicationComponent.gameScreen.dispose()
-        applicationComponent.pauseMenuScreen.dispose()
         setScreen(applicationComponent.menuScreen)
     }
 

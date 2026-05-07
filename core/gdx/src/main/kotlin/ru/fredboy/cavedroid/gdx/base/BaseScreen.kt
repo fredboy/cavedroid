@@ -31,9 +31,8 @@ abstract class BaseScreen(
     }
 
     final override fun dispose() {
-        job.invokeOnCompletion {
-            onDispose()
-        }
+        job.cancel()
+        onDispose()
     }
 
     abstract fun onResize(width: Int, height: Int)

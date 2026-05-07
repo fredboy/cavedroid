@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.game.world.generator
 
 import com.badlogic.gdx.utils.TimeUtils
+import ru.fredboy.cavedroid.domain.world.model.Biome
 
 data class WorldGeneratorConfig(
     val width: Int,

@@ -198,12 +198,16 @@ object GameModule {
             gameWorldLightManager = gameWorldLightManager,
             initialForeMap = mapData?.foreMap,
             initialBackMap = mapData?.backMap,
+            initialBiomes = mapData?.biomes,
         ).apply {
             mapData?.let {
                 this.currentGameTime = mapData.gameTime
                 this.moonPhase = mapData.moonPhase
                 this.totalGameTimeSec = mapData.totalGameTime
                 this.lastSpawnGameTime = mapData.lastSpawnGameTime
+                mapData.weather?.let { this.weather = it }
+                mapData.weatherTimer?.let { this.weatherTimer = it }
+                mapData.weatherIntensity?.let { this.weatherIntensity = it }
             }
         }
     }

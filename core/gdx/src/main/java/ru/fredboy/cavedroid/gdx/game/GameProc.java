@@ -34,6 +34,7 @@ public class GameProc implements Disposable {
     private final GameInputProcessor mGameInputProcessor;
     private final GameWorld mGameWorld;
     private final ProjectileController mProjectileController;
+    private final WeatherSoundController mWeatherSoundController;
 
     private final Timer mWorldLogicTimer = new Timer();
 
@@ -49,7 +50,8 @@ public class GameProc implements Disposable {
                     GameWorldMobDamageControllerTask gameWorldMobDamageControllerTask,
                     GameWorldMobSpawnControllerTask gameWorldMobSpawnControllerTask,
                     GameInputProcessor gameInputProcessor,
-                    ProjectileController projectileController
+                    ProjectileController projectileController,
+                    WeatherSoundController weatherSoundController
     ) {
         mGameRenderer = gameRenderer;
         mMobsController = mobsController;
@@ -62,6 +64,7 @@ public class GameProc implements Disposable {
         mGameInputProcessor = gameInputProcessor;
         mGameWorld = gameWorld;
         mProjectileController = projectileController;
+        mWeatherSoundController = weatherSoundController;
 
         mWorldLogicTimer.scheduleTask(gameWorldFluidsLogicControllerTask, 0,
                 GameWorldFluidsLogicControllerTask.FLUID_UPDATE_INTERVAL_SEC);
@@ -96,6 +99,7 @@ public class GameProc implements Disposable {
         mGameInputProcessor.update(delta);
         mGameRenderer.render(delta);
         mContainerController.update(delta);
+        mWeatherSoundController.update();
     }
 
     public void onResize() {
@@ -122,6 +126,7 @@ public class GameProc implements Disposable {
         mGameWorldMobSpawnControllerTask.shutdownBlocking();
         mWorldLogicTimer.stop();
 
+        mWeatherSoundController.dispose();
         mGameRenderer.dispose();
         mProjectileController.dispose();
         mDropController.dispose();

@@ -22,6 +22,7 @@ import ru.fredboy.cavedroid.domain.assets.repository.TextureRegionsTextureAssets
 import ru.fredboy.cavedroid.domain.assets.repository.TouchButtonsTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.UiSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.WearableTextureAssetsRepository
+import ru.fredboy.cavedroid.domain.assets.repository.WeatherSoundAssetsRepository
 import javax.inject.Inject
 
 @Reusable
@@ -41,6 +42,7 @@ class GameAssetsHolder @Inject constructor(
     private val foodSoundAssetsRepository: FoodSoundAssetsRepository,
     private val blockActionSoundAssetsRepository: BlockActionSoundAssetsRepository,
     private val wearableTextureAssetsRepository: WearableTextureAssetsRepository,
+    private val weatherSoundAssetsRepository: WeatherSoundAssetsRepository,
 ) {
 
     private val repositories = sequenceOf(
@@ -59,6 +61,7 @@ class GameAssetsHolder @Inject constructor(
         foodSoundAssetsRepository,
         blockActionSoundAssetsRepository,
         wearableTextureAssetsRepository,
+        weatherSoundAssetsRepository,
     )
 
     fun initializeRepository() {

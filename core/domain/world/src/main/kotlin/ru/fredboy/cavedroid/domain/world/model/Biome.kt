@@ -1,4 +1,4 @@
-package ru.fredboy.cavedroid.game.world.generator
+package ru.fredboy.cavedroid.domain.world.model
 
 enum class Biome {
     PLAINS,

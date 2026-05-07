@@ -23,6 +23,8 @@ import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.domain.save.model.GameMapSaveData
 import ru.fredboy.cavedroid.domain.save.model.GameSaveInfo
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
+import ru.fredboy.cavedroid.domain.world.model.Biome
+import ru.fredboy.cavedroid.domain.world.model.Weather
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
 import ru.fredboy.cavedroid.entity.drop.DropQueue
@@ -166,6 +168,57 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         }
     }
 
+    private fun compressBiomes(biomes: Array<Biome>): ByteArray {
+        val width = biomes.size
+
+        val result = sequence {
+            var run = 0
+            var runValue: UByte? = null
+
+            yield(MAP_SAVE_VERSION.toByte())
+            width.toByteArray().forEach { yield(it) }
+
+            for (x in 0..<width) {
+                val ordinal = biomes[x].ordinal.toUByte()
+
+                if (ordinal != runValue || run == Int.MAX_VALUE) {
+                    if (run > 0 && runValue != null) {
+                        run.toByteArray().forEach { yield(it) }
+                        yield(runValue!!.toByte())
+                    }
+                    run = 1
+                    runValue = ordinal
+                } else {
+                    run++
+                }
+            }
+
+            run.toByteArray().forEach { yield(it) }
+            yield(runValue!!.toByte())
+        }
+
+        return result.toList().toByteArray()
+    }
+
+    private fun decompressBiomes(bytes: ByteArray): Array<Biome> {
+        val version = bytes.first().toUByte()
+        require(version == MAP_SAVE_VERSION)
+
+        val width = ByteBuffer.wrap(bytes, 1, Int.SIZE_BYTES).getInt()
+        val biomeEntries = Biome.entries
+
+        val list = buildList {
+            for (i in 1 + Int.SIZE_BYTES..bytes.lastIndex step Int.SIZE_BYTES + 1) {
+                val run = ByteBuffer.wrap(bytes, i, Int.SIZE_BYTES).getInt()
+                val ordinal = bytes[i + Int.SIZE_BYTES].toUByte().toInt()
+                val biome = biomeEntries[ordinal]
+                repeat(run) { add(biome) }
+            }
+        }
+
+        return Array(width) { list[it] }
+    }
+
     private fun internalLoadMap(
         savesPath: String,
     ): GameMapSaveData {
@@ -183,15 +236,26 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             close()
         }
 
+        val biomesFile = Gdx.files.absolute("$savesPath/$BIOMES_FILE")
+        val biomes: Array<Biome>? = if (biomesFile.exists()) {
+            GZIPInputStream(biomesFile.read()).use { decompressBiomes(it.readBytes()) }
+        } else {
+            null
+        }
+
         val meta = loadMapData(savesPath)
 
         return GameMapSaveData(
             foreMap = foreMap,
             backMap = backMap,
+            biomes = biomes,
             gameTime = meta.gameTime,
             moonPhase = meta.moonPhase,
             totalGameTime = meta.totalGameTime ?: meta.gameTime,
             lastSpawnGameTime = meta.lastSpawnGameTime ?: 0f,
+            weather = meta.weather?.let { Weather.entries.getOrNull(it) },
+            weatherTimer = meta.weatherTimer,
+            weatherIntensity = meta.weatherIntensity,
         )
     }
 
@@ -212,6 +276,10 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             write(compressMap(fullBackMap, dict))
             close()
         }
+
+        GZIPOutputStream(Gdx.files.absolute("$savesPath/$BIOMES_FILE").write(false)).use {
+            it.write(compressBiomes(gameWorld.biomes))
+        }
     }
 
     private fun saveMapData(gameWorld: GameWorld, savesPath: String, worldName: String, gameMode: GameMode) {
@@ -225,6 +293,9 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             moonPhase = gameWorld.moonPhase,
             gameMode = gameMode,
             lastSpawnGameTime = gameWorld.lastSpawnGameTime,
+            weather = gameWorld.weather.ordinal,
+            weatherTimer = gameWorld.weatherTimer,
+            weatherIntensity = gameWorld.weatherIntensity,
         )
 
         val bytes = ProtoBuf.encodeToByteArray(worldSaveDataDto)
@@ -500,6 +571,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         private const val DICT_FILE = "dict"
         private const val FOREMAP_FILE = "foremap.dat.gz"
         private const val BACKMAP_FILE = "backmap.dat.gz"
+        private const val BIOMES_FILE = "biomes.dat.gz"
         private const val META_FILE = "meta.dat"
 
         private const val SCREENSHOT_FILE = "screenshot.png"

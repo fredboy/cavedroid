@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.game.world.generator
 import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.domain.world.model.Biome
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -452,11 +453,13 @@ class GameWorldGenerator(
     /**
      * Generate world
      */
-    fun generate(): Pair<Array<Array<Block>>, Array<Array<Block>>> {
+    fun generate(): GeneratedWorld {
         var biome = Biome.PLAINS
+        val biomes = Array(config.width) { Biome.PLAINS }
 
         for (x in 0 until config.width) {
             biome = biomesMap[x] ?: biome
+            biomes[x] = biome
 
             when (biome) {
                 Biome.PLAINS -> plainsBiome(x)
@@ -470,6 +473,12 @@ class GameWorldGenerator(
         generateCaves()
         fillLava()
 
-        return Pair(foreMap, backMap)
+        return GeneratedWorld(foreMap, backMap, biomes)
     }
+
+    data class GeneratedWorld(
+        val foreMap: Array<Array<Block>>,
+        val backMap: Array<Array<Block>>,
+        val biomes: Array<Biome>,
+    )
 }

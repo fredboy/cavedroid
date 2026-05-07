@@ -1,14 +1,20 @@
 package ru.fredboy.cavedroid.domain.save.model
 
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.world.model.Biome
+import ru.fredboy.cavedroid.domain.world.model.Weather
 
 data class GameMapSaveData(
     val foreMap: Array<Array<Block>>?,
     val backMap: Array<Array<Block>>?,
+    val biomes: Array<Biome>?,
     val gameTime: Float,
     val moonPhase: Int,
     val totalGameTime: Float,
     val lastSpawnGameTime: Float,
+    val weather: Weather?,
+    val weatherTimer: Float?,
+    val weatherIntensity: Float?,
 ) {
 
     override fun equals(other: Any?): Boolean {
@@ -21,6 +27,7 @@ data class GameMapSaveData(
         if (moonPhase != other.moonPhase) return false
         if (!foreMap.contentDeepEquals(other.foreMap)) return false
         if (!backMap.contentDeepEquals(other.backMap)) return false
+        if (!biomes.contentEquals(other.biomes)) return false
 
         return true
     }
@@ -30,6 +37,7 @@ data class GameMapSaveData(
         result = 31 * result + moonPhase.hashCode()
         result = 31 * result + (foreMap?.contentDeepHashCode() ?: 0)
         result = 31 * result + (backMap?.contentDeepHashCode() ?: 0)
+        result = 31 * result + (biomes?.contentHashCode() ?: 0)
         return result
     }
 }

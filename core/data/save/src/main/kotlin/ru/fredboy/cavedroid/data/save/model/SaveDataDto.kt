@@ -238,5 +238,8 @@ sealed class SaveDataDto {
         val gameMode: GameMode,
         val totalGameTime: Float? = null,
         val lastSpawnGameTime: Float? = null,
+        val weather: Int? = null,
+        val weatherTimer: Float? = null,
+        val weatherIntensity: Float? = null,
     ) : SaveDataDto()
 }

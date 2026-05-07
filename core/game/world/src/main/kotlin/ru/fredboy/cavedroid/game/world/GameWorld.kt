@@ -12,13 +12,16 @@ import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
+import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.domain.world.model.Layer
+import ru.fredboy.cavedroid.domain.world.model.Weather
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
 import ru.fredboy.cavedroid.game.world.generator.GameWorldGenerator
 import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
 import java.lang.ref.WeakReference
-import java.util.*
+import java.util.LinkedList
 import javax.inject.Inject
+import kotlin.random.Random
 
 @GameScope
 class GameWorld @Inject constructor(
@@ -29,9 +32,11 @@ class GameWorld @Inject constructor(
     private val gameWorldLightManager: GameWorldLightManager,
     initialForeMap: Array<Array<Block>>?,
     initialBackMap: Array<Array<Block>>?,
+    initialBiomes: Array<Biome>?,
 ) : Disposable {
     val foreMap: Array<Array<Block>>
     val backMap: Array<Array<Block>>
+    val biomes: Array<Biome>
 
     val width: Int
     val height: Int
@@ -41,6 +46,10 @@ class GameWorld @Inject constructor(
     var lastSpawnGameTime = 0f
 
     var moonPhase = 0
+
+    var weather: Weather = Weather.CLEAR
+    var weatherTimer: Float = nextWeatherDuration(Weather.CLEAR)
+    var weatherIntensity: Float = 0f
 
     val generatorConfig = WorldGeneratorConfig.getDefault()
 
@@ -73,10 +82,12 @@ class GameWorld @Inject constructor(
         if (initialForeMap != null && initialBackMap != null) {
             foreMap = initialForeMap
             backMap = initialBackMap
+            biomes = initialBiomes ?: Array(width) { Biome.PLAINS }
         } else {
-            val (generatedFore, generatedBack) = GameWorldGenerator(generatorConfig, itemsRepository).generate()
-            foreMap = generatedFore
-            backMap = generatedBack
+            val generated = GameWorldGenerator(generatorConfig, itemsRepository).generate()
+            foreMap = generated.foreMap
+            backMap = generated.backMap
+            biomes = generated.biomes
         }
 
         physicsController.attachToGameWorld(this)
@@ -106,6 +117,13 @@ class GameWorld @Inject constructor(
             transformed = width + x
         }
         return transformed
+    }
+
+    fun getBiomeAt(x: Int): Biome = biomes[transformX(x)]
+
+    private fun nextWeatherDuration(next: Weather): Float = when (next) {
+        Weather.CLEAR -> Random.nextFloat() * (CLEAR_MAX_SEC - CLEAR_MIN_SEC) + CLEAR_MIN_SEC
+        Weather.RAIN -> Random.nextFloat() * (RAIN_MAX_SEC - RAIN_MIN_SEC) + RAIN_MIN_SEC
     }
 
     private fun getMap(x: Int, y: Int, layer: Layer): Block {
@@ -304,6 +322,20 @@ class GameWorld @Inject constructor(
             skipNight = false
         }
 
+        weatherTimer -= delta * timeMultiplier
+        if (weatherTimer <= 0f) {
+            weather = if (weather == Weather.CLEAR) Weather.RAIN else Weather.CLEAR
+            weatherTimer = nextWeatherDuration(weather)
+        }
+
+        val intensityTarget = if (weather == Weather.RAIN) 1f else 0f
+        val intensityStep = delta / WEATHER_FADE_SEC
+        weatherIntensity = if (weatherIntensity < intensityTarget) {
+            (weatherIntensity + intensityStep).coerceAtMost(intensityTarget)
+        } else {
+            (weatherIntensity - intensityStep).coerceAtLeast(intensityTarget)
+        }
+
         gameWorldLightManager.update(delta)
 
         box2dAccumulator += delta
@@ -327,5 +359,12 @@ class GameWorld @Inject constructor(
         private const val PHYSICS_STEP_DELTA = 1f / 60f
 
         const val DAY_DURATION_SEC = 1200
+
+        private const val CLEAR_MIN_SEC = 5f * 60f
+        private const val CLEAR_MAX_SEC = 15f * 60f
+        private const val RAIN_MIN_SEC = 1f * 60f
+        private const val RAIN_MAX_SEC = 5f * 60f
+
+        private const val WEATHER_FADE_SEC = 15f
     }
 }
