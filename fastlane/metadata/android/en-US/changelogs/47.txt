@@ -1,0 +1,15 @@
+## beta-0.15.0 (2026-05-08)
+
+*  Add CLAUDE.md 
+*  Extract MVVM framework into core:common:mvvm module with tests and CI 
+*  Add debounce on resize 
+*  Add Minecraft-style hunger system with sprint 
+*  Add touch and shift sprint, gate sprint on hunger 
+*  Mirror Box2D bodies and lights across the world-loop seam 
+*  Invalidate seam-wrapped chunk frame buffers on block change 
+*  Refresh sun rays when the camera jumps across the world seam 
+*  Add first-run onboarding overlay with control tips 
+*  Fix cursor bug 
+*  Add weather 
+
+
