@@ -25,3 +25,20 @@ fun mirrorSidesFor(chunkPosition: Int, worldWidth: Int, band: Int): List<Int> {
     if (chunkPosition >= worldWidth - band) sides.add(-1)
     return sides
 }
+
+/**
+ * True if a block at world-x [x] (assumed in `[0, worldWidth)`) falls into the
+ * range `[rangeStart, rangeStart + rangeWidth)` after accounting for horizontal
+ * world wrap. The range may straddle or sit entirely outside `[0, worldWidth)`
+ * (e.g. for chunk frame buffers rendering the seam-wrapped portion of the
+ * viewport).
+ */
+fun wrapsIntoRange(x: Int, rangeStart: Int, rangeWidth: Int, worldWidth: Int): Boolean {
+    if (rangeWidth <= 0) return false
+    val rangeEnd = rangeStart + rangeWidth
+    if (x in rangeStart until rangeEnd) return true
+    if (worldWidth <= 0) return false
+    if (x + worldWidth in rangeStart until rangeEnd) return true
+    if (x - worldWidth in rangeStart until rangeEnd) return true
+    return false
+}

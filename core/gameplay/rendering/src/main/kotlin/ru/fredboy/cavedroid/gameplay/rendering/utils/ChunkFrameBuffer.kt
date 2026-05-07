@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.utils.PIXELS_PER_METER
+import ru.fredboy.cavedroid.common.utils.wrapsIntoRange
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.game.world.GameWorld
 
@@ -42,7 +43,8 @@ class ChunkFrameBuffer<Renderer : RenderingTool>(
     private val chunkWorldY = chunkY * CHUNK_SIZE
 
     private val onBlockPlacedListener = OnBlockPlacedListener { _, x, y, _ ->
-        if (x >= chunkWorldX && x < chunkWorldX + CHUNK_SIZE && y >= chunkWorldY && y < chunkWorldY + CHUNK_SIZE) {
+        if (y < chunkWorldY || y >= chunkWorldY + CHUNK_SIZE) return@OnBlockPlacedListener
+        if (wrapsIntoRange(x, chunkWorldX, CHUNK_SIZE, gameWorld.width)) {
             dirty = true
         }
     }

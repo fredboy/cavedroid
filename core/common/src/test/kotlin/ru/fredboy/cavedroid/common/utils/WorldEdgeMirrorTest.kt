@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.common.utils
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -113,5 +114,49 @@ class WorldEdgeMirrorTest {
             val sides = mirrorSidesFor(chunkPosition, width, band)
             assertTrue(sides.size <= 1, "chunk $chunkPosition produced sides=$sides")
         }
+    }
+
+    @Test
+    fun `wrapsIntoRange matches when block is directly inside the range`() {
+        assertTrue(wrapsIntoRange(x = 5, rangeStart = 0, rangeWidth = 16, worldWidth = 1024))
+        assertTrue(wrapsIntoRange(x = 0, rangeStart = 0, rangeWidth = 16, worldWidth = 1024))
+        assertTrue(wrapsIntoRange(x = 15, rangeStart = 0, rangeWidth = 16, worldWidth = 1024))
+    }
+
+    @Test
+    fun `wrapsIntoRange does not match when block is outside and no wrap helps`() {
+        assertFalse(wrapsIntoRange(x = 16, rangeStart = 0, rangeWidth = 16, worldWidth = 1024))
+        assertFalse(wrapsIntoRange(x = 500, rangeStart = 0, rangeWidth = 16, worldWidth = 1024))
+    }
+
+    @Test
+    fun `wrapsIntoRange matches when range sits past the right edge of the world`() {
+        // Buffer for the seam-wrapped view from the right edge: chunkWorldX = worldWidth.
+        // A block at x=0 in the data model represents a block at world x=1024 in the buffer's frame.
+        assertTrue(wrapsIntoRange(x = 0, rangeStart = 1024, rangeWidth = 16, worldWidth = 1024))
+        assertTrue(wrapsIntoRange(x = 15, rangeStart = 1024, rangeWidth = 16, worldWidth = 1024))
+        assertFalse(wrapsIntoRange(x = 16, rangeStart = 1024, rangeWidth = 16, worldWidth = 1024))
+    }
+
+    @Test
+    fun `wrapsIntoRange matches when range sits before the left edge of the world`() {
+        // Buffer for the seam-wrapped view from the left edge: chunkWorldX = -16.
+        // A block at x=worldWidth-1 in the data model represents a block at world x=-1 in the buffer's frame.
+        assertTrue(wrapsIntoRange(x = 1023, rangeStart = -16, rangeWidth = 16, worldWidth = 1024))
+        assertTrue(wrapsIntoRange(x = 1008, rangeStart = -16, rangeWidth = 16, worldWidth = 1024))
+        assertFalse(wrapsIntoRange(x = 1007, rangeStart = -16, rangeWidth = 16, worldWidth = 1024))
+        assertFalse(wrapsIntoRange(x = 0, rangeStart = -16, rangeWidth = 16, worldWidth = 1024))
+    }
+
+    @Test
+    fun `wrapsIntoRange returns false for non-positive range width`() {
+        assertFalse(wrapsIntoRange(x = 0, rangeStart = 0, rangeWidth = 0, worldWidth = 1024))
+        assertFalse(wrapsIntoRange(x = 0, rangeStart = 0, rangeWidth = -1, worldWidth = 1024))
+    }
+
+    @Test
+    fun `wrapsIntoRange degrades to direct check when world width is non-positive`() {
+        assertTrue(wrapsIntoRange(x = 5, rangeStart = 0, rangeWidth = 16, worldWidth = 0))
+        assertFalse(wrapsIntoRange(x = 5, rangeStart = 16, rangeWidth = 16, worldWidth = 0))
     }
 }
