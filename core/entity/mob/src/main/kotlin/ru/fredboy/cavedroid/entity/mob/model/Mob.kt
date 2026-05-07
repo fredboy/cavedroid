@@ -86,6 +86,9 @@ abstract class Mob(
 
     var breath = params.maxBreath
 
+    open val effectiveSpeedMultiplier: Float
+        get() = 1f
+
     var footContactCounter = 0
 
     private var lastJumpMs = 0L
@@ -340,7 +343,7 @@ abstract class Mob(
 
         applyMediumResistanceToBody(mobWorldAdapter)
         if (!controlVector.isZero) {
-            velocity.x = controlVector.x
+            velocity.x = controlVector.x * effectiveSpeedMultiplier
             if (isFlyMode) {
                 velocity.y = controlVector.y
             } else if (!canClimb) {

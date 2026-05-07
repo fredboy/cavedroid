@@ -18,6 +18,7 @@ class KeyboardInputActionMapper @Inject constructor() {
 
             Input.Keys.E -> KeyboardInputActionKey.OpenInventory
             Input.Keys.ALT_LEFT -> KeyboardInputActionKey.SwitchControlsMode
+            Input.Keys.CONTROL_LEFT, Input.Keys.SHIFT_LEFT -> KeyboardInputActionKey.Sprint
 
             Input.Keys.ESCAPE, Input.Keys.BACK -> KeyboardInputActionKey.Pause
 

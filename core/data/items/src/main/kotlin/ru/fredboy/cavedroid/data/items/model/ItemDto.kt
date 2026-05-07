@@ -21,6 +21,7 @@ data class ItemDto(
     @SerialName("burning_time") val burningTime: Long? = null,
     @SerialName("smelt_product") val smeltProduct: String? = null,
     @SerialName("heal") val heal: Int? = null,
+    @SerialName("saturation") val saturation: Float = 0f,
     @SerialName("mob_key") val mobKey: String? = null,
     @SerialName("state_sprites") val stateSprites: List<String>? = null,
     @SerialName("protection") val protection: Int? = null,

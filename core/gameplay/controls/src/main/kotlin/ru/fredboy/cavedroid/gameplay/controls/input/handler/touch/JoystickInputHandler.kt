@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gameplay.controls.input.handler.touch
 
 import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.model.Joystick
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -48,6 +49,7 @@ class JoystickInputHandler @Inject constructor(
 
     private fun resetVelocity() {
         mobController.player.controlVector.x = 0f
+        mobController.player.isSprinting = false
 
         if (mobController.player.isFlyMode || mobController.player.canClimb) {
             mobController.player.controlVector.y = 0f
@@ -107,6 +109,8 @@ class JoystickInputHandler @Inject constructor(
         if (mobController.player.isFlyMode || mobController.player.canClimb) {
             mobController.player.controlVector.y = joyVector.y
         }
+
+        mobController.player.isSprinting = joystick.rawDistance > Joystick.SPRINT_DISTANCE
     }
 
     override fun handle(action: MouseInputAction) {

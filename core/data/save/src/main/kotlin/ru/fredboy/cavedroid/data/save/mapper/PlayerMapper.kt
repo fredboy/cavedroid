@@ -55,6 +55,10 @@ class PlayerMapper @Inject constructor(
         spawnPointY = player.spawnPoint?.y ?: 0f,
         controlMode = controlModeMapper.mapSaveData(player.controlMode),
         activeSlot = player.activeSlot,
+        foodLevel = player.foodLevel,
+        saturationLevel = player.saturationLevel,
+        exhaustionLevel = player.exhaustionLevel,
+        foodTickTimer = player.foodTickTimer,
         breath = player.breath,
         wearingArmor = inventoryMapper.mapSaveData(player.wearingArmor),
     )
@@ -93,12 +97,16 @@ class PlayerMapper @Inject constructor(
             controlMode = controlModeMapper.mapControlMode(saveDataDto.controlMode)
             spawnPoint = Vector2(saveDataDto.spawnPointX, saveDataDto.spawnPointY)
             activeSlot = saveDataDto.activeSlot
+            foodLevel = saveDataDto.foodLevel
+            saturationLevel = saveDataDto.saturationLevel
+            exhaustionLevel = saveDataDto.exhaustionLevel
+            foodTickTimer = saveDataDto.foodTickTimer
             breath = saveDataDto.breath ?: params.maxBreath
             wearingArmor = saveDataDto.wearingArmor?.let(inventoryMapper::mapWearingArmor) ?: wearingArmor
         }
     }
 
     companion object {
-        private const val SAVE_DATA_VERSION = 6
+        private const val SAVE_DATA_VERSION = 7
     }
 }

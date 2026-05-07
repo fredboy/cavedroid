@@ -213,6 +213,10 @@ sealed class SaveDataDto {
         val spawnPointY: Float,
         val controlMode: ControlModeSaveDataDto,
         val activeSlot: Int,
+        val foodLevel: Int,
+        val saturationLevel: Float,
+        val exhaustionLevel: Float,
+        val foodTickTimer: Int,
         override val breath: Int? = null,
         val wearingArmor: InventorySaveDataDto? = null,
     ) : MobSaveDataDto()
