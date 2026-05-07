@@ -23,6 +23,7 @@ import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.IHudRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.world.IWorldRenderer
 import javax.inject.Inject
+import kotlin.math.abs
 
 @GameScope
 class GameRenderer @Inject constructor(
@@ -71,6 +72,8 @@ class GameRenderer @Inject constructor(
     private val shaper = ShapeRenderer()
 
     private val spriter = SpriteBatch()
+
+    private var lastCameraX = Float.NaN
 
     init {
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f)
@@ -168,6 +171,10 @@ class GameRenderer @Inject constructor(
     fun render(delta: Float) {
         updateCameraPosition(delta)
 
+        val cameraJumped = !lastCameraX.isNaN() &&
+            abs(camera.position.x - lastCameraX) > gameWorld.width / 2f
+        lastCameraX = camera.position.x
+
         spriter.projectionMatrix = camera.combined
         shaper.projectionMatrix = camera.combined
 
@@ -187,6 +194,9 @@ class GameRenderer @Inject constructor(
         spriter.end()
 
         gameWorld.rayHandler.setCombinedMatrix(camera)
+        if (cameraJumped) {
+            gameWorld.rayHandler.update()
+        }
         gameWorld.rayHandler.render()
 
         if (gameContextRepository.shouldShowInfo()) {
