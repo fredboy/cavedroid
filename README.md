@@ -61,7 +61,7 @@ You can download APK and JAR builds from [the releases page](https://github.com/
 ### Android
 
 ```bash
-./gradlew android:assembleDebug
+./gradlew android:assembleFossDebug
 ```
 
 ### Desktop

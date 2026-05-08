@@ -84,6 +84,14 @@ object Dependencies {
 
     const val kermit = "co.touchlab:kermit:${Versions.kermit}"
 
+    object Google {
+
+        object Firebase {
+            const val bom = "com.google.firebase:firebase-bom:${Versions.firebase}"
+            const val crashlytics = "com.google.firebase:firebase-crashlytics"
+        }
+    }
+
     object Test {
         const val junitJupiter = "org.junit.jupiter:junit-jupiter:${Versions.junit}"
         const val junitJupiterEngine = "org.junit.jupiter:junit-jupiter-engine:${Versions.junit}"

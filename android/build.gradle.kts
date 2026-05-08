@@ -10,6 +10,9 @@ private val natives by configurations.creating
 plugins {
     id("com.android.application")
     id("kotlin-android")
+
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 private val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -46,13 +49,25 @@ android {
 
     defaultConfig {
         applicationId = ApplicationInfo.packageName
-        minSdk = 21
+        minSdk = 23
         targetSdk = 36
 
         versionCode = ApplicationInfo.versionCode
         versionName = ApplicationInfo.versionName
 
         multiDexEnabled = true
+    }
+
+    flavorDimensions += "distribution"
+
+    productFlavors {
+        create("foss") {
+            dimension = "distribution"
+        }
+
+        create("store") {
+            dimension = "distribution"
+        }
     }
 
     applicationVariants.asSequence()
@@ -186,6 +201,9 @@ dependencies {
 
     implementation(Dependencies.LibGDX.gdx)
     implementation(Dependencies.LibGDX.Android.backend)
+
+    "storeImplementation"(platform(Dependencies.Google.Firebase.bom))
+    "storeImplementation"(Dependencies.Google.Firebase.crashlytics)
 
     natives(Dependencies.LibGDX.Android.Natives.armeabi)
     natives(Dependencies.LibGDX.Android.Natives.arm64)

@@ -131,4 +131,6 @@ object Versions {
      * [Source](https://github.com/mockk/mockk)
      */
     const val mockk = "1.13.13"
+
+    const val firebase = "34.13.0"
 }

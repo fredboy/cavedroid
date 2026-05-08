@@ -125,3 +125,5 @@ keystore.properties
 
 **/build/
 **/_build/
+
+**/google-services.json
