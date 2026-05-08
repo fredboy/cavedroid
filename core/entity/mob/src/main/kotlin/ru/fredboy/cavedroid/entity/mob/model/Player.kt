@@ -36,7 +36,7 @@ class Player(
     soundPlayer: SoundPlayer,
     stepsSoundAssetsRepository: StepsSoundAssetsRepository,
 
-    ) : Mob(Direction.random(), params, PlayerMobBehavior(soundPlayer, stepsSoundAssetsRepository)) {
+) : Mob(Direction.random(), params, PlayerMobBehavior(soundPlayer, stepsSoundAssetsRepository)) {
 
     var spawnPoint: Vector2? = null
 
@@ -125,8 +125,8 @@ class Player(
 
     fun canShootBow(): Boolean {
         return !isInBed &&
-                activeItem.item is Item.Bow &&
-                (inventory.items.any { it.item.params.key == "arrow" && it.amount > 0 } || gameMode.isCreative())
+            activeItem.item is Item.Bow &&
+            (inventory.items.any { it.item.params.key == "arrow" && it.amount > 0 } || gameMode.isCreative())
     }
 
     override fun changeDir() = Unit
@@ -532,7 +532,7 @@ class Player(
         val spriteOrigin = item.params.inHandSpriteOrigin
         val handMultiplier = -direction.basis
         val xOffset = (-1 + direction.index) * itemSprite.width + SMALL_ITEM_SIZE / 2 +
-                handMultiplier * itemSprite.width * spriteOrigin.x
+            handMultiplier * itemSprite.width * spriteOrigin.x
         val yOffset = if (!isSmallSprite) -itemSprite.height / 2 else 0f
 
         val rotate = handAnim + HAND_ITEM_ANGLE_DEG

@@ -158,7 +158,7 @@ abstract class Mob(
                 /* tag = */ TAG,
                 /* message = */
                 "Attempted to spawn ${this::class.simpleName} on coordinates ($x;$y), " +
-                        "when mob is already spawned and alive!",
+                    "when mob is already spawned and alive!",
             )
             return
         }
