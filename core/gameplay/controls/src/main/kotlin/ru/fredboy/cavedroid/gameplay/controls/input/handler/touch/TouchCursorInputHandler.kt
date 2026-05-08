@@ -34,6 +34,7 @@ import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.annotation.BindMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.isInsideHotbar
+import ru.fredboy.cavedroid.gameplay.controls.usecase.UseFoodInteractor
 import javax.inject.Inject
 
 @GameScope
@@ -55,6 +56,7 @@ class TouchCursorInputHandler @Inject constructor(
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
     private val blockActionSoundAssetsRepository: BlockActionSoundAssetsRepository,
     private val onboardingEvents: OnboardingEvents,
+    private val useFoodInteractor: UseFoodInteractor,
 ) : IMouseInputHandler {
 
     private val player get() = mobController.player
@@ -202,14 +204,7 @@ class TouchCursorInputHandler @Inject constructor(
                     }
             }?.takeIfTrue()
             ?: (item as? Item.Food)?.let {
-                if (player.health < player.maxHealth) {
-                    playFoodSound()
-                    player.heal(item.heal)
-                    player.decreaseCurrentItemCount()
-                    true
-                } else {
-                    false
-                }
+                useFoodInteractor.execute(player)
             }
     }
 
@@ -242,19 +237,19 @@ class TouchCursorInputHandler @Inject constructor(
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return applicationContextRepository.isTouch() &&
-            gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-            (
+                gameWindowsManager.currentWindowType == GameWindowType.NONE &&
                 (
-                    action.actionKey is MouseInputActionKey.Screen &&
                         (
-                            action.screenX > applicationContextRepository.getWidth() / 2f &&
-                                !action.actionKey.touchUp ||
-                                (action.actionKey.pointer == pointer)
-                            )
-                    ) ||
-                    (action.actionKey is MouseInputActionKey.Dragged && action.actionKey.pointer == pointer)
-                ) &&
-            !action.isInsideHotbar(gameContextRepository, getTextureRegionByNameUseCase)
+                                action.actionKey is MouseInputActionKey.Screen &&
+                                        (
+                                                action.screenX > applicationContextRepository.getWidth() / 2f &&
+                                                        !action.actionKey.touchUp ||
+                                                        (action.actionKey.pointer == pointer)
+                                                )
+                                ) ||
+                                (action.actionKey is MouseInputActionKey.Dragged && action.actionKey.pointer == pointer)
+                        ) &&
+                !action.isInsideHotbar(gameContextRepository, getTextureRegionByNameUseCase)
     }
 
     override fun handle(action: MouseInputAction) {

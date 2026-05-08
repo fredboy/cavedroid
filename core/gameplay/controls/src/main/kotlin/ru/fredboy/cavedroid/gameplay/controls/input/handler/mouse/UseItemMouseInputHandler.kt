@@ -13,7 +13,6 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
-import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.entity.projectile.model.Projectile
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
@@ -31,6 +30,7 @@ import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.annotation.BindMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.isInsideHotbar
+import ru.fredboy.cavedroid.gameplay.controls.usecase.UseFoodInteractor
 import javax.inject.Inject
 
 @GameScope
@@ -52,18 +52,19 @@ class UseItemMouseInputHandler @Inject constructor(
     private val projectileController: ProjectileController,
     private val blockActionSoundAssetsRepository: BlockActionSoundAssetsRepository,
     private val onboardingEvents: OnboardingEvents,
+    private val useFoodInteractor: UseFoodInteractor,
 ) : IMouseInputHandler {
 
     private var buttonHoldTask: Timer.Task? = null
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return !applicationContextRepository.isTouch() &&
-            (
-                buttonHoldTask?.isScheduled == true ||
-                    !action.isInsideHotbar(gameContextRepository, textureRegions) &&
-                    gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-                    action.actionKey is MouseInputActionKey.Right
-                )
+                (
+                        buttonHoldTask?.isScheduled == true ||
+                                !action.isInsideHotbar(gameContextRepository, textureRegions) &&
+                                gameWindowsManager.currentWindowType == GameWindowType.NONE &&
+                                action.actionKey is MouseInputActionKey.Right
+                        )
     }
 
     private fun cancelHold() {
@@ -78,7 +79,7 @@ class UseItemMouseInputHandler @Inject constructor(
         val item = player.activeItem.item
         player.startHitting(false)
         player.stopHitting()
-
+        blockActionSoundAssetsRepository
         if (item is Item.Placeable) {
             val placed = placeBlockActionMap.placeToBackgroundAction(
                 item = item,
@@ -136,21 +137,10 @@ class UseItemMouseInputHandler @Inject constructor(
     private fun tryUseMob(): Boolean {
         val mob = mobController.mobs.firstOrNull { mob ->
             mob.hitbox.contains(mobController.player.cursorX, mobController.player.cursorY) &&
-                mobController.player.position.cpy().sub(mob.position).len() <= MOB_HIT_RANGE
+                    mobController.player.position.cpy().sub(mob.position).len() <= MOB_HIT_RANGE
         } ?: return false
 
         return useMobActionMap[mob.params.key]?.perform(mob) ?: false
-    }
-
-    private fun playFoodSound() {
-        val sound = foodSoundAssetsRepository.getFoodSound() ?: return
-        soundPlayer.playSoundAtPosition(
-            sound = sound,
-            soundX = mobController.player.position.x,
-            soundY = mobController.player.position.x,
-            playerX = mobController.player.position.x,
-            playerY = mobController.player.position.x,
-        )
     }
 
     private fun handleUp() {
@@ -178,15 +168,8 @@ class UseItemMouseInputHandler @Inject constructor(
                         false
                     }
             }?.takeIfTrue()
-            ?: (item as? Item.Food)?.let { food ->
-                if (player.foodLevel < Player.MAX_FOOD_LEVEL) {
-                    playFoodSound()
-                    player.eat(food.heal, food.saturation)
-                    player.decreaseCurrentItemCount()
-                    true
-                } else {
-                    false
-                }
+            ?: (item as? Item.Food)?.let {
+                useFoodInteractor.execute(player)
             }?.takeIfTrue()
     }
 
