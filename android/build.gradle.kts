@@ -195,6 +195,20 @@ tasks.preBuild.apply {
     dependsOn("generateAttributionIndex")
 }
 
+androidComponents {
+    onVariants(selector().withFlavor("distribution" to "foss")) { variant ->
+        val variantName = variant.name.replaceFirstChar { it.uppercase() }
+        afterEvaluate {
+            listOf(
+                "process${variantName}GoogleServices",
+                "injectCrashlyticsMappingFile$variantName",
+                "uploadCrashlyticsMappingFile$variantName",
+                "${variant.name}GoogleServices",
+            ).forEach { tasks.findByName(it)?.enabled = false }
+        }
+    }
+}
+
 dependencies {
     useCommonLibs()
     useGdxModule()
