@@ -13,4 +13,6 @@ interface SoundPlayer {
     )
 
     fun playUiSound(sound: Sound)
+
+    fun playLoopSound(sound: Sound, volume: Float): Long
 }

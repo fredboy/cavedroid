@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gdx.game
 
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.utils.Disposable
+import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.repository.WeatherSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.world.model.Biome
@@ -14,6 +15,7 @@ class WeatherSoundController @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobController: MobController,
     private val weatherSoundAssetsRepository: WeatherSoundAssetsRepository,
+    private val soundPlayer: SoundPlayer,
 ) : Disposable {
 
     private var rainSound: Sound? = null
@@ -34,7 +36,7 @@ class WeatherSoundController @Inject constructor(
         val volume = intensity * MAX_VOLUME
         val sound = rainSound ?: weatherSoundAssetsRepository.getRainSound()?.also { rainSound = it } ?: return
         if (rainSoundId == -1L) {
-            rainSoundId = sound.loop(volume)
+            rainSoundId = soundPlayer.playLoopSound(sound, volume)
         } else {
             sound.setVolume(rainSoundId, volume)
         }
