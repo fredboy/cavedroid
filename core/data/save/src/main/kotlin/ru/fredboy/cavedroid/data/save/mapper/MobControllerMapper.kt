@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.data.save.mapper
 
 import dagger.Reusable
+import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
@@ -30,6 +31,7 @@ class MobControllerMapper @Inject constructor(
     private val tooltipManager: TooltipManager,
     private val soundPlayer: SoundPlayer,
     private val stepsSoundAssetsRepository: StepsSoundAssetsRepository,
+    private val applicationController: ApplicationController,
 ) {
 
     fun mapSaveData(mobController: MobController): SaveDataDto.MobControllerSaveDataDto = SaveDataDto.MobControllerSaveDataDto(
@@ -68,6 +70,7 @@ class MobControllerMapper @Inject constructor(
             stepsSoundAssetsRepository = stepsSoundAssetsRepository,
             projectileAdapter = projectileAdapter,
             mobQueue = mobQueue,
+            applicationController = applicationController,
         ).apply {
             (mobs as MutableList).addAll(
                 saveDataDto.mobs.mapNotNull { mob ->

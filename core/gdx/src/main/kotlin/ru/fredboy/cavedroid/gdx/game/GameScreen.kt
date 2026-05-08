@@ -60,8 +60,13 @@ class GameScreen @Inject constructor(
     }
 
     private fun resetGameComponent() {
+        gameComponent?.deathScreen?.dispose()
         gameComponent?.gameProc?.dispose()
         gameComponent = null
+    }
+
+    fun respawnPlayer() {
+        gameComponent?.gameProc?.respawnPlayer()
     }
 
     fun newGame(gameConfig: StartGameConfig.New) {

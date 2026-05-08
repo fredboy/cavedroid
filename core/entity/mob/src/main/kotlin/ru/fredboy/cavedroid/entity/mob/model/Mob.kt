@@ -67,7 +67,6 @@ abstract class Mob(
     var anim = 0f
 
     var isDead = false
-        protected set
 
     val canJump: Boolean
         get() = footContactCounter > 0 && TimeUtils.timeSinceMillis(lastJumpMs) >= JUMP_COOLDOWN_MS
@@ -159,7 +158,7 @@ abstract class Mob(
                 /* tag = */ TAG,
                 /* message = */
                 "Attempted to spawn ${this::class.simpleName} on coordinates ($x;$y), " +
-                    "when mob is already spawned and alive!",
+                        "when mob is already spawned and alive!",
             )
             return
         }
@@ -421,6 +420,10 @@ abstract class Mob(
     override fun dispose() {
         body.world.destroyBody(body)
         _body = null
+    }
+
+    fun isDisposed(): Boolean {
+        return _body == null
     }
 
     private inner class ResetTakeDamageTask : Timer.Task() {

@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.game.controller.mob
 
 import com.badlogic.gdx.utils.Disposable
+import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.TooltipManager
@@ -35,6 +36,7 @@ class MobController @Inject constructor(
     private val stepsSoundAssetsRepository: StepsSoundAssetsRepository,
     private val projectileAdapter: ProjectileAdapter,
     private val mobQueue: MobQueue,
+    private val applicationController: ApplicationController,
 ) : Disposable {
 
     // TODO: Do proper DI
@@ -43,6 +45,8 @@ class MobController @Inject constructor(
     private val _mobs = LinkedList<Mob>()
 
     val mobs: List<Mob> get() = _mobs
+
+    private var deathHandled = false
 
     var player = Player(
         getFallbackItem = getFallbackItemUseCase,
@@ -99,16 +103,18 @@ class MobController @Inject constructor(
     }
 
     private fun updatePlayer(delta: Float) {
-        player.update(mobWorldAdapter, playerAdapter, projectileAdapter, delta)
-        mobSoundManager.makeSound(player)
+        if (!deathHandled) {
+            player.update(mobWorldAdapter, playerAdapter, projectileAdapter, delta)
+            mobSoundManager.makeSound(player)
+        }
 
-        if (player.isDead) {
+        if (!deathHandled && (player.isDead || player.health <= 0)) {
+            deathHandled = true
             dropQueue.offerInventory(player.position.x, player.position.y, player.inventory)
             dropQueue.offerItems(player.position.x, player.position.y, player.wearingArmor.items.toList())
             player.inventory.clear()
             player.wearingArmor.clear()
-            player.dispose()
-            respawnPlayer()
+            applicationController.showDeathScreen()
         }
     }
 
@@ -117,6 +123,10 @@ class MobController @Inject constructor(
     }
 
     fun respawnPlayer() {
+        deathHandled = false
+        if (!player.isDisposed()) {
+            player.dispose()
+        }
         player.respawn(
             spawnPoint = player.spawnPoint ?: mobWorldAdapter.findSpawnPoint(),
             mobPhysicsFactory = mobPhysicsFactory,

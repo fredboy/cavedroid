@@ -237,19 +237,19 @@ class TouchCursorInputHandler @Inject constructor(
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return applicationContextRepository.isTouch() &&
-                gameWindowsManager.currentWindowType == GameWindowType.NONE &&
+            gameWindowsManager.currentWindowType == GameWindowType.NONE &&
+            (
                 (
+                    action.actionKey is MouseInputActionKey.Screen &&
                         (
-                                action.actionKey is MouseInputActionKey.Screen &&
-                                        (
-                                                action.screenX > applicationContextRepository.getWidth() / 2f &&
-                                                        !action.actionKey.touchUp ||
-                                                        (action.actionKey.pointer == pointer)
-                                                )
-                                ) ||
-                                (action.actionKey is MouseInputActionKey.Dragged && action.actionKey.pointer == pointer)
-                        ) &&
-                !action.isInsideHotbar(gameContextRepository, getTextureRegionByNameUseCase)
+                            action.screenX > applicationContextRepository.getWidth() / 2f &&
+                                !action.actionKey.touchUp ||
+                                (action.actionKey.pointer == pointer)
+                            )
+                    ) ||
+                    (action.actionKey is MouseInputActionKey.Dragged && action.actionKey.pointer == pointer)
+                ) &&
+            !action.isInsideHotbar(gameContextRepository, getTextureRegionByNameUseCase)
     }
 
     override fun handle(action: MouseInputAction) {

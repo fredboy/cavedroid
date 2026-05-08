@@ -24,7 +24,7 @@ class DropAttractionToMobContactHandler @Inject constructor() : AbstractContactH
         get() = Mob::class
 
     override fun Drop.handleBeginContact(contact: Contact, entityB: Mob) {
-        if (entityB !is Player) {
+        if (entityB !is Player || entityB.isDead) {
             return
         }
 
@@ -34,7 +34,7 @@ class DropAttractionToMobContactHandler @Inject constructor() : AbstractContactH
     }
 
     override fun Drop.handleEndContact(contact: Contact, entityB: Mob) {
-        if (isPickedUp || entityB !is Player) {
+        if (isPickedUp || entityB !is Player || entityB.isDead) {
             return
         }
 

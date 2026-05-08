@@ -15,4 +15,8 @@ interface ApplicationController {
     fun resumeGame()
 
     fun pauseGame()
+
+    fun showDeathScreen()
+
+    fun respawnPlayer()
 }

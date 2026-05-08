@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.gdx.di
 
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import dagger.BindsInstance
 import dagger.Component
 import ru.fredboy.cavedroid.common.api.ApplicationController
@@ -105,6 +106,8 @@ interface ApplicationComponent {
     val wearableTextureAssetsRepository: WearableTextureAssetsRepository
 
     val weatherSoundAssetsRepository: WeatherSoundAssetsRepository
+
+    val menuSkin: Skin
 
     @Component.Builder
     interface Builder {

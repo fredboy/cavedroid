@@ -26,7 +26,7 @@ class MobToDropContactHandler @Inject constructor() : AbstractContactHandler<Mob
 
     override fun Mob.handleBeginContact(contact: Contact, entityB: Drop) {
         // TODO: Other mobs should also pick drop
-        if (this !is Player) {
+        if (this !is Player || this.isDead) {
             return
         }
 

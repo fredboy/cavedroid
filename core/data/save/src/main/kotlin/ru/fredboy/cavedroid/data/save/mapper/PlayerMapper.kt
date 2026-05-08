@@ -103,6 +103,7 @@ class PlayerMapper @Inject constructor(
             foodTickTimer = saveDataDto.foodTickTimer
             breath = saveDataDto.breath ?: params.maxBreath
             wearingArmor = saveDataDto.wearingArmor?.let(inventoryMapper::mapWearingArmor) ?: wearingArmor
+            isDead = health <= 0
         }
     }
 

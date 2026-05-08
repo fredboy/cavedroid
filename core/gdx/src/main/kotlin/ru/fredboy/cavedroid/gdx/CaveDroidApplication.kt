@@ -15,6 +15,7 @@ import ru.fredboy.cavedroid.common.utils.ratio
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
 import ru.fredboy.cavedroid.gdx.di.ApplicationComponent
 import ru.fredboy.cavedroid.gdx.di.DaggerApplicationComponent
+import ru.fredboy.cavedroid.gdx.game.DeathScreen
 import ru.fredboy.cavedroid.gdx.game.GameScreen
 import ru.fredboy.cavedroid.gdx.menu.v2.PauseMenuScreen
 import java.util.Locale
@@ -92,6 +93,7 @@ class CaveDroidApplication(
         applicationComponent.menuScreen.dispose()
         applicationComponent.pauseMenuScreen.dispose()
         applicationComponent.gameScreen.dispose()
+        applicationComponent.menuSkin.dispose()
         applicationComponent.disposeAssets()
     }
 
@@ -137,6 +139,29 @@ class CaveDroidApplication(
         }
         setScreen(applicationComponent.gameScreen)
         screen.resume()
+    }
+
+    override fun showDeathScreen() {
+        if (screen !is GameScreen) {
+            logger.w { "Cannot show death screen when active screen is not game" }
+            return
+        }
+        val deathScreen = applicationComponent.gameScreen.gameComponent?.deathScreen
+            ?: run {
+                logger.w { "No game component – cannot show death screen" }
+                return
+            }
+        setScreen(deathScreen)
+    }
+
+    override fun respawnPlayer() {
+        val gameScreen = applicationComponent.gameScreen
+        if (screen !is DeathScreen) {
+            logger.w { "Cannot respawn when active screen is not death screen" }
+            return
+        }
+        gameScreen.respawnPlayer()
+        setScreen(gameScreen)
     }
 
     override fun setScreen(screen: Screen?) {

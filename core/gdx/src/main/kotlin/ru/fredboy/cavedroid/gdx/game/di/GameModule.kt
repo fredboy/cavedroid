@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gdx.game.di
 
 import dagger.Module
 import dagger.Provides
+import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.TooltipManager
@@ -115,6 +116,7 @@ object GameModule {
         stepsSoundAssetsRepository: StepsSoundAssetsRepository,
         projectileAdapter: ProjectileAdapter,
         mobQueue: MobQueue,
+        applicationController: ApplicationController,
     ): MobController = if (gameContextRepository.isLoadGame()) {
         saveDataRepository.loadMobController(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
@@ -140,6 +142,7 @@ object GameModule {
             stepsSoundAssetsRepository = stepsSoundAssetsRepository,
             projectileAdapter = projectileAdapter,
             mobQueue = mobQueue,
+            applicationController = applicationController,
         )
     }
 

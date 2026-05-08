@@ -118,6 +118,10 @@ public class GameProc implements Disposable {
         Gdx.input.setInputProcessor(mGameInputProcessor);
     }
 
+    public void respawnPlayer() {
+        mMobsController.respawnPlayer();
+    }
+
     @Override
     public void dispose() {
         mGameWorldFluidsLogicControllerTask.shutdownBlocking();

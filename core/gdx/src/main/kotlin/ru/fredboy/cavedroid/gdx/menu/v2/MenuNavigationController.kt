@@ -1,8 +1,5 @@
 package ru.fredboy.cavedroid.gdx.menu.v2
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Scaling
@@ -23,6 +20,9 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.attribution.AttributionMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.attribution.AttributionMenuViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.attribution.attributionMenuView
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.RootNavKey
+import ru.fredboy.cavedroid.gdx.menu.v2.view.death.DeathScreenNavKey
+import ru.fredboy.cavedroid.gdx.menu.v2.view.death.DeathScreenViewModel
+import ru.fredboy.cavedroid.gdx.menu.v2.view.death.deathScreenView
 import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.DeleteWorldMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.DeleteWorldMenuViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.deleteWorldMenuView
@@ -57,24 +57,13 @@ class MenuNavigationController @Inject constructor(
     private val viewModelProviders: Set<@JvmSuppressWildcards ViewModelProvider<*, *>>,
     private val applicationContextRepository: ApplicationContextRepository,
     private val rootNavKey: RootNavKey,
+    skin: Skin,
 ) : Disposable {
     private val viewport = ScalingViewport(
         Scaling.stretch,
         applicationContextRepository.getWidth(),
         applicationContextRepository.getHeight(),
     )
-
-    private val skin = Skin(Gdx.files.internal("skin/skin.json"))
-        .apply {
-            atlas.textures.forEach { texture ->
-                texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest)
-            }
-
-            getAll(BitmapFont::class.java)
-                .forEach { entry ->
-                    entry.value.data.setScale(1f)
-                }
-        }
 
     init {
         Scene2DSkin.defaultSkin = skin
@@ -135,6 +124,11 @@ class MenuNavigationController @Inject constructor(
                 pauseMenuView(viewModel)
             }
 
+            is DeathScreenNavKey -> {
+                val viewModel = findViewModel<DeathScreenNavKey, DeathScreenViewModel>(navKey, cachedViewModel)
+                deathScreenView(viewModel)
+            }
+
             is LanguageMenuNavKey -> {
                 val viewModel = findViewModel<LanguageMenuNavKey, LanguageMenuViewModel>(navKey, cachedViewModel)
                 languageMenuView(viewModel)
@@ -161,6 +155,5 @@ class MenuNavigationController @Inject constructor(
 
     override fun dispose() {
         navRootStage.dispose()
-        skin.dispose()
     }
 }

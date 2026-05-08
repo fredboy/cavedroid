@@ -7,7 +7,6 @@ import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.takeIfTrue
 import ru.fredboy.cavedroid.domain.assets.repository.BlockActionSoundAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.FoodSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -58,12 +57,12 @@ class UseItemMouseInputHandler @Inject constructor(
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return !applicationContextRepository.isTouch() &&
-                (
-                        buttonHoldTask?.isScheduled == true ||
-                                !action.isInsideHotbar(gameContextRepository, textureRegions) &&
-                                gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-                                action.actionKey is MouseInputActionKey.Right
-                        )
+            (
+                buttonHoldTask?.isScheduled == true ||
+                    !action.isInsideHotbar(gameContextRepository, textureRegions) &&
+                    gameWindowsManager.currentWindowType == GameWindowType.NONE &&
+                    action.actionKey is MouseInputActionKey.Right
+                )
     }
 
     private fun cancelHold() {
@@ -136,7 +135,7 @@ class UseItemMouseInputHandler @Inject constructor(
     private fun tryUseMob(): Boolean {
         val mob = mobController.mobs.firstOrNull { mob ->
             mob.hitbox.contains(mobController.player.cursorX, mobController.player.cursorY) &&
-                    mobController.player.position.cpy().sub(mob.position).len() <= MOB_HIT_RANGE
+                mobController.player.position.cpy().sub(mob.position).len() <= MOB_HIT_RANGE
         } ?: return false
 
         return useMobActionMap[mob.params.key]?.perform(mob) ?: false
