@@ -305,7 +305,7 @@ abstract class Mob(
 
         body.gravityScale = if (canClimb) {
             when {
-                controlVector.y != 0f -> controlVector.y
+                controlVector.y != 0f -> MathUtils.clamp(controlVector.y, -2f, 2f)
                 climb -> -2f
                 descend -> 2f
                 else -> 1f
