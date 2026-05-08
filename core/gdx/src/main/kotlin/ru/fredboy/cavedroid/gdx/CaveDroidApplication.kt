@@ -5,6 +5,7 @@ import co.touchlab.kermit.Severity
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Screen
 import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.PreferencesStore
@@ -136,6 +137,18 @@ class CaveDroidApplication(
         }
         setScreen(applicationComponent.gameScreen)
         screen.resume()
+    }
+
+    override fun setScreen(screen: Screen?) {
+        try {
+            screen?.show()
+            screen?.resize(Gdx.graphics.width, Gdx.graphics.height)
+        } catch (e: Exception) {
+            throw e
+        }
+
+        this.screen?.hide()
+        this.screen = screen
     }
 
     fun getPreferencesStore() = preferencesStore

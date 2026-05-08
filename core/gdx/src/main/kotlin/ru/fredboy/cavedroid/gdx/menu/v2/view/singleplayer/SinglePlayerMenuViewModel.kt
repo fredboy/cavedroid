@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.singleplayer
 
+import co.touchlab.kermit.Logger
 import com.badlogic.gdx.graphics.Texture
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -40,6 +41,10 @@ class SinglePlayerMenuViewModel(
         .map { trigger ->
             if (trigger == Trigger.LOADING_WORLD) {
                 return@map SinglePlayerMenuState.LoadingWorld
+            }
+
+            if (trigger == Trigger.LOAD_FAILED) {
+                return@map SinglePlayerMenuState.LoadingFailed
             }
 
             val appDir = applicationContextRepository.getGameDirectory()
@@ -86,14 +91,25 @@ class SinglePlayerMenuViewModel(
             reloadTrigger.emit(Trigger.LOADING_WORLD)
             delay(50)
 
-            withContext(GdxMainDispatcher) {
-                applicationController.startGame(
-                    startGameConfig = StartGameConfig.Load(
-                        worldName = save.name,
-                        saveDirectory = save.directory,
-                    ),
-                )
+            try {
+                withContext(GdxMainDispatcher) {
+                    applicationController.startGame(
+                        startGameConfig = StartGameConfig.Load(
+                            worldName = save.name,
+                            saveDirectory = save.directory,
+                        ),
+                    )
+                }
+            } catch (e: Exception) {
+                logger.e(e) { "Failed to load world '${save.name}'" }
+                reloadTrigger.emit(Trigger.LOAD_FAILED)
             }
+        }
+    }
+
+    fun onLoadingFailedBackClick() {
+        viewModelScope.launch {
+            reloadTrigger.emit(Trigger.LOAD_LIST)
         }
     }
 
@@ -113,5 +129,11 @@ class SinglePlayerMenuViewModel(
     private enum class Trigger {
         LOAD_LIST,
         LOADING_WORLD,
+        LOAD_FAILED,
+    }
+
+    companion object {
+        private const val TAG = "SinglePlayerMenuViewModel"
+        private val logger = Logger.withTag(TAG)
     }
 }

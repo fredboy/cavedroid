@@ -23,6 +23,7 @@ suspend fun Stage.singlePlayerMenuView(viewModel: SinglePlayerMenuViewModel) = v
     viewModel.stateFlow.collect { state ->
         when (state) {
             is SinglePlayerMenuState.LoadingWorld -> loading(viewModel)
+            is SinglePlayerMenuState.LoadingFailed -> loadingFailed(viewModel)
             is SinglePlayerMenuState.ShowList -> savesList(viewModel, state)
         }
     }
@@ -117,6 +118,35 @@ private fun Stage.loading(viewModel: SinglePlayerMenuViewModel) {
             pad(8f)
 
             label(viewModel.getLocalizedString("loadingWorld"))
+        }
+    }
+}
+
+@Scene2dDsl
+private fun Stage.loadingFailed(viewModel: SinglePlayerMenuViewModel) {
+    actors {
+        table {
+            setFillParent(true)
+            background(
+                TiledDrawable(
+                    TextureRegionDrawable(
+                        skin.getRegion("background"),
+                    ),
+                ),
+            )
+            pad(8f)
+
+            label(viewModel.getLocalizedString("loadingWorldFailed"))
+
+            row()
+
+            textButton(viewModel.getLocalizedString("back")) {
+                onClickWithSound(viewModel) { viewModel.onLoadingFailedBackClick() }
+            }.cell(
+                width = 400f,
+                height = 60f,
+                padTop = 32f,
+            )
         }
     }
 }

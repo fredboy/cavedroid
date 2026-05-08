@@ -6,7 +6,7 @@ import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import javax.inject.Inject
 
-internal class UseFoodInteractor @Inject constructor(
+class UseFoodInteractor @Inject constructor(
     private val soundPlayer: SoundPlayer,
     private val foodSoundAssetsRepository: FoodSoundAssetsRepository,
 ) {

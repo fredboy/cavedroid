@@ -4,6 +4,8 @@ sealed interface SinglePlayerMenuState {
 
     data object LoadingWorld : SinglePlayerMenuState
 
+    data object LoadingFailed : SinglePlayerMenuState
+
     data class ShowList(
         val saves: List<SaveInfoVo>,
     ) : SinglePlayerMenuState

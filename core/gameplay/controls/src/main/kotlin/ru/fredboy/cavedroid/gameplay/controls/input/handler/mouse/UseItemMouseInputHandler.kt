@@ -46,7 +46,6 @@ class UseItemMouseInputHandler @Inject constructor(
     private val gameWorld: GameWorld,
     private val textureRegions: GetTextureRegionByNameUseCase,
     private val applicationContextRepository: ApplicationContextRepository,
-    private val foodSoundAssetsRepository: FoodSoundAssetsRepository,
     private val soundPlayer: SoundPlayer,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
     private val projectileController: ProjectileController,
