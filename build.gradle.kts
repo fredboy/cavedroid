@@ -3,7 +3,10 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     ktlintGradle
-    dependencyLicenseReport
+    // Version comes from buildSrc's `implementation` dependency on the plugin (needed there so
+    // PerFlavorTextReportRenderer can reference its types). Adding a version here would clash
+    // with the existing classpath entry.
+    id("com.github.jk1.dependency-license-report")
     id("com.google.gms.google-services") version "4.4.4" apply false
     id("com.google.firebase.crashlytics") version "3.0.7" apply false
 }

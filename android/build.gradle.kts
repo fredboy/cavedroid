@@ -1,4 +1,6 @@
 import com.android.build.gradle.internal.tasks.factory.dependsOn
+import com.github.jk1.license.LicenseReportExtension
+import com.github.jk1.license.task.ReportTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.nio.file.Files
@@ -42,7 +44,7 @@ android {
         named("main") {
             jniLibs.srcDir("libs")
             assets {
-                srcDirs("src/main/assets", "build/generated/extraRes")
+                srcDirs("src/main/assets", "build/generated/extraRes/shared")
             }
         }
 
@@ -86,6 +88,15 @@ android {
 
             buildConfigField("String", "BANNER_AD_UNIT_ID", bannerAdUnitId)
             buildConfigField("String", "INTERSTITIAL_AD_UNIT_ID", interstitialAdUnitId)
+        }
+    }
+
+    sourceSets {
+        named("foss") {
+            assets.srcDirs("build/generated/extraRes/foss")
+        }
+        named("store") {
+            assets.srcDirs("build/generated/extraRes/store")
         }
     }
 
@@ -164,12 +175,35 @@ task("copyAndroidNatives") {
     }
 }
 
-tasks.register<Copy>("copyLicenseReport") {
-    dependsOn("generateLicenseReport")
+// AGP creates per-flavor runtime classpaths (fossReleaseRuntimeClasspath / storeReleaseRuntimeClasspath)
+// but no plain `runtimeClasspath`, so the jk1 plugin's default config produces an empty report. We
+// register one ReportTask per flavor with its own LicenseReportExtension, then ship the result in
+// flavor-specific generated assets so each APK gets only the notices for the libs it actually bundles.
+val licenseFlavors = listOf("foss", "store")
 
-    from("build/reports/dependency-license/THIRD-PARTY-NOTICES.txt")
-    into("build/generated/extraRes")
-    rename { "notices.txt" }
+licenseFlavors.forEach { flavor ->
+    val capFlavor = flavor.replaceFirstChar { it.uppercase() }
+    val reportOutputDir = layout.buildDirectory.dir("reports/dependency-license-$flavor")
+
+    val flavorLicenseConfig = LicenseReportExtension(project).apply {
+        outputDir = reportOutputDir.get().asFile.absolutePath
+        configurations = arrayOf("${flavor}ReleaseRuntimeClasspath")
+        renderers = arrayOf(PerFlavorTextReportRenderer(reportOutputDir.get().asFile))
+        excludeOwnGroup = true
+        excludes = arrayOf("CaveCraft.*")
+        projects = arrayOf(project)
+    }
+
+    val reportTask = tasks.register<ReportTask>("generate${capFlavor}LicenseReport") {
+        config = flavorLicenseConfig
+    }
+
+    tasks.register<Copy>("copy${capFlavor}LicenseReport") {
+        dependsOn(reportTask)
+        from(reportOutputDir.map { it.file("THIRD-PARTY-NOTICES.txt") })
+        into(layout.buildDirectory.dir("generated/extraRes/$flavor"))
+        rename { "notices.txt" }
+    }
 }
 
 tasks.whenTaskAdded {
@@ -183,7 +217,7 @@ tasks.register("generateAttributionIndex") {
     description = "Scans assets/ for attribution.txt files and generates attribution_index.txt"
 
     val assetsDir = layout.projectDirectory.dir("src/main/assets").asFile.toPath().toRealPath()
-    val extraDir = layout.projectDirectory.dir("build/generated/extraRes").apply {
+    val extraDir = layout.projectDirectory.dir("build/generated/extraRes/shared").apply {
         asFile.mkdirs()
     }
     val outputFile = extraDir.file("attribution_index.txt")
@@ -210,11 +244,22 @@ tasks.register("generateAttributionIndex") {
 }
 
 tasks.preBuild.apply {
-    dependsOn("copyLicenseReport")
     dependsOn("generateAttributionIndex")
 }
 
 androidComponents {
+    licenseFlavors.forEach { flavor ->
+        val capFlavor = flavor.replaceFirstChar { it.uppercase() }
+        onVariants(selector().withFlavor("distribution" to flavor)) { variant ->
+            val capVariant = variant.name.replaceFirstChar { it.uppercase() }
+            afterEvaluate {
+                tasks.named("pre${capVariant}Build") {
+                    dependsOn("copy${capFlavor}LicenseReport")
+                }
+            }
+        }
+    }
+
     onVariants(selector().withFlavor("distribution" to "foss")) { variant ->
         val variantName = variant.name.replaceFirstChar { it.uppercase() }
         afterEvaluate {
