@@ -6,14 +6,11 @@ import com.badlogic.gdx.Application
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.NoOpAdController
 import ru.fredboy.cavedroid.common.api.PreferencesStore
-import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.utils.DEFAULT_VIEWPORT_WIDTH
 import ru.fredboy.cavedroid.common.utils.ratio
@@ -22,7 +19,6 @@ import ru.fredboy.cavedroid.gdx.di.ApplicationComponent
 import ru.fredboy.cavedroid.gdx.di.DaggerApplicationComponent
 import ru.fredboy.cavedroid.gdx.game.DeathScreen
 import ru.fredboy.cavedroid.gdx.game.GameScreen
-import ru.fredboy.cavedroid.gdx.menu.v2.MenuScreen
 import ru.fredboy.cavedroid.gdx.menu.v2.PauseMenuScreen
 import java.util.Locale
 
@@ -66,6 +62,9 @@ class CaveDroidApplication(
         val isFullscreen = preferencesStore.getPreference(PreferenceKeys.FULLSCREEN).toBoolean()
         initFullscreenMode(isFullscreen)
 
+        val personalizedAdsConsent = preferencesStore.getPreference(PreferenceKeys.PERSONALIZED_ADS_CONSENT)
+            ?.toBooleanStrictOrNull()
+
         applicationComponent = DaggerApplicationComponent.builder()
             .applicationContext(
                 ApplicationContext(
@@ -85,12 +84,17 @@ class CaveDroidApplication(
                         ?.toBooleanStrictOrNull() ?: true,
                     isOnboardingShown = preferencesStore.getPreference(PreferenceKeys.ONBOARDING_SHOWN)
                         ?.toBooleanStrictOrNull() ?: false,
+                    personalizedAdsConsent = personalizedAdsConsent,
                 ),
             )
             .applicationController(this)
             .preferencesStore(preferencesStore)
             .adController(adController)
             .build()
+
+        if (personalizedAdsConsent != null) {
+            adController.setPersonalizedAdsEnabled(personalizedAdsConsent)
+        }
 
         Gdx.files.absolute(gameDataDirectoryPath).mkdirs()
         applicationComponent.initializeAssets()

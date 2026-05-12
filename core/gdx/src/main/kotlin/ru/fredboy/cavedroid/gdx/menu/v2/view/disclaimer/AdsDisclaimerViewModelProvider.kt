@@ -1,4 +1,4 @@
-package ru.fredboy.cavedroid.gdx.menu.v2.view.settings
+package ru.fredboy.cavedroid.gdx.menu.v2.view.disclaimer
 
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.di.MenuScope
@@ -12,17 +12,17 @@ import kotlin.reflect.KClass
 
 @MenuScope
 @BindViewModelProvider
-class SettingsMenuViewModelProvider @Inject constructor(
+class AdsDisclaimerViewModelProvider @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
     private val adController: AdController,
     private val baseViewModelDependencies: BaseViewModelDependencies,
-) : ViewModelProvider<SettingsMenuNavKey, SettingsMenuViewModel> {
+) : ViewModelProvider<AdsDisclaimerNavKey, AdsDisclaimerViewModel> {
 
-    override val viewModelClass: KClass<SettingsMenuViewModel>
-        get() = SettingsMenuViewModel::class
+    override val viewModelClass: KClass<AdsDisclaimerViewModel>
+        get() = AdsDisclaimerViewModel::class
 
-    override fun get(navKey: SettingsMenuNavKey, navBackStack: NavBackStack): SettingsMenuViewModel {
-        return SettingsMenuViewModel(
+    override fun get(navKey: AdsDisclaimerNavKey, navBackStack: NavBackStack): AdsDisclaimerViewModel {
+        return AdsDisclaimerViewModel(
             navBackStack = navBackStack,
             applicationContextRepository = applicationContextRepository,
             adController = adController,

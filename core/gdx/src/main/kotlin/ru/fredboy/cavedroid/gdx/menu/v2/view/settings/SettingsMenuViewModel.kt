@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
@@ -17,8 +18,12 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
 class SettingsMenuViewModel(
     private val navBackStack: NavBackStack,
     private val applicationContextRepository: ApplicationContextRepository,
+    private val adController: AdController,
     baseViewModelDependencies: BaseViewModelDependencies,
 ) : BaseViewModel(baseViewModelDependencies) {
+
+    private val showPersonalizedAdsToggle: Boolean
+        get() = adController.supportsPersonalizedAdsConsent
 
     private val _dynamicCameraFlow = MutableSharedFlow<Boolean>(replay = 0)
     private val dynamicCameraFlow: Flow<Boolean> = _dynamicCameraFlow
@@ -40,13 +45,26 @@ class SettingsMenuViewModel(
         .onStart { emit(applicationContextRepository.isSoundEnabled()) }
         .distinctUntilChanged()
 
+    private val _personalizedAdsFlow = MutableSharedFlow<Boolean>(replay = 0)
+    private val personalizedAdsFlow: Flow<Boolean> = _personalizedAdsFlow
+        .onStart { emit(applicationContextRepository.getPersonalizedAdsConsent() ?: false) }
+        .distinctUntilChanged()
+
     val stateFlow: StateFlow<SettingsMenuState> = combine(
         dynamicCameraFlow,
         fullscreenFlow,
         autoJumpFlow,
         soundFlow,
-    ) { dynamicCamera, fullscreen, autoJump, sound ->
-        SettingsMenuState(dynamicCamera, fullscreen, autoJump, sound)
+        personalizedAdsFlow,
+    ) { values ->
+        SettingsMenuState(
+            dynamicCamera = values[0],
+            fullscreen = values[1],
+            autoJump = values[2],
+            sound = values[3],
+            showPersonalizedAdsToggle = showPersonalizedAdsToggle,
+            personalizedAds = values[4],
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(500L),
@@ -59,6 +77,8 @@ class SettingsMenuViewModel(
             fullscreen = applicationContextRepository.isFullscreen(),
             autoJump = applicationContextRepository.isAutoJumpEnabled(),
             sound = applicationContextRepository.isSoundEnabled(),
+            showPersonalizedAdsToggle = showPersonalizedAdsToggle,
+            personalizedAds = applicationContextRepository.getPersonalizedAdsConsent() ?: false,
         )
     }
 
@@ -78,12 +98,20 @@ class SettingsMenuViewModel(
         viewModelScope.launch { _soundFlow.emit(enabled) }
     }
 
+    fun onPersonalizedAdsClick(enabled: Boolean) {
+        viewModelScope.launch { _personalizedAdsFlow.emit(enabled) }
+    }
+
     fun onDoneClick() {
         stateFlow.value.run {
             applicationContextRepository.setFullscreen(fullscreen)
             applicationContextRepository.setUseDynamicCamera(dynamicCamera)
             applicationContextRepository.setAutoJumpEnabled(autoJump)
             applicationContextRepository.setSoundEnabled(sound)
+            if (showPersonalizedAdsToggle) {
+                applicationContextRepository.setPersonalizedAdsConsent(personalizedAds)
+                adController.setPersonalizedAdsEnabled(personalizedAds)
+            }
         }
         navBackStack.pop()
     }

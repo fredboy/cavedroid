@@ -2,6 +2,8 @@ package ru.fredboy.cavedroid.common.api
 
 interface AdController {
 
+    val supportsPersonalizedAdsConsent: Boolean
+
     fun showBanner()
 
     fun hideBanner()
@@ -9,6 +11,8 @@ interface AdController {
     fun loadInterstitial()
 
     fun showInterstitial(onDismissed: () -> Unit)
+
+    fun setPersonalizedAdsEnabled(enabled: Boolean)
 
     fun resume()
 

@@ -20,9 +20,13 @@ import ru.fredboy.cavedroid.common.api.AdController
 
 class YandexAdController(private val activity: Activity) : AdController {
 
+    override val supportsPersonalizedAdsConsent: Boolean = true
+
     private val bannerAdView: BannerAdView by lazy {
-        val widthDp = (activity.resources.displayMetrics.widthPixels /
-            activity.resources.displayMetrics.density).toInt()
+        val widthDp = (
+            activity.resources.displayMetrics.widthPixels /
+                activity.resources.displayMetrics.density
+            ).toInt() / 2
         BannerAdView(activity).apply {
             setAdSize(BannerAdSize.sticky(activity, widthDp))
             setBannerAdEventListener(object : BannerAdEventListener {
@@ -48,10 +52,11 @@ class YandexAdController(private val activity: Activity) : AdController {
     private fun ensureBannerInWindow() {
         if (bannerAddedToWindow) return
         val params = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT,
             FrameLayout.LayoutParams.WRAP_CONTENT,
             Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL,
         )
+
         activity.addContentView(bannerAdView, params)
         bannerAdView.loadAd(AdRequest.Builder(BuildConfig.BANNER_AD_UNIT_ID).build())
         bannerAddedToWindow = true
@@ -88,7 +93,10 @@ class YandexAdController(private val activity: Activity) : AdController {
 
     override fun showInterstitial(onDismissed: () -> Unit) {
         activity.runOnUiThread {
-            val ad = interstitialAd ?: run { onDismissed(); return@runOnUiThread }
+            val ad = interstitialAd ?: run {
+                onDismissed()
+                return@runOnUiThread
+            }
             ad.setAdEventListener(object : InterstitialAdEventListener {
                 override fun onAdShown() {}
 
@@ -111,6 +119,10 @@ class YandexAdController(private val activity: Activity) : AdController {
             })
             ad.show(activity)
         }
+    }
+
+    override fun setPersonalizedAdsEnabled(enabled: Boolean) {
+        YandexAds.setUserConsent(enabled)
     }
 
     override fun resume() {

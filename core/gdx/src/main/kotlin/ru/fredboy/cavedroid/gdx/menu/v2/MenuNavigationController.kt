@@ -26,6 +26,9 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.death.deathScreenView
 import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.DeleteWorldMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.DeleteWorldMenuViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.deleteWorldMenuView
+import ru.fredboy.cavedroid.gdx.menu.v2.view.disclaimer.AdsDisclaimerNavKey
+import ru.fredboy.cavedroid.gdx.menu.v2.view.disclaimer.AdsDisclaimerViewModel
+import ru.fredboy.cavedroid.gdx.menu.v2.view.disclaimer.adsDisclaimerView
 import ru.fredboy.cavedroid.gdx.menu.v2.view.help.HelpMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.help.HelpMenuViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.help.helpMenuView
@@ -132,6 +135,11 @@ class MenuNavigationController @Inject constructor(
             is LanguageMenuNavKey -> {
                 val viewModel = findViewModel<LanguageMenuNavKey, LanguageMenuViewModel>(navKey, cachedViewModel)
                 render(viewModel) { languageMenuView(viewModel) }
+            }
+
+            is AdsDisclaimerNavKey -> {
+                val viewModel = findViewModel<AdsDisclaimerNavKey, AdsDisclaimerViewModel>(navKey, cachedViewModel)
+                render(viewModel) { adsDisclaimerView(viewModel) }
             }
 
             else -> throw IllegalStateException("Unknown key $navKey")

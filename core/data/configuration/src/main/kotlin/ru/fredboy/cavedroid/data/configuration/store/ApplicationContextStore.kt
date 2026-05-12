@@ -75,4 +75,11 @@ class ApplicationContextStore @Inject constructor(
             applicationContext.isOnboardingShown = value
             preferencesStore.setPreference(PreferenceKeys.ONBOARDING_SHOWN, value.toString())
         }
+
+    var personalizedAdsConsent: Boolean?
+        get() = synchronized(lock) { applicationContext.personalizedAdsConsent }
+        set(value) = synchronized(lock) {
+            applicationContext.personalizedAdsConsent = value
+            preferencesStore.setPreference(PreferenceKeys.PERSONALIZED_ADS_CONSENT, value?.toString())
+        }
 }
