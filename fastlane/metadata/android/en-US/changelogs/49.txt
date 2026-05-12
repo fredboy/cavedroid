@@ -1,0 +1,15 @@
+## RC-1.0.0 (2026-05-12)
+
+*  Fix water impact 
+*  Add store flavor with crashlytics 
+*  Fix firebase applied to foss build 
+*  Add yandex ads controller 
+*  Only show banner in main menu 
+*  Add personalized ads preference in store flavor 
+*  Assemble foss release in script 
+*  Run only core tests in CI 
+*  Fix mvvm tests 
+*  Fix apk path 
+*  Fix android license reports 
+
+
