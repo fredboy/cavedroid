@@ -7,7 +7,9 @@ import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
+import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
+import ru.fredboy.cavedroid.common.api.NoOpAdController
 import ru.fredboy.cavedroid.common.api.PreferencesStore
 import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.utils.DEFAULT_VIEWPORT_WIDTH
@@ -17,6 +19,7 @@ import ru.fredboy.cavedroid.gdx.di.ApplicationComponent
 import ru.fredboy.cavedroid.gdx.di.DaggerApplicationComponent
 import ru.fredboy.cavedroid.gdx.game.DeathScreen
 import ru.fredboy.cavedroid.gdx.game.GameScreen
+import ru.fredboy.cavedroid.gdx.menu.v2.MenuScreen
 import ru.fredboy.cavedroid.gdx.menu.v2.PauseMenuScreen
 import java.util.Locale
 
@@ -25,6 +28,7 @@ class CaveDroidApplication(
     private val isTouchScreen: Boolean,
     private val isDebug: Boolean,
     private val preferencesStore: PreferencesStore,
+    private val adController: AdController = NoOpAdController(),
     loggingSeverity: Severity = Severity.Info,
 ) : Game(),
     CaveDroidApplicationDecorator,
@@ -99,11 +103,16 @@ class CaveDroidApplication(
 
     override fun quitGame() {
         applicationComponent.gameScreen.saveGame()
-        applicationComponent.gameScreen.dispose()
-        setScreen(applicationComponent.menuScreen)
+        adController.showInterstitial {
+            Gdx.app.postRunnable {
+                applicationComponent.gameScreen.dispose()
+                setScreen(applicationComponent.menuScreen)
+            }
+        }
     }
 
     override fun startGame(startGameConfig: StartGameConfig) {
+        adController.loadInterstitial()
         val gameScreen = applicationComponent.gameScreen.apply {
             when (startGameConfig) {
                 is StartGameConfig.New -> newGame(startGameConfig)
@@ -165,6 +174,11 @@ class CaveDroidApplication(
     }
 
     override fun setScreen(screen: Screen?) {
+        when (screen) {
+            is MenuScreen -> adController.showBanner()
+            else -> adController.hideBanner()
+        }
+
         try {
             screen?.show()
             screen?.resize(Gdx.graphics.width, Gdx.graphics.height)

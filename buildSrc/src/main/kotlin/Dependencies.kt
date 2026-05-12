@@ -92,6 +92,10 @@ object Dependencies {
         }
     }
 
+    object Yandex {
+        const val mobileads = "com.yandex.android:mobileads:${Versions.mobileads}"
+    }
+
     object Test {
         const val junitJupiter = "org.junit.jupiter:junit-jupiter:${Versions.junit}"
         const val junitJupiterEngine = "org.junit.jupiter:junit-jupiter-engine:${Versions.junit}"

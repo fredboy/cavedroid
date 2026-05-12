@@ -5,7 +5,7 @@ plugins {
     ktlintGradle
     dependencyLicenseReport
     id("com.google.gms.google-services") version "4.4.4" apply false
-    id("com.google.firebase.crashlytics") version "3.0.2" apply false
+    id("com.google.firebase.crashlytics") version "3.0.7" apply false
 }
 
 buildscript {
