@@ -7,7 +7,9 @@ import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
+import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
+import ru.fredboy.cavedroid.common.api.NoOpAdController
 import ru.fredboy.cavedroid.common.api.PreferencesStore
 import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.utils.DEFAULT_VIEWPORT_WIDTH
@@ -25,6 +27,7 @@ class CaveDroidApplication(
     private val isTouchScreen: Boolean,
     private val isDebug: Boolean,
     private val preferencesStore: PreferencesStore,
+    private val adController: AdController = NoOpAdController(),
     loggingSeverity: Severity = Severity.Info,
 ) : Game(),
     CaveDroidApplicationDecorator,
@@ -59,6 +62,9 @@ class CaveDroidApplication(
         val isFullscreen = preferencesStore.getPreference(PreferenceKeys.FULLSCREEN).toBoolean()
         initFullscreenMode(isFullscreen)
 
+        val personalizedAdsConsent = preferencesStore.getPreference(PreferenceKeys.PERSONALIZED_ADS_CONSENT)
+            ?.toBooleanStrictOrNull()
+
         applicationComponent = DaggerApplicationComponent.builder()
             .applicationContext(
                 ApplicationContext(
@@ -78,11 +84,17 @@ class CaveDroidApplication(
                         ?.toBooleanStrictOrNull() ?: true,
                     isOnboardingShown = preferencesStore.getPreference(PreferenceKeys.ONBOARDING_SHOWN)
                         ?.toBooleanStrictOrNull() ?: false,
+                    personalizedAdsConsent = personalizedAdsConsent,
                 ),
             )
             .applicationController(this)
             .preferencesStore(preferencesStore)
+            .adController(adController)
             .build()
+
+        if (personalizedAdsConsent != null) {
+            adController.setPersonalizedAdsEnabled(personalizedAdsConsent)
+        }
 
         Gdx.files.absolute(gameDataDirectoryPath).mkdirs()
         applicationComponent.initializeAssets()
@@ -99,11 +111,16 @@ class CaveDroidApplication(
 
     override fun quitGame() {
         applicationComponent.gameScreen.saveGame()
-        applicationComponent.gameScreen.dispose()
-        setScreen(applicationComponent.menuScreen)
+        adController.showInterstitial {
+            Gdx.app.postRunnable {
+                applicationComponent.gameScreen.dispose()
+                setScreen(applicationComponent.menuScreen)
+            }
+        }
     }
 
     override fun startGame(startGameConfig: StartGameConfig) {
+        adController.loadInterstitial()
         val gameScreen = applicationComponent.gameScreen.apply {
             when (startGameConfig) {
                 is StartGameConfig.New -> newGame(startGameConfig)

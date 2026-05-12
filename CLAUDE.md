@@ -126,6 +126,44 @@ Both wire into `processResources` / `preBuild` automatically — don't commit th
 
 `buildSrc/src/main/kotlin/ApplicationInfo.kt` (`versionName`, `versionCode`) and `core/common/.../CaveDroidConstants.kt` (`VERSION`) must stay in lockstep. `up-version.sh <new-version>` is the only sanctioned way to bump them.
 
+### Android product flavors (`foss` vs `store`)
+
+The Android module ships **two flavors** on the `distribution` dimension, declared in `android/build.gradle.kts`:
+
+- **`foss`** — no proprietary deps. Firebase Crashlytics and Yandex Mobile Ads are excluded; the `process*GoogleServices` / `*CrashlyticsMappingFile*` tasks are disabled in `androidComponents { onVariants(... "foss") }`. `BANNER_AD_UNIT_ID` / `INTERSTITIAL_AD_UNIT_ID` BuildConfig fields are `null`.
+- **`store`** — bundles Firebase Crashlytics (via `storeImplementation platform(Firebase.bom) + Firebase.crashlytics`) and Yandex Mobile Ads (`Dependencies.Yandex.mobileads`). Ad unit IDs come from `yandex.properties` at repo root (`bannerAdUnitId`, `interstitialAdUnitId`); missing properties fall back to `null` BuildConfig fields.
+
+Build either flavor with `./gradlew :android:assembleFossDebug` or `:android:assembleStoreDebug`. CI/local debug-only flows can still use the convenience `:android:assembleDebug` (assembles both).
+
+**Flavor-specific source sets** under `android/src/`:
+
+- `src/main/` — shared launcher/PreferencesStore code.
+- `src/foss/kotlin/.../AdControllerFactory.kt` — returns `NoOpAdController()`.
+- `src/store/kotlin/.../AdControllerFactory.kt` — returns `YandexAdController(activity)`.
+- `src/store/kotlin/.../YandexAdController.kt` — concrete Yandex SDK integration (banner + interstitial).
+
+`AndroidLauncher` calls `createAdController(this)`, which Gradle resolves to the flavor-specific implementation. Desktop/iOS don't pass an `AdController` to `CaveDroidApplication`, so they default to `NoOpAdController`.
+
+### Ads architecture
+
+The ad system is a thin platform-agnostic abstraction in `core/common`:
+
+- **`AdController`** interface (`core/common/.../api/AdController.kt`) — `showBanner`/`hideBanner`/`loadInterstitial`/`showInterstitial(onDismissed)`/`setPersonalizedAdsEnabled`/`resume`/`pause`/`destroy`, plus `val supportsPersonalizedAdsConsent: Boolean`.
+- **`NoOpAdController`** — used by foss + desktop + iOS. `supportsPersonalizedAdsConsent = false`, all methods are no-ops (`showInterstitial` calls `onDismissed()` immediately).
+- **`YandexAdController`** (store flavor only) — `supportsPersonalizedAdsConsent = true`. Calls `YandexAds.setUserConsent(boolean)` for personalization consent (the SDK 8.x name; do not use `MobileAds`).
+
+Wiring: `AdController` is `@BindsInstance`-bound into `ApplicationComponent` via `CaveDroidApplication`'s constructor. View models that need ads inject it (e.g. `MainMenuViewModel` shows/hides the banner in `onShow`/`onHide`).
+
+**Personalized-ads consent flow** (store flavor only):
+
+1. Stored under `PreferenceKeys.PERSONALIZED_ADS_CONSENT` as `"true"`/`"false"`/null (null = not yet asked).
+2. Plumbed through `ApplicationContext.personalizedAdsConsent: Boolean?` → `ApplicationContextStore` → `ApplicationContextRepository.{get,set}PersonalizedAdsConsent`.
+3. On launch, `CaveDroidApplication.create()` reads the stored value and calls `adController.setPersonalizedAdsEnabled(...)` if non-null.
+4. On first visit to the main menu, `MainMenuViewModel.onShow()` checks `adController.supportsPersonalizedAdsConsent && repo.getPersonalizedAdsConsent() == null` and pushes `AdsDisclaimerNavKey`. The disclaimer screen has Agree / Opt-out buttons that persist the choice and forward it to `adController.setPersonalizedAdsEnabled`.
+5. The Settings menu shows a "Personalized Ads" toggle only when `state.showPersonalizedAdsToggle == true` (i.e. `adController.supportsPersonalizedAdsConsent`). This keeps foss + desktop free of any ads-related UI.
+
+When adding ad-aware UI: gate it on `adController.supportsPersonalizedAdsConsent` (not on flavor names) so foss/desktop hide it automatically.
+
 ### Logging
 
 `co.touchlab:kermit` everywhere. The launcher chooses severity from CLI flags (`--verbose` → Verbose, `--debug` → Debug, otherwise Info). Use `Logger.withTag("…")` per class rather than the global logger.

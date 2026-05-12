@@ -46,4 +46,8 @@ interface ApplicationContextRepository {
     fun isOnboardingShown(): Boolean
 
     fun setOnboardingShown(shown: Boolean)
+
+    fun getPersonalizedAdsConsent(): Boolean?
+
+    fun setPersonalizedAdsConsent(consent: Boolean?)
 }

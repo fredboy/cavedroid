@@ -24,6 +24,15 @@ private val keystoreProperties = if (keystorePropertiesFile.exists()) {
     null
 }
 
+private val yandexPropertiesFile = rootProject.file("yandex.properties")
+private val yandexProperties = if (yandexPropertiesFile.exists()) {
+    Properties().apply {
+        load(FileInputStream(yandexPropertiesFile))
+    }
+} else {
+    null
+}
+
 android {
     namespace = ApplicationInfo.packageName
     compileSdk = 36
@@ -63,10 +72,20 @@ android {
     productFlavors {
         create("foss") {
             dimension = "distribution"
+
+            buildConfigField("String", "BANNER_AD_UNIT_ID", "null")
+            buildConfigField("String", "INTERSTITIAL_AD_UNIT_ID", "null")
         }
 
         create("store") {
             dimension = "distribution"
+
+            val bannerAdUnitId = yandexProperties?.get("bannerAdUnitId")?.toString()?.let { "\"$it\"" } ?: "null"
+            val interstitialAdUnitId =
+                yandexProperties?.get("interstitialAdUnitId")?.toString()?.let { "\"$it\"" } ?: "null"
+
+            buildConfigField("String", "BANNER_AD_UNIT_ID", bannerAdUnitId)
+            buildConfigField("String", "INTERSTITIAL_AD_UNIT_ID", interstitialAdUnitId)
         }
     }
 
@@ -218,6 +237,7 @@ dependencies {
 
     "storeImplementation"(platform(Dependencies.Google.Firebase.bom))
     "storeImplementation"(Dependencies.Google.Firebase.crashlytics)
+    "storeImplementation"(Dependencies.Yandex.mobileads)
 
     natives(Dependencies.LibGDX.Android.Natives.armeabi)
     natives(Dependencies.LibGDX.Android.Natives.arm64)

@@ -98,6 +98,12 @@ class ApplicationContextRepositoryImpl @Inject constructor(
         applicationContextStore.isOnboardingShown = shown
     }
 
+    override fun getPersonalizedAdsConsent(): Boolean? = applicationContextStore.personalizedAdsConsent
+
+    override fun setPersonalizedAdsConsent(consent: Boolean?) {
+        applicationContextStore.personalizedAdsConsent = consent
+    }
+
     companion object {
         private val SUPPORTED_LOCALES = listOf(Locale("en"), Locale("ru"))
     }

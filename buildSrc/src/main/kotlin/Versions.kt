@@ -133,4 +133,6 @@ object Versions {
     const val mockk = "1.13.13"
 
     const val firebase = "34.13.0"
+
+    const val mobileads = "8.0.0"
 }

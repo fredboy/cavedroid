@@ -25,5 +25,7 @@ object CaveDroidConstants {
         const val WINDOW_HEIGHT_KEY = "window_height"
 
         const val ONBOARDING_SHOWN = "onboarding_shown"
+
+        const val PERSONALIZED_ADS_CONSENT = "personalized_ads_consent"
     }
 }

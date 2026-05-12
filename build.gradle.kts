@@ -5,7 +5,7 @@ plugins {
     ktlintGradle
     dependencyLicenseReport
     id("com.google.gms.google-services") version "4.4.4" apply false
-    id("com.google.firebase.crashlytics") version "3.0.2" apply false
+    id("com.google.firebase.crashlytics") version "3.0.7" apply false
 }
 
 buildscript {
@@ -71,5 +71,18 @@ allprojects {
         maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
         maven { url = uri("https://oss.sonatype.org/content/repositories/releases/") }
         maven { url = uri("https://jitpack.io") }
+    }
+}
+
+val testCore = tasks.register("testCore") {
+    group = "verification"
+    description = "Runs JVM unit tests in all :core modules."
+}
+
+subprojects {
+    if (path.startsWith(":core:")) {
+        plugins.withId("org.jetbrains.kotlin.jvm") {
+            testCore.configure { dependsOn(tasks.named("test")) }
+        }
     }
 }

@@ -33,6 +33,7 @@ class PauseMenuScreen @Inject constructor(
         currentStage.let { stage ->
             Gdx.input.inputProcessor = stage
             menuNavigationController.reset()
+            menuNavigationController.navRootStage.show()
             currentStage.draw()
         }
     }
@@ -59,7 +60,9 @@ class PauseMenuScreen @Inject constructor(
     override fun resume() {
     }
 
-    override fun hide() {}
+    override fun hide() {
+        menuNavigationController.navRootStage.hide()
+    }
 
     override fun onDispose() {
         menuNavigationController.dispose()

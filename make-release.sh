@@ -15,7 +15,7 @@ mkdir "$release_dir"
 
 ./up-version.sh "$1"
 
-./gradlew clean ktlintCheck android:assembleRelease desktop:packageLinuxX64 desktop:packageWinX64
+./gradlew clean ktlintCheck android:assembleFossRelease desktop:packageLinuxX64 desktop:packageWinX64
 
 cp "android/build/outputs/apk/release/android-release.apk" "$release_dir/android-$1.apk"
 cp "desktop/build/dist/cavedroid-linuxX64.zip" "$release_dir/linux-x86_64-$1.zip"

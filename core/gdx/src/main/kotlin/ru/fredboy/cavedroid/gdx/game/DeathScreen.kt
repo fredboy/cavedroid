@@ -28,6 +28,7 @@ class DeathScreen @Inject constructor(
     override fun show() {
         Gdx.input.inputProcessor = currentStage
         menuNavigationController.reset()
+        menuNavigationController.navRootStage.show()
         currentStage.draw()
     }
 
