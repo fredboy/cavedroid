@@ -3,7 +3,7 @@ package ru.fredboy.cavedroid.common
 object CaveDroidConstants {
     const val TITLE = "CaveDroid"
 
-    const val VERSION = "RC-1.0.0"
+    const val VERSION = "RC-1.0.0.1"
 
     const val GITHUB_LINK = "https://github.com/fredboy/cavedroid"
 
