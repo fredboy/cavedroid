@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gdx.di
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import dagger.BindsInstance
 import dagger.Component
+import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.PreferencesStore
 import ru.fredboy.cavedroid.common.api.SoundPlayer
@@ -109,6 +110,8 @@ interface ApplicationComponent {
 
     val menuSkin: Skin
 
+    val adController: AdController
+
     @Component.Builder
     interface Builder {
 
@@ -120,6 +123,9 @@ interface ApplicationComponent {
 
         @BindsInstance
         fun preferencesStore(impl: PreferencesStore): Builder
+
+        @BindsInstance
+        fun adController(impl: AdController): Builder
 
         fun build(): ApplicationComponent
     }

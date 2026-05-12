@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.main
 
+import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
@@ -13,7 +14,20 @@ class MainMenuViewModel(
     private val applicationController: ApplicationController,
     private val navBackStack: NavBackStack,
     baseViewModelDependencies: BaseViewModelDependencies,
+    private val adController: AdController,
 ) : BaseViewModel(baseViewModelDependencies) {
+
+    override fun onShow() {
+        adController.showBanner()
+    }
+
+    override fun onHide() {
+        adController.hideBanner()
+    }
+
+    override fun onDispose() {
+        adController.hideBanner()
+    }
 
     fun onSinglePlayerClick() {
         navBackStack.push(SinglePlayerMenuNavKey)

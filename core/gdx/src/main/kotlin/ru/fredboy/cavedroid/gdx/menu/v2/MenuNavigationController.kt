@@ -71,67 +71,67 @@ class MenuNavigationController @Inject constructor(
 
     private val navBackStack = NavBackStack(rootNavKey)
 
-    val navRootStage = NavRootStage(viewport, navBackStack, GdxMainDispatcher) { navKey, cachedViewModel ->
+    val navRootStage = NavRootStage(viewport, navBackStack, GdxMainDispatcher) { navKey, cachedViewModel, render ->
         when (navKey) {
             is MainMenuNavKey -> {
                 val viewModel = findViewModel<MainMenuNavKey, MainMenuViewModel>(navKey, cachedViewModel)
-                mainMenuView(viewModel)
+                render(viewModel) { mainMenuView(viewModel) }
             }
 
             is NewGameMenuNavKey -> {
                 val viewModel = findViewModel<NewGameMenuNavKey, NewGameMenuViewModel>(navKey, cachedViewModel)
-                newGameMenuView(viewModel)
+                render(viewModel) { newGameMenuView(viewModel) }
             }
 
             is SettingsMenuNavKey -> {
                 val viewModel = findViewModel<SettingsMenuNavKey, SettingsMenuViewModel>(navKey, cachedViewModel)
-                settingsMenuView(viewModel)
+                render(viewModel) { settingsMenuView(viewModel) }
             }
 
             is HelpMenuNavKey -> {
                 val viewModel = findViewModel<HelpMenuNavKey, HelpMenuViewModel>(navKey, cachedViewModel)
-                helpMenuView(viewModel)
+                render(viewModel) { helpMenuView(viewModel) }
             }
 
             is AboutMenuNavKey -> {
                 val viewModel = findViewModel<AboutMenuNavKey, AboutMenuViewModel>(navKey, cachedViewModel)
-                aboutMenuView(viewModel)
+                render(viewModel) { aboutMenuView(viewModel) }
             }
 
             is AttributionMenuNavKey -> {
                 val viewModel = findViewModel<AttributionMenuNavKey, AttributionMenuViewModel>(navKey, cachedViewModel)
-                attributionMenuView(viewModel)
+                render(viewModel) { attributionMenuView(viewModel) }
             }
 
             is NoticeMenuNavKey -> {
                 val viewModel = findViewModel<NoticeMenuNavKey, NoticeMenuViewModel>(navKey, cachedViewModel)
-                noticeMenuView(viewModel)
+                render(viewModel) { noticeMenuView(viewModel) }
             }
 
             is SinglePlayerMenuNavKey -> {
                 val viewModel =
                     findViewModel<SinglePlayerMenuNavKey, SinglePlayerMenuViewModel>(navKey, cachedViewModel)
-                singlePlayerMenuView(viewModel)
+                render(viewModel) { singlePlayerMenuView(viewModel) }
             }
 
             is DeleteWorldMenuNavKey -> {
                 val viewModel = findViewModel<DeleteWorldMenuNavKey, DeleteWorldMenuViewModel>(navKey, cachedViewModel)
-                deleteWorldMenuView(viewModel)
+                render(viewModel) { deleteWorldMenuView(viewModel) }
             }
 
             is PauseMenuNavKey -> {
                 val viewModel = findViewModel<PauseMenuNavKey, PauseMenuViewModel>(navKey, cachedViewModel)
-                pauseMenuView(viewModel)
+                render(viewModel) { pauseMenuView(viewModel) }
             }
 
             is DeathScreenNavKey -> {
                 val viewModel = findViewModel<DeathScreenNavKey, DeathScreenViewModel>(navKey, cachedViewModel)
-                deathScreenView(viewModel)
+                render(viewModel) { deathScreenView(viewModel) }
             }
 
             is LanguageMenuNavKey -> {
                 val viewModel = findViewModel<LanguageMenuNavKey, LanguageMenuViewModel>(navKey, cachedViewModel)
-                languageMenuView(viewModel)
+                render(viewModel) { languageMenuView(viewModel) }
             }
 
             else -> throw IllegalStateException("Unknown key $navKey")

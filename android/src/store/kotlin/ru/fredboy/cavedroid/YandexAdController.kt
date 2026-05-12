@@ -53,7 +53,7 @@ class YandexAdController(private val activity: Activity) : AdController {
             Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL,
         )
         activity.addContentView(bannerAdView, params)
-        bannerAdView.loadAd(AdRequest.Builder(BANNER_AD_UNIT_ID).build())
+        bannerAdView.loadAd(AdRequest.Builder(BuildConfig.BANNER_AD_UNIT_ID).build())
         bannerAddedToWindow = true
     }
 
@@ -72,7 +72,7 @@ class YandexAdController(private val activity: Activity) : AdController {
         if (interstitialAd != null) return
         activity.runOnUiThread {
             interstitialLoader.loadAd(
-                AdRequest.Builder(INTERSTITIAL_AD_UNIT_ID).build(),
+                AdRequest.Builder(BuildConfig.INTERSTITIAL_AD_UNIT_ID).build(),
                 object : InterstitialAdLoadListener {
                     override fun onAdLoaded(ad: InterstitialAd) {
                         interstitialAd = ad
@@ -127,11 +127,5 @@ class YandexAdController(private val activity: Activity) : AdController {
             interstitialAd = null
             if (bannerAddedToWindow) bannerAdView.destroy()
         }
-    }
-
-    companion object {
-        private const val BANNER_AD_UNIT_ID = "your-banner-ad-unit-id"
-        // TODO: replace with your Yandex Partner Network interstitial ad unit ID
-        private const val INTERSTITIAL_AD_UNIT_ID = "your-interstitial-ad-unit-id"
     }
 }

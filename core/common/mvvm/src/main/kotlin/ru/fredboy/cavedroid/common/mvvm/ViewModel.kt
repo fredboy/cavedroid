@@ -18,6 +18,12 @@ abstract class ViewModel : Disposable {
         onDispose()
     }
 
+    open fun onShow() {
+    }
+
+    open fun onHide() {
+    }
+
     open fun onDispose() {
     }
 }

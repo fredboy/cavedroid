@@ -6,11 +6,14 @@ import com.badlogic.gdx.Application
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.NoOpAdController
 import ru.fredboy.cavedroid.common.api.PreferencesStore
+import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.utils.DEFAULT_VIEWPORT_WIDTH
 import ru.fredboy.cavedroid.common.utils.ratio
@@ -86,6 +89,7 @@ class CaveDroidApplication(
             )
             .applicationController(this)
             .preferencesStore(preferencesStore)
+            .adController(adController)
             .build()
 
         Gdx.files.absolute(gameDataDirectoryPath).mkdirs()
@@ -174,11 +178,6 @@ class CaveDroidApplication(
     }
 
     override fun setScreen(screen: Screen?) {
-        when (screen) {
-            is MenuScreen -> adController.showBanner()
-            else -> adController.hideBanner()
-        }
-
         try {
             screen?.show()
             screen?.resize(Gdx.graphics.width, Gdx.graphics.height)

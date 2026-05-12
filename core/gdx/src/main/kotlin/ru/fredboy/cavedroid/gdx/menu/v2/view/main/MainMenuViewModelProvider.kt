@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.main
 
+import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.di.MenuScope
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
@@ -14,12 +15,13 @@ import kotlin.reflect.KClass
 class MainMenuViewModelProvider @Inject constructor(
     private val applicationController: ApplicationController,
     private val baseViewModelDependencies: BaseViewModelDependencies,
+    private val adController: AdController,
 ) : ViewModelProvider<MainMenuNavKey, MainMenuViewModel> {
 
     override val viewModelClass: KClass<MainMenuViewModel>
         get() = MainMenuViewModel::class
 
     override fun get(navKey: MainMenuNavKey, navBackStack: NavBackStack): MainMenuViewModel {
-        return MainMenuViewModel(applicationController, navBackStack, baseViewModelDependencies)
+        return MainMenuViewModel(applicationController, navBackStack, baseViewModelDependencies, adController)
     }
 }

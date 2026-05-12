@@ -55,6 +55,10 @@ class NavRootStageTest {
         override fun clearViewModelFor(navKey: NavKey) {
             viewModels.remove(navKey)?.dispose()
         }
+
+        override fun show() = Unit
+
+        override fun hide() = Unit
     }
 
     @Test

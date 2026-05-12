@@ -38,6 +38,5 @@ class NavBackStack(
 
     internal fun attachHost(host: NavStageHost) {
         this.host = host
-        host.onStackChanged(stack.peek())
     }
 }

@@ -127,3 +127,4 @@ keystore.properties
 **/_build/
 
 **/google-services.json
+yandex.properties
