@@ -95,18 +95,14 @@ class NavRootStageTest {
         val backStack = NavBackStack(KeyA)
         val host = FakeNavHost(backStack) { _, cached -> cached ?: FakeViewModel() }
 
-        // KeyA's VM is created on initial attachHost.
+        host.onStackChanged(KeyA, null)
         val keyAVm = host.viewModels.getValue(KeyA)
 
-        // Push KeyB then pop, then revisit KeyA — resolver gets cached A.
         backStack.push(KeyB)
         backStack.pop()
 
-        // Re-push by simulating a navigation back to A: not directly possible
-        // via NavBackStack's API, so verify the cache for A persisted.
         assertSame(keyAVm, host.viewModels[KeyA])
-        // Resolver was called with the cached KeyA VM during the pop.
-        val popCall = host.resolverCalls.last { it.first == KeyA && host.resolverCalls.indexOf(it) > 0 }
+        val popCall = host.resolverCalls.last { it.first == KeyA }
         assertSame(keyAVm, popCall.second)
     }
 
@@ -115,6 +111,7 @@ class NavRootStageTest {
         val backStack = NavBackStack(KeyA)
         val host = FakeNavHost(backStack) { _, _ -> FakeViewModel() }
 
+        host.onStackChanged(KeyA, null)
         val vm = host.viewModels.getValue(KeyA) as FakeViewModel
         host.clearViewModelFor(KeyA)
 
@@ -131,7 +128,6 @@ class NavRootStageTest {
         backStack.push(KeyB)
         backStack.pop()
 
-        verify { host.onStackChanged(KeyA, null) }
         verify { host.onStackChanged(KeyB, null) }
         verify { host.onStackChanged(KeyA, KeyB) }
     }

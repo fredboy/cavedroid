@@ -3,7 +3,6 @@ package ru.fredboy.cavedroid.common.mvvm
 import io.mockk.confirmVerified
 import io.mockk.mockk
 import io.mockk.verify
-import io.mockk.verifyOrder
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -22,13 +21,13 @@ class NavBackStackTest {
     }
 
     @Test
-    fun `attachHost notifies host with current top key`() {
+    fun `attachHost does not notify host`() {
         val host = mockk<NavStageHost>(relaxed = true)
         val stack = NavBackStack(KeyA)
 
         stack.attachHost(host)
 
-        verify(exactly = 1) { host.onStackChanged(KeyA, null) }
+        confirmVerified(host)
     }
 
     @Test
@@ -37,10 +36,7 @@ class NavBackStackTest {
 
         stack.push(KeyB)
 
-        verifyOrder {
-            host.onStackChanged(KeyA, null)
-            host.onStackChanged(KeyB, null)
-        }
+        verify(exactly = 1) { host.onStackChanged(KeyB, null) }
     }
 
     @Test
@@ -59,7 +55,6 @@ class NavBackStackTest {
 
         stack.pop()
 
-        verify(exactly = 1) { host.onStackChanged(KeyA, null) }
         confirmVerified(host)
     }
 
