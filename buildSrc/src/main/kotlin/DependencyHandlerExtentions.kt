@@ -75,6 +75,10 @@ fun DependencyHandler.useLightingTint() {
     useModule(":core:gameplay:lighting-tint")
 }
 
+fun DependencyHandler.useTeaVMBackend() {
+    implementation(Dependencies.LibGDX.Web.backend)
+}
+
 fun DependencyHandler.useGdxModule() {
     useModule(":core:gdx")
 }

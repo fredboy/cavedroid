@@ -9,6 +9,7 @@ pluginManagement {
 include("android")
 include("desktop")
 include("ios")
+include("html")
 
 /**
  * Global modules

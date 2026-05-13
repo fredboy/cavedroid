@@ -41,6 +41,10 @@ object Dependencies {
             const val backend = "com.badlogicgames.gdx:gdx-backend-robovm:${Versions.gdx}"
             const val natives = "com.badlogicgames.gdx:gdx-platform:${Versions.gdx}:natives-ios"
         }
+
+        object Web {
+            const val backend = "com.github.xpenatan.gdx-teavm:backend-web:${Versions.gdxTeaVM}"
+        }
     }
 
     object LibKTX {
