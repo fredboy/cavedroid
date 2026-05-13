@@ -7,7 +7,7 @@ import java.util.*
 
 abstract class BaseViewModel(
     private val dependencies: BaseViewModelDependencies,
-) : ViewModel() {
+) : ViewModel(dependencies.dispatchers.main) {
 
     protected val ioDispatcher: CoroutineDispatcher get() = dependencies.dispatchers.io
 

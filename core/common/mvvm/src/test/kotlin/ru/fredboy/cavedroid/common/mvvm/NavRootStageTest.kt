@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.common.mvvm
 
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.Dispatchers
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -18,7 +19,7 @@ class NavRootStageTest {
     private object KeyA : NavKey
     private object KeyB : NavKey
 
-    private class FakeViewModel : ViewModel() {
+    private class FakeViewModel : ViewModel(Dispatchers.Unconfined) {
         var disposed: Boolean = false
             private set
 
