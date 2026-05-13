@@ -44,7 +44,7 @@ fun Stage.aboutMenuView(viewModel: AboutMenuViewModel) = viewModel.also {
 
                     MIT License
 
-                    Copyright © 2018-2025 Fedor Ivanov <fredboy@protonmail.com>
+                    Copyright © 2018-2026 Fedor Ivanov <fredboy@protonmail.com>
                 """.trimIndent(),
             ) {
                 wrap = true

@@ -3,13 +3,13 @@ index 006aa876..3eac0179 100644
 --- a/android/build.gradle.kts
 +++ b/android/build.gradle.kts
 @@ -60,7 +60,7 @@ android {
- 
+
      defaultConfig {
          applicationId = ApplicationInfo.packageName
 -        minSdk = 23
 +        minSdk = 16
          targetSdk = 36
- 
+
          versionCode = ApplicationInfo.versionCode
 diff --git a/android/src/main/AndroidManifest.xml b/android/src/main/AndroidManifest.xml
 index 66ba35ec..8feee9c3 100644
@@ -18,7 +18,7 @@ index 66ba35ec..8feee9c3 100644
 @@ -2,6 +2,8 @@
  <manifest xmlns:android="http://schemas.android.com/apk/res/android"
            xmlns:tools="http://schemas.android.com/tools">
- 
+
 +    <uses-sdk tools:overrideLibrary="co.touchlab.kermit,co.touchlab.kermit.core" />
 +
      <application
@@ -34,7 +34,7 @@ index dc57e2b9..9737b58a 100644
       */
 -    const val gdx = "1.13.1"
 +    const val gdx = "1.9.10"
- 
+
      /**
       * Dagger version
 @@ -66,14 +66,14 @@ object Versions {
@@ -43,7 +43,7 @@ index dc57e2b9..9737b58a 100644
       */
 -    const val box2dLights = "1.5"
 +    const val box2dLights = "1.4"
- 
+
      /**
       * Kotlin extensions for libGDX.
       *
@@ -51,7 +51,7 @@ index dc57e2b9..9737b58a 100644
       */
 -    const val libKtx = "1.13.1-rc1"
 +    const val libKtx = "1.9.10-b6"
- 
+
      /**
       * Kotlin coroutines
 diff --git a/core/common/src/main/kotlin/box2dLight/DirectionalLightExtention.kt b/core/common/src/main/kotlin/box2dLight/DirectionalLightExtention.kt
@@ -71,7 +71,7 @@ index 71c4aee3..a6ed5568 100644
 --- a/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt
 +++ b/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt
 @@ -2,8 +2,8 @@ package ru.fredboy.cavedroid.data.save.repository
- 
+
  import com.badlogic.gdx.Gdx
  import com.badlogic.gdx.files.FileHandle
 -import com.badlogic.gdx.graphics.Pixmap
@@ -83,7 +83,7 @@ index 71c4aee3..a6ed5568 100644
 @@ -320,7 +320,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
              return
          }
- 
+
 -        val pixmap = Pixmap.createFromFrameBuffer(
 +        val pixmap = ScreenUtils.getFrameBufferPixmap(
              halfWidth - screenshotHalfSize,
@@ -94,7 +94,7 @@ index cc9c3936..3d16dee3 100644
 --- a/core/entity/mob/src/main/kotlin/ru/fredboy/cavedroid/entity/mob/model/Player.kt
 +++ b/core/entity/mob/src/main/kotlin/ru/fredboy/cavedroid/entity/mob/model/Player.kt
 @@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.entity.mob.model
- 
+
  import box2dLight.Light
  import box2dLight.PointLight
 +import box2dLight.setDirectionCompat
@@ -109,7 +109,7 @@ index cc9c3936..3d16dee3 100644
 +            sight.setDirectionCompat(0f)
          }
      }
- 
+
 diff --git a/core/game/world/src/main/kotlin/ru/fredboy/cavedroid/game/world/GameWorldLightManager.kt b/core/game/world/src/main/kotlin/ru/fredboy/cavedroid/game/world/GameWorldLightManager.kt
 index 45d8efcb..345d03a8 100644
 --- a/core/game/world/src/main/kotlin/ru/fredboy/cavedroid/game/world/GameWorldLightManager.kt
@@ -138,16 +138,16 @@ index d9cfc2ca..ce46aafa 100644
 @@ -110,8 +110,6 @@ class GameInputProcessor @Inject constructor(
          )
      }
- 
+
 -    override fun touchCancelled(p0: Int, p1: Int, p2: Int, p3: Int): Boolean = false
 -
      override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
          val (touchX, touchY) = gameContextRepository.getCameraContext().getViewportCoordinates(screenX, screenY)
- 
+
 @@ -147,13 +145,13 @@ class GameInputProcessor @Inject constructor(
- 
+
      override fun mouseMoved(p0: Int, p1: Int): Boolean = false
- 
+
 -    override fun scrolled(amountX: Float, amountY: Float): Boolean {
 +    override fun scrolled(amount: Int): Boolean {
          val action: MouseInputAction? = mouseInputActionMapper
@@ -173,7 +173,7 @@ index 09ccc5a5..b21d185a 100644
 +        val rotation = kotlin.math.atan((v / h).toDouble()).toFloat() * MathUtils.radDeg
          return MathUtils.clamp(rotation, -45f, 45f)
      }
- 
+
 diff --git a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/mouse/UseItemMouseInputHandler.kt b/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/mouse/UseItemMouseInputHandler.kt
 index 55f6c9b9..91135eb3 100644
 --- a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/mouse/UseItemMouseInputHandler.kt
@@ -208,13 +208,13 @@ index 4ec77fc9..37aebf8c 100644
 +        val rotation = kotlin.math.atan((v / h).toDouble()).toFloat() * MathUtils.radDeg
          return MathUtils.clamp(rotation, -45f, 45f)
      }
- 
+
 diff --git a/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/hud/CrosshairRenderer.kt b/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/hud/CrosshairRenderer.kt
 index 922657d5..862d71c0 100644
 --- a/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/hud/CrosshairRenderer.kt
 +++ b/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/hud/CrosshairRenderer.kt
 @@ -2,10 +2,10 @@ package ru.fredboy.cavedroid.gameplay.rendering.renderer.hud
- 
+
  import com.badlogic.gdx.Gdx
  import com.badlogic.gdx.graphics.Color
 -import com.badlogic.gdx.graphics.Pixmap
@@ -227,7 +227,7 @@ index 922657d5..862d71c0 100644
  import ru.fredboy.cavedroid.common.utils.invertColor
 @@ -30,7 +30,7 @@ class CrosshairRenderer @Inject constructor(
          get() = RENDER_LAYER
- 
+
      private fun getTintColor(x: Float, y: Float, viewport: Rectangle): Color {
 -        val pixmap = Pixmap.createFromFrameBuffer(
 +        val pixmap = ScreenUtils.getFrameBufferPixmap(
@@ -252,7 +252,7 @@ index df33c009..513c25a8 100644
 --- a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/about/AboutMenuView.kt
 +++ b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/about/AboutMenuView.kt
 @@ -47,7 +47,7 @@ fun Stage.aboutMenuView(viewModel: AboutMenuViewModel) = viewModel.also {
-                     Copyright © 2018-2025 Fedor Ivanov <fredboy@protonmail.com>
+                     Copyright © 2018-2026 Fedor Ivanov <fredboy@protonmail.com>
                  """.trimIndent(),
              ) {
 -                wrap = true
@@ -265,7 +265,7 @@ index de7d4cf9..7c1c530b 100644
 --- a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/attribution/AttributionMenuView.kt
 +++ b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/attribution/AttributionMenuView.kt
 @@ -29,7 +29,7 @@ suspend fun Stage.attributionMenuView(viewModel: AttributionMenuViewModel) = vie
- 
+
                  scrollPane {
                      label(attributions) {
 -                        wrap = true
@@ -279,7 +279,7 @@ index 1f7a9e2f..aa716644 100644
 +++ b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/disclaimer/AdsDisclaimerView.kt
 @@ -37,7 +37,7 @@ fun Stage.adsDisclaimerView(viewModel: AdsDisclaimerViewModel) = viewModel.also
              row()
- 
+
              scrollPane {
 -                label(viewModel.getLocalizedString("adsDisclaimerBody")) { wrap = true }
 +                label(viewModel.getLocalizedString("adsDisclaimerBody")) { setWrap(true) }
@@ -292,7 +292,7 @@ index c5476043..f2ff75e9 100644
 +++ b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/notice/NoticeMenuView.kt
 @@ -28,7 +28,7 @@ suspend fun Stage.noticeMenuView(viewModel: NoticeMenuViewModel) = viewModel.als
                  pad(8f)
- 
+
                  scrollPane {
 -                    label(state.notices) { wrap = true }
 +                    label(state.notices) { setWrap(true) }
@@ -305,7 +305,7 @@ index 916faf7d..c24fd255 100644
 +++ b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/singleplayer/SinglePlayerMenuView.kt
 @@ -1,7 +1,9 @@
  package ru.fredboy.cavedroid.gdx.menu.v2.view.singleplayer
- 
+
 +import com.badlogic.gdx.graphics.g2d.TextureRegion
  import com.badlogic.gdx.scenes.scene2d.Stage
  import com.badlogic.gdx.scenes.scene2d.Touchable
@@ -323,7 +323,7 @@ index 916faf7d..c24fd255 100644
  import ktx.scene2d.scrollPane
 @@ -166,12 +167,10 @@ private fun <S> KWidget<S>.saveItem(
          isDisabled = true
- 
+
          saveInfo.screenshot?.let { screenshot ->
 -            image(screenshot) {
 +            val img = Image(TextureRegionDrawable(TextureRegion(screenshot))).apply {
