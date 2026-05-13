@@ -81,7 +81,7 @@ class CaveDroidApplication(
                     isAutoJumpEnabled = preferencesStore.getPreference(PreferenceKeys.AUTO_JUMP)
                         ?.toBooleanStrictOrNull() ?: true,
                     locale = preferencesStore.getPreference(PreferenceKeys.LOCALE)
-                        ?.let(::Locale) ?: Locale.getDefault(),
+                        ?.let(::Locale) ?: safeDefaultLocale(),
                     soundEnabled = preferencesStore.getPreference(PreferenceKeys.SOUND_ENABLED)
                         ?.toBooleanStrictOrNull() ?: true,
                     isOnboardingShown = preferencesStore.getPreference(PreferenceKeys.ONBOARDING_SHOWN)
@@ -99,7 +99,9 @@ class CaveDroidApplication(
             adController.setPersonalizedAdsEnabled(personalizedAdsConsent)
         }
 
-        Gdx.files.absolute(gameDataDirectoryPath).mkdirs()
+        if (Gdx.app.type != Application.ApplicationType.WebGL) {
+            Gdx.files.absolute(gameDataDirectoryPath).mkdirs()
+        }
         applicationComponent.initializeAssets()
         setScreen(applicationComponent.menuScreen)
     }
@@ -199,6 +201,14 @@ class CaveDroidApplication(
     fun getPreferencesStore() = preferencesStore
 
     override fun getDelegate() = this
+
+    private fun safeDefaultLocale(): Locale {
+        return try {
+            Locale.getDefault()
+        } catch (_: Throwable) {
+            Locale.ENGLISH
+        }
+    }
 
     companion object {
         private const val TAG = "CaveDroidApplication"
