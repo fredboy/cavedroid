@@ -122,6 +122,18 @@ add(img).width(80f).height(80f)
 
 Known call site: `core/gdx/.../menu/v2/view/singleplayer/SinglePlayerMenuView.kt` (the save thumbnail). String-form `image("name")` calls elsewhere (e.g. `image("gamelogo")` in `AboutMenuView.kt`) still work — only `image(Texture)` needs porting. A grep for `image(.*screenshot\|image(.*Texture` finds the failing form.
 
+### `proguard-rules.pro` — silence libGDX 1.9.10's stale jnigen refs
+
+`assembleFossDebug` doesn't run R8, but `assembleFossRelease` does — and R8 fails with `Missing class com.badlogic.gdx.jnigen.AntScriptGenerator` (and several siblings) referenced from `com.badlogic.gdx.physics.box2d.utils.Box2DBuild.main()`. `Box2DBuild` is a build-tool main method that's never invoked at runtime, but R8 still resolves its call graph. Newer libGDX versions stripped these references; 1.9.10 still has them.
+
+Add to `android/proguard-rules.pro`:
+
+```proguard
+-dontwarn com.badlogic.gdx.jnigen.**
+```
+
+`make-release.sh` invokes the release build, so the legacy step will hit this. The rule is harmless on mainline (no warnings to suppress when the classes resolve), so it could just as well live there — but keeping it in the patch keeps the legacy concern self-contained.
+
 ### `AndroidManifest.xml` — override kermit's minSdk 21
 
 `android/build.gradle.kts` carries `minSdk = 16`, but AGP's manifest merger fails because `co.touchlab:kermit-android-debug:2.0.8` and `co.touchlab:kermit-core-android-debug:2.0.8` both declare `minSdkVersion="21"` in their bundled manifests. Kermit is pure Kotlin (a multiplatform logger) — the minSdk floor is conservative metadata, not a real native dependency, so the override is safe.
@@ -175,10 +187,12 @@ NDK r16b = libGDX 1.9.10. Anything newer (r19c, r21+) means the wrong artifact w
 Once the build is verified, capture the full migration diff to `legacy-migration.patch` at the repo root. This turns the downgrade into a portable, reproducible artifact: mainline development continues on `master`, and any future legacy release just re-applies the patch.
 
 ```bash
-git diff > legacy-migration.patch
+git diff -- ':!legacy-migration.patch' > legacy-migration.patch
 ```
 
-Sanity-check the patch covers what you expect — at minimum it should touch `buildSrc/.../Versions.kt`, `android/build.gradle.kts` (the `minSdk` lowering), `android/src/main/AndroidManifest.xml` (the `<uses-sdk tools:overrideLibrary="co.touchlab.kermit,co.touchlab.kermit.core" />` line), the `box2dLight/DirectionalLightExtention.kt` helper, and every source file listed under "API ports the downgrade forces" above. If any of those are missing, the working tree was not in the right state when you ran `git diff`.
+The `':!legacy-migration.patch'` pathspec is required when the patch already exists in `HEAD` — the redirect truncates the destination *before* `git diff` runs, so a naive `git diff > legacy-migration.patch` captures the patch's own deletion + rewrite, producing a self-referential patch that no longer applies cleanly. Exclude the patch file from the diff to avoid this.
+
+Sanity-check the patch covers what you expect — at minimum it should touch `buildSrc/.../Versions.kt`, `android/build.gradle.kts` (the `minSdk` lowering), `android/src/main/AndroidManifest.xml` (the `<uses-sdk tools:overrideLibrary="co.touchlab.kermit,co.touchlab.kermit.core" />` line), `android/proguard-rules.pro` (the `-dontwarn com.badlogic.gdx.jnigen.**` line), the `box2dLight/DirectionalLightExtention.kt` helper, and every source file listed under "API ports the downgrade forces" above. If any of those are missing, the working tree was not in the right state when you ran `git diff`.
 
 Optional but recommended: after capturing the patch, revert the code/build edits with `git restore` (preserving only `legacy-migration.patch`, the skill, and the README sections). The next legacy release runs:
 
