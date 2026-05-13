@@ -120,6 +120,20 @@ val img = Image(TextureRegionDrawable(TextureRegion(texture))).apply {
 add(img).width(80f).height(80f)
 ```
 
+Known call site: `core/gdx/.../menu/v2/view/singleplayer/SinglePlayerMenuView.kt` (the save thumbnail). String-form `image("name")` calls elsewhere (e.g. `image("gamelogo")` in `AboutMenuView.kt`) still work — only `image(Texture)` needs porting. A grep for `image(.*screenshot\|image(.*Texture` finds the failing form.
+
+### `AndroidManifest.xml` — override kermit's minSdk 21
+
+`android/build.gradle.kts` carries `minSdk = 16`, but AGP's manifest merger fails because `co.touchlab:kermit-android-debug:2.0.8` and `co.touchlab:kermit-core-android-debug:2.0.8` both declare `minSdkVersion="21"` in their bundled manifests. Kermit is pure Kotlin (a multiplatform logger) — the minSdk floor is conservative metadata, not a real native dependency, so the override is safe.
+
+Add to `android/src/main/AndroidManifest.xml` directly under `<manifest>`:
+
+```xml
+<uses-sdk tools:overrideLibrary="co.touchlab.kermit,co.touchlab.kermit.core" />
+```
+
+Both package names are required — AGP fails the merge for each library separately, so a single-entry override will produce a second identical-looking error after the first is fixed. Don't try to set `android:minSdkVersion` here; AGP rejects that when `defaultConfig.minSdk` is also set. The `xmlns:tools="http://schemas.android.com/tools"` declaration is already on the root `<manifest>` element.
+
 ### `box2dLight.Light.direction` — protected field in box2dlights 1.4
 
 box2dlights 1.5 exposed a public setter; 1.4 didn't. Use the package-private accessor pattern already established in `core/common/src/main/kotlin/box2dLight/DirectionalLightExtention.kt`:
@@ -164,7 +178,7 @@ Once the build is verified, capture the full migration diff to `legacy-migration
 git diff > legacy-migration.patch
 ```
 
-Sanity-check the patch covers what you expect — at minimum it should touch `buildSrc/.../Versions.kt`, `android/build.gradle.kts` (the `minSdk` lowering), `android/src/main/AndroidManifest.xml` (the `uses-sdk` block), the `box2dLight/DirectionalLightExtention.kt` helper, and every source file listed under "API ports the downgrade forces" above. If any of those are missing, the working tree was not in the right state when you ran `git diff`.
+Sanity-check the patch covers what you expect — at minimum it should touch `buildSrc/.../Versions.kt`, `android/build.gradle.kts` (the `minSdk` lowering), `android/src/main/AndroidManifest.xml` (the `<uses-sdk tools:overrideLibrary="co.touchlab.kermit,co.touchlab.kermit.core" />` line), the `box2dLight/DirectionalLightExtention.kt` helper, and every source file listed under "API ports the downgrade forces" above. If any of those are missing, the working tree was not in the right state when you ran `git diff`.
 
 Optional but recommended: after capturing the patch, revert the code/build edits with `git restore` (preserving only `legacy-migration.patch`, the skill, and the README sections). The next legacy release runs:
 
