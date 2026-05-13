@@ -1,4 +1,4 @@
-package ru.fredboy.cavedroid.game.world
+package ru.fredboy.cavedroid.gameplay.lighting.box2d
 
 import box2dLight.DirectionalLight
 import box2dLight.Light
@@ -22,12 +22,13 @@ import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.entity.mob.model.Mob
+import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 import javax.inject.Inject
 import kotlin.math.max
 
 @GameScope
-class GameWorldLightManager @Inject constructor(
+class Box2dLightingSystem @Inject constructor(
     private val gameContextRepository: GameContextRepository,
 ) : LightingSystem,
     OnBlockPlacedListener {
@@ -58,7 +59,7 @@ class GameWorldLightManager @Inject constructor(
 
     override fun attachToGameWorld(gameWorld: GameWorld) {
         if (_gameWorld != null) {
-            logger.w { "GameWorldLightManager already attached" }
+            logger.w { "Box2dLightingSystem already attached" }
             return
         }
 
@@ -331,7 +332,7 @@ class GameWorldLightManager @Inject constructor(
     }
 
     companion object {
-        private const val TAG = "GameWorldLightManager"
+        private const val TAG = "Box2dLightingSystem"
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         private const val CHUNK_SIZE = 4

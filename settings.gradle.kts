@@ -64,6 +64,7 @@ include("core:game:world")
 include("core:gameplay:controls")
 include("core:gameplay:physics")
 include("core:gameplay:rendering")
+include("core:gameplay:lighting-box2d")
 
 /**
  * Gdx module: initialization, menu, screens...

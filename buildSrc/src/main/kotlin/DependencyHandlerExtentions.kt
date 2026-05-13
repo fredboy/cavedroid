@@ -63,6 +63,10 @@ fun DependencyHandler.useGameplayModules() {
     useModule(":core:gameplay:rendering")
 }
 
+fun DependencyHandler.useLightingBox2d() {
+    useModule(":core:gameplay:lighting-box2d")
+}
+
 fun DependencyHandler.useGdxModule() {
     useModule(":core:gdx")
 }

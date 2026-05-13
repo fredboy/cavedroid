@@ -7,18 +7,13 @@ java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
-    useAutomultibind()
     useLibgdx()
-    useLibKtx()
     useDagger()
 
     useCommonLibs()
-    useMvvmModule()
-    useDataModules()
-    useDomainModules()
-    useDomainSaveModule()
-    useEntityModules()
-    useGameModules()
-    useGameplayModules()
-    useLightingBox2d()
+    useModule(":core:domain:configuration")
+    useModule(":core:domain:items")
+    useModule(":core:domain:world")
+    useModule(":core:entity:mob")
+    useModule(":core:game:world")
 }
