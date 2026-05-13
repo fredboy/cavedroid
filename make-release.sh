@@ -46,14 +46,7 @@ if [[ -f legacy-migration.patch ]]; then
   patched_files=$(grep -E '^\+\+\+ b/' legacy-migration.patch | sed 's|^+++ b/||' || true)
   if git apply --check legacy-migration.patch 2>/dev/null; then
     git apply legacy-migration.patch
-    # android/libs/ still holds the main build's 1.13.1 natives. AGP's
-    # mergeJniLibFolders runs in parallel with copyAndroidNatives (no
-    # explicit ordering), so without intervention the merge picks up
-    # whatever happens to be in libs/ when it starts. Force libs/ to hold
-    # 1.9.10 natives BEFORE assembling, by running copyAndroidNatives as a
-    # separate gradle invocation. Then clean+assemble: the merge re-runs
-    # against the now-correct libs/.
-    if ./gradlew :android:copyAndroidNatives && ./gradlew clean android:assembleFossRelease; then
+    if ./gradlew clean android:assembleFossRelease; then
       cp "android/build/outputs/apk/foss/release/android-foss-release.apk" \
          "$release_dir/android-legacy-foss-$1.apk"
       echo ">> Legacy build succeeded: $release_dir/android-legacy-foss-$1.apk"

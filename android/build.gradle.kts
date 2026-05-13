@@ -207,7 +207,7 @@ licenseFlavors.forEach { flavor ->
 }
 
 tasks.whenTaskAdded {
-    if (name.contains("package")) {
+    if (name.contains("package") || name.endsWith("JniLibFolders")) {
         dependsOn("copyAndroidNatives")
     }
 }

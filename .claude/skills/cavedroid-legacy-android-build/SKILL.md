@@ -172,7 +172,7 @@ for arch in armeabi-v7a arm64-v8a x86 x86_64; do
 done
 ```
 
-Every line must print `0`. Verify against the APK, not `android/libs/<arch>/libgdx.so`: `android/libs/` is the staging dir populated by `copyAndroidNatives`, but what ends up in the APK comes through AGP's `mergeJniLibFolders` task, and the two have no explicit ordering relative to each other (see "Build ordering pitfall" below). Inspect the APK to see what actually shipped.
+Every line must print `0`. Verify against the APK, not `android/libs/<arch>/libgdx.so`: libs/ is the staging dir populated by `copyAndroidNatives`, but what ends up in the APK comes through AGP's `mergeJniLibFolders` task. With the current `android/build.gradle.kts`, those two are correctly ordered (see below); the APK is still the source of truth for what shipped.
 
 Cross-check the NDK signature too:
 
@@ -183,23 +183,21 @@ unzip -p "$apk" lib/armeabi-v7a/libgdx.so | file -
 
 NDK r16b = libGDX 1.9.10. Anything newer (r19c, r21+) means the wrong artifact was bundled.
 
-### Build ordering pitfall: `mergeJniLibFolders` vs `copyAndroidNatives`
+### Background: how `copyAndroidNatives` is ordered
 
-`android/build.gradle.kts` registers `copyAndroidNatives` (which extracts the natives jars into `android/libs/`) as a dependency of any `package*` task via `tasks.whenTaskAdded { if (name.contains("package")) dependsOn("copyAndroidNatives") }`. AGP's `mergeFossReleaseJniLibFolders` is **also** a prerequisite of `packageFossRelease`, but it has no ordering relationship with `copyAndroidNatives` — Gradle can run them in arbitrary order (or in parallel).
+`android/build.gradle.kts` wires `copyAndroidNatives` (which extracts the natives jars into libs/) as a prerequisite of *both* the AGP `package*` and `*JniLibFolders` tasks:
 
-When `android/libs/` already contains the correct natives at task-graph start (the common case in a single-build flow), the merge picks them up no matter when copy runs, and everything works. The race becomes visible when libs/ has *wrong* content at graph start and depends on copy to fix it:
-
-- **`make-release.sh` flow**: the main build leaves libs/ with libGDX 1.13.1 natives. The legacy build's gradle invocation may run merge before copy → merge packages 1.13.1 → APK crashes on legacy Android.
-- **Wiping libs/ before the legacy build** doesn't help; if anything it's worse, because merge then reads an empty dir and the APK ships with no natives at all.
-
-The fix is to **pre-stage** libs/ with the correct natives via a separate `:android:copyAndroidNatives` invocation *before* the assemble call:
-
-```bash
-./gradlew :android:copyAndroidNatives                 # libs/ now has 1.9.10
-./gradlew clean :android:assembleFossRelease          # merge reads correct libs/
+```kotlin
+tasks.whenTaskAdded {
+    if (name.contains("package") || name.endsWith("JniLibFolders")) {
+        dependsOn("copyAndroidNatives")
+    }
+}
 ```
 
-Two separate invocations matter: within a single invocation the race still applies (copy may run after merge). Between two invocations, libs/ is guaranteed-correct when the second one starts. `make-release.sh` uses this pattern; replicate it whenever you re-build the legacy variant after a different libGDX version has touched libs/.
+The `JniLibFolders` clause is the load-bearing part for this skill. Without it, `mergeJniLibFolders` and `copyAndroidNatives` are sibling prerequisites of `package*` with no relative order — Gradle is free to run merge first against whatever libs/ happens to contain. Two sequenced builds at different libGDX versions (the common case after running `make-release.sh`, or just rebuilding after legacy then mainline) will then race: the second build can ship the *first* build's natives. The APK passes `assembleFossRelease`, the `__memcpy_chk` symbol either is or isn't present depending on which version "won," and you don't notice until the app actually crashes on a target device.
+
+If a future libGDX bump or a buildSrc refactor removes the `JniLibFolders` clause, the race comes back. If you're re-doing the migration from scratch and see a freshly built APK that doesn't match `Versions.kt`, re-check that `whenTaskAdded` block first.
 
 ## Save the migration as a patch (do this before reverting)
 
