@@ -23,7 +23,6 @@ class KeyboardInputActionMapper @Inject constructor() {
             Input.Keys.ESCAPE, Input.Keys.BACK -> KeyboardInputActionKey.Pause
 
             Input.Keys.F1 -> KeyboardInputActionKey.ShowDebug
-            Input.Keys.GRAVE -> KeyboardInputActionKey.SwitchGameMode
             Input.Keys.M -> KeyboardInputActionKey.ShowMap
 
             Input.Keys.Q -> KeyboardInputActionKey.DropItem
