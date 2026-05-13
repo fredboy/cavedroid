@@ -4,6 +4,7 @@ import co.touchlab.kermit.Severity
 import com.badlogic.gdx.Files
 import com.github.xpenatan.gdx.teavm.backends.web.WebApplication
 import com.github.xpenatan.gdx.teavm.backends.web.WebApplicationConfiguration
+import com.github.xpenatan.gdx.teavm.backends.web.utils.WebNavigator
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.gameplay.lighting.tint.TintLightingSystemFactory
@@ -28,7 +29,7 @@ object WebLauncher {
         val app = CaveDroidApplication(
             gameDataDirectoryPath = "",
             gameDataFileType = Files.FileType.Local,
-            isTouchScreen = false,
+            isTouchScreen = isMobileBrowser(),
             isDebug = false,
             preferencesStore = WebPreferencesStore(),
             lightingSystemFactory = TintLightingSystemFactory(),
@@ -42,4 +43,12 @@ object WebLauncher {
 
         WebApplication(app, config)
     }
+
+    private fun isMobileBrowser(): Boolean {
+        val userAgent = WebNavigator.getUserAgent() ?: return false
+        return MOBILE_USER_AGENT_REGEX.containsMatchIn(userAgent)
+    }
+
+    private val MOBILE_USER_AGENT_REGEX =
+        Regex("Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini", RegexOption.IGNORE_CASE)
 }
