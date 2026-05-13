@@ -73,6 +73,52 @@ You can download APK and JAR builds from [the releases page](https://github.com/
 On Windows, use `gradlew.bat` instead of `./gradlew`, though it will fail because of symlinks used to reference assets
 directory, so some tweaks are required.
 
+### Legacy Android devices (API 16/17 — Jelly Bean)
+
+> **⚠️ Experimental / unstable.** Legacy APKs are published on the
+> [releases page](https://github.com/fredboy/cavedroid/releases) — look for builds tagged
+> `legacy` (or similar). They are provided as-is for users on Android 4.1/4.2 hardware. The
+> legacy configuration downgrades libGDX by six years and three minor versions; it compiles
+> and the natives load on API 16, but runtime behaviour is **not** part of the regular QA
+> pass — Scene2D layout, Box2D contact ordering, and blending defaults may differ subtly
+> from the main build. Expect rough edges, file issues if you find them, and do not assume
+> save-file compatibility with the mainline build.
+
+The default build targets `minSdk = 23`. The libGDX 1.12+ native libraries CaveDroid ships
+with reference Bionic symbols (`__memcpy_chk`) that don't exist before Android 4.3 (API 18),
+so they fail to load on older devices with `SharedLibraryLoadRuntimeException: Couldn't load
+shared library 'gdx'`.
+
+Building for API 16/17 requires downgrading libGDX to 1.9.10 (the last release whose Android
+natives don't reference the missing symbol) and matching ktx / box2dlights versions, plus
+porting several API call sites that were added in libGDX 1.10–1.11.
+
+The complete migration is checked in as `legacy-migration.patch` at the repo root. To produce
+a legacy build:
+
+```bash
+git apply legacy-migration.patch
+./gradlew :android:assembleFossDebug   # or assembleFossRelease
+
+# Verify the bundled natives don't reference the missing symbol — every line must print 0:
+for arch in armeabi-v7a arm64-v8a x86 x86_64; do
+    echo -n "$arch: "; strings android/libs/$arch/libgdx.so | grep -c __memcpy_chk
+done
+
+git restore -SW :/                     # back to mainline once the APK is built
+```
+
+`git apply` may fail (`--check` reports conflicts) if mainline has since changed a file the
+patch touches. In that case the patch is stale and must be regenerated — don't hand-resolve
+hunks. Re-run the full migration procedure and overwrite the patch with `git diff > legacy-migration.patch`
+before reverting the working tree.
+
+If you are using Claude Code in this repository, the `cavedroid-legacy-android-build` skill
+automates the above end-to-end: it applies the patch when valid, falls back to regenerating
+it on drift, and runs the verification step. Trigger it by asking to build for Android 4.1/4.2,
+or by pasting the `__memcpy_chk` crash log. The manual checklist (what the patch contains and
+why) lives at `.claude/skills/cavedroid-legacy-android-build/SKILL.md`.
+
 ## Setting up the keystore for signing
 
 To build an android release and enable the `desktop:generateSignedJar` task for release builds,
