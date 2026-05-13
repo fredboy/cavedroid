@@ -172,7 +172,7 @@ for arch in armeabi-v7a arm64-v8a x86 x86_64; do
 done
 ```
 
-Every line must print `0`. Verify against the APK, not `android/libs/<arch>/libgdx.so`: that directory is the staging area populated by `copyAndroidNatives`, but AGP's `mergeJniLibFolders` task caches its output in `build/intermediates/`. Successive Gradle invocations against different libGDX versions (e.g. the main 1.13.1 build followed by the legacy 1.9.10 build in `make-release.sh`) can leave a clean `android/libs/` while the packaged APK still contains stale natives from the cache. Inspecting the APK bypasses both layers. (If you're mid-build and haven't packaged yet, `android/libs/` is still a useful sanity check — just don't rely on it as the final word.)
+Every line must print `0`. Verify against the APK, not `android/libs/<arch>/libgdx.so`: `android/libs/` is the staging dir populated by `copyAndroidNatives`, but what ends up in the APK comes through AGP's `mergeJniLibFolders` task, and the two have no explicit ordering relative to each other (see "Build ordering pitfall" below). Inspect the APK to see what actually shipped.
 
 Cross-check the NDK signature too:
 
@@ -183,11 +183,23 @@ unzip -p "$apk" lib/armeabi-v7a/libgdx.so | file -
 
 NDK r16b = libGDX 1.9.10. Anything newer (r19c, r21+) means the wrong artifact was bundled.
 
-If the APK has stale natives but `android/libs/` is clean, the AGP merge cache is the culprit. Wipe both before rebuilding:
+### Build ordering pitfall: `mergeJniLibFolders` vs `copyAndroidNatives`
+
+`android/build.gradle.kts` registers `copyAndroidNatives` (which extracts the natives jars into `android/libs/`) as a dependency of any `package*` task via `tasks.whenTaskAdded { if (name.contains("package")) dependsOn("copyAndroidNatives") }`. AGP's `mergeFossReleaseJniLibFolders` is **also** a prerequisite of `packageFossRelease`, but it has no ordering relationship with `copyAndroidNatives` — Gradle can run them in arbitrary order (or in parallel).
+
+When `android/libs/` already contains the correct natives at task-graph start (the common case in a single-build flow), the merge picks them up no matter when copy runs, and everything works. The race becomes visible when libs/ has *wrong* content at graph start and depends on copy to fix it:
+
+- **`make-release.sh` flow**: the main build leaves libs/ with libGDX 1.13.1 natives. The legacy build's gradle invocation may run merge before copy → merge packages 1.13.1 → APK crashes on legacy Android.
+- **Wiping libs/ before the legacy build** doesn't help; if anything it's worse, because merge then reads an empty dir and the APK ships with no natives at all.
+
+The fix is to **pre-stage** libs/ with the correct natives via a separate `:android:copyAndroidNatives` invocation *before* the assemble call:
 
 ```bash
-rm -rf android/libs && ./gradlew clean android:assembleFossRelease
+./gradlew :android:copyAndroidNatives                 # libs/ now has 1.9.10
+./gradlew clean :android:assembleFossRelease          # merge reads correct libs/
 ```
+
+Two separate invocations matter: within a single invocation the race still applies (copy may run after merge). Between two invocations, libs/ is guaranteed-correct when the second one starts. `make-release.sh` uses this pattern; replicate it whenever you re-build the legacy variant after a different libGDX version has touched libs/.
 
 ## Save the migration as a patch (do this before reverting)
 
