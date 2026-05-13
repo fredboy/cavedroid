@@ -95,7 +95,7 @@ internal class FontTextureAssetsRepositoryImpl @Inject constructor(
     companion object {
         private const val TAG = "FontAssetsRepositoryImpl"
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)
-        private const val FONT_FILE_PATH = "skin/font//lanapixel.fnt"
+        private const val FONT_FILE_PATH = "skin/font/lanapixel.fnt"
         private const val BASE_MENU_LOCALIZATION = "i18n/CaveDroid_Menu"
         private const val BASE_ITEMS_LOCALIZATION = "i18n/CaveDroid_Items"
         private const val BASE_ONBOARDING_LOCALIZATION = "i18n/CaveDroid_Onboarding"

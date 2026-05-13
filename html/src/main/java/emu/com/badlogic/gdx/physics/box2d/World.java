@@ -326,6 +326,11 @@ public final class World implements Disposable {
 		}
 	}
 
+	/** @return the number of fixtures currently in the simulation */
+	public int getFixtureCount () {
+		return fixtures.size;
+	}
+
 	/** @return all joints currently in the simulation */
 	public void getJoints (Array<Joint> joints) {
 		joints.clear();
