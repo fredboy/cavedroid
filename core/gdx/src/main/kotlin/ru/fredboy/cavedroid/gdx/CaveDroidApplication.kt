@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gdx
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.Severity
 import com.badlogic.gdx.Application
+import com.badlogic.gdx.Files
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
@@ -26,6 +27,7 @@ import java.util.Locale
 
 class CaveDroidApplication(
     private val gameDataDirectoryPath: String,
+    private val gameDataFileType: Files.FileType,
     private val isTouchScreen: Boolean,
     private val isDebug: Boolean,
     private val preferencesStore: PreferencesStore,
@@ -75,6 +77,7 @@ class CaveDroidApplication(
                     isDebug = isDebug,
                     isTouch = isTouchScreen,
                     gameDirectory = gameDataDirectoryPath,
+                    gameDirectoryFileType = gameDataFileType,
                     width = width,
                     height = height,
                     isFullscreen = isFullscreen,
@@ -102,7 +105,7 @@ class CaveDroidApplication(
             adController.setPersonalizedAdsEnabled(personalizedAdsConsent)
         }
 
-        if (Gdx.app.type != Application.ApplicationType.WebGL) {
+        if (gameDataFileType == Files.FileType.Absolute) {
             Gdx.files.absolute(gameDataDirectoryPath).mkdirs()
         }
         applicationComponent.initializeAssets()

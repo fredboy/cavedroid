@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.html
 
 import co.touchlab.kermit.Severity
+import com.badlogic.gdx.Files
 import com.github.xpenatan.gdx.teavm.backends.web.WebApplication
 import com.github.xpenatan.gdx.teavm.backends.web.WebApplicationConfiguration
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
@@ -20,6 +21,7 @@ object WebLauncher {
 
         val app = CaveDroidApplication(
             gameDataDirectoryPath = "",
+            gameDataFileType = Files.FileType.Local,
             isTouchScreen = false,
             isDebug = false,
             preferencesStore = WebPreferencesStore(),

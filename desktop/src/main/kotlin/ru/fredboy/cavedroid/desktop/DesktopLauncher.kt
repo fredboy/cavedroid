@@ -62,6 +62,7 @@ internal object DesktopLauncher {
 
         val caveGame = CaveDroidApplication(
             gameDataDirectoryPath = System.getProperty("user.home") + "/.cavedroid",
+            gameDataFileType = Files.FileType.Absolute,
             isTouchScreen = touch,
             isDebug = debug,
             preferencesStore = preferencesStore,

@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.data.configuration.store
 
+import com.badlogic.gdx.Files
 import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
 import ru.fredboy.cavedroid.common.api.PreferencesStore
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
@@ -39,6 +40,9 @@ class ApplicationContextStore @Inject constructor(
     var gameDirectory: String
         get() = synchronized(lock) { applicationContext.gameDirectory }
         set(value) = synchronized(lock) { applicationContext.gameDirectory = value }
+
+    val gameDirectoryFileType: Files.FileType
+        get() = synchronized(lock) { applicationContext.gameDirectoryFileType }
 
     var width: Float
         get() = synchronized(lock) { applicationContext.width }

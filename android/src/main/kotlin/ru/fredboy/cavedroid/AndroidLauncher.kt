@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import co.touchlab.kermit.Severity
+import com.badlogic.gdx.Files
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +41,7 @@ class AndroidLauncher : AndroidApplication() {
             /* listener = */
             CaveDroidApplication(
                 gameDataDirectoryPath = gameDataDirectoryPath,
+                gameDataFileType = Files.FileType.Absolute,
                 isTouchScreen = true,
                 isDebug = BuildConfig.DEBUG,
                 preferencesStore = AndroidPreferencesStore(applicationContext),

@@ -14,6 +14,7 @@ dependencies {
     useDagger()
 
     useModule(":core:domain:assets")
+    useModule(":core:domain:configuration")
     useModule(":core:domain:items")
     useModule(":core:domain:world")
     useModule(":core:domain:save")

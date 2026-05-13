@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.data.save.repository
 
+import com.badlogic.gdx.Files
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.Pixmap
@@ -17,6 +18,7 @@ import ru.fredboy.cavedroid.data.save.mapper.GameSaveInfoMapper
 import ru.fredboy.cavedroid.data.save.mapper.MobControllerMapper
 import ru.fredboy.cavedroid.data.save.mapper.ProjectileControllerMapper
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
@@ -57,7 +59,15 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     private val gameSaveInfoMapper: GameSaveInfoMapper,
     private val projectileControllerMapper: ProjectileControllerMapper,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
+    private val applicationContextRepository: ApplicationContextRepository,
 ) : SaveDataRepository {
+
+    private val fileType: Files.FileType
+        get() = applicationContextRepository.getGameDirectoryFileType()
+
+    private fun file(path: String): FileHandle {
+        return Gdx.files.getFileHandle(path.trimStart('/'), fileType)
+    }
 
     private fun Int.toByteArray(): ByteArray = ByteBuffer.allocate(Int.SIZE_BYTES)
         .putInt(this)
@@ -222,21 +232,21 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     private fun internalLoadMap(
         savesPath: String,
     ): GameMapSaveData {
-        val dict = Gdx.files.absolute("$savesPath/$DICT_FILE").readString().split("\n")
+        val dict = file("$savesPath/$DICT_FILE").readString().split("\n")
 
         val foreMap: Array<Array<Block>>
-        with(GZIPInputStream(Gdx.files.absolute("$savesPath/$FOREMAP_FILE").read())) {
+        with(GZIPInputStream(file("$savesPath/$FOREMAP_FILE").read())) {
             foreMap = decompressMap(readBytes(), dict, itemsRepository)
             close()
         }
 
         val backMap: Array<Array<Block>>
-        with(GZIPInputStream(Gdx.files.absolute("$savesPath/$BACKMAP_FILE").read())) {
+        with(GZIPInputStream(file("$savesPath/$BACKMAP_FILE").read())) {
             backMap = decompressMap(readBytes(), dict, itemsRepository)
             close()
         }
 
-        val biomesFile = Gdx.files.absolute("$savesPath/$BIOMES_FILE")
+        val biomesFile = file("$savesPath/$BIOMES_FILE")
         val biomes: Array<Biome>? = if (biomesFile.exists()) {
             GZIPInputStream(biomesFile.read()).use { decompressBiomes(it.readBytes()) }
         } else {
@@ -265,25 +275,25 @@ internal class SaveDataRepositoryImpl @Inject constructor(
 
         val dict = buildBlocksDictionary(fullForeMap, fullBackMap)
 
-        saveDict(Gdx.files.absolute("$savesPath/$DICT_FILE"), dict)
+        saveDict(file("$savesPath/$DICT_FILE"), dict)
 
-        with(GZIPOutputStream(Gdx.files.absolute("$savesPath/$FOREMAP_FILE").write(false))) {
+        with(GZIPOutputStream(file("$savesPath/$FOREMAP_FILE").write(false))) {
             write(compressMap(fullForeMap, dict))
             close()
         }
 
-        with(GZIPOutputStream(Gdx.files.absolute("$savesPath/$BACKMAP_FILE").write(false))) {
+        with(GZIPOutputStream(file("$savesPath/$BACKMAP_FILE").write(false))) {
             write(compressMap(fullBackMap, dict))
             close()
         }
 
-        GZIPOutputStream(Gdx.files.absolute("$savesPath/$BIOMES_FILE").write(false)).use {
+        GZIPOutputStream(file("$savesPath/$BIOMES_FILE").write(false)).use {
             it.write(compressBiomes(gameWorld.biomes))
         }
     }
 
     private fun saveMapData(gameWorld: GameWorld, savesPath: String, worldName: String, gameMode: GameMode) {
-        val metaFile = Gdx.files.absolute("$savesPath/$META_FILE")
+        val metaFile = file("$savesPath/$META_FILE")
 
         val worldSaveDataDto = SaveDataDto.WorldSaveDataDto(
             version = MAP_SAVE_VERSION.toInt(),
@@ -304,7 +314,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     }
 
     private fun loadMapData(savesPath: String): SaveDataDto.WorldSaveDataDto {
-        val metaFile = Gdx.files.absolute("$savesPath/$META_FILE")
+        val metaFile = file("$savesPath/$META_FILE")
 
         val bytes = metaFile.readBytes()
 
@@ -332,7 +342,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             pixmap.pixels.put(i, 255.toByte())
         }
 
-        PixmapIO.writePNG(Gdx.files.absolute("$savesPath/$SCREENSHOT_FILE"), pixmap, Deflater.DEFAULT_COMPRESSION, true)
+        PixmapIO.writePNG(file("$savesPath/$SCREENSHOT_FILE"), pixmap, Deflater.DEFAULT_COMPRESSION, true)
         pixmap.dispose()
     }
 
@@ -346,12 +356,12 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         }
 
         var savesPath = getSavePath(gameDataFolder, saveGameDirectory)
-        var saveDirHandle = Gdx.files.absolute(savesPath)
+        var saveDirHandle = file(savesPath)
         var suffix = 0
 
         while (saveDirHandle.exists() && suffix < 256) {
             savesPath = getSavePath(gameDataFolder, "${saveGameDirectory}_${++suffix}")
-            saveDirHandle = Gdx.files.absolute(savesPath)
+            saveDirHandle = file(savesPath)
         }
 
         return saveDirHandle.name()
@@ -369,10 +379,10 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     ) {
         val savesPath = getSavePath(gameDataFolder, saveGameDirectory)
 
-        val dropFile = Gdx.files.absolute("$savesPath/$DROP_FILE")
-        val mobsFile = Gdx.files.absolute("$savesPath/$MOBS_FILE")
-        val containersFile = Gdx.files.absolute("$savesPath/$CONTAINERS_FILE")
-        val projectilesFile = Gdx.files.absolute("$savesPath/$PROJECTILES_FILE")
+        val dropFile = file("$savesPath/$DROP_FILE")
+        val mobsFile = file("$savesPath/$MOBS_FILE")
+        val containersFile = file("$savesPath/$CONTAINERS_FILE")
+        val projectilesFile = file("$savesPath/$PROJECTILES_FILE")
 
         val dropBytes = ProtoBuf.encodeToByteArray(dropControllerMapper.mapSaveData(dropController))
         val mobsBytes = ProtoBuf.encodeToByteArray(mobControllerMapper.mapSaveData(mobController))
@@ -408,7 +418,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         dropAdapter: DropAdapter,
     ): ContainerController {
         val savesPath = getSavePath(gameDataFolder, saveGameDirectory)
-        val containersFile = Gdx.files.absolute("$savesPath/$CONTAINERS_FILE")
+        val containersFile = file("$savesPath/$CONTAINERS_FILE")
         val containersBytes = containersFile.readBytes()
 
         return ProtoBuf.decodeFromByteArray<SaveDataDto.ContainerControllerSaveDataDto>(
@@ -431,7 +441,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         playerAdapter: PlayerAdapter,
     ): DropController {
         val savesPath = getSavePath(gameDataFolder, saveGameDirectory)
-        val dropFile = Gdx.files.absolute("$savesPath/$DROP_FILE")
+        val dropFile = file("$savesPath/$DROP_FILE")
         val dropBytes = dropFile.readBytes()
 
         return ProtoBuf.decodeFromByteArray<SaveDataDto.DropControllerSaveDataDto>(dropBytes)
@@ -456,7 +466,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         mobQueue: MobQueue,
     ): MobController {
         val savesPath = getSavePath(gameDataFolder, saveGameDirectory)
-        val mobsFile = Gdx.files.absolute("$savesPath/$MOBS_FILE")
+        val mobsFile = file("$savesPath/$MOBS_FILE")
         val mobsBytes = mobsFile.readBytes()
 
         return ProtoBuf.decodeFromByteArray<SaveDataDto.MobControllerSaveDataDto>(mobsBytes)
@@ -480,7 +490,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         dropQueue: DropQueue,
     ): ProjectileController {
         val savesPath = getSavePath(gameDataFolder, saveGameDirectory)
-        val projectilesFile = Gdx.files.absolute("$savesPath/$PROJECTILES_FILE")
+        val projectilesFile = file("$savesPath/$PROJECTILES_FILE")
 
         if (!projectilesFile.exists()) {
             return ProjectileController(
@@ -530,7 +540,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     }
 
     override fun getSavesInfo(gameDataFolder: String): List<GameSaveInfo> {
-        return Gdx.files.absolute("$gameDataFolder/$SAVES_DIR").list { it.isDirectory }
+        return file("$gameDataFolder/$SAVES_DIR").list { it.isDirectory }
             .asSequence()
             .filter { isSaveDir(it) }
             .map { saveDir ->
@@ -549,7 +559,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
 
     override fun deleteSave(gameDataFolder: String, saveDir: String) {
         val savePath = getSavePath(gameDataFolder, saveDir)
-        val handle = Gdx.files.absolute(savePath)
+        val handle = file(savePath)
 
         try {
             handle.deleteDirectory()

@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.domain.configuration.repository
 
+import com.badlogic.gdx.Files
 import java.util.Locale
 
 interface ApplicationContextRepository {
@@ -13,6 +14,8 @@ interface ApplicationContextRepository {
     fun useDynamicCamera(): Boolean
 
     fun getGameDirectory(): String
+
+    fun getGameDirectoryFileType(): Files.FileType
 
     fun getWidth(): Float
 

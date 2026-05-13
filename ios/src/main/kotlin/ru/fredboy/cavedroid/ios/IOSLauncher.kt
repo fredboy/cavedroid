@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.ios
 
+import com.badlogic.gdx.Files
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration
@@ -32,6 +33,7 @@ object IOSLauncher : IOSApplication.Delegate() {
 
         val caveDroidApplication = CaveDroidApplication(
             gameDataDirectoryPath = dataDir,
+            gameDataFileType = Files.FileType.Absolute,
             isTouchScreen = true,
             isDebug = false,
             preferencesStore = IOSPreferencesStore(),
