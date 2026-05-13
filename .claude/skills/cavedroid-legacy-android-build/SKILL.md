@@ -162,25 +162,32 @@ Then call sites: `sight.setDirectionCompat(0f)` instead of `sight.direction = 0f
 
 ## Verification step (do this, don't skip)
 
-Compile alone proves nothing — the bug we're fixing is a *load-time* failure. After a successful `:android:assembleFossDebug`, confirm the bundled natives don't reference the broken symbol:
+Compile alone proves nothing — the bug we're fixing is a *load-time* failure. After the build, confirm the natives packaged **inside the APK** don't reference the broken symbol:
 
 ```bash
+apk=android/build/outputs/apk/foss/release/android-foss-release.apk   # or .../debug/android-foss-debug.apk
 for arch in armeabi-v7a arm64-v8a x86 x86_64; do
   echo "=== $arch ==="
-  strings android/libs/$arch/libgdx.so | grep -c __memcpy_chk
+  unzip -p "$apk" "lib/$arch/libgdx.so" | strings | grep -c __memcpy_chk
 done
 ```
 
-Every line must print `0`. A non-zero count means the natives configuration is still resolving to a newer libGDX version — check `buildSrc/Versions.kt` and the Gradle dependency tree (`./gradlew :android:dependencies | grep gdx-platform`).
+Every line must print `0`. Verify against the APK, not `android/libs/<arch>/libgdx.so`: that directory is the staging area populated by `copyAndroidNatives`, but AGP's `mergeJniLibFolders` task caches its output in `build/intermediates/`. Successive Gradle invocations against different libGDX versions (e.g. the main 1.13.1 build followed by the legacy 1.9.10 build in `make-release.sh`) can leave a clean `android/libs/` while the packaged APK still contains stale natives from the cache. Inspecting the APK bypasses both layers. (If you're mid-build and haven't packaged yet, `android/libs/` is still a useful sanity check — just don't rely on it as the final word.)
 
 Cross-check the NDK signature too:
 
 ```bash
-file android/libs/armeabi-v7a/libgdx.so
+unzip -p "$apk" lib/armeabi-v7a/libgdx.so | file -
 # expect: built by NDK r16b ... for Android 14
 ```
 
 NDK r16b = libGDX 1.9.10. Anything newer (r19c, r21+) means the wrong artifact was bundled.
+
+If the APK has stale natives but `android/libs/` is clean, the AGP merge cache is the culprit. Wipe both before rebuilding:
+
+```bash
+rm -rf android/libs && ./gradlew clean android:assembleFossRelease
+```
 
 ## Save the migration as a patch (do this before reverting)
 

@@ -46,7 +46,13 @@ if [[ -f legacy-migration.patch ]]; then
   patched_files=$(grep -E '^\+\+\+ b/' legacy-migration.patch | sed 's|^+++ b/||' || true)
   if git apply --check legacy-migration.patch 2>/dev/null; then
     git apply legacy-migration.patch
-    if ./gradlew android:assembleFossRelease; then
+    # The main build populated android/libs/ with 1.13.1 .so files (which
+    # reference __memcpy_chk and crash on API 16/17). copyAndroidNatives
+    # would normally overwrite them, but AGP's jniLibs merge caches the
+    # earlier content. Wipe libs/ and clean build/ so the legacy build
+    # starts from a fresh state.
+    rm -rf android/libs
+    if ./gradlew clean android:assembleFossRelease; then
       cp "android/build/outputs/apk/foss/release/android-foss-release.apk" \
          "$release_dir/android-legacy-foss-$1.apk"
       echo ">> Legacy build succeeded: $release_dir/android-legacy-foss-$1.apk"
