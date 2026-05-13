@@ -4,7 +4,7 @@
 
 [![Android CI](https://github.com/fredboy/cavedroid/actions/workflows/android.yml/badge.svg)](https://github.com/fredboy/cavedroid/actions/workflows/android.yml)
 [![Ktlint](https://github.com/fredboy/cavedroid/actions/workflows/ktlint.yml/badge.svg)](https://github.com/fredboy/cavedroid/actions/workflows/ktlint.yml)
-[![GitHub Tag](https://img.shields.io/github/v/tag/fredboy/cavedroid)](https://github.com/fredboy/cavedroid/tags)
+[![GitHub Release](https://img.shields.io/github/v/release/fredboy/cavedroid)](https://github.com/fredboy/cavedroid/releases)
 
 CaveDroid is a **2D Minecraft-inspired game** for Android, Desktop (Windows, Linux, macOS), and potentially iOS.
 Explore, mine, and build in a looped world.
