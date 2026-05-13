@@ -1,6 +1,0 @@
-*  Fix button sound
-*  Lights fixes
-*  Optimize blocks rendering using freame buffer
-*  Rendering optimization
-*  Only update dirty chunks
-*  Fix world update, enable vsync, minor optimizations
