@@ -67,6 +67,10 @@ fun DependencyHandler.useLightingBox2d() {
     useModule(":core:gameplay:lighting-box2d")
 }
 
+fun DependencyHandler.useLightingTint() {
+    useModule(":core:gameplay:lighting-tint")
+}
+
 fun DependencyHandler.useGdxModule() {
     useModule(":core:gdx")
 }
