@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.Filter
-import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.effectiveMirrorBand
 import ru.fredboy.cavedroid.common.utils.mirrorSidesFor
 import ru.fredboy.cavedroid.common.utils.neighbourCoordinates
@@ -24,11 +23,9 @@ import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
-import javax.inject.Inject
 import kotlin.math.max
 
-@GameScope
-class Box2dLightingSystem @Inject constructor(
+class Box2dLightingSystem(
     private val gameContextRepository: GameContextRepository,
 ) : LightingSystem,
     OnBlockPlacedListener {

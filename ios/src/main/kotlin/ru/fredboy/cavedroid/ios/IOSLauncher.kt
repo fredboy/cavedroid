@@ -8,6 +8,7 @@ import org.robovm.apple.foundation.NSFileManager
 import org.robovm.apple.foundation.NSSearchPathDirectory
 import org.robovm.apple.foundation.NSSearchPathDomainMask
 import org.robovm.apple.uikit.UIApplication
+import ru.fredboy.cavedroid.gameplay.lighting.box2d.Box2dLightingSystemFactory
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
 
 object IOSLauncher : IOSApplication.Delegate() {
@@ -31,6 +32,7 @@ object IOSLauncher : IOSApplication.Delegate() {
             isTouchScreen = true,
             isDebug = false,
             preferencesStore = IOSPreferencesStore(),
+            lightingSystemFactory = Box2dLightingSystemFactory(),
         )
 
         return IOSApplication(caveDroidApplication, config)

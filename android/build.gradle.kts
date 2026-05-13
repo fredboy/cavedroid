@@ -276,6 +276,7 @@ androidComponents {
 dependencies {
     useCommonLibs()
     useGdxModule()
+    useLightingBox2d()
 
     implementation(Dependencies.LibGDX.gdx)
     implementation(Dependencies.LibGDX.Android.backend)

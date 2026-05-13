@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.SharedLibraryLoader
 import org.lwjgl.system.Configuration
 import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
 import ru.fredboy.cavedroid.desktop.utils.SaveSizePrefsGameDecorator
+import ru.fredboy.cavedroid.gameplay.lighting.box2d.Box2dLightingSystemFactory
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
 
 internal object DesktopLauncher {
@@ -61,6 +62,7 @@ internal object DesktopLauncher {
             isTouchScreen = touch,
             isDebug = debug,
             preferencesStore = preferencesStore,
+            lightingSystemFactory = Box2dLightingSystemFactory(),
             loggingSeverity = when {
                 verbose -> Severity.Verbose
                 debug -> Severity.Debug

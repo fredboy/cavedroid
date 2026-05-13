@@ -13,6 +13,7 @@ java.targetCompatibility = ApplicationInfo.sourceCompatibility
 dependencies {
     useCommonLibs()
     useGdxModule()
+    useLightingBox2d()
 
     implementation(Dependencies.LibGDX.gdx)
     implementation(Dependencies.RoboVM.rt)

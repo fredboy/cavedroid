@@ -7,6 +7,7 @@ import co.touchlab.kermit.Severity
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
 import ru.fredboy.cavedroid.common.api.AdController
+import ru.fredboy.cavedroid.gameplay.lighting.box2d.Box2dLightingSystemFactory
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
 
 class AndroidLauncher : AndroidApplication() {
@@ -39,6 +40,7 @@ class AndroidLauncher : AndroidApplication() {
                 isTouchScreen = true,
                 isDebug = BuildConfig.DEBUG,
                 preferencesStore = AndroidPreferencesStore(applicationContext),
+                lightingSystemFactory = Box2dLightingSystemFactory(),
                 adController = adController,
                 loggingSeverity = if (BuildConfig.DEBUG) Severity.Debug else Severity.Info,
             ),

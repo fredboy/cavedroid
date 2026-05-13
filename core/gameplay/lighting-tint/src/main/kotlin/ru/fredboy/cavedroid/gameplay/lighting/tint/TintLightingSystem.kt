@@ -6,15 +6,12 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.physics.box2d.Body
-import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.world.lighting.LightHandle
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
-import javax.inject.Inject
 
-@GameScope
-class TintLightingSystem @Inject constructor() : LightingSystem {
+class TintLightingSystem : LightingSystem {
 
     private var _gameWorld: GameWorld? = null
 

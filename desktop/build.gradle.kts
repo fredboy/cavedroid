@@ -195,6 +195,7 @@ construo {
 dependencies {
     useCommonLibs()
     useGdxModule()
+    useLightingBox2d()
 
     implementation(Dependencies.LibGDX.gdx)
     implementation(Dependencies.LibGDX.Desktop.backend)

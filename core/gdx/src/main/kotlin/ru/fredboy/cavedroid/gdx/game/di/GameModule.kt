@@ -36,9 +36,17 @@ import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.GameWorldContactListener
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
+import ru.fredboy.cavedroid.game.world.lighting.LightingSystemFactory
 
 @Module
 object GameModule {
+
+    @Provides
+    @GameScope
+    fun provideLightingSystem(
+        factory: LightingSystemFactory,
+        gameContextRepository: GameContextRepository,
+    ): LightingSystem = factory.create(gameContextRepository)
 
     @Provides
     @GameScope

@@ -15,6 +15,7 @@ import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.utils.DEFAULT_VIEWPORT_WIDTH
 import ru.fredboy.cavedroid.common.utils.ratio
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
+import ru.fredboy.cavedroid.game.world.lighting.LightingSystemFactory
 import ru.fredboy.cavedroid.gdx.di.ApplicationComponent
 import ru.fredboy.cavedroid.gdx.di.DaggerApplicationComponent
 import ru.fredboy.cavedroid.gdx.game.DeathScreen
@@ -27,6 +28,7 @@ class CaveDroidApplication(
     private val isTouchScreen: Boolean,
     private val isDebug: Boolean,
     private val preferencesStore: PreferencesStore,
+    private val lightingSystemFactory: LightingSystemFactory,
     private val adController: AdController = NoOpAdController(),
     loggingSeverity: Severity = Severity.Info,
 ) : Game(),
@@ -90,6 +92,7 @@ class CaveDroidApplication(
             .applicationController(this)
             .preferencesStore(preferencesStore)
             .adController(adController)
+            .lightingSystemFactory(lightingSystemFactory)
             .build()
 
         if (personalizedAdsConsent != null) {

@@ -20,5 +20,4 @@ dependencies {
     useEntityModules()
     useGameModules()
     useGameplayModules()
-    useLightingBox2d()
 }

@@ -35,6 +35,7 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
+import ru.fredboy.cavedroid.game.world.lighting.LightingSystemFactory
 import ru.fredboy.cavedroid.gdx.game.GameScreen
 import ru.fredboy.cavedroid.gdx.menu.v2.MenuScreen
 import ru.fredboy.cavedroid.gdx.menu.v2.PauseMenuScreen
@@ -112,6 +113,8 @@ interface ApplicationComponent {
 
     val adController: AdController
 
+    val lightingSystemFactory: LightingSystemFactory
+
     @Component.Builder
     interface Builder {
 
@@ -126,6 +129,9 @@ interface ApplicationComponent {
 
         @BindsInstance
         fun adController(impl: AdController): Builder
+
+        @BindsInstance
+        fun lightingSystemFactory(factory: LightingSystemFactory): Builder
 
         fun build(): ApplicationComponent
     }

@@ -9,6 +9,10 @@ fun DependencyHandler.useModule(moduleName: String) {
     add("implementation", project(moduleName))
 }
 
+fun DependencyHandler.useApiModule(moduleName: String) {
+    add("api", project(moduleName))
+}
+
 fun DependencyHandler.useCommonModule() {
     useModule(":core:common")
 }
