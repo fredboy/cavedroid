@@ -11,6 +11,7 @@ import ru.fredboy.cavedroid.game.controller.drop.di.ControllerDropModule
 import ru.fredboy.cavedroid.game.controller.mob.di.MobControllerModule
 import ru.fredboy.cavedroid.game.controller.projectile.di.ProjectileControllerModule
 import ru.fredboy.cavedroid.game.world.di.GameWorldModule
+import ru.fredboy.cavedroid.game.world.di.LightingModule
 import ru.fredboy.cavedroid.gameplay.physics.di.PhysicsModule
 import ru.fredboy.cavedroid.gameplay.rendering.GameRenderer
 import ru.fredboy.cavedroid.gdx.di.ApplicationComponent
@@ -42,6 +43,7 @@ import ru.fredboy.cavedroid.generated.module.WorldRenderModule
         MouseInputHandlersModule::class,
         UseBlockActionsModule::class,
         GameWorldModule::class,
+        LightingModule::class,
         ControllerContainerModule::class,
         ControllerDropModule::class,
         GameContextModule::class,

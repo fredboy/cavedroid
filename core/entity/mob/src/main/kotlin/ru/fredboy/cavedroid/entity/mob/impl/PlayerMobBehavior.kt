@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.entity.mob.impl
 
-import box2dLight.publicUpdate
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.api.SoundPlayer
@@ -123,7 +122,7 @@ class PlayerMobBehavior(
         projectileAdapter: ProjectileAdapter,
         delta: Float,
     ) {
-        sight?.publicUpdate()
+        sight?.update()
 
         if (isPullingBow && !canShootBow()) {
             isPullingBow = false

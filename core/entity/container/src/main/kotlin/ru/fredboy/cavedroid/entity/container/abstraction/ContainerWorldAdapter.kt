@@ -1,7 +1,7 @@
 package ru.fredboy.cavedroid.entity.container.abstraction
 
-import box2dLight.RayHandler
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.world.lighting.LightHandle
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.entity.container.model.ContainerCoordinates
@@ -22,5 +22,5 @@ interface ContainerWorldAdapter {
 
     fun removeOnBlockPlacedListener(listener: OnBlockPlacedListener)
 
-    fun getRayHandler(): RayHandler
+    fun createFurnaceLight(x: Float, y: Float): LightHandle
 }

@@ -6,28 +6,31 @@ import box2dLight.PointLight
 import box2dLight.RayHandler
 import box2dLight.publicUpdate
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.Filter
-import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.effectiveMirrorBand
 import ru.fredboy.cavedroid.common.utils.mirrorSidesFor
 import ru.fredboy.cavedroid.common.utils.neighbourCoordinates
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.world.lighting.LightHandle
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.entity.mob.model.Mob
+import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 import javax.inject.Inject
 import kotlin.math.max
 
 @GameScope
 class GameWorldLightManager @Inject constructor(
     private val gameContextRepository: GameContextRepository,
-) : OnBlockPlacedListener,
-    Disposable {
+) : LightingSystem,
+    OnBlockPlacedListener {
 
     private var _gameWorld: GameWorld? = null
 
@@ -43,7 +46,7 @@ class GameWorldLightManager @Inject constructor(
     private val sunLight: DirectionalLight
         get() = requireNotNull(_sunLight)
 
-    val rayHandler: RayHandler
+    private val rayHandler: RayHandler
         get() = requireNotNull(_rayHandler)
 
     private val blockLights = mutableMapOf<Pair<Int, Int>, List<Light>>()
@@ -53,7 +56,7 @@ class GameWorldLightManager @Inject constructor(
     private val mirrorBand: Int
         get() = effectiveMirrorBand(MIRROR_BAND_BLOCKS, gameWorld.width)
 
-    fun attachToGameWorld(gameWorld: GameWorld) {
+    override fun attachToGameWorld(gameWorld: GameWorld) {
         if (_gameWorld != null) {
             logger.w { "GameWorldLightManager already attached" }
             return
@@ -104,11 +107,11 @@ class GameWorldLightManager @Inject constructor(
         }
     }
 
-    fun isMobExposedToSun(mob: Mob): Boolean {
+    override fun isMobExposedToSun(mob: Mob): Boolean {
         return sunLight.contains(mob.position.x, mob.position.y)
     }
 
-    fun update(delta: Float) {
+    override fun update(delta: Float) {
         updateAccumulator += delta
 
         if (updateAccumulator < SUN_UPDATE_FREQUENCY) {
@@ -125,6 +128,57 @@ class GameWorldLightManager @Inject constructor(
         sunLight.direction = sunAngle
         sunLight.color = Color().apply { a = max(gameWorld.getSunlight(), 0.1f) }
         sunLight.publicUpdate()
+    }
+
+    override fun render(camera: OrthographicCamera, cameraJumped: Boolean) {
+        rayHandler.setCombinedMatrix(camera)
+        if (cameraJumped) {
+            rayHandler.update()
+        }
+        rayHandler.render()
+    }
+
+    override fun recalculate() {
+        rayHandler.update()
+    }
+
+    override fun createPlayerSightLight(body: Body, x: Float, y: Float): LightHandle {
+        val light = PointLight(
+            rayHandler,
+            128,
+            Color().apply { a = 0.7f },
+            4f,
+            x,
+            y,
+        ).apply {
+            attachToBody(body)
+            ignoreAttachedBody = true
+            setContactFilter(
+                Filter().apply {
+                    categoryBits = PhysicsConstants.CATEGORY_OPAQUE
+                },
+            )
+            isXray = true
+        }
+        return Box2dLightHandle(light)
+    }
+
+    override fun createFurnaceLight(x: Float, y: Float): LightHandle {
+        val light = PointLight(
+            rayHandler,
+            128,
+            Color().apply { a = 1f },
+            13f,
+            x,
+            y,
+        ).apply {
+            val filter = Filter().apply {
+                maskBits = PhysicsConstants.CATEGORY_OPAQUE
+            }
+            setContactFilter(filter)
+            setSoftnessLength(3f)
+        }
+        return Box2dLightHandle(light)
     }
 
     private fun updateChunk(blockX: Int, blockY: Int) {
@@ -255,6 +309,26 @@ class GameWorldLightManager @Inject constructor(
         val points: Set<Pair<Int, Int>>,
         val block: Block,
     )
+
+    private class Box2dLightHandle(private val light: Light) : LightHandle {
+        override var isActive: Boolean
+            get() = light.isActive
+            set(value) {
+                light.isActive = value
+            }
+
+        override fun setPosition(x: Float, y: Float) {
+            light.setPosition(x, y)
+        }
+
+        override fun update() {
+            light.publicUpdate()
+        }
+
+        override fun dispose() {
+            light.remove(true)
+        }
+    }
 
     companion object {
         private const val TAG = "GameWorldLightManager"

@@ -34,8 +34,8 @@ import ru.fredboy.cavedroid.game.controller.mob.MobSoundManager
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.GameWorldContactListener
-import ru.fredboy.cavedroid.game.world.GameWorldLightManager
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
+import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 
 @Module
 object GameModule {
@@ -182,7 +182,7 @@ object GameModule {
         physicsController: GameWorldContactListener,
         gameWorldSolidBlockBodiesManager: GameWorldSolidBlockBodiesManager,
         environmentTextureRegionsRepository: EnvironmentTextureRegionsRepositoryTexture,
-        gameWorldLightManager: GameWorldLightManager,
+        lightingSystem: LightingSystem,
     ): GameWorld {
         val mapData = if (gameContextRepository.isLoadGame()) {
             saveDataRepository.loadMap(
@@ -198,7 +198,7 @@ object GameModule {
             physicsController = physicsController,
             gameWorldSolidBlockBodiesManager = gameWorldSolidBlockBodiesManager,
             environmentTextureRegionsRepository = environmentTextureRegionsRepository,
-            gameWorldLightManager = gameWorldLightManager,
+            lightingSystem = lightingSystem,
             initialForeMap = mapData?.foreMap,
             initialBackMap = mapData?.backMap,
             initialBiomes = mapData?.biomes,
