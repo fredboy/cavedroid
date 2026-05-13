@@ -7,6 +7,18 @@ if [[ ! $1 ]]; then
   exit
 fi
 
+if [[ -n "${JAVA_HOME:-}" && -x "$JAVA_HOME/bin/java" ]]; then
+  java_bin="$JAVA_HOME/bin/java"
+else
+  java_bin="java"
+fi
+java_version=$("$java_bin" -version 2>&1 | sed -nE '1s/.*version "([0-9]+).*/\1/p')
+if [[ "$java_version" != "17" ]]; then
+  echo ">> Java 17 required; found '${java_version:-unknown}' via $java_bin (JAVA_HOME=${JAVA_HOME:-(unset)})"
+  exit 1
+fi
+echo ">> Java 17 detected (via $java_bin)"
+
 ./require-clean-work-tree.sh "$0" || exit 1
 
 release_dir="release-$1"
