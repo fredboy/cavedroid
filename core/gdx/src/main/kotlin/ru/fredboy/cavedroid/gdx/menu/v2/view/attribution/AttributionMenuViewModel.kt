@@ -1,7 +1,6 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.attribution
 
 import com.badlogic.gdx.Gdx
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +20,7 @@ class AttributionMenuViewModel(
 
     private val attributionsFlow = _attributionsFlow
         .onStart {
-            val attributions = withContext(Dispatchers.IO) {
+            val attributions = withContext(ioDispatcher) {
                 getAllAttributions()
             }
             emit(attributions)

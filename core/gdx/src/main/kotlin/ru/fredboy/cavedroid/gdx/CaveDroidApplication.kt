@@ -11,6 +11,7 @@ import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.NoOpAdController
 import ru.fredboy.cavedroid.common.api.PreferencesStore
+import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.utils.DEFAULT_VIEWPORT_WIDTH
 import ru.fredboy.cavedroid.common.utils.ratio
@@ -29,6 +30,7 @@ class CaveDroidApplication(
     private val isDebug: Boolean,
     private val preferencesStore: PreferencesStore,
     private val lightingSystemFactory: LightingSystemFactory,
+    private val dispatchers: AppDispatchers,
     private val adController: AdController = NoOpAdController(),
     loggingSeverity: Severity = Severity.Info,
 ) : Game(),
@@ -93,6 +95,7 @@ class CaveDroidApplication(
             .preferencesStore(preferencesStore)
             .adController(adController)
             .lightingSystemFactory(lightingSystemFactory)
+            .appDispatchers(dispatchers)
             .build()
 
         if (personalizedAdsConsent != null) {

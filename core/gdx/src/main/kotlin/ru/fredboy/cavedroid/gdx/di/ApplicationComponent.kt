@@ -7,6 +7,7 @@ import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.PreferencesStore
 import ru.fredboy.cavedroid.common.api.SoundPlayer
+import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.data.assets.di.DataAssetsModule
 import ru.fredboy.cavedroid.data.configuration.di.ApplicationContextModule
@@ -115,6 +116,8 @@ interface ApplicationComponent {
 
     val lightingSystemFactory: LightingSystemFactory
 
+    val appDispatchers: AppDispatchers
+
     @Component.Builder
     interface Builder {
 
@@ -132,6 +135,9 @@ interface ApplicationComponent {
 
         @BindsInstance
         fun lightingSystemFactory(factory: LightingSystemFactory): Builder
+
+        @BindsInstance
+        fun appDispatchers(dispatchers: AppDispatchers): Builder
 
         fun build(): ApplicationComponent
     }

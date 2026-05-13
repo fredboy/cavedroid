@@ -1,7 +1,6 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.notice
 
 import com.badlogic.gdx.Gdx
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +21,7 @@ class NoticeMenuViewModel(
 
     private val noticesFlow = _noticesFlow
         .onStart {
-            val notices = withContext(Dispatchers.IO) {
+            val notices = withContext(ioDispatcher) {
                 Gdx.files.internal("notices.txt").readString()
             }
             emit(notices)

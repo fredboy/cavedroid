@@ -3,6 +3,8 @@ package ru.fredboy.cavedroid.html
 import co.touchlab.kermit.Severity
 import com.github.xpenatan.gdx.teavm.backends.web.WebApplication
 import com.github.xpenatan.gdx.teavm.backends.web.WebApplicationConfiguration
+import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
+import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.gameplay.lighting.tint.TintLightingSystemFactory
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
 
@@ -22,6 +24,11 @@ object WebLauncher {
             isDebug = false,
             preferencesStore = WebPreferencesStore(),
             lightingSystemFactory = TintLightingSystemFactory(),
+            dispatchers = AppDispatchers(
+                io = GdxMainDispatcher,
+                background = GdxMainDispatcher,
+                main = GdxMainDispatcher,
+            ),
             loggingSeverity = Severity.Info,
         )
 
