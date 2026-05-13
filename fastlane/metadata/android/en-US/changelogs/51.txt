@@ -1,0 +1,14 @@
+## 1.0.0 (2026-05-13)
+
+*  Add legacy Android build skill and docs 
+*  Add legacy migration patch and wire it into make-release.sh 
+*  Update license 
+*  Remove FPS counter and mode switch key 
+*  Add gdx-jnigen dontwarn rule for legacy R8 build 
+*  Verify Java 17 at start of make-release.sh 
+*  Clean android/libs before legacy build to avoid stale natives in APK 
+*  Pre-stage 1.9.10 natives before legacy gradle build 
+*  Document mergeJniLibFolders vs copyAndroidNatives race and the pre-stage fix 
+*  Order JniLibFolders merge after copyAndroidNatives 
+
+
