@@ -540,8 +540,9 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     }
 
     override fun getSavesInfo(gameDataFolder: String): List<GameSaveInfo> {
-        return file("$gameDataFolder/$SAVES_DIR").list { it.isDirectory }
+        return file("$gameDataFolder/$SAVES_DIR").list()
             .asSequence()
+            .filter { it.isDirectory }
             .filter { isSaveDir(it) }
             .map { saveDir ->
                 val saveData = loadMapData(saveDir.path())

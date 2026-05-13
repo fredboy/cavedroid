@@ -13,6 +13,12 @@ object WebLauncher {
 
     @JvmStatic
     fun main(args: Array<String>) {
+        // kotlinx-coroutines' "stack trace recovery" walks the JVM stack to
+        // enrich exceptions. Under TeaVM that walk hits nulls and crashes
+        // inside the exception-handling path, masking the actual error.
+        // Disabling recovery surfaces real exceptions cleanly.
+        System.setProperty("kotlinx.coroutines.stacktrace.recovery", "false")
+
         val config = WebApplicationConfiguration().apply {
             width = 0
             height = 0
