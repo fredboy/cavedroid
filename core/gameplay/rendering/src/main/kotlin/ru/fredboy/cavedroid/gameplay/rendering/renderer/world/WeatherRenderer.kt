@@ -46,9 +46,15 @@ class WeatherRenderer @Inject constructor(
 
     private fun drawSunAndMoon(spriteBatch: SpriteBatch, viewport: Rectangle) {
         val skyWidth = max(SKY_SPAN, viewport.width)
+        val totalSpan = skyWidth * 2f
         val normalizedTime = gameWorld.getNormalizedTime()
         val sunPositionX = (skyWidth * normalizedTime) + (viewport.width / 2 - skyWidth / 2)
-        val moonPositionX = (sunPositionX + skyWidth) % (skyWidth * 2f)
+        // Avoid `(sunPositionX + skyWidth) % totalSpan` — TeaVM's Float.rem codegen
+        // drops the parentheses around the divisor and evaluates it as
+        // `((sunPositionX + skyWidth) % skyWidth) * 2f`, so the moon ends up
+        // tracking `2 * sunPositionX` and is visible all day.
+        val rawMoonPos = sunPositionX + skyWidth
+        val moonPositionX = if (rawMoonPos >= totalSpan) rawMoonPos - totalSpan else rawMoonPos
         val sunSprite = environmentTextureRegionsRepository.getSunSprite()
         val moonSprite = environmentTextureRegionsRepository.getMoonPhaseSprite(gameWorld.moonPhase)
 
