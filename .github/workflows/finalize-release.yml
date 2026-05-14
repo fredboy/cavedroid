@@ -2,7 +2,7 @@ name: Finalize Release
 
 # Manually triggered from the Actions UI (or `gh workflow run`). On the
 # release/A.B.C branch:
-#   1. AI-generates en + ru plaintext fastlane changelogs (GitHub Models).
+#   1. AI-generates plaintext fastlane changelogs for every supported locale (GitHub Models).
 #   2. Commits them with [skip ci] and pushes the release branch.
 #   3. Opens a PR release/A.B.C -> master, enables auto-merge.
 #   4. Waits for that PR to merge, then tags vA.B.C on the master merge commit.

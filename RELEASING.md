@@ -57,8 +57,8 @@ export GITHUB_TOKEN=$(gh auth token)
 
 The script:
 
-1. AI-generates en + ru plaintext changelogs via [GitHub Models](https://github.com/marketplace/models).
-2. Writes them to `fastlane/metadata/android/{en-US,ru-RU}/changelogs/<versionCode>.txt`.
+1. AI-generates plaintext changelogs for every supported locale via [GitHub Models](https://github.com/marketplace/models). The locale list lives in `scripts/locales.sh` and must stay in sync with `SUPPORTED_LOCALES` in `CaveDroidConstants.kt`.
+2. Writes them to `fastlane/metadata/android/<locale-dir>/changelogs/<versionCode>.txt`, one file per supported locale.
 3. Commits with `[skip ci]` and pushes the release branch.
 4. Opens PR `release/A.B.C → master`, enables auto-merge.
 5. **Waits for that PR to merge** (you approve it on GitHub).
@@ -79,7 +79,7 @@ For auto-merge to be available at all, Settings → General → Pull Requests �
 After `finalize-release.yml` finishes, `release.yml` runs (dispatched explicitly by the finalize step). It:
 
 1. Calls `scripts/build-release-artifacts.sh A.B.C --skip-legacy` (signed Android foss release + desktop Linux/Win + web).
-2. Calls `scripts/gen-release-notes-ai.sh vA.B.C --output release-notes.md` for bilingual markdown release notes.
+2. Calls `scripts/gen-release-notes-ai.sh vA.B.C --output release-notes.md` for multilingual markdown release notes (one section per supported locale).
 3. Creates the GitHub Release with all artifacts attached.
 
 To do this locally instead:
@@ -181,10 +181,10 @@ All release logic lives in `scripts/` so it can run locally and in CI. Each scri
 | `up-version.sh A.B.C` | Bump version files in lockstep | Clean tree (called by the others) |
 | `require-clean-work-tree.sh` | Helper guard | — |
 | `start-release.sh A.B.C [--no-push] [--skip-clean-check]` | Cut `release/A.B.C` from develop + version bump | On `develop`, clean tree |
-| `gen-changelog-ai.sh A.B.C [--model M]` | AI-generate en+ru fastlane changelogs | `GITHUB_TOKEN` set |
+| `gen-changelog-ai.sh A.B.C [--model M]` | AI-generate fastlane changelogs for all supported locales | `GITHUB_TOKEN` set |
 | `finalize-release.sh A.B.C [--no-push] [--skip-clean-check]` | Run gen-changelog-ai, commit, merge to master+develop, tag | On `release/A.B.C`, clean tree, `GITHUB_TOKEN` set, master+develop fetched locally |
 | `build-release-artifacts.sh A.B.C [--skip-legacy]` | Build signed Android foss + desktop Linux/Win + web | `keystore.properties` at repo root |
-| `gen-release-notes-ai.sh vA.B.C [--model M] [--output PATH]` | AI-generate bilingual markdown release notes | `GITHUB_TOKEN` set |
+| `gen-release-notes-ai.sh vA.B.C [--model M] [--output PATH]` | AI-generate multilingual markdown release notes (one section per supported locale) | `GITHUB_TOKEN` set |
 
 `GITHUB_TOKEN` for local use: `export GITHUB_TOKEN=$(gh auth token)`. In CI it's auto-provided and the workflow declares `permissions: { models: read }`.
 

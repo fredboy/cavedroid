@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Finalize a release via PRs:
-#   1. AI-generate fastlane changelogs (en + ru), commit, push release branch.
+#   1. AI-generate fastlane changelogs (one per supported locale), commit, push release branch.
 #   2. Open PR  release/A.B.C -> master  with auto-merge enabled.
 #   3. Wait for it to merge (manual approval expected on the PR side).
 #   4. Tag vA.B.C on the master merge commit, push the tag.
@@ -85,14 +85,20 @@ if ! command -v gh >/dev/null 2>&1; then
   exit 1
 fi
 
-echo ">> Generating AI changelog (fastlane en + ru)"
+echo ">> Generating AI changelog (fastlane, one per supported locale)"
 ./scripts/gen-changelog-ai.sh "$version"
 
 version_code=$(grep 'const val versionCode' buildSrc/src/main/kotlin/ApplicationInfo.kt | sed -E 's/.*versionCode = ([0-9]+)/\1/')
 
 echo ">> Committing fastlane changelog"
-git add "fastlane/metadata/android/en-US/changelogs/${version_code}.txt" \
-        "fastlane/metadata/android/ru-RU/changelogs/${version_code}.txt"
+shopt -s nullglob
+changelog_files=(fastlane/metadata/android/*/changelogs/"${version_code}.txt")
+shopt -u nullglob
+if [[ ${#changelog_files[@]} -eq 0 ]]; then
+  echo >&2 "error: no changelog files were produced for versionCode ${version_code}"
+  exit 1
+fi
+git add "${changelog_files[@]}"
 git commit -m "[skip ci] Add changelog for $tag"
 
 echo ">> Pushing $branch"
