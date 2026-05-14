@@ -1,0 +1,36 @@
+## 1.0.1 (2026-05-14)
+
+*  Cleanup metadata changelogs 
+*  Switch README badge from tag to release 
+*  Refactor: extract LightingSystem interface from GameWorldLightManager 
+*  Add :core:gameplay:lighting-box2d module 
+*  Add :core:gameplay:lighting-tint module (web fallback) 
+*  Wire LightingSystem via per-platform LightingSystemFactory 
+*  Add :html TeaVM module skeleton 
+*  :html spike — stub JDK gaps for kotlinx-coroutines under TeaVM 
+*  Vendor gdx-box2d-gwt sources so TeaVM can compile a JS bundle 
+*  Fix double-slash in lanapixel.fnt path 
+*  Inject AppDispatchers; remove direct Dispatchers.IO/Default usage 
+*  Inject ViewModel's dispatcher; remove Dispatchers.Default from viewModelScope 
+*  Route save layer through Gdx.files.getFileHandle with per-platform FileType 
+*  Web: unbreak ThreadLocalRandom, coroutines stack recovery, and save list 
+*  Web: detect mobile browsers and enable touch input 
+*  Web: bundle notices.txt and attribution_index.txt into the JS build 
+*  Refresh saves list when SinglePlayer menu is shown 
+*  Web: hide the Exit button on the main menu 
+*  Web: stop sun and moon overlapping in the sky 
+*  Web: fix NaN pitch when breaking a 0-hp block 
+*  Default Player.holdCursor based on touch-input mode 
+*  Save: keep leading '/' on absolute paths in SaveDataRepositoryImpl 
+*  Pass ApplicationContextRepository to MobController construction sites 
+*  Web: split dev and release TeaVM build variants 
+*  Web: add :html:packageWebDist and ship it from make-release.sh 
+*  Add HTML/JS web build via gdx-teavm (#38) 
+*  #39: Fix saved games list won't update after deletion 
+*  #40: Fix unknown locale crash 
+*  #39: Fix saved games list won't update after deletion (#41) 
+*  #40: Fix unknown locale crash (#42) 
+*  Update legacy migration patch 
+*  Fix implicit task dependency for desktop:dist on runtime classpath jars 
+
+
