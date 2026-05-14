@@ -29,13 +29,14 @@ mkdir "$release_dir"
 echo ">> Bumping version to $1"
 ./up-version.sh "$1"
 
-echo ">> Running ktlint + main builds (Android foss release, desktop Linux/Win)"
-./gradlew clean ktlintCheck android:assembleFossRelease desktop:packageLinuxX64 desktop:packageWinX64
+echo ">> Running ktlint + main builds (Android foss release, desktop Linux/Win, web)"
+./gradlew clean ktlintCheck android:assembleFossRelease desktop:packageLinuxX64 desktop:packageWinX64 html:packageWebDist
 
 echo ">> Copying main artifacts to $release_dir/"
 cp "android/build/outputs/apk/foss/release/android-foss-release.apk" "$release_dir/android-foss-$1.apk"
 cp "desktop/build/dist/cavedroid-linuxX64.zip" "$release_dir/linux-x86_64-$1.zip"
 cp "desktop/build/dist/cavedroid-winX64.zip" "$release_dir/win-x86_64-$1.zip"
+cp "html/build/dist/cavedroid-web-$1.zip" "$release_dir/web-$1.zip"
 
 # Legacy Android build (best-effort). If legacy-migration.patch is present and
 # still applies, produce an extra android-legacy-foss-$1.apk for API 16/17

@@ -119,3 +119,19 @@ tasks.register<JavaExec>("buildJsRelease") {
     description = "Compile :html to JavaScript via TeaVM (release: obfuscated, FULL optimization, no source maps)."
     configureWebBuild(sourceMaps = false, obfuscate = true, optimization = "FULL")
 }
+
+tasks.register<Zip>("packageWebDist") {
+    group = "distribution"
+    description = "Package the release web bundle into a zip ready for static hosting."
+    dependsOn("buildJsRelease")
+
+    archiveBaseName.set("cavedroid-web")
+    archiveVersion.set(ApplicationInfo.versionName)
+    destinationDirectory.set(layout.buildDirectory.dir("dist"))
+
+    from(layout.buildDirectory.dir("dist/webapp")) {
+        // WEB-INF is only used by the embedded Jetty dev server; static
+        // hosts don't need it and including it leaks the servlet config.
+        exclude("WEB-INF/**")
+    }
+}
