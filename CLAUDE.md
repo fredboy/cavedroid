@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-CaveDroid — a 2D Minecraft-inspired game built on **libGDX** in **Kotlin** (JVM 17, Kotlin 2.2.10), shipping for Android, Desktop (Linux/Windows/macOS via the `construo` plugin), and iOS (via RoboVM). Single-player, horizontally looped world.
+CaveDroid — a 2D Minecraft-inspired game built on **libGDX** in **Kotlin** (JVM 17, Kotlin 2.2.10), shipping for Android, Desktop (Linux/Windows/macOS via the `construo` plugin), iOS (via RoboVM), and the **Web** (via TeaVM-JS through `gdx-teavm`). Single-player, horizontally looped world.
 
 ## Common commands
 
@@ -28,6 +28,12 @@ All Gradle tasks run via `./gradlew` (use `gradlew.bat` on Windows — note that
 
 # Signed/proguarded desktop release JAR (requires keystore.properties)
 ./gradlew desktop:generateSignedJar
+
+# Web (TeaVM-JS)
+./gradlew html:buildJs                 # dev: source maps, no obfuscation, SIMPLE optimization
+./gradlew html:runWeb                  # buildJs + start embedded Jetty dev server
+./gradlew html:buildJsRelease          # release: obfuscated, FULL optimization, no source maps
+./gradlew html:packageWebDist          # zip the release bundle for static hosting
 
 # Lint
 ./gradlew ktlintCheck                  # check
@@ -78,7 +84,7 @@ Game-loop / rendering behavior is still verified manually via
 
 ### Release flow
 
-`./make-release.sh <versionName>` is the canonical release script: it requires a clean tree, runs `up-version.sh` (which bumps `versionName` and increments `versionCode`), runs `ktlintCheck` + Android release + Linux/Win desktop packages, copies artifacts into `release-<version>/`, generates a changelog, and creates the commit + tag. Don't hand-edit version numbers — `up-version.sh` keeps two files in sync (see "Versioning" below).
+`./make-release.sh <versionName>` is the canonical release script: it requires a clean tree, runs `up-version.sh` (which bumps `versionName` and increments `versionCode`), runs `ktlintCheck` + Android release + Linux/Win desktop packages + `html:packageWebDist`, copies artifacts (including `web-<version>.zip`) into `release-<version>/`, generates a changelog, and creates the commit + tag. Don't hand-edit version numbers — `up-version.sh` keeps two files in sync (see "Versioning" below).
 
 ### Signing
 
@@ -88,16 +94,16 @@ For Android release builds and the desktop `generateSignedJar`/`packageLinuxX64`
 
 ### Multi-module Gradle layout
 
-Three platform launcher modules (`android`, `desktop`, `ios`) thinly wrap a shared `core` module graph. The launcher's only job is to build a `CaveDroidApplication` (in `core:gdx`) and hand it a platform-specific `PreferencesStore`.
+Four platform launcher modules (`android`, `desktop`, `ios`, `html`) thinly wrap a shared `core` module graph. The launcher's only job is to build a `CaveDroidApplication` (in `core:gdx`) and hand it a platform-specific `PreferencesStore` (and on Web, also a tint-based `LightingSystem`).
 
 The `core` graph follows a clean-architecture-ish split. **Module dependencies flow inward:** outer layers depend on inner ones, never the reverse.
 
-- **`core:common`** — shared API contracts (`ApplicationController`, `PreferencesStore`, `SoundPlayer`), constants, scope annotations (`@GameScope`, `@MenuScope`), Kotlin/Gdx utilities. No libGDX-specific game logic.
+- **`core:common`** — shared API contracts (`ApplicationController`, `PreferencesStore`, `SoundPlayer`, `AdController`, `LightingSystem`), constants, scope annotations (`@GameScope`, `@MenuScope`), Kotlin/Gdx utilities. No libGDX-specific game logic.
 - **`core:domain:*`** — repository interfaces, use cases, domain models (assets, configuration, items, world, save). Pure Kotlin.
 - **`core:data:*`** — repository implementations and Dagger modules that bind them (assets, configuration, items, save). Save uses `kotlinx.serialization` (json + protobuf).
 - **`core:entity:*`** — game entity types: `container`, `drop`, `mob`, `projectile`.
 - **`core:game:*`** — game-scoped logic: `controller/{drop,container,mob,projectile}`, `world`, `window` (UI windows like inventory, crafting). Lives behind `@GameScope`.
-- **`core:gameplay:*`** — cross-cutting systems: `controls`, `physics` (Box2D + Box2DLights), `rendering`.
+- **`core:gameplay:*`** — cross-cutting systems: `controls`, `physics` (Box2D), `rendering`, plus the swappable lighting backends `lighting-box2d` (Box2DLights — desktop/android/ios) and `lighting-tint` (full-screen day/night tint — web fallback, no per-block lights).
 - **`core:gdx`** — top-level integration: the `CaveDroidApplication : Game` class, `MenuScreen`/`GameScreen`/`PauseMenuScreen`, the menu's MVVM-ish navigation framework (`menu/v2/navigation`), and the **two Dagger components** (`ApplicationComponent`, `GameComponent`).
 
 The `buildSrc/` module centralizes versions and exposes ergonomic dependency helpers: each module's `build.gradle.kts` reads almost like a manifest (`useCommonLibs()`, `useDagger()`, `useDomainModules()`, `useGameModules()`, `useLibgdx()`, `useLibKtx()`, `useAutomultibind()`, `useKotlinxSerializationJson()`, etc., defined in `buildSrc/src/main/kotlin/DependencyHandlerExtentions.kt`). When adding dependencies, prefer extending these helpers over inlining versions.
@@ -115,7 +121,7 @@ When changing DI wiring, also update the matching `Component` in `core:gdx/.../d
 
 ### Assets and resources
 
-`assets/` at the repo root is the single source of truth. Both `desktop/src/main/resources` and `android/src/main/assets` are **symlinks** to it (which is why Windows builds need extra setup). The iOS module reads `assets/` directly. Each platform's `build.gradle.kts` adds two synthesized resources at build time:
+`assets/` at the repo root is the single source of truth. Both `desktop/src/main/resources` and `android/src/main/assets` are **symlinks** to it (which is why Windows builds need extra setup). The iOS module reads `assets/` directly. The `:html` module passes `assets/` straight to TeaVM via `cavedroid.assetsPath` and bundles `notices.txt` + `attribution_index.txt` separately under `build/generated/extraAssets/`. Each platform's `build.gradle.kts` adds two synthesized resources at build time:
 
 - `notices.txt` — generated from the license report plugin (`copyLicenseReport` → `build/generated/extraRes/notices.txt`).
 - `attribution_index.txt` — built by the `generateAttributionIndex` task by walking the assets tree for `attribution.txt` files.
@@ -164,12 +170,40 @@ Wiring: `AdController` is `@BindsInstance`-bound into `ApplicationComponent` via
 
 When adding ad-aware UI: gate it on `adController.supportsPersonalizedAdsConsent` (not on flavor names) so foss/desktop hide it automatically.
 
+### Web (TeaVM-JS) target
+
+The `:html` module compiles JVM bytecode (Kotlin + Java) to JavaScript via **gdx-teavm** (xpenatan). Layout:
+
+- `html/src/main/kotlin/.../WebLauncher.kt` — TeaVM entry; constructs `CaveDroidApplication` with a `WebPreferencesStore` (LocalStorage) and `NoOpAdController`.
+- `html/src/main/kotlin/.../BuildWebJs.kt` — invoked by Gradle as a `JavaExec`. Reads `cavedroid.*` system properties (`assetsPath`, `extraAssetsPath`, `launcherClass`, `serve`, `sourceMaps`, `obfuscate`, `optimization`, `sourceRoots`) and drives the TeaVM `TeaCompiler`.
+- `html/src/main/java/emu/**` — vendored emulated classes that TeaVM substitutes at compile time:
+  - `emu/com/badlogic/gdx/physics/box2d/**` — Box2D port (gdx-box2d-gwt, Apache 2.0). Contains a local `getFixtureCount()` patch in `World.java`.
+  - `emu/org/jbox2d/**` — jbox2d (BSD).
+  - `emu/java/**` — small JDK stubs (e.g. `java.util.concurrent.*` no-ops) that TeaVM remaps via `META-INF/teavm.properties`'s `mapPackageHierarchy|emu.*=*` directive.
+- `html/src/main/java/emulate/**` — `@Emulate` overrides for libGDX/Java types that need web-specific implementations.
+- `html/NOTICE.md` — provenance and licensing for everything under `emu/`.
+
+**Lighting:** the web build uses `lighting-tint` (full-screen day/night blend driven by `GameWorld.getSunlight()`) instead of `lighting-box2d`. There are no per-block light sources in the browser.
+
+**Gradle tasks** (defined in `html/build.gradle.kts`):
+
+| Task | Optimization | Source maps | Obfuscated | Use |
+|---|---|---|---|---|
+| `buildJs` | `SIMPLE` | yes | no | local development; produces readable JS + maps to original Kotlin sources |
+| `runWeb` | `SIMPLE` | yes | no | `buildJs` + start the embedded Jetty server |
+| `buildJsRelease` | `FULL` | no | yes | production bundle |
+| `packageWebDist` | (depends on `buildJsRelease`) | — | — | zips `build/dist/webapp` (excluding `WEB-INF/`) into `build/dist/cavedroid-web-<version>.zip` for static hosting |
+
+`sourceRoots` is computed lazily by walking every subproject's `src/main/kotlin` and `src/main/java` so browser stack traces resolve to the original Kotlin files.
+
+**Web-specific behavior in shared code:** view models gate platform-only UI (e.g. `MainMenuViewModel.showExitButton`) on `Gdx.app.type != Application.ApplicationType.WebGL` — keep platform/capability checks in the VM, not the View.
+
 ### Logging
 
 `co.touchlab:kermit` everywhere. The launcher chooses severity from CLI flags (`--verbose` → Verbose, `--debug` → Debug, otherwise Info). Use `Logger.withTag("…")` per class rather than the global logger.
 
 ## Style
 
-- **Kotlin only** (no new Java code). JVM target 17 across all modules.
+- **Kotlin only** (no new Java code). JVM target 17 across all modules. The vendored emulated Java classes under `html/src/main/java/emu/**` and `html/src/main/java/emulate/**` are the documented exception — they exist in Java because their upstream sources do.
 - **Ktlint** (1.6.0, IntelliJ code style) gates CI. The `.editorconfig` disables a handful of rules (multiline expression wrapping, string template indent, comment wrapping, empty first line in class body, property/backing-property naming, function expression body) — don't reintroduce those.
 - Generated code under `**/generated/**` is excluded from formatting.
