@@ -12,14 +12,21 @@ object BuildWebJs {
     fun main(args: Array<String>) {
         val assetsPath = System.getProperty("cavedroid.assetsPath")
             ?: error("cavedroid.assetsPath system property must be set by the gradle task.")
+        val extraAssetsPath = System.getProperty("cavedroid.extraAssetsPath")
         val launcherClass = System.getProperty("cavedroid.launcherClass")
             ?: error("cavedroid.launcherClass system property must be set by the gradle task.")
         val serve = System.getProperty("cavedroid.serve")?.toBooleanStrictOrNull() == true
 
         val backend = WebBackend().setStartJettyAfterBuild(serve)
 
-        TeaCompiler(backend)
+        val compiler = TeaCompiler(backend)
             .addAssets(AssetFileHandle(assetsPath))
+
+        if (!extraAssetsPath.isNullOrEmpty()) {
+            compiler.addAssets(AssetFileHandle(extraAssetsPath))
+        }
+
+        compiler
             .setOptimizationLevel(TeaVMOptimizationLevel.SIMPLE)
             .setMainClass(launcherClass)
             .setObfuscated(false)
