@@ -135,4 +135,15 @@ object Versions {
     const val firebase = "34.13.0"
 
     const val mobileads = "8.0.0"
+
+    /**
+     * gdx-teavm — libGDX backend that compiles JVM bytecode to JavaScript via TeaVM.
+     *
+     * [Source](https://github.com/xpenatan/gdx-teavm)
+     *
+     * Note: this artifact pulls libGDX 1.14.0 transitively, while the rest of the
+     * project pins 1.13.1. Gradle resolves to the higher version on the :html
+     * classpath; runtime ABI is forward-compatible for our usage.
+     */
+    const val gdxTeaVM = "1.5.6"
 }

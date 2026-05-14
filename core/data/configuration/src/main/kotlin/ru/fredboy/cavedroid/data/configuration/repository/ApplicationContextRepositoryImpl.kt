@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.data.configuration.repository
 
+import com.badlogic.gdx.Files
 import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.data.configuration.store.ApplicationContextStore
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -21,6 +22,8 @@ class ApplicationContextRepositoryImpl @Inject constructor(
     override fun useDynamicCamera(): Boolean = applicationContextStore.useDynamicCamera
 
     override fun getGameDirectory(): String = applicationContextStore.gameDirectory
+
+    override fun getGameDirectoryFileType(): Files.FileType = applicationContextStore.gameDirectoryFileType
 
     override fun getWidth(): Float = applicationContextStore.width
 

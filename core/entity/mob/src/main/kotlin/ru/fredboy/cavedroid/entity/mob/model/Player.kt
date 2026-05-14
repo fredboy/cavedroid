@@ -1,12 +1,9 @@
 package ru.fredboy.cavedroid.entity.mob.model
 
-import box2dLight.Light
-import box2dLight.PointLight
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.Filter
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.common.utils.TooltipManager
@@ -21,7 +18,7 @@ import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
-import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
+import ru.fredboy.cavedroid.domain.world.lighting.LightHandle
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.impl.PlayerMobBehavior
@@ -113,10 +110,10 @@ class Player(
 
     val activeItem get() = inventory.items[activeSlot]
 
-    var sight: Light? = null
+    var sight: LightHandle? = null
         set(value) {
             if (field != null) {
-                field?.remove(true)
+                field?.dispose()
                 field = null
             }
 
@@ -359,30 +356,11 @@ class Player(
     }
 
     fun initSight(mobWorldAdapter: MobWorldAdapter) {
-        sight = PointLight(
-            mobWorldAdapter.getRayHandler(),
-            128,
-            Color().apply { a = 0.7f },
-            4f,
-            position.x,
-            position.y,
-        ).apply {
-            attachToBody(body)
-            ignoreAttachedBody = true
-            setContactFilter(
-                Filter().apply {
-                    categoryBits = PhysicsConstants.CATEGORY_OPAQUE
-                },
-            )
-            isXray = true
-        }
+        sight = mobWorldAdapter.createPlayerSightLight(body, position.x, position.y)
     }
 
     fun updateSight() {
-        sight?.let { sight ->
-            sight.setPosition(position.x, position.y)
-            sight.direction = 0f
-        }
+        sight?.setPosition(position.x, position.y)
     }
 
     fun startHitting(withDamage: Boolean = true) {

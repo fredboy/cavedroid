@@ -1,13 +1,14 @@
 package ru.fredboy.cavedroid.game.world.impl
 
-import box2dLight.RayHandler
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.World
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
+import ru.fredboy.cavedroid.domain.world.lighting.LightHandle
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
@@ -17,6 +18,7 @@ import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.projectile.abstraction.ProjectileWorldAdapter
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
@@ -25,6 +27,7 @@ internal class WorldAdapterImpl @Inject constructor(
     private val gameWorld: GameWorld,
     private val itemsRepository: ItemsRepository,
     private val mobParamsRepository: MobParamsRepository,
+    private val lightingSystem: LightingSystem,
 ) : DropWorldAdapter,
     ContainerWorldAdapter,
     MobWorldAdapter,
@@ -137,8 +140,12 @@ internal class WorldAdapterImpl @Inject constructor(
         return getClimbable(hitbox) as? Block.Fluid
     }
 
-    override fun getRayHandler(): RayHandler {
-        return gameWorld.rayHandler
+    override fun createPlayerSightLight(body: Body, x: Float, y: Float): LightHandle {
+        return lightingSystem.createPlayerSightLight(body, x, y)
+    }
+
+    override fun createFurnaceLight(x: Float, y: Float): LightHandle {
+        return lightingSystem.createFurnaceLight(x, y)
     }
 
     override fun isDayTime(): Boolean {

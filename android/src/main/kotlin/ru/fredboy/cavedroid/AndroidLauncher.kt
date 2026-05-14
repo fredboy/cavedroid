@@ -4,9 +4,14 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import co.touchlab.kermit.Severity
+import com.badlogic.gdx.Files
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
+import kotlinx.coroutines.Dispatchers
 import ru.fredboy.cavedroid.common.api.AdController
+import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
+import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
+import ru.fredboy.cavedroid.gameplay.lighting.box2d.Box2dLightingSystemFactory
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
 
 class AndroidLauncher : AndroidApplication() {
@@ -36,9 +41,16 @@ class AndroidLauncher : AndroidApplication() {
             /* listener = */
             CaveDroidApplication(
                 gameDataDirectoryPath = gameDataDirectoryPath,
+                gameDataFileType = Files.FileType.Absolute,
                 isTouchScreen = true,
                 isDebug = BuildConfig.DEBUG,
                 preferencesStore = AndroidPreferencesStore(applicationContext),
+                lightingSystemFactory = Box2dLightingSystemFactory(),
+                dispatchers = AppDispatchers(
+                    io = Dispatchers.IO,
+                    background = Dispatchers.Default,
+                    main = GdxMainDispatcher,
+                ),
                 adController = adController,
                 loggingSeverity = if (BuildConfig.DEBUG) Severity.Debug else Severity.Info,
             ),

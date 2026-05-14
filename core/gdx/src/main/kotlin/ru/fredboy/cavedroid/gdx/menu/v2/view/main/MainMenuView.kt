@@ -47,15 +47,17 @@ fun Stage.mainMenuView(viewModel: MainMenuViewModel) = viewModel.also {
                     align = Align.right,
                 )
 
-                textButton(viewModel.getLocalizedString("exit")) {
-                    onClickWithSound(viewModel) {
-                        viewModel.onExitGameClick()
-                    }
-                }.cell(
-                    width = 600f,
-                    height = 60f,
-                    pad = 10f,
-                )
+                if (viewModel.showExitButton) {
+                    textButton(viewModel.getLocalizedString("exit")) {
+                        onClickWithSound(viewModel) {
+                            viewModel.onExitGameClick()
+                        }
+                    }.cell(
+                        width = 600f,
+                        height = 60f,
+                        pad = 10f,
+                    )
+                }
 
                 imageButton {
                     image("help")

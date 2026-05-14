@@ -1,16 +1,12 @@
 package ru.fredboy.cavedroid.game.controller.container
 
-import box2dLight.Light
-import box2dLight.PointLight
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.physics.box2d.Filter
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
+import ru.fredboy.cavedroid.domain.world.lighting.LightHandle
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
-import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
 import ru.fredboy.cavedroid.entity.container.model.Container
@@ -67,7 +63,7 @@ class ContainerController @Inject constructor(
             dropAdapter.dropInventory(x.toFloat(), y.toFloat(), container.inventory)
 
             if (container is Furnace) {
-                container.lightSource?.remove(true)
+                container.lightSource?.dispose()
             }
         }
     }
@@ -115,20 +111,8 @@ class ContainerController @Inject constructor(
         }
     }
 
-    private fun createFurnaceLightSource(x: Int, y: Int, furnace: Furnace): Light {
-        return PointLight(
-            containerWorldAdapter.getRayHandler(),
-            128,
-            Color().apply { a = 1f },
-            13f,
-            x + 0.5f,
-            y + 0.5f,
-        ).apply {
-            val filter = Filter().apply {
-                maskBits = PhysicsConstants.CATEGORY_OPAQUE
-            }
-            setContactFilter(filter)
-            setSoftnessLength(3f)
+    private fun createFurnaceLightSource(x: Int, y: Int, furnace: Furnace): LightHandle {
+        return containerWorldAdapter.createFurnaceLight(x + 0.5f, y + 0.5f).apply {
             isActive = furnace.isActive
         }
     }

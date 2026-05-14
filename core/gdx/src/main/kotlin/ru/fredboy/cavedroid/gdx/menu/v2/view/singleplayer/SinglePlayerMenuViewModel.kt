@@ -2,7 +2,6 @@ package ru.fredboy.cavedroid.gdx.menu.v2.view.singleplayer
 
 import co.touchlab.kermit.Logger
 import com.badlogic.gdx.graphics.Texture
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.fredboy.cavedroid.common.api.ApplicationController
-import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -48,7 +46,7 @@ class SinglePlayerMenuViewModel(
             }
 
             val appDir = applicationContextRepository.getGameDirectory()
-            val saves = withContext(Dispatchers.IO) {
+            val saves = withContext(ioDispatcher) {
                 saveDataRepository.getSavesInfo(appDir)
             }
 
@@ -61,7 +59,7 @@ class SinglePlayerMenuViewModel(
                     gameMode = saveInfo.gameMode,
                     isSupported = saveInfo.isSupported,
                     screenshot = saveInfo.screenshotHandle?.let { handle ->
-                        withContext(GdxMainDispatcher) {
+                        withContext(mainDispatcher) {
                             Texture(handle).also { texture ->
                                 loadedTextures.add(
                                     texture,
@@ -92,7 +90,7 @@ class SinglePlayerMenuViewModel(
             delay(50)
 
             try {
-                withContext(GdxMainDispatcher) {
+                withContext(mainDispatcher) {
                     applicationController.startGame(
                         startGameConfig = StartGameConfig.Load(
                             worldName = save.name,
@@ -121,7 +119,22 @@ class SinglePlayerMenuViewModel(
         navBackStack.pop()
     }
 
+    override fun onShow() {
+        viewModelScope.launch {
+            disposeLoadedTextures()
+            reloadTrigger.emit(Trigger.LOAD_LIST)
+        }
+    }
+
+    override fun onHide() {
+        disposeLoadedTextures()
+    }
+
     override fun onDispose() {
+        disposeLoadedTextures()
+    }
+
+    private fun disposeLoadedTextures() {
         loadedTextures.forEach(Texture::dispose)
         loadedTextures.clear()
     }

@@ -2,9 +2,6 @@ package ru.fredboy.cavedroid.gdx.base
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import ru.fredboy.cavedroid.common.utils.DEFAULT_VIEWPORT_WIDTH
 import ru.fredboy.cavedroid.common.utils.MIN_VIEWPORT_HEIGHT
 import ru.fredboy.cavedroid.common.utils.ratio
@@ -17,12 +14,6 @@ abstract class BaseScreen(
 
     protected open val scaleFactor = 1f
 
-    private val job = SupervisorJob()
-
-    private val dispatcher = Dispatchers.Default
-
-    protected val screenScope = CoroutineScope(dispatcher + job)
-
     final override fun resize(width: Int, height: Int) {
         val scaledWidth = DEFAULT_VIEWPORT_WIDTH * scaleFactor
         applicationContextRepository.setWidth(scaledWidth)
@@ -31,7 +22,6 @@ abstract class BaseScreen(
     }
 
     final override fun dispose() {
-        job.cancel()
         onDispose()
     }
 

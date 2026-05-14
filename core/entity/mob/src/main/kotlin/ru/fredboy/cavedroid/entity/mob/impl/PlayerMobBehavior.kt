@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.entity.mob.impl
 
-import box2dLight.publicUpdate
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.api.SoundPlayer
@@ -66,7 +65,9 @@ class PlayerMobBehavior(
             GameMode.SURVIVAL -> {
                 if (lastBreakSoundPlayedDelta >= BREAK_SOUND_INTERVAL || blockDamage >= targetBlock.params.hitPoints) {
                     lastBreakSoundPlayedDelta = 0f
-                    playBlockHitSound(targetBlock, blockDamage / targetBlock.params.hitPoints + 1f)
+                    val hitPoints = targetBlock.params.hitPoints
+                    val pitch = if (hitPoints <= 0) 2f else blockDamage / hitPoints + 1f
+                    playBlockHitSound(targetBlock, pitch)
                 }
 
                 if (blockDamage >= targetBlock.params.hitPoints) {
@@ -123,7 +124,7 @@ class PlayerMobBehavior(
         projectileAdapter: ProjectileAdapter,
         delta: Float,
     ) {
-        sight?.publicUpdate()
+        sight?.update()
 
         if (isPullingBow && !canShootBow()) {
             isPullingBow = false

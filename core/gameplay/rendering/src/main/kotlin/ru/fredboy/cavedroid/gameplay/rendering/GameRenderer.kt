@@ -20,6 +20,7 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.IHudRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.world.IWorldRenderer
 import javax.inject.Inject
@@ -31,6 +32,7 @@ class GameRenderer @Inject constructor(
     private val gameContextRepository: GameContextRepository,
     private val tooltipManager: TooltipManager,
     private val gameWorld: GameWorld,
+    private val lightingSystem: LightingSystem,
     private val player: PlayerAdapter,
     private val getFont: GetFontUseCase,
     @Suppress("LocalVariableName") _worldRenderers: Set<@JvmSuppressWildcards IWorldRenderer>,
@@ -201,11 +203,7 @@ class GameRenderer @Inject constructor(
 
         spriter.end()
 
-        gameWorld.rayHandler.setCombinedMatrix(camera)
-        if (cameraJumped) {
-            gameWorld.rayHandler.update()
-        }
-        gameWorld.rayHandler.render()
+        lightingSystem.render(camera, cameraJumped)
 
         if (gameContextRepository.shouldShowInfo()) {
             debugRenderer?.render(gameWorld.world, camera.combined)

@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.entity.container.model
 
-import box2dLight.Light
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -8,6 +7,7 @@ import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem.Companion.isNoneOrNull
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
+import ru.fredboy.cavedroid.domain.world.lighting.LightHandle
 
 class Furnace(
     fallbackItem: Item.None,
@@ -20,7 +20,7 @@ class Furnace(
 
     override val type get() = Block.Furnace::class
 
-    var lightSource: Light? = null
+    var lightSource: LightHandle? = null
 
     var fuel: InventoryItem
         get() = items[FUEL_INDEX]

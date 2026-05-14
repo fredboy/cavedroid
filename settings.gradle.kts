@@ -9,6 +9,7 @@ pluginManagement {
 include("android")
 include("desktop")
 include("ios")
+include("html")
 
 /**
  * Global modules
@@ -64,6 +65,8 @@ include("core:game:world")
 include("core:gameplay:controls")
 include("core:gameplay:physics")
 include("core:gameplay:rendering")
+include("core:gameplay:lighting-box2d")
+include("core:gameplay:lighting-tint")
 
 /**
  * Gdx module: initialization, menu, screens...

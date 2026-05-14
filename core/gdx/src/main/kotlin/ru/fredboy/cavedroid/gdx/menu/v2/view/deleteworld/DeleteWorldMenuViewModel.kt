@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -33,13 +32,13 @@ class DeleteWorldMenuViewModel(
     fun onConfirmClick() {
         viewModelScope.launch {
             _stateFlow.emit(DeleteWorldMenuState.Deleting)
-            withContext(Dispatchers.IO) {
+            withContext(ioDispatcher) {
                 saveDataRepository.deleteSave(
                     gameDataFolder = applicationContextRepository.getGameDirectory(),
                     saveDir = saveDirectory,
                 )
 
-                withContext(Dispatchers.Default) {
+                withContext(backgroundDispatcher) {
                     navBackStack.pop()
                 }
             }
