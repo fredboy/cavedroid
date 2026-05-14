@@ -119,7 +119,22 @@ class SinglePlayerMenuViewModel(
         navBackStack.pop()
     }
 
+    override fun onShow() {
+        viewModelScope.launch {
+            disposeLoadedTextures()
+            reloadTrigger.emit(Trigger.LOAD_LIST)
+        }
+    }
+
+    override fun onHide() {
+        disposeLoadedTextures()
+    }
+
     override fun onDispose() {
+        disposeLoadedTextures()
+    }
+
+    private fun disposeLoadedTextures() {
         loadedTextures.forEach(Texture::dispose)
         loadedTextures.clear()
     }
