@@ -1,0 +1,2 @@
+- Einführung einer scrollbareren Sprachansicht für eine einfachere Navigation.
+- Unterstützung der deutschen Sprache hinzugefügt.
