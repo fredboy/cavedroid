@@ -7,6 +7,7 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
@@ -37,6 +38,7 @@ class MobController @Inject constructor(
     private val projectileAdapter: ProjectileAdapter,
     private val mobQueue: MobQueue,
     private val applicationController: ApplicationController,
+    private val applicationContextRepository: ApplicationContextRepository,
 ) : Disposable {
 
     // TODO: Do proper DI
@@ -54,10 +56,11 @@ class MobController @Inject constructor(
         params = requireNotNull(mobParamsRepository.getMobParamsByKey("char")),
         soundPlayer = soundPlayer,
         stepsSoundAssetsRepository = stepsSoundAssetsRepository,
-    )
+    ).apply { holdCursor = applicationContextRepository.isTouch() }
         set(value) {
             field.dispose()
             field = value
+            field.holdCursor = applicationContextRepository.isTouch()
             field.initSight(mobWorldAdapter)
         }
 
