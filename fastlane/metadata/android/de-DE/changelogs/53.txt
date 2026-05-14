@@ -1,2 +1,2 @@
-- Neue scrollbare Sprachansicht für einfachere Navigation.
-- Unterstützung für die deutsche Sprache hinzugefügt, um mehr Spieler anzusprechen.
+- Scrollbare Sprachansicht für eine bessere Navigation hinzugefügt.
+- Unterstützung der deutschen Sprache für ein breiteres Publikum eingeführt.
