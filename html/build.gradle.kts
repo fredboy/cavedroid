@@ -66,7 +66,26 @@ tasks.register("generateAttributionIndex") {
     }
 }
 
-private fun JavaExec.configureWebBuild() {
+// Source roots for TeaVM source-map generation. We feed every Kotlin/Java
+// source dir of every Gradle subproject so stack traces in the browser
+// resolve to the original Kotlin files instead of the generated JS.
+private val sourceRoots: String by lazy {
+    rootProject.subprojects
+        .flatMap { project ->
+            listOf(
+                project.projectDir.resolve("src/main/kotlin"),
+                project.projectDir.resolve("src/main/java"),
+            )
+        }
+        .filter { it.isDirectory }
+        .joinToString(File.pathSeparator) { it.absolutePath }
+}
+
+private fun JavaExec.configureWebBuild(
+    sourceMaps: Boolean,
+    obfuscate: Boolean,
+    optimization: String,
+) {
     dependsOn("assemble", "copyLicenseReport", "generateAttributionIndex")
     mainClass.set(webBuildClassName)
     classpath = sourceSets["main"].runtimeClasspath
@@ -74,17 +93,29 @@ private fun JavaExec.configureWebBuild() {
     systemProperty("cavedroid.assetsPath", rootProject.file("assets").absolutePath)
     systemProperty("cavedroid.extraAssetsPath", extraAssetsDir.get().asFile.absolutePath)
     systemProperty("cavedroid.launcherClass", webLauncherClassName)
+    systemProperty("cavedroid.sourceMaps", sourceMaps.toString())
+    systemProperty("cavedroid.obfuscate", obfuscate.toString())
+    systemProperty("cavedroid.optimization", optimization)
+    if (sourceMaps) {
+        systemProperty("cavedroid.sourceRoots", sourceRoots)
+    }
 }
 
 tasks.register<JavaExec>("buildJs") {
     group = "build"
-    description = "Compile :html to JavaScript via TeaVM and write build/dist."
-    configureWebBuild()
+    description = "Compile :html to JavaScript via TeaVM (dev: source maps, no obfuscation, SIMPLE optimization)."
+    configureWebBuild(sourceMaps = true, obfuscate = false, optimization = "SIMPLE")
 }
 
 tasks.register<JavaExec>("runWeb") {
     group = "application"
-    description = "Build the JS bundle and start the embedded Jetty dev server."
-    configureWebBuild()
+    description = "Build the dev JS bundle and start the embedded Jetty server."
+    configureWebBuild(sourceMaps = true, obfuscate = false, optimization = "SIMPLE")
     systemProperty("cavedroid.serve", "true")
+}
+
+tasks.register<JavaExec>("buildJsRelease") {
+    group = "build"
+    description = "Compile :html to JavaScript via TeaVM (release: obfuscated, FULL optimization, no source maps)."
+    configureWebBuild(sourceMaps = false, obfuscate = true, optimization = "FULL")
 }
