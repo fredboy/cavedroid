@@ -1,7 +1,9 @@
 package ru.fredboy.cavedroid.data.configuration.repository
 
+import co.touchlab.kermit.Logger
 import com.badlogic.gdx.Files
 import com.badlogic.gdx.Gdx
+import ru.fredboy.cavedroid.common.CaveDroidConstants.SUPPORTED_LOCALES
 import ru.fredboy.cavedroid.data.configuration.store.ApplicationContextStore
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import java.util.Locale
@@ -71,12 +73,19 @@ class ApplicationContextRepositoryImpl @Inject constructor(
     }
 
     override fun getLocale(): Locale {
-        return applicationContextStore.locale
+        val locale = applicationContextStore.locale
+
+        if (locale !in SUPPORTED_LOCALES) {
+            logger.e { "Locale not supported: ${locale.language}. Falling back to English" }
+            return Locale.ENGLISH.also { en -> setLocale(en) }
+        }
+
+        return locale
     }
 
     override fun setLocale(locale: Locale) {
         if (locale !in SUPPORTED_LOCALES) {
-            Gdx.app.error("ApplicationContextRepositoryImpl", "Locale not supported: ${locale.language}")
+            logger.e { "Locale not supported: ${locale.language}" }
             return
         }
 
@@ -108,6 +117,6 @@ class ApplicationContextRepositoryImpl @Inject constructor(
     }
 
     companion object {
-        private val SUPPORTED_LOCALES = listOf(Locale("en"), Locale("ru"))
+        private val logger = Logger.withTag("ApplicationContextRepositoryImpl")
     }
 }

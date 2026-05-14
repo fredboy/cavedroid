@@ -8,6 +8,7 @@ import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
+import ru.fredboy.cavedroid.common.CaveDroidConstants.SUPPORTED_LOCALES
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.NoOpAdController
@@ -210,7 +211,7 @@ class CaveDroidApplication(
 
     private fun safeDefaultLocale(): Locale {
         return try {
-            Locale.getDefault()
+            Locale.getDefault().takeIf { it in SUPPORTED_LOCALES } ?: Locale.ENGLISH
         } catch (_: Throwable) {
             Locale.ENGLISH
         }
