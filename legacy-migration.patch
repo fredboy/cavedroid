@@ -1,5 +1,5 @@
 diff --git a/android/build.gradle.kts b/android/build.gradle.kts
-index 006aa876..3eac0179 100644
+index b936053d..1703cf33 100644
 --- a/android/build.gradle.kts
 +++ b/android/build.gradle.kts
 @@ -60,7 +60,7 @@ android {
@@ -12,18 +12,14 @@ index 006aa876..3eac0179 100644
  
          versionCode = ApplicationInfo.versionCode
 diff --git a/android/proguard-rules.pro b/android/proguard-rules.pro
-index 6879d376..b650caf3 100644
+index 6879d376..2bd4dad4 100644
 --- a/android/proguard-rules.pro
 +++ b/android/proguard-rules.pro
-@@ -24,3 +24,9 @@
+@@ -24,3 +24,5 @@
  -keep class com.badlogic.gdx.** { *; }
  
  -keep @kotlinx.serialization.Serializable class * { *; }
 +
-+# libGDX 1.9.10's Box2DBuild.main() references gdx-jnigen build-tool classes
-+# that aren't bundled at runtime. The main method is never invoked from the
-+# app, but R8 still resolves its references. Newer libGDX versions stripped
-+# these refs; on the legacy 1.9.10 path we suppress the missing-class errors.
 +-dontwarn com.badlogic.gdx.jnigen.**
 diff --git a/android/src/main/AndroidManifest.xml b/android/src/main/AndroidManifest.xml
 index 66ba35ec..8feee9c3 100644
@@ -39,7 +35,7 @@ index 66ba35ec..8feee9c3 100644
              android:allowBackup="true"
              android:icon="@drawable/ic_launcher"
 diff --git a/buildSrc/src/main/kotlin/Versions.kt b/buildSrc/src/main/kotlin/Versions.kt
-index dc57e2b9..9737b58a 100644
+index 660e37fd..d0fd1b99 100644
 --- a/buildSrc/src/main/kotlin/Versions.kt
 +++ b/buildSrc/src/main/kotlin/Versions.kt
 @@ -10,7 +10,7 @@ object Versions {
@@ -68,33 +64,19 @@ index dc57e2b9..9737b58a 100644
  
      /**
       * Kotlin coroutines
-diff --git a/core/common/src/main/kotlin/box2dLight/DirectionalLightExtention.kt b/core/common/src/main/kotlin/box2dLight/DirectionalLightExtention.kt
-index 2898e99c..a8c22bd4 100644
---- a/core/common/src/main/kotlin/box2dLight/DirectionalLightExtention.kt
-+++ b/core/common/src/main/kotlin/box2dLight/DirectionalLightExtention.kt
-@@ -3,3 +3,7 @@ package box2dLight
- fun Light.publicUpdate() {
-     update()
- }
-+
-+fun Light.setDirectionCompat(direction: Float) {
-+    this.direction = direction
-+}
 diff --git a/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt b/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt
-index 71c4aee3..a6ed5568 100644
+index 3f9288d0..587ec958 100644
 --- a/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt
 +++ b/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt
-@@ -2,8 +2,8 @@ package ru.fredboy.cavedroid.data.save.repository
- 
- import com.badlogic.gdx.Gdx
+@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx
  import com.badlogic.gdx.files.FileHandle
--import com.badlogic.gdx.graphics.Pixmap
+ import com.badlogic.gdx.graphics.Pixmap
  import com.badlogic.gdx.graphics.PixmapIO
 +import com.badlogic.gdx.utils.ScreenUtils
  import com.badlogic.gdx.utils.TimeUtils
  import kotlinx.serialization.ExperimentalSerializationApi
  import kotlinx.serialization.decodeFromByteArray
-@@ -320,7 +320,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
+@@ -335,7 +336,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
              return
          }
  
@@ -103,48 +85,6 @@ index 71c4aee3..a6ed5568 100644
              halfWidth - screenshotHalfSize,
              halfHeight - screenshotHalfSize,
              screenshotHalfSize shl 1,
-diff --git a/core/entity/mob/src/main/kotlin/ru/fredboy/cavedroid/entity/mob/model/Player.kt b/core/entity/mob/src/main/kotlin/ru/fredboy/cavedroid/entity/mob/model/Player.kt
-index cc9c3936..3d16dee3 100644
---- a/core/entity/mob/src/main/kotlin/ru/fredboy/cavedroid/entity/mob/model/Player.kt
-+++ b/core/entity/mob/src/main/kotlin/ru/fredboy/cavedroid/entity/mob/model/Player.kt
-@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.entity.mob.model
- 
- import box2dLight.Light
- import box2dLight.PointLight
-+import box2dLight.setDirectionCompat
- import com.badlogic.gdx.graphics.Color
- import com.badlogic.gdx.graphics.g2d.SpriteBatch
- import com.badlogic.gdx.math.MathUtils
-@@ -381,7 +382,7 @@ class Player(
-     fun updateSight() {
-         sight?.let { sight ->
-             sight.setPosition(position.x, position.y)
--            sight.direction = 0f
-+            sight.setDirectionCompat(0f)
-         }
-     }
- 
-diff --git a/core/game/world/src/main/kotlin/ru/fredboy/cavedroid/game/world/GameWorldLightManager.kt b/core/game/world/src/main/kotlin/ru/fredboy/cavedroid/game/world/GameWorldLightManager.kt
-index 45d8efcb..345d03a8 100644
---- a/core/game/world/src/main/kotlin/ru/fredboy/cavedroid/game/world/GameWorldLightManager.kt
-+++ b/core/game/world/src/main/kotlin/ru/fredboy/cavedroid/game/world/GameWorldLightManager.kt
-@@ -5,6 +5,7 @@ import box2dLight.Light
- import box2dLight.PointLight
- import box2dLight.RayHandler
- import box2dLight.publicUpdate
-+import box2dLight.setDirectionCompat
- import com.badlogic.gdx.graphics.Color
- import com.badlogic.gdx.math.MathUtils
- import com.badlogic.gdx.math.Vector2
-@@ -122,7 +123,7 @@ class GameWorldLightManager @Inject constructor(
-         if (MathUtils.isEqual(90f, sunAngle, 0.1f)) {
-             sunAngle = 90.1f
-         }
--        sunLight.direction = sunAngle
-+        sunLight.setDirectionCompat(sunAngle)
-         sunLight.color = Color().apply { a = max(gameWorld.getSunlight(), 0.1f) }
-         sunLight.publicUpdate()
-     }
 diff --git a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/GameInputProcessor.kt b/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/GameInputProcessor.kt
 index d9cfc2ca..ce46aafa 100644
 --- a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/GameInputProcessor.kt
@@ -223,6 +163,39 @@ index 4ec77fc9..37aebf8c 100644
          return MathUtils.clamp(rotation, -45f, 45f)
      }
  
+diff --git a/core/gameplay/lighting-box2d/src/main/kotlin/box2dLight/DirectionalLightExtention.kt b/core/gameplay/lighting-box2d/src/main/kotlin/box2dLight/DirectionalLightExtention.kt
+index 2898e99c..a8c22bd4 100644
+--- a/core/gameplay/lighting-box2d/src/main/kotlin/box2dLight/DirectionalLightExtention.kt
++++ b/core/gameplay/lighting-box2d/src/main/kotlin/box2dLight/DirectionalLightExtention.kt
+@@ -3,3 +3,7 @@ package box2dLight
+ fun Light.publicUpdate() {
+     update()
+ }
++
++fun Light.setDirectionCompat(direction: Float) {
++    this.direction = direction
++}
+diff --git a/core/gameplay/lighting-box2d/src/main/kotlin/ru/fredboy/cavedroid/gameplay/lighting/box2d/Box2dLightingSystem.kt b/core/gameplay/lighting-box2d/src/main/kotlin/ru/fredboy/cavedroid/gameplay/lighting/box2d/Box2dLightingSystem.kt
+index 440e25c6..7b9a9ec4 100644
+--- a/core/gameplay/lighting-box2d/src/main/kotlin/ru/fredboy/cavedroid/gameplay/lighting/box2d/Box2dLightingSystem.kt
++++ b/core/gameplay/lighting-box2d/src/main/kotlin/ru/fredboy/cavedroid/gameplay/lighting/box2d/Box2dLightingSystem.kt
+@@ -5,6 +5,7 @@ import box2dLight.Light
+ import box2dLight.PointLight
+ import box2dLight.RayHandler
+ import box2dLight.publicUpdate
++import box2dLight.setDirectionCompat
+ import com.badlogic.gdx.graphics.Color
+ import com.badlogic.gdx.graphics.OrthographicCamera
+ import com.badlogic.gdx.math.MathUtils
+@@ -123,7 +124,7 @@ class Box2dLightingSystem(
+         if (MathUtils.isEqual(90f, sunAngle, 0.1f)) {
+             sunAngle = 90.1f
+         }
+-        sunLight.direction = sunAngle
++        sunLight.setDirectionCompat(sunAngle)
+         sunLight.color = Color().apply { a = max(gameWorld.getSunlight(), 0.1f) }
+         sunLight.publicUpdate()
+     }
 diff --git a/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/hud/CrosshairRenderer.kt b/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/hud/CrosshairRenderer.kt
 index 922657d5..862d71c0 100644
 --- a/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/hud/CrosshairRenderer.kt
