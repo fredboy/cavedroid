@@ -1,4 +1,4 @@
-<p>Dieses Spiel ist ein Sandbox-Survival-Abenteuer in einer frühen Beta-Phase, das in einer zweidimensionalen, prozedural generierten Voxelwelt spielt. Spieler können vielfältige Landschaften erkunden, darunter Höhlen und Biome, Ressourcen sammeln, Werkzeuge, Rüstungen und Nahrung herstellen sowie Strukturen bauen, um zu überleben. Die Welt bietet einen Tag-Nacht-Zyklus, dynamische Beleuchtung, Flüssigkeiten und interaktive Kreaturen.</p>
+<p>Dieses Spiel ist ein Sandbox-Survival-Abenteuer, das in einer zweidimensionalen, prozedural generierten Voxelwelt spielt. Spieler können vielfältige Landschaften erkunden, darunter Höhlen und Biome, Ressourcen sammeln, Werkzeuge, Rüstungen und Nahrung herstellen sowie Strukturen bauen, um zu überleben. Die Welt bietet einen Tag-Nacht-Zyklus, dynamische Beleuchtung, Flüssigkeiten und interaktive Kreaturen.</p>
 
 <p><strong>Features:</strong></p>
 <ul>

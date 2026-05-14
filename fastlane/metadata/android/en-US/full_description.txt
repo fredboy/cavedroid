@@ -1,4 +1,4 @@
-<p>This game is an early beta sandbox survival adventure set in a two dimansional procedurally generated voxel world. Players can explore diverse landscapes, including caves and biomes, gather resources, craft tools, armor, and food, and build structures to survive. The world features a day/night cycle, dynamic lighting, fluids, and interactive mobs.</p>
+<p>This game is a sandbox survival adventure set in a two-dimensional procedurally generated voxel world. Players can explore diverse landscapes, including caves and biomes, gather resources, craft tools, armor, and food, and build structures to survive. The world features a day/night cycle, dynamic lighting, fluids, and interactive mobs.</p>
 
 <p><strong>Features include:</strong></p>
 <ul>
