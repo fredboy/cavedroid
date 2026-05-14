@@ -65,7 +65,9 @@ class PlayerMobBehavior(
             GameMode.SURVIVAL -> {
                 if (lastBreakSoundPlayedDelta >= BREAK_SOUND_INTERVAL || blockDamage >= targetBlock.params.hitPoints) {
                     lastBreakSoundPlayedDelta = 0f
-                    playBlockHitSound(targetBlock, blockDamage / targetBlock.params.hitPoints + 1f)
+                    val hitPoints = targetBlock.params.hitPoints
+                    val pitch = if (hitPoints <= 0) 2f else blockDamage / hitPoints + 1f
+                    playBlockHitSound(targetBlock, pitch)
                 }
 
                 if (blockDamage >= targetBlock.params.hitPoints) {
