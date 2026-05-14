@@ -103,7 +103,7 @@ Each script enforces a repo-root guard. AI scripts read `$GITHUB_TOKEN` from env
 The three release workflows drive the end-to-end flow:
 
 - **`start-release.yml`** (`workflow_dispatch`, `version=A.B.C`) — calls `scripts/start-release.sh`.
-- **`finalize-release.yml`** (`workflow_dispatch`, `version=A.B.C`) — calls `scripts/finalize-release.sh`, which in turn calls `scripts/gen-changelog-ai.sh`.
+- **`finalize-release.yml`** (`workflow_dispatch`, `version=A.B.C`) — calls `scripts/finalize-release.sh`. Script generates AI changelogs on the release branch, opens the `release/A.B.C → master` PR with auto-merge enabled, waits up to 30 min for the human-approved merge, tags `vA.B.C` on the master merge commit, opens the `release/A.B.C → develop` sync PR with auto-merge, then explicitly dispatches `release.yml`. The bot cannot self-approve PRs (GitHub forbids it); branch protection with required reviews works by having the maintainer approve manually while the workflow polls.
 - **`release.yml`** (tag push `v*.*.*`) — calls `scripts/build-release-artifacts.sh` and `scripts/gen-release-notes-ai.sh`, then `softprops/action-gh-release` to publish.
 
 ### Signing

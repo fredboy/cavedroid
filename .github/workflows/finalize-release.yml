@@ -3,16 +3,26 @@ name: Finalize Release
 # Manually triggered from the Actions UI (or `gh workflow run`). On the
 # release/A.B.C branch:
 #   1. AI-generates en + ru plaintext fastlane changelogs (GitHub Models).
-#   2. Commits them with [skip ci].
-#   3. Merges release/A.B.C into master (--no-ff), tags vA.B.C on master.
-#   4. Merges release/A.B.C into develop (--no-ff).
-#   5. Pushes master, develop, the release branch, and the tag.
+#   2. Commits them with [skip ci] and pushes the release branch.
+#   3. Opens a PR release/A.B.C -> master, enables auto-merge.
+#   4. Waits for that PR to merge, then tags vA.B.C on the master merge commit.
+#   5. Opens a PR release/A.B.C -> develop, enables auto-merge.
+#   6. Dispatches the Release workflow for the tag (signed builds + GitHub Release).
 #
 # Delegates to scripts/finalize-release.sh so the same flow works locally.
 #
-# Branch protection note: GITHUB_TOKEN must be able to push to master and
-# develop. Either disable protection for those branches or allow
-# github-actions[bot] to bypass.
+# Branch protection notes:
+#   - The repository must have "Allow auto-merge" enabled
+#     (Settings -> General -> Pull Requests).
+#   - If branch protection requires reviews on master/develop, approve the
+#     PR manually on GitHub once the workflow has created it. Auto-merge
+#     will then fire once required checks pass.
+#   - Status checks required on master/develop should be a subset of the
+#     ones we declare: Ktlint, Tests, Android CI. The release-branch.yml
+#     workflow has already validated the same code prior to finalize.
+#   - The workflow waits up to 30 minutes (default) for the master PR to
+#     merge. If you need more time, re-run with --no-wait and finish the
+#     post-merge steps manually (the workflow's log prints them).
 
 on:
   workflow_dispatch:
@@ -24,6 +34,8 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
+  actions: write
   models: read
 
 jobs:
@@ -41,31 +53,21 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Fetch master and develop
-        run: |
-          git fetch origin master:master develop:develop
-
       - name: Run finalize-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           chmod +x scripts/*.sh
           ./scripts/finalize-release.sh "${{ inputs.version }}" --skip-clean-check
-
-      - name: Trigger Release workflow
-        # GITHUB_TOKEN-pushed tags do NOT fire push-tag triggers; workflow_dispatch
-        # is exempt from that rule, so we dispatch release.yml explicitly here.
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh workflow run release.yml -f tag="v${{ inputs.version }}"
 
       - name: Summary
         run: |
           {
             echo "### Release v${{ inputs.version }} finalized"
             echo
-            echo "- Merged \`release/${{ inputs.version }}\` into \`master\` and \`develop\`"
-            echo "- Tagged \`v${{ inputs.version }}\` on master merge commit"
-            echo "- The **Release** workflow is now building signed artifacts and will create the GitHub Release."
+            echo "- Master PR opened and merged (auto-merge)"
+            echo "- \`v${{ inputs.version }}\` tagged on the master merge commit"
+            echo "- Develop sync PR opened with auto-merge enabled"
+            echo "- Release workflow dispatched for \`v${{ inputs.version }}\`"
           } >> "$GITHUB_STEP_SUMMARY"

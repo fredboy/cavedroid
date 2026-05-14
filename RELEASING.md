@@ -46,28 +46,37 @@ GitHub: Actions → **Finalize Release** → Run workflow → `version=A.B.C`. O
 gh workflow run finalize-release.yml -f version=A.B.C
 ```
 
-Or fully local (must be on `release/A.B.C`, clean tree, `GITHUB_TOKEN` set):
+Or fully local (must be on `release/A.B.C`, clean tree, `gh` CLI authenticated):
 
 ```bash
 export GITHUB_TOKEN=$(gh auth token)
-./scripts/finalize-release.sh A.B.C
+./scripts/finalize-release.sh A.B.C                     # waits up to 30 min for master PR to merge
+./scripts/finalize-release.sh A.B.C --no-wait           # exits after opening master PR
+./scripts/finalize-release.sh A.B.C --timeout 3600      # wait up to 1 hour instead
 ```
 
-In both cases the script:
+The script:
 
-1. AI-generates en + ru plaintext changelogs via [GitHub Models](https://github.com/marketplace/models) (`openai/gpt-4o-mini`; override the model by editing `scripts/gen-changelog-ai.sh` invocation flags).
+1. AI-generates en + ru plaintext changelogs via [GitHub Models](https://github.com/marketplace/models).
 2. Writes them to `fastlane/metadata/android/{en-US,ru-RU}/changelogs/<versionCode>.txt`.
-3. Commits with `[skip ci]`.
-4. Merges `release/A.B.C` into `master` (`--no-ff`).
-5. Tags `vA.B.C` on the master merge commit.
-6. Merges `release/A.B.C` into `develop` (`--no-ff`).
-7. Pushes `master`, `develop`, the release branch, and the tag.
+3. Commits with `[skip ci]` and pushes the release branch.
+4. Opens PR `release/A.B.C → master`, enables auto-merge.
+5. **Waits for that PR to merge** (you approve it on GitHub).
+6. Tags `vA.B.C` on the master merge commit, pushes the tag.
+7. Opens PR `release/A.B.C → develop`, enables auto-merge (you approve to sync).
+8. Dispatches `release.yml` for the tag.
 
-The tag push triggers `release.yml` (or you can build artifacts locally — see below).
+#### Reviewing the PRs
 
-### Step 4 — artifacts and GitHub Release (automatic on tag push)
+GitHub forbids an actor from approving their own PR, so the bot cannot self-approve. With "Require pull request reviews" set on `master`/`develop`, **you approve the PRs manually** on GitHub once the workflow opens them. Auto-merge fires automatically as soon as your approval lands and required status checks are green.
 
-When the tag lands on `origin`, `release.yml`:
+If you take longer than the script's wait timeout (default 30 min) to approve, the workflow times out. To recover: approve and merge the master PR by hand, then run the remaining steps (tag, develop PR, dispatch release) — the workflow log prints the exact commands. Or just bump the timeout via `--timeout SECONDS`.
+
+For auto-merge to be available at all, Settings → General → Pull Requests → **Allow auto-merge** must be on.
+
+### Step 4 — artifacts and GitHub Release
+
+After `finalize-release.yml` finishes, `release.yml` runs (dispatched explicitly by the finalize step). It:
 
 1. Calls `scripts/build-release-artifacts.sh A.B.C --skip-legacy` (signed Android foss release + desktop Linux/Win + web).
 2. Calls `scripts/gen-release-notes-ai.sh vA.B.C --output release-notes.md` for bilingual markdown release notes.
@@ -193,7 +202,7 @@ All workflows live in `.github/workflows/`. The release-flow workflows are thin 
 | `release-branch.yml` | push or PR on `release/**` / `hotfix/**` | Full multi-platform build (Android foss debug + desktop Linux/Win + web) with mock keystore |
 | `start-release.yml` | `workflow_dispatch` | Calls `scripts/start-release.sh` |
 | `finalize-release.yml` | `workflow_dispatch` | Calls `scripts/finalize-release.sh` |
-| `release.yml` | push of tag `v*.*.*` | Decodes keystore, calls `scripts/build-release-artifacts.sh`, calls `scripts/gen-release-notes-ai.sh`, publishes the GitHub Release |
+| `release.yml` | push of tag `v*.*.*` or `workflow_dispatch` (dispatched by `finalize-release.yml`) | Decodes keystore, calls `scripts/build-release-artifacts.sh`, calls `scripts/gen-release-notes-ai.sh`, publishes the GitHub Release |
 
 ### Required secrets
 
@@ -205,15 +214,22 @@ Configure in Settings → Secrets and variables → Actions:
 | `ANDROID_KEYSTORE_PASSWORD` | `release.yml` | keystore password |
 | `ANDROID_KEY_ALIAS` | `release.yml` | key alias inside the keystore |
 | `ANDROID_KEY_PASSWORD` | `release.yml` | key password |
+`GITHUB_TOKEN` (provided automatically) covers AI inference, PR creation, auto-merge enablement, and the explicit `workflow_dispatch` of `release.yml`.
 
-`GITHUB_TOKEN` (provided automatically) covers git pushes and GitHub Models inference.
+### Repo settings
+
+- Settings → General → Pull Requests → ✅ **Allow auto-merge** (required for `finalize-release.yml`).
+- Settings → Actions → General → **Workflow permissions** → ✅ "Read and write permissions". This lets `finalize-release.yml` push the changelog commit to the release branch and create PRs.
 
 ### Branch protection
 
-`finalize-release.yml` pushes commits, merges, and tags to `master` and `develop` using `GITHUB_TOKEN`. For this to coexist with branch protection, allow `github-actions[bot]` to bypass on those branches (Settings → Branches → Branch protection rule → "Allow specified actors to bypass required pull requests"):
+The PR-based finalize flow lets you keep full branch protection on `master` and `develop`:
 
-- For `master`: require status checks (`Ktlint`, `Tests`, `Android CI`); allow bot bypass.
-- For `develop`: require status checks; allow bot bypass.
+- For `master`: ✅ Require status checks (`Ktlint`, `Tests`, `Android CI`), ✅ Require pull request reviews.
+- For `develop`: same.
 - Optionally enforce linear history on `develop`.
+- The release branch itself (`release/**`) needs to be pushable by `github-actions[bot]` (for the `[skip ci]` changelog commit). Either don't protect `release/**`, or allow the bot to bypass.
+
+Because the bot can't self-approve, you approve the master and develop PRs manually on GitHub once `finalize-release.yml` opens them. Auto-merge then takes over.
 
 If you'd rather not grant bypass, change `finalize-release.yml` to create PRs for the master/develop merges instead of pushing directly — you'll lose one-click automation but keep strict protection.
