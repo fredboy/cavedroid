@@ -7,7 +7,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -36,39 +38,45 @@ class SinglePlayerMenuViewModel(
 
     private val saveInfoFlow = reloadTrigger
         .onStart { emit(Trigger.LOAD_LIST) }
-        .map { trigger ->
+        .flatMapConcat { trigger ->
             if (trigger == Trigger.LOADING_WORLD) {
-                return@map SinglePlayerMenuState.LoadingWorld
+                return@flatMapConcat flowOf(SinglePlayerMenuState.LoadingWorld)
             }
 
             if (trigger == Trigger.LOAD_FAILED) {
-                return@map SinglePlayerMenuState.LoadingFailed
+                return@flatMapConcat flowOf(SinglePlayerMenuState.LoadingFailed)
             }
 
-            val appDir = applicationContextRepository.getGameDirectory()
-            val saves = withContext(ioDispatcher) {
-                saveDataRepository.getSavesInfo(appDir)
-            }
+            flow {
+                emit(SinglePlayerMenuState.LoadingList)
 
-            saves.map { saveInfo ->
-                SaveInfoVo(
-                    version = saveInfo.version,
-                    name = saveInfo.name,
-                    directory = saveInfo.directory,
-                    timeCreated = saveInfo.lastModifiedString,
-                    gameMode = saveInfo.gameMode,
-                    isSupported = saveInfo.isSupported,
-                    screenshot = saveInfo.screenshotHandle?.let { handle ->
-                        withContext(mainDispatcher) {
-                            Texture(handle).also { texture ->
-                                loadedTextures.add(
-                                    texture,
-                                )
+                val appDir = applicationContextRepository.getGameDirectory()
+                val saves = withContext(ioDispatcher) {
+                    saveDataRepository.getSavesInfo(appDir)
+                }
+
+                val list = saves.map { saveInfo ->
+                    SaveInfoVo(
+                        version = saveInfo.version,
+                        name = saveInfo.name,
+                        directory = saveInfo.directory,
+                        timeCreated = saveInfo.lastModifiedString,
+                        gameMode = saveInfo.gameMode,
+                        isSupported = saveInfo.isSupported,
+                        screenshot = saveInfo.screenshotHandle?.let { handle ->
+                            withContext(mainDispatcher) {
+                                Texture(handle).also { texture ->
+                                    loadedTextures.add(
+                                        texture,
+                                    )
+                                }
                             }
-                        }
-                    },
-                )
-            }.let { SinglePlayerMenuState.ShowList(it) }
+                        },
+                    )
+                }
+
+                emit(SinglePlayerMenuState.ShowList(list))
+            }
         }
 
     val stateFlow: StateFlow<SinglePlayerMenuState> =
@@ -77,7 +85,7 @@ class SinglePlayerMenuViewModel(
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = SinglePlayerMenuState.ShowList(emptyList()),
+            initialValue = SinglePlayerMenuState.LoadingList,
         )
 
     fun onNewGameClick() {
