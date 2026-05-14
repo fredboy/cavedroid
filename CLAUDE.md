@@ -84,7 +84,27 @@ Game-loop / rendering behavior is still verified manually via
 
 ### Release flow
 
-`./make-release.sh <versionName>` is the canonical release script: it requires a clean tree, runs `up-version.sh` (which bumps `versionName` and increments `versionCode`), runs `ktlintCheck` + Android release + Linux/Win desktop packages + `html:packageWebDist`, copies artifacts (including `web-<version>.zip`) into `release-<version>/`, generates a changelog, and creates the commit + tag. Don't hand-edit version numbers — `up-version.sh` keeps two files in sync (see "Versioning" below).
+The project follows Git Flow: `master` (latest stable), `develop` (trunk), `issue/XX` feature branches, `release/A.B.C` stabilization branches, `hotfix/A.B.C` for production fixes. See [RELEASING.md](RELEASING.md) for the maintainer process; [CONTRIBUTING.md](CONTRIBUTING.md) for contributor flow.
+
+Release logic lives in `scripts/`; GitHub Actions workflows are thin wrappers that call those scripts so every step can also run locally as a fallback.
+
+| Script | Purpose | Workflow that calls it |
+|---|---|---|
+| `scripts/up-version.sh A.B.C` | Bump `versionName`/`versionCode`/`VERSION` | `start-release.yml` |
+| `scripts/start-release.sh A.B.C` | Cut `release/A.B.C` from develop + version bump | `start-release.yml` |
+| `scripts/gen-changelog-ai.sh A.B.C` | AI-generate en+ru plaintext fastlane changelogs (GitHub Models) | `finalize-release.yml` (via finalize-release.sh) |
+| `scripts/finalize-release.sh A.B.C` | Changelog → commit → merge to master+develop → tag | `finalize-release.yml` |
+| `scripts/build-release-artifacts.sh A.B.C` | ktlint + signed Android foss release + desktop Linux/Win + web; copies to `release-A.B.C/` | `release.yml` |
+| `scripts/gen-release-notes-ai.sh vA.B.C` | AI-generate bilingual markdown release notes (GitHub Models) | `release.yml` |
+| `scripts/require-clean-work-tree.sh` | Helper guard for local invocations | (not used in CI; scripts pass `--skip-clean-check`) |
+
+Each script enforces a repo-root guard. AI scripts read `$GITHUB_TOKEN` from env (auto-provided in CI with `models: read` permission; locally use `export GITHUB_TOKEN=$(gh auth token)`).
+
+The three release workflows drive the end-to-end flow:
+
+- **`start-release.yml`** (`workflow_dispatch`, `version=A.B.C`) — calls `scripts/start-release.sh`.
+- **`finalize-release.yml`** (`workflow_dispatch`, `version=A.B.C`) — calls `scripts/finalize-release.sh`, which in turn calls `scripts/gen-changelog-ai.sh`.
+- **`release.yml`** (tag push `v*.*.*`) — calls `scripts/build-release-artifacts.sh` and `scripts/gen-release-notes-ai.sh`, then `softprops/action-gh-release` to publish.
 
 ### Signing
 
@@ -130,7 +150,7 @@ Both wire into `processResources` / `preBuild` automatically — don't commit th
 
 ### Versioning
 
-`buildSrc/src/main/kotlin/ApplicationInfo.kt` (`versionName`, `versionCode`) and `core/common/.../CaveDroidConstants.kt` (`VERSION`) must stay in lockstep. `up-version.sh <new-version>` is the only sanctioned way to bump them.
+`buildSrc/src/main/kotlin/ApplicationInfo.kt` (`versionName`, `versionCode`) and `core/common/.../CaveDroidConstants.kt` (`VERSION`) must stay in lockstep. `scripts/up-version.sh <new-version>` is the only sanctioned way to bump them.
 
 ### Android product flavors (`foss` vs `store`)
 

@@ -1,0 +1,40 @@
+name: Release Branch Build
+
+# Sanity-checks that a release/* or hotfix/* branch can produce all platform
+# artifacts. Uses a mock keystore — actual signed builds happen on tag push
+# via release.yml.
+
+on:
+  push:
+    branches:
+      - 'release/**'
+      - 'hotfix/**'
+  pull_request:
+    branches:
+      - 'release/**'
+      - 'hotfix/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Mock keystore.properties
+        run: echo "releaseKeystorePath=mock" > keystore.properties
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build all platforms (debug Android + desktop + web)
+        run: |
+          ./gradlew clean ktlintCheck \
+            android:assembleFossDebug \
+            desktop:packageLinuxX64 \
+            desktop:packageWinX64 \
+            html:packageWebDist

@@ -1,0 +1,49 @@
+name: Start Release
+
+# Manually triggered from the Actions UI (or `gh workflow run`). Creates a
+# `release/A.B.C` branch from `develop`, bumps the version, and pushes.
+#
+# Delegates to scripts/start-release.sh so the same flow works locally.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Semver version (A.B.C, no v prefix)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  start:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Run start-release
+        run: |
+          chmod +x scripts/*.sh
+          ./scripts/start-release.sh "${{ inputs.version }}" --skip-clean-check
+
+      - name: Summary
+        run: |
+          {
+            echo "### Release branch ready"
+            echo
+            echo "Branch: \`release/${{ inputs.version }}\`"
+            echo
+            echo "Next steps:"
+            echo "1. PR stabilization fixes into \`release/${{ inputs.version }}\` if needed."
+            echo "2. When stable, run the **Finalize Release** workflow with version \`${{ inputs.version }}\`."
+          } >> "$GITHUB_STEP_SUMMARY"

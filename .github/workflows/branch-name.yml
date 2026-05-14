@@ -1,0 +1,53 @@
+name: PR Branch Name
+
+# Validates the head branch name on PRs from the same repository.
+# Skipped for fork PRs — contributors choose their own naming on their fork.
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Validate branch name
+        env:
+          BRANCH: ${{ github.head_ref }}
+          BASE: ${{ github.base_ref }}
+        run: |
+          # Branches allowed to target develop
+          allow_to_develop='^(issue/[0-9]+|fix/[a-z0-9][a-z0-9-]*|feature/[a-z0-9][a-z0-9-]*)$'
+          # Branches allowed to target release/* or hotfix/* (stabilization fixes)
+          allow_to_release='^(issue/[0-9]+|fix/[a-z0-9][a-z0-9-]*)$'
+          # Branches allowed to target master (hotfix merges from automation only — but allow manual paths)
+          allow_to_master='^(hotfix/[0-9]+\.[0-9]+\.[0-9]+|release/[0-9]+\.[0-9]+\.[0-9]+)$'
+
+          case "$BASE" in
+            develop)
+              pattern="$allow_to_develop"
+              hint=$'  - issue/<number>           (e.g. issue/42)\n  - fix/<short-slug>         (e.g. fix/lighting-flicker)\n  - feature/<short-slug>     (e.g. feature/wolf-mob)'
+              ;;
+            release/*|hotfix/*)
+              pattern="$allow_to_release"
+              hint=$'  - issue/<number>           (e.g. issue/42)\n  - fix/<short-slug>         (e.g. fix/crash-on-load)'
+              ;;
+            master)
+              pattern="$allow_to_master"
+              hint=$'  - hotfix/<A.B.C>           (e.g. hotfix/1.0.3)\n  - release/<A.B.C>          (e.g. release/1.0.2)'
+              ;;
+            *)
+              echo "::error::PR targets '$BASE' but only master/develop/release/*/hotfix/* are accepted bases"
+              exit 1
+              ;;
+          esac
+
+          if [[ "$BRANCH" =~ $pattern ]]; then
+            echo "✅ Branch '$BRANCH' is valid for base '$BASE'"
+          else
+            echo "::error::Branch name '$BRANCH' does not match conventions for PRs targeting '$BASE'"
+            echo "Allowed patterns:"
+            printf '%s\n' "$hint"
+            exit 1
+          fi

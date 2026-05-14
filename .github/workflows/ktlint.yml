@@ -2,25 +2,25 @@ name: Ktlint
 
 on:
   push:
-    branches: [ "master" ]
-    paths:
-      - .github/workflows/ktlint.yml
-      - 'src/**/*.kt'
-      - '**.kts'
-  pull_request:
     branches: [ "master", "develop" ]
     paths:
       - .github/workflows/ktlint.yml
-      - 'src/**/*.kt'
+      - '**/src/**/*.kt'
+      - '**.kts'
+  pull_request:
+    branches: [ "master", "develop", "release/**", "hotfix/**" ]
+    paths:
+      - .github/workflows/ktlint.yml
+      - '**/src/**/*.kt'
       - '**.kts'
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'

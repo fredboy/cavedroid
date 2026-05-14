@@ -1,0 +1,71 @@
+name: Finalize Release
+
+# Manually triggered from the Actions UI (or `gh workflow run`). On the
+# release/A.B.C branch:
+#   1. AI-generates en + ru plaintext fastlane changelogs (GitHub Models).
+#   2. Commits them with [skip ci].
+#   3. Merges release/A.B.C into master (--no-ff), tags vA.B.C on master.
+#   4. Merges release/A.B.C into develop (--no-ff).
+#   5. Pushes master, develop, the release branch, and the tag.
+#
+# Delegates to scripts/finalize-release.sh so the same flow works locally.
+#
+# Branch protection note: GITHUB_TOKEN must be able to push to master and
+# develop. Either disable protection for those branches or allow
+# github-actions[bot] to bypass.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Semver version (A.B.C, no v prefix)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  models: read
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release/${{ inputs.version }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch master and develop
+        run: |
+          git fetch origin master:master develop:develop
+
+      - name: Run finalize-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x scripts/*.sh
+          ./scripts/finalize-release.sh "${{ inputs.version }}" --skip-clean-check
+
+      - name: Trigger Release workflow
+        # GITHUB_TOKEN-pushed tags do NOT fire push-tag triggers; workflow_dispatch
+        # is exempt from that rule, so we dispatch release.yml explicitly here.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run release.yml -f tag="v${{ inputs.version }}"
+
+      - name: Summary
+        run: |
+          {
+            echo "### Release v${{ inputs.version }} finalized"
+            echo
+            echo "- Merged \`release/${{ inputs.version }}\` into \`master\` and \`develop\`"
+            echo "- Tagged \`v${{ inputs.version }}\` on master merge commit"
+            echo "- The **Release** workflow is now building signed artifacts and will create the GitHub Release."
+          } >> "$GITHUB_STEP_SUMMARY"
