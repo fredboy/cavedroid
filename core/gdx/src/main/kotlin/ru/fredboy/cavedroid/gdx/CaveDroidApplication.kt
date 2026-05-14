@@ -3,18 +3,22 @@ package ru.fredboy.cavedroid.gdx
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.Severity
 import com.badlogic.gdx.Application
+import com.badlogic.gdx.Files
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
+import ru.fredboy.cavedroid.common.CaveDroidConstants.SUPPORTED_LOCALES
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.NoOpAdController
 import ru.fredboy.cavedroid.common.api.PreferencesStore
+import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.utils.DEFAULT_VIEWPORT_WIDTH
 import ru.fredboy.cavedroid.common.utils.ratio
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
+import ru.fredboy.cavedroid.game.world.lighting.LightingSystemFactory
 import ru.fredboy.cavedroid.gdx.di.ApplicationComponent
 import ru.fredboy.cavedroid.gdx.di.DaggerApplicationComponent
 import ru.fredboy.cavedroid.gdx.game.DeathScreen
@@ -24,9 +28,12 @@ import java.util.Locale
 
 class CaveDroidApplication(
     private val gameDataDirectoryPath: String,
+    private val gameDataFileType: Files.FileType,
     private val isTouchScreen: Boolean,
     private val isDebug: Boolean,
     private val preferencesStore: PreferencesStore,
+    private val lightingSystemFactory: LightingSystemFactory,
+    private val dispatchers: AppDispatchers,
     private val adController: AdController = NoOpAdController(),
     loggingSeverity: Severity = Severity.Info,
 ) : Game(),
@@ -71,6 +78,7 @@ class CaveDroidApplication(
                     isDebug = isDebug,
                     isTouch = isTouchScreen,
                     gameDirectory = gameDataDirectoryPath,
+                    gameDirectoryFileType = gameDataFileType,
                     width = width,
                     height = height,
                     isFullscreen = isFullscreen,
@@ -79,7 +87,7 @@ class CaveDroidApplication(
                     isAutoJumpEnabled = preferencesStore.getPreference(PreferenceKeys.AUTO_JUMP)
                         ?.toBooleanStrictOrNull() ?: true,
                     locale = preferencesStore.getPreference(PreferenceKeys.LOCALE)
-                        ?.let(::Locale) ?: Locale.getDefault(),
+                        ?.let(::Locale) ?: safeDefaultLocale(),
                     soundEnabled = preferencesStore.getPreference(PreferenceKeys.SOUND_ENABLED)
                         ?.toBooleanStrictOrNull() ?: true,
                     isOnboardingShown = preferencesStore.getPreference(PreferenceKeys.ONBOARDING_SHOWN)
@@ -90,13 +98,17 @@ class CaveDroidApplication(
             .applicationController(this)
             .preferencesStore(preferencesStore)
             .adController(adController)
+            .lightingSystemFactory(lightingSystemFactory)
+            .appDispatchers(dispatchers)
             .build()
 
         if (personalizedAdsConsent != null) {
             adController.setPersonalizedAdsEnabled(personalizedAdsConsent)
         }
 
-        Gdx.files.absolute(gameDataDirectoryPath).mkdirs()
+        if (gameDataFileType == Files.FileType.Absolute) {
+            Gdx.files.absolute(gameDataDirectoryPath).mkdirs()
+        }
         applicationComponent.initializeAssets()
         setScreen(applicationComponent.menuScreen)
     }
@@ -196,6 +208,14 @@ class CaveDroidApplication(
     fun getPreferencesStore() = preferencesStore
 
     override fun getDelegate() = this
+
+    private fun safeDefaultLocale(): Locale {
+        return try {
+            Locale.getDefault().takeIf { it in SUPPORTED_LOCALES } ?: Locale.ENGLISH
+        } catch (_: Throwable) {
+            Locale.ENGLISH
+        }
+    }
 
     companion object {
         private const val TAG = "CaveDroidApplication"

@@ -1,0 +1,116 @@
+name: Release
+
+# Builds signed release artifacts for a vA.B.C tag and creates a GitHub
+# Release with AI-generated notes for every supported locale.
+#
+# Triggers:
+#   - workflow_dispatch with tag input — the primary path; how
+#     finalize-release.yml chains into this workflow (GITHUB_TOKEN cannot
+#     fire push-tag triggers, but workflow_dispatch is exempt).
+#   - push of a vA.B.C tag — manual fallback for human-pushed tags.
+#
+# Build + AI release-notes generation are delegated to scripts in scripts/
+# so the same logic can be invoked locally.
+#
+# Required secrets:
+#   ANDROID_KEYSTORE_BASE64        — base64-encoded .jks/.keystore file
+#   ANDROID_KEYSTORE_PASSWORD      — keystore password
+#   ANDROID_KEY_ALIAS              — key alias inside the keystore
+#   ANDROID_KEY_PASSWORD           — key password
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to build and publish (e.g. v1.0.2)'
+        required: true
+        type: string
+
+concurrency:
+  group: release-${{ github.event.inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      models: read
+    steps:
+      - name: Determine tag
+        id: tag
+        run: |
+          if [[ -n "${{ github.event.inputs.tag }}" ]]; then
+            echo "tag=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate tag
+        run: |
+          tag="${{ steps.tag.outputs.tag }}"
+          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::tag must be vA.B.C (got '$tag')"
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.tag.outputs.tag }}
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+        env:
+          TAG: ${{ steps.tag.outputs.tag }}
+
+      - name: Decode keystore and write keystore.properties
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [[ -z "$KEYSTORE_BASE64" ]]; then
+            echo "::error::ANDROID_KEYSTORE_BASE64 secret is not configured"
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.keystore"
+          cat > keystore.properties <<EOF
+          releaseKeystorePath=$RUNNER_TEMP/release.keystore
+          releaseKeystorePassword=$KEYSTORE_PASSWORD
+          releaseKeyAlias=$KEY_ALIAS
+          releaseKeyPassword=$KEY_PASSWORD
+          EOF
+
+      - name: Make scripts executable
+        run: chmod +x gradlew scripts/*.sh
+
+      - name: Build release artifacts
+        run: ./scripts/build-release-artifacts.sh "${{ steps.version.outputs.version }}" --skip-legacy
+
+      - name: Generate AI release notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./scripts/gen-release-notes-ai.sh "${{ steps.tag.outputs.tag }}" --output release-notes.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: ${{ steps.tag.outputs.tag }}
+          body_path: release-notes.md
+          files: release-${{ steps.version.outputs.version }}/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

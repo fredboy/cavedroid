@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.common.mvvm
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
@@ -10,7 +11,7 @@ import org.junit.jupiter.api.Test
 
 class ViewModelTest {
 
-    private class TrackedViewModel : ViewModel() {
+    private class TrackedViewModel : ViewModel(Dispatchers.Unconfined) {
         var disposeCalls: Int = 0
             private set
 

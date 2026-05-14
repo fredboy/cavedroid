@@ -1,9 +1,11 @@
 package ru.fredboy.cavedroid.common
 
+import java.util.Locale
+
 object CaveDroidConstants {
     const val TITLE = "CaveDroid"
 
-    const val VERSION = "1.0.0"
+    const val VERSION = "1.0.2"
 
     const val GITHUB_LINK = "https://github.com/fredboy/cavedroid"
 
@@ -28,4 +30,6 @@ object CaveDroidConstants {
 
         const val PERSONALIZED_ADS_CONSENT = "personalized_ads_consent"
     }
+
+    val SUPPORTED_LOCALES = listOf(Locale("en"), Locale("ru"), Locale("de"))
 }

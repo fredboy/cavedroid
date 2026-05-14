@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.data.configuration.model
 
+import com.badlogic.gdx.Files
 import java.util.Locale
 
 class ApplicationContext(
@@ -8,6 +9,7 @@ class ApplicationContext(
     internal var isFullscreen: Boolean,
     internal var useDynamicCamera: Boolean,
     internal var gameDirectory: String,
+    internal val gameDirectoryFileType: Files.FileType,
     internal var width: Float,
     internal var height: Float,
     internal var isAutoJumpEnabled: Boolean,

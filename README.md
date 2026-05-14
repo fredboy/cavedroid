@@ -6,7 +6,7 @@
 [![Ktlint](https://github.com/fredboy/cavedroid/actions/workflows/ktlint.yml/badge.svg)](https://github.com/fredboy/cavedroid/actions/workflows/ktlint.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/fredboy/cavedroid)](https://github.com/fredboy/cavedroid/releases)
 
-CaveDroid is a **2D Minecraft-inspired game** for Android, Desktop (Windows, Linux, macOS), and potentially iOS.
+CaveDroid is a **2D Minecraft-inspired game** for Android, Desktop (Windows, Linux, macOS), Web (browser), and potentially iOS.
 Explore, mine, and build in a looped world.
 
 <details>
@@ -28,7 +28,7 @@ Explore, mine, and build in a looped world.
 - 2D world, looped horizontally
 - Craft, mine, and explore
 - Procedurally generated world
-- Cross-platform: Android, Desktop (Windows/Linux/macOS), iOS (untested)
+- Cross-platform: Android, Desktop (Windows/Linux/macOS), Web (browser, via TeaVM), iOS (untested)
 - Single-player mode (multiplayer not available yet)
 
 ---
@@ -72,6 +72,28 @@ You can download APK and JAR builds from [the releases page](https://github.com/
 
 On Windows, use `gradlew.bat` instead of `./gradlew`, though it will fail because of symlinks used to reference assets
 directory, so some tweaks are required.
+
+### Web (browser)
+
+CaveDroid compiles to JavaScript through [gdx-teavm](https://github.com/xpenatan/gdx-teavm). Lighting on the web build
+uses a simplified day/night tint shader (no per-block light sources) — gameplay is otherwise at parity with the desktop
+build.
+
+```bash
+# Run locally with the embedded Jetty dev server (source maps, no obfuscation)
+./gradlew html:runWeb
+
+# Build a development bundle without serving
+./gradlew html:buildJs
+
+# Build the obfuscated, fully-optimized release bundle
+./gradlew html:buildJsRelease
+
+# Zip the release bundle (build/dist/cavedroid-web-<version>.zip) for static hosting
+./gradlew html:packageWebDist
+```
+
+The release zip can be unpacked under any static web host (GitHub Pages, S3, Netlify, …) — no server-side runtime required.
 
 ### Legacy Android devices (API 16/17 — Jelly Bean)
 

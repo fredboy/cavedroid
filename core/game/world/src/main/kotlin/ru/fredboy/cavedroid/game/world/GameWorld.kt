@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.game.world
 
-import box2dLight.RayHandler
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
@@ -18,6 +17,7 @@ import ru.fredboy.cavedroid.domain.world.model.Weather
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
 import ru.fredboy.cavedroid.game.world.generator.GameWorldGenerator
 import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
+import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 import java.lang.ref.WeakReference
 import java.util.LinkedList
 import javax.inject.Inject
@@ -29,7 +29,7 @@ class GameWorld @Inject constructor(
     private val physicsController: GameWorldContactListener,
     private val gameWorldSolidBlockBodiesManager: GameWorldSolidBlockBodiesManager,
     private val environmentTextureRegionsRepository: EnvironmentTextureRegionsRepositoryTexture,
-    private val gameWorldLightManager: GameWorldLightManager,
+    val lightingSystem: LightingSystem,
     initialForeMap: Array<Array<Block>>?,
     initialBackMap: Array<Array<Block>>?,
     initialBiomes: Array<Biome>?,
@@ -54,9 +54,6 @@ class GameWorld @Inject constructor(
     val generatorConfig = WorldGeneratorConfig.getDefault()
 
     val world: World = World(Vector2(0f, 32f), false)
-
-    val rayHandler: RayHandler
-        get() = gameWorldLightManager.rayHandler
 
     private var timeMultiplier = 1f
 
@@ -92,7 +89,7 @@ class GameWorld @Inject constructor(
 
         physicsController.attachToGameWorld(this)
         gameWorldSolidBlockBodiesManager.attachToGameWorld(this)
-        gameWorldLightManager.attachToGameWorld(this)
+        lightingSystem.attachToGameWorld(this)
     }
 
     fun addBlockPlacedListener(listener: OnBlockPlacedListener) {
@@ -336,7 +333,7 @@ class GameWorld @Inject constructor(
             (weatherIntensity - intensityStep).coerceAtLeast(intensityTarget)
         }
 
-        gameWorldLightManager.update(delta)
+        lightingSystem.update(delta)
 
         box2dAccumulator += delta
         while (box2dAccumulator >= PHYSICS_STEP_DELTA) {
@@ -346,7 +343,7 @@ class GameWorld @Inject constructor(
     }
 
     override fun dispose() {
-        gameWorldLightManager.dispose()
+        lightingSystem.dispose()
         physicsController.dispose()
         gameWorldSolidBlockBodiesManager.dispose()
         world.dispose()

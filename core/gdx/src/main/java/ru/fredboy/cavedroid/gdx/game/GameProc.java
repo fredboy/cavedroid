@@ -84,7 +84,7 @@ public class GameProc implements Disposable {
 
         mGameRenderer.resetCameraToPlayer();
         mGameRenderer.render(0f);
-        mGameWorld.getRayHandler().update();
+        mGameWorld.getLightingSystem().recalculate();
     }
 
     public void setPlayerGameMode(GameMode gameMode) {

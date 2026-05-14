@@ -1,0 +1,95 @@
+name: PR Commit Lint
+
+# Validates commit messages on PRs from the same repository.
+# - issue/NN branches: every non-merge commit subject must start with "#NN: ".
+# - other branches: only generic checks (non-empty subject, length cap).
+# Skipped for fork PRs.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate commit messages
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BRANCH: ${{ github.head_ref }}
+        run: |
+          set -u
+          errors=0
+
+          issue_num=""
+          if [[ "$BRANCH" =~ ^issue/([0-9]+)$ ]]; then
+            issue_num="${BASH_REMATCH[1]}"
+            echo "Branch is issue/$issue_num — every non-merge commit must start with '#$issue_num: '"
+          else
+            echo "Branch is '$BRANCH' — only generic checks apply"
+          fi
+
+          # Iterate commits in the PR
+          mapfile -t shas < <(git rev-list --reverse "$BASE_SHA..$HEAD_SHA")
+          if [[ ${#shas[@]} -eq 0 ]]; then
+            echo "No commits in PR range — nothing to lint"
+            exit 0
+          fi
+
+          for sha in "${shas[@]}"; do
+            subject=$(git show -s --format=%s "$sha")
+            parent_count=$(git rev-list --parents -n 1 "$sha" | wc -w)
+            parent_count=$((parent_count - 1))
+
+            # Skip merge commits
+            if [[ $parent_count -gt 1 ]]; then
+              echo "  · $sha (merge) — skipped"
+              continue
+            fi
+
+            # Skip bot-authored [skip ci] commits (defensive — shouldn't appear in human PRs)
+            if [[ "$subject" == \[skip\ ci\]* ]]; then
+              echo "  · $sha [skip ci] — skipped"
+              continue
+            fi
+
+            ok=1
+
+            # Generic: non-empty
+            if [[ -z "$subject" ]]; then
+              echo "::error::Commit $sha has an empty subject"
+              ok=0
+            fi
+
+            # Generic: length cap
+            if (( ${#subject} > 100 )); then
+              echo "::warning::Commit $sha subject is ${#subject} chars (>100): '$subject'"
+            fi
+
+            # Issue-branch prefix
+            if [[ -n "$issue_num" ]]; then
+              if [[ ! "$subject" =~ ^\#${issue_num}:[[:space:]] ]]; then
+                echo "::error::Commit $sha: '$subject' — expected prefix '#$issue_num: '"
+                ok=0
+              fi
+            fi
+
+            if [[ $ok -eq 1 ]]; then
+              echo "  ✓ $sha — $subject"
+            else
+              errors=$((errors + 1))
+            fi
+          done
+
+          if [[ $errors -gt 0 ]]; then
+            echo "::error::$errors commit(s) failed validation"
+            exit 1
+          fi
+
+          echo "✅ All commits passed validation"

@@ -1,0 +1,5 @@
+## 1.0.1 (2026-05-14)
+
+* Absturz bei nicht unterstützter Sprache behoben
+* Behoben: Weltenliste wurde nach dem Löschen einer Welt nicht neu geladen
+* Weitere kleinere Korrekturen

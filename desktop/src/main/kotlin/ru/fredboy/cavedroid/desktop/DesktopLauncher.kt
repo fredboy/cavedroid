@@ -6,9 +6,13 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 import com.badlogic.gdx.utils.Os
 import com.badlogic.gdx.utils.SharedLibraryLoader
+import kotlinx.coroutines.Dispatchers
 import org.lwjgl.system.Configuration
 import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
+import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
+import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.desktop.utils.SaveSizePrefsGameDecorator
+import ru.fredboy.cavedroid.gameplay.lighting.box2d.Box2dLightingSystemFactory
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
 
 internal object DesktopLauncher {
@@ -58,9 +62,16 @@ internal object DesktopLauncher {
 
         val caveGame = CaveDroidApplication(
             gameDataDirectoryPath = System.getProperty("user.home") + "/.cavedroid",
+            gameDataFileType = Files.FileType.Absolute,
             isTouchScreen = touch,
             isDebug = debug,
             preferencesStore = preferencesStore,
+            lightingSystemFactory = Box2dLightingSystemFactory(),
+            dispatchers = AppDispatchers(
+                io = Dispatchers.IO,
+                background = Dispatchers.Default,
+                main = GdxMainDispatcher,
+            ),
             loggingSeverity = when {
                 verbose -> Severity.Verbose
                 debug -> Severity.Debug

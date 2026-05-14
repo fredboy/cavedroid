@@ -53,6 +53,7 @@ tasks.register<JavaExec>("runTouch") {
 
 tasks.register<Jar>("dist") {
     dependsOn("assemble")
+    dependsOn(configurations.runtimeClasspath)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes["Main-Class"] = desktopLauncherClassName
@@ -195,6 +196,7 @@ construo {
 dependencies {
     useCommonLibs()
     useGdxModule()
+    useLightingBox2d()
 
     implementation(Dependencies.LibGDX.gdx)
     implementation(Dependencies.LibGDX.Desktop.backend)

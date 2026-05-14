@@ -132,7 +132,7 @@ Add to `android/proguard-rules.pro`:
 -dontwarn com.badlogic.gdx.jnigen.**
 ```
 
-`make-release.sh` invokes the release build, so the legacy step will hit this. The rule is harmless on mainline (no warnings to suppress when the classes resolve), so it could just as well live there — but keeping it in the patch keeps the legacy concern self-contained.
+`scripts/build-release-artifacts.sh` invokes the release build, so the legacy step will hit this. The rule is harmless on mainline (no warnings to suppress when the classes resolve), so it could just as well live there — but keeping it in the patch keeps the legacy concern self-contained.
 
 ### `AndroidManifest.xml` — override kermit's minSdk 21
 
@@ -195,7 +195,7 @@ tasks.whenTaskAdded {
 }
 ```
 
-The `JniLibFolders` clause is the load-bearing part for this skill. Without it, `mergeJniLibFolders` and `copyAndroidNatives` are sibling prerequisites of `package*` with no relative order — Gradle is free to run merge first against whatever libs/ happens to contain. Two sequenced builds at different libGDX versions (the common case after running `make-release.sh`, or just rebuilding after legacy then mainline) will then race: the second build can ship the *first* build's natives. The APK passes `assembleFossRelease`, the `__memcpy_chk` symbol either is or isn't present depending on which version "won," and you don't notice until the app actually crashes on a target device.
+The `JniLibFolders` clause is the load-bearing part for this skill. Without it, `mergeJniLibFolders` and `copyAndroidNatives` are sibling prerequisites of `package*` with no relative order — Gradle is free to run merge first against whatever libs/ happens to contain. Two sequenced builds at different libGDX versions (the common case after running `scripts/build-release-artifacts.sh`, or just rebuilding after legacy then mainline) will then race: the second build can ship the *first* build's natives. The APK passes `assembleFossRelease`, the `__memcpy_chk` symbol either is or isn't present depending on which version "won," and you don't notice until the app actually crashes on a target device.
 
 If a future libGDX bump or a buildSrc refactor removes the `JniLibFolders` clause, the race comes back. If you're re-doing the migration from scratch and see a freshly built APK that doesn't match `Versions.kt`, re-check that `whenTaskAdded` block first.
 

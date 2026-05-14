@@ -9,6 +9,10 @@ fun DependencyHandler.useModule(moduleName: String) {
     add("implementation", project(moduleName))
 }
 
+fun DependencyHandler.useApiModule(moduleName: String) {
+    add("api", project(moduleName))
+}
+
 fun DependencyHandler.useCommonModule() {
     useModule(":core:common")
 }
@@ -61,6 +65,18 @@ fun DependencyHandler.useGameplayModules() {
     useModule(":core:gameplay:controls")
     useModule(":core:gameplay:physics")
     useModule(":core:gameplay:rendering")
+}
+
+fun DependencyHandler.useLightingBox2d() {
+    useModule(":core:gameplay:lighting-box2d")
+}
+
+fun DependencyHandler.useLightingTint() {
+    useModule(":core:gameplay:lighting-tint")
+}
+
+fun DependencyHandler.useTeaVMBackend() {
+    implementation(Dependencies.LibGDX.Web.backend)
 }
 
 fun DependencyHandler.useGdxModule() {

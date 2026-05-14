@@ -1,12 +1,19 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.common
 
 import com.badlogic.gdx.Gdx
+import kotlinx.coroutines.CoroutineDispatcher
 import ru.fredboy.cavedroid.common.mvvm.ViewModel
 import java.util.*
 
 abstract class BaseViewModel(
     private val dependencies: BaseViewModelDependencies,
-) : ViewModel() {
+) : ViewModel(dependencies.dispatchers.main) {
+
+    protected val ioDispatcher: CoroutineDispatcher get() = dependencies.dispatchers.io
+
+    protected val backgroundDispatcher: CoroutineDispatcher get() = dependencies.dispatchers.background
+
+    protected val mainDispatcher: CoroutineDispatcher get() = dependencies.dispatchers.main
 
     fun getLocalizedString(key: String, fallback: String = ""): String {
         return try {

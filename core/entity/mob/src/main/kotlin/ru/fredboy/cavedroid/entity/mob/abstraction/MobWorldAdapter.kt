@@ -1,10 +1,11 @@
 package ru.fredboy.cavedroid.entity.mob.abstraction
 
-import box2dLight.RayHandler
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.World
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.world.lighting.LightHandle
 
 interface MobWorldAdapter {
 
@@ -30,7 +31,7 @@ interface MobWorldAdapter {
 
     fun getClimbable(hitbox: Rectangle): Block.Climbable?
 
-    fun getRayHandler(): RayHandler
+    fun createPlayerSightLight(body: Body, x: Float, y: Float): LightHandle
 
     fun isDayTime(): Boolean
 
