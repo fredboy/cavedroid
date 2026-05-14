@@ -53,6 +53,7 @@ tasks.register<JavaExec>("runTouch") {
 
 tasks.register<Jar>("dist") {
     dependsOn("assemble")
+    dependsOn(configurations.runtimeClasspath)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes["Main-Class"] = desktopLauncherClassName
