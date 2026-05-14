@@ -1,2 +1,2 @@
-- Introduced a scrollable language view for easier navigation.
-- Added support for the German language.
+- New scrollable language view for easier navigation.
+- German language support added for more players.
