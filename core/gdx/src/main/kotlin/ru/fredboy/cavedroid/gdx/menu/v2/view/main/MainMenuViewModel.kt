@@ -1,5 +1,7 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.main
 
+import com.badlogic.gdx.Application
+import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
@@ -19,6 +21,9 @@ class MainMenuViewModel(
     private val adController: AdController,
     private val applicationContextRepository: ApplicationContextRepository,
 ) : BaseViewModel(baseViewModelDependencies) {
+
+    val showExitButton: Boolean
+        get() = Gdx.app.type != Application.ApplicationType.WebGL
 
     override fun onShow() {
         if (adController.supportsPersonalizedAdsConsent &&
