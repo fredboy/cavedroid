@@ -6,6 +6,7 @@ import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
@@ -32,6 +33,7 @@ class MobControllerMapper @Inject constructor(
     private val soundPlayer: SoundPlayer,
     private val stepsSoundAssetsRepository: StepsSoundAssetsRepository,
     private val applicationController: ApplicationController,
+    private val applicationContextRepository: ApplicationContextRepository,
 ) {
 
     fun mapSaveData(mobController: MobController): SaveDataDto.MobControllerSaveDataDto = SaveDataDto.MobControllerSaveDataDto(
@@ -71,6 +73,7 @@ class MobControllerMapper @Inject constructor(
             projectileAdapter = projectileAdapter,
             mobQueue = mobQueue,
             applicationController = applicationController,
+            applicationContextRepository = applicationContextRepository,
         ).apply {
             (mobs as MutableList).addAll(
                 saveDataDto.mobs.mapNotNull { mob ->

@@ -151,6 +151,7 @@ object GameModule {
             projectileAdapter = projectileAdapter,
             mobQueue = mobQueue,
             applicationController = applicationController,
+            applicationContextRepository = applicationContextRepository,
         )
     }
 
