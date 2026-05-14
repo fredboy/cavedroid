@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# Generates bilingual (en + ru) markdown release notes via GitHub Models.
+# Generates multilingual markdown release notes via GitHub Models, with one
+# top-level section per supported locale. The list of locales lives in
+# scripts/locales.sh.
 #
 # Usage:
 #   GITHUB_TOKEN=$(gh auth token) ./scripts/gen-release-notes-ai.sh vA.B.C [--model MODEL] [--output PATH]
@@ -45,6 +47,9 @@ if [[ -z "${GITHUB_TOKEN:-}" ]]; then
   exit 1
 fi
 
+# shellcheck source=scripts/locales.sh
+source "$(dirname "$0")/locales.sh"
+
 # Previous tag = next-most-recent tag, excluding the current one
 prev_tag=$(git tag --sort=-creatordate | grep -v "^${tag}$" | head -n 1 || true)
 
@@ -85,20 +90,24 @@ if [[ -z "$commits" ]]; then
   exit 0
 fi
 
+# Build the section list for the AI prompt: one "## <autonym>" heading per locale.
+sections_text=""
+for code in "${SUPPORTED_LOCALES[@]}"; do
+  autonym=${LOCALE_AUTONYMS[$code]}
+  qualifier=""
+  if [[ "$code" != "en" ]]; then
+    qualifier=" (idiomatic translation, same structure as English)"
+  fi
+  sections_text+="## ${autonym}${qualifier}"$'\n\n'"[markdown bullet lists, optionally under #### subheaders per category]"$'\n\n'
+done
+
 prompt="You are writing GitHub Release notes for CaveDroid, a 2D Minecraft-inspired indie game (Android, desktop, web).
 
 Below is the raw git commit log for release ${tag} (previous tag: ${prev_tag:-(none)}). Drop refactors, internal cleanup, build/CI tweaks, and dependency bumps — keep only what a player would care about (new features, gameplay changes, bug fixes, UI improvements).
 
-Group items by category (New Features / Improvements / Fixes — omit empty groups). Produce a bilingual markdown body with two top-level sections:
+Group items by category (New Features / Improvements / Fixes — omit empty groups). Produce a multilingual markdown body with one top-level section per supported language, in this order:
 
-## English
-
-[markdown bullet lists, optionally under #### subheaders per category]
-
-## Русский
-
-[same content, idiomatic translation, same structure]
-
+${sections_text}
 End the body with an italicised \"Full commit log:\" line linking to the GitHub compare view between ${prev_tag:-(none)} and ${tag} (omit if there is no previous tag).
 
 Commits:

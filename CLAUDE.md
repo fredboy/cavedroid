@@ -92,10 +92,10 @@ Release logic lives in `scripts/`; GitHub Actions workflows are thin wrappers th
 |---|---|---|
 | `scripts/up-version.sh A.B.C` | Bump `versionName`/`versionCode`/`VERSION` | `start-release.yml` |
 | `scripts/start-release.sh A.B.C` | Cut `release/A.B.C` from develop + version bump | `start-release.yml` |
-| `scripts/gen-changelog-ai.sh A.B.C` | AI-generate en+ru plaintext fastlane changelogs (GitHub Models) | `finalize-release.yml` (via finalize-release.sh) |
+| `scripts/gen-changelog-ai.sh A.B.C` | AI-generate plaintext fastlane changelogs for all supported locales (GitHub Models) | `finalize-release.yml` (via finalize-release.sh) |
 | `scripts/finalize-release.sh A.B.C` | Changelog → commit → merge to master+develop → tag | `finalize-release.yml` |
 | `scripts/build-release-artifacts.sh A.B.C` | ktlint + signed Android foss release + desktop Linux/Win + web; copies to `release-A.B.C/` | `release.yml` |
-| `scripts/gen-release-notes-ai.sh vA.B.C` | AI-generate bilingual markdown release notes (GitHub Models) | `release.yml` |
+| `scripts/gen-release-notes-ai.sh vA.B.C` | AI-generate multilingual markdown release notes for all supported locales (GitHub Models) | `release.yml` |
 | `scripts/require-clean-work-tree.sh` | Helper guard for local invocations | (not used in CI; scripts pass `--skip-clean-check`) |
 
 Each script enforces a repo-root guard. AI scripts read `$GITHUB_TOKEN` from env (auto-provided in CI with `models: read` permission; locally use `export GITHUB_TOKEN=$(gh auth token)`).

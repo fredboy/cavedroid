@@ -1,7 +1,7 @@
 name: Release
 
 # Builds signed release artifacts for a vA.B.C tag and creates a GitHub
-# Release with AI-generated bilingual notes.
+# Release with AI-generated notes for every supported locale.
 #
 # Triggers:
 #   - workflow_dispatch with tag input — the primary path; how
