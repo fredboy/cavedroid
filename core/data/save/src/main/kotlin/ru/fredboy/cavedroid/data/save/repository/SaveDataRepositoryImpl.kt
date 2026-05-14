@@ -66,7 +66,12 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         get() = applicationContextRepository.getGameDirectoryFileType()
 
     private fun file(path: String): FileHandle {
-        return Gdx.files.getFileHandle(path.trimStart('/'), fileType)
+        // Absolute paths must keep the leading '/' so libGDX wraps them in an
+        // absolute File. Local/Internal paths are relative to the platform's
+        // base dir and the leading slash would either be rejected (web) or
+        // mis-resolved, so trim it for those.
+        val resolved = if (fileType == Files.FileType.Absolute) path else path.trimStart('/')
+        return Gdx.files.getFileHandle(resolved, fileType)
     }
 
     private fun Int.toByteArray(): ByteArray = ByteBuffer.allocate(Int.SIZE_BYTES)
