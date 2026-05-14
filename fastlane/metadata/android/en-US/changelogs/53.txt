@@ -1,0 +1,2 @@
+- Added scrollable language view for better navigation.
+- Introduced German language support for a wider audience.
