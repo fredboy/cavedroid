@@ -120,6 +120,19 @@ tasks.register<JavaExec>("buildJsRelease") {
     configureWebBuild(sourceMaps = false, obfuscate = true, optimization = "FULL")
 }
 
+// SIMPLE optimization with obfuscation, no source maps. Both ADVANCED and
+// FULL run TeaVM's devirtualization pass (`optimizationLevel != SIMPLE` in
+// TeaVM.java) which strips constructors it considers unreachable (e.g.
+// abstract base classes like cbgssa_RelativeTemporalAction) even though
+// `$rt_simpleConstructors([...])` still references them — ReferenceError
+// at startup. Only SIMPLE's lazy mode keeps every constructor reachable,
+// which is what libGDX's metadata-driven class registry needs.
+tasks.register<JavaExec>("buildJsYandex") {
+    group = "build"
+    description = "Compile :html to JavaScript via TeaVM for Yandex Games (SIMPLE optimization, obfuscated, no source maps)."
+    configureWebBuild(sourceMaps = false, obfuscate = true, optimization = "SIMPLE")
+}
+
 tasks.register<Zip>("packageWebDist") {
     group = "distribution"
     description = "Package the release web bundle into a zip ready for static hosting."
@@ -134,4 +147,49 @@ tasks.register<Zip>("packageWebDist") {
         // hosts don't need it and including it leaks the servlet config.
         exclude("WEB-INF/**")
     }
+}
+
+// Generates the Yandex Games variant of index.html into its own directory.
+// We don't write into dist/webapp because that's owned by buildJsRelease and
+// Gradle's Copy-task output tracking would clobber the rest of the bundle.
+private val yandexOverlayDir = layout.buildDirectory.dir("generated/yandex")
+
+tasks.register<Copy>("applyYandexIndexHtml") {
+    group = "build"
+    description = "Render the Yandex Games variant of index.html with template substitutions applied."
+
+    from(layout.projectDirectory.file("src/main/resources/webapp/index-yandex.html"))
+    into(yandexOverlayDir)
+    rename { "index.html" }
+
+    // Placeholders mirror what gdx-teavm's WebBackend would substitute in the
+    // default index.html — we re-do that substitution here because the source
+    // template still has the raw %TITLE% / %JS_SCRIPT% / %MODE% tokens.
+    filter<org.apache.tools.ant.filters.ReplaceTokens>(
+        "beginToken" to "%",
+        "endToken" to "%",
+        "tokens" to mapOf(
+            "TITLE" to ApplicationInfo.name,
+            "JS_SCRIPT" to "<script type=\"text/javascript\" charset=\"utf-8\" src=\"app.js\"></script>",
+            "MODE" to "main()",
+            "WIDTH" to "800",
+            "HEIGHT" to "600",
+            "ARGS" to "",
+        ),
+    )
+}
+
+tasks.register<Zip>("packageWebDistYandex") {
+    group = "distribution"
+    description = "Package the release web bundle as a Yandex Games-ready zip."
+    dependsOn("buildJsYandex", "applyYandexIndexHtml")
+
+    archiveBaseName.set("cavedroid-web-yandex")
+    archiveVersion.set(ApplicationInfo.versionName)
+    destinationDirectory.set(layout.buildDirectory.dir("dist"))
+
+    from(layout.buildDirectory.dir("dist/webapp")) {
+        exclude("WEB-INF/**", "index.html")
+    }
+    from(yandexOverlayDir)
 }

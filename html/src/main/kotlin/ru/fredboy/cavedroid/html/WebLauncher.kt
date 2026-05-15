@@ -6,6 +6,8 @@ import com.github.xpenatan.gdx.teavm.backends.web.WebApplication
 import com.github.xpenatan.gdx.teavm.backends.web.WebApplicationConfiguration
 import com.github.xpenatan.gdx.teavm.backends.web.utils.WebNavigator
 import org.teavm.jso.JSBody
+import ru.fredboy.cavedroid.common.api.AdController
+import ru.fredboy.cavedroid.common.api.NoOpAdController
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.gameplay.lighting.tint.TintLightingSystemFactory
@@ -28,6 +30,14 @@ object WebLauncher {
             showDownloadLogs = true
         }
 
+        val yandexAvailable = YandexGamesBridge.isAvailable()
+        val adController: AdController = if (yandexAvailable) YandexGamesAdController() else NoOpAdController()
+        val onGameReady: (() -> Unit)? = if (yandexAvailable) {
+            { YandexGamesBridge.notifyLoadingReady() }
+        } else {
+            null
+        }
+
         val app = CaveDroidApplication(
             gameDataDirectoryPath = "",
             gameDataFileType = Files.FileType.Local,
@@ -40,7 +50,9 @@ object WebLauncher {
                 background = GdxMainDispatcher,
                 main = GdxMainDispatcher,
             ),
-            defaultLocaleProvider = ::localeFromNavigator,
+            adController = adController,
+            defaultLocaleProvider = { defaultLocale(yandexAvailable) },
+            onGameReady = onGameReady,
             loggingSeverity = Severity.Info,
         )
 
@@ -52,9 +64,16 @@ object WebLauncher {
         return MOBILE_USER_AGENT_REGEX.containsMatchIn(userAgent)
     }
 
-    private fun localeFromNavigator(): Locale? {
-        val tag = navigatorLanguage()?.takeIf { it.isNotEmpty() } ?: return null
-        val language = tag.substringBefore('-').substringBefore('_').lowercase()
+    private fun defaultLocale(yandexAvailable: Boolean): Locale? {
+        if (yandexAvailable) {
+            localeFromTag(YandexGamesBridge.getLanguage())?.let { return it }
+        }
+        return localeFromTag(navigatorLanguage())
+    }
+
+    private fun localeFromTag(tag: String?): Locale? {
+        val safeTag = tag?.takeIf { it.isNotEmpty() } ?: return null
+        val language = safeTag.substringBefore('-').substringBefore('_').lowercase()
         return language.takeIf { it.isNotEmpty() }?.let(::Locale)
     }
 
