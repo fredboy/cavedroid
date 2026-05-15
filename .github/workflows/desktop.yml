@@ -1,4 +1,4 @@
-name: Build Android
+name: Build Desktop
 
 on:
   push:
@@ -25,4 +25,4 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew android:buildFossDebug
+      run: ./gradlew desktop:dist
