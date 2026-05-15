@@ -1,0 +1,6 @@
+# Vendored TeaVM emulation sources for the :html target.
+# These are third-party Java files (gdx-box2d-gwt + jbox2d) that we must
+# ship in-tree because gdx-teavm has no published Box2D port. Exclude them
+# from GitHub's language statistics so the repo isn't classified as Java.
+html/src/main/java/emu/**       linguist-vendored
+html/src/main/java/emulate/**   linguist-vendored
