@@ -116,17 +116,10 @@ tasks.register<JavaExec>("runWeb") {
 
 tasks.register<JavaExec>("buildJsRelease") {
     group = "build"
-    description = "Compile :html to JavaScript via TeaVM (release: obfuscated, FULL optimization, no source maps)."
-    configureWebBuild(sourceMaps = false, obfuscate = true, optimization = "FULL")
+    description = "Compile :html to JavaScript via TeaVM (release: obfuscated, SIMPLE optimization, no source maps)."
+    configureWebBuild(sourceMaps = false, obfuscate = true, optimization = "SIMPLE")
 }
 
-// SIMPLE optimization with obfuscation, no source maps. Both ADVANCED and
-// FULL run TeaVM's devirtualization pass (`optimizationLevel != SIMPLE` in
-// TeaVM.java) which strips constructors it considers unreachable (e.g.
-// abstract base classes like cbgssa_RelativeTemporalAction) even though
-// `$rt_simpleConstructors([...])` still references them — ReferenceError
-// at startup. Only SIMPLE's lazy mode keeps every constructor reachable,
-// which is what libGDX's metadata-driven class registry needs.
 tasks.register<JavaExec>("buildJsYandex") {
     group = "build"
     description = "Compile :html to JavaScript via TeaVM for Yandex Games (SIMPLE optimization, obfuscated, no source maps)."
