@@ -1,0 +1,72 @@
+name: PR Title Lint
+
+# Enforces PR title conventions on same-repo PRs.
+#
+# Universal rule (every PR):
+#   - Title must start with an uppercase letter (any script — Latin, Cyrillic, etc.).
+#
+# Additionally on issue/NN branches:
+#   - Title must start with a GitHub issue-closing keyword and the matching
+#     issue number, e.g. "Closes #42: ..." or "Fixes #42 - ...".
+#     Allowed keywords (case-insensitive after the first letter):
+#       close / closes / closed, fix / fixes / fixed, resolve / resolves / resolved.
+#
+# fix/<slug>, feature/<slug>, release/*, hotfix/*: only the universal rule applies.
+#
+# Skipped for fork PRs — contributors choose their own conventions on their fork.
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Validate PR title
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+          BRANCH: ${{ github.head_ref }}
+        run: |
+          set -u
+
+          # Universal: first character must be an uppercase letter (Unicode-aware).
+          if ! grep -qP '^\p{Lu}' <<< "$TITLE"; then
+            echo "::error::PR title must start with a capital letter"
+            echo "  Got: '$TITLE'"
+            exit 1
+          fi
+
+          # Issue-branch-specific rule.
+          if [[ "$BRANCH" =~ ^issue/([0-9]+)$ ]]; then
+            branch_issue="${BASH_REMATCH[1]}"
+            echo "Branch is issue/$branch_issue — checking closing-keyword + issue number"
+
+            shopt -s nocasematch
+            if [[ ! "$TITLE" =~ ^(close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved)[[:space:]]+#([0-9]+) ]]; then
+              shopt -u nocasematch
+              cat <<EOF >&2
+          ::error::PR title from an issue/NN branch must start with a GitHub closing keyword + the issue number
+          Got:       '$TITLE'
+          Expected:  'Closes #${branch_issue}: <description>'
+                 or  'Fixes #${branch_issue} - <description>'
+                 or  'Resolves #${branch_issue} <description>'
+          Allowed keywords: close/closes/closed, fix/fixes/fixed, resolve/resolves/resolved (case-insensitive, but the first character of the title must be uppercase).
+          EOF
+              exit 1
+            fi
+
+            title_issue="${BASH_REMATCH[2]}"
+            shopt -u nocasematch
+
+            if [[ "$title_issue" != "$branch_issue" ]]; then
+              echo "::error::PR title references #${title_issue} but the branch is issue/${branch_issue} — they must match"
+              echo "  title: '$TITLE'"
+              exit 1
+            fi
+          else
+            echo "Branch is '$BRANCH' — only the capital-letter rule applies"
+          fi
+
+          echo "PR title '$TITLE' validates"

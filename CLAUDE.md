@@ -97,6 +97,7 @@ Release logic lives in `scripts/`; GitHub Actions workflows are thin wrappers th
 | `scripts/build-release-artifacts.sh A.B.C` | ktlint + signed Android foss release + desktop Linux/Win + web; copies to `release-A.B.C/` | `release.yml` |
 | `scripts/gen-release-notes-ai.sh vA.B.C` | AI-generate multilingual markdown release notes for all supported locales (GitHub Models) | `release.yml` |
 | `scripts/require-clean-work-tree.sh` | Helper guard for local invocations | (not used in CI; scripts pass `--skip-clean-check`) |
+| `scripts/setup-repo-settings.sh` | One-shot maintainer setup: configures PR settings + creates `release/*` squash-only ruleset via `gh api` | (manual; not in CI) |
 
 Each script enforces a repo-root guard. AI scripts read `$GITHUB_TOKEN` from env (auto-provided in CI with `models: read` permission; locally use `export GITHUB_TOKEN=$(gh auth token)`).
 
