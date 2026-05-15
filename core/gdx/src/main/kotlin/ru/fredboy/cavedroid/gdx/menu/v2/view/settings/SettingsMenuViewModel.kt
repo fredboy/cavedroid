@@ -1,5 +1,7 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.settings
 
+import com.badlogic.gdx.Application
+import com.badlogic.gdx.Gdx
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -64,6 +66,8 @@ class SettingsMenuViewModel(
             sound = values[3],
             showPersonalizedAdsToggle = showPersonalizedAdsToggle,
             personalizedAds = values[4],
+            showFullscreenButton = Gdx.graphics.supportsDisplayModeChange() &&
+                Gdx.app.type != Application.ApplicationType.WebGL,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -79,6 +83,8 @@ class SettingsMenuViewModel(
             sound = applicationContextRepository.isSoundEnabled(),
             showPersonalizedAdsToggle = showPersonalizedAdsToggle,
             personalizedAds = applicationContextRepository.getPersonalizedAdsConsent() ?: false,
+            showFullscreenButton = Gdx.graphics.supportsDisplayModeChange() &&
+                Gdx.app.type != Application.ApplicationType.WebGL,
         )
     }
 

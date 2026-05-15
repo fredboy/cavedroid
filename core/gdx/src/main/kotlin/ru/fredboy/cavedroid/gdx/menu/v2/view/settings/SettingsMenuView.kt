@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.settings
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable
@@ -56,7 +55,7 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
 
                         row()
 
-                        if (Gdx.graphics.supportsDisplayModeChange()) {
+                        if (state.showFullscreenButton) {
                             textButton(
                                 viewModel.getFormattedString("fullscreen", state.fullscreen.toToggleStateString()),
                             ) {

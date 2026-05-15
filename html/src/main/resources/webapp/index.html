@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>%TITLE%</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <style>
+            html, body {
+                background: #000;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            #canvas {
+                border: none;
+            }
+        </style>
+    </head>
+    <body oncontextmenu="return false">
+        <div>
+            <canvas id="canvas"></canvas>
+        </div>
+        <script>
+            async function start() {
+                %MODE%
+            }
+            window.addEventListener("load", start);
+        </script>
+        %JS_SCRIPT%
+    </body>
+</html>

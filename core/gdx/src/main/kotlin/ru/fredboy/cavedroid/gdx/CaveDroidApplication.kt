@@ -36,6 +36,7 @@ class CaveDroidApplication(
     private val dispatchers: AppDispatchers,
     private val adController: AdController = NoOpAdController(),
     private val defaultLocaleProvider: () -> Locale? = { safeDefaultLocale() },
+    private val onGameReady: (() -> Unit)? = null,
     loggingSeverity: Severity = Severity.Info,
 ) : Game(),
     CaveDroidApplicationDecorator,
@@ -113,6 +114,8 @@ class CaveDroidApplication(
         }
         applicationComponent.initializeAssets()
         setScreen(applicationComponent.menuScreen)
+
+        onGameReady?.invoke()
     }
 
     override fun dispose() {
