@@ -36,11 +36,19 @@ Verify your environment works:
    git checkout -b issue/42
    ```
 
-3. **Commit.** If the branch is `issue/NN`, prefix every commit subject with `#NN: ` — e.g. `#42: Add inventory drag-and-drop`. This keeps GitHub cross-linking intact and is enforced by CI. Other branches have no prefix requirement.
+3. **Commit.** Commit subjects have no required format — feature PRs are **squash-merged**, so the PR title becomes the single commit landing on `develop`.
 
-4. **Open a PR targeting `develop`.** Reference the issue in the description (`Closes #42`).
+4. **Open a PR targeting `develop`.** Title rules:
+   - **All PRs:** the title must start with a capital letter.
+   - **`issue/NN` branches** additionally: the title must start with a GitHub issue-closing keyword and the matching issue number, e.g.
+     - `Closes #42: Add inventory drag-and-drop`
+     - `Fixes #99 - Crash on world deletion`
+     - `Resolves #100 Add new feature`
 
-CI runs ktlint, JUnit tests, an Android debug build, and lints your branch name + commit messages. All must pass before merge.
+     Allowed keywords: `Close` / `Closes` / `Closed`, `Fix` / `Fixes` / `Fixed`, `Resolve` / `Resolves` / `Resolved` (the first letter must be uppercase; the rest of the keyword is case-insensitive). CI enforces this and that the issue number matches the branch.
+   - **`fix/<slug>` / `feature/<slug>`:** any title is fine as long as it starts with a capital letter. If the change happens to close an issue, include a closing keyword in the title or description so GitHub auto-closes the issue on merge.
+
+CI runs ktlint, JUnit tests, an Android debug build, and lints your branch name + PR title. All must pass before merge.
 
 ## Branching context
 
@@ -83,9 +91,9 @@ Don't instantiate libGDX classes that need a GL context (`Stage`, `RayHandler`, 
 ## Pull requests
 
 - Target `develop`.
-- One issue per PR where possible; reference the issue (`Closes #42`).
+- One issue per PR where possible; the title carries the issue reference (see Workflow step 4).
 - CI must pass before merge.
-- Default to merge commits (`--no-ff`); squash only when the branch history is noisy.
+- Feature PRs are **squash-merged** — the PR title becomes the single commit on `develop`. (Release-flow PRs use merge commits, but those are maintainer-only.)
 
 ## Questions
 
