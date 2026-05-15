@@ -35,6 +35,7 @@ class CaveDroidApplication(
     private val lightingSystemFactory: LightingSystemFactory,
     private val dispatchers: AppDispatchers,
     private val adController: AdController = NoOpAdController(),
+    private val defaultLocaleProvider: () -> Locale? = { safeDefaultLocale() },
     loggingSeverity: Severity = Severity.Info,
 ) : Game(),
     CaveDroidApplicationDecorator,
@@ -87,7 +88,8 @@ class CaveDroidApplication(
                     isAutoJumpEnabled = preferencesStore.getPreference(PreferenceKeys.AUTO_JUMP)
                         ?.toBooleanStrictOrNull() ?: true,
                     locale = preferencesStore.getPreference(PreferenceKeys.LOCALE)
-                        ?.let(::Locale) ?: safeDefaultLocale(),
+                        ?.let(::Locale) ?: defaultLocaleProvider()
+                        ?.takeIf { it in SUPPORTED_LOCALES } ?: Locale.ENGLISH,
                     soundEnabled = preferencesStore.getPreference(PreferenceKeys.SOUND_ENABLED)
                         ?.toBooleanStrictOrNull() ?: true,
                     isOnboardingShown = preferencesStore.getPreference(PreferenceKeys.ONBOARDING_SHOWN)
@@ -209,16 +211,16 @@ class CaveDroidApplication(
 
     override fun getDelegate() = this
 
-    private fun safeDefaultLocale(): Locale {
-        return try {
-            Locale.getDefault().takeIf { it in SUPPORTED_LOCALES } ?: Locale.ENGLISH
-        } catch (_: Throwable) {
-            Locale.ENGLISH
-        }
-    }
-
     companion object {
         private const val TAG = "CaveDroidApplication"
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)
+
+        private fun safeDefaultLocale(): Locale {
+            return try {
+                Locale.getDefault()
+            } catch (_: Throwable) {
+                Locale.ENGLISH
+            }
+        }
     }
 }
