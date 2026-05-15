@@ -98,7 +98,7 @@ jobs:
         run: chmod +x gradlew scripts/*.sh
 
       - name: Build release artifacts
-        run: ./scripts/build-release-artifacts.sh "${{ steps.version.outputs.version }}" --skip-legacy
+        run: ./scripts/build-release-artifacts.sh "${{ steps.version.outputs.version }}"
 
       - name: Generate AI release notes
         env:
