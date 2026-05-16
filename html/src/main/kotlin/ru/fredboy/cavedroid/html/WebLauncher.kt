@@ -33,10 +33,15 @@ object WebLauncher {
 
         val yandexAvailable = YandexGamesBridge.isAvailable()
         val adController: AdController = if (yandexAvailable) YandexGamesAdController() else NoOpAdController()
-        val onGameReady: (() -> Unit)? = if (yandexAvailable) {
-            { YandexGamesBridge.notifyLoadingReady() }
-        } else {
-            null
+
+        var appRef: CaveDroidApplication? = null
+        WebAudioLifecycle.install(
+            onSuspend = { appRef?.applicationComponentOrNull?.soundPlayer?.pauseAll() },
+            onResume = { appRef?.applicationComponentOrNull?.soundPlayer?.resumeAll() },
+        )
+
+        val onGameReady: () -> Unit = {
+            if (yandexAvailable) YandexGamesBridge.notifyLoadingReady()
         }
 
         val isMobileBrowser = isMobileBrowser()
@@ -63,6 +68,7 @@ object WebLauncher {
             onGameReady = onGameReady,
             loggingSeverity = Severity.Info,
         )
+        appRef = app
 
         WebApplication(app, config)
     }

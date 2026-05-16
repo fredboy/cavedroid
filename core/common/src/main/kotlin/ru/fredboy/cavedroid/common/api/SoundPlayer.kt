@@ -15,4 +15,10 @@ interface SoundPlayer {
     fun playUiSound(sound: Sound)
 
     fun playLoopSound(sound: Sound, volume: Float): Long
+
+    fun stopLoopSound(sound: Sound, id: Long)
+
+    fun pauseAll()
+
+    fun resumeAll()
 }
