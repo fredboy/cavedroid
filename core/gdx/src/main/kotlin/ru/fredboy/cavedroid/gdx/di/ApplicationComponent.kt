@@ -5,6 +5,7 @@ import dagger.BindsInstance
 import dagger.Component
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
+import ru.fredboy.cavedroid.common.api.InlineTextInput
 import ru.fredboy.cavedroid.common.api.PreferencesStore
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
@@ -114,6 +115,8 @@ interface ApplicationComponent {
 
     val adController: AdController
 
+    val inlineTextInput: InlineTextInput
+
     val lightingSystemFactory: LightingSystemFactory
 
     val appDispatchers: AppDispatchers
@@ -132,6 +135,9 @@ interface ApplicationComponent {
 
         @BindsInstance
         fun adController(impl: AdController): Builder
+
+        @BindsInstance
+        fun inlineTextInput(impl: InlineTextInput): Builder
 
         @BindsInstance
         fun lightingSystemFactory(factory: LightingSystemFactory): Builder
