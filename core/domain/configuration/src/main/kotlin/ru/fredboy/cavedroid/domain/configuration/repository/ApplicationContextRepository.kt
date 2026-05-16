@@ -7,6 +7,8 @@ interface ApplicationContextRepository {
 
     fun isDebug(): Boolean
 
+    fun isYandexGamesBuild(): Boolean
+
     fun isTouch(): Boolean
 
     fun isFullscreen(): Boolean

@@ -40,6 +40,7 @@ class CaveDroidApplication(
     private val inlineTextInput: InlineTextInput = NoOpInlineTextInput,
     private val defaultLocaleProvider: () -> Locale? = { safeDefaultLocale() },
     private val onGameReady: (() -> Unit)? = null,
+    private val isYandexGamesBuild: Boolean = false,
     loggingSeverity: Severity = Severity.Info,
 ) : Game(),
     CaveDroidApplicationDecorator,
@@ -102,6 +103,7 @@ class CaveDroidApplication(
                     isOnboardingShown = preferencesStore.getPreference(PreferenceKeys.ONBOARDING_SHOWN)
                         ?.toBooleanStrictOrNull() ?: false,
                     personalizedAdsConsent = personalizedAdsConsent,
+                    isYandexGamesBuild = isYandexGamesBuild,
                 ),
             )
             .applicationController(this)

@@ -38,26 +38,12 @@ suspend fun Stage.noticeMenuView(viewModel: NoticeMenuViewModel) = viewModel.als
                 row()
                     .bottom()
 
-                table {
-                    textButton(viewModel.getLocalizedString("copy")) {
-                        onClickWithSound(viewModel) { viewModel.onCopyClicked(state.notices) }
-                    }.cell(
-                        width = 400f,
-                        height = 60f,
-                        padRight = 16f,
-                    )
-
-                    textButton(viewModel.getLocalizedString("back")) {
-                        onClickWithSound(viewModel) { viewModel.onBackClick() }
-                    }.cell(
-                        width = 400f,
-                        height = 60f,
-                        padLeft = 16f,
-                    )
+                textButton(viewModel.getLocalizedString("back")) {
+                    onClickWithSound(viewModel) { viewModel.onBackClick() }
                 }.cell(
-                    expandX = true,
-                    fillX = true,
-                    padTop = 16f,
+                    width = 600f,
+                    height = 60f,
+                    pad = 16f,
                 )
             }
         }
