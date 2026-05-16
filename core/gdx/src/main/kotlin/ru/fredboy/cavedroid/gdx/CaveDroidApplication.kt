@@ -11,7 +11,9 @@ import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
 import ru.fredboy.cavedroid.common.CaveDroidConstants.SUPPORTED_LOCALES
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
+import ru.fredboy.cavedroid.common.api.InlineTextInput
 import ru.fredboy.cavedroid.common.api.NoOpAdController
+import ru.fredboy.cavedroid.common.api.NoOpInlineTextInput
 import ru.fredboy.cavedroid.common.api.PreferencesStore
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.model.StartGameConfig
@@ -35,6 +37,7 @@ class CaveDroidApplication(
     private val lightingSystemFactory: LightingSystemFactory,
     private val dispatchers: AppDispatchers,
     private val adController: AdController = NoOpAdController(),
+    private val inlineTextInput: InlineTextInput = NoOpInlineTextInput,
     private val defaultLocaleProvider: () -> Locale? = { safeDefaultLocale() },
     private val onGameReady: (() -> Unit)? = null,
     loggingSeverity: Severity = Severity.Info,
@@ -101,6 +104,7 @@ class CaveDroidApplication(
             .applicationController(this)
             .preferencesStore(preferencesStore)
             .adController(adController)
+            .inlineTextInput(inlineTextInput)
             .lightingSystemFactory(lightingSystemFactory)
             .appDispatchers(dispatchers)
             .build()
@@ -216,7 +220,7 @@ class CaveDroidApplication(
 
     companion object {
         private const val TAG = "CaveDroidApplication"
-        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
+        private val logger = Logger.withTag(TAG)
 
         private fun safeDefaultLocale(): Locale {
             return try {
