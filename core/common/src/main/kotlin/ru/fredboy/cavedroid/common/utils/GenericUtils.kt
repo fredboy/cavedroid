@@ -25,3 +25,5 @@ fun Boolean.takeIfTrue(): Boolean? = takeIf { it }
 fun String.startWithCapital(locale: Locale) = replaceFirstChar {
     if (it.isLowerCase()) it.titlecase(locale) else it.toString()
 }
+
+inline fun <reified T> Any?.safeCast(): T? = this as? T

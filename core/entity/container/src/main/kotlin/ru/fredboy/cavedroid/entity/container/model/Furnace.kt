@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.entity.container.model
 
 import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
@@ -16,7 +17,10 @@ class Furnace(
     size = SIZE,
     fallbackItem = fallbackItem,
     initialItems = initialItems,
-) {
+),
+    Disposable {
+
+    var notifyStateChanged: ((isActive: Boolean) -> Unit)? = null
 
     override val type get() = Block.Furnace::class
 
@@ -50,6 +54,7 @@ class Furnace(
             lightSource?.apply {
                 this@apply.isActive = value != null && !value.isNone()
             }
+            notifyStateChanged?.invoke(value != null && !value.isNone())
         }
 
     var currentFuelKey: String? = null
@@ -142,6 +147,11 @@ class Furnace(
             smeltStarTimeMs = TimeUtils.millis()
             smeltProgress = 0f
         }
+    }
+
+    override fun dispose() {
+        lightSource?.dispose()
+        notifyStateChanged = null
     }
 
     companion object {

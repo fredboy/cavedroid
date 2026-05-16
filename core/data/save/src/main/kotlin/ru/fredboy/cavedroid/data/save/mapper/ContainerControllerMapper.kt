@@ -52,7 +52,9 @@ class ContainerControllerMapper @Inject constructor(
                 }
 
                 if (container != null) {
-                    containerMap.put(ContainerCoordinates.fromString(key), container)
+                    val coordinates = ContainerCoordinates.fromString(key)
+                    containerMap[coordinates] = container
+                    onContainerAdded(coordinates.x, coordinates.y, coordinates.z, container)
                 }
             }
         }
