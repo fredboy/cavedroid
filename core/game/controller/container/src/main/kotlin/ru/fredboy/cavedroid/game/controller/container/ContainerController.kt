@@ -1,6 +1,8 @@
 package ru.fredboy.cavedroid.game.controller.container
 
+import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.removeFirst
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.domain.world.lighting.LightHandle
@@ -13,6 +15,8 @@ import ru.fredboy.cavedroid.entity.container.model.Container
 import ru.fredboy.cavedroid.entity.container.model.ContainerCoordinates
 import ru.fredboy.cavedroid.entity.container.model.Furnace
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter
+import java.lang.ref.WeakReference
+import java.util.LinkedList
 import javax.inject.Inject
 
 @GameScope
@@ -23,6 +27,8 @@ class ContainerController @Inject constructor(
     private val dropAdapter: DropAdapter,
 ) : OnBlockPlacedListener,
     OnBlockDestroyedListener {
+
+    private val furnaceStateChangedListeners = LinkedList<WeakReference<FurnaceStateChangedListener>>()
 
     val containerMap = mutableMapOf<ContainerCoordinates, Container>()
 
@@ -37,8 +43,36 @@ class ContainerController @Inject constructor(
         return ContainerCoordinates(x, y, z)
     }
 
+    fun addFurnaceListener(listener: FurnaceStateChangedListener) {
+        furnaceStateChangedListeners.add(WeakReference(listener))
+    }
+
+    fun removeFurnaceListener(listener: FurnaceStateChangedListener) {
+        furnaceStateChangedListeners.removeFirst { it.get() == listener }
+    }
+
+    private fun notifyFurnaceStateUpdated(x: Int, y: Int, z: Int, isActive: Boolean) {
+        furnaceStateChangedListeners.removeAll { listener ->
+            listener.get()?.let {
+                it.onFurnaceStateChanged(x, y, z, isActive)
+                return@removeAll false
+            }
+
+            logger.w { "An empty FurnaceStateChangedListener weak reference was removed!" }
+            true
+        }
+    }
+
     fun getContainer(x: Int, y: Int, z: Int): Container? {
         return containerMap[getContainerKey(x, y, z)]
+    }
+
+    fun onContainerAdded(x: Int, y: Int, z: Int, container: Container) {
+        if (container is Furnace) {
+            container.notifyStateChanged = { isActive ->
+                notifyFurnaceStateUpdated(x, y, z, isActive)
+            }
+        }
     }
 
     fun addContainer(x: Int, y: Int, z: Int, container: Container) {
@@ -48,6 +82,7 @@ class ContainerController @Inject constructor(
         }
 
         containerMap[key] = container
+        onContainerAdded(x, y, z, container)
     }
 
     private fun retrieveContainer(x: Int, y: Int, z: Int): Container? {
@@ -62,8 +97,8 @@ class ContainerController @Inject constructor(
         retrieveContainer(x, y, z)?.let { container ->
             dropAdapter.dropInventory(x.toFloat(), y.toFloat(), container.inventory)
 
-            if (container is Furnace) {
-                container.lightSource?.dispose()
+            if (container is Disposable) {
+                container.dispose()
             }
         }
     }
@@ -88,9 +123,14 @@ class ContainerController @Inject constructor(
     }
 
     fun dispose() {
+        containerMap.values.asSequence()
+            .filterIsInstance<Disposable>()
+            .forEach { container -> container.dispose() }
+
         containerMap.clear()
         containerWorldAdapter.removeOnBlockPlacedListener(this)
         containerWorldAdapter.removeOnBlockDestroyedListener(this)
+        furnaceStateChangedListeners.clear()
     }
 
     override fun onBlockDestroyed(
