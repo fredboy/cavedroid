@@ -60,7 +60,6 @@ fun Stage.show(viewModel: NewGameMenuViewModel) {
                     }
                 }
 
-
                 row()
 
                 textButton(viewModel.getLocalizedString("creative")) {

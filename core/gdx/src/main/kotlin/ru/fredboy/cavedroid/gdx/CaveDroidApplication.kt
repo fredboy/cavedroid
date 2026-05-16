@@ -52,6 +52,9 @@ class CaveDroidApplication(
     override lateinit var applicationComponent: ApplicationComponent
         private set
 
+    val applicationComponentOrNull: ApplicationComponent?
+        get() = if (::applicationComponent.isInitialized) applicationComponent else null
+
     private fun initFullscreenMode(isFullscreen: Boolean) {
         if (Gdx.app.type != Application.ApplicationType.Desktop) {
             return
