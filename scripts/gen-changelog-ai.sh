@@ -82,6 +82,8 @@ done
 prompt="You are generating user-facing changelogs for CaveDroid, a 2D Minecraft-inspired indie game (Android, desktop, web).
 
 Below is the raw git commit log for the upcoming v${version} release. Drop refactors, internal cleanup, build/CI tweaks, and dependency bumps — keep only what a player would care about (new features, gameplay changes, bug fixes, UI improvements).
+Changes targeting specific platforms must come next to each other back to back and be prefixed with the platform name and a colon \"Android:\", \"Desktop:\", etc.
+Omit changes that mention store releases, yandex, ads, firebase, telemetry.
 
 Output one plaintext changelog per language:
 ${locale_list_text}
