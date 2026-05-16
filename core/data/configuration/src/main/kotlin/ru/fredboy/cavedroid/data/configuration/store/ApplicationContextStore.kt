@@ -19,6 +19,9 @@ class ApplicationContextStore @Inject constructor(
     val isDebug: Boolean
         get() = synchronized(lock) { applicationContext.isDebug }
 
+    val isYandexGamesBuild: Boolean
+        get() = synchronized(lock) { applicationContext.isYandexGamesBuild }
+
     var isTouch: Boolean
         get() = synchronized(lock) { applicationContext.isTouch }
         set(value) = synchronized(lock) { applicationContext.isTouch = value }

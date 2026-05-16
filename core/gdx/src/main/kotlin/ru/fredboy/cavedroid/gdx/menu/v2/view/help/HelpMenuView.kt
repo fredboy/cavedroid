@@ -11,13 +11,15 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 fun Stage.helpMenuView(viewModel: HelpMenuViewModel) = viewModel.also {
     actors {
         menuButtonsTable {
-            textButton(viewModel.getLocalizedString("about")) {
-                onClickWithSound(viewModel) {
-                    viewModel.onAboutClick()
+            if (viewModel.isAboutButtonVisible) {
+                textButton(viewModel.getLocalizedString("about")) {
+                    onClickWithSound(viewModel) {
+                        viewModel.onAboutClick()
+                    }
                 }
-            }
 
-            row()
+                row()
+            }
 
             textButton(viewModel.getLocalizedString("attribution")) {
                 onClickWithSound(viewModel) {
