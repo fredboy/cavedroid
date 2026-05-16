@@ -2,7 +2,6 @@ package ru.fredboy.cavedroid.gdx.menu.v2.view.singleplayer
 
 import co.touchlab.kermit.Logger
 import com.badlogic.gdx.graphics.Texture
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
