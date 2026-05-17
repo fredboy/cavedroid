@@ -60,6 +60,7 @@ object WebLauncher {
             },
             defaultLocaleProvider = { defaultLocale(yandexAvailable) },
             loggingSeverity = Severity.Info,
+            isYandexGamesBuild = yandexAvailable,
         ).let { app ->
             if (yandexAvailable) {
                 YandexGamesLifecycleGameDecorator(app)
