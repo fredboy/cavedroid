@@ -1,0 +1,6 @@
+- Added a dedicated save button to the pause menu.
+- Expanded onboarding hints with new messages for bed-failure and inventory.
+- Show native language names in the language menu.
+- Fixed the lit furnace not emitting light.
+- Fixed mobile input issues in browsers.
+- Improved world loading messages on the web.
