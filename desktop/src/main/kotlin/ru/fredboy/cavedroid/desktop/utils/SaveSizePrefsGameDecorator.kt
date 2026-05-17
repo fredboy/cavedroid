@@ -25,6 +25,7 @@ class SaveSizePrefsGameDecorator(
     private val resizeEventFlow = MutableSharedFlow<Pair<Int, Int>>()
 
     override fun create() {
+        delegate.applicationControllerOverride = this
         observeResize()
         delegate.create()
     }
