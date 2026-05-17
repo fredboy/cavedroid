@@ -1,0 +1,6 @@
+- Eine eigene Speicher-Button im Pausenmenü hinzugefügt.
+- Onboarding-Hinweise mit neuen Meldungen zu Bettfehlern und Inventar erweitert.
+- Native Sprachennamen im Sprachmenü angezeigt.
+- Problem mit der nicht leuchtenden Ofen behoben.
+- Eingabefehler in mobilen Browsern behoben.
+- Verbesserte Weltlade-Nachrichten auf der Webseite.
