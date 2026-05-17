@@ -17,6 +17,8 @@ class ApplicationContextRepositoryImpl @Inject constructor(
 
     override fun isDebug(): Boolean = applicationContextStore.isDebug
 
+    override fun isYandexGamesBuild(): Boolean = applicationContextStore.isYandexGamesBuild
+
     override fun isTouch(): Boolean = applicationContextStore.isTouch
 
     override fun isFullscreen(): Boolean = applicationContextStore.isFullscreen
@@ -108,6 +110,12 @@ class ApplicationContextRepositoryImpl @Inject constructor(
 
     override fun setOnboardingShown(shown: Boolean) {
         applicationContextStore.isOnboardingShown = shown
+    }
+
+    override fun isInventoryHintShown(): Boolean = applicationContextStore.isInventoryHintShown
+
+    override fun setInventoryHintShown(shown: Boolean) {
+        applicationContextStore.isInventoryHintShown = shown
     }
 
     override fun getPersonalizedAdsConsent(): Boolean? = applicationContextStore.personalizedAdsConsent

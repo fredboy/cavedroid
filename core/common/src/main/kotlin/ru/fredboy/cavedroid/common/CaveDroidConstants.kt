@@ -5,7 +5,7 @@ import java.util.Locale
 object CaveDroidConstants {
     const val TITLE = "CaveDroid"
 
-    const val VERSION = "1.0.2"
+    const val VERSION = "1.0.3"
 
     const val GITHUB_LINK = "https://github.com/fredboy/cavedroid"
 
@@ -27,6 +27,8 @@ object CaveDroidConstants {
         const val WINDOW_HEIGHT_KEY = "window_height"
 
         const val ONBOARDING_SHOWN = "onboarding_shown"
+
+        const val INVENTORY_HINT_SHOWN = "inventory_hint_shown"
 
         const val PERSONALIZED_ADS_CONSENT = "personalized_ads_consent"
     }

@@ -24,6 +24,7 @@ include("core:data:assets")
 include("core:data:configuration")
 include("core:data:items")
 include("core:data:save")
+include("core:data:stats")
 
 /**
  * First level domain models
@@ -33,6 +34,7 @@ include("core:domain:configuration")
 include("core:domain:items")
 include("core:domain:world")
 include("core:domain:save")
+include("core:domain:stats")
 
 /**
  * Second level domain models
@@ -52,6 +54,7 @@ include("core:game:controller:drop")
 include("core:game:controller:container")
 include("core:game:controller:mob")
 include("core:game:controller:projectile")
+include("core:game:controller:stats")
 
 // ui windows module
 include("core:game:window")

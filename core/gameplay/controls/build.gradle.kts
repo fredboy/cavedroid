@@ -14,6 +14,7 @@ dependencies {
     useCommonLibs()
     useDomainModules()
     useDomainSaveModule()
+    useDomainStatsModule()
     useEntityModules()
     useGameModules()
 }

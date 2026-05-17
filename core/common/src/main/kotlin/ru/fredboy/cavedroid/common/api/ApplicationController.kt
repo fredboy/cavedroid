@@ -1,8 +1,9 @@
 package ru.fredboy.cavedroid.common.api
 
+import com.badlogic.gdx.ApplicationListener
 import ru.fredboy.cavedroid.common.model.StartGameConfig
 
-interface ApplicationController {
+interface ApplicationController : ApplicationListener {
 
     fun quitGame()
 
@@ -15,6 +16,8 @@ interface ApplicationController {
     fun resumeGame()
 
     fun pauseGame()
+
+    fun saveGame()
 
     fun showDeathScreen()
 

@@ -7,6 +7,8 @@ interface ApplicationContextRepository {
 
     fun isDebug(): Boolean
 
+    fun isYandexGamesBuild(): Boolean
+
     fun isTouch(): Boolean
 
     fun isFullscreen(): Boolean
@@ -49,6 +51,10 @@ interface ApplicationContextRepository {
     fun isOnboardingShown(): Boolean
 
     fun setOnboardingShown(shown: Boolean)
+
+    fun isInventoryHintShown(): Boolean
+
+    fun setInventoryHintShown(shown: Boolean)
 
     fun getPersonalizedAdsConsent(): Boolean?
 

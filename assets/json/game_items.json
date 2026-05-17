@@ -138,6 +138,9 @@
     },
     "crafting_table": {
       "hp": 180,
+      "collision": false,
+      "background": true,
+      "casts_shadows": false,
       "texture": "crafting_table",
       "tool_level": 0,
       "tool_type": "axe",
@@ -1830,8 +1833,10 @@
     },
     "furnace": {
       "hp": 1050,
-      "collision": true,
+      "collision": false,
+      "background": true,
       "transparent": false,
+      "casts_shadows": false,
       "drop": "furnace",
       "texture": "furnace",
       "animated": true,
@@ -1852,8 +1857,10 @@
     },
     "chest": {
       "hp": 180,
-      "collision": true,
+      "collision": false,
+      "background": true,
       "transparent": false,
+      "casts_shadows": false,
       "drop": "chest",
       "texture": "chest",
       "tool_level": 0,

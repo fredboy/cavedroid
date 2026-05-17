@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.model.SpriteOrigin
 import ru.fredboy.cavedroid.common.utils.drawSprite
+import ru.fredboy.cavedroid.common.utils.safeCast
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageFrameCountUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageSpriteUseCase
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -118,6 +119,10 @@ abstract class BlocksRenderer(
                 backgroundBlock.draw(spriteBatch, drawX, drawY)
             }
         }
+
+        containerController.getContainer(x, y, Layer.BACKGROUND.z)
+            ?.safeCast<Furnace>()
+            ?.let { furnace -> furnace.lightSource?.update() }
     }
 
     protected fun drawForeMap(spriteBatch: SpriteBatch, x: Int, y: Int, drawX: Float, drawY: Float) {
@@ -133,6 +138,10 @@ abstract class BlocksRenderer(
                 foregroundBlock.draw(spriteBatch, drawX, drawY)
             }
         }
+
+        containerController.getContainer(x, y, Layer.FOREGROUND.z)
+            ?.safeCast<Furnace>()
+            ?.let { furnace -> furnace.lightSource?.update() }
     }
 
     private fun drawAttachedToNeighbour(

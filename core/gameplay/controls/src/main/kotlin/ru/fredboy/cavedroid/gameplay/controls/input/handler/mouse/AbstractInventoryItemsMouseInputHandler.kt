@@ -2,10 +2,12 @@ package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
+import ru.fredboy.cavedroid.common.api.InventoryHintEvents
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem.Companion.isNoneOrNull
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.domain.stats.repository.StatsRepository
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindow
@@ -19,6 +21,8 @@ abstract class AbstractInventoryItemsMouseInputHandler(
     private val itemsRepository: ItemsRepository,
     private val gameWindowsManager: GameWindowsManager,
     private val windowType: GameWindowType,
+    private val inventoryHintEvents: InventoryHintEvents,
+    private val statsRepository: StatsRepository,
 ) : IMouseInputHandler {
 
     protected abstract val windowTexture: TextureRegion
@@ -74,6 +78,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         } else {
             window.onRightClick(items, itemsRepository, index)
         }
+        inventoryHintEvents.notifyItemMoved()
     }
 
     protected fun handleInsideCraftResultCell(
@@ -107,8 +112,13 @@ abstract class AbstractInventoryItemsMouseInputHandler(
             }
         }
 
+        val consumed = items[index].isNoneOrNull()
+
         if (window is AbstractInventoryWindowWithCraftGrid) {
             reduceCraftItems(window)
+            if (consumed) {
+                statsRepository.recordItemCrafted()
+            }
         }
     }
 }

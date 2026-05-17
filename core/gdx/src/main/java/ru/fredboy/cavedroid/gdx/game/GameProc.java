@@ -10,6 +10,7 @@ import ru.fredboy.cavedroid.game.controller.container.ContainerController;
 import ru.fredboy.cavedroid.game.controller.drop.DropController;
 import ru.fredboy.cavedroid.game.controller.mob.MobController;
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController;
+import ru.fredboy.cavedroid.game.controller.stats.StatsController;
 import ru.fredboy.cavedroid.game.world.GameWorld;
 import ru.fredboy.cavedroid.gameplay.controls.GameInputProcessor;
 import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldBlocksLogicControllerTask;
@@ -35,6 +36,7 @@ public class GameProc implements Disposable {
     private final GameWorld mGameWorld;
     private final ProjectileController mProjectileController;
     private final WeatherSoundController mWeatherSoundController;
+    private final StatsController mStatsController;
 
     private final Timer mWorldLogicTimer = new Timer();
 
@@ -51,7 +53,8 @@ public class GameProc implements Disposable {
                     GameWorldMobSpawnControllerTask gameWorldMobSpawnControllerTask,
                     GameInputProcessor gameInputProcessor,
                     ProjectileController projectileController,
-                    WeatherSoundController weatherSoundController
+                    WeatherSoundController weatherSoundController,
+                    StatsController statsController
     ) {
         mGameRenderer = gameRenderer;
         mMobsController = mobsController;
@@ -65,6 +68,7 @@ public class GameProc implements Disposable {
         mGameWorld = gameWorld;
         mProjectileController = projectileController;
         mWeatherSoundController = weatherSoundController;
+        mStatsController = statsController;
 
         mWorldLogicTimer.scheduleTask(gameWorldFluidsLogicControllerTask, 0,
                 GameWorldFluidsLogicControllerTask.FLUID_UPDATE_INTERVAL_SEC);
@@ -100,6 +104,7 @@ public class GameProc implements Disposable {
         mGameRenderer.render(delta);
         mContainerController.update(delta);
         mWeatherSoundController.update();
+        mStatsController.update(delta);
     }
 
     public void onResize() {
@@ -136,6 +141,7 @@ public class GameProc implements Disposable {
         mDropController.dispose();
         mMobsController.dispose();
         mContainerController.dispose();
+        mStatsController.dispose();
         mGameWorld.dispose();
     }
 }

@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.gameplay.controls.action.useblock.bed
 
 import com.badlogic.gdx.math.Vector2
+import ru.fredboy.cavedroid.common.api.GameMessageEvents
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -14,6 +15,7 @@ import javax.inject.Inject
 class UseBedRightAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobController: MobController,
+    private val gameMessageEvents: GameMessageEvents,
 ) : IUseBlockAction {
 
     override fun perform(block: Block, x: Int, y: Int) {
@@ -24,10 +26,15 @@ class UseBedRightAction @Inject constructor(
 
         mobController.player.spawnPoint = sleepPoint.cpy().add(mobController.player.position)
 
-        if (gameWorld.isDayTime() ||
-            !mobController.playerCanSleep() ||
-            gameWorld.getForeMap(x, y - 1).params.hasCollision
-        ) {
+        if (gameWorld.isDayTime()) {
+            gameMessageEvents.showLocalized("cantSleepDayTime")
+            return
+        }
+        if (!mobController.playerCanSleep()) {
+            gameMessageEvents.showLocalized("cantSleepMonstersNearby")
+            return
+        }
+        if (gameWorld.getForeMap(x, y - 1).params.hasCollision) {
             return
         }
 

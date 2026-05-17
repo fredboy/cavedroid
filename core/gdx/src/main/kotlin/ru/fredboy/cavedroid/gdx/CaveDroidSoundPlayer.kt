@@ -13,6 +13,11 @@ class CaveDroidSoundPlayer @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
 ) : SoundPlayer {
 
+    // Track active loops so pauseAll/resumeAll only touch sounds we started — Web Audio
+    // forbids resume() before a user gesture if nothing was previously playing.
+    private val activeLoops = mutableMapOf<Sound, MutableSet<Long>>()
+    private var pausedLoops: Map<Sound, Set<Long>> = emptyMap()
+
     override fun playSoundAtPosition(
         sound: Sound,
         soundX: Float,
@@ -53,7 +58,35 @@ class CaveDroidSoundPlayer @Inject constructor(
             return -1L
         }
 
-        return sound.loop(volume)
+        val id = sound.loop(volume)
+        activeLoops.getOrPut(sound) { mutableSetOf() } += id
+        return id
+    }
+
+    override fun stopLoopSound(sound: Sound, id: Long) {
+        if (id == -1L) return
+        sound.stop(id)
+        activeLoops[sound]?.let { ids ->
+            ids -= id
+            if (ids.isEmpty()) {
+                activeLoops -= sound
+            }
+        }
+    }
+
+    override fun pauseAll() {
+        val snapshot = activeLoops.mapValues { it.value.toSet() }
+        pausedLoops = snapshot
+        snapshot.forEach { (sound, ids) ->
+            ids.forEach { sound.pause(it) }
+        }
+    }
+
+    override fun resumeAll() {
+        pausedLoops.forEach { (sound, ids) ->
+            ids.forEach { sound.resume(it) }
+        }
+        pausedLoops = emptyMap()
     }
 
     companion object {

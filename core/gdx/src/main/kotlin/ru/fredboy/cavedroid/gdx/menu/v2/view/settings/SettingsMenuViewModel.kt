@@ -1,5 +1,7 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.settings
 
+import com.badlogic.gdx.Application
+import com.badlogic.gdx.Gdx
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -50,12 +52,18 @@ class SettingsMenuViewModel(
         .onStart { emit(applicationContextRepository.getPersonalizedAdsConsent() ?: false) }
         .distinctUntilChanged()
 
+    private val _canResetHintsFlow = MutableSharedFlow<Boolean>(replay = 0)
+    private val canResetHintsFlow: Flow<Boolean> = _canResetHintsFlow
+        .onStart { emit(computeCanResetHints()) }
+        .distinctUntilChanged()
+
     val stateFlow: StateFlow<SettingsMenuState> = combine(
         dynamicCameraFlow,
         fullscreenFlow,
         autoJumpFlow,
         soundFlow,
         personalizedAdsFlow,
+        canResetHintsFlow,
     ) { values ->
         SettingsMenuState(
             dynamicCamera = values[0],
@@ -64,12 +72,20 @@ class SettingsMenuViewModel(
             sound = values[3],
             showPersonalizedAdsToggle = showPersonalizedAdsToggle,
             personalizedAds = values[4],
+            showFullscreenButton = Gdx.graphics.supportsDisplayModeChange() &&
+                Gdx.app.type != Application.ApplicationType.WebGL,
+            canResetHints = values[5],
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(500L),
         initialValue = createState(),
     )
+
+    private fun computeCanResetHints(): Boolean {
+        return applicationContextRepository.isOnboardingShown() ||
+            applicationContextRepository.isInventoryHintShown()
+    }
 
     private fun createState(): SettingsMenuState {
         return SettingsMenuState(
@@ -79,6 +95,9 @@ class SettingsMenuViewModel(
             sound = applicationContextRepository.isSoundEnabled(),
             showPersonalizedAdsToggle = showPersonalizedAdsToggle,
             personalizedAds = applicationContextRepository.getPersonalizedAdsConsent() ?: false,
+            showFullscreenButton = Gdx.graphics.supportsDisplayModeChange() &&
+                Gdx.app.type != Application.ApplicationType.WebGL,
+            canResetHints = computeCanResetHints(),
         )
     }
 
@@ -114,5 +133,11 @@ class SettingsMenuViewModel(
             }
         }
         navBackStack.pop()
+    }
+
+    fun onResetHintsClick() {
+        applicationContextRepository.setOnboardingShown(false)
+        applicationContextRepository.setInventoryHintShown(false)
+        viewModelScope.launch { _canResetHintsFlow.emit(false) }
     }
 }

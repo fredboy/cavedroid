@@ -19,6 +19,9 @@ class ApplicationContextStore @Inject constructor(
     val isDebug: Boolean
         get() = synchronized(lock) { applicationContext.isDebug }
 
+    val isYandexGamesBuild: Boolean
+        get() = synchronized(lock) { applicationContext.isYandexGamesBuild }
+
     var isTouch: Boolean
         get() = synchronized(lock) { applicationContext.isTouch }
         set(value) = synchronized(lock) { applicationContext.isTouch = value }
@@ -78,6 +81,13 @@ class ApplicationContextStore @Inject constructor(
         set(value) = synchronized(lock) {
             applicationContext.isOnboardingShown = value
             preferencesStore.setPreference(PreferenceKeys.ONBOARDING_SHOWN, value.toString())
+        }
+
+    var isInventoryHintShown: Boolean
+        get() = synchronized(lock) { applicationContext.isInventoryHintShown }
+        set(value) = synchronized(lock) {
+            applicationContext.isInventoryHintShown = value
+            preferencesStore.setPreference(PreferenceKeys.INVENTORY_HINT_SHOWN, value.toString())
         }
 
     var personalizedAdsConsent: Boolean?

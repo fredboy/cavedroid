@@ -12,12 +12,15 @@ import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.utils.PIXELS_PER_METER
 import ru.fredboy.cavedroid.common.utils.wrapsIntoRange
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
+import ru.fredboy.cavedroid.game.controller.container.ContainerController
+import ru.fredboy.cavedroid.game.controller.container.FurnaceStateChangedListener
 import ru.fredboy.cavedroid.game.world.GameWorld
 
 class ChunkFrameBuffer<Renderer : RenderingTool>(
     private val chunkX: Int,
     private val chunkY: Int,
     private val gameWorld: GameWorld,
+    private val containerController: ContainerController,
     private val renderingTool: Renderer,
 ) : Disposable {
 
@@ -49,10 +52,18 @@ class ChunkFrameBuffer<Renderer : RenderingTool>(
         }
     }
 
+    private val furnaceStateChangedListener = FurnaceStateChangedListener { x, y, _, _ ->
+        if (y < chunkWorldY || y >= chunkWorldY + CHUNK_SIZE) return@FurnaceStateChangedListener
+        if (wrapsIntoRange(x, chunkWorldX, CHUNK_SIZE, gameWorld.width)) {
+            dirty = true
+        }
+    }
+
     var dirty = true
 
     init {
         gameWorld.addBlockPlacedListener(onBlockPlacedListener)
+        containerController.addFurnaceListener(furnaceStateChangedListener)
     }
 
     fun rebuild(drawFunction: (Renderer, Int, Int, Float, Float) -> Unit) {
@@ -102,6 +113,7 @@ class ChunkFrameBuffer<Renderer : RenderingTool>(
         renderingTool.dispose()
         fbo.dispose()
         gameWorld.removeBlockPlacedListener(onBlockPlacedListener)
+        containerController.removeFurnaceListener(furnaceStateChangedListener)
     }
 
     companion object {

@@ -116,7 +116,7 @@ master_pr_num="${master_pr_url##*/}"
 echo ">> Master PR: $master_pr_url (#$master_pr_num)"
 
 echo ">> Enabling auto-merge on master PR"
-gh pr merge "$master_pr_num" --auto --merge
+gh pr merge "$master_pr_num" --auto --merge --delete-branch=false
 
 if [[ $wait_for_merge -eq 0 ]]; then
   cat <<EOF
@@ -170,7 +170,7 @@ develop_pr_num="${develop_pr_url##*/}"
 echo ">> Develop PR: $develop_pr_url (#$develop_pr_num)"
 
 echo ">> Enabling auto-merge on develop PR"
-gh pr merge "$develop_pr_num" --auto --merge
+gh pr merge "$develop_pr_num" --auto --merge --delete-branch=false
 
 echo ">> Dispatching Release workflow"
 gh workflow run release.yml -f tag="$tag"

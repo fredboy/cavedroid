@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gameplay.controls.action.placeblock
 
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.domain.stats.repository.StatsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.controls.action.annotation.BindPlaceBlockAction
@@ -12,6 +13,7 @@ import javax.inject.Inject
 class PlaceSlabAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobController: MobController,
+    private val statsRepository: StatsRepository,
 ) : IPlaceBlockAction {
 
     override fun place(placeable: Item.Placeable, x: Int, y: Int): Boolean {
@@ -43,6 +45,7 @@ class PlaceSlabAction @Inject constructor(
 
         return if (gameWorld.placeToForeground(x, y, slabPart)) {
             mobController.player.decreaseCurrentItemCount()
+            statsRepository.recordBlockPlaced()
             true
         } else {
             false

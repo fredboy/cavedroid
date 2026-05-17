@@ -198,7 +198,7 @@ All workflows live in `.github/workflows/`. The release-flow workflows are thin 
 | `test.yml` | same as ktlint | Runs `./gradlew testCore`, uploads test reports on failure |
 | `android.yml` | same as ktlint | Builds `android:buildFossDebug` as a smoke test |
 | `branch-name.yml` | PR opened/edited/sync (same-repo only) | Validates head branch matches conventions for the chosen base |
-| `commit-lint.yml` | PR opened/sync (same-repo only) | On `issue/NN` branches, requires every non-merge commit subject to start with `#NN: ` |
+| `pr-title-lint.yml` | PR opened/edited/sync (same-repo only) | Every PR title must start with a capital letter. PRs from `issue/NN` branches must additionally start with a GitHub closing keyword + the matching issue number (`Closes #NN ...`, `Fixes #NN ...`, etc.) |
 | `release-branch.yml` | push or PR on `release/**` / `hotfix/**` | Full multi-platform build (Android foss debug + desktop Linux/Win + web) with mock keystore |
 | `start-release.yml` | `workflow_dispatch` | Calls `scripts/start-release.sh` |
 | `finalize-release.yml` | `workflow_dispatch` | Calls `scripts/finalize-release.sh` |
@@ -218,18 +218,43 @@ Configure in Settings → Secrets and variables → Actions:
 
 ### Repo settings
 
-- Settings → General → Pull Requests → ✅ **Allow auto-merge** (required for `finalize-release.yml`).
-- Settings → Actions → General → **Workflow permissions** → ✅ "Read and write permissions". This lets `finalize-release.yml` push the changelog commit to the release branch and create PRs.
+Run the one-shot setup script — it configures everything below via `gh api`:
 
-### Branch protection
+```bash
+./scripts/setup-repo-settings.sh
+```
 
-The PR-based finalize flow lets you keep full branch protection on `master` and `develop`:
+What it configures:
 
-- For `master`: ✅ Require status checks (`Ktlint`, `Tests`, `Android CI`), ✅ Require pull request reviews.
+- ✅ Allow squash merging — default for feature PRs to `develop`.
+- ✅ Allow merge commits — `finalize-release.sh` uses these for release/A.B.C → master and → develop PRs to preserve Git Flow's merge-commit shape.
+- ❌ Allow rebase merging.
+- ✅ Allow auto-merge — required by `finalize-release.yml`.
+- `delete_branch_on_merge = false` — release branches are kept after merging.
+- Squash commit message: PR title only (so `Closes #NN` in the title carries to the squashed commit on develop and auto-closes the issue).
+- Merge commit message: PR title only.
+- Ruleset on `release/*`: PRs targeting release branches must be squash-merged (enforces "release stabilization fixes are squashed").
+
+Settings the script does **not** touch (do these manually if you want them):
+
+- Settings → Actions → General → **Workflow permissions** → ✅ "Read and write permissions" (required so `finalize-release.yml` can push the changelog commit + create PRs).
+- Branch protection / rulesets on `master` and `develop` (see below).
+
+### Merge-strategy convention
+
+GitHub's merge-method restriction is per-target-branch. `develop` receives squash-merged feature PRs *and* merge-commit release-sync PRs, so it can't be locked to one method. The convention is:
+
+- **Feature PRs (`issue/*`, `fix/*`, `feature/*`) → `develop`:** squash. The PR title becomes the commit (so it must start with `Closes #NN` etc. for issue branches — enforced by `pr-title-lint.yml`).
+- **Release PRs (`release/A.B.C` → `master`, `release/A.B.C` → `develop`):** merge commit. `finalize-release.sh` explicitly passes `gh pr merge --merge` to force this regardless of the repo default.
+- **Fix PRs targeting `release/*`:** squash. Enforced by the ruleset created by `setup-repo-settings.sh`.
+
+### Branch protection on master / develop
+
+Recommended additions (manual; not in the setup script):
+
+- For `master`: ✅ Require pull request reviews, ✅ Require status checks (`Ktlint`, `Tests`, `Android CI`).
 - For `develop`: same.
 - Optionally enforce linear history on `develop`.
 - The release branch itself (`release/**`) needs to be pushable by `github-actions[bot]` (for the `[skip ci]` changelog commit). Either don't protect `release/**`, or allow the bot to bypass.
 
-Because the bot can't self-approve, you approve the master and develop PRs manually on GitHub once `finalize-release.yml` opens them. Auto-merge then takes over.
-
-If you'd rather not grant bypass, change `finalize-release.yml` to create PRs for the master/develop merges instead of pushing directly — you'll lose one-click automation but keep strict protection.
+Because the bot can't self-approve, you approve the master and develop release PRs manually on GitHub once `finalize-release.yml` opens them. Auto-merge takes over after approval.

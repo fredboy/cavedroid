@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gdx.menu.v2.view.newgame
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable
+import ktx.actors.onClick
 import ktx.scene2d.Scene2dDsl
 import ktx.scene2d.actors
 import ktx.scene2d.label
@@ -47,6 +48,17 @@ fun Stage.show(viewModel: NewGameMenuViewModel) {
         actors {
             menuButtonsTable {
                 val worldNameField = textField(viewModel.getLocalizedString("newWorld"))
+                if (viewModel.inlineTextInput.isSupported) {
+                    worldNameField.onClick {
+                        viewModel.inlineTextInput.trigger(
+                            initialText = worldNameField.text,
+                            initialCursor = worldNameField.cursorPosition,
+                        ) { newText, newCursor ->
+                            worldNameField.text = newText
+                            worldNameField.cursorPosition = newCursor
+                        }
+                    }
+                }
 
                 row()
 

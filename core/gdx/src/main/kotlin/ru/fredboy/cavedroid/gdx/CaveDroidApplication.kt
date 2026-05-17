@@ -7,11 +7,19 @@ import com.badlogic.gdx.Files
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
 import ru.fredboy.cavedroid.common.CaveDroidConstants.SUPPORTED_LOCALES
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
+import ru.fredboy.cavedroid.common.api.CloudStatsSync
+import ru.fredboy.cavedroid.common.api.InlineTextInput
 import ru.fredboy.cavedroid.common.api.NoOpAdController
+import ru.fredboy.cavedroid.common.api.NoOpCloudStatsSync
+import ru.fredboy.cavedroid.common.api.NoOpInlineTextInput
 import ru.fredboy.cavedroid.common.api.PreferencesStore
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.model.StartGameConfig
@@ -35,10 +43,13 @@ class CaveDroidApplication(
     private val lightingSystemFactory: LightingSystemFactory,
     private val dispatchers: AppDispatchers,
     private val adController: AdController = NoOpAdController(),
+    private val cloudStatsSync: CloudStatsSync = NoOpCloudStatsSync(),
+    private val inlineTextInput: InlineTextInput = NoOpInlineTextInput,
+    private val defaultLocaleProvider: () -> Locale? = { safeDefaultLocale() },
+    private val isYandexGamesBuild: Boolean = false,
     loggingSeverity: Severity = Severity.Info,
 ) : Game(),
-    CaveDroidApplicationDecorator,
-    ApplicationController {
+    CaveDroidApplicationDecorator {
 
     init {
         Logger.setMinSeverity(loggingSeverity)
@@ -46,6 +57,13 @@ class CaveDroidApplication(
 
     override lateinit var applicationComponent: ApplicationComponent
         private set
+
+    val applicationComponentOrNull: ApplicationComponent?
+        get() = if (::applicationComponent.isInitialized) applicationComponent else null
+
+    var applicationControllerOverride: ApplicationController? = null
+
+    private val applicationScope = CoroutineScope(SupervisorJob() + dispatchers.io)
 
     private fun initFullscreenMode(isFullscreen: Boolean) {
         if (Gdx.app.type != Application.ApplicationType.Desktop) {
@@ -73,6 +91,7 @@ class CaveDroidApplication(
             ?.toBooleanStrictOrNull()
 
         applicationComponent = DaggerApplicationComponent.builder()
+            .cloudStatsSync(cloudStatsSync)
             .applicationContext(
                 ApplicationContext(
                     isDebug = isDebug,
@@ -87,17 +106,22 @@ class CaveDroidApplication(
                     isAutoJumpEnabled = preferencesStore.getPreference(PreferenceKeys.AUTO_JUMP)
                         ?.toBooleanStrictOrNull() ?: true,
                     locale = preferencesStore.getPreference(PreferenceKeys.LOCALE)
-                        ?.let(::Locale) ?: safeDefaultLocale(),
+                        ?.let(::Locale) ?: defaultLocaleProvider()
+                        ?.takeIf { it in SUPPORTED_LOCALES } ?: Locale.ENGLISH,
                     soundEnabled = preferencesStore.getPreference(PreferenceKeys.SOUND_ENABLED)
                         ?.toBooleanStrictOrNull() ?: true,
                     isOnboardingShown = preferencesStore.getPreference(PreferenceKeys.ONBOARDING_SHOWN)
                         ?.toBooleanStrictOrNull() ?: false,
+                    isInventoryHintShown = preferencesStore.getPreference(PreferenceKeys.INVENTORY_HINT_SHOWN)
+                        ?.toBooleanStrictOrNull() ?: false,
                     personalizedAdsConsent = personalizedAdsConsent,
+                    isYandexGamesBuild = isYandexGamesBuild,
                 ),
             )
-            .applicationController(this)
+            .applicationController(applicationControllerOverride ?: this)
             .preferencesStore(preferencesStore)
             .adController(adController)
+            .inlineTextInput(inlineTextInput)
             .lightingSystemFactory(lightingSystemFactory)
             .appDispatchers(dispatchers)
             .build()
@@ -110,10 +134,25 @@ class CaveDroidApplication(
             Gdx.files.absolute(gameDataDirectoryPath).mkdirs()
         }
         applicationComponent.initializeAssets()
+
+        applicationScope.launch {
+            applicationComponent.statsRepository.load()
+            val remote = runCatching { cloudStatsSync.loadStats() }
+                .onFailure { logger.w(it) { "Cloud stats load failed" } }
+                .getOrNull()
+            if (remote != null) {
+                applicationComponent.statsRepository.mergeFromCloud(remote)
+                applicationComponent.statsRepository.save()
+            }
+        }
+
         setScreen(applicationComponent.menuScreen)
     }
 
     override fun dispose() {
+        runCatching {
+            runBlocking { applicationComponent.statsRepository.save() }
+        }.onFailure { logger.w(it) { "Stats save on dispose failed" } }
         applicationComponent.menuScreen.dispose()
         applicationComponent.pauseMenuScreen.dispose()
         applicationComponent.gameScreen.dispose()
@@ -170,6 +209,19 @@ class CaveDroidApplication(
         screen.resume()
     }
 
+    override fun saveGame() {
+        val gameScreen = when (val currentScreen = screen) {
+            is GameScreen -> currentScreen
+            is PauseMenuScreen -> applicationComponent.gameScreen
+            else -> {
+                logger.w { "Cannot save when no game session is active" }
+                return
+            }
+        }
+        gameScreen.saveGame()
+        resumeGame()
+    }
+
     override fun showDeathScreen() {
         if (screen !is GameScreen) {
             logger.w { "Cannot show death screen when active screen is not game" }
@@ -209,16 +261,16 @@ class CaveDroidApplication(
 
     override fun getDelegate() = this
 
-    private fun safeDefaultLocale(): Locale {
-        return try {
-            Locale.getDefault().takeIf { it in SUPPORTED_LOCALES } ?: Locale.ENGLISH
-        } catch (_: Throwable) {
-            Locale.ENGLISH
-        }
-    }
-
     companion object {
         private const val TAG = "CaveDroidApplication"
-        private val logger = co.touchlab.kermit.Logger.withTag(TAG)
+        private val logger = Logger.withTag(TAG)
+
+        private fun safeDefaultLocale(): Locale {
+            return try {
+                Locale.getDefault()
+            } catch (_: Throwable) {
+                Locale.ENGLISH
+            }
+        }
     }
 }

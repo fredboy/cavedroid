@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>%TITLE%</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <style>
+            html, body {
+                background: #000;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                -webkit-user-select: none;
+                -webkit-touch-callout: none;
+                user-select: none;
+                touch-action: none;
+                overscroll-behavior: contain;
+            }
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            #canvas {
+                border: none;
+                -webkit-user-select: none;
+                -webkit-touch-callout: none;
+                user-select: none;
+                touch-action: none;
+            }
+        </style>
+        <script>
+            // TeaVM wraps app.js in a UMD shim that auto-detects AMD/CJS via
+            // `typeof define === 'function'` / `typeof exports === 'object'`.
+            // The Yandex Games iframe installs a `window.define` that survives
+            // delete/overwrite, which would route TeaVM's `main` (and every
+            // other top-level symbol) onto an AMD exports object instead of
+            // `window` — TeaVM's generated code then fails with "X is not
+            // defined" the first time one symbol references another. Top-level
+            // `let` declarations go into the script-shared lexical environment,
+            // which is consulted before `window` for bare-identifier lookups,
+            // so the wrapper's `typeof define` here resolves to `undefined`
+            // and the wrapper falls through to `module(self)` (B === window).
+            let define, exports;
+        </script>
+        %JS_SCRIPT%
+        <script>
+            if (typeof window.main !== 'function') {
+                console.error('[cavedroid] window.main is not defined after app.js — UMD wrapper did not take the browser-global branch.');
+            }
+            window.__yaSdkReady = new Promise(function (resolve) {
+                window.__yaSdkInit = function () {
+                    YaGames.init().then(function (sdk) {
+                        window.ysdk = sdk;
+                        resolve(sdk);
+                    }).catch(function (err) {
+                        console.warn('[cavedroid] YaGames.init() failed:', err);
+                        resolve(null);
+                    });
+                };
+            });
+        </script>
+        <script async src="/sdk.js" onload="window.__yaSdkInit()" onerror="window.__yaSdkInit = function () {}; console.warn('[cavedroid] Yandex Games SDK script failed to load');"></script>
+    </head>
+    <body oncontextmenu="return false">
+        <div>
+            <canvas id="canvas"></canvas>
+        </div>
+        <script>
+            async function start() {
+                try {
+                    await Promise.race([
+                        window.__yaSdkReady,
+                        new Promise(function (resolve) { setTimeout(resolve, 10000); }),
+                    ]);
+                } catch (e) {
+                    console.warn('[cavedroid] Yandex SDK wait failed:', e);
+                }
+                if (typeof window.main !== 'function') {
+                    console.error('[cavedroid] Cannot start: window.main is not a function');
+                    return;
+                }
+                %MODE%
+            }
+            window.addEventListener('load', start);
+        </script>
+    </body>
+</html>

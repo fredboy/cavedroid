@@ -17,6 +17,8 @@ dependencies {
     useDataModules()
     useDomainModules()
     useDomainSaveModule()
+    useDomainStatsModule()
+    useDataStatsModule()
     useEntityModules()
     useGameModules()
     useGameplayModules()

@@ -2,7 +2,6 @@ package ru.fredboy.cavedroid.gdx.menu.v2.view.singleplayer
 
 import co.touchlab.kermit.Logger
 import com.badlogic.gdx.graphics.Texture
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -14,6 +13,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.yield
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
@@ -95,7 +95,11 @@ class SinglePlayerMenuViewModel(
     fun onLoadClick(save: SaveInfoVo) {
         viewModelScope.launch {
             reloadTrigger.emit(Trigger.LOADING_WORLD)
-            delay(50)
+
+            // Two yields so the View's flow collector adds the LoadingWorld actors AND a
+            // render pass paints them before startGame blocks the main thread.
+            yield()
+            yield()
 
             try {
                 withContext(mainDispatcher) {

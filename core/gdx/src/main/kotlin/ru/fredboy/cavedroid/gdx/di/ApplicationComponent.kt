@@ -5,6 +5,8 @@ import dagger.BindsInstance
 import dagger.Component
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
+import ru.fredboy.cavedroid.common.api.CloudStatsSync
+import ru.fredboy.cavedroid.common.api.InlineTextInput
 import ru.fredboy.cavedroid.common.api.PreferencesStore
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
@@ -14,6 +16,7 @@ import ru.fredboy.cavedroid.data.configuration.di.ApplicationContextModule
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
 import ru.fredboy.cavedroid.data.items.di.DataItemsModule
 import ru.fredboy.cavedroid.data.save.di.DataSaveModule
+import ru.fredboy.cavedroid.data.stats.di.DataStatsModule
 import ru.fredboy.cavedroid.domain.assets.repository.BlockActionSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockTextureAssetsRepository
@@ -36,6 +39,7 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
+import ru.fredboy.cavedroid.domain.stats.repository.StatsRepository
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystemFactory
 import ru.fredboy.cavedroid.gdx.game.GameScreen
 import ru.fredboy.cavedroid.gdx.menu.v2.MenuScreen
@@ -48,6 +52,7 @@ import javax.inject.Singleton
         DataAssetsModule::class,
         DataItemsModule::class,
         DataSaveModule::class,
+        DataStatsModule::class,
         ApplicationContextModule::class,
         ApplicationModule::class,
     ],
@@ -79,6 +84,10 @@ interface ApplicationComponent {
     val itemsRepository: ItemsRepository
 
     val saveDataRepository: SaveDataRepository
+
+    val statsRepository: StatsRepository
+
+    val cloudStatsSync: CloudStatsSync
 
     val applicationController: ApplicationController
 
@@ -114,6 +123,8 @@ interface ApplicationComponent {
 
     val adController: AdController
 
+    val inlineTextInput: InlineTextInput
+
     val lightingSystemFactory: LightingSystemFactory
 
     val appDispatchers: AppDispatchers
@@ -132,6 +143,12 @@ interface ApplicationComponent {
 
         @BindsInstance
         fun adController(impl: AdController): Builder
+
+        @BindsInstance
+        fun cloudStatsSync(impl: CloudStatsSync): Builder
+
+        @BindsInstance
+        fun inlineTextInput(impl: InlineTextInput): Builder
 
         @BindsInstance
         fun lightingSystemFactory(factory: LightingSystemFactory): Builder

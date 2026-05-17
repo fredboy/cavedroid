@@ -2,11 +2,13 @@ package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
+import ru.fredboy.cavedroid.common.api.InventoryHintEvents
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem.Companion.isNoneOrNull
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.domain.stats.repository.StatsRepository
 import ru.fredboy.cavedroid.entity.container.model.Furnace
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
@@ -25,11 +27,15 @@ class SelectFurnaceInventoryItemMouseInputHandler @Inject constructor(
     private val mobController: MobController,
     private val textureRegions: GetTextureRegionByNameUseCase,
     itemsRepository: ItemsRepository,
+    inventoryHintEvents: InventoryHintEvents,
+    statsRepository: StatsRepository,
 ) : AbstractInventoryItemsMouseInputHandler(
     gameContextRepository = gameContextRepository,
     itemsRepository = itemsRepository,
     gameWindowsManager = gameWindowsManager,
     windowType = GameWindowType.FURNACE,
+    inventoryHintEvents = inventoryHintEvents,
+    statsRepository = statsRepository,
 ) {
 
     override val windowTexture get() = requireNotNull(textureRegions["furnace"])

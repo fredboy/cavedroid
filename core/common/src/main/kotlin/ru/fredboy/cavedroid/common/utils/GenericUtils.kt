@@ -25,3 +25,12 @@ fun Boolean.takeIfTrue(): Boolean? = takeIf { it }
 fun String.startWithCapital(locale: Locale) = replaceFirstChar {
     if (it.isLowerCase()) it.titlecase(locale) else it.toString()
 }
+
+fun Locale.nativeDisplayName(): String = when (language) {
+    "en" -> "English"
+    "ru" -> "Русский"
+    "de" -> "Deutsch"
+    else -> getDisplayLanguage(this).startWithCapital(this)
+}
+
+inline fun <reified T> Any?.safeCast(): T? = this as? T

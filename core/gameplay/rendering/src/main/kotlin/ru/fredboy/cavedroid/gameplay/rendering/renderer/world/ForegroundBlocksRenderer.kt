@@ -45,7 +45,15 @@ class ForegroundBlocksRenderer @Inject constructor(
             spriteBatch = spriteBatch,
             viewport = viewport,
             chunks = chunks,
-            chunkFactory = { x, y -> ChunkFrameBuffer(x, y, gameWorld, RenderingTool.SpriteBatch()) },
+            chunkFactory = { x, y ->
+                ChunkFrameBuffer(
+                    chunkX = x,
+                    chunkY = y,
+                    gameWorld = gameWorld,
+                    containerController = containerController,
+                    renderingTool = RenderingTool.SpriteBatch(),
+                )
+            },
             drawFunction = { batch, x, y, drawX, drawY -> drawForeMap(batch.spriteBatch, x, y, drawX, drawY) },
         )
 

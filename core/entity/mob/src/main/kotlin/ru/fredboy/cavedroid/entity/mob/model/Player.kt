@@ -120,6 +120,8 @@ class Player(
             field = value
         }
 
+    var onMobAttacked: ((mob: Mob, damageDealt: Int) -> Unit)? = null
+
     fun canShootBow(): Boolean {
         return !isInBed &&
             activeItem.item is Item.Bow &&
@@ -388,7 +390,9 @@ class Player(
             durateActiveDurable()
         }
         val damage = 1 * (activeTool?.mobDamageMultiplier ?: 1f)
-        mob.damage(damage.toInt())
+        val damageInt = damage.toInt()
+        mob.damage(damageInt)
+        onMobAttacked?.invoke(mob, damageInt)
         addExhaustion(EXHAUSTION_PER_ATTACK)
         stopHitting()
     }

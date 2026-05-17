@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.fredboy.cavedroid.common.api.ApplicationController
+import ru.fredboy.cavedroid.common.api.InlineTextInput
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.common.model.StartGameConfig
@@ -19,6 +20,7 @@ class NewGameMenuViewModel(
     private val applicationController: ApplicationController,
     private val worldNameSanitizer: WorldNameSanitizer,
     private val navBackStack: NavBackStack,
+    val inlineTextInput: InlineTextInput,
     baseViewModelDependencies: BaseViewModelDependencies,
 ) : BaseViewModel(baseViewModelDependencies) {
 
