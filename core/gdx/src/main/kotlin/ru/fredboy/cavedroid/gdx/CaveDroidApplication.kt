@@ -182,6 +182,18 @@ class CaveDroidApplication(
         screen.resume()
     }
 
+    override fun saveGame() {
+        val gameScreen = when (val currentScreen = screen) {
+            is GameScreen -> currentScreen
+            is PauseMenuScreen -> applicationComponent.gameScreen
+            else -> {
+                logger.w { "Cannot save when no game session is active" }
+                return
+            }
+        }
+        gameScreen.saveGame()
+    }
+
     override fun showDeathScreen() {
         if (screen !is GameScreen) {
             logger.w { "Cannot show death screen when active screen is not game" }

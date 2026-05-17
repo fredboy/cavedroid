@@ -17,6 +17,8 @@ interface ApplicationController : ApplicationListener {
 
     fun pauseGame()
 
+    fun saveGame()
+
     fun showDeathScreen()
 
     fun respawnPlayer()
