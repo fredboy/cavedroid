@@ -7,7 +7,9 @@ import com.github.xpenatan.gdx.teavm.backends.web.WebApplicationConfiguration
 import com.github.xpenatan.gdx.teavm.backends.web.utils.WebNavigator
 import org.teavm.jso.JSBody
 import ru.fredboy.cavedroid.common.api.AdController
+import ru.fredboy.cavedroid.common.api.CloudStatsSync
 import ru.fredboy.cavedroid.common.api.NoOpAdController
+import ru.fredboy.cavedroid.common.api.NoOpCloudStatsSync
 import ru.fredboy.cavedroid.common.api.NoOpInlineTextInput
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
@@ -33,6 +35,7 @@ object WebLauncher {
 
         val yandexAvailable = YandexGamesBridge.isAvailable()
         val adController: AdController = if (yandexAvailable) YandexGamesAdController() else NoOpAdController()
+        val cloudStatsSync: CloudStatsSync = if (yandexAvailable) YandexCloudStatsSync() else NoOpCloudStatsSync()
 
         val isMobileBrowser = isMobileBrowser()
 
@@ -49,6 +52,7 @@ object WebLauncher {
                 main = GdxMainDispatcher,
             ),
             adController = adController,
+            cloudStatsSync = cloudStatsSync,
             inlineTextInput = if (isMobileBrowser) {
                 WebInlineTextInput()
             } else {
@@ -56,6 +60,7 @@ object WebLauncher {
             },
             defaultLocaleProvider = { defaultLocale(yandexAvailable) },
             loggingSeverity = Severity.Info,
+            isYandexGamesBuild = yandexAvailable,
         ).let { app ->
             if (yandexAvailable) {
                 YandexGamesLifecycleGameDecorator(app)

@@ -241,5 +241,6 @@ sealed class SaveDataDto {
         val weather: Int? = null,
         val weatherTimer: Float? = null,
         val weatherIntensity: Float? = null,
+        val currentStreakStartDayIndex: Int? = null,
     ) : SaveDataDto()
 }

@@ -52,6 +52,14 @@ fun Stage.pauseMenuView(viewModel: PauseMenuViewModel) = viewModel.also {
 
             row()
 
+            textButton(viewModel.getLocalizedString("statistics")) {
+                onClickWithSound(viewModel) {
+                    viewModel.onStatisticsClick()
+                }
+            }
+
+            row()
+
             textButton(viewModel.getLocalizedString("quit")) {
                 onClickWithSound(viewModel) {
                     viewModel.onQuitGameClick()
