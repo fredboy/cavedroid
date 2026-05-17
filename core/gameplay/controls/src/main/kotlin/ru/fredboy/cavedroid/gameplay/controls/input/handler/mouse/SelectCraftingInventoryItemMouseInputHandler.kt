@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
+import ru.fredboy.cavedroid.common.api.InventoryHintEvents
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -31,11 +32,13 @@ class SelectCraftingInventoryItemMouseInputHandler @Inject constructor(
     private val itemsRepository: ItemsRepository,
     private val playerAdapter: PlayerAdapter,
     private val dropQueue: DropQueue,
+    inventoryHintEvents: InventoryHintEvents,
 ) : AbstractInventoryItemsMouseInputHandler(
     gameContextRepository = gameContextRepository,
     itemsRepository = itemsRepository,
     gameWindowsManager = gameWindowsManager,
     windowType = GameWindowType.CRAFTING_TABLE,
+    inventoryHintEvents = inventoryHintEvents,
 ) {
 
     override val windowTexture get() = requireNotNull(textureRegions["crafting_table"])

@@ -59,6 +59,31 @@ fun SpriteBatch.drawString(
     return font.draw(this, str, x, y)
 }
 
+@JvmOverloads
+fun SpriteBatch.drawMultilineCentered(
+    font: BitmapFont,
+    str: String,
+    centerX: Float,
+    topY: Float,
+    getStringWidth: (String) -> Float,
+    getStringHeight: (String) -> Float,
+    color: Color = Color.WHITE,
+    lineSpacing: Float = MULTILINE_DEFAULT_LINE_SPACING,
+) {
+    val lines = str.split('\n')
+    if (lines.isEmpty()) return
+    font.color = color
+    val lineStep = getStringHeight(lines.first()) + lineSpacing
+    var y = topY
+    for (line in lines) {
+        val lineWidth = getStringWidth(line)
+        font.draw(this, line, centerX - lineWidth / 2f, y)
+        y += lineStep
+    }
+}
+
+private const val MULTILINE_DEFAULT_LINE_SPACING = 4f
+
 /**
  * Parses hex color string into [Color]
  * Format is strictly #FFFFFF

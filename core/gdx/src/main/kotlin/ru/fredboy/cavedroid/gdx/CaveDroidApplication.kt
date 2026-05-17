@@ -102,6 +102,8 @@ class CaveDroidApplication(
                         ?.toBooleanStrictOrNull() ?: true,
                     isOnboardingShown = preferencesStore.getPreference(PreferenceKeys.ONBOARDING_SHOWN)
                         ?.toBooleanStrictOrNull() ?: false,
+                    isInventoryHintShown = preferencesStore.getPreference(PreferenceKeys.INVENTORY_HINT_SHOWN)
+                        ?.toBooleanStrictOrNull() ?: false,
                     personalizedAdsConsent = personalizedAdsConsent,
                     isYandexGamesBuild = isYandexGamesBuild,
                 ),
@@ -192,6 +194,7 @@ class CaveDroidApplication(
             }
         }
         gameScreen.saveGame()
+        resumeGame()
     }
 
     override fun showDeathScreen() {

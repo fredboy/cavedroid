@@ -52,6 +52,10 @@ interface ApplicationContextRepository {
 
     fun setOnboardingShown(shown: Boolean)
 
+    fun isInventoryHintShown(): Boolean
+
+    fun setInventoryHintShown(shown: Boolean)
+
     fun getPersonalizedAdsConsent(): Boolean?
 
     fun setPersonalizedAdsConsent(consent: Boolean?)

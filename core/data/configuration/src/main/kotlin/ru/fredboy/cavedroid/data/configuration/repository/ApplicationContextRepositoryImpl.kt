@@ -112,6 +112,12 @@ class ApplicationContextRepositoryImpl @Inject constructor(
         applicationContextStore.isOnboardingShown = shown
     }
 
+    override fun isInventoryHintShown(): Boolean = applicationContextStore.isInventoryHintShown
+
+    override fun setInventoryHintShown(shown: Boolean) {
+        applicationContextStore.isInventoryHintShown = shown
+    }
+
     override fun getPersonalizedAdsConsent(): Boolean? = applicationContextStore.personalizedAdsConsent
 
     override fun setPersonalizedAdsConsent(consent: Boolean?) {

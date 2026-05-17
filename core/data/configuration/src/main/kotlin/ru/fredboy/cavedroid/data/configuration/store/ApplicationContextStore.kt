@@ -83,6 +83,13 @@ class ApplicationContextStore @Inject constructor(
             preferencesStore.setPreference(PreferenceKeys.ONBOARDING_SHOWN, value.toString())
         }
 
+    var isInventoryHintShown: Boolean
+        get() = synchronized(lock) { applicationContext.isInventoryHintShown }
+        set(value) = synchronized(lock) {
+            applicationContext.isInventoryHintShown = value
+            preferencesStore.setPreference(PreferenceKeys.INVENTORY_HINT_SHOWN, value.toString())
+        }
+
     var personalizedAdsConsent: Boolean?
         get() = synchronized(lock) { applicationContext.personalizedAdsConsent }
         set(value) = synchronized(lock) {
