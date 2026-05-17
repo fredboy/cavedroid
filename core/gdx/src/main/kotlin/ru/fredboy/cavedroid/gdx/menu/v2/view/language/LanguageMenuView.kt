@@ -10,7 +10,7 @@ import ktx.scene2d.label
 import ktx.scene2d.scrollPane
 import ktx.scene2d.table
 import ktx.scene2d.textButton
-import ru.fredboy.cavedroid.common.utils.startWithCapital
+import ru.fredboy.cavedroid.common.utils.nativeDisplayName
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 
 @Scene2dDsl
@@ -45,7 +45,7 @@ fun Stage.languageMenuView(viewModel: LanguageMenuViewModel) = viewModel.also {
                         .pad(10f)
 
                     viewModel.locales.map { locale ->
-                        textButton(locale.getDisplayLanguage(locale).startWithCapital(locale)) {
+                        textButton(locale.nativeDisplayName()) {
                             onClickWithSound(viewModel) {
                                 viewModel.onLanguageSelect(locale)
                             }
