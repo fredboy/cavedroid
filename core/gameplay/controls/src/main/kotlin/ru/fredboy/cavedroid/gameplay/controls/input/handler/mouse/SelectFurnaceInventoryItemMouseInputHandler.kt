@@ -8,6 +8,7 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem.Companion.isNoneOrNull
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.domain.stats.repository.StatsRepository
 import ru.fredboy.cavedroid.entity.container.model.Furnace
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
@@ -27,12 +28,14 @@ class SelectFurnaceInventoryItemMouseInputHandler @Inject constructor(
     private val textureRegions: GetTextureRegionByNameUseCase,
     itemsRepository: ItemsRepository,
     inventoryHintEvents: InventoryHintEvents,
+    statsRepository: StatsRepository,
 ) : AbstractInventoryItemsMouseInputHandler(
     gameContextRepository = gameContextRepository,
     itemsRepository = itemsRepository,
     gameWindowsManager = gameWindowsManager,
     windowType = GameWindowType.FURNACE,
     inventoryHintEvents = inventoryHintEvents,
+    statsRepository = statsRepository,
 ) {
 
     override val windowTexture get() = requireNotNull(textureRegions["furnace"])

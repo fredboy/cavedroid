@@ -7,6 +7,7 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.domain.stats.repository.StatsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsConfigs
@@ -25,12 +26,14 @@ class SelectChestInventoryItemMouseInputHandler @Inject constructor(
     private val textureRegions: GetTextureRegionByNameUseCase,
     itemsRepository: ItemsRepository,
     inventoryHintEvents: InventoryHintEvents,
+    statsRepository: StatsRepository,
 ) : AbstractInventoryItemsMouseInputHandler(
     gameContextRepository = gameContextRepository,
     itemsRepository = itemsRepository,
     gameWindowsManager = gameWindowsManager,
     windowType = GameWindowType.CHEST,
     inventoryHintEvents = inventoryHintEvents,
+    statsRepository = statsRepository,
 ) {
 
     override val windowTexture get() = requireNotNull(textureRegions["chest"])

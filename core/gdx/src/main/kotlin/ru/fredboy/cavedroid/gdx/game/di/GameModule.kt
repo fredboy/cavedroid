@@ -220,6 +220,7 @@ object GameModule {
                 mapData.weather?.let { this.weather = it }
                 mapData.weatherTimer?.let { this.weatherTimer = it }
                 mapData.weatherIntensity?.let { this.weatherIntensity = it }
+                this.currentStreakStartDayIndex = mapData.currentStreakStartDayIndex
             }
         }
     }

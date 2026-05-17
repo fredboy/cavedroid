@@ -45,6 +45,14 @@ fun DependencyHandler.useDomainSaveModule() {
     useModule(":core:domain:save")
 }
 
+fun DependencyHandler.useDomainStatsModule() {
+    useModule(":core:domain:stats")
+}
+
+fun DependencyHandler.useDataStatsModule() {
+    useModule(":core:data:stats")
+}
+
 fun DependencyHandler.useEntityModules() {
     useModule(":core:entity:container")
     useModule(":core:entity:drop")
@@ -57,6 +65,7 @@ fun DependencyHandler.useGameModules() {
     useModule(":core:game:controller:drop")
     useModule(":core:game:controller:mob")
     useModule(":core:game:controller:projectile")
+    useModule(":core:game:controller:stats")
     useModule(":core:game:window")
     useModule(":core:game:world")
 }

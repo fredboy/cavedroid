@@ -3,6 +3,7 @@ import java.nio.file.StandardOpenOption
 
 plugins {
     kotlin("jvm")
+    kotlinxSerialization
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility
@@ -24,6 +25,7 @@ dependencies {
     useGdxModule()
     useLightingTint()
     useTeaVMBackend()
+    useKotlinxSerializationJson()
 
     implementation(Dependencies.LibGDX.gdx)
 }

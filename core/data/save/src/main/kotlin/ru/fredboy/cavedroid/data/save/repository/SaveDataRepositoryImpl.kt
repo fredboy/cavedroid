@@ -271,6 +271,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             weather = meta.weather?.let { Weather.entries.getOrNull(it) },
             weatherTimer = meta.weatherTimer,
             weatherIntensity = meta.weatherIntensity,
+            currentStreakStartDayIndex = meta.currentStreakStartDayIndex ?: 0,
         )
     }
 
@@ -307,10 +308,12 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             gameTime = gameWorld.currentGameTime,
             moonPhase = gameWorld.moonPhase,
             gameMode = gameMode,
+            totalGameTime = gameWorld.totalGameTimeSec,
             lastSpawnGameTime = gameWorld.lastSpawnGameTime,
             weather = gameWorld.weather.ordinal,
             weatherTimer = gameWorld.weatherTimer,
             weatherIntensity = gameWorld.weatherIntensity,
+            currentStreakStartDayIndex = gameWorld.currentStreakStartDayIndex,
         )
 
         val bytes = ProtoBuf.encodeToByteArray(worldSaveDataDto)

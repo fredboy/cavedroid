@@ -45,6 +45,8 @@ class GameWorld @Inject constructor(
     var totalGameTimeSec = currentGameTime
     var lastSpawnGameTime = 0f
 
+    var currentStreakStartDayIndex = 0
+
     var moonPhase = 0
 
     var weather: Weather = Weather.CLEAR

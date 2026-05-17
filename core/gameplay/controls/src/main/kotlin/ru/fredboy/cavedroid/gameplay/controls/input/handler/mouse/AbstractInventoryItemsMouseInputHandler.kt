@@ -7,6 +7,7 @@ import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepositor
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem.Companion.isNoneOrNull
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.domain.stats.repository.StatsRepository
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindow
@@ -21,6 +22,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
     private val gameWindowsManager: GameWindowsManager,
     private val windowType: GameWindowType,
     private val inventoryHintEvents: InventoryHintEvents,
+    private val statsRepository: StatsRepository,
 ) : IMouseInputHandler {
 
     protected abstract val windowTexture: TextureRegion
@@ -110,8 +112,13 @@ abstract class AbstractInventoryItemsMouseInputHandler(
             }
         }
 
+        val consumed = items[index].isNoneOrNull()
+
         if (window is AbstractInventoryWindowWithCraftGrid) {
             reduceCraftItems(window)
+            if (consumed) {
+                statsRepository.recordItemCrafted()
+            }
         }
     }
 }

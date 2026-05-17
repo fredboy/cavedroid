@@ -15,6 +15,7 @@ data class GameMapSaveData(
     val weather: Weather?,
     val weatherTimer: Float?,
     val weatherIntensity: Float?,
+    val currentStreakStartDayIndex: Int = 0,
 ) {
 
     override fun equals(other: Any?): Boolean {

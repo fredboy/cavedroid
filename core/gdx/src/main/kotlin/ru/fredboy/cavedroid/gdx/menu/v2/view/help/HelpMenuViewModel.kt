@@ -7,6 +7,7 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.attribution.AttributionMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
 import ru.fredboy.cavedroid.gdx.menu.v2.view.notice.NoticeMenuNavKey
+import ru.fredboy.cavedroid.gdx.menu.v2.view.stats.StatsMenuNavKey
 
 class HelpMenuViewModel(
     private val navBackStack: NavBackStack,
@@ -27,6 +28,10 @@ class HelpMenuViewModel(
 
     fun onLicensesClick() {
         navBackStack.push(NoticeMenuNavKey)
+    }
+
+    fun onStatisticsClick() {
+        navBackStack.push(StatsMenuNavKey)
     }
 
     fun onBackClicked() {

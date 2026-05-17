@@ -37,6 +37,14 @@ fun Stage.helpMenuView(viewModel: HelpMenuViewModel) = viewModel.also {
 
             row()
 
+            textButton(viewModel.getLocalizedString("statistics")) {
+                onClickWithSound(viewModel) {
+                    viewModel.onStatisticsClick()
+                }
+            }
+
+            row()
+
             textButton(viewModel.getLocalizedString("back")) {
                 onClickWithSound(viewModel) {
                     viewModel.onBackClicked()
