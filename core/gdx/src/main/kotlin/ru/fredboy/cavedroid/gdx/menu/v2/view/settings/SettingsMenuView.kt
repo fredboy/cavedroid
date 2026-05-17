@@ -101,6 +101,17 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
 
                             row()
                         }
+
+                        textButton(viewModel.getLocalizedString("resetHints")) {
+                            onClickWithSound(viewModel) {
+                                if (!isDisabled) {
+                                    viewModel.onResetHintsClick()
+                                }
+                            }
+                            isDisabled = !state.canResetHints
+                        }
+
+                        row()
                     }
                 }.also { pane ->
                     setScrollFocus(pane)

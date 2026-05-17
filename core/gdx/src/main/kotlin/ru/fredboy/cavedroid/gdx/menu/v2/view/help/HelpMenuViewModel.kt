@@ -15,7 +15,7 @@ class HelpMenuViewModel(
 ) : BaseViewModel(baseViewModelDependencies) {
 
     val isAboutButtonVisible: Boolean
-        get() = applicationContextRepository.isYandexGamesBuild()
+        get() = !applicationContextRepository.isYandexGamesBuild()
 
     fun onAboutClick() {
         navBackStack.push(AboutMenuNavKey)

@@ -16,6 +16,7 @@ class ApplicationContext(
     internal var locale: Locale,
     internal var soundEnabled: Boolean,
     internal var isOnboardingShown: Boolean,
+    internal var isInventoryHintShown: Boolean,
     internal var personalizedAdsConsent: Boolean?,
     internal val isYandexGamesBuild: Boolean,
 )

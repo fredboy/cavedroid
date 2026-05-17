@@ -46,6 +46,11 @@ class YandexGamesLifecycleGameDecorator(
         YandexGamesBridge.notifyGameplayStart()
     }
 
+    override fun saveGame() {
+        delegate.saveGame()
+        YandexGamesBridge.notifyGameplayStart()
+    }
+
     override fun quitGame() {
         YandexGamesBridge.notifyGameplayStop()
         delegate.quitGame()

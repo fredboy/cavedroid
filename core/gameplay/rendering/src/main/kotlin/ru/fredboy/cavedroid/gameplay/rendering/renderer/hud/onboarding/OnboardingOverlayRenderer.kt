@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.common.utils.drawString
+import ru.fredboy.cavedroid.common.utils.drawMultilineCentered
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
@@ -52,15 +52,15 @@ class OnboardingOverlayRenderer @Inject constructor(
         spriteBatch.begin()
 
         val tip = controller.getLocalizedTip(state.step)
-        val font = getFont()
-        val textWidth = getStringWidth(tip)
         val textHeight = getStringHeight(tip)
 
-        spriteBatch.drawString(
-            font = font,
+        spriteBatch.drawMultilineCentered(
+            font = getFont(),
             str = tip,
-            x = (viewport.width - textWidth) / 2f,
-            y = viewport.height / TIP_Y_DIVISOR - textHeight / 2f,
+            centerX = viewport.width / 2f,
+            topY = viewport.height / TIP_Y_DIVISOR - textHeight / 2f,
+            getStringWidth = getStringWidth::invoke,
+            getStringHeight = getStringHeight::invoke,
             color = Color(1f, 1f, 1f, textAlpha),
         )
     }
