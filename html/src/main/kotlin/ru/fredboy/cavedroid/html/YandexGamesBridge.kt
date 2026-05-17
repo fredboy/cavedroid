@@ -48,6 +48,64 @@ internal object YandexGamesBridge {
     @JSBody(
         script = """
             try {
+                if (window.ysdk && window.ysdk.features && window.ysdk.features.GameplayAPI) {
+                    window.ysdk.features.GameplayAPI.start();
+                }
+            } catch (e) {
+                console.warn('GameplayAPI.start() failed:', e);
+            }
+        """,
+    )
+    external fun notifyGameplayStart()
+
+    @JvmStatic
+    @JSBody(
+        script = """
+            try {
+                if (window.ysdk && window.ysdk.features && window.ysdk.features.GameplayAPI) {
+                    window.ysdk.features.GameplayAPI.stop();
+                }
+            } catch (e) {
+                console.warn('GameplayAPI.stop() failed:', e);
+            }
+        """,
+    )
+    external fun notifyGameplayStop()
+
+    @JvmStatic
+    @JSBody(
+        params = ["callback"],
+        script = """
+            try {
+                if (window.ysdk) {
+                    ysdk.on('game_api_pause', callback);
+                }
+            } catch (e) {
+                console.warn('listenGameApiPause(callback) failed:', e);
+            }
+        """,
+    )
+    external fun listenGameApiPause(callback: YaGamesCallback)
+
+    @JvmStatic
+    @JSBody(
+        params = ["callback"],
+        script = """
+            try {
+                if (window.ysdk) {
+                    ysdk.on('game_api_resume', callback);
+                }
+            } catch (e) {
+                console.warn('listenGameApiResume(callback) failed:', e);
+            }
+        """,
+    )
+    external fun listenGameApiResume(callback: YaGamesCallback)
+
+    @JvmStatic
+    @JSBody(
+        script = """
+            try {
                 if (window.ysdk && window.ysdk.adv) {
                     window.ysdk.adv.showBannerAdv();
                 }

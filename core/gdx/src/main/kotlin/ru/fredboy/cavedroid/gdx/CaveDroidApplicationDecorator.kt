@@ -1,8 +1,8 @@
 package ru.fredboy.cavedroid.gdx
 
-import com.badlogic.gdx.ApplicationListener
+import ru.fredboy.cavedroid.common.api.ApplicationController
 
-interface CaveDroidApplicationDecorator : ApplicationListener {
+interface CaveDroidApplicationDecorator : ApplicationController {
 
     val applicationComponent get() = getDelegate().applicationComponent
 

@@ -39,12 +39,10 @@ class CaveDroidApplication(
     private val adController: AdController = NoOpAdController(),
     private val inlineTextInput: InlineTextInput = NoOpInlineTextInput,
     private val defaultLocaleProvider: () -> Locale? = { safeDefaultLocale() },
-    private val onGameReady: (() -> Unit)? = null,
     private val isYandexGamesBuild: Boolean = false,
     loggingSeverity: Severity = Severity.Info,
 ) : Game(),
-    CaveDroidApplicationDecorator,
-    ApplicationController {
+    CaveDroidApplicationDecorator {
 
     init {
         Logger.setMinSeverity(loggingSeverity)
@@ -55,6 +53,8 @@ class CaveDroidApplication(
 
     val applicationComponentOrNull: ApplicationComponent?
         get() = if (::applicationComponent.isInitialized) applicationComponent else null
+
+    var applicationControllerOverride: ApplicationController? = null
 
     private fun initFullscreenMode(isFullscreen: Boolean) {
         if (Gdx.app.type != Application.ApplicationType.Desktop) {
@@ -106,7 +106,7 @@ class CaveDroidApplication(
                     isYandexGamesBuild = isYandexGamesBuild,
                 ),
             )
-            .applicationController(this)
+            .applicationController(applicationControllerOverride ?: this)
             .preferencesStore(preferencesStore)
             .adController(adController)
             .inlineTextInput(inlineTextInput)
@@ -123,8 +123,6 @@ class CaveDroidApplication(
         }
         applicationComponent.initializeAssets()
         setScreen(applicationComponent.menuScreen)
-
-        onGameReady?.invoke()
     }
 
     override fun dispose() {
