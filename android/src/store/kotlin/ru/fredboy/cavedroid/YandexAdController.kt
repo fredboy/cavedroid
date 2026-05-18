@@ -20,6 +20,12 @@ import ru.fredboy.cavedroid.common.api.AdController
 
 class YandexAdController(private val activity: Activity) : AdController {
 
+    @Volatile
+    private var shouldShowBanner: Boolean = false
+
+    @Volatile
+    private var bannerAdLoaded = false
+
     override val supportsPersonalizedAdsConsent: Boolean = true
 
     private val bannerAdView: BannerAdView by lazy {
@@ -57,20 +63,45 @@ class YandexAdController(private val activity: Activity) : AdController {
             Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL,
         )
 
-        activity.addContentView(bannerAdView, params)
+        bannerAdView.setBannerAdEventListener(
+            object : BannerAdEventListener {
+                override fun onAdClicked() = Unit
+                override fun onAdFailedToLoad(error: AdRequestError) = Unit
+                override fun onImpression(impressionData: ImpressionData?) = Unit
+                override fun onAdLoaded() {
+                    bannerAdLoaded = true
+                    if (shouldShowBanner) {
+                        bannerAdView.visibility = View.VISIBLE
+                    } else {
+                        bannerAdView.visibility = View.GONE
+                    }
+
+                    if (!bannerAddedToWindow) {
+                        bannerAddedToWindow = true
+                        activity.addContentView(bannerAdView, params)
+                    }
+                }
+            },
+        )
+        bannerAdView.visibility = View.INVISIBLE
         bannerAdView.loadAd(AdRequest.Builder(BuildConfig.BANNER_AD_UNIT_ID).build())
-        bannerAddedToWindow = true
     }
 
     override fun showBanner() {
+        shouldShowBanner = true
         activity.runOnUiThread {
             ensureBannerInWindow()
-            bannerAdView.visibility = View.VISIBLE
+            if (shouldShowBanner && bannerAdLoaded) {
+                bannerAdView.visibility = View.VISIBLE
+            }
         }
     }
 
     override fun hideBanner() {
-        activity.runOnUiThread { bannerAdView.visibility = View.GONE }
+        shouldShowBanner = false
+        activity.runOnUiThread {
+            bannerAdView.visibility = View.GONE
+        }
     }
 
     override fun loadInterstitial() {
@@ -123,14 +154,13 @@ class YandexAdController(private val activity: Activity) : AdController {
 
     override fun setPersonalizedAdsEnabled(enabled: Boolean) {
         YandexAds.setUserConsent(enabled)
+        YandexAds.setAgeRestricted(!enabled)
     }
 
     override fun resume() {
-//        activity.runOnUiThread { if (bannerAddedToWindow) bannerAdView.resume() }
     }
 
     override fun pause() {
-//        activity.runOnUiThread { if (bannerAddedToWindow) bannerAdView.pause() }
     }
 
     override fun destroy() {
