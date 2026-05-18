@@ -30,9 +30,9 @@ class YandexAdController(private val activity: Activity) : AdController {
 
     private val bannerAdView: BannerAdView by lazy {
         val widthDp = (
-                activity.resources.displayMetrics.widthPixels /
-                        activity.resources.displayMetrics.density
-                ).toInt() / 2
+            activity.resources.displayMetrics.widthPixels /
+                activity.resources.displayMetrics.density
+            ).toInt() / 2
         BannerAdView(activity).apply {
             setAdSize(BannerAdSize.sticky(activity, widthDp))
             setBannerAdEventListener(object : BannerAdEventListener {
@@ -81,7 +81,7 @@ class YandexAdController(private val activity: Activity) : AdController {
                         activity.addContentView(bannerAdView, params)
                     }
                 }
-            }
+            },
         )
         bannerAdView.visibility = View.INVISIBLE
         bannerAdView.loadAd(AdRequest.Builder(BuildConfig.BANNER_AD_UNIT_ID).build())
