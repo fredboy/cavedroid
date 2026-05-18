@@ -30,7 +30,7 @@ object WebLauncher {
         val config = WebApplicationConfiguration().apply {
             width = 0
             height = 0
-            showDownloadLogs = true
+            showDownloadLogs = false
         }
 
         val yandexAvailable = YandexGamesBridge.isAvailable()
