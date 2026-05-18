@@ -23,7 +23,7 @@ class AttributionMenuViewModel(
             val attributions = withContext(ioDispatcher) {
                 getAllAttributions()
             }
-            emit(attributions)
+            emit("${getLocalizedString("attributionsPreamble")}\n\n$attributions")
         }
 
     val stateFlow: StateFlow<String> = attributionsFlow

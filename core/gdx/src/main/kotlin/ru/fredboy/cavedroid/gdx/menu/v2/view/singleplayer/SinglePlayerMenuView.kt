@@ -211,7 +211,7 @@ private fun <S> KWidget<S>.saveItem(
                 align = Align.left,
             )
 
-            label(" - ${saveInfo.gameMode.name}")
+            label(" - ${viewModel.getLocalizedString(saveInfo.gameMode.name.lowercase())}")
                 .cell(
                     expandX = true,
                     fillX = true,

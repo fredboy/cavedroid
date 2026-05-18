@@ -18,7 +18,7 @@ inline fun <reified T> ifTrue(bool: Boolean, func: () -> T): T? = bool.ifTrue(fu
 
 inline fun <reified T> ifFalse(bool: Boolean, func: () -> T): T? = bool.ifFalse(func)
 
-fun Boolean.toToggleStateString(): String = if (this) "ON" else "OFF"
+fun Boolean.toToggleStateString(on: String, off: String): String = if (this) on else off
 
 fun Boolean.takeIfTrue(): Boolean? = takeIf { it }
 

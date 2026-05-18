@@ -13,6 +13,11 @@ import ktx.scene2d.textButton
 import ru.fredboy.cavedroid.common.utils.toToggleStateString
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 
+private fun Boolean.toLocalizedToggle(viewModel: SettingsMenuViewModel): String = toToggleStateString(
+    on = viewModel.getLocalizedString("toggleOn"),
+    off = viewModel.getLocalizedString("toggleOff"),
+)
+
 @Scene2dDsl
 suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel.also {
     viewModel.stateFlow.collect { state ->
@@ -46,7 +51,7 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                             .pad(10f)
 
                         textButton(
-                            viewModel.getFormattedString("dynamicCamera", state.dynamicCamera.toToggleStateString()),
+                            viewModel.getFormattedString("dynamicCamera", state.dynamicCamera.toLocalizedToggle(viewModel)),
                         ) {
                             onClickWithSound(viewModel) {
                                 viewModel.onDynamicCameraClick(!state.dynamicCamera)
@@ -57,7 +62,7 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
 
                         if (state.showFullscreenButton) {
                             textButton(
-                                viewModel.getFormattedString("fullscreen", state.fullscreen.toToggleStateString()),
+                                viewModel.getFormattedString("fullscreen", state.fullscreen.toLocalizedToggle(viewModel)),
                             ) {
                                 onClickWithSound(viewModel) {
                                     viewModel.onFullscreenClick(!state.fullscreen)
@@ -68,7 +73,7 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                         }
 
                         textButton(
-                            viewModel.getFormattedString("autoJump", state.autoJump.toToggleStateString()),
+                            viewModel.getFormattedString("autoJump", state.autoJump.toLocalizedToggle(viewModel)),
                         ) {
                             onClickWithSound(viewModel) {
                                 viewModel.onAutoJumpClick(!state.autoJump)
@@ -78,7 +83,7 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                         row()
 
                         textButton(
-                            viewModel.getFormattedString("enableSound", state.sound.toToggleStateString()),
+                            viewModel.getFormattedString("enableSound", state.sound.toLocalizedToggle(viewModel)),
                         ) {
                             onClickWithSound(viewModel) {
                                 viewModel.onSoundClick(!state.sound)
@@ -91,7 +96,7 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                             textButton(
                                 viewModel.getFormattedString(
                                     "personalizedAds",
-                                    state.personalizedAds.toToggleStateString(),
+                                    state.personalizedAds.toLocalizedToggle(viewModel),
                                 ),
                             ) {
                                 onClickWithSound(viewModel) {
