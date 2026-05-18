@@ -233,6 +233,7 @@ class CaveDroidApplication(
                 return
             }
         setScreen(deathScreen)
+        adController.showBanner()
     }
 
     override fun respawnPlayer() {
@@ -241,8 +242,13 @@ class CaveDroidApplication(
             logger.w { "Cannot respawn when active screen is not death screen" }
             return
         }
-        gameScreen.respawnPlayer()
-        setScreen(gameScreen)
+//        adController.hideBanner()
+        adController.showInterstitial {
+            Gdx.app.postRunnable {
+                gameScreen.respawnPlayer()
+                setScreen(gameScreen)
+            }
+        }
     }
 
     override fun setScreen(screen: Screen?) {
