@@ -242,7 +242,6 @@ class CaveDroidApplication(
             logger.w { "Cannot respawn when active screen is not death screen" }
             return
         }
-//        adController.hideBanner()
         adController.showInterstitial {
             Gdx.app.postRunnable {
                 gameScreen.respawnPlayer()
@@ -257,6 +256,12 @@ class CaveDroidApplication(
             screen?.resize(Gdx.graphics.width, Gdx.graphics.height)
         } catch (e: Exception) {
             throw e
+        }
+
+        if (screen is GameScreen) {
+            applicationComponent.soundPlayer.resumeAll()
+        } else {
+            applicationComponent.soundPlayer.pauseAll()
         }
 
         this.screen?.hide()
