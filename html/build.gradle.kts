@@ -19,6 +19,44 @@ private val webLauncherClassName = "ru.fredboy.cavedroid.html.WebLauncher"
 private val webBuildClassName = "ru.fredboy.cavedroid.html.BuildWebJs"
 
 private val extraAssetsDir = layout.buildDirectory.dir("generated/extraAssets")
+private val yandexExtraAssetsDir = layout.buildDirectory.dir("generated/extraAssetsYandex")
+
+// Yandex Games 8.4.2 forbids any links to external resources (including bare
+// domain names like "freesound.org"). We rewrite known license URLs to short
+// names, then strip every remaining http(s) URL and bare domain so the
+// notices / attributions screens stay license-compliant without leaking URLs.
+private val yandexLicenseShortNames: List<Pair<Regex, String>> = listOf(
+    Regex("""https?://creativecommons\.org/publicdomain/zero/1\.0/?""") to "CC0 1.0",
+    Regex("""https?://creativecommons\.org/licenses/by/4\.0/?""") to "CC-BY 4.0",
+    Regex("""https?://creativecommons\.org/licenses/by-sa/4\.0/?""") to "CC-BY-SA 4.0",
+    Regex("""https?://creativecommons\.org/licenses/by/3\.0/?""") to "CC-BY 3.0",
+    Regex("""https?://creativecommons\.org/licenses/by-sa/3\.0/?""") to "CC-BY-SA 3.0",
+    Regex("""https?://(www\.)?apache\.org/licenses/LICENSE-2\.0(\.txt|\.html)?""") to "Apache 2.0",
+    Regex("""https?://(www\.)?fsf\.org/licensing/licenses/lgpl\.txt""") to "LGPL 2.1",
+    Regex("""https?://opensource\.org/licenses/MIT""") to "MIT",
+    Regex("""https?://opensource\.org/licenses/BSD-3-Clause""") to "BSD-3-Clause",
+    Regex("""https?://opensource\.org/licenses/EPL-2\.0""") to "EPL 2.0",
+)
+
+private val yandexUrlRegex = Regex("""https?://\S+""")
+
+private val yandexBareDomainRegex = Regex(
+    """\b(?:[a-zA-Z0-9-]+\.)+(?:org|com|net|io|info|dev|co|gg|games|app|me|tv|us|uk|ru)\b(?:/\S*)?""",
+)
+
+private fun String.sanitizeForYandex(): String {
+    val cleaned = lineSequence()
+        .map { line ->
+            var l = line
+            yandexLicenseShortNames.forEach { (re, name) -> l = re.replace(l, name) }
+            l = yandexUrlRegex.replace(l, "")
+            l = yandexBareDomainRegex.replace(l, "")
+            l.trimEnd().trimEnd('-', ' ').trimEnd()
+        }
+        .filter { !it.trim().endsWith("URL:") }
+        .joinToString("\n")
+    return Regex("""\n{3,}""").replace(cleaned, "\n\n").trim() + "\n"
+}
 
 dependencies {
     useCommonLibs()
@@ -122,10 +160,56 @@ tasks.register<JavaExec>("buildJsRelease") {
     configureWebBuild(sourceMaps = false, obfuscate = true, optimization = "SIMPLE")
 }
 
+tasks.register("sanitizeYandexAssets") {
+    group = "assets"
+    description = "Strip URLs and bare domains from notices.txt and per-asset attribution.txt files for Yandex Games (8.4.2) compliance."
+
+    dependsOn("copyLicenseReport", "generateAttributionIndex")
+
+    val noticesIn = extraAssetsDir.map { it.file("notices.txt") }
+    val indexIn = extraAssetsDir.map { it.file("attribution_index.txt") }
+    val assetsDir = rootProject.file("assets")
+    val outDir = yandexExtraAssetsDir
+
+    inputs.file(noticesIn)
+    inputs.file(indexIn)
+    inputs.dir(assetsDir)
+    outputs.dir(outDir)
+
+    doLast {
+        val outRoot = outDir.get().asFile
+        outRoot.mkdirs()
+
+        outRoot.resolve("notices.txt").writeText(
+            noticesIn.get().asFile.readText().sanitizeForYandex(),
+        )
+
+        val combined = buildString {
+            indexIn.get().asFile.readLines()
+                .map(String::trim)
+                .filter(String::isNotEmpty)
+                .forEach { relPath ->
+                    val file = assetsDir.resolve(relPath)
+                    if (!file.isFile) return@forEach
+                    append(relPath).append("\n\n")
+                    append(file.readText().sanitizeForYandex().trim())
+                    append("\n\n================\n\n")
+                }
+        }.trim() + "\n"
+
+        outRoot.resolve("attributions.txt").writeText(combined)
+    }
+}
+
 tasks.register<JavaExec>("buildJsYandex") {
     group = "build"
-    description = "Compile :html to JavaScript via TeaVM for Yandex Games (SIMPLE optimization, obfuscated, no source maps)."
+    description = "Compile :html to JavaScript via TeaVM for Yandex Games (obfuscated; notices and attributions sanitized to comply with 8.4.2)."
     configureWebBuild(sourceMaps = false, obfuscate = true, optimization = "SIMPLE")
+    dependsOn("sanitizeYandexAssets")
+    // Override the extra assets path set by configureWebBuild so the bundled
+    // notices.txt has URLs stripped and the viewmodel picks up the combined
+    // sanitized attributions.txt instead of walking attribution_index.txt.
+    systemProperty("cavedroid.extraAssetsPath", yandexExtraAssetsDir.get().asFile.absolutePath)
 }
 
 tasks.register<Zip>("packageWebDist") {

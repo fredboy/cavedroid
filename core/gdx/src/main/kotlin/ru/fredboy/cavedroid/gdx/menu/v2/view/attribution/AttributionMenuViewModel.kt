@@ -34,6 +34,12 @@ class AttributionMenuViewModel(
         )
 
     fun getAllAttributions(): String {
+        // The Yandex Games web build ships a pre-combined, URL-stripped
+        // attributions.txt; using it directly avoids re-reading the raw
+        // per-asset attribution.txt files that still contain external links.
+        val combinedFile = Gdx.files.internal("attributions.txt")
+        if (combinedFile.exists()) return combinedFile.readString()
+
         val indexFile = Gdx.files.internal("attribution_index.txt")
         if (!indexFile.exists()) return "No attributions found."
 
