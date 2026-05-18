@@ -34,25 +34,30 @@ class YandexGamesLifecycleGameDecorator(
     override fun pauseGame() {
         delegate.pauseGame()
         YandexGamesBridge.notifyGameplayStop()
+        YandexGamesBridge.showBanner()
     }
 
     override fun resumeGame() {
         delegate.resumeGame()
         YandexGamesBridge.notifyGameplayStart()
+        YandexGamesBridge.hideBanner()
     }
 
     override fun startGame(startGameConfig: StartGameConfig) {
         delegate.startGame(startGameConfig)
         YandexGamesBridge.notifyGameplayStart()
+        YandexGamesBridge.hideBanner()
     }
 
     override fun saveGame() {
         delegate.saveGame()
         YandexGamesBridge.notifyGameplayStart()
+        YandexGamesBridge.hideBanner()
     }
 
     override fun quitGame() {
         YandexGamesBridge.notifyGameplayStop()
         delegate.quitGame()
+        YandexGamesBridge.showBanner()
     }
 }

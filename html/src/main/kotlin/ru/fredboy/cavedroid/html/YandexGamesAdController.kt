@@ -8,9 +8,6 @@ class YandexGamesAdController : AdController {
 
     override fun showBanner() = YandexGamesBridge.showBanner()
 
-    // Yandex Games requires the sticky banner to stay visible during gameplay,
-    // so hideBanner() intentionally no-ops here (the host shell controls
-    // dismissal via its own UI).
     override fun hideBanner() = Unit
 
     override fun loadInterstitial() = Unit
