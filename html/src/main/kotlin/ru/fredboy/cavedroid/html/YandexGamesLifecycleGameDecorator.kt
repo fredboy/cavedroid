@@ -60,4 +60,14 @@ class YandexGamesLifecycleGameDecorator(
         delegate.quitGame()
         YandexGamesBridge.showBanner()
     }
+
+    override fun showDeathScreen() {
+        delegate.showDeathScreen()
+        YandexGamesBridge.showBanner()
+    }
+
+    override fun respawnPlayer() {
+        delegate.respawnPlayer()
+        YandexGamesBridge.hideBanner()
+    }
 }

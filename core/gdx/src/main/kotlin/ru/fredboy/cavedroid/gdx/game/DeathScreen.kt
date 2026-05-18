@@ -52,7 +52,9 @@ class DeathScreen @Inject constructor(
     override fun resume() {
     }
 
-    override fun hide() {}
+    override fun hide() {
+        menuNavigationController.navRootStage.hide()
+    }
 
     override fun onDispose() {
         menuNavigationController.dispose()
