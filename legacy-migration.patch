@@ -65,7 +65,7 @@ index 660e37fd..d0fd1b99 100644
      /**
       * Kotlin coroutines
 diff --git a/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt b/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt
-index 3f9288d0..587ec958 100644
+index 8504e5d8..2552d1cb 100644
 --- a/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt
 +++ b/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt
 @@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx
@@ -76,7 +76,7 @@ index 3f9288d0..587ec958 100644
  import com.badlogic.gdx.utils.TimeUtils
  import kotlinx.serialization.ExperimentalSerializationApi
  import kotlinx.serialization.decodeFromByteArray
-@@ -335,7 +336,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
+@@ -338,7 +339,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
              return
          }
  
@@ -274,7 +274,7 @@ index 1f7a9e2f..aa716644 100644
                  expand = true,
                  fill = true,
 diff --git a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/notice/NoticeMenuView.kt b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/notice/NoticeMenuView.kt
-index c5476043..f2ff75e9 100644
+index 591b1f5b..824c49bf 100644
 --- a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/notice/NoticeMenuView.kt
 +++ b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/notice/NoticeMenuView.kt
 @@ -28,7 +28,7 @@ suspend fun Stage.noticeMenuView(viewModel: NoticeMenuViewModel) = viewModel.als
@@ -287,7 +287,7 @@ index c5476043..f2ff75e9 100644
                      expand = true,
                      fill = true,
 diff --git a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/singleplayer/SinglePlayerMenuView.kt b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/singleplayer/SinglePlayerMenuView.kt
-index 916faf7d..c24fd255 100644
+index 43c29421..638c5919 100644
 --- a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/singleplayer/SinglePlayerMenuView.kt
 +++ b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/singleplayer/SinglePlayerMenuView.kt
 @@ -1,7 +1,9 @@
@@ -308,7 +308,7 @@ index 916faf7d..c24fd255 100644
  import ktx.scene2d.imageButton
  import ktx.scene2d.label
  import ktx.scene2d.scrollPane
-@@ -166,12 +167,10 @@ private fun <S> KWidget<S>.saveItem(
+@@ -186,12 +187,10 @@ private fun <S> KWidget<S>.saveItem(
          isDisabled = true
  
          saveInfo.screenshot?.let { screenshot ->
@@ -324,3 +324,16 @@ index 916faf7d..c24fd255 100644
          }
      }.cell(
          width = 100f,
+diff --git a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/stats/StatsMenuView.kt b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/stats/StatsMenuView.kt
+index 6a628dea..a14f467f 100644
+--- a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/stats/StatsMenuView.kt
++++ b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/stats/StatsMenuView.kt
+@@ -28,7 +28,7 @@ suspend fun Stage.statsMenuView(viewModel: StatsMenuViewModel) = viewModel.also
+                 pad(8f)
+ 
+                 scrollPane {
+-                    label(buildContent(viewModel, state)) { wrap = true }
++                    label(buildContent(viewModel, state)) { setWrap(true) }
+                 }.cell(
+                     expand = true,
+                     fill = true,
