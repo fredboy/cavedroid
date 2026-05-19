@@ -52,9 +52,17 @@ Explore, mine, and build in a looped world.
 
 ---
 
-## Binary Releases
+## Download
 
-You can download APK and JAR builds from [the releases page](https://github.com/fredboy/cavedroid/releases).
+<p>
+  <a href="https://play.google.com/store/apps/details?id=ru.fredboy.cavedroid">
+    <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="60">
+  </a>
+</p>
+
+
+You can also download APK and JAR builds from [the releases page](https://github.com/fredboy/cavedroid/releases).
+Or play right from your browser [on GitHubPages](https://fredboy.github.io/cavedroid).
 
 ---
 
