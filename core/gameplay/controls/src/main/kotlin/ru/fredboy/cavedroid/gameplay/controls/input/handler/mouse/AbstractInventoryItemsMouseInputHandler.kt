@@ -31,16 +31,16 @@ abstract class AbstractInventoryItemsMouseInputHandler(
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.currentWindowType == windowType &&
-                getWindowRect(gameContextRepository.getCameraContext().viewport).contains(
-                    action.screenX,
-                    action.screenY,
+            getWindowRect(gameContextRepository.getCameraContext().viewport).contains(
+                action.screenX,
+                action.screenY,
+            ) &&
+            (
+                action.actionKey is MouseInputActionKey.Left ||
+                    action.actionKey is MouseInputActionKey.Right ||
+                    action.actionKey is MouseInputActionKey.Screen
                 ) &&
-                (
-                        action.actionKey is MouseInputActionKey.Left ||
-                                action.actionKey is MouseInputActionKey.Right ||
-                                action.actionKey is MouseInputActionKey.Screen
-                        ) &&
-                (action.actionKey.touchUp || action.actionKey is MouseInputActionKey.Screen)
+            (action.actionKey.touchUp || action.actionKey is MouseInputActionKey.Screen)
     }
 
     protected fun updateCraftResult(window: AbstractInventoryWindowWithCraftGrid) {
@@ -92,9 +92,9 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         if (items[index].isNoneOrNull() ||
             !selectedItem.isNoneOrNull() &&
             (
-                    selectedItem.item != items[index].item ||
-                            !selectedItem.canBeAdded(items[index].amount)
-                    )
+                selectedItem.item != items[index].item ||
+                    !selectedItem.canBeAdded(items[index].amount)
+                )
         ) {
             return
         }
