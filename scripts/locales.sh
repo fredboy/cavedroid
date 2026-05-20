@@ -9,12 +9,13 @@
 #   source "$(dirname "$0")/locales.sh"
 
 # Ordered list of supported locale codes.
-SUPPORTED_LOCALES=(en es de ru)
+SUPPORTED_LOCALES=(en es pt de ru)
 
 # Locale code -> fastlane directory under fastlane/metadata/android/
 declare -A LOCALE_FASTLANE_DIRS=(
   [en]="en-US"
   [es]="es-ES"
+  [pt]="pt-BR"
   [de]="de-DE"
   [ru]="ru-RU"
 )
@@ -23,6 +24,7 @@ declare -A LOCALE_FASTLANE_DIRS=(
 declare -A LOCALE_NAMES=(
   [en]="English"
   [es]="Spanish"
+  [pt]="Portuguese"
   [de]="German"
   [ru]="Russian"
 )
@@ -31,6 +33,7 @@ declare -A LOCALE_NAMES=(
 declare -A LOCALE_AUTONYMS=(
   [en]="English"
   [es]="Español"
+  [pt]="Português"
   [de]="Deutsch"
   [ru]="Русский"
 )

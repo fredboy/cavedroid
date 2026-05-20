@@ -33,5 +33,5 @@ object CaveDroidConstants {
         const val PERSONALIZED_ADS_CONSENT = "personalized_ads_consent"
     }
 
-    val SUPPORTED_LOCALES = listOf(Locale("en"), Locale("es"), Locale("de"), Locale("ru"))
+    val SUPPORTED_LOCALES = listOf(Locale("en"), Locale("es"), Locale("pt"), Locale("de"), Locale("ru"))
 }
