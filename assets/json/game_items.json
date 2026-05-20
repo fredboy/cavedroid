@@ -650,7 +650,8 @@
           }
         }
       ],
-      "material": "wood"
+      "material": "wood",
+      "sprite_top": 8
     },
     "bed_r": {
       "hp": 21,
@@ -670,7 +671,8 @@
           }
         }
       ],
-      "material": "wood"
+      "material": "wood",
+      "sprite_top": 8
     },
     "web": {
       "meta": "web",

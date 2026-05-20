@@ -24,14 +24,21 @@ class PlayerCursorRenderer @Inject constructor(
         val selectedX = mobController.player.selectedX
         val selectedY = mobController.player.selectedY
 
-        if (gameWorld.hasForeAt(selectedX, selectedY) || gameWorld.hasBackAt(selectedX, selectedY)) {
-            spriteBatch.draw(
-                /* region = */ mobAssetsRepository.getPlayerCursorSprite(),
-                /* x = */ selectedX.toFloat(),
-                /* y = */ selectedY.toFloat(),
-                /* width = */ 1f,
-                /* height = */ 1f,
-            )
+        val block = gameWorld.getForeMap(selectedX, selectedY)
+            .takeUnless { it.isNone() }
+            ?: gameWorld.getBackMap(selectedX, selectedY)
+                .takeUnless { it.isNone() }
+
+        block?.run {
+            mobAssetsRepository.getPlayerCursorSprite().apply {
+                setBounds(
+                    /* x = */ selectedX + params.spriteMarginsMeters.left,
+                    /* y = */ selectedY + params.spriteMarginsMeters.top,
+                    /* width = */ spriteWidthMeters,
+                    /* height = */ spriteHeightMeters,
+                )
+                draw(spriteBatch)
+            }
         }
     }
 
