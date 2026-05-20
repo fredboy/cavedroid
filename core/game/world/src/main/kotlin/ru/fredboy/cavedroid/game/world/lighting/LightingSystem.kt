@@ -8,6 +8,7 @@ import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.game.world.GameWorld
 
 interface LightingSystem : Disposable {
+    val chunkSize: Int
     fun attachToGameWorld(gameWorld: GameWorld)
     fun update(delta: Float)
     fun recalculate()
@@ -15,4 +16,5 @@ interface LightingSystem : Disposable {
     fun isMobExposedToSun(mob: Mob): Boolean
     fun createPlayerSightLight(body: Body, x: Float, y: Float): LightHandle
     fun createFurnaceLight(x: Float, y: Float): LightHandle
+    fun refreshChunks(chunks: Iterable<Pair<Int, Int>>)
 }
