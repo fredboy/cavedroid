@@ -1,0 +1,11 @@
+<p>Este juego es una aventura de supervivencia tipo sandbox ambientada en un mundo vóxel bidimensional generado proceduralmente. Los jugadores pueden explorar paisajes diversos, incluidos cuevas y biomas, recolectar recursos, fabricar herramientas, armaduras y comida, y construir estructuras para sobrevivir. El mundo cuenta con un ciclo día/noche, iluminación dinámica, fluidos y criaturas interactivas.</p>
+
+<p><strong>Características:</strong></p>
+<ul>
+  <li>Generación procedural de mundos con menas, cuevas, colinas y biomas.</li>
+  <li>Sistema de fabricación con recetas para herramientas, armaduras y consumibles.</li>
+  <li>Animales y criaturas hostiles con comportamientos y botines únicos.</li>
+  <li>Iluminación dinámica, fluidos y renderizado fluido del terreno.</li>
+  <li>Acciones del jugador como construir, minar, fabricar, combatir y explorar.</li>
+  <li>Sistemas de inventario y supervivencia, incluyendo comida, salud y equipo.</li>
+</ul>

@@ -79,10 +79,10 @@ for code in "${SUPPORTED_LOCALES[@]}"; do
   i=$((i + 1))
 done
 
-prompt="You are generating user-facing changelogs for CaveDroid, a 2D Minecraft-inspired indie game (Android, desktop, web).
+prompt="You are generating user-facing changelogs for CaveDroid, a 2D Minecraft-inspired indie game. These changelogs ship to the Google Play Store via fastlane, so they must only describe changes that are relevant to mobile (Android) players.
 
-Below is the raw git commit log for the upcoming v${version} release. Drop refactors, internal cleanup, build/CI tweaks, and dependency bumps — keep only what a player would care about (new features, gameplay changes, bug fixes, UI improvements).
-Changes targeting specific platforms must come next to each other back to back and be prefixed with the platform name and a colon \"Android:\", \"Desktop:\", etc.
+Below is the raw git commit log for the upcoming v${version} release. Drop refactors, internal cleanup, build/CI tweaks, and dependency bumps — keep only what a mobile player would care about (new features, gameplay changes, bug fixes, UI improvements).
+Omit changes that only affect desktop (Linux/Windows/macOS), the web/browser/TeaVM build, or iOS — if a change is explicitly scoped to one of those platforms and does not also reach Android, leave it out. Cross-platform changes that also reach Android are fine; do not prefix them with a platform name.
 Omit changes that mention store releases, yandex, ads, firebase, telemetry.
 
 Output one plaintext changelog per language:
