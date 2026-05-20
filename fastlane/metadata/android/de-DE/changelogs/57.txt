@@ -1,0 +1,7 @@
+- Verbesserung der Menü-Lokalisierung und Vereinfachung des Pausenmenüs.
+- Stummschalten des Sounds außerhalb des Spiels für ein besseres Erlebnis.
+- Entfernen des Sprungknopfs auf dem Touchscreen und Anpassung der Abstände.
+- Hinzufügen von geplanten Wachstumswarteschlangen für Setzlinge.
+- Einführung der Benutzung von Knochenmehl und neuen Funktionen für den Weizenanbau.
+- Genießen Sie den Kuchen mit neuen Essensstufen und verbesserter Lokalisierung.
+- Behebung des Problems mit der Haltbarkeit von Werkzeugen im Inventar.

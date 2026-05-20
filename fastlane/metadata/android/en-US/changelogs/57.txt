@@ -1,0 +1,7 @@
+- Improve menu localization and simplify pause menu.
+- Pause sound outside game screen for a better experience.
+- Remove jump button on touch and adjust margins for smoother controls.
+- Add scheduled growth queue for saplings to enhance farming.
+- Introduce bone meal use action and new wheat farming features.
+- Enjoy cake with new eating stages and refined localization.
+- Fix tool durability loss in inventory bug and sticky inventory item issue.
