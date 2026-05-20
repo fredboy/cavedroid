@@ -1,5 +1,8 @@
-- Melhoramos a localização do menu e simplificamos a pausa para facilitar a navegação.
-- Ajustamos a jogabilidade removendo o botão de pular na tela de toque.
-- Novas funções: uso de fertilizante, cultivo de trigo, bolos e cana-de-açúcar.
-- Implementamos uma fila de crescimento programada para mudas.
-- Resolvemos vários bugs, incluindo a durabilidade de ferramentas no inventário.
+- Melhore a localização do menu e simplifique o menu de pausa.
+- Adicione fila de crescimento programado para mudas.
+- Adicione a ação de uso de farinha de osso.
+- Inclua cultivo de trigo, bolo e cana-de-açúcar.
+- Introduza etapas para comer bolo.
+- Corrija o problema de perda de durabilidade de ferramentas no inventário.
+- Adicione nomes localizados para cultivo de trigo, bolo e cana-de-açúcar.
+- Adicione o menu de Configuração do Mundo para escolher o novo tamanho do mundo.

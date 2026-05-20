@@ -1,5 +1,8 @@
-- Mejoramos la localización del menú y simplificamos la pausa para facilitar la navegación.
-- Ajustamos la jugabilidad eliminando el botón de salto en la pantalla táctil.
-- Nuevas funciones: uso de abono, cultivo de trigo, pasteles y caña de azúcar.
-- Implementamos una cola de crecimiento programado para los brotes.
-- Corregimos varios errores, incluido el problema de durabilidad de herramientas en inventario.
+- Mejora la localización del menú y simplifica el menú de pausa.
+- Añade cola de crecimiento programada para plántulas.
+- Añade la acción de uso de harina de hueso.
+- Incluye agricultura de trigo, pastel y caña de azúcar.
+- Introduce etapas para comer pastel.
+- Corrige el problema de pérdida de durabilidad de herramientas en el inventario.
+- Añade nombres localizados para agricultura de trigo, pastel y caña de azúcar.
+- Añade menú de Configuración del Mundo para elegir el nuevo tamaño del mundo.
