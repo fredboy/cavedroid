@@ -718,6 +718,15 @@
             "type": "exact_amount",
             "amount": 1
           }
+        },
+        {
+          "key": "wheat_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.125,
+            "amount": 1
+          }
         }
       ],
       "replaceable": true,
@@ -2159,6 +2168,207 @@
         }
       ],
       "material": "wood"
+    },
+    "farmland": {
+      "hp": 18,
+      "texture": "farmland",
+      "tool_level": 0,
+      "tool_type": "shovel",
+      "drop_info": [
+        {
+          "key": "dirt",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "dirt"
+    },
+    "farmland_moist": {
+      "hp": 18,
+      "texture": "farmland_moist",
+      "tool_level": 0,
+      "tool_type": "shovel",
+      "drop_info": [
+        {
+          "key": "dirt",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "dirt"
+    },
+    "wheat_stage0": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "wheat_stage0",
+      "hp": 0,
+      "drop_info": [
+        {
+          "key": "wheat_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass"
+    },
+    "wheat_stage1": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "wheat_stage1",
+      "hp": 0,
+      "drop_info": [
+        {
+          "key": "wheat_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass"
+    },
+    "wheat_stage2": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "wheat_stage2",
+      "hp": 0,
+      "drop_info": [
+        {
+          "key": "wheat_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass"
+    },
+    "wheat_stage3": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "wheat_stage3",
+      "hp": 0,
+      "drop_info": [
+        {
+          "key": "wheat_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass"
+    },
+    "wheat_stage4": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "wheat_stage4",
+      "hp": 0,
+      "drop_info": [
+        {
+          "key": "wheat_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass"
+    },
+    "wheat_stage5": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "wheat_stage5",
+      "hp": 0,
+      "drop_info": [
+        {
+          "key": "wheat_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass"
+    },
+    "wheat_stage6": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "wheat_stage6",
+      "hp": 0,
+      "drop_info": [
+        {
+          "key": "wheat",
+          "requires_tool": false,
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass"
+    },
+    "hay_block": {
+      "hp": 9,
+      "texture": "hay_block",
+      "tool_level": 0,
+      "tool_type": "hoe",
+      "drop_info": [
+        {
+          "key": "hay_block",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass"
+    },
+    "cake": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "cake",
+      "hp": 2,
+      "drop_info": [],
+      "material": "grass"
+    },
+    "sugar_cane": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "sugar_cane",
+      "hp": 0,
+      "drop_info": [
+        {
+          "key": "sugar_cane",
+          "requires_tool": false,
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass"
     }
   },
   "items": {
@@ -3926,6 +4136,89 @@
       "name": "Raw Gold",
       "texture": "gold_raw",
       "smelt_product": "gold_ingot"
+    },
+    "wheat_seeds": {
+      "name": "Wheat Seeds",
+      "type": "usable",
+      "texture": "wheat_seeds",
+      "action_key": "use_wheat_seeds_action"
+    },
+    "wheat": {
+      "name": "Wheat",
+      "texture": "wheat"
+    },
+    "bread": {
+      "name": "Bread",
+      "type": "food",
+      "texture": "bread",
+      "heal": 5,
+      "saturation": 6.0
+    },
+    "hay_block": {
+      "name": "Hay Block",
+      "type": "block",
+      "texture": "hay_block"
+    },
+    "cake": {
+      "name": "Cake",
+      "type": "block",
+      "texture": "cake"
+    },
+    "wood_hoe": {
+      "name": "Wooden Hoe",
+      "type": "hoe",
+      "texture": "wood_hoe",
+      "origin_x": 0.125,
+      "tool_level": 1,
+      "max_stack": 1,
+      "durability": 59,
+      "burning_time": 10000
+    },
+    "stone_hoe": {
+      "name": "Stone Hoe",
+      "type": "hoe",
+      "texture": "stone_hoe",
+      "origin_x": 0.125,
+      "tool_level": 2,
+      "max_stack": 1,
+      "durability": 131
+    },
+    "iron_hoe": {
+      "name": "Iron Hoe",
+      "type": "hoe",
+      "texture": "iron_hoe",
+      "origin_x": 0.125,
+      "tool_level": 3,
+      "max_stack": 1,
+      "durability": 250
+    },
+    "diamond_hoe": {
+      "name": "Diamond Hoe",
+      "type": "hoe",
+      "texture": "diamond_hoe",
+      "origin_x": 0.125,
+      "tool_level": 4,
+      "max_stack": 1,
+      "durability": 1561
+    },
+    "gold_hoe": {
+      "name": "Golden Hoe",
+      "type": "hoe",
+      "texture": "gold_hoe",
+      "origin_x": 0.125,
+      "tool_level": 1,
+      "max_stack": 1,
+      "durability": 32
+    },
+    "sugar_cane": {
+      "name": "Sugar Cane",
+      "type": "usable",
+      "texture": "sugar_cane",
+      "action_key": "use_sugar_cane_action"
+    },
+    "sugar": {
+      "name": "Sugar",
+      "texture": "sugar"
     }
   }
 }

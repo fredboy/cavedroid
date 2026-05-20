@@ -18,7 +18,7 @@ class UseBedRightAction @Inject constructor(
     private val gameMessageEvents: GameMessageEvents,
 ) : IUseBlockAction {
 
-    override fun perform(block: Block, x: Int, y: Int) {
+    override fun perform(block: Block, x: Int, y: Int): Boolean {
         val sleepPoint = Vector2(
             (x.toFloat() + (1f - mobController.player.width / 2f)) - mobController.player.position.x,
             (y.toFloat() + 1 - mobController.player.height / 2f) - mobController.player.position.y,
@@ -28,19 +28,20 @@ class UseBedRightAction @Inject constructor(
 
         if (gameWorld.isDayTime()) {
             gameMessageEvents.showLocalized("cantSleepDayTime")
-            return
+            return true
         }
         if (!mobController.playerCanSleep()) {
             gameMessageEvents.showLocalized("cantSleepMonstersNearby")
-            return
+            return true
         }
         if (gameWorld.getForeMap(x, y - 1).params.hasCollision) {
-            return
+            return true
         }
 
         gameWorld.skipNight()
         mobController.player.isInBed = true
         mobController.player.applyPendingTransform(sleepPoint)
+        return true
     }
 
     companion object {

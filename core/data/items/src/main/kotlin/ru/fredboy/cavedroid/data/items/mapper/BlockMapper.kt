@@ -96,6 +96,7 @@ class BlockMapper @Inject constructor(
         "pickaxe" -> Item.Pickaxe::class.java
         "axe" -> Item.Axe::class.java
         "shears" -> Item.Shears::class.java
+        "hoe" -> Item.Hoe::class.java
 
         else -> null
     }

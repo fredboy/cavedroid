@@ -16,15 +16,16 @@ class UseFurnaceAction @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
 ) : IUseBlockAction {
 
-    override fun perform(block: Block, x: Int, y: Int) {
+    override fun perform(block: Block, x: Int, y: Int): Boolean {
         // TODO: transform x
         val furnace = (
             containerController.getContainer(x, y, Layer.FOREGROUND.z)
                 ?: containerController.getContainer(x, y, Layer.BACKGROUND.z)
             ) as? Furnace
-        furnace ?: return
+        furnace ?: return false
 
         gameWindowsManager.openFurnace(furnace)
+        return true
     }
 
     companion object {

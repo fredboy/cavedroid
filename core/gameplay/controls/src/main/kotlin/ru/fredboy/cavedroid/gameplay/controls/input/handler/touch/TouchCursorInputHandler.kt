@@ -215,11 +215,13 @@ class TouchCursorInputHandler @Inject constructor(
                 .takeIf { !it.isNone() }
             ?: return false
 
-        return useBlockActionMap[block.params.key]?.perform(
+        val handled = useBlockActionMap[block.params.key]?.perform(
             block = block,
             x = mobController.player.selectedX,
             y = mobController.player.selectedY,
-        )?.let {
+        ) ?: false
+
+        if (handled) {
             block.params.actionSoundKey?.let { key ->
                 blockActionSoundAssetsRepository.getBlockActionSound(key)?.let { sound ->
                     soundPlayer.playSoundAtPosition(
@@ -231,8 +233,9 @@ class TouchCursorInputHandler @Inject constructor(
                     )
                 }
             }
-            true
-        } ?: false
+        }
+
+        return handled
     }
 
     override fun checkConditions(action: MouseInputAction): Boolean {

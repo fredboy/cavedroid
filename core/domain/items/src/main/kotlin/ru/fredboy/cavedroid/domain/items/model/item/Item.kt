@@ -192,6 +192,15 @@ sealed class Item {
         override val durability: Int,
     ) : Tool()
 
+    data class Hoe(
+        override val params: CommonItemParams,
+        override val sprite: Sprite,
+        override val mobDamageMultiplier: Float,
+        override val blockDamageMultiplier: Float,
+        override val level: Int,
+        override val durability: Int,
+    ) : Tool()
+
     data class Bow(
         override val params: CommonItemParams,
         override val sprite: Sprite,

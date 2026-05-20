@@ -3417,6 +3417,196 @@
         "count": 1
       }
     ]
+  },
+  "wood_hoe": {
+    "recipes": [
+      {
+        "input": [
+          "planks.*",
+          "planks.*",
+          null,
+          null,
+          "stick",
+          null,
+          null,
+          "stick",
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "stone_hoe": {
+    "recipes": [
+      {
+        "input": [
+          "cobblestone",
+          "cobblestone",
+          null,
+          null,
+          "stick",
+          null,
+          null,
+          "stick",
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "iron_hoe": {
+    "recipes": [
+      {
+        "input": [
+          "iron_ingot",
+          "iron_ingot",
+          null,
+          null,
+          "stick",
+          null,
+          null,
+          "stick",
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "diamond_hoe": {
+    "recipes": [
+      {
+        "input": [
+          "diamond",
+          "diamond",
+          null,
+          null,
+          "stick",
+          null,
+          null,
+          "stick",
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "gold_hoe": {
+    "recipes": [
+      {
+        "input": [
+          "gold_ingot",
+          "gold_ingot",
+          null,
+          null,
+          "stick",
+          null,
+          null,
+          "stick",
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "bread": {
+    "recipes": [
+      {
+        "input": [
+          "wheat",
+          "wheat",
+          "wheat",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "hay_block": {
+    "recipes": [
+      {
+        "input": [
+          "wheat",
+          "wheat",
+          "wheat",
+          "wheat",
+          "wheat",
+          "wheat",
+          "wheat",
+          "wheat",
+          "wheat"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "wheat": {
+    "recipes": [
+      {
+        "input": [
+          "hay_block",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 9
+      }
+    ]
+  },
+  "cake": {
+    "recipes": [
+      {
+        "input": [
+          "bucket_milk",
+          "bucket_milk",
+          "bucket_milk",
+          "sugar",
+          "egg",
+          "sugar",
+          "wheat",
+          "wheat",
+          "wheat"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "sugar": {
+    "recipes": [
+      {
+        "input": [
+          "sugar_cane",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   }
 }
 

@@ -33,12 +33,18 @@ class UseBoneMealAction @Inject constructor(
                     }
                 }
             }
+            in WHEAT_GROWING_KEYS -> advanceWheat(x, y, key)
             "grass" -> if (!scatterFlowers(x, y)) return false
             else -> return false
         }
 
         mobController.player.decreaseCurrentItemCount()
         return true
+    }
+
+    private fun advanceWheat(x: Int, y: Int, currentKey: String) {
+        val nextStage = WHEAT_NEXT[currentKey] ?: return
+        gameWorld.setForeMap(x, y, getBlockByKeyUseCase[nextStage])
     }
 
     private fun scatterFlowers(x: Int, y: Int): Boolean {
@@ -153,5 +159,14 @@ class UseBoneMealAction @Inject constructor(
         private val SAPLING_KEYS = setOf("sapling_oak", "sapling_birch", "sapling_spruce")
         private val SOIL_KEYS = setOf("dirt", "grass", "grass_snowed")
         private val FLOWER_KEYS = listOf("dandelion", "rose", "tallgrass", "tallgrass", "tallgrass")
+        private val WHEAT_NEXT = mapOf(
+            "wheat_stage0" to "wheat_stage1",
+            "wheat_stage1" to "wheat_stage2",
+            "wheat_stage2" to "wheat_stage3",
+            "wheat_stage3" to "wheat_stage4",
+            "wheat_stage4" to "wheat_stage5",
+            "wheat_stage5" to "wheat_stage6",
+        )
+        private val WHEAT_GROWING_KEYS = WHEAT_NEXT.keys
     }
 }
