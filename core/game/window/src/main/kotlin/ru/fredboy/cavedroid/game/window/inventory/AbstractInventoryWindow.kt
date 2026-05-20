@@ -5,6 +5,7 @@ import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem.Companion.isNoneOrNull
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.window.GameWindowType
+import kotlin.math.max
 
 abstract class AbstractInventoryWindow {
 
@@ -72,6 +73,7 @@ abstract class AbstractInventoryWindow {
 
         val newItem = selectedItem.item.toInventoryItem(
             (clickedItem.takeIf { !it.item.isNone() }?.amount ?: 0) + 1,
+            max(clickedItem.durability, selectedItem.durability),
         )
         items[index] = newItem
         selectedItem.amount--
