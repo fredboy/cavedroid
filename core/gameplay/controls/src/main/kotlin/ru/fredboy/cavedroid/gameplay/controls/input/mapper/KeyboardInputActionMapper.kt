@@ -2,12 +2,16 @@ package ru.fredboy.cavedroid.gameplay.controls.input.mapper
 
 import com.badlogic.gdx.Input
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.ifTrue
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.gameplay.controls.input.action.KeyboardInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.KeyboardInputActionKey
 import javax.inject.Inject
 
 @GameScope
-class KeyboardInputActionMapper @Inject constructor() {
+class KeyboardInputActionMapper @Inject constructor(
+    private val applicationContextRepository: ApplicationContextRepository,
+) {
 
     fun map(key: Int, isKeyDown: Boolean): KeyboardInputAction? {
         val actionKey = when (key) {
@@ -22,9 +26,6 @@ class KeyboardInputActionMapper @Inject constructor() {
 
             Input.Keys.ESCAPE, Input.Keys.BACK -> KeyboardInputActionKey.Pause
 
-            Input.Keys.F1 -> KeyboardInputActionKey.ShowDebug
-            Input.Keys.M -> KeyboardInputActionKey.ShowMap
-
             Input.Keys.Q -> KeyboardInputActionKey.DropItem
 
             Input.Keys.NUM_1 -> KeyboardInputActionKey.SelectHotbarSlot(0)
@@ -38,6 +39,14 @@ class KeyboardInputActionMapper @Inject constructor() {
             Input.Keys.NUM_9 -> KeyboardInputActionKey.SelectHotbarSlot(8)
 
             else -> null
+        } ?: ifTrue(applicationContextRepository.isDebug()) {
+            when (key) {
+                Input.Keys.F1 -> KeyboardInputActionKey.ShowDebug
+                Input.Keys.M -> KeyboardInputActionKey.ShowMap
+                Input.Keys.GRAVE -> KeyboardInputActionKey.SwitchGameMode
+
+                else -> null
+            }
         }
 
         return actionKey?.let { KeyboardInputAction(it, isKeyDown) }
