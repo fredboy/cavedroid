@@ -23,6 +23,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.impl.PlayerMobBehavior
 import kotlin.math.abs
+import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 
@@ -61,7 +62,7 @@ class Player(
     var holdCursor = true
     var cursorToPlayer = Vector2()
 
-    val selectedX get() = cursorX.toInt()
+    val selectedX get() = floor(cursorX).toInt()
     val selectedY get() = cursorY.toInt()
 
     var controlMode = ControlMode.CURSOR

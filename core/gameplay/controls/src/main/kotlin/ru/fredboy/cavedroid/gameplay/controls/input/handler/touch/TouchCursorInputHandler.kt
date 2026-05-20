@@ -308,10 +308,7 @@ class TouchCursorInputHandler @Inject constructor(
         val worldX = touchDownCursorCoords.x + moveX.meters + (player.position.x - touchDownPlayerPos.x)
         val worldY = touchDownCursorCoords.y + moveY.meters + (player.position.y - touchDownPlayerPos.y)
 
-        // when worldX < 0, need to subtract 1 to avoid negative zero
-        val fixCycledWorld = if (worldX < 0) 1 else 0
-
-        player.cursorX = worldX - fixCycledWorld
+        player.cursorX = worldX
         player.cursorY = worldY
 
         player.headRotation = getPlayerHeadRotation(worldX, worldY)
