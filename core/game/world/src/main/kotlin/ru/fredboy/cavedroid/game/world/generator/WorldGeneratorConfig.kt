@@ -24,7 +24,12 @@ data class WorldGeneratorConfig(
             seed = TimeUtils.millis(),
             maxSurfaceHeight = 160,
             minSurfaceHeight = 64,
-            biomes = Biome.entries.toList(),
+            biomes = listOf(
+                Biome.PLAINS,
+                Biome.PLAINS,
+                Biome.DESERT,
+                Biome.WINTER,
+            ),
             minBiomeSize = 64,
             seaLevel = 128,
             lavaLevel = 224,
