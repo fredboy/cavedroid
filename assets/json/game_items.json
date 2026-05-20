@@ -700,7 +700,7 @@
           }
         }
       ],
-      "material": "web"
+      "material": "grass"
     },
     "tallgrass": {
       "collision": false,
@@ -2343,14 +2343,89 @@
       ],
       "material": "grass"
     },
-    "cake": {
+    "cake_0": {
       "collision": false,
       "transparent": true,
       "block_required": true,
       "texture": "cake",
       "hp": 2,
       "drop_info": [],
-      "material": "grass"
+      "material": "grass",
+      "sprite_top": 8,
+      "sprite_left": 1,
+      "sprite_right": 1
+    },
+    "cake_1": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "cake",
+      "hp": 2,
+      "drop_info": [],
+      "material": "grass",
+      "sprite_top": 8,
+      "sprite_left": 1,
+      "sprite_right": 3
+    },
+    "cake_2": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "cake",
+      "hp": 2,
+      "drop_info": [],
+      "material": "grass",
+      "sprite_top": 8,
+      "sprite_left": 1,
+      "sprite_right": 5
+    },
+    "cake_3": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "cake",
+      "hp": 2,
+      "drop_info": [],
+      "material": "grass",
+      "sprite_top": 8,
+      "sprite_left": 1,
+      "sprite_right": 7
+    },
+    "cake_4": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "cake",
+      "hp": 2,
+      "drop_info": [],
+      "material": "grass",
+      "sprite_top": 8,
+      "sprite_left": 1,
+      "sprite_right": 9
+    },
+    "cake_5": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "cake",
+      "hp": 2,
+      "drop_info": [],
+      "material": "grass",
+      "sprite_top": 8,
+      "sprite_left": 1,
+      "sprite_right": 11
+    },
+    "cake_6": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "cake",
+      "hp": 2,
+      "drop_info": [],
+      "material": "grass",
+      "sprite_top": 8,
+      "sprite_left": 1,
+      "sprite_right": 13
     },
     "sugar_cane": {
       "collision": false,
@@ -4161,8 +4236,9 @@
     },
     "cake": {
       "name": "Cake",
-      "type": "block",
-      "texture": "cake"
+      "type": "usable",
+      "texture": "cake",
+      "action_key": "use_cake_action"
     },
     "wood_hoe": {
       "name": "Wooden Hoe",
