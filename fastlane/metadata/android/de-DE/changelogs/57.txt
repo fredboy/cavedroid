@@ -1,0 +1,8 @@
+- Verbessere die Lokalisierung des Menüs und vereinfache das Pausenmenü.
+- Füge eine geplante Wachstumswarteschlange für Setzlinge hinzu.
+- Füge die Aktion zur Verwendung von Knochenmehl hinzu.
+- Ergänze den Weizenanbau, Kuchen und Zuckerrohr.
+- Führe Essensstufen für Kuchen ein.
+- Behebe das Problem mit dem Verlust der Haltbarkeit von Werkzeugen im Inventar.
+- Füge lokalisierte Namen für Weizenanbau, Kuchen und Zuckerrohr hinzu.
+- Füge das Menü zur Weltkonfiguration zum Auswählen der neuen Weltgröße hinzu.
