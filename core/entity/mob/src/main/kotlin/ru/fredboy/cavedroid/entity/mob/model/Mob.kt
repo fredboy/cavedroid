@@ -297,7 +297,7 @@ abstract class Mob(
             }
         }
 
-        canClimb = climbable != null
+        canClimb = climbable != null && climbable !is Block.Web
         canSwim = liquid != null
 
         val mediumResistance = climbable?.climbSpeedFactor ?: 0f
