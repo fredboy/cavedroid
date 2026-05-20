@@ -1,7 +1,5 @@
-- Melhore a localização do menu e simplifique o menu de pausa.
-- Pause o som fora da tela do jogo para uma melhor experiência.
-- Remova o botão de pular na tela de toque e ajuste as margens.
-- Adicione filas de crescimento programadas para as mudas.
-- Introduza a ação de usar adubo e novas funções de cultivo de trigo.
-- Desfrute do bolo com novas etapas de consumo e localização aprimorada.
-- Corrija a perda de durabilidade de ferramentas no inventário.
+- Melhoramos a localização do menu e simplificamos a pausa para facilitar a navegação.
+- Ajustamos a jogabilidade removendo o botão de pular na tela de toque.
+- Novas funções: uso de fertilizante, cultivo de trigo, bolos e cana-de-açúcar.
+- Implementamos uma fila de crescimento programada para mudas.
+- Resolvemos vários bugs, incluindo a durabilidade de ferramentas no inventário.

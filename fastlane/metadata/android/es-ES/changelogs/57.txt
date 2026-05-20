@@ -1,7 +1,5 @@
-- Mejora la localización del menú y simplifica el menú de pausa.
-- Silencia el sonido fuera de la pantalla de juego para una mejor experiencia.
-- Elimina el botón de salto en la pantalla táctil y ajusta los márgenes.
-- Añade colas de crecimiento programadas para los árboles.
-- Introduce la acción de usar abono y nuevas funciones de cultivo de trigo.
-- Disfruta del pastel con nuevas etapas de consumo y localización refinada.
-- Soluciona el error de pérdida de durabilidad de herramientas en el inventario.
+- Mejoramos la localización del menú y simplificamos la pausa para facilitar la navegación.
+- Ajustamos la jugabilidad eliminando el botón de salto en la pantalla táctil.
+- Nuevas funciones: uso de abono, cultivo de trigo, pasteles y caña de azúcar.
+- Implementamos una cola de crecimiento programado para los brotes.
+- Corregimos varios errores, incluido el problema de durabilidad de herramientas en inventario.
