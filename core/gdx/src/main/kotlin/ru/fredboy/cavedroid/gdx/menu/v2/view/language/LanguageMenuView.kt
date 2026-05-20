@@ -27,7 +27,7 @@ fun Stage.languageMenuView(viewModel: LanguageMenuViewModel) = viewModel.also {
             )
             pad(8f)
 
-            label(viewModel.getLocalizedString("settings")) {
+            label(viewModel.getLocalizedString("language")) {
                 setAlignment(Align.center)
             }.cell(
                 expandX = true,
