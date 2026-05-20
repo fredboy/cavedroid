@@ -31,16 +31,16 @@ abstract class AbstractInventoryItemsMouseInputHandler(
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.currentWindowType == windowType &&
-            getWindowRect(gameContextRepository.getCameraContext().viewport).contains(
-                action.screenX,
-                action.screenY,
-            ) &&
-            (
-                action.actionKey is MouseInputActionKey.Left ||
-                    action.actionKey is MouseInputActionKey.Right ||
-                    action.actionKey is MouseInputActionKey.Screen
+                getWindowRect(gameContextRepository.getCameraContext().viewport).contains(
+                    action.screenX,
+                    action.screenY,
                 ) &&
-            (action.actionKey.touchUp || action.actionKey is MouseInputActionKey.Screen)
+                (
+                        action.actionKey is MouseInputActionKey.Left ||
+                                action.actionKey is MouseInputActionKey.Right ||
+                                action.actionKey is MouseInputActionKey.Screen
+                        ) &&
+                (action.actionKey.touchUp || action.actionKey is MouseInputActionKey.Screen)
     }
 
     protected fun updateCraftResult(window: AbstractInventoryWindowWithCraftGrid) {
@@ -66,7 +66,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         if (action.actionKey is MouseInputActionKey.Screen) {
             if (!action.actionKey.touchUp) {
                 window.onLeftCLick(items, itemsRepository, index, action.actionKey.pointer)
-            } else {
+            } else if (!window.selectedItem.isNoneOrNull()) {
                 if (action.actionKey.pointer == window.selectItemPointer) {
                     window.onLeftCLick(items, itemsRepository, index, action.actionKey.pointer)
                 } else {
@@ -92,9 +92,9 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         if (items[index].isNoneOrNull() ||
             !selectedItem.isNoneOrNull() &&
             (
-                selectedItem.item != items[index].item ||
-                    !selectedItem.canBeAdded(items[index].amount)
-                )
+                    selectedItem.item != items[index].item ||
+                            !selectedItem.canBeAdded(items[index].amount)
+                    )
         ) {
             return
         }
