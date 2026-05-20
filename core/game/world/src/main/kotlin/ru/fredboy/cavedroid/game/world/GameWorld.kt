@@ -33,6 +33,7 @@ class GameWorld @Inject constructor(
     initialForeMap: Array<Array<Block>>?,
     initialBackMap: Array<Array<Block>>?,
     initialBiomes: Array<Biome>?,
+    requestedWidth: Int?,
 ) : Disposable {
     val foreMap: Array<Array<Block>>
     val backMap: Array<Array<Block>>
@@ -53,7 +54,9 @@ class GameWorld @Inject constructor(
     var weatherTimer: Float = nextWeatherDuration(Weather.CLEAR)
     var weatherIntensity: Float = 0f
 
-    val generatorConfig = WorldGeneratorConfig.getDefault()
+    val generatorConfig: WorldGeneratorConfig = WorldGeneratorConfig.getDefault(
+        width = initialForeMap?.size ?: requestedWidth ?: WorldGeneratorConfig.DEFAULT_WIDTH,
+    )
 
     val world: World = World(Vector2(0f, 32f), false)
 

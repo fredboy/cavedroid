@@ -18,8 +18,10 @@ data class WorldGeneratorConfig(
 
     companion object {
 
-        fun getDefault(): WorldGeneratorConfig = WorldGeneratorConfig(
-            width = 1024,
+        const val DEFAULT_WIDTH: Int = 1024
+
+        fun getDefault(width: Int = DEFAULT_WIDTH): WorldGeneratorConfig = WorldGeneratorConfig(
+            width = width,
             height = 256,
             seed = TimeUtils.millis(),
             maxSurfaceHeight = 160,

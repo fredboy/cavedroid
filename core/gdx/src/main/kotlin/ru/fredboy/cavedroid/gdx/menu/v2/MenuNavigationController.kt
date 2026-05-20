@@ -56,6 +56,9 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.singleplayer.singlePlayerMenuView
 import ru.fredboy.cavedroid.gdx.menu.v2.view.stats.StatsMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.stats.StatsMenuViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.stats.statsMenuView
+import ru.fredboy.cavedroid.gdx.menu.v2.view.worldconfig.WorldConfigMenuNavKey
+import ru.fredboy.cavedroid.gdx.menu.v2.view.worldconfig.WorldConfigMenuViewModel
+import ru.fredboy.cavedroid.gdx.menu.v2.view.worldconfig.worldConfigMenuView
 import javax.inject.Inject
 
 @MenuScope
@@ -87,6 +90,11 @@ class MenuNavigationController @Inject constructor(
             is NewGameMenuNavKey -> {
                 val viewModel = findViewModel<NewGameMenuNavKey, NewGameMenuViewModel>(navKey, cachedViewModel)
                 render(viewModel) { newGameMenuView(viewModel) }
+            }
+
+            is WorldConfigMenuNavKey -> {
+                val viewModel = findViewModel<WorldConfigMenuNavKey, WorldConfigMenuViewModel>(navKey, cachedViewModel)
+                render(viewModel) { worldConfigMenuView(viewModel) }
             }
 
             is SettingsMenuNavKey -> {

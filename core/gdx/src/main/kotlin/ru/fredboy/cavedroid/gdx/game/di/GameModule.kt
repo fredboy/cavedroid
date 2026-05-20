@@ -238,6 +238,7 @@ object GameModule {
             initialForeMap = mapData?.foreMap,
             initialBackMap = mapData?.backMap,
             initialBiomes = mapData?.biomes,
+            requestedWidth = gameContextRepository.getRequestedWorldWidth(),
         ).apply {
             mapData?.let {
                 this.currentGameTime = mapData.gameTime
