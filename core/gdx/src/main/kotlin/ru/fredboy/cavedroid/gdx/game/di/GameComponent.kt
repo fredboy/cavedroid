@@ -18,6 +18,7 @@ import ru.fredboy.cavedroid.gdx.game.DeathScreen
 import ru.fredboy.cavedroid.gdx.game.GameProc
 import ru.fredboy.cavedroid.gdx.game.GameSaveHelper
 import ru.fredboy.cavedroid.generated.module.DropContactHandlerModule
+import ru.fredboy.cavedroid.generated.module.GrowBlockActionsModule
 import ru.fredboy.cavedroid.generated.module.HudRenderModule
 import ru.fredboy.cavedroid.generated.module.KeyboardInputHandlersModule
 import ru.fredboy.cavedroid.generated.module.MobContactHandlerModule
@@ -37,6 +38,7 @@ import ru.fredboy.cavedroid.generated.module.WorldRenderModule
         GameModule::class,
         UseItemActionsModule::class,
         UpdateBlockActionsModule::class,
+        GrowBlockActionsModule::class,
         PlaceBlockActionsModule::class,
         KeyboardInputHandlersModule::class,
         MouseInputHandlersModule::class,

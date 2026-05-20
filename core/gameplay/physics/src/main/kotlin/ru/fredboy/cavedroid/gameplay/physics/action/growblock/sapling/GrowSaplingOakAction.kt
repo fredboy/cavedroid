@@ -1,31 +1,32 @@
-package ru.fredboy.cavedroid.gameplay.physics.action.updateblock.sapling
+package ru.fredboy.cavedroid.gameplay.physics.action.growblock.sapling
 
-import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.usecase.GetBlockByKeyUseCase
 import ru.fredboy.cavedroid.game.world.GameWorld
-import ru.fredboy.cavedroid.gameplay.physics.action.annotation.BindUpdateBlockAction
-import ru.fredboy.cavedroid.gameplay.physics.action.updateblock.IUpdateBlockAction
+import ru.fredboy.cavedroid.gameplay.physics.action.annotation.BindGrowBlockAction
+import ru.fredboy.cavedroid.gameplay.physics.action.growblock.IGrowBlockAction
 import javax.inject.Inject
 
 @GameScope
-@BindUpdateBlockAction(stringKey = UpdateSaplingOakAction.BLOCK_KEY)
-class UpdateSaplingOakAction @Inject constructor(
+@BindGrowBlockAction(stringKey = GrowSaplingOakAction.BLOCK_KEY)
+class GrowSaplingOakAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val getBlockByKeyUseCase: GetBlockByKeyUseCase,
-) : IUpdateBlockAction {
+) : IGrowBlockAction {
 
-    override fun update(x: Int, y: Int) {
-        if (gameWorld.getForeMap(x, y + 1).params.key.let { it != "dirt" && it != "grass" && it != "grass_snowed" } ||
-            MathUtils.randomBoolean(0.99f)
-        ) {
-            return
+    override fun grow(x: Int, y: Int): Boolean {
+        if (gameWorld.getForeMap(x, y).params.key != BLOCK_KEY) {
+            return false
+        }
+        if (gameWorld.getForeMap(x, y + 1).params.key !in SOIL_KEYS) {
+            return false
         }
 
         for (ix in x - 1..x + 1) {
             for (iy in y - 5..y) {
+                if (ix == x && iy == y) continue
                 if (!gameWorld.getForeMap(ix, iy).params.replaceable) {
-                    return
+                    return false
                 }
             }
         }
@@ -50,9 +51,12 @@ class UpdateSaplingOakAction @Inject constructor(
                 gameWorld.setForeMap(ix, iy, leaves)
             }
         }
+
+        return true
     }
 
     companion object {
         const val BLOCK_KEY = "sapling_oak"
+        private val SOIL_KEYS = setOf("dirt", "grass", "grass_snowed")
     }
 }

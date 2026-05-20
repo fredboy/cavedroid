@@ -229,6 +229,21 @@ sealed class SaveDataDto {
     ) : SaveDataDto()
 
     @Serializable
+    data class GrowBlockEntryDto(
+        override val version: Int,
+        val x: Int,
+        val y: Int,
+        val key: String,
+        val remainingTicks: Long,
+    ) : SaveDataDto()
+
+    @Serializable
+    data class GrowBlocksSaveDataDto(
+        override val version: Int,
+        val entries: List<GrowBlockEntryDto>,
+    ) : SaveDataDto()
+
+    @Serializable
     data class WorldSaveDataDto(
         override val version: Int,
         val name: String,

@@ -10,6 +10,7 @@ import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.controller.stats.StatsController
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldGrowBlocksControllerTask
 import javax.inject.Inject
 
 @GameScope
@@ -23,6 +24,7 @@ class GameSaveHelper @Inject constructor(
     private val saveDataRepository: SaveDataRepository,
     private val projectileController: ProjectileController,
     private val statsController: StatsController,
+    private val growBlocksControllerTask: GameWorldGrowBlocksControllerTask,
 ) {
 
     fun saveGame(overwrite: Boolean) {
@@ -43,6 +45,7 @@ class GameSaveHelper @Inject constructor(
             containerController = containerController,
             gameWorld = gameWorld,
             projectileController = projectileController,
+            growBlockEntries = growBlocksControllerTask.snapshot(),
         )
 
         statsController.onSaveCheckpoint()
