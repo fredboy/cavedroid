@@ -54,7 +54,19 @@ CaveDroid — это **2D-игра в стиле Minecraft** для Android, Des
 
 ## Готовые сборки
 
-APK и JAR сборки можно скачать на [странице релизов](https://github.com/fredboy/cavedroid/releases).
+<p>
+  <a href="https://play.google.com/store/apps/details?id=ru.fredboy.cavedroid">
+    <img alt="Доступно в Google Play" src="https://play.google.com/intl/ru_ru/badges/static/images/badges/ru_badge_web_generic.png" height="60">
+  </a>
+    <br>
+  <a href="https://www.rustore.ru/catalog/app/ru.fredboy.cavedroid">
+    <img alt="Доступно в RuStore" src="https://www.rustore.ru/help/icons/logo-color-dark.svg" height="54">
+  </a>
+</p>
+
+
+APK и JAR сборки также можно скачать на [странице релизов](https://github.com/fredboy/cavedroid/releases).
+Или поиграть прямо в браузере [на GitHub Pages](https://fredboy.github.io/cavedroid).
 
 ---
 

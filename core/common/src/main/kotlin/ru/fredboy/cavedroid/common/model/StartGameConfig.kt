@@ -10,6 +10,7 @@ sealed interface StartGameConfig {
         override val worldName: String,
         override val saveDirectory: String,
         val gameMode: GameMode,
+        val worldSize: WorldSize,
     ) : StartGameConfig
 
     data class Load(

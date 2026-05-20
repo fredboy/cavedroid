@@ -66,7 +66,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         if (action.actionKey is MouseInputActionKey.Screen) {
             if (!action.actionKey.touchUp) {
                 window.onLeftCLick(items, itemsRepository, index, action.actionKey.pointer)
-            } else {
+            } else if (!window.selectedItem.isNoneOrNull()) {
                 if (action.actionKey.pointer == window.selectItemPointer) {
                     window.onLeftCLick(items, itemsRepository, index, action.actionKey.pointer)
                 } else {

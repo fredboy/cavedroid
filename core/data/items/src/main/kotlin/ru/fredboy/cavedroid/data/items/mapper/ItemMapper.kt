@@ -83,6 +83,15 @@ class ItemMapper @Inject constructor(
                 durability = requireNotNull(dto.durability),
             )
 
+            "hoe" -> Item.Hoe(
+                params = params,
+                sprite = requireNotNull(loadSprite(dto)),
+                mobDamageMultiplier = dto.mobDamageMultiplier,
+                blockDamageMultiplier = dto.blockDamageMultiplier,
+                level = requireNotNull(dto.toolLevel),
+                durability = requireNotNull(dto.durability),
+            )
+
             "block" -> Item.Block(
                 params = params,
                 block = requireNotNull(block),

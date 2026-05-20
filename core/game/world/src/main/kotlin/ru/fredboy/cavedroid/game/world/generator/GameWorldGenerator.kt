@@ -327,6 +327,34 @@ class GameWorldGenerator(
         }
     }
 
+    private fun generateSugarCane() {
+        val sugarCane = itemsRepository.getBlockByKey("sugar_cane")
+        val supportKeys = setOf("dirt", "grass", "grass_snowed", "sand")
+
+        for (x in 0..<config.width) {
+            val surfaceY = heights[x]
+            val support = foreMap[x][surfaceY]
+            if (support.params.key !in supportKeys) continue
+
+            val leftWater = x > 0 && foreMap[x - 1][surfaceY].isWater()
+            val rightWater = x < config.width - 1 && foreMap[x + 1][surfaceY].isWater()
+            if (!leftWater && !rightWater) continue
+
+            val topY = surfaceY - 1
+            if (topY < 0 || !foreMap[x][topY].isNone()) continue
+
+            if (random.nextInt(100) >= 25) continue
+
+            val caneHeight = random.nextInt(1, 4)
+            for (dy in 0..<caneHeight) {
+                val ty = topY - dy
+                if (ty < 0) break
+                if (!foreMap[x][ty].isNone()) break
+                foreMap[x][ty] = sugarCane
+            }
+        }
+    }
+
     private fun generateVein(x: Int, y: Int, size: Int, block: Block) {
         val width = random.nextInt(1..size).takeIf { x + it < config.width } ?: (config.width - x - 1)
         val height = random.nextInt(1..size).takeIf { y + it < config.height - 1 } ?: (config.height - y - 2)
@@ -470,6 +498,7 @@ class GameWorldGenerator(
 
         generateOres()
         fillWater()
+        generateSugarCane()
         generateCaves()
         fillLava()
 

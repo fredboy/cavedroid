@@ -12,8 +12,9 @@ class UseCraftingTableAction @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
 ) : IUseBlockAction {
 
-    override fun perform(block: Block, x: Int, y: Int) {
+    override fun perform(block: Block, x: Int, y: Int): Boolean {
         gameWindowsManager.openCrafting()
+        return true
     }
 
     companion object {

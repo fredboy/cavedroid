@@ -15,6 +15,7 @@ import ru.fredboy.cavedroid.game.world.GameWorld;
 import ru.fredboy.cavedroid.gameplay.controls.GameInputProcessor;
 import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldBlocksLogicControllerTask;
 import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldFluidsLogicControllerTask;
+import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldGrowBlocksControllerTask;
 import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldMobDamageControllerTask;
 import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldMobSpawnControllerTask;
 import ru.fredboy.cavedroid.gameplay.rendering.GameRenderer;
@@ -30,6 +31,7 @@ public class GameProc implements Disposable {
     private final ContainerController mContainerController;
     private final GameWorldFluidsLogicControllerTask mGameWorldFluidsLogicControllerTask;
     private final GameWorldBlocksLogicControllerTask mGameWorldBlocksLogicControllerTask;
+    private final GameWorldGrowBlocksControllerTask mGameWorldGrowBlocksControllerTask;
     private final GameWorldMobDamageControllerTask mGameWorldMobDamageControllerTask;
     private final GameWorldMobSpawnControllerTask mGameWorldMobSpawnControllerTask;
     private final GameInputProcessor mGameInputProcessor;
@@ -49,6 +51,7 @@ public class GameProc implements Disposable {
                     ContainerController containerController,
                     GameWorldFluidsLogicControllerTask gameWorldFluidsLogicControllerTask,
                     GameWorldBlocksLogicControllerTask gameWorldBlocksLogicControllerTask,
+                    GameWorldGrowBlocksControllerTask gameWorldGrowBlocksControllerTask,
                     GameWorldMobDamageControllerTask gameWorldMobDamageControllerTask,
                     GameWorldMobSpawnControllerTask gameWorldMobSpawnControllerTask,
                     GameInputProcessor gameInputProcessor,
@@ -62,6 +65,7 @@ public class GameProc implements Disposable {
         mContainerController = containerController;
         mGameWorldFluidsLogicControllerTask = gameWorldFluidsLogicControllerTask;
         mGameWorldBlocksLogicControllerTask = gameWorldBlocksLogicControllerTask;
+        mGameWorldGrowBlocksControllerTask = gameWorldGrowBlocksControllerTask;
         mGameWorldMobDamageControllerTask = gameWorldMobDamageControllerTask;
         mGameWorldMobSpawnControllerTask = gameWorldMobSpawnControllerTask;
         mGameInputProcessor = gameInputProcessor;
@@ -74,6 +78,9 @@ public class GameProc implements Disposable {
                 GameWorldFluidsLogicControllerTask.FLUID_UPDATE_INTERVAL_SEC);
         mWorldLogicTimer.scheduleTask(gameWorldBlocksLogicControllerTask, 0,
                 GameWorldBlocksLogicControllerTask.WORLD_BLOCKS_LOGIC_UPDATE_INTERVAL_SEC);
+        mWorldLogicTimer.scheduleTask(gameWorldGrowBlocksControllerTask,
+                GameWorldGrowBlocksControllerTask.GROW_BLOCKS_UPDATE_INTERVAL_SEC,
+                GameWorldGrowBlocksControllerTask.GROW_BLOCKS_UPDATE_INTERVAL_SEC);
         mWorldLogicTimer.scheduleTask(gameWorldMobDamageControllerTask, 0,
                 GameWorldMobDamageControllerTask.ENVIRONMENTAL_MOB_DAMAGE_INTERVAL_SEC);
         mWorldLogicTimer.scheduleTask(gameWorldMobSpawnControllerTask,
@@ -131,6 +138,7 @@ public class GameProc implements Disposable {
     public void dispose() {
         mGameWorldFluidsLogicControllerTask.shutdownBlocking();
         mGameWorldBlocksLogicControllerTask.shutdownBlocking();
+        mGameWorldGrowBlocksControllerTask.shutdownBlocking();
         mGameWorldMobDamageControllerTask.shutdownBlocking();
         mGameWorldMobSpawnControllerTask.shutdownBlocking();
         mWorldLogicTimer.stop();

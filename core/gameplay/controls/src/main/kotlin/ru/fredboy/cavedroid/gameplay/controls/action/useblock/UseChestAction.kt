@@ -16,12 +16,13 @@ class UseChestAction @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
 ) : IUseBlockAction {
 
-    override fun perform(block: Block, x: Int, y: Int) {
+    override fun perform(block: Block, x: Int, y: Int): Boolean {
         // TODO: transform x
         val chest = (containerController.getContainer(x, y, Layer.FOREGROUND.z) as? Chest)
             ?: (containerController.getContainer(x, y, Layer.BACKGROUND.z) as? Chest)
-            ?: return
+            ?: return false
         gameWindowsManager.openChest(chest)
+        return true
     }
 
     companion object {

@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.domain.save.repository
 
 import ru.fredboy.cavedroid.domain.save.model.GameMapSaveData
 import ru.fredboy.cavedroid.domain.save.model.GameSaveInfo
+import ru.fredboy.cavedroid.domain.save.model.GrowBlockEntry
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
 import ru.fredboy.cavedroid.entity.drop.DropQueue
@@ -37,7 +38,13 @@ interface SaveDataRepository {
         containerController: ContainerController,
         gameWorld: GameWorld,
         projectileController: ProjectileController,
+        growBlockEntries: List<GrowBlockEntry>,
     )
+
+    fun loadGrowBlockEntries(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+    ): List<GrowBlockEntry>
 
     fun loadMap(
         gameDataFolder: String,

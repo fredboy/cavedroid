@@ -37,6 +37,8 @@ import ru.fredboy.cavedroid.game.world.GameWorldContactListener
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystemFactory
+import ru.fredboy.cavedroid.gameplay.physics.action.growblock.IGrowBlockAction
+import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldGrowBlocksControllerTask
 
 @Module
 object GameModule {
@@ -183,6 +185,31 @@ object GameModule {
 
     @Provides
     @GameScope
+    fun provideGameWorldGrowBlocksControllerTask(
+        applicationContextRepository: ApplicationContextRepository,
+        gameContextRepository: GameContextRepository,
+        saveDataRepository: SaveDataRepository,
+        gameWorld: GameWorld,
+        growBlockActions: Map<String, @JvmSuppressWildcards IGrowBlockAction>,
+    ): GameWorldGrowBlocksControllerTask {
+        val initialEntries = if (gameContextRepository.isLoadGame()) {
+            saveDataRepository.loadGrowBlockEntries(
+                gameDataFolder = applicationContextRepository.getGameDirectory(),
+                saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
+            )
+        } else {
+            emptyList()
+        }
+
+        return GameWorldGrowBlocksControllerTask(
+            gameWorld = gameWorld,
+            growBlockActions = growBlockActions,
+            initialEntries = initialEntries,
+        )
+    }
+
+    @Provides
+    @GameScope
     fun provideGameWorld(
         applicationContextRepository: ApplicationContextRepository,
         gameContextRepository: GameContextRepository,
@@ -211,6 +238,7 @@ object GameModule {
             initialForeMap = mapData?.foreMap,
             initialBackMap = mapData?.backMap,
             initialBiomes = mapData?.biomes,
+            requestedWidth = gameContextRepository.getRequestedWorldWidth(),
         ).apply {
             mapData?.let {
                 this.currentGameTime = mapData.gameTime

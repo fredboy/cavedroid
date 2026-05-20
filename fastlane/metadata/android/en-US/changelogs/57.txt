@@ -1,0 +1,8 @@
+- Improve menu localization and simplify pause menu.
+- Add scheduled-growth queue for saplings.
+- Add bone meal use action.
+- Add wheat farming, cake, and sugar cane features.
+- Introduce cake eating stages.
+- Fix tool durability loss in inventory bug.
+- Add localized names for wheat farming, cake, and sugar cane.
+- Add World Configuration menu for choosing new world size.

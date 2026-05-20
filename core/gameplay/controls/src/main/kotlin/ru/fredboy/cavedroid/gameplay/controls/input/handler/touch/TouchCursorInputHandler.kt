@@ -215,11 +215,13 @@ class TouchCursorInputHandler @Inject constructor(
                 .takeIf { !it.isNone() }
             ?: return false
 
-        return useBlockActionMap[block.params.key]?.perform(
+        val handled = useBlockActionMap[block.params.key]?.perform(
             block = block,
             x = mobController.player.selectedX,
             y = mobController.player.selectedY,
-        )?.let {
+        ) ?: false
+
+        if (handled) {
             block.params.actionSoundKey?.let { key ->
                 blockActionSoundAssetsRepository.getBlockActionSound(key)?.let { sound ->
                     soundPlayer.playSoundAtPosition(
@@ -231,8 +233,9 @@ class TouchCursorInputHandler @Inject constructor(
                     )
                 }
             }
-            true
-        } ?: false
+        }
+
+        return handled
     }
 
     override fun checkConditions(action: MouseInputAction): Boolean {
@@ -305,10 +308,7 @@ class TouchCursorInputHandler @Inject constructor(
         val worldX = touchDownCursorCoords.x + moveX.meters + (player.position.x - touchDownPlayerPos.x)
         val worldY = touchDownCursorCoords.y + moveY.meters + (player.position.y - touchDownPlayerPos.y)
 
-        // when worldX < 0, need to subtract 1 to avoid negative zero
-        val fixCycledWorld = if (worldX < 0) 1 else 0
-
-        player.cursorX = worldX - fixCycledWorld
+        player.cursorX = worldX
         player.cursorY = worldY
 
         player.headRotation = getPlayerHeadRotation(worldX, worldY)

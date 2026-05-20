@@ -29,14 +29,21 @@ class WeatherSoundController @Inject constructor(
             return
         }
 
-        val inRainBiome = gameWorld.getBiomeAt(mobController.player.mapX) == Biome.PLAINS
-        val intensity = if (inRainBiome) gameWorld.weatherIntensity else 0f
+        val player = mobController.player
+        val inRainBiome = gameWorld.getBiomeAt(player.mapX) == Biome.PLAINS
+        val depthFactor = depthFactor(player.middleMapY)
+        val intensity = if (inRainBiome) gameWorld.weatherIntensity * depthFactor else 0f
 
         if (intensity > 0f) {
             playRain(intensity)
         } else {
             stopRain()
         }
+    }
+
+    private fun depthFactor(playerMapY: Int): Float {
+        val depth = playerMapY - gameWorld.generatorConfig.seaLevel
+        return (1f - depth.toFloat() / DEPTH_FADE_BLOCKS).coerceIn(0f, 1f)
     }
 
     private fun playRain(intensity: Float) {
@@ -61,5 +68,6 @@ class WeatherSoundController @Inject constructor(
 
     companion object {
         private const val MAX_VOLUME = 0.5f
+        private const val DEPTH_FADE_BLOCKS = 24f
     }
 }

@@ -47,7 +47,11 @@ class StatsMenuViewModel(
         viewModelScope.launch(ioDispatcher) {
             val rendered = TrackedLeaderboards.ALL.map { entry ->
                 val rank = cloudStatsSync.getLeaderboardEntry(entry.name)?.rank
-                val rankStr = if (rank != null) "#${rank + 1}" else getLocalizedString("statsLeaderboardUnranked", fallback = "-")
+                val rankStr = if (rank != null) {
+                    "#$rank"
+                } else {
+                    getLocalizedString("statsLeaderboardUnranked", fallback = "-")
+                }
                 "${getLocalizedString(entry.labelKey, fallback = entry.name)}: $rankStr"
             }
             leaderboardLines.value = rendered

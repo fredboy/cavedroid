@@ -24,7 +24,7 @@ class NoticeMenuViewModel(
             val notices = withContext(ioDispatcher) {
                 Gdx.files.internal("notices.txt").readString()
             }
-            emit(notices)
+            emit("${getLocalizedString("noticesPreamble")}\n\n$notices")
         }
 
     val stateFlow: StateFlow<NoticeMenuState> = noticesFlow

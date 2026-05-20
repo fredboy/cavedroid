@@ -11,6 +11,8 @@ interface GameContextRepository {
 
     fun getWorldName(): String
 
+    fun getRequestedWorldWidth(): Int?
+
     fun isLoadGame(): Boolean
 
     fun shouldShowInfo(): Boolean

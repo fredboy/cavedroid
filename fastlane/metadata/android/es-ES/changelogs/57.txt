@@ -1,0 +1,8 @@
+- Mejora la localización del menú y simplifica el menú de pausa.
+- Añade cola de crecimiento programada para plántulas.
+- Añade la acción de uso de harina de hueso.
+- Incluye agricultura de trigo, pastel y caña de azúcar.
+- Introduce etapas para comer pastel.
+- Corrige el problema de pérdida de durabilidad de herramientas en el inventario.
+- Añade nombres localizados para agricultura de trigo, pastel y caña de azúcar.
+- Añade menú de Configuración del Mundo para elegir el nuevo tamaño del mundo.

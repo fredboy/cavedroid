@@ -14,8 +14,9 @@ class UseTrapdoorClosedAction @Inject constructor(
     private val itemsRepository: ItemsRepository,
 ) : IUseBlockAction {
 
-    override fun perform(block: Block, x: Int, y: Int) {
+    override fun perform(block: Block, x: Int, y: Int): Boolean {
         gameWorld.setForeMap(x, y, itemsRepository.getBlockByKey("trapdoor_wood_open"))
+        return true
     }
 
     companion object {

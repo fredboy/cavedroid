@@ -1,0 +1,8 @@
+- Melhore a localização do menu e simplifique o menu de pausa.
+- Adicione fila de crescimento programado para mudas.
+- Adicione a ação de uso de farinha de osso.
+- Inclua cultivo de trigo, bolo e cana-de-açúcar.
+- Introduza etapas para comer bolo.
+- Corrija o problema de perda de durabilidade de ferramentas no inventário.
+- Adicione nomes localizados para cultivo de trigo, bolo e cana-de-açúcar.
+- Adicione o menu de Configuração do Mundo para escolher o novo tamanho do mundo.

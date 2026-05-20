@@ -23,6 +23,9 @@ class GameContextStore @Inject constructor(
     val worldName: String
         get() = gameContext.worldName
 
+    val requestedWorldWidth: Int?
+        get() = gameContext.requestedWorldWidth
+
     var showInfo: Boolean
         get() = synchronized(lock) { gameContext.showInfo }
         set(value) = synchronized(lock) { gameContext.showInfo = value }

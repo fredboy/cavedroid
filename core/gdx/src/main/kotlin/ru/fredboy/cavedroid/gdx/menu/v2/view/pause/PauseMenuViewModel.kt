@@ -17,10 +17,6 @@ class PauseMenuViewModel(
         applicationController.resumeGame()
     }
 
-    fun onSaveClick() {
-        applicationController.saveGame()
-    }
-
     fun onSettingsClick() {
         navBackStack.push(SettingsMenuNavKey)
     }
