@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.gdx.game
 
+import co.touchlab.kermit.Logger
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.model.Joystick
@@ -61,9 +62,14 @@ class GameScreen @Inject constructor(
     }
 
     private fun resetGameComponent() {
-        gameComponent?.deathScreen?.dispose()
-        gameComponent?.gameProc?.dispose()
-        gameComponent = null
+        try {
+            gameComponent?.deathScreen?.dispose()
+            gameComponent?.gameProc?.dispose()
+        } catch (e: Exception) {
+            logger.w(e) { "Recover faulty gameComponent" }
+        } finally {
+            gameComponent = null
+        }
     }
 
     fun respawnPlayer() {
@@ -137,5 +143,9 @@ class GameScreen @Inject constructor(
 
     override fun onDispose() {
         resetGameComponent()
+    }
+
+    companion object {
+        private val logger = Logger.withTag("GameScreen")
     }
 }
