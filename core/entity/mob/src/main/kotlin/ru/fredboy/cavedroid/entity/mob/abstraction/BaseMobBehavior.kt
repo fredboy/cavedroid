@@ -1,6 +1,10 @@
 package ru.fredboy.cavedroid.entity.mob.abstraction
 
+import ru.fredboy.cavedroid.common.utils.PIXELS_PER_METER
+import ru.fredboy.cavedroid.common.utils.floor
 import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
+import ru.fredboy.cavedroid.common.utils.meters
+import ru.fredboy.cavedroid.common.utils.pixels
 import ru.fredboy.cavedroid.entity.mob.model.Direction
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import kotlin.reflect.KClass
@@ -36,7 +40,11 @@ abstract class BaseMobBehavior<MOB : Mob>(
 
     protected fun MOB.checkAutojumpObstacle(worldAdapter: MobWorldAdapter): Boolean {
         val targetHitbox = hitbox.apply {
-            x += Direction.fromVector(controlVector).basis
+            val dir = Direction.fromVector(controlVector)
+            x = ((x + width / 2f) + dir.basis).floor + when (dir) {
+                Direction.LEFT -> (PIXELS_PER_METER - 1).meters
+                Direction.RIGHT -> 1f.meters
+            } - width / 2f
             y -= 1f
         }
 
