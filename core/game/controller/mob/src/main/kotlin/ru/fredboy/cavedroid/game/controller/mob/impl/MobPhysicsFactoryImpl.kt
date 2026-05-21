@@ -150,18 +150,18 @@ class MobPhysicsFactoryImpl @Inject constructor(
     private fun Body.createAutoJumpSensor(height: Float) {
         val sensorShapeR = PolygonShape().apply {
             setAsBox(
-                0.5f,
+                0.4f,
                 0.125f,
-                Vector2(0.5f, height / 2 - 0.8f),
+                Vector2(0.4f, height / 2 - 0.8f),
                 0f,
             )
         }
 
         val sensorShapeL = PolygonShape().apply {
             setAsBox(
-                0.5f,
+                0.4f,
                 0.125f,
-                Vector2(-0.5f, height / 2 - 0.8f),
+                Vector2(-0.4f, height / 2 - 0.8f),
                 0f,
             )
         }
