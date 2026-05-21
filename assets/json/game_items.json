@@ -2325,9 +2325,20 @@
             "type": "exact_amount",
             "amount": 1
           }
+        },
+        {
+          "key": "wheat_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_range",
+            "min": 1,
+            "max": 3,
+            "chance": 1
+          }
         }
       ],
-      "material": "grass"
+      "material": "grass",
+      "drop_single": false
     },
     "hay_block": {
       "hp": 9,
@@ -2347,10 +2358,11 @@
     },
     "cake_0": {
       "collision": false,
+      "background": true,
       "transparent": true,
       "block_required": true,
       "texture": "cake",
-      "hp": 2,
+      "hp": 30,
       "drop_info": [],
       "material": "grass",
       "sprite_top": 8,
@@ -2359,10 +2371,11 @@
     },
     "cake_1": {
       "collision": false,
+      "background": true,
       "transparent": true,
       "block_required": true,
       "texture": "cake",
-      "hp": 2,
+      "hp": 30,
       "drop_info": [],
       "material": "grass",
       "sprite_top": 8,
@@ -2371,10 +2384,11 @@
     },
     "cake_2": {
       "collision": false,
+      "background": true,
       "transparent": true,
       "block_required": true,
       "texture": "cake",
-      "hp": 2,
+      "hp": 30,
       "drop_info": [],
       "material": "grass",
       "sprite_top": 8,
@@ -2383,10 +2397,11 @@
     },
     "cake_3": {
       "collision": false,
+      "background": true,
       "transparent": true,
       "block_required": true,
       "texture": "cake",
-      "hp": 2,
+      "hp": 30,
       "drop_info": [],
       "material": "grass",
       "sprite_top": 8,
@@ -2395,10 +2410,11 @@
     },
     "cake_4": {
       "collision": false,
+      "background": true,
       "transparent": true,
       "block_required": true,
       "texture": "cake",
-      "hp": 2,
+      "hp": 30,
       "drop_info": [],
       "material": "grass",
       "sprite_top": 8,
@@ -2407,10 +2423,11 @@
     },
     "cake_5": {
       "collision": false,
+      "background": true,
       "transparent": true,
       "block_required": true,
       "texture": "cake",
-      "hp": 2,
+      "hp": 30,
       "drop_info": [],
       "material": "grass",
       "sprite_top": 8,
@@ -2419,10 +2436,11 @@
     },
     "cake_6": {
       "collision": false,
+      "background": true,
       "transparent": true,
       "block_required": true,
       "texture": "cake",
-      "hp": 2,
+      "hp": 30,
       "drop_info": [],
       "material": "grass",
       "sprite_top": 8,
