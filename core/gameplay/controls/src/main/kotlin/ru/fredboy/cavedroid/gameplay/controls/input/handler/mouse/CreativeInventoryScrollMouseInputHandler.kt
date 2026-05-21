@@ -10,8 +10,8 @@ import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepositor
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
-import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindowWithCraftGrid
-import ru.fredboy.cavedroid.game.window.inventory.CreativeInventoryWindow
+import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindowWithScroll
+import ru.fredboy.cavedroid.game.window.inventory.CreativeInventoryTabsWindow
 import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
@@ -34,9 +34,10 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
     private var dragStartY = 0f
 
     override fun checkConditions(action: MouseInputAction): Boolean {
-        val recipeBookActive = (gameWindowsManager.currentWindow as? AbstractInventoryWindowWithCraftGrid)
-            ?.recipeBookActive ?: false
-        return gameWindowsManager.currentWindowType == GameWindowType.CREATIVE_INVENTORY &&
+        return (
+            gameWindowsManager.currentWindowType == GameWindowType.CREATIVE_INVENTORY ||
+                ((gameWindowsManager.currentWindow as? CreativeInventoryTabsWindow)?.selectedTab?.isInventory == false)
+            ) &&
             (
                 gameWindowsManager.isDragging ||
                     Rectangle(
@@ -85,7 +86,7 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
             MathUtils.clamp(
                 /* value = */ gameWindowsManager.creativeScrollAmount,
                 /* min = */ 0,
-                /* max = */ (gameWindowsManager.currentWindow as CreativeInventoryWindow).getMaxScroll(itemsRepository),
+                /* max = */ (gameWindowsManager.currentWindow as AbstractInventoryWindowWithScroll).getMaxScroll(),
             )
     }
 

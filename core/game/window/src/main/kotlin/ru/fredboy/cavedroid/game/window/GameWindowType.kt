@@ -7,4 +7,5 @@ enum class GameWindowType {
     CHEST,
     CRAFTING_TABLE,
     FURNACE,
+    CREATIVE_INVENTORY_TABS,
 }

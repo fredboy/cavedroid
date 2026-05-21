@@ -82,9 +82,9 @@ class WearingArmor(
     }
 
     companion object {
-        private const val HELMET_INDEX = 0
-        private const val CHESTPLATE_INDEX = 1
-        private const val LEGGINGS_INDEX = 2
-        private const val BOOTS_INDEX = 3
+        const val HELMET_INDEX = 0
+        const val CHESTPLATE_INDEX = 1
+        const val LEGGINGS_INDEX = 2
+        const val BOOTS_INDEX = 3
     }
 }

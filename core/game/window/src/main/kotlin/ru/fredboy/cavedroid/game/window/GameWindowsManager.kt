@@ -11,6 +11,7 @@ import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindow
 import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindowWithCraftGrid
 import ru.fredboy.cavedroid.game.window.inventory.ChestInventoryWindow
 import ru.fredboy.cavedroid.game.window.inventory.CraftingInventoryWindow
+import ru.fredboy.cavedroid.game.window.inventory.CreativeInventoryTabsWindow
 import ru.fredboy.cavedroid.game.window.inventory.CreativeInventoryWindow
 import ru.fredboy.cavedroid.game.window.inventory.FurnaceInventoryWindow
 import ru.fredboy.cavedroid.game.window.inventory.SurvivalInventoryWindow
@@ -37,7 +38,11 @@ class GameWindowsManager @Inject constructor(
     }
 
     fun openCreativeInventory() {
-        currentWindow = CreativeInventoryWindow()
+        currentWindow = CreativeInventoryWindow(itemsRepository)
+    }
+
+    fun openCreativeTabsInventory() {
+        currentWindow = CreativeInventoryTabsWindow(itemsRepository)
     }
 
     fun openFurnace(furnace: Furnace) {
