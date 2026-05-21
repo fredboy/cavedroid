@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -10,6 +11,7 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
+import kotlin.time.Duration.Companion.milliseconds
 
 class DeleteWorldMenuViewModel(
     private val saveDataRepository: SaveDataRepository,
@@ -38,6 +40,7 @@ class DeleteWorldMenuViewModel(
                     saveDir = saveDirectory,
                 )
 
+                delay(100.milliseconds)
                 withContext(backgroundDispatcher) {
                     navBackStack.pop()
                 }
