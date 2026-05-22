@@ -1,0 +1,5 @@
+- Fixed player jump issues when running into closed doors.
+- Added a new creative inventory with categorized tabs for easier access.
+- Introduced cake placement anywhere in the world.
+- Improved touch controls by rearranging buttons and allowing stack splitting on screen.
+- Resolved text flickering in the single player menu.

@@ -1,0 +1,5 @@
+- Se solucionaron problemas de salto del jugador al chocar con puertas cerradas.
+- Se agregó un nuevo inventario creativo con pestañas categorizadas para un acceso más fácil.
+- Se puede colocar pastel en cualquier parte del mundo.
+- Se mejoraron los controles táctiles reorganizando botones y permitiendo dividir pilas en pantalla.
+- Se resolvió el parpadeo de texto en el menú de un jugador.
