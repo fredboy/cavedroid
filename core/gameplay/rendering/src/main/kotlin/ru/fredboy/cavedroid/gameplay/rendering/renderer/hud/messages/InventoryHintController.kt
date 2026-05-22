@@ -37,6 +37,10 @@ class InventoryHintController @Inject constructor(
         fadeElapsedSec = 0f
     }
 
+    override fun notifyItemHeld() {
+        // TODO
+    }
+
     companion object {
         private const val FADE_DURATION_SEC = 2f
     }

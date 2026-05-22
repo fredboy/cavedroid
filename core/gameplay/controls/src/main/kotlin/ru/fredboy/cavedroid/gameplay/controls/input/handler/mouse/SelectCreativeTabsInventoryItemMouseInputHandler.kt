@@ -22,6 +22,7 @@ import ru.fredboy.cavedroid.game.window.GameWindowsConfigs.CreativeTabs
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.window.inventory.CreativeInventoryTabsWindow
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
+import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.annotation.BindMouseInputHandler
 import javax.inject.Inject
 
@@ -38,6 +39,7 @@ class SelectCreativeTabsInventoryItemMouseInputHandler @Inject constructor(
     inventoryHintEvents: InventoryHintEvents,
     statsRepository: StatsRepository,
 ) : AbstractInventoryItemsMouseInputHandler(
+    applicationContextRepository = applicationContextRepository,
     gameContextRepository = gameContextRepository,
     itemsRepository = itemsRepository,
     gameWindowsManager = gameWindowsManager,
@@ -71,8 +73,9 @@ class SelectCreativeTabsInventoryItemMouseInputHandler @Inject constructor(
         return super.checkConditions(action) &&
             !(
                 applicationContextRepository.isTouch() &&
-                    (gameWindowsManager.isDragging || !action.actionKey.touchUp) &&
-                    (gameWindowsManager.currentWindow as? CreativeInventoryTabsWindow)?.selectedTab?.isInventory != true
+                    (gameWindowsManager.currentWindow as? CreativeInventoryTabsWindow)
+                        ?.selectedTab?.isInventory != true &&
+                    (action.actionKey is MouseInputActionKey.Dragged || !action.actionKey.touchUp)
                 )
     }
 
