@@ -1,0 +1,2 @@
+- Fixed cursor behavior for smoother gameplay.
+- Minor improvements and bug fixes.
