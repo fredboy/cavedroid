@@ -91,7 +91,7 @@ Below is the raw git commit log for release ${tag} (previous tag: ${prev_tag:-(n
 
 Output English-only markdown. Group items by category (New Features / Improvements / Fixes — omit empty groups) using #### subheaders, with markdown bullet lists under each. Do not include any top-level (##) language section heading.
 
-End the body with an italicised \"Full commit log:\" line linking to the GitHub compare view between ${prev_tag:-(none)} and ${tag} (omit if there is no previous tag).
+NEVER end the body with an italicised \"Full commit log:\" line linking to the GitHub compare view between ${prev_tag:-(none)} and ${tag} (omit if there is no previous tag).
 
 Commits:
 ${commits}"

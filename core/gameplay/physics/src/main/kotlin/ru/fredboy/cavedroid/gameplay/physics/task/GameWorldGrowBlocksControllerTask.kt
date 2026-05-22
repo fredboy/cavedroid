@@ -21,7 +21,7 @@ class GameWorldGrowBlocksControllerTask(
 
     private var currentTick = 0L
 
-    private val queue = PriorityQueue<Entry>(compareBy(Entry::dueTick))
+    private val queue = PriorityQueue<Entry>(16, compareBy(Entry::dueTick))
 
     private val pending = HashMap<Long, Entry>()
 

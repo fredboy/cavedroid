@@ -1,0 +1,3 @@
+- Se solucionó un error de duplicación ocasional en la cuadrícula de creación 
+- Se mejoró el desplazamiento en las pestañas creativas 
+- Se mejoró el renderizado de las pistas de introducción 

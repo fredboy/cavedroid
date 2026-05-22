@@ -70,7 +70,12 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         pointer: Int,
     ) {
         cancelHold()
-        onCancelHold = { window.onLeftCLick(items, itemsRepository, index, pointer) }
+        onCancelHold = {
+            window.onLeftCLick(items, itemsRepository, index, pointer)
+            if (window is AbstractInventoryWindowWithCraftGrid) {
+                updateCraftResult(window)
+            }
+        }
         holdingPointer = pointer
         selectableCellHoldTask = object : Timer.Task() {
             override fun run() {

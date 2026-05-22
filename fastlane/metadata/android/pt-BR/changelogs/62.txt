@@ -1,0 +1,3 @@
+- Corrigido um erro de duplicação ocasional na grade de criação 
+- Aprimorado o rolar nas guias criativas 
+- Melhorado o renderização das dicas de introdução 

@@ -64,9 +64,9 @@ class TouchInventoryHintRenderer @Inject constructor(
     }
 
     companion object {
-        private const val RENDER_LAYER = 100610
+        private const val RENDER_LAYER = 100810
         private val HINT_KEYS = listOf("touchInventoryHint", "touchInventoryStackSplitHint")
-        private const val BOTTOM_MARGIN = 4f
+        private const val BOTTOM_MARGIN = 8f
         private const val LINE_SPACING = 4f
     }
 }

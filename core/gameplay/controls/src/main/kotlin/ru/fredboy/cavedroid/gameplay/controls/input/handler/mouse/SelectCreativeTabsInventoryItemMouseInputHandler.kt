@@ -74,8 +74,12 @@ class SelectCreativeTabsInventoryItemMouseInputHandler @Inject constructor(
             !(
                 applicationContextRepository.isTouch() &&
                     (gameWindowsManager.currentWindow as? CreativeInventoryTabsWindow)
-                        ?.selectedTab?.isInventory != true &&
-                    (action.actionKey is MouseInputActionKey.Dragged || !action.actionKey.touchUp)
+                        ?.selectedTab?.isInventory == false &&
+                    (
+                        action.actionKey is MouseInputActionKey.Dragged ||
+                            gameWindowsManager.isDragging ||
+                            !action.actionKey.touchUp
+                        )
                 )
     }
 

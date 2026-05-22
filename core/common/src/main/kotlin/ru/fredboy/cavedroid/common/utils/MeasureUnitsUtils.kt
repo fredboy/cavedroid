@@ -20,3 +20,23 @@ val Float.floor get() = floor(this)
 val Float.ceil get() = ceil(this)
 
 val Int.scaleToViewport: Float get() = this.toFloat() / DEFAULT_VIEWPORT_WIDTH
+
+infix fun Int.floorDiv(y: Int): Int {
+    val x = this
+    var r = x / y
+    // if the signs are different and modulo not zero, round down
+    if ((x xor y) < 0 && (r * y != x)) {
+        r--
+    }
+    return r
+}
+
+infix fun Int.floorMod(y: Int): Int {
+    val x = this
+    var mod = x % y
+    // if the signs are different and modulo not zero, adjust result
+    if ((mod xor y) < 0 && mod != 0) {
+        mod += y
+    }
+    return mod
+}

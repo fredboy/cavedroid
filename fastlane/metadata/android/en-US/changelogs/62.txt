@@ -1,0 +1,3 @@
+- Fixed an occasional duplication glitch in the crafting grid 
+- Improved scrolling in creative tabs 
+- Enhanced rendering of onboarding hints 

@@ -77,6 +77,8 @@ val generatePlist by tasks.registering {
                     </array>
                     <key>CFBundleIconName</key>
                     <string>AppIcon</string>
+                    <key>UILaunchScreen</key>
+                    <dict/>
                 </dict>
                 </plist>
             """.trimIndent(),
@@ -132,5 +134,5 @@ tasks.assemble.apply {
 }
 
 robovm {
-    isIosSkipSigning = true
+    isIosSkipSigning = false
 }
