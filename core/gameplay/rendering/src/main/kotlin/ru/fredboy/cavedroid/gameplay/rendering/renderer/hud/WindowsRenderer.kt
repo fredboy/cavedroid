@@ -46,6 +46,6 @@ class WindowsRenderer @Inject constructor(
         private const val TAG = "WindowsRenderer"
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
-        const val RENDER_LAYER = 100600
+        const val RENDER_LAYER = 100800
     }
 }

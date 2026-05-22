@@ -66,7 +66,7 @@ class OnboardingOverlayRenderer @Inject constructor(
     }
 
     companion object {
-        private const val RENDER_LAYER = 100550
+        private const val RENDER_LAYER = 100700
         private const val MAX_TICK_DELTA = 0.1f
         private const val DIM_ALPHA = 0.4f
         private const val TIP_Y_DIVISOR = 3f

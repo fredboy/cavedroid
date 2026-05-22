@@ -94,7 +94,7 @@ class TouchControlsRenderer @Inject constructor(
     }
 
     companion object {
-        private const val RENDER_LAYER = 100700
+        private const val RENDER_LAYER = 100600
 
         private const val SHADE_KEY = "shade"
     }
