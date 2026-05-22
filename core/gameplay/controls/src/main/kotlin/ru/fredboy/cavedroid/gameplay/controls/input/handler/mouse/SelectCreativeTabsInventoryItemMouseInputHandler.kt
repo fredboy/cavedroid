@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.api.InventoryHintEvents
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -33,6 +34,7 @@ class SelectCreativeTabsInventoryItemMouseInputHandler @Inject constructor(
     private val mobController: MobController,
     private val textureRegions: GetTextureRegionByNameUseCase,
     private val itemsRepository: ItemsRepository,
+    private val tooltipManager: TooltipManager,
     inventoryHintEvents: InventoryHintEvents,
     statsRepository: StatsRepository,
 ) : AbstractInventoryItemsMouseInputHandler(
@@ -59,10 +61,9 @@ class SelectCreativeTabsInventoryItemMouseInputHandler @Inject constructor(
             0f,
             0f,
             windowTexture.regionWidth.toFloat(),
-            windowTexture.regionHeight.toFloat(),
+            windowTexture.regionHeight.toFloat() + selectedTabTexture.regionHeight,
         ).apply {
             setCenter(viewport.getCenter(Vector2()))
-            height += selectedTabTexture.regionHeight
         }
     }
 
@@ -90,6 +91,7 @@ class SelectCreativeTabsInventoryItemMouseInputHandler @Inject constructor(
         if (applicationContextRepository.isTouch()) {
             val item = items[itemIndex].item
             mobController.player.inventory.addItem(item)
+            tooltipManager.showHotbarTooltip(item.params.name)
         } else {
             handleInsidePlaceableCell(
                 action = action,
@@ -134,7 +136,8 @@ class SelectCreativeTabsInventoryItemMouseInputHandler @Inject constructor(
         val window = gameWindowsManager.currentWindow as CreativeInventoryTabsWindow
 
         val windowX = gameContextRepository.getCameraContext().viewport.width / 2 - windowTexture.regionWidth / 2
-        val windowY = gameContextRepository.getCameraContext().viewport.height / 2 - windowTexture.regionHeight / 2
+        val windowY = gameContextRepository.getCameraContext().viewport.height / 2 -
+            (windowTexture.regionHeight + selectedTabTexture.regionHeight) / 2
 
         val xOnWindow = action.screenX - windowX
         val yOnWindow = action.screenY - windowY

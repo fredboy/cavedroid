@@ -114,7 +114,7 @@ class CreativeTabsWindowRenderer @Inject constructor(
         val window = gameWindowsManager.currentWindow as CreativeInventoryTabsWindow
 
         val windowX = viewport.width / 2 - windowTexture.regionWidth / 2
-        val windowY = viewport.height / 2 - windowTexture.regionHeight / 2
+        val windowY = viewport.height / 2 - (windowTexture.regionHeight + selectedTabTexture.regionHeight) / 2
 
         val oneScrollAmount = GameWindowsConfigs.CreativeTabs.scrollIndicatorFullHeight / window.getMaxScroll()
 
@@ -175,7 +175,7 @@ class CreativeTabsWindowRenderer @Inject constructor(
         val windowTexture = currentTabInfo.windowTexture
 
         val windowX = viewport.width / 2 - windowTexture.regionWidth / 2
-        val windowY = viewport.height / 2 - windowTexture.regionHeight / 2
+        val windowY = viewport.height / 2 - (windowTexture.regionHeight + selectedTabTexture.regionHeight) / 2
 
         spriteBatch.draw(windowTexture, windowX, windowY)
         drawPlayerPortrait(spriteBatch, windowX, windowY)
@@ -275,7 +275,7 @@ class CreativeTabsWindowRenderer @Inject constructor(
         val window = gameWindowsManager.currentWindow as CreativeInventoryTabsWindow
 
         val windowX = viewport.width / 2 - windowTexture.regionWidth / 2
-        val windowY = viewport.height / 2 - windowTexture.regionHeight / 2
+        val windowY = viewport.height / 2 - (windowTexture.regionHeight + selectedTabTexture.regionHeight) / 2
 
         CreativeInventoryTabsWindow.Tab.entries.forEachIndexed { index, tab ->
             val info = tabs[tab] ?: return@forEachIndexed

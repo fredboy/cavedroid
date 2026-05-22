@@ -66,7 +66,7 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
             0f,
             0f,
             recipeBookWidth + windowTexture.regionWidth.toFloat(),
-            max(windowTexture.regionHeight.toFloat(), recipeBookHeight),
+            max(windowTexture.regionHeight.toFloat() + extraHeight, recipeBookHeight),
         ).apply {
             if (window?.recipeBookActive != true) {
                 setCenter(viewport.getCenter(Vector2()))
@@ -74,7 +74,6 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
                 x = viewport.width / 2f - recipeBookWidth
                 y = viewport.height / 2f - height / 2f
             }
-            height += extraHeight
         }
     }
 
