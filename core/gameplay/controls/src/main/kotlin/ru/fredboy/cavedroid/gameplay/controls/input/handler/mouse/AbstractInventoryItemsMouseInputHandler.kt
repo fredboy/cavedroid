@@ -31,6 +31,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
 
     private var selectableCellHoldTask: Timer.Task? = null
     private var holdingPointer: Int = -1
+    private var onCancelHold: (() -> Unit)? = null
 
     protected abstract val windowTexture: TextureRegion
 
@@ -40,6 +41,8 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         selectableCellHoldTask?.cancel()
         selectableCellHoldTask = null
         holdingPointer = -1
+        onCancelHold?.invoke()
+        onCancelHold = null
     }
 
     private fun handleHold(
@@ -48,6 +51,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         index: Int,
         pointer: Int,
     ) {
+        onCancelHold = null
         cancelHold()
 
         if (!window.selectedItem.isNoneOrNull()) {
@@ -66,6 +70,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         pointer: Int,
     ) {
         cancelHold()
+        onCancelHold = { window.onLeftCLick(items, itemsRepository, index, pointer) }
         holdingPointer = pointer
         selectableCellHoldTask = object : Timer.Task() {
             override fun run() {
@@ -122,7 +127,6 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         if (action.actionKey is MouseInputActionKey.Dragged) {
             if (action.actionKey.pointer == holdingPointer) {
                 cancelHold()
-                window.onLeftCLick(items, itemsRepository, index, action.actionKey.pointer)
             }
         } else if (action.actionKey is MouseInputActionKey.Screen) {
             if (!action.actionKey.touchUp && window.selectedItem.isNoneOrNull()) {
@@ -150,6 +154,10 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         window: AbstractInventoryWindow,
         index: Int,
     ) {
+        if (action.actionKey is MouseInputActionKey.Dragged) {
+            return
+        }
+
         val selectedItem = window.selectedItem
 
         if (items[index].isNoneOrNull() ||
