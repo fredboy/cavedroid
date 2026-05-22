@@ -1,0 +1,2 @@
+- Corrigimos os controles do inventário no modo de sobrevivência para uma experiência mais fluida.
+- Melhorias e correções de bugs menores.
