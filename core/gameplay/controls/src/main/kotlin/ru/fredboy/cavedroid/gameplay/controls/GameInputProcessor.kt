@@ -34,6 +34,7 @@ class GameInputProcessor @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
 ) : InputProcessor {
 
+    private var dragging = false
     private var touchDownX = 0f
     private var touchDownY = 0f
 
@@ -88,14 +89,17 @@ class GameInputProcessor @Inject constructor(
                 )
             }
 
-            val touchedKey: TouchButton = pointerToTouchedKey[pointer] ?: getTouchedKey(touchX, touchY)
+            val touchedKey = pointerToTouchedKey[pointer]
+                ?: dragging.ifFalse { getTouchedKey(touchX, touchY) }
 
-            return (touchedKey.isMouse).ifFalse {
-                keyUp(touchedKey.code).takeIf { it }
+            return touchedKey?.let {
+                (touchedKey.isMouse).ifFalse {
+                    keyUp(touchedKey.code).takeIf { it }
+                }
             } ?: onMouseActionEvent(
                 mouseX = screenX,
                 mouseY = screenY,
-                button = touchedKey.takeIf { it.isMouse }?.code ?: nullButton.code,
+                button = touchedKey.takeIf { it?.isMouse == true }?.code ?: nullButton.code,
                 touchUp = true,
                 pointer = pointer,
             )
@@ -120,7 +124,8 @@ class GameInputProcessor @Inject constructor(
         }
 
         val touchedKey = getTouchedKey(touchX, touchY)
-        if (pointerToTouchedKey[pointer]?.code != touchedKey.code) {
+        val keyPointer = pointerToTouchedKey[pointer]
+        if (!dragging && keyPointer != null && keyPointer.code != touchedKey.code) {
             pointerToTouchedKey.remove(pointer)?.let { key ->
                 return if (!key.isMouse) {
                     keyUp(key.code)
@@ -136,6 +141,7 @@ class GameInputProcessor @Inject constructor(
             }
         }
 
+        dragging = true
         val action = mouseInputActionMapper.mapDragged(
             mouseX = screenX.toFloat(),
             mouseY = screenY.toFloat(),
