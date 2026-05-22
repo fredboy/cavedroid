@@ -19,7 +19,7 @@ class UseCakeAction @Inject constructor(
     override fun perform(item: Item.Usable, x: Int, y: Int): Boolean {
         val cake = getBlockByKeyUseCase["cake_0"]
 
-        if (gameWorld.canPlaceToForeground(x, y, cake) && gameWorld.getForeMap(x, y + 1).params.hasCollision) {
+        if (gameWorld.canPlaceToForeground(x, y, cake)) {
             gameWorld.placeToForeground(x, y, cake)
             mobController.player.decreaseCurrentItemCount()
             return true
