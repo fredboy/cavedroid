@@ -33,14 +33,16 @@ class DeleteWorldMenuViewModel(
 
     fun onConfirmClick() {
         viewModelScope.launch {
+            delay(100.milliseconds)
             _stateFlow.emit(DeleteWorldMenuState.Deleting)
+        }
+        viewModelScope.launch {
             withContext(ioDispatcher) {
                 saveDataRepository.deleteSave(
                     gameDataFolder = applicationContextRepository.getGameDirectory(),
                     saveDir = saveDirectory,
                 )
 
-                delay(100.milliseconds)
                 withContext(backgroundDispatcher) {
                     navBackStack.pop()
                 }

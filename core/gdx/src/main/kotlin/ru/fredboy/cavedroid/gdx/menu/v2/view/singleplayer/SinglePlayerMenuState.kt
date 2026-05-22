@@ -10,5 +10,6 @@ sealed interface SinglePlayerMenuState {
 
     data class ShowList(
         val saves: List<SaveInfoVo>,
+        val showMessageIfEmpty: Boolean = true,
     ) : SinglePlayerMenuState
 }

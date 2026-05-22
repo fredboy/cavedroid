@@ -2,7 +2,6 @@ package ru.fredboy.cavedroid.gdx.menu.v2.view.singleplayer
 
 import co.touchlab.kermit.Logger
 import com.badlogic.gdx.graphics.Texture
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +23,6 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
 import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.DeleteWorldMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.newgame.NewGameMenuNavKey
-import kotlin.time.Duration.Companion.milliseconds
 
 class SinglePlayerMenuViewModel(
     private val applicationContextRepository: ApplicationContextRepository,
@@ -50,8 +48,7 @@ class SinglePlayerMenuViewModel(
             }
 
             flow {
-                emit(SinglePlayerMenuState.LoadingList)
-                delay(100.milliseconds)
+//                emit(SinglePlayerMenuState.LoadingList)
 
                 val appDir = applicationContextRepository.getGameDirectory()
                 val saves = withContext(ioDispatcher) {
@@ -88,7 +85,7 @@ class SinglePlayerMenuViewModel(
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = SinglePlayerMenuState.LoadingList,
+            initialValue = SinglePlayerMenuState.ShowList(emptyList(), false),
         )
 
     fun onNewGameClick() {

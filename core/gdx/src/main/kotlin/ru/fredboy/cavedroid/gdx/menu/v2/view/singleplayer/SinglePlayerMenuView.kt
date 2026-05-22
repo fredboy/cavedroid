@@ -16,6 +16,7 @@ import ktx.scene2d.scrollPane
 import ktx.scene2d.table
 import ktx.scene2d.textButton
 import ru.fredboy.cavedroid.common.CaveDroidConstants.MAX_SAVES_COUNT
+import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 
 @Scene2dDsl
@@ -60,7 +61,9 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
                         )
 
                         row()
-                    } ?: label(viewModel.getLocalizedString("noWorlds"))
+                    } ?: ifTrue(state.showMessageIfEmpty) {
+                        label(viewModel.getLocalizedString("noWorlds"))
+                    }
                 }
             }.also { pane ->
                 setScrollFocus(pane)
