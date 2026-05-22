@@ -1,0 +1,2 @@
+- Die Steuerung des Überlebensinventars wurde verbessert für ein besseres Spielerlebnis.
+- Kleinere Verbesserungen und Bugfixes.

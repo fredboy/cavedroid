@@ -67,8 +67,7 @@ abstract class AbstractInventoryWindow {
 
         if (selectedItem == null ||
             (!clickedItem.isNoneOrNull() && selectedItem.item != clickedItem.item) ||
-            !clickedItem.canBeAdded() ||
-            pointer != selectItemPointer
+            !clickedItem.canBeAdded()
         ) {
             return
         }

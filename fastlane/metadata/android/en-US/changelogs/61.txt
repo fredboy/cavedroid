@@ -1,0 +1,2 @@
+- Fixed survival inventory controls for a smoother experience.
+- Minor improvements and bug fixes.

@@ -1,0 +1,2 @@
+- Se corrigieron los controles del inventario en el modo de supervivencia para una mejor experiencia.
+- Mejoras menores y correcciones de errores.
