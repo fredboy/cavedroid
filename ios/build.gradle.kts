@@ -134,5 +134,5 @@ tasks.assemble.apply {
 }
 
 robovm {
-    isIosSkipSigning = true
+    isIosSkipSigning = false
 }
