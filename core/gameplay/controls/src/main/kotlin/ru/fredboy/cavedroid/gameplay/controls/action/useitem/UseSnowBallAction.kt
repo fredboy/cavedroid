@@ -23,7 +23,7 @@ class UseSnowBallAction @Inject constructor(
                 damage = 1,
                 width = 0.5f,
                 height = 0.5f,
-                dropOnGround = true,
+                dropOnGround = false,
             ),
             x = mobController.player.position.x + mobController.player.direction.basis,
             y = mobController.player.position.y - mobController.player.height / 4f,
