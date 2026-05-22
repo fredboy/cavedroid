@@ -50,13 +50,14 @@ abstract class AbstractInventoryWindow {
         selectItemPointer = pointer
     }
 
-    fun onRightClick(items: MutableList<InventoryItem>, itemsRepository: ItemsRepository, index: Int) {
+    fun onRightClick(items: MutableList<InventoryItem>, itemsRepository: ItemsRepository, index: Int, pointer: Int = -1) {
         val clickedItem = items[index]
         val selectedItem = selectedItem
 
         if (selectedItem.isNoneOrNull() && !clickedItem.isNoneOrNull()) {
             val half = InventoryItem(clickedItem.item, MathUtils.ceil(clickedItem.amount.toFloat() / 2f))
             this.selectedItem = half
+            this.selectItemPointer = pointer
             clickedItem.subtract(half.amount)
             if (clickedItem.amount == 0) {
                 items[index] = itemsRepository.fallbackItem.toInventoryItem()
@@ -66,7 +67,8 @@ abstract class AbstractInventoryWindow {
 
         if (selectedItem == null ||
             (!clickedItem.isNoneOrNull() && selectedItem.item != clickedItem.item) ||
-            !clickedItem.canBeAdded()
+            !clickedItem.canBeAdded() ||
+            pointer != selectItemPointer
         ) {
             return
         }
@@ -80,6 +82,7 @@ abstract class AbstractInventoryWindow {
 
         if (selectedItem.amount <= 0) {
             this@AbstractInventoryWindow.selectedItem = null
+            this@AbstractInventoryWindow.selectItemPointer = -1
         }
     }
 }

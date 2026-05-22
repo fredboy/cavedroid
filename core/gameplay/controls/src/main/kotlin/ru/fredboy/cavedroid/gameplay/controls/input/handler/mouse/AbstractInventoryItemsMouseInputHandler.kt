@@ -46,6 +46,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         items: MutableList<InventoryItem>,
         window: AbstractInventoryWindow,
         index: Int,
+        pointer: Int,
     ) {
         cancelHold()
 
@@ -53,7 +54,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
             return
         }
 
-        window.onRightClick(items, itemsRepository, index)
+        window.onRightClick(items, itemsRepository, index, pointer)
 
         inventoryHintEvents.notifyItemHeld()
     }
@@ -68,7 +69,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         holdingPointer = pointer
         selectableCellHoldTask = object : Timer.Task() {
             override fun run() {
-                handleHold(items, window, index)
+                handleHold(items, window, index, pointer)
             }
         }
         Timer.schedule(selectableCellHoldTask, TOUCH_HOLD_TIME_SEC)
@@ -124,13 +125,15 @@ abstract class AbstractInventoryItemsMouseInputHandler(
                 window.onLeftCLick(items, itemsRepository, index, action.actionKey.pointer)
             }
         } else if (action.actionKey is MouseInputActionKey.Screen) {
-            if (!action.actionKey.touchUp) {
+            if (!action.actionKey.touchUp && window.selectedItem.isNoneOrNull()) {
                 handleDown(items, window, index, action.actionKey.pointer)
+            } else if (!action.actionKey.touchUp) {
+                window.onLeftCLick(items, itemsRepository, index, action.actionKey.pointer)
             } else if (!window.selectedItem.isNoneOrNull()) {
                 if (action.actionKey.pointer == window.selectItemPointer) {
                     window.onLeftCLick(items, itemsRepository, index, action.actionKey.pointer)
                 } else {
-                    window.onRightClick(items, itemsRepository, index)
+                    window.onRightClick(items, itemsRepository, index, action.actionKey.pointer)
                 }
             }
         } else if (action.actionKey is MouseInputActionKey.Left) {
