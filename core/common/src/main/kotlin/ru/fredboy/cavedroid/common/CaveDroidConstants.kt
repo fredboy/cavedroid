@@ -5,7 +5,7 @@ import java.util.Locale
 object CaveDroidConstants {
     const val TITLE = "CaveDroid"
 
-    const val VERSION = "1.1.2"
+    const val VERSION = "1.1.3"
 
     const val GITHUB_LINK = "https://github.com/fredboy/cavedroid"
 
