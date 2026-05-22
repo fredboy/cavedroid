@@ -214,7 +214,7 @@ class SelectCreativeTabsInventoryItemMouseInputHandler @Inject constructor(
             window.selectedTab = clickedTab
             gameWindowsManager.creativeScrollAmount = 0
         } else if (isInsideTrash) {
-            window.selectedItem = null
+            handleInsidePlaceableCell(action, mutableListOf(itemsRepository.fallbackItem.toInventoryItem()), window, 0)
         }
     }
 

@@ -87,6 +87,7 @@ internal class FontTextureAssetsRepositoryImpl @Inject constructor(
         val currentLocale = applicationContextRepository.getLocale()
         logger.i { "Loading localization for locale $currentLocale" }
         I18NBundle.setSimpleFormatter(true)
+        I18NBundle.setExceptionOnMissingKey(false)
         menuBundle = I18NBundle.createBundle(Gdx.files.internal(BASE_MENU_LOCALIZATION), currentLocale)
         itemsBundle = I18NBundle.createBundle(Gdx.files.internal(BASE_ITEMS_LOCALIZATION), currentLocale)
         onboardingBundle = I18NBundle.createBundle(Gdx.files.internal(BASE_ONBOARDING_LOCALIZATION), currentLocale)
