@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.common.utils
 
+import kotlin.math.ceil
 import kotlin.math.floor
 
 const val PIXELS_PER_METER = 16f
@@ -15,5 +16,7 @@ val Int.meters get() = this.toFloat().meters
 val Float.pixels get() = this * PIXELS_PER_METER
 
 val Float.floor get() = floor(this)
+
+val Float.ceil get() = ceil(this)
 
 val Int.scaleToViewport: Float get() = this.toFloat() / DEFAULT_VIEWPORT_WIDTH

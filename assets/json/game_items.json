@@ -1959,8 +1959,8 @@
       "action_sound_key": "door/close"
     },
     "door_wood_top_left_closed": {
-      "right": 14,
-      "sprite_right": 14,
+      "right": 13,
+      "sprite_right": 13,
       "hp": 270,
       "collision": true,
       "background": false,
@@ -1983,8 +1983,8 @@
       "action_sound_key": "door/open"
     },
     "door_wood_bottom_left_closed": {
-      "right": 14,
-      "sprite_right": 14,
+      "right": 13,
+      "sprite_right": 13,
       "hp": 270,
       "collision": true,
       "background": false,
@@ -2051,8 +2051,8 @@
       "action_sound_key": "door/close"
     },
     "door_wood_top_right_closed": {
-      "left": 14,
-      "sprite_left": 14,
+      "left": 13,
+      "sprite_left": 13,
       "hp": 270,
       "collision": true,
       "background": false,
@@ -2075,8 +2075,8 @@
       "action_sound_key": "door/open"
     },
     "door_wood_bottom_right_closed": {
-      "left": 14,
-      "sprite_left": 14,
+      "left": 13,
+      "sprite_left": 13,
       "hp": 270,
       "collision": true,
       "background": false,
