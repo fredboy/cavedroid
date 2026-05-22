@@ -1,0 +1,2 @@
+- Se corrigió el comportamiento del cursor para una jugabilidad más fluida.
+- Mejoras menores y correcciones de errores.
