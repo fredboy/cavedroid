@@ -1,0 +1,2 @@
+- Corrigimos as dicas de introdução para mais clareza em telas sensíveis ao toque.
+- Melhorias menores e correções de bugs.
