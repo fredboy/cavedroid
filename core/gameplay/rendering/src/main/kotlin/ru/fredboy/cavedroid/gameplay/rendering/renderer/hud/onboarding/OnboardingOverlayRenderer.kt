@@ -11,6 +11,8 @@ import ru.fredboy.cavedroid.common.utils.drawMultilineCentered
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
+import ru.fredboy.cavedroid.game.window.GameWindowType
+import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindHudRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.IHudRenderer
 import javax.inject.Inject
@@ -22,11 +24,16 @@ class OnboardingOverlayRenderer @Inject constructor(
     private val getFont: GetFontUseCase,
     private val getStringWidth: GetStringWidthUseCase,
     private val getStringHeight: GetStringHeightUseCase,
+    private val gameWindowsManager: GameWindowsManager,
 ) : IHudRenderer {
 
     override val renderLayer: Int = RENDER_LAYER
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
+        if (gameWindowsManager.currentWindowType != GameWindowType.NONE) {
+            return
+        }
+
         controller.tick(delta.coerceAtMost(MAX_TICK_DELTA))
         val state = controller.state ?: return
 
