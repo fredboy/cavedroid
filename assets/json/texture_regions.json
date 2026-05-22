@@ -223,5 +223,37 @@
       "w": 12,
       "h": 11
     }
+  },
+  "textures/creative_inventory/tab_inventory": {
+    "creative_inventory_tab": {
+      "w": 194,
+      "h": 138
+    }
+  },
+  "textures/creative_inventory/tab_items": {
+    "creative_items_tab": {
+      "w": 194,
+      "h": 138
+    }
+  },
+  "textures/creative_inventory/tab_item_search": {
+    "creative_search_tab": {
+      "w": 194,
+      "h": 138
+    }
+  },
+  "textures/creative_inventory/tabs": {
+    "creative_tab_unselected": {
+      "x": 0,
+      "y": 64,
+      "w": 26,
+      "h": 28
+    },
+    "creative_tab_selected": {
+      "x": 0,
+      "y": 100,
+      "w": 26,
+      "h": 28
+    }
   }
 }

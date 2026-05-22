@@ -48,7 +48,7 @@ class MobStepUpBlockContactHandler @Inject constructor() : AbstractContactHandle
                 return false
             }
 
-            val (blockX, blockY) = getBlockCoordinates(contact)
+            val (blockX, blockY) = getBlockCoordinates(contact, block)
 
             val blockRect = block.getRectangle(blockX, blockY)
 
@@ -78,7 +78,7 @@ class MobStepUpBlockContactHandler @Inject constructor() : AbstractContactHandle
     override fun Mob.handleBeginContact(contact: Contact, entityB: Block) {
         contact.isEnabled = false
 
-        val (blockX, blockY) = getBlockCoordinates(contact)
+        val (blockX, blockY) = getBlockCoordinates(contact, entityB)
 
         val mobRect = hitbox
         val blockRect = entityB.getRectangle(blockX, blockY)
@@ -88,10 +88,12 @@ class MobStepUpBlockContactHandler @Inject constructor() : AbstractContactHandle
 
     override fun Mob.handleEndContact(contact: Contact, entityB: Block) = Unit
 
-    private fun Mob.getBlockCoordinates(contact: Contact): Pair<Int, Int> {
+    private fun Mob.getBlockCoordinates(contact: Contact, block: Block): Pair<Int, Int> {
         val horizontalPrecision = CONTACT_PRECISION * if (controlVector.x < 0f) -1 else 1
         return contact.worldManifold.points.first().let { vec ->
-            (vec.x + horizontalPrecision).toInt() to (vec.y + CONTACT_PRECISION).toInt()
+            val x = (vec.x + horizontalPrecision).toInt()
+            val y = (vec.y - block.params.collisionMargins.top + CONTACT_PRECISION).toInt()
+            x to y
         }
     }
 

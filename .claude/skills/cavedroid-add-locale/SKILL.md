@@ -1,6 +1,6 @@
 ---
 name: cavedroid-add-locale
-description: Use when the user asks to add a new UI language / locale to CaveDroid (e.g. "add French localization", "support Polish", "translate the game into Japanese"). Encodes the four places that have to stay in sync (Kotlin constant, scripts/locales.sh, libGDX i18n properties bundles, fastlane metadata), the ordering rule, what to translate from, and the things that intentionally do NOT need a new locale entry.
+description: Use when the user asks to add a new UI language / locale to CaveDroid (e.g. "add French localization", "support Polish", "translate the game into Japanese"). Encodes the five places that have to stay in sync (Kotlin constant, scripts/locales.sh, libGDX i18n properties bundles, fastlane metadata, the nativeDisplayName autonym map), the ordering rule, what to translate from, and the things that intentionally do NOT need a new locale entry.
 ---
 
 # CaveDroid — add a new locale
@@ -20,9 +20,9 @@ Before editing anything, pin down:
 
 If the user only gave the language name, infer the rest and state your assumption in the response (e.g. "Using `fr` / `fr-FR` / `Français`").
 
-## The four places that have to stay in sync
+## The five places that have to stay in sync
 
-All four must be updated together. Forgetting any one will silently break either the runtime locale picker, the build, or the release pipeline.
+All five must be updated together. Forgetting any one will silently break either the runtime locale picker, the build, or the release pipeline.
 
 ### 1. `core/common/src/main/kotlin/ru/fredboy/cavedroid/common/CaveDroidConstants.kt`
 
@@ -56,7 +56,11 @@ Notes on the existing translations:
 - `\n` is a literal escape sequence interpreted by libGDX — keep it.
 - The German file (`CaveDroid_*_de.properties`) and Spanish file (`CaveDroid_*_es.properties`) are the most recent, complete reference translations — use whichever is linguistically closer to the target.
 
-### 4. Fastlane metadata under `fastlane/metadata/android/<fastlane-dir>/`
+### 4. `core/common/src/main/kotlin/ru/fredboy/cavedroid/common/utils/GenericUtils.kt`
+
+Add a `"<code>" -> "<autonym>"` branch to the `Locale.nativeDisplayName()` `when`. This is what the Settings language picker displays for each locale; the default `else` branch falls back to `Locale.getDisplayLanguage(this).startWithCapital(this)`, which produces something usable but inconsistent with the curated autonyms used everywhere else (notably the autonym must match `LOCALE_AUTONYMS[<code>]` in `scripts/locales.sh`). Keep the branches in `SUPPORTED_LOCALES` order.
+
+### 5. Fastlane metadata under `fastlane/metadata/android/<fastlane-dir>/`
 
 Create exactly:
 
@@ -99,11 +103,12 @@ The key-diff should be empty for all three bundles. The order of codes in the Ko
 
 ## Commit style
 
-Single commit. Subject like `Add <Language> localization` (imperative, ~50 chars). No `Co-Authored-By:` trailer (project convention). The commit should include all four pieces — splitting them creates intermediate broken states (e.g. a locale advertised in the constant with no bundle files).
+Single commit. Subject like `Add <Language> localization` (imperative, ~50 chars). No `Co-Authored-By:` trailer (project convention). The commit should include all five pieces — splitting them creates intermediate broken states (e.g. a locale advertised in the constant with no bundle files, or a curated autonym in `locales.sh` that the Settings picker overrides with libGDX's generic capitalization).
 
 ## Things that have bitten past additions
 
 - Adding to the Kotlin list but forgetting `locales.sh` — release builds blow up at `gen-changelog-ai.sh` time.
 - Adding to `locales.sh` but forgetting the Kotlin list — the locale is invisible at runtime; the language picker in Settings won't offer it.
+- Adding the locale everywhere but forgetting `nativeDisplayName()` — Settings still lists the language, but with libGDX's default `getDisplayLanguage(...)` capitalization instead of the curated autonym (e.g. `Español` vs. `español`).
 - Creating `fastlane/metadata/android/<dir>/changelogs/<old-versionCode>.txt` files manually — pointless busywork; the script only writes the upcoming version.
 - Translating from German instead of English — German is a translation itself; subtle drift accumulates. Always translate from `en-US/` / `_en.properties`.

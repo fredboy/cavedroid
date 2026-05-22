@@ -28,8 +28,10 @@ fun String.startWithCapital(locale: Locale) = replaceFirstChar {
 
 fun Locale.nativeDisplayName(): String = when (language) {
     "en" -> "English"
-    "ru" -> "Русский"
+    "es" -> "Español"
+    "pt" -> "Português"
     "de" -> "Deutsch"
+    "ru" -> "Русский"
     else -> getDisplayLanguage(this).startWithCapital(this)
 }
 

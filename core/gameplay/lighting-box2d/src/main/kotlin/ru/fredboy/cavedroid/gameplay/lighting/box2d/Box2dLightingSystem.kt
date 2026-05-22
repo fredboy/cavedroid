@@ -54,6 +54,8 @@ class Box2dLightingSystem(
     private val mirrorBand: Int
         get() = effectiveMirrorBand(MIRROR_BAND_BLOCKS, gameWorld.width)
 
+    override val chunkSize: Int = CHUNK_SIZE
+
     override fun attachToGameWorld(gameWorld: GameWorld) {
         if (_gameWorld != null) {
             logger.w { "Box2dLightingSystem already attached" }
@@ -72,13 +74,18 @@ class Box2dLightingSystem(
             setSoftnessLength(5f)
         }
 
-        for (x in 0..<gameWorld.width step CHUNK_SIZE) {
-            for (y in 0..<gameWorld.height step CHUNK_SIZE) {
-                updateChunk(x, y)
-            }
-        }
-
         gameWorld.addBlockPlacedListener(this)
+    }
+
+    override fun refreshChunks(chunks: Iterable<Pair<Int, Int>>) {
+        if (_gameWorld == null) return
+        chunks.forEach { key ->
+            if (blockLights[key] == null) {
+                updateChunk(key.first, key.second)
+            }
+
+            blockLights[key]?.forEach { it.publicUpdate() }
+        }
     }
 
     override fun onBlockPlaced(block: Block, x: Int, y: Int, layer: Layer) {

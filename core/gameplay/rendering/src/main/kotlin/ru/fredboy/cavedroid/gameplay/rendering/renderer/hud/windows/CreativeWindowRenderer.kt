@@ -41,7 +41,7 @@ class CreativeWindowRenderer @Inject constructor(
         val windowX = viewport.width / 2 - creativeWindow.regionWidth / 2
         val windowY = viewport.height / 2 - creativeWindow.regionHeight / 2
         val oneScrollAmount = GameWindowsConfigs.Creative.scrollIndicatorFullHeight /
-            (gameWindowsManager.currentWindow as CreativeInventoryWindow).getMaxScroll(itemsRepository)
+            (gameWindowsManager.currentWindow as CreativeInventoryWindow).getMaxScroll()
 
         spriteBatch.draw(creativeWindow, windowX, windowY)
         spriteBatch.draw(

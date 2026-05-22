@@ -1,0 +1,5 @@
+- Probleme beim Springen des Spielers beim Anstoßen an geschlossene Türen wurden behoben.
+- Ein neues kreatives Inventar mit kategorisierten Tabs wurde hinzugefügt.
+- Kuchen kann nun überall platziert werden.
+- Touch-Steuerelemente wurden verbessert, Buttons neu angeordnet und das Teilen von Stapeln ermöglicht.
+- Textflimmern im Einzelspieler-Menü wurde behoben.

@@ -1,3 +1,5 @@
+@file:Suppress("ConstPropertyName")
+
 package ru.fredboy.cavedroid.game.window
 
 object GameWindowsConfigs {
@@ -162,5 +164,56 @@ object GameWindowsConfigs {
 
         const val nextX = 98f
         const val nextY = 143f
+    }
+
+    data object CreativeTabs {
+        const val portraitMarginLeft = 78f
+        const val portraitMarginTop = 8f
+        const val portraitWidth = 20f
+        const val portraitHeight = 40f
+
+        const val itemsGridMarginLeft = 9f
+        const val itemsGridMarginTop = 54f
+        const val itemsGridMarginTopItemsTab = 18f
+
+        const val hotbarCells = 9
+
+        const val itemsInRow = 9
+        const val itemsInCol = 5
+        const val itemsInInvCol = 3
+
+        const val itemsGridRowHeight = 18f
+        const val itemsGridColWidth = 18f
+
+        const val hotbarOffsetFromBottom = 26f
+
+        const val headX = 54f
+        const val headY = 6f
+
+        const val bodyX = 54f
+        const val bodyY = 32f
+
+        const val legsX = 108f
+        const val legsY = 6f
+
+        const val feetX = 108f
+        const val feetY = 32f
+
+        const val helmX = 2f
+        const val helmY = -3f
+
+        const val chestX = -6f
+        const val chestY = 7f
+
+        const val pantX = 2f
+        const val pantY = 19f
+
+        const val bootX = 2f
+        const val bootY = 27f
+
+        const val scrollIndicatorMarginLeft = 175f
+        const val scrollIndicatorMarginTop = 18f
+        const val scrollIndicatorFullHeight = 95f
+        val itemsOnPage get() = itemsInCol * itemsInRow
     }
 }

@@ -149,7 +149,7 @@ class DropController @Inject constructor(
             }
         } ?: (block.params.toolLevel == 0)
 
-        block.getDropItem(getItemByKeyUseCase, toolRequirementMet)?.let { dropItem ->
+        block.getDropItems(getItemByKeyUseCase, toolRequirementMet).forEach { dropItem ->
             addDrop(
                 x = x + .5f,
                 y = y + .5f,

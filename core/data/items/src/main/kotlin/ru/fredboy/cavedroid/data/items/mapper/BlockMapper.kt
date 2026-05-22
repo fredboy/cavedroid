@@ -79,6 +79,7 @@ class BlockMapper @Inject constructor(
         replaceable = dto.replaceable,
         material = mapMaterial(dto),
         actionSoundKey = dto.actionSoundKey,
+        dropsSingleItem = dto.pickSingleDrop,
     )
 
     private fun mapLightInfo(info: BlockLightDto?): BlockLightInfo? {

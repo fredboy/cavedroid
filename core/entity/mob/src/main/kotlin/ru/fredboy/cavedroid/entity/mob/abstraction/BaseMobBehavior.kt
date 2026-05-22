@@ -1,5 +1,7 @@
 package ru.fredboy.cavedroid.entity.mob.abstraction
 
+import ru.fredboy.cavedroid.common.utils.ceil
+import ru.fredboy.cavedroid.common.utils.floor
 import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.entity.mob.model.Direction
 import ru.fredboy.cavedroid.entity.mob.model.Mob
@@ -36,7 +38,12 @@ abstract class BaseMobBehavior<MOB : Mob>(
 
     protected fun MOB.checkAutojumpObstacle(worldAdapter: MobWorldAdapter): Boolean {
         val targetHitbox = hitbox.apply {
-            x += Direction.fromVector(controlVector).basis
+            val dir = Direction.fromVector(controlVector)
+            width = 1f
+            x = when (dir) {
+                Direction.LEFT -> x.floor
+                Direction.RIGHT -> x.ceil
+            } - width / 2f
             y -= 1f
         }
 

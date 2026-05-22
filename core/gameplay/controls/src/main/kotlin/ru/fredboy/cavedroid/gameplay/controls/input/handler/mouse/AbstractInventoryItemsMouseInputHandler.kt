@@ -1,8 +1,11 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
+import co.touchlab.kermit.Logger
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.api.InventoryHintEvents
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem.Companion.isNoneOrNull
@@ -17,6 +20,7 @@ import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
 
 abstract class AbstractInventoryItemsMouseInputHandler(
+    private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
     private val itemsRepository: ItemsRepository,
     private val gameWindowsManager: GameWindowsManager,
@@ -25,9 +29,51 @@ abstract class AbstractInventoryItemsMouseInputHandler(
     private val statsRepository: StatsRepository,
 ) : IMouseInputHandler {
 
+    private var selectableCellHoldTask: Timer.Task? = null
+    private var holdingPointer: Int = -1
+
     protected abstract val windowTexture: TextureRegion
 
     protected abstract fun getWindowRect(viewport: Rectangle): Rectangle
+
+    private fun cancelHold() {
+        selectableCellHoldTask?.cancel()
+        selectableCellHoldTask = null
+        holdingPointer = -1
+    }
+
+    private fun handleHold(
+        items: MutableList<InventoryItem>,
+        window: AbstractInventoryWindow,
+        index: Int,
+        pointer: Int,
+    ) {
+        cancelHold()
+
+        if (!window.selectedItem.isNoneOrNull()) {
+            return
+        }
+
+        window.onRightClick(items, itemsRepository, index, pointer)
+
+        inventoryHintEvents.notifyItemHeld()
+    }
+
+    private fun handleDown(
+        items: MutableList<InventoryItem>,
+        window: AbstractInventoryWindow,
+        index: Int,
+        pointer: Int,
+    ) {
+        cancelHold()
+        holdingPointer = pointer
+        selectableCellHoldTask = object : Timer.Task() {
+            override fun run() {
+                handleHold(items, window, index, pointer)
+            }
+        }
+        Timer.schedule(selectableCellHoldTask, TOUCH_HOLD_TIME_SEC)
+    }
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.currentWindowType == windowType &&
@@ -38,9 +84,15 @@ abstract class AbstractInventoryItemsMouseInputHandler(
             (
                 action.actionKey is MouseInputActionKey.Left ||
                     action.actionKey is MouseInputActionKey.Right ||
-                    action.actionKey is MouseInputActionKey.Screen
+                    action.actionKey is MouseInputActionKey.Screen ||
+                    action.actionKey is MouseInputActionKey.Dragged &&
+                    applicationContextRepository.isTouch()
                 ) &&
-            (action.actionKey.touchUp || action.actionKey is MouseInputActionKey.Screen)
+            (
+                action.actionKey is MouseInputActionKey.Dragged ||
+                    action.actionKey.touchUp ||
+                    action.actionKey is MouseInputActionKey.Screen
+                )
     }
 
     protected fun updateCraftResult(window: AbstractInventoryWindowWithCraftGrid) {
@@ -63,14 +115,25 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         window: AbstractInventoryWindow,
         index: Int,
     ) {
-        if (action.actionKey is MouseInputActionKey.Screen) {
-            if (!action.actionKey.touchUp) {
+        if (action.actionKey is MouseInputActionKey.Screen && action.actionKey.touchUp) {
+            cancelHold()
+        }
+
+        if (action.actionKey is MouseInputActionKey.Dragged) {
+            if (action.actionKey.pointer == holdingPointer) {
+                cancelHold()
+                window.onLeftCLick(items, itemsRepository, index, action.actionKey.pointer)
+            }
+        } else if (action.actionKey is MouseInputActionKey.Screen) {
+            if (!action.actionKey.touchUp && window.selectedItem.isNoneOrNull()) {
+                handleDown(items, window, index, action.actionKey.pointer)
+            } else if (!action.actionKey.touchUp) {
                 window.onLeftCLick(items, itemsRepository, index, action.actionKey.pointer)
             } else if (!window.selectedItem.isNoneOrNull()) {
                 if (action.actionKey.pointer == window.selectItemPointer) {
                     window.onLeftCLick(items, itemsRepository, index, action.actionKey.pointer)
                 } else {
-                    window.onRightClick(items, itemsRepository, index)
+                    window.onRightClick(items, itemsRepository, index, action.actionKey.pointer)
                 }
             }
         } else if (action.actionKey is MouseInputActionKey.Left) {
@@ -120,5 +183,10 @@ abstract class AbstractInventoryItemsMouseInputHandler(
                 statsRepository.recordItemCrafted()
             }
         }
+    }
+
+    companion object {
+        private val logger = Logger.withTag("AbstractInventoryItemsMouseInputHandler")
+        private const val TOUCH_HOLD_TIME_SEC = 0.5f
     }
 }

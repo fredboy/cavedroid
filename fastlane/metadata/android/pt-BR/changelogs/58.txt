@@ -1,0 +1,5 @@
+- Corrigimos os problemas de pulo do jogador ao colidir com portas fechadas.
+- Adicionamos um novo inventário criativo com abas categorizadas para facilitar o acesso.
+- Agora é possível colocar bolos em qualquer lugar do mundo.
+- Melhoramos os controles de toque reorganizando botões e permitindo a divisão de pilhas na tela.
+- Resolvemos o problema de flicker de texto no menu de jogador único.

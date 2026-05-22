@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.api.InventoryHintEvents
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.stats.repository.StatsRepository
@@ -24,10 +25,12 @@ class SelectChestInventoryItemMouseInputHandler @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val mobController: MobController,
     private val textureRegions: GetTextureRegionByNameUseCase,
+    applicationContextRepository: ApplicationContextRepository,
     itemsRepository: ItemsRepository,
     inventoryHintEvents: InventoryHintEvents,
     statsRepository: StatsRepository,
 ) : AbstractInventoryItemsMouseInputHandler(
+    applicationContextRepository = applicationContextRepository,
     gameContextRepository = gameContextRepository,
     itemsRepository = itemsRepository,
     gameWindowsManager = gameWindowsManager,

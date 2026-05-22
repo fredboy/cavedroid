@@ -442,6 +442,8 @@ class Player(
 
     fun rayCastCursor(mobWorldAdapter: MobWorldAdapter, onCallback: () -> Unit = {}) {
         val cursor = Vector2(cursorX, cursorY)
+        val position = position.cpy().apply { y -= height / 2f }
+
         if (gameMode.isSurvival()) {
             val plToCursor = cursor
                 .sub(position)

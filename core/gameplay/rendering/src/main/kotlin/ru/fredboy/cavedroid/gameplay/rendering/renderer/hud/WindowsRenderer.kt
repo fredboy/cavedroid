@@ -9,6 +9,7 @@ import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindHudRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.windows.ChestWindowRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.windows.CraftingWindowRenderer
+import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.windows.CreativeTabsWindowRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.windows.CreativeWindowRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.windows.FurnaceWindowRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.windows.SurvivalWindowRenderer
@@ -23,6 +24,7 @@ class WindowsRenderer @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val furnaceWindowRenderer: FurnaceWindowRenderer,
     private val chestWindowRenderer: ChestWindowRenderer,
+    private val creativeTabsWindowRenderer: CreativeTabsWindowRenderer,
 ) : IHudRenderer {
 
     override val renderLayer get() = RENDER_LAYER
@@ -34,6 +36,7 @@ class WindowsRenderer @Inject constructor(
             GameWindowType.CRAFTING_TABLE -> craftingWindowRenderer.draw(spriteBatch, shapeRenderer, viewport, delta)
             GameWindowType.FURNACE -> furnaceWindowRenderer.draw(spriteBatch, shapeRenderer, viewport, delta)
             GameWindowType.CHEST -> chestWindowRenderer.draw(spriteBatch, shapeRenderer, viewport, delta)
+            GameWindowType.CREATIVE_INVENTORY_TABS -> creativeTabsWindowRenderer.draw(spriteBatch, shapeRenderer, viewport, delta)
             GameWindowType.NONE -> return
             else -> logger.e { "Cannot draw window: ${windowType.name}" }
         }

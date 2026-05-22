@@ -25,6 +25,8 @@ import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.IHudRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.world.IWorldRenderer
 import javax.inject.Inject
 import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.floor
 
 @GameScope
 class GameRenderer @Inject constructor(
@@ -77,8 +79,62 @@ class GameRenderer @Inject constructor(
 
     private var lastCameraX = Float.NaN
 
+    private val activeLightChunks = mutableSetOf<Pair<Int, Int>>()
+    private val scratchVisibleChunks = mutableSetOf<Pair<Int, Int>>()
+    private val scratchEnteredChunks = mutableSetOf<Pair<Int, Int>>()
+
     init {
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f)
+    }
+
+    private fun refreshVisibleLightChunks() {
+        val chunkSize = lightingSystem.chunkSize
+        if (chunkSize <= 0) return
+
+        val worldWidth = gameWorld.width
+        val worldHeight = gameWorld.height
+        if (worldWidth <= 0 || worldHeight <= 0) return
+
+        val visibleX = camera.position.x - camera.viewportWidth / 2f
+        val visibleY = camera.position.y - camera.viewportHeight / 2f
+        val visibleRight = visibleX + camera.viewportWidth
+        val visibleBottom = visibleY + camera.viewportHeight
+
+        val minBlockX = floor(visibleX).toInt() - chunkSize
+        val maxBlockX = ceil(visibleRight).toInt() + chunkSize
+        val minBlockY = floor(visibleY).toInt() - chunkSize
+        val maxBlockY = ceil(visibleBottom).toInt() + chunkSize
+
+        val chunkMinX = Math.floorDiv(minBlockX, chunkSize) * chunkSize
+        val chunkMaxX = Math.floorDiv(maxBlockX, chunkSize) * chunkSize
+        val chunkMinY = Math.floorDiv(minBlockY, chunkSize) * chunkSize
+        val chunkMaxY = Math.floorDiv(maxBlockY, chunkSize) * chunkSize
+
+        scratchVisibleChunks.clear()
+        var cx = chunkMinX
+        while (cx <= chunkMaxX) {
+            val wrappedX = Math.floorMod(cx, worldWidth)
+            val wrappedChunkX = wrappedX - Math.floorMod(wrappedX, chunkSize)
+            var cy = chunkMinY
+            while (cy <= chunkMaxY) {
+                if (cy in 0 until worldHeight) {
+                    scratchVisibleChunks.add(wrappedChunkX to cy)
+                }
+                cy += chunkSize
+            }
+            cx += chunkSize
+        }
+
+        scratchEnteredChunks.clear()
+        scratchEnteredChunks.addAll(scratchVisibleChunks)
+        scratchEnteredChunks.removeAll(activeLightChunks)
+
+        if (scratchEnteredChunks.isNotEmpty()) {
+            lightingSystem.refreshChunks(scratchEnteredChunks)
+        }
+
+        activeLightChunks.clear()
+        activeLightChunks.addAll(scratchVisibleChunks)
     }
 
     private fun updateStaticCameraPosition(targetX: Float, targetY: Float) {
@@ -184,6 +240,11 @@ class GameRenderer @Inject constructor(
         val cameraJumped = !lastCameraX.isNaN() &&
             abs(camera.position.x - lastCameraX) > gameWorld.width / 2f
         lastCameraX = camera.position.x
+
+        if (cameraJumped) {
+            activeLightChunks.clear()
+        }
+        refreshVisibleLightChunks()
 
         spriter.projectionMatrix = camera.combined
         shaper.projectionMatrix = camera.combined

@@ -147,40 +147,41 @@ sealed class Block {
         /* height = */ spriteHeightMeters,
     )
 
-    fun getDropItem(itemByKey: GetItemByKeyUseCase, toolRequirementMet: Boolean): InventoryItem? {
+    fun getDropItems(itemByKey: GetItemByKeyUseCase, toolRequirementMet: Boolean): List<InventoryItem> {
         if (params.dropInfo.isEmpty()) {
-            return null
+            return emptyList()
         }
 
-        for (info in params.dropInfo) {
-            if (info.requiresTool && !toolRequirementMet) {
-                continue
-            }
-
-            when (info.amount) {
-                is DropAmount.ExactAmount -> {
-                    return info.toInventoryItem(itemByKey)
+        return params.dropInfo.asSequence()
+            .mapNotNull { info ->
+                if (info.requiresTool && !toolRequirementMet) {
+                    return@mapNotNull null
                 }
 
-                is DropAmount.RandomChance -> {
-                    if (MathUtils.randomBoolean(info.amount.chance)) {
-                        return info.toInventoryItem(itemByKey)
-                    } else {
-                        continue
+                when (info.amount) {
+                    is DropAmount.ExactAmount -> {
+                        return@mapNotNull info.toInventoryItem(itemByKey)
+                    }
+
+                    is DropAmount.RandomChance -> {
+                        if (MathUtils.randomBoolean(info.amount.chance)) {
+                            return@mapNotNull info.toInventoryItem(itemByKey)
+                        } else {
+                            return@mapNotNull null
+                        }
+                    }
+
+                    is DropAmount.RandomRange -> {
+                        if (MathUtils.randomBoolean(info.amount.chance)) {
+                            return@mapNotNull info.toInventoryItem(itemByKey)
+                        } else {
+                            return@mapNotNull null
+                        }
                     }
                 }
-
-                is DropAmount.RandomRange -> {
-                    if (MathUtils.randomBoolean(info.amount.chance)) {
-                        return info.toInventoryItem(itemByKey)
-                    } else {
-                        continue
-                    }
-                }
             }
-        }
-
-        return null
+            .run { if (params.dropsSingleItem) take(1) else this }
+            .toList()
     }
 
     sealed class Container : Block()

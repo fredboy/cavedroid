@@ -34,11 +34,17 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
     private val furnaceInventoryTexture get() = requireNotNull(textureRegions["furnace"])
     private val chestInventoryTexture get() = requireNotNull(textureRegions["chest"])
 
+    private val creativeTabsWindowTexture get() = requireNotNull(textureRegions["creative_items_tab"])
+    private val creativeTabsTabTexture get() = requireNotNull(textureRegions["creative_tab_selected"])
+
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.currentWindowType != GameWindowType.NONE &&
             (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
             !action.actionKey.touchUp &&
-            !getWindowRect(gameContextRepository.getCameraContext().viewport).contains(action.screenX, action.screenY)
+            !getWindowRect(gameContextRepository.getCameraContext().viewport).contains(
+                action.screenX,
+                action.screenY,
+            )
     }
 
     private fun getWindowRect(viewport: Rectangle): Rectangle {
@@ -50,11 +56,17 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
             ?.run { regionWidth.toFloat() to regionHeight.toFloat() }
             ?: (0f to 0f)
 
+        val extraHeight = if (gameWindowsManager.currentWindowType == GameWindowType.CREATIVE_INVENTORY_TABS) {
+            creativeTabsTabTexture.regionHeight.toFloat()
+        } else {
+            0f
+        }
+
         return Rectangle(
             0f,
             0f,
             recipeBookWidth + windowTexture.regionWidth.toFloat(),
-            max(windowTexture.regionHeight.toFloat(), recipeBookHeight),
+            max(windowTexture.regionHeight.toFloat() + extraHeight, recipeBookHeight),
         ).apply {
             if (window?.recipeBookActive != true) {
                 setCenter(viewport.getCenter(Vector2()))
@@ -71,7 +83,9 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
         GameWindowType.CRAFTING_TABLE -> craftingInventoryTexture
         GameWindowType.FURNACE -> furnaceInventoryTexture
         GameWindowType.CHEST -> chestInventoryTexture
-        else -> throw UnsupportedOperationException("Cant close window ${window.name}")
+        GameWindowType.CREATIVE_INVENTORY_TABS -> creativeTabsWindowTexture
+
+        GameWindowType.NONE -> throw UnsupportedOperationException("Cant close window ${window.name}")
     }
 
     override fun handle(action: MouseInputAction) {

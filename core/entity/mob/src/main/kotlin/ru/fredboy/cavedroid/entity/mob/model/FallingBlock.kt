@@ -39,7 +39,7 @@ class FallingBlock(
 
     override fun getDropItems(itemByKey: GetItemByKeyUseCase): List<InventoryItem> {
         return if (shouldDrop) {
-            listOfNotNull(block.getDropItem(itemByKey, true))
+            block.getDropItems(itemByKey, true)
         } else {
             emptyList()
         }

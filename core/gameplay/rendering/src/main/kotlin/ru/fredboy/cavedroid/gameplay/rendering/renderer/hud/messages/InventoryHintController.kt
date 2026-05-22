@@ -13,6 +13,9 @@ class InventoryHintController @Inject constructor(
     private var dismissed: Boolean = applicationContextRepository.isInventoryHintShown()
     private var fadeElapsedSec: Float = -1f
 
+    var hintIndex = 0
+        private set
+
     val isVisible: Boolean
         get() = !dismissed
 
@@ -27,17 +30,27 @@ class InventoryHintController @Inject constructor(
         if (dismissed || fadeElapsedSec < 0f) return
         fadeElapsedSec += delta
         if (fadeElapsedSec >= FADE_DURATION_SEC) {
-            dismissed = true
-            applicationContextRepository.setInventoryHintShown(true)
+            fadeElapsedSec = -1f
+            hintIndex++
+            dismissed = hintIndex >= TOTAL_HINTS
+            if (dismissed) {
+                applicationContextRepository.setInventoryHintShown(true)
+            }
         }
     }
 
     override fun notifyItemMoved() {
-        if (dismissed || fadeElapsedSec >= 0f) return
+        if (hintIndex != 0 || dismissed || fadeElapsedSec >= 0f) return
+        fadeElapsedSec = 0f
+    }
+
+    override fun notifyItemHeld() {
+        if (hintIndex != 1 || dismissed || fadeElapsedSec >= 0f) return
         fadeElapsedSec = 0f
     }
 
     companion object {
+        private const val TOTAL_HINTS = 2
         private const val FADE_DURATION_SEC = 2f
     }
 }

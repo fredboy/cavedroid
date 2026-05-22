@@ -20,9 +20,13 @@ class TintLightingSystem : LightingSystem {
 
     private val shaper = ShapeRenderer()
 
+    override val chunkSize: Int = 1
+
     override fun attachToGameWorld(gameWorld: GameWorld) {
         _gameWorld = gameWorld
     }
+
+    override fun refreshChunks(chunks: Iterable<Pair<Int, Int>>) = Unit
 
     override fun update(delta: Float) = Unit
 

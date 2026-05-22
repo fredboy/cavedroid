@@ -1,5 +1,7 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.action.keys
 
+import co.touchlab.kermit.Logger
+
 sealed interface MouseInputActionKey {
 
     val touchUp: Boolean
@@ -17,7 +19,11 @@ sealed interface MouseInputActionKey {
         override val pointer: Int,
     ) : Touch {
         override val touchUp: Boolean
-            get() = throw IllegalAccessException("not applicable for mouse dragged action")
+            get() {
+                val e = IllegalAccessException("not applicable for mouse dragged action")
+                logger.w(e) { "Checking touch up on Dragged" }
+                return false
+            }
     }
 
     data class Left(
@@ -42,6 +48,14 @@ sealed interface MouseInputActionKey {
         val amountY: Float,
     ) : MouseInputActionKey {
         override val touchUp: Boolean
-            get() = throw IllegalAccessException("not applicable for mouse scroll action")
+            get() {
+                val e = IllegalAccessException("not applicable for mouse scroll action")
+                logger.w(e) { "Checking touch up on Scrolled" }
+                return false
+            }
+    }
+
+    companion object {
+        private val logger = Logger.withTag("MouseInputActionKey")
     }
 }

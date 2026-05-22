@@ -48,7 +48,7 @@ class SinglePlayerMenuViewModel(
             }
 
             flow {
-                emit(SinglePlayerMenuState.LoadingList)
+//                emit(SinglePlayerMenuState.LoadingList)
 
                 val appDir = applicationContextRepository.getGameDirectory()
                 val saves = withContext(ioDispatcher) {
@@ -85,7 +85,7 @@ class SinglePlayerMenuViewModel(
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = SinglePlayerMenuState.LoadingList,
+            initialValue = SinglePlayerMenuState.ShowList(emptyList(), false),
         )
 
     fun onNewGameClick() {
@@ -133,7 +133,6 @@ class SinglePlayerMenuViewModel(
 
     override fun onShow() {
         viewModelScope.launch {
-            disposeLoadedTextures()
             reloadTrigger.emit(Trigger.LOAD_LIST)
         }
     }

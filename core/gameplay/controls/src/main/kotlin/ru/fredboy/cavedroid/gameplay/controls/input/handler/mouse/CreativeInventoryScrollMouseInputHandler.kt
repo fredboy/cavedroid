@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
+import co.touchlab.kermit.Logger
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
@@ -7,11 +8,10 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
-import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
-import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindowWithCraftGrid
-import ru.fredboy.cavedroid.game.window.inventory.CreativeInventoryWindow
+import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindowWithScroll
+import ru.fredboy.cavedroid.game.window.inventory.CreativeInventoryTabsWindow
 import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
@@ -25,25 +25,36 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
     private val gameWindowsManager: GameWindowsManager,
-    private val itemsRepository: ItemsRepository,
     private val textureRegions: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
 
     private val creativeInventoryTexture get() = requireNotNull(textureRegions["creative"])
+    private val itemsTabWindowTexture get() = requireNotNull(textureRegions["creative_items_tab"])
+
+    private val windowTexture
+        get() = when (gameWindowsManager.currentWindowType) {
+            GameWindowType.CREATIVE_INVENTORY -> creativeInventoryTexture
+            GameWindowType.CREATIVE_INVENTORY_TABS -> itemsTabWindowTexture
+            else -> {
+                logger.w { "Unsupported window type $gameWindowsManager. Fallback to creative" }
+                creativeInventoryTexture
+            }
+        }
 
     private var dragStartY = 0f
 
     override fun checkConditions(action: MouseInputAction): Boolean {
-        val recipeBookActive = (gameWindowsManager.currentWindow as? AbstractInventoryWindowWithCraftGrid)
-            ?.recipeBookActive ?: false
-        return gameWindowsManager.currentWindowType == GameWindowType.CREATIVE_INVENTORY &&
+        return (
+            gameWindowsManager.currentWindowType == GameWindowType.CREATIVE_INVENTORY ||
+                ((gameWindowsManager.currentWindow as? CreativeInventoryTabsWindow)?.selectedTab?.isInventory == false)
+            ) &&
             (
                 gameWindowsManager.isDragging ||
                     Rectangle(
                         0f,
                         0f,
-                        creativeInventoryTexture.regionWidth.toFloat(),
-                        creativeInventoryTexture.regionHeight.toFloat(),
+                        windowTexture.regionWidth.toFloat(),
+                        windowTexture.regionHeight.toFloat(),
                     )
                         .apply {
                             setCenter(
@@ -85,7 +96,7 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
             MathUtils.clamp(
                 /* value = */ gameWindowsManager.creativeScrollAmount,
                 /* min = */ 0,
-                /* max = */ (gameWindowsManager.currentWindow as CreativeInventoryWindow).getMaxScroll(itemsRepository),
+                /* max = */ (gameWindowsManager.currentWindow as AbstractInventoryWindowWithScroll).getMaxScroll(),
             )
     }
 
@@ -119,6 +130,7 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
     }
 
     companion object {
+        private val logger = Logger.withTag("CreativeInventoryScrollMouseInputHandler")
         private const val DRAG_SENSITIVITY = 16f
     }
 }
