@@ -1,0 +1,3 @@
+- Gelegentliches Duplikationsproblem im Crafting-Gitter behoben 
+- Scrollen in den kreativen Tabs verbessert 
+- Verbesserung der Darstellung von Onboarding-Hinweisen 
