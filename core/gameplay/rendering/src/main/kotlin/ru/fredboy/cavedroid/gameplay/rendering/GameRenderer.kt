@@ -13,6 +13,8 @@ import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.common.utils.drawString
+import ru.fredboy.cavedroid.common.utils.floorDiv
+import ru.fredboy.cavedroid.common.utils.floorMod
 import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
@@ -105,16 +107,16 @@ class GameRenderer @Inject constructor(
         val minBlockY = floor(visibleY).toInt() - chunkSize
         val maxBlockY = ceil(visibleBottom).toInt() + chunkSize
 
-        val chunkMinX = Math.floorDiv(minBlockX, chunkSize) * chunkSize
-        val chunkMaxX = Math.floorDiv(maxBlockX, chunkSize) * chunkSize
-        val chunkMinY = Math.floorDiv(minBlockY, chunkSize) * chunkSize
-        val chunkMaxY = Math.floorDiv(maxBlockY, chunkSize) * chunkSize
+        val chunkMinX = (minBlockX floorDiv chunkSize) * chunkSize
+        val chunkMaxX = (maxBlockX floorDiv chunkSize) * chunkSize
+        val chunkMinY = (minBlockY floorDiv chunkSize) * chunkSize
+        val chunkMaxY = (maxBlockY floorDiv chunkSize) * chunkSize
 
         scratchVisibleChunks.clear()
         var cx = chunkMinX
         while (cx <= chunkMaxX) {
-            val wrappedX = Math.floorMod(cx, worldWidth)
-            val wrappedChunkX = wrappedX - Math.floorMod(wrappedX, chunkSize)
+            val wrappedX = cx floorMod worldWidth
+            val wrappedChunkX = wrappedX - (wrappedX floorMod chunkSize)
             var cy = chunkMinY
             while (cy <= chunkMaxY) {
                 if (cy in 0 until worldHeight) {
