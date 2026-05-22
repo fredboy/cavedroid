@@ -1,0 +1,2 @@
+- Fixed onboarding hints for better clarity on touch screens.
+- Minor improvements and bug fixes.
