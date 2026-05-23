@@ -5,6 +5,7 @@ data class SettingsMenuState(
     val fullscreen: Boolean,
     val autoJump: Boolean,
     val sound: Boolean,
+    val smoothLighting: Boolean,
     val showPersonalizedAdsToggle: Boolean,
     val personalizedAds: Boolean,
     val showFullscreenButton: Boolean,

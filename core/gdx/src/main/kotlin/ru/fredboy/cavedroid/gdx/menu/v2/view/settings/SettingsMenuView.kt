@@ -92,6 +92,19 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
 
                         row()
 
+                        textButton(
+                            viewModel.getFormattedString(
+                                "smoothLighting",
+                                state.smoothLighting.toLocalizedToggle(viewModel),
+                            ),
+                        ) {
+                            onClickWithSound(viewModel) {
+                                viewModel.onSmoothLightingClick(!state.smoothLighting)
+                            }
+                        }
+
+                        row()
+
                         if (state.showPersonalizedAdsToggle) {
                             textButton(
                                 viewModel.getFormattedString(

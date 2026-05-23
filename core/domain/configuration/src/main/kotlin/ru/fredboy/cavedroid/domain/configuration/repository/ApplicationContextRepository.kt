@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.domain.configuration.repository
 
 import com.badlogic.gdx.Files
+import ru.fredboy.cavedroid.domain.configuration.model.LightingBackend
 import java.util.Locale
 
 interface ApplicationContextRepository {
@@ -59,4 +60,8 @@ interface ApplicationContextRepository {
     fun getPersonalizedAdsConsent(): Boolean?
 
     fun setPersonalizedAdsConsent(consent: Boolean?)
+
+    fun getLightingBackend(): LightingBackend
+
+    fun setLightingBackend(backend: LightingBackend)
 }

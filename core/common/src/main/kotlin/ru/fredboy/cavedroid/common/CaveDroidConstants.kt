@@ -31,6 +31,8 @@ object CaveDroidConstants {
         const val INVENTORY_HINT_SHOWN = "inventory_hint_shown"
 
         const val PERSONALIZED_ADS_CONSENT = "personalized_ads_consent"
+
+        const val LIGHTING_BACKEND = "lighting_backend"
     }
 
     val SUPPORTED_LOCALES = listOf(Locale("en"), Locale("es"), Locale("pt"), Locale("de"), Locale("ru"))

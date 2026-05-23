@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.data.configuration.model
 
 import com.badlogic.gdx.Files
+import ru.fredboy.cavedroid.domain.configuration.model.LightingBackend
 import java.util.Locale
 
 class ApplicationContext(
@@ -18,5 +19,6 @@ class ApplicationContext(
     internal var isOnboardingShown: Boolean,
     internal var isInventoryHintShown: Boolean,
     internal var personalizedAdsConsent: Boolean?,
+    internal var lightingBackend: LightingBackend,
     internal val isYandexGamesBuild: Boolean,
 )

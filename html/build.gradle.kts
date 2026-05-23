@@ -62,6 +62,7 @@ dependencies {
     useCommonLibs()
     useGdxModule()
     useLightingTint()
+    useLightingBfs()
     useTeaVMBackend()
     useKotlinxSerializationJson()
 

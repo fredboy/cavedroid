@@ -11,8 +11,10 @@ import kotlinx.coroutines.Dispatchers
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
+import ru.fredboy.cavedroid.gameplay.lighting.bfs.BfsLightingSystemFactory
 import ru.fredboy.cavedroid.gameplay.lighting.box2d.Box2dLightingSystemFactory
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
+import ru.fredboy.cavedroid.gdx.di.DelegatingLightingSystemFactory
 
 class AndroidLauncher : AndroidApplication() {
 
@@ -37,6 +39,8 @@ class AndroidLauncher : AndroidApplication() {
             }
         }
 
+        val preferencesStore = AndroidPreferencesStore(applicationContext)
+
         initialize(
             /* listener = */
             CaveDroidApplication(
@@ -44,8 +48,12 @@ class AndroidLauncher : AndroidApplication() {
                 gameDataFileType = Files.FileType.Absolute,
                 isTouchScreen = true,
                 isDebug = BuildConfig.DEBUG,
-                preferencesStore = AndroidPreferencesStore(applicationContext),
-                lightingSystemFactory = Box2dLightingSystemFactory(),
+                preferencesStore = preferencesStore,
+                lightingSystemFactory = DelegatingLightingSystemFactory(
+                    preferencesStore = preferencesStore,
+                    legacy = Box2dLightingSystemFactory(),
+                    bfs = BfsLightingSystemFactory(),
+                ),
                 dispatchers = AppDispatchers(
                     io = Dispatchers.IO,
                     background = Dispatchers.Default,
