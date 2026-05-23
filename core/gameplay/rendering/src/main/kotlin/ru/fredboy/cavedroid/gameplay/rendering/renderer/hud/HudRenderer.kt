@@ -109,7 +109,7 @@ class HudRenderer @Inject constructor(
 
         if (player.breath < player.params.maxBreath) {
             for (i in 0..<player.breath / 2) {
-                spriteBatch.draw(wholeBubbleTexture, x - i *iconWidth, y)
+                spriteBatch.draw(wholeBubbleTexture, x - i * iconWidth, y)
             }
             if (player.breath % 2 == 1) {
                 spriteBatch.draw(halfBubbleTexture, x - (player.breath / 2) * iconWidth, y)
