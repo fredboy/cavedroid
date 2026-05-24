@@ -8,6 +8,7 @@ import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
+import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem.Companion.isNoneOrNull
 import ru.fredboy.cavedroid.domain.items.model.inventory.asSafeInventoryList
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
@@ -220,7 +221,7 @@ class SelectCreativeTabsInventoryItemMouseInputHandler @Inject constructor(
             handleInsideCreativeGrid(action, xOnItemsGrid.toInt(), yOnItemsGrid.toInt())
         } else if (isInsideHotbar) {
             handleInsideHotbar(action, xOnInvGrid.toInt())
-        } else if (clickedTab != null) {
+        } else if (clickedTab != null && window.selectedItem.isNoneOrNull()) {
             window.selectedTab = clickedTab
             gameWindowsManager.creativeScrollAmount = 0
         } else if (isInsideTrash) {
