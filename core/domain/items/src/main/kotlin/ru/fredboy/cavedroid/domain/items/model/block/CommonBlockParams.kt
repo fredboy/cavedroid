@@ -30,4 +30,6 @@ data class CommonBlockParams(
     val actionSoundKey: String?,
 ) {
     val spriteMarginsMeters by lazy { spriteMargins.toMeters() }
+
+    val isFullBlock get() = collisionMargins.run { top == 0f && bottom == 0f && left == 0f && right == 0f }
 }

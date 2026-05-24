@@ -53,7 +53,7 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                         textButton(
                             viewModel.getFormattedString(
                                 "dynamicCamera",
-                                state.dynamicCamera.toLocalizedToggle(viewModel)
+                                state.dynamicCamera.toLocalizedToggle(viewModel),
                             ),
                         ) {
                             onClickWithSound(viewModel) {
@@ -67,7 +67,7 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                             textButton(
                                 viewModel.getFormattedString(
                                     "fullscreen",
-                                    state.fullscreen.toLocalizedToggle(viewModel)
+                                    state.fullscreen.toLocalizedToggle(viewModel),
                                 ),
                             ) {
                                 onClickWithSound(viewModel) {
