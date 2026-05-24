@@ -62,38 +62,38 @@ class OnboardingControllerTest {
         when (step) {
             OnboardingStep.Move -> {
                 controlVector.set(1f, 0f)
-                tick(0.016f)
-                tick(2f)
+                update(0.016f)
+                update(2f)
                 controlVector.set(0f, 0f)
             }
             OnboardingStep.Jump -> {
                 velocityVector.y = -5f
-                tick(0.016f)
-                tick(2f)
+                update(0.016f)
+                update(2f)
                 velocityVector.y = 0f
             }
             OnboardingStep.Aim -> {
-                tick(0.016f) // baseline
+                update(0.016f) // baseline
                 every { player.cursorX } returns 5f
                 every { player.cursorY } returns 5f
-                tick(0.016f)
-                tick(2f)
+                update(0.016f)
+                update(2f)
             }
             OnboardingStep.Break -> {
                 every { player.isHittingWithDamage } returns true
-                tick(0.016f)
-                tick(2f)
+                update(0.016f)
+                update(2f)
                 every { player.isHittingWithDamage } returns false
             }
             OnboardingStep.Place -> {
                 notifyPlace()
-                tick(0.016f)
-                tick(2f)
+                update(0.016f)
+                update(2f)
             }
             OnboardingStep.OpenInventory -> {
                 every { gameWindowsManager.currentWindowType } returns GameWindowType.SURVIVAL_INVENTORY
-                tick(0.016f)
-                tick(2f)
+                update(0.016f)
+                update(2f)
                 every { gameWindowsManager.currentWindowType } returns GameWindowType.NONE
             }
         }
@@ -115,7 +115,7 @@ class OnboardingControllerTest {
         setupPlayerState()
 
         val controller = newController()
-        controller.tick(0.016f)
+        controller.update(0.016f)
 
         assertNull(controller.state)
         verify(exactly = 0) { applicationContextRepository.setOnboardingShown(any()) }
@@ -212,7 +212,7 @@ class OnboardingControllerTest {
         assertEquals(true, controller.state?.awaitingInput)
 
         controlVector.set(1f, 0f)
-        controller.tick(0.016f)
+        controller.update(0.016f)
 
         assertEquals(false, controller.state?.awaitingInput)
         assertSame(OnboardingStep.Move, controller.state?.step)
@@ -230,17 +230,17 @@ class OnboardingControllerTest {
 
         // Sub-threshold tiny upward bump should NOT trigger
         velocityVector.y = -1f
-        controller.tick(0.016f)
+        controller.update(0.016f)
         assertEquals(true, controller.state?.awaitingInput)
 
         // Falling (positive y) should NOT trigger
         velocityVector.y = 5f
-        controller.tick(0.016f)
+        controller.update(0.016f)
         assertEquals(true, controller.state?.awaitingInput)
 
         // Real jump (past threshold) triggers
         velocityVector.y = -5f
-        controller.tick(0.016f)
+        controller.update(0.016f)
         assertEquals(false, controller.state?.awaitingInput)
     }
 
@@ -251,16 +251,16 @@ class OnboardingControllerTest {
 
         val controller = newController()
         controlVector.set(1f, 0f)
-        controller.tick(0.016f) // trigger Move
+        controller.update(0.016f) // trigger Move
 
-        controller.tick(0.5f)
+        controller.update(0.5f)
         assertEquals(OnboardingStep.Move, controller.state?.step)
         assertEquals(false, controller.state?.awaitingInput)
         // 0.5 / 1.5 ≈ 0.33
         val progress = controller.state?.cooldownProgress ?: 0f
         assert(progress > 0.3f && progress < 0.4f) { "progress=$progress" }
 
-        controller.tick(2f) // overshoot cooldown
+        controller.update(2f) // overshoot cooldown
         assertSame(OnboardingStep.Jump, controller.state?.step)
     }
 
@@ -279,17 +279,17 @@ class OnboardingControllerTest {
 
         // Opening a chest should NOT trigger
         every { gameWindowsManager.currentWindowType } returns GameWindowType.CHEST
-        controller.tick(0.016f)
+        controller.update(0.016f)
         assertEquals(true, controller.state?.awaitingInput)
 
         // Opening crafting table should NOT trigger
         every { gameWindowsManager.currentWindowType } returns GameWindowType.CRAFTING_TABLE
-        controller.tick(0.016f)
+        controller.update(0.016f)
         assertEquals(true, controller.state?.awaitingInput)
 
         // Opening survival inventory SHOULD trigger
         every { gameWindowsManager.currentWindowType } returns GameWindowType.SURVIVAL_INVENTORY
-        controller.tick(0.016f)
+        controller.update(0.016f)
         assertEquals(false, controller.state?.awaitingInput)
     }
 
@@ -307,7 +307,7 @@ class OnboardingControllerTest {
         assertEquals(true, controller.state?.awaitingInput)
 
         controller.notifyPlace()
-        controller.tick(0.016f)
+        controller.update(0.016f)
 
         assertEquals(false, controller.state?.awaitingInput)
     }
@@ -323,15 +323,15 @@ class OnboardingControllerTest {
         assertSame(OnboardingStep.Aim, controller.state?.step)
 
         // first tick captures baseline; cursor is still at 10,10
-        controller.tick(0.016f)
+        controller.update(0.016f)
         assertEquals(true, controller.state?.awaitingInput)
         // unchanged cursor → still awaiting
-        controller.tick(0.016f)
+        controller.update(0.016f)
         assertEquals(true, controller.state?.awaitingInput)
 
         // change cursor
         every { player.cursorX } returns 12f
-        controller.tick(0.016f)
+        controller.update(0.016f)
         assertEquals(false, controller.state?.awaitingInput)
     }
 
@@ -342,8 +342,8 @@ class OnboardingControllerTest {
 
         val controller = newController()
         controlVector.set(1f, 0f)
-        controller.tick(0.016f) // trigger Move
-        controller.tick(100f) // huge delta — exhausts cooldown immediately
+        controller.update(0.016f) // trigger Move
+        controller.update(100f) // huge delta — exhausts cooldown immediately
 
         assertNotNull(controller.state)
         assert(controller.state?.step != OnboardingStep.Move)

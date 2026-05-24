@@ -19,6 +19,7 @@ import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldGrowBlocksControllerT
 import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldMobDamageControllerTask;
 import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldMobSpawnControllerTask;
 import ru.fredboy.cavedroid.gameplay.rendering.GameRenderer;
+import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.onboarding.OnboardingController;
 
 import javax.inject.Inject;
 
@@ -39,6 +40,7 @@ public class GameProc implements Disposable {
     private final ProjectileController mProjectileController;
     private final WeatherSoundController mWeatherSoundController;
     private final StatsController mStatsController;
+    private final OnboardingController mOnboardingController;
 
     private final Timer mWorldLogicTimer = new Timer();
 
@@ -57,7 +59,8 @@ public class GameProc implements Disposable {
                     GameInputProcessor gameInputProcessor,
                     ProjectileController projectileController,
                     WeatherSoundController weatherSoundController,
-                    StatsController statsController
+                    StatsController statsController,
+                    OnboardingController onboardingController
     ) {
         mGameRenderer = gameRenderer;
         mMobsController = mobsController;
@@ -73,6 +76,7 @@ public class GameProc implements Disposable {
         mProjectileController = projectileController;
         mWeatherSoundController = weatherSoundController;
         mStatsController = statsController;
+        mOnboardingController = onboardingController;
 
         mWorldLogicTimer.scheduleTask(gameWorldFluidsLogicControllerTask, 0,
                 GameWorldFluidsLogicControllerTask.FLUID_UPDATE_INTERVAL_SEC);
@@ -112,6 +116,7 @@ public class GameProc implements Disposable {
         mContainerController.update(delta);
         mWeatherSoundController.update();
         mStatsController.update(delta);
+        mOnboardingController.update(delta);
     }
 
     public void onResize() {
