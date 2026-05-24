@@ -40,7 +40,7 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
     override fun checkConditions(action: MouseInputAction): Boolean {
         return gameWindowsManager.currentWindowType != GameWindowType.NONE &&
             (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
-            !action.actionKey.touchUp &&
+            !gameWindowsManager.isDragging &&
             !getWindowRect(gameContextRepository.getCameraContext().viewport).contains(
                 action.screenX,
                 action.screenY,

@@ -12,6 +12,8 @@ import ru.fredboy.cavedroid.domain.items.model.inventory.asSafeInventoryList
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.stats.repository.StatsRepository
+import ru.fredboy.cavedroid.entity.drop.DropQueue
+import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.entity.mob.model.WearingArmor.Companion.BOOTS_INDEX
 import ru.fredboy.cavedroid.entity.mob.model.WearingArmor.Companion.CHESTPLATE_INDEX
 import ru.fredboy.cavedroid.entity.mob.model.WearingArmor.Companion.HELMET_INDEX
@@ -38,6 +40,8 @@ class SelectCreativeTabsInventoryItemMouseInputHandler @Inject constructor(
     private val tooltipManager: TooltipManager,
     inventoryHintEvents: InventoryHintEvents,
     statsRepository: StatsRepository,
+    playerAdapter: PlayerAdapter,
+    dropQueue: DropQueue,
 ) : AbstractInventoryItemsMouseInputHandler(
     applicationContextRepository = applicationContextRepository,
     gameContextRepository = gameContextRepository,
@@ -46,6 +50,8 @@ class SelectCreativeTabsInventoryItemMouseInputHandler @Inject constructor(
     windowType = GameWindowType.CREATIVE_INVENTORY_TABS,
     inventoryHintEvents = inventoryHintEvents,
     statsRepository = statsRepository,
+    playerAdapter = playerAdapter,
+    dropQueue = dropQueue,
 ) {
 
     private val inventoryTabWindowTexture get() = requireNotNull(textureRegions["creative_inventory_tab"])
@@ -219,6 +225,8 @@ class SelectCreativeTabsInventoryItemMouseInputHandler @Inject constructor(
             gameWindowsManager.creativeScrollAmount = 0
         } else if (isInsideTrash) {
             handleInsidePlaceableCell(action, mutableListOf(itemsRepository.fallbackItem.toInventoryItem()), window, 0)
+        } else {
+            handleOutsideAnyCell(action, window)
         }
     }
 

@@ -9,6 +9,8 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.stats.repository.StatsRepository
+import ru.fredboy.cavedroid.entity.drop.DropQueue
+import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsConfigs
@@ -29,6 +31,8 @@ class SelectChestInventoryItemMouseInputHandler @Inject constructor(
     itemsRepository: ItemsRepository,
     inventoryHintEvents: InventoryHintEvents,
     statsRepository: StatsRepository,
+    playerAdapter: PlayerAdapter,
+    dropQueue: DropQueue,
 ) : AbstractInventoryItemsMouseInputHandler(
     applicationContextRepository = applicationContextRepository,
     gameContextRepository = gameContextRepository,
@@ -37,6 +41,8 @@ class SelectChestInventoryItemMouseInputHandler @Inject constructor(
     windowType = GameWindowType.CHEST,
     inventoryHintEvents = inventoryHintEvents,
     statsRepository = statsRepository,
+    playerAdapter = playerAdapter,
+    dropQueue = dropQueue,
 ) {
 
     override val windowTexture get() = requireNotNull(textureRegions["chest"])
@@ -73,6 +79,7 @@ class SelectChestInventoryItemMouseInputHandler @Inject constructor(
     }
 
     override fun handle(action: MouseInputAction) {
+        val window = gameWindowsManager.currentWindow as ChestInventoryWindow
         val texture = windowTexture
 
         val xOnWindow =
@@ -104,6 +111,8 @@ class SelectChestInventoryItemMouseInputHandler @Inject constructor(
             handleInsideInventoryGrid(action, xOnGrid.toInt(), yOnGrid.toInt())
         } else if (isInsideContentGrid) {
             handleInsideContentGrid(action, xOnContent.toInt(), yOnContent.toInt())
+        } else {
+            handleOutsideAnyCell(action, window)
         }
     }
 }

@@ -11,6 +11,8 @@ import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem.Companion.isNoneOrNull
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.stats.repository.StatsRepository
+import ru.fredboy.cavedroid.entity.drop.DropQueue
+import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindow
@@ -27,6 +29,8 @@ abstract class AbstractInventoryItemsMouseInputHandler(
     private val windowType: GameWindowType,
     private val inventoryHintEvents: InventoryHintEvents,
     private val statsRepository: StatsRepository,
+    private val playerAdapter: PlayerAdapter,
+    private val dropQueue: DropQueue,
 ) : IMouseInputHandler {
 
     private var selectableCellHoldTask: Timer.Task? = null
@@ -196,6 +200,17 @@ abstract class AbstractInventoryItemsMouseInputHandler(
                 statsRepository.recordItemCrafted()
             }
         }
+    }
+
+    protected fun handleOutsideAnyCell(action: MouseInputAction, window: AbstractInventoryWindow) {
+        if (action.actionKey !is MouseInputActionKey.Screen || !action.actionKey.touchUp) {
+            return
+        }
+
+        val selectedItem = window.selectedItem?.takeIf { !it.isNoneOrNull() } ?: return
+
+        dropQueue.offerItem(playerAdapter.x, playerAdapter.y, selectedItem)
+        window.selectedItem = null
     }
 
     companion object {

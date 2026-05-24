@@ -46,6 +46,8 @@ SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
     windowType = GameWindowType.SURVIVAL_INVENTORY,
     inventoryHintEvents = inventoryHintEvents,
     statsRepository = statsRepository,
+    playerAdapter = playerAdapter,
+    dropQueue = dropQueue,
 ) {
 
     override val windowTexture get() = requireNotNull(textureRegions["survival"])
@@ -264,6 +266,8 @@ SelectSurvivalInventoryItemMouseInputHandler @Inject constructor(
             toggleRecipeBook(window)
         } else if (isInsideRecipeBook) {
             handleInsideRecipeBook(action)
+        } else {
+            handleOutsideAnyCell(action, window)
         }
     }
 }

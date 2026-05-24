@@ -45,6 +45,8 @@ class SelectCraftingInventoryItemMouseInputHandler @Inject constructor(
     windowType = GameWindowType.CRAFTING_TABLE,
     inventoryHintEvents = inventoryHintEvents,
     statsRepository = statsRepository,
+    playerAdapter = playerAdapter,
+    dropQueue = dropQueue,
 ) {
 
     override val windowTexture get() = requireNotNull(textureRegions["crafting_table"])
@@ -236,6 +238,8 @@ class SelectCraftingInventoryItemMouseInputHandler @Inject constructor(
             toggleRecipeBook(window)
         } else if (isInsideRecipeBook) {
             handleInsideRecipeBook(action)
+        } else {
+            handleOutsideAnyCell(action, window)
         }
     }
 }

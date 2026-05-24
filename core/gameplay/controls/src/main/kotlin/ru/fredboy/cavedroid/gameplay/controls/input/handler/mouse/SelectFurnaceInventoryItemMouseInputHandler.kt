@@ -11,6 +11,8 @@ import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem.Companion
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.stats.repository.StatsRepository
 import ru.fredboy.cavedroid.entity.container.model.Furnace
+import ru.fredboy.cavedroid.entity.drop.DropQueue
+import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsConfigs
@@ -31,6 +33,8 @@ class SelectFurnaceInventoryItemMouseInputHandler @Inject constructor(
     itemsRepository: ItemsRepository,
     inventoryHintEvents: InventoryHintEvents,
     statsRepository: StatsRepository,
+    playerAdapter: PlayerAdapter,
+    dropQueue: DropQueue,
 ) : AbstractInventoryItemsMouseInputHandler(
     applicationContextRepository = applicationContextRepository,
     gameContextRepository = gameContextRepository,
@@ -39,6 +43,8 @@ class SelectFurnaceInventoryItemMouseInputHandler @Inject constructor(
     windowType = GameWindowType.FURNACE,
     inventoryHintEvents = inventoryHintEvents,
     statsRepository = statsRepository,
+    playerAdapter = playerAdapter,
+    dropQueue = dropQueue,
 ) {
 
     override val windowTexture get() = requireNotNull(textureRegions["furnace"])
@@ -90,6 +96,7 @@ class SelectFurnaceInventoryItemMouseInputHandler @Inject constructor(
     }
 
     override fun handle(action: MouseInputAction) {
+        val window = gameWindowsManager.currentWindow as FurnaceInventoryWindow
         val texture = windowTexture
 
         val xOnWindow =
@@ -130,6 +137,8 @@ class SelectFurnaceInventoryItemMouseInputHandler @Inject constructor(
             handleInsideInput(action)
         } else if (isInsideResult) {
             handleInsideResult(action)
+        } else {
+            handleOutsideAnyCell(action, window)
         }
     }
 }
