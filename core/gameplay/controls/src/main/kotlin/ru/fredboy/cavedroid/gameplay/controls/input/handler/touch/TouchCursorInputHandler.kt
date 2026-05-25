@@ -269,6 +269,8 @@ class TouchCursorInputHandler @Inject constructor(
                 handleUp()
                 pointer = -1
                 mobController.player.holdAim = true
+                mobController.player.aimX = mobController.player.cursorX
+                mobController.player.aimY = mobController.player.cursorY
                 mobController.player.aimToPlayer.set(
                     player.aimX - player.position.x,
                     player.aimY - player.position.y,

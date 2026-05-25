@@ -32,7 +32,8 @@ class LightingOverlayRenderer(
     private var rawBrightness: FloatArray = FloatArray(0)
     private var rawCapacity: Int = 0
 
-    fun render(camera: OrthographicCamera, sunBrightness: Float) {
+    fun render(camera: OrthographicCamera, sunLight: Float) {
+        val sunBrightness = max(sunLight, MIN_SUN_BRIGHTNESS)
         val visible: Rectangle = gameContextRepository.getCameraContext().visibleWorld
         val padding = 1
         val minX = floor(visible.x).toInt() - padding
@@ -169,6 +170,7 @@ class LightingOverlayRenderer(
     }
 
     companion object {
+        private const val MIN_SUN_BRIGHTNESS = 0.2f
         private const val MIN_AMBIENT = 1f / LightGrid.MAX_LEVEL_F
 
         private val NEIGHBOURS = arrayOf(

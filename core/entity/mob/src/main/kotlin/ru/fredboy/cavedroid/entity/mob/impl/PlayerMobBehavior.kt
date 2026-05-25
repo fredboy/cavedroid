@@ -158,6 +158,12 @@ class PlayerMobBehavior(
         }
         rayCastCursor(worldAdapter)
 
+        if (holdAim && controlVector.isZero) {
+            aimX = cursorX
+            aimY = cursorY
+            aimToPlayer.set(aimX - position.x, aimY - position.y)
+        }
+
         if (gameMode.isCreative()) {
             return
         }

@@ -106,13 +106,20 @@ class OnboardingController @Inject constructor(
             val player = mobController.player
             baseline != null && (player.aimToPlayer != baseline)
         }
+
         is OnboardingStep.Break -> mobController.player.isHittingWithDamage
         is OnboardingStep.Place -> placeTriggered
-        is OnboardingStep.OpenInventory -> gameWindowsManager.currentWindowType != GameWindowType.NONE
+        is OnboardingStep.OpenInventory -> gameWindowsManager.currentWindowType in inventoryWindowTypes
     }
 
     companion object {
         private const val COOLDOWN_SEC = 1.5f
         private const val JUMP_VELOCITY_THRESHOLD = -3f
+
+        private val inventoryWindowTypes = setOf(
+            GameWindowType.CREATIVE_INVENTORY,
+            GameWindowType.CREATIVE_INVENTORY_TABS,
+            GameWindowType.SURVIVAL_INVENTORY,
+        )
     }
 }
