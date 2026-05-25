@@ -130,10 +130,10 @@ abstract class BlocksRenderer(
         val bottomRight = foreBottom || foreRight || foreBottomRight
         val bottomLeft = foreBottom || foreLeft || foreBottomLeft
 
-        if (!topLeft && !topRight && !bottomRight && !bottomLeft) return
+        if (!topLeft && !topRight && !bottomRight && !bottomLeft) {
+            return
+        }
 
-        // FBO local Y maps linearly to world Y (y-down camera), so col1/col2 (at FBO y)
-        // are the visual top corners and col3/col4 (at FBO y+1) are the visual bottom corners.
         shapeRenderer.rect(
             /* x = */ drawX,
             /* y = */ drawY,

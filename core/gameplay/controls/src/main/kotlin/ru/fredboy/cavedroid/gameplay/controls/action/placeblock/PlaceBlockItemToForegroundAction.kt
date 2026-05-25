@@ -37,9 +37,15 @@ class PlaceBlockItemToForegroundAction @Inject constructor(
             return false
         }
 
-        if (placeable.block.params.requiresBlock &&
-            gameWorld.getForeMap(x, y + 1).params.run { !hasCollision || !isFullBlock }
-        ) {
+        val attachToBottom = gameWorld.getForeMap(x, y + 1).params.hasCollision
+        val attachToNeighbour = gameWorld.getForeMap(x, y).params.allowAttachToNeighbour &&
+            (
+                gameWorld.getForeMap(x - 1, y).params.run { hasCollision && !isTransparent } ||
+                    gameWorld.getForeMap(x + 1, y).params.run { hasCollision && !isTransparent } ||
+                    gameWorld.getBackMap(x, y).params.hasCollision
+                )
+
+        if (!attachToBottom && !attachToNeighbour) {
             return false
         }
 
