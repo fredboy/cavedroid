@@ -56,11 +56,11 @@ class MobController @Inject constructor(
         params = requireNotNull(mobParamsRepository.getMobParamsByKey("char")),
         soundPlayer = soundPlayer,
         stepsSoundAssetsRepository = stepsSoundAssetsRepository,
-    ).apply { holdCursor = applicationContextRepository.isTouch() }
+    ).apply { holdAim = applicationContextRepository.isTouch() }
         set(value) {
             field.dispose()
             field = value
-            field.holdCursor = applicationContextRepository.isTouch()
+            field.holdAim = applicationContextRepository.isTouch()
             field.initSight(mobWorldAdapter)
         }
 

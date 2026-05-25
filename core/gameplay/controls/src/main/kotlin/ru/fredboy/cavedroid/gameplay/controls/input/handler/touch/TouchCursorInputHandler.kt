@@ -66,7 +66,7 @@ class TouchCursorInputHandler @Inject constructor(
     private var wasDragged = false
 
     private val touchDownCoords = Vector2()
-    private val touchDownCursorCoords = Vector2()
+    private val touchDownAimCoords = Vector2()
 
     private val touchDownPlayerPos = Vector2()
 
@@ -260,18 +260,18 @@ class TouchCursorInputHandler @Inject constructor(
             if (!action.actionKey.touchUp) {
                 pointer = action.actionKey.pointer
                 touchDownCoords.set(action.screenX, action.screenY)
-                touchDownCursorCoords.set(player.cursorX, player.cursorY)
+                touchDownAimCoords.set(player.aimX, player.aimY)
                 touchDownPlayerPos.set(player.position)
                 wasDragged = false
-                mobController.player.holdCursor = false
+                mobController.player.holdAim = false
                 handleTouchDown(action)
             } else {
                 handleUp()
                 pointer = -1
-                mobController.player.holdCursor = true
-                mobController.player.cursorToPlayer.set(
-                    player.cursorX - player.position.x,
-                    player.cursorY - player.position.y,
+                mobController.player.holdAim = true
+                mobController.player.aimToPlayer.set(
+                    player.aimX - player.position.x,
+                    player.aimY - player.position.y,
                 )
             }
         } else if (action.actionKey is MouseInputActionKey.Dragged && pointer != -1) {
@@ -292,7 +292,7 @@ class TouchCursorInputHandler @Inject constructor(
         updateCursorPosition(action)
         mobController.rayCastPlayerCursor {
             touchDownCoords.set(action.screenX, action.screenY)
-            touchDownCursorCoords.set(player.cursorX, player.cursorY)
+            touchDownAimCoords.set(player.aimX, player.aimY)
             touchDownPlayerPos.set(player.position)
         }
         setPlayerDirectionToCursor()
@@ -305,11 +305,11 @@ class TouchCursorInputHandler @Inject constructor(
     private fun updateCursorPosition(action: MouseInputAction) {
         val moveX = action.screenX - touchDownCoords.x
         val moveY = action.screenY - touchDownCoords.y
-        val worldX = touchDownCursorCoords.x + moveX.meters + (player.position.x - touchDownPlayerPos.x)
-        val worldY = touchDownCursorCoords.y + moveY.meters + (player.position.y - touchDownPlayerPos.y)
+        val worldX = touchDownAimCoords.x + moveX.meters + (player.position.x - touchDownPlayerPos.x)
+        val worldY = touchDownAimCoords.y + moveY.meters + (player.position.y - touchDownPlayerPos.y)
 
-        player.cursorX = worldX
-        player.cursorY = worldY
+        player.aimX = worldX
+        player.aimY = worldY
 
         player.headRotation = getPlayerHeadRotation(worldX, worldY)
 

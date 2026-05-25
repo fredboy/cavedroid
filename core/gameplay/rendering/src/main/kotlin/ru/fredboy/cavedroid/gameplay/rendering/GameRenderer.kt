@@ -149,8 +149,8 @@ class GameRenderer @Inject constructor(
 
     private fun updateDynamicCameraPosition(delta: Float) {
         val cameraTargetPosition = Vector3().apply {
-            x = player.x / 2f + player.cursorX / 2f
-            y = player.y / 2f + player.cursorY / 2f
+            x = player.x / 2f + player.aimX / 2f
+            y = player.y / 2f + player.aimY / 2f
         }
 
         if (!gameContextRepository.getCameraContext().visibleWorld.contains(player.x, player.y)) {

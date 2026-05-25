@@ -66,6 +66,17 @@ class CrosshairRenderer @Inject constructor(
                     height = crosshairSprite.regionHeight.toFloat(),
                     tint = tintColor,
                 )
+
+                if (gameContextRepository.shouldShowInfo()) {
+                    spriteBatch.drawSprite(
+                        sprite = crosshairSprite,
+                        x = x - crosshairSprite.regionWidth / 2f + (mobController.player.aimX - mobController.player.cursorX).pixels,
+                        y = y - crosshairSprite.regionHeight / 2f + (mobController.player.aimY - mobController.player.cursorY).pixels,
+                        width = crosshairSprite.regionWidth.toFloat(),
+                        height = crosshairSprite.regionHeight.toFloat(),
+                        tint = Color(0.5f, 0.5f, 0.5f, 1f),
+                    )
+                }
             }
         }
     }

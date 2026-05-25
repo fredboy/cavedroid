@@ -152,11 +152,11 @@ class PlayerMobBehavior(
             jump()
         }
 
-        if (holdCursor) {
-            cursorX = position.x + cursorToPlayer.x
-            cursorY = position.y + cursorToPlayer.y
-            rayCastCursor(worldAdapter)
+        if (holdAim) {
+            aimX = position.x + aimToPlayer.x
+            aimY = position.y + aimToPlayer.y
         }
+        rayCastCursor(worldAdapter)
 
         if (gameMode.isCreative()) {
             return

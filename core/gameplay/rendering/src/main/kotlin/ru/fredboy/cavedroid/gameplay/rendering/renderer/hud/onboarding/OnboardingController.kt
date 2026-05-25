@@ -64,7 +64,7 @@ class OnboardingController @Inject constructor(
     private fun handleAwaitingInput(current: OnboardingState) {
         if (current.step === OnboardingStep.Aim && cursorBaseline == null) {
             val player = mobController.player
-            cursorBaseline = player.cursorToPlayer.cpy()
+            cursorBaseline = player.aimToPlayer.cpy()
             return
         }
         if (isTriggered(current.step)) {
@@ -104,7 +104,7 @@ class OnboardingController @Inject constructor(
         is OnboardingStep.Aim -> {
             val baseline = cursorBaseline
             val player = mobController.player
-            baseline != null && (player.cursorToPlayer != baseline)
+            baseline != null && (player.aimToPlayer != baseline)
         }
         is OnboardingStep.Break -> mobController.player.isHittingWithDamage
         is OnboardingStep.Place -> placeTriggered
