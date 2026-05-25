@@ -6,7 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable
 import com.badlogic.gdx.utils.Align
 import ktx.scene2d.Scene2dDsl
 import ktx.scene2d.actors
-import ktx.scene2d.image
 import ktx.scene2d.label
 import ktx.scene2d.scrollPane
 import ktx.scene2d.table
@@ -55,17 +54,6 @@ private fun Stage.show(viewModel: WorldConfigMenuViewModel) {
                 ),
             )
             pad(8f)
-
-            image("gamelogo").apply {
-                cell(
-                    width = 600f,
-                    height = 600f * drawable.minHeight / drawable.minWidth,
-                )
-                center()
-                top()
-            }
-
-            row()
 
             label(viewModel.getLocalizedString("worldSize")) {
                 setAlignment(Align.center)
