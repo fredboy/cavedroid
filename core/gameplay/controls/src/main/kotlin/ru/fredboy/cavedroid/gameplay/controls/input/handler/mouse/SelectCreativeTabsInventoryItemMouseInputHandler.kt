@@ -197,7 +197,7 @@ class SelectCreativeTabsInventoryItemMouseInputHandler @Inject constructor(
                 yOnWindow <= windowTexture.regionHeight
 
         val isInsideTrash =
-            xOnInvGrid.toInt() == CreativeTabs.hotbarCells &&
+            xOnInvGrid > CreativeTabs.hotbarCells &&
                 yOnWindow >= windowTexture.regionHeight - CreativeTabs.hotbarOffsetFromBottom &&
                 yOnWindow <= windowTexture.regionHeight
 
