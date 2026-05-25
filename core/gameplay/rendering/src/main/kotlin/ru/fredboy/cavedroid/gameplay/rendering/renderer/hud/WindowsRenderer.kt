@@ -1,5 +1,7 @@
 package ru.fredboy.cavedroid.gameplay.rendering.renderer.hud
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
@@ -30,14 +32,64 @@ class WindowsRenderer @Inject constructor(
     override val renderLayer get() = RENDER_LAYER
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
+        // dim background
+        if (gameWindowsManager.currentWindowType != GameWindowType.NONE) {
+            spriteBatch.end()
+            Gdx.gl.glEnable(GL20.GL_BLEND)
+            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
+            shapeRenderer.setColor(0f, 0f, 0f, 0.4f)
+            shapeRenderer.rect(0f, 0f, viewport.width, viewport.height)
+            shapeRenderer.end()
+            Gdx.gl.glDisable(GL20.GL_BLEND)
+            spriteBatch.begin()
+        }
+
         when (val windowType = gameWindowsManager.currentWindowType) {
-            GameWindowType.CREATIVE_INVENTORY -> creativeWindowRenderer.draw(spriteBatch, shapeRenderer, viewport, delta)
-            GameWindowType.SURVIVAL_INVENTORY -> survivalWindowRenderer.draw(spriteBatch, shapeRenderer, viewport, delta)
-            GameWindowType.CRAFTING_TABLE -> craftingWindowRenderer.draw(spriteBatch, shapeRenderer, viewport, delta)
-            GameWindowType.FURNACE -> furnaceWindowRenderer.draw(spriteBatch, shapeRenderer, viewport, delta)
-            GameWindowType.CHEST -> chestWindowRenderer.draw(spriteBatch, shapeRenderer, viewport, delta)
-            GameWindowType.CREATIVE_INVENTORY_TABS -> creativeTabsWindowRenderer.draw(spriteBatch, shapeRenderer, viewport, delta)
+            GameWindowType.CREATIVE_INVENTORY -> creativeWindowRenderer.draw(
+                spriteBatch = spriteBatch,
+                shapeRenderer = shapeRenderer,
+                viewport = viewport,
+                delta = delta,
+            )
+
+            GameWindowType.SURVIVAL_INVENTORY -> survivalWindowRenderer.draw(
+                spriteBatch = spriteBatch,
+                shapeRenderer = shapeRenderer,
+                viewport = viewport,
+                delta = delta,
+            )
+
+            GameWindowType.CRAFTING_TABLE -> craftingWindowRenderer.draw(
+                spriteBatch = spriteBatch,
+                shapeRenderer = shapeRenderer,
+                viewport = viewport,
+                delta = delta,
+            )
+
+            GameWindowType.FURNACE -> furnaceWindowRenderer.draw(
+                spriteBatch = spriteBatch,
+                shapeRenderer = shapeRenderer,
+                viewport = viewport,
+                delta = delta,
+            )
+
+            GameWindowType.CHEST -> chestWindowRenderer.draw(
+                spriteBatch = spriteBatch,
+                shapeRenderer = shapeRenderer,
+                viewport = viewport,
+                delta = delta,
+            )
+
+            GameWindowType.CREATIVE_INVENTORY_TABS -> creativeTabsWindowRenderer.draw(
+                spriteBatch = spriteBatch,
+                shapeRenderer = shapeRenderer,
+                viewport = viewport,
+                delta = delta,
+            )
+
             GameWindowType.NONE -> return
+
             else -> logger.e { "Cannot draw window: ${windowType.name}" }
         }
     }

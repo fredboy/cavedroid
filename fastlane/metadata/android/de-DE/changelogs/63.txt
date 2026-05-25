@@ -1,0 +1,6 @@
+- Verbesserte Überlebens-HUD für bessere Sichtbarkeit.
+- Genieße neue Lichteffekte mit dem hinzugefügten BFS-Licht-Backend und der sanften Beleuchtungseinstellung.
+- Probleme mit der Platzierung von Fackeln und der Darstellung von Sonne und Mond wurden behoben.
+- Verhindere, dass Gegenstände im Inventar stecken bleiben.
+- Merke dir die zuletzt geöffnete kreative Registerkarte für ein angenehmeres Spiel.
+- Kleinere Verbesserungen und Fehlerbehebungen.

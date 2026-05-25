@@ -94,6 +94,8 @@ class PlayerMapper @Inject constructor(
             blockDamage = saveDataDto.blockDamage
             cursorX = saveDataDto.cursorX.toFloat()
             cursorY = saveDataDto.cursorY.toFloat()
+            aimX = cursorX
+            aimY = cursorY
             controlMode = controlModeMapper.mapControlMode(saveDataDto.controlMode)
             spawnPoint = Vector2(saveDataDto.spawnPointX, saveDataDto.spawnPointY)
             activeSlot = saveDataDto.activeSlot

@@ -478,6 +478,14 @@ class GameWorldGenerator(
         }
     }
 
+    private fun postGenCleanUp() {
+        for (x in 0..<config.width) {
+            if (foreMap[x][heights[x] - 1].params.requiresBlock && !foreMap[x][heights[x]].params.hasCollision) {
+                foreMap[x][heights[x] - 1] = itemsRepository.fallbackBlock
+            }
+        }
+    }
+
     /**
      * Generate world
      */
@@ -501,6 +509,8 @@ class GameWorldGenerator(
         generateSugarCane()
         generateCaves()
         fillLava()
+
+        postGenCleanUp()
 
         return GeneratedWorld(foreMap, backMap, biomes)
     }

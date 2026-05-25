@@ -34,7 +34,6 @@ class OnboardingOverlayRenderer @Inject constructor(
             return
         }
 
-        controller.tick(delta.coerceAtMost(MAX_TICK_DELTA))
         val state = controller.state ?: return
 
         val fadeOut = if (state.isLast && !state.awaitingInput) {

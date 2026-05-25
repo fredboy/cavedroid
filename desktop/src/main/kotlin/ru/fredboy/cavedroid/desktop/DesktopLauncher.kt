@@ -9,8 +9,10 @@ import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.desktop.utils.SaveSizePrefsGameDecorator
+import ru.fredboy.cavedroid.gameplay.lighting.bfs.BfsLightingSystemFactory
 import ru.fredboy.cavedroid.gameplay.lighting.box2d.Box2dLightingSystemFactory
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
+import ru.fredboy.cavedroid.gdx.di.DelegatingLightingSystemFactory
 
 internal object DesktopLauncher {
 
@@ -59,7 +61,11 @@ internal object DesktopLauncher {
             isTouchScreen = touch,
             isDebug = debug,
             preferencesStore = preferencesStore,
-            lightingSystemFactory = Box2dLightingSystemFactory(),
+            lightingSystemFactory = DelegatingLightingSystemFactory(
+                preferencesStore = preferencesStore,
+                legacy = Box2dLightingSystemFactory(),
+                bfs = BfsLightingSystemFactory(),
+            ),
             dispatchers = AppDispatchers(
                 io = Dispatchers.IO,
                 background = Dispatchers.Default,

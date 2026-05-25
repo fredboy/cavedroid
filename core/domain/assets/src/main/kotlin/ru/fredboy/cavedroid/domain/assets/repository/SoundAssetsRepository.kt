@@ -9,7 +9,7 @@ abstract class SoundAssetsRepository : AssetsRepository {
 
     protected val loadedSounds = LinkedList<Sound>()
 
-    protected fun FileHandle.loadAllSounds(getName: (Int) -> String = { "$it.ogg" }): List<Sound> {
+    protected fun FileHandle.loadAllSounds(getName: (Int) -> String = { "$it.mp3" }): List<Sound> {
         if (!exists()) {
             return emptyList()
         }

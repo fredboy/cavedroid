@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.utils.Vector2Proxy
+import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.world.model.ContactSensorType
@@ -136,6 +137,11 @@ class Drop(
 
     private fun getControlVectorWithAppliedResistance(dropWorldAdapter: DropWorldAdapter): Vector2 {
         val liquid = dropWorldAdapter.getMediumLiquid(hitbox.apply { height *= .75f })
+
+        if (liquid is Block.Lava) {
+            isPickedUp = true
+            return Vector2.Zero
+        }
 
         val mediumResistance = liquid?.density ?: 1f
         body.linearDamping = mediumResistance

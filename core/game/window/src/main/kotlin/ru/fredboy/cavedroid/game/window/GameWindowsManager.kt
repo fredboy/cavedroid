@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.game.window
 
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.TooltipManager
+import ru.fredboy.cavedroid.common.utils.safeCast
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.entity.container.model.Chest
 import ru.fredboy.cavedroid.entity.container.model.Furnace
@@ -33,6 +34,8 @@ class GameWindowsManager @Inject constructor(
     val currentWindowType: GameWindowType
         get() = currentWindow?.type ?: GameWindowType.NONE
 
+    private var lastOpenCreativeTab: CreativeInventoryTabsWindow.Tab? = null
+
     fun openSurvivalInventory() {
         currentWindow = SurvivalInventoryWindow(itemsRepository)
     }
@@ -42,7 +45,9 @@ class GameWindowsManager @Inject constructor(
     }
 
     fun openCreativeTabsInventory() {
-        currentWindow = CreativeInventoryTabsWindow(itemsRepository)
+        currentWindow = CreativeInventoryTabsWindow(itemsRepository).apply {
+            selectedTab = lastOpenCreativeTab ?: selectedTab
+        }
     }
 
     fun openFurnace(furnace: Furnace) {
@@ -61,6 +66,11 @@ class GameWindowsManager @Inject constructor(
         (currentWindow as? AbstractInventoryWindowWithCraftGrid)?.let { window ->
             dropAdapter.dropItems(playerAdapter.x, playerAdapter.y, window.craftingItems)
         }
+
+        currentWindow?.safeCast<CreativeInventoryTabsWindow>()?.selectedTab?.let { tab ->
+            lastOpenCreativeTab = tab
+        }
+
         currentWindow = null
         tooltipManager.showMouseTooltip("")
     }

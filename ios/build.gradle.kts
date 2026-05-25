@@ -14,6 +14,7 @@ dependencies {
     useCommonLibs()
     useGdxModule()
     useLightingBox2d()
+    useLightingBfs()
 
     implementation(Dependencies.LibGDX.gdx)
     implementation(Dependencies.RoboVM.rt)

@@ -1,0 +1,6 @@
+- Improve survival HUD for better visibility.
+- Enjoy new lighting effects with the added BFS lighting backend and smooth-lighting setting.
+- Fix issues with torch placement and rendering of the sun and moon.
+- Prevent items from getting stuck in inventory.
+- Remember your last open creative tab for easier gameplay.
+- Minor improvements and bug fixes.

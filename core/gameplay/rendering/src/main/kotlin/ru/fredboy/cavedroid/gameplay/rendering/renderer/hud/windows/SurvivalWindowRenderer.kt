@@ -61,6 +61,7 @@ class SurvivalWindowRenderer @Inject constructor(
 
             wearableTextureAssetsRepository.getFrontSprite(material, slot)
                 ?.apply {
+                    setScale(1f)
                     setPosition(portraitX + armorX, portraitY + armorY)
                     setColor(armorPiece.params.tint ?: Color.WHITE)
                 }

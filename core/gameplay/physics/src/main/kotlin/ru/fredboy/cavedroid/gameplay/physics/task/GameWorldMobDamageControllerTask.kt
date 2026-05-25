@@ -60,7 +60,7 @@ class GameWorldMobDamageControllerTask @Inject constructor(
         val y = (position.y - height / 2f + 0.125f).toInt()
 
         return gameWorld.getForeMap(x, y).let { block ->
-            block.params.hasCollision && block.getRectangle(x, y).overlaps(hitbox)
+            block.params.hasCollision && block.params.isFullBlock && block.getRectangle(x, y).overlaps(hitbox)
         }
     }
 

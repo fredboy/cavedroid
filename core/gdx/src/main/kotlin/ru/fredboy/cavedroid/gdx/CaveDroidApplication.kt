@@ -26,6 +26,7 @@ import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.utils.DEFAULT_VIEWPORT_WIDTH
 import ru.fredboy.cavedroid.common.utils.ratio
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
+import ru.fredboy.cavedroid.domain.configuration.model.LightingBackend
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystemFactory
 import ru.fredboy.cavedroid.gdx.di.ApplicationComponent
 import ru.fredboy.cavedroid.gdx.di.DaggerApplicationComponent
@@ -115,6 +116,9 @@ class CaveDroidApplication(
                     isInventoryHintShown = preferencesStore.getPreference(PreferenceKeys.INVENTORY_HINT_SHOWN)
                         ?.toBooleanStrictOrNull() ?: false,
                     personalizedAdsConsent = personalizedAdsConsent,
+                    lightingBackend = LightingBackend.fromName(
+                        preferencesStore.getPreference(PreferenceKeys.LIGHTING_BACKEND),
+                    ),
                     isYandexGamesBuild = isYandexGamesBuild,
                 ),
             )

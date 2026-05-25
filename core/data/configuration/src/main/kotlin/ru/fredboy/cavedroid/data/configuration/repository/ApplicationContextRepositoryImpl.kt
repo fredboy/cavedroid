@@ -5,6 +5,7 @@ import com.badlogic.gdx.Files
 import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.common.CaveDroidConstants.SUPPORTED_LOCALES
 import ru.fredboy.cavedroid.data.configuration.store.ApplicationContextStore
+import ru.fredboy.cavedroid.domain.configuration.model.LightingBackend
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import java.util.Locale
 import javax.inject.Inject
@@ -122,6 +123,12 @@ class ApplicationContextRepositoryImpl @Inject constructor(
 
     override fun setPersonalizedAdsConsent(consent: Boolean?) {
         applicationContextStore.personalizedAdsConsent = consent
+    }
+
+    override fun getLightingBackend(): LightingBackend = applicationContextStore.lightingBackend
+
+    override fun setLightingBackend(backend: LightingBackend) {
+        applicationContextStore.lightingBackend = backend
     }
 
     companion object {

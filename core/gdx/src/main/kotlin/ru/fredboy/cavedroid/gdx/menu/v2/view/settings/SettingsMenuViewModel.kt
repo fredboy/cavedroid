@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
+import ru.fredboy.cavedroid.domain.configuration.model.LightingBackend
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
@@ -47,6 +48,11 @@ class SettingsMenuViewModel(
         .onStart { emit(applicationContextRepository.isSoundEnabled()) }
         .distinctUntilChanged()
 
+    private val _smoothLightingFlow = MutableSharedFlow<Boolean>(replay = 0)
+    private val smoothLightingFlow: Flow<Boolean> = _smoothLightingFlow
+        .onStart { emit(applicationContextRepository.getLightingBackend() == LightingBackend.BFS) }
+        .distinctUntilChanged()
+
     private val _personalizedAdsFlow = MutableSharedFlow<Boolean>(replay = 0)
     private val personalizedAdsFlow: Flow<Boolean> = _personalizedAdsFlow
         .onStart { emit(applicationContextRepository.getPersonalizedAdsConsent() ?: false) }
@@ -62,6 +68,7 @@ class SettingsMenuViewModel(
         fullscreenFlow,
         autoJumpFlow,
         soundFlow,
+        smoothLightingFlow,
         personalizedAdsFlow,
         canResetHintsFlow,
     ) { values ->
@@ -70,11 +77,12 @@ class SettingsMenuViewModel(
             fullscreen = values[1],
             autoJump = values[2],
             sound = values[3],
+            smoothLighting = values[4],
             showPersonalizedAdsToggle = showPersonalizedAdsToggle,
-            personalizedAds = values[4],
+            personalizedAds = values[5],
             showFullscreenButton = Gdx.graphics.supportsDisplayModeChange() &&
                 Gdx.app.type != Application.ApplicationType.WebGL,
-            canResetHints = values[5],
+            canResetHints = values[6],
         )
     }.stateIn(
         scope = viewModelScope,
@@ -93,6 +101,7 @@ class SettingsMenuViewModel(
             fullscreen = applicationContextRepository.isFullscreen(),
             autoJump = applicationContextRepository.isAutoJumpEnabled(),
             sound = applicationContextRepository.isSoundEnabled(),
+            smoothLighting = applicationContextRepository.getLightingBackend() == LightingBackend.BFS,
             showPersonalizedAdsToggle = showPersonalizedAdsToggle,
             personalizedAds = applicationContextRepository.getPersonalizedAdsConsent() ?: false,
             showFullscreenButton = Gdx.graphics.supportsDisplayModeChange() &&
@@ -117,6 +126,10 @@ class SettingsMenuViewModel(
         viewModelScope.launch { _soundFlow.emit(enabled) }
     }
 
+    fun onSmoothLightingClick(enabled: Boolean) {
+        viewModelScope.launch { _smoothLightingFlow.emit(enabled) }
+    }
+
     fun onPersonalizedAdsClick(enabled: Boolean) {
         viewModelScope.launch { _personalizedAdsFlow.emit(enabled) }
     }
@@ -127,6 +140,9 @@ class SettingsMenuViewModel(
             applicationContextRepository.setUseDynamicCamera(dynamicCamera)
             applicationContextRepository.setAutoJumpEnabled(autoJump)
             applicationContextRepository.setSoundEnabled(sound)
+            applicationContextRepository.setLightingBackend(
+                if (smoothLighting) LightingBackend.BFS else LightingBackend.LEGACY,
+            )
             if (showPersonalizedAdsToggle) {
                 applicationContextRepository.setPersonalizedAdsConsent(personalizedAds)
                 adController.setPersonalizedAdsEnabled(personalizedAds)

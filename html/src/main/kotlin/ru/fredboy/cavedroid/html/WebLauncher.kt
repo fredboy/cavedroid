@@ -13,8 +13,10 @@ import ru.fredboy.cavedroid.common.api.NoOpCloudStatsSync
 import ru.fredboy.cavedroid.common.api.NoOpInlineTextInput
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
+import ru.fredboy.cavedroid.gameplay.lighting.bfs.BfsLightingSystemFactory
 import ru.fredboy.cavedroid.gameplay.lighting.tint.TintLightingSystemFactory
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
+import ru.fredboy.cavedroid.gdx.di.DelegatingLightingSystemFactory
 import java.util.Locale
 
 object WebLauncher {
@@ -39,13 +41,19 @@ object WebLauncher {
 
         val isMobileBrowser = isMobileBrowser()
 
+        val preferencesStore = WebPreferencesStore()
+
         val app = CaveDroidApplication(
             gameDataDirectoryPath = "",
             gameDataFileType = Files.FileType.Local,
             isTouchScreen = isMobileBrowser,
             isDebug = false,
-            preferencesStore = WebPreferencesStore(),
-            lightingSystemFactory = TintLightingSystemFactory(),
+            preferencesStore = preferencesStore,
+            lightingSystemFactory = DelegatingLightingSystemFactory(
+                preferencesStore = preferencesStore,
+                legacy = TintLightingSystemFactory(),
+                bfs = BfsLightingSystemFactory(),
+            ),
             dispatchers = AppDispatchers(
                 io = GdxMainDispatcher,
                 background = GdxMainDispatcher,

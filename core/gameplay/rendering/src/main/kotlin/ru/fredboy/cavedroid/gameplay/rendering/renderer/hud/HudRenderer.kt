@@ -56,13 +56,15 @@ class HudRenderer @Inject constructor(
         val totalHearts = player.maxHealth / 2
         val wholeHearts = player.health / 2
 
+        val iconWidth = wholeHeart.regionWidth - 1
+
         for (i in 0..<totalHearts) {
             if (i < wholeHearts) {
-                spriteBatch.draw(wholeHeart, x + i * wholeHeart.regionWidth, y)
+                spriteBatch.draw(wholeHeart, x + i * iconWidth, y)
             } else if (i == wholeHearts && player.health % 2 == 1) {
-                spriteBatch.draw(halfHeart, x + i * wholeHeart.regionWidth, y)
+                spriteBatch.draw(halfHeart, x + i * iconWidth, y)
             } else {
-                spriteBatch.draw(emptyHeart, x + i * wholeHeart.regionWidth, y)
+                spriteBatch.draw(emptyHeart, x + i * iconWidth, y)
             }
         }
     }
@@ -81,8 +83,10 @@ class HudRenderer @Inject constructor(
         val totalFoods = Player.MAX_FOOD_LEVEL / 2
         val wholeFoods = player.foodLevel / 2
 
+        val iconWidth = foodWhole.regionWidth - 1
+
         for (i in 0..<totalFoods) {
-            val drawX = x - (i + 1) * foodWhole.regionWidth
+            val drawX = x - (i + 1) * iconWidth
             if (i < wholeFoods) {
                 spriteBatch.draw(foodWhole, drawX, y)
             } else if (i == wholeFoods && player.foodLevel % 2 == 1) {
@@ -100,14 +104,15 @@ class HudRenderer @Inject constructor(
             return
         }
 
-        val x = x - wholeBubbleTexture.regionWidth
+        val iconWidth = wholeBubbleTexture.regionWidth - 1
+        val x = x - iconWidth
 
         if (player.breath < player.params.maxBreath) {
             for (i in 0..<player.breath / 2) {
-                spriteBatch.draw(wholeBubbleTexture, x - i * wholeBubbleTexture.regionWidth, y)
+                spriteBatch.draw(wholeBubbleTexture, x - i * iconWidth, y)
             }
             if (player.breath % 2 == 1) {
-                spriteBatch.draw(halfBubbleTexture, x - (player.breath / 2) * wholeBubbleTexture.regionWidth, y)
+                spriteBatch.draw(halfBubbleTexture, x - (player.breath / 2) * iconWidth, y)
             }
         }
     }
@@ -122,14 +127,15 @@ class HudRenderer @Inject constructor(
 
         val totalShields = player.maxHealth / 2
         val wholeShields = protection / 2
+        val iconWidth = wholeShieldTexture.regionWidth - 1
 
         for (i in 0..<totalShields) {
             if (i < wholeShields) {
-                spriteBatch.draw(wholeShieldTexture, x + i * wholeShieldTexture.regionWidth, y)
+                spriteBatch.draw(wholeShieldTexture, x + i * iconWidth, y)
             } else if (i == wholeShields && protection % 2 == 1) {
-                spriteBatch.draw(halfShieldTexture, x + i * wholeShieldTexture.regionWidth, y)
+                spriteBatch.draw(halfShieldTexture, x + i * iconWidth, y)
             } else {
-                spriteBatch.draw(emptyShieldTexture, x + i * wholeShieldTexture.regionWidth, y)
+                spriteBatch.draw(emptyShieldTexture, x + i * iconWidth, y)
             }
         }
     }

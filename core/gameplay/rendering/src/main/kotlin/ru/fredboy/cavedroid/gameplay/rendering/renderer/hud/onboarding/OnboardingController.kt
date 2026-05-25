@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.onboarding
 
+import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.api.OnboardingEvents
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
@@ -23,7 +24,7 @@ class OnboardingController @Inject constructor(
 
     private var stepIndex = 0
 
-    private var cursorBaseline: Pair<Float, Float>? = null
+    private var cursorBaseline: Vector2? = null
 
     private var placeTriggered = false
 
@@ -39,7 +40,7 @@ class OnboardingController @Inject constructor(
     }
         private set
 
-    fun tick(delta: Float) {
+    fun update(delta: Float) {
         val current = state ?: return
         if (current.awaitingInput) {
             handleAwaitingInput(current)
@@ -53,13 +54,17 @@ class OnboardingController @Inject constructor(
         .get(step.localizationKey(isTouch))
 
     override fun notifyPlace() {
+        if (stepIndex < steps.size && steps[stepIndex] != OnboardingStep.Place) {
+            return
+        }
+
         placeTriggered = true
     }
 
     private fun handleAwaitingInput(current: OnboardingState) {
         if (current.step === OnboardingStep.Aim && cursorBaseline == null) {
             val player = mobController.player
-            cursorBaseline = player.cursorX to player.cursorY
+            cursorBaseline = player.aimToPlayer.cpy()
             return
         }
         if (isTriggered(current.step)) {
@@ -99,18 +104,22 @@ class OnboardingController @Inject constructor(
         is OnboardingStep.Aim -> {
             val baseline = cursorBaseline
             val player = mobController.player
-            baseline != null && (player.cursorX != baseline.first || player.cursorY != baseline.second)
+            baseline != null && (player.aimToPlayer != baseline)
         }
+
         is OnboardingStep.Break -> mobController.player.isHittingWithDamage
         is OnboardingStep.Place -> placeTriggered
-        is OnboardingStep.OpenInventory -> {
-            val type = gameWindowsManager.currentWindowType
-            type == GameWindowType.SURVIVAL_INVENTORY || type == GameWindowType.CREATIVE_INVENTORY
-        }
+        is OnboardingStep.OpenInventory -> gameWindowsManager.currentWindowType in inventoryWindowTypes
     }
 
     companion object {
         private const val COOLDOWN_SEC = 1.5f
         private const val JUMP_VELOCITY_THRESHOLD = -3f
+
+        private val inventoryWindowTypes = setOf(
+            GameWindowType.CREATIVE_INVENTORY,
+            GameWindowType.CREATIVE_INVENTORY_TABS,
+            GameWindowType.SURVIVAL_INVENTORY,
+        )
     }
 }

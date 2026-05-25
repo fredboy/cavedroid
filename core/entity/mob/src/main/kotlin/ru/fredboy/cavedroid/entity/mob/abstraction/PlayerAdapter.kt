@@ -13,6 +13,9 @@ interface PlayerAdapter {
     val width: Float
     val height: Float
 
+    val aimX: Float
+    val aimY: Float
+
     val cursorX: Float
     val cursorY: Float
 

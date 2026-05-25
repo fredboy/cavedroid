@@ -45,30 +45,33 @@ class WeatherRenderer @Inject constructor(
     }
 
     private fun drawSunAndMoon(spriteBatch: SpriteBatch, viewport: Rectangle) {
-        val skyWidth = max(SKY_SPAN, viewport.width)
+        val sunSprite = environmentTextureRegionsRepository.getSunSprite()
+        val moonSprite = environmentTextureRegionsRepository.getMoonPhaseSprite(gameWorld.moonPhase)
+        val skyBodyWidth = max(sunSprite.width, moonSprite.width)
+        val skyWidth = max(SKY_SPAN, viewport.width) + skyBodyWidth * 2
         val totalSpan = skyWidth * 2f
         val normalizedTime = gameWorld.getNormalizedTime()
-        val sunPositionX = (skyWidth * normalizedTime) + (viewport.width / 2 - skyWidth / 2)
         // Avoid `(sunPositionX + skyWidth) % totalSpan` — TeaVM's Float.rem codegen
         // drops the parentheses around the divisor and evaluates it as
         // `((sunPositionX + skyWidth) % skyWidth) * 2f`, so the moon ends up
         // tracking `2 * sunPositionX` and is visible all day.
-        val rawMoonPos = sunPositionX + skyWidth
-        val moonPositionX = if (rawMoonPos >= totalSpan) rawMoonPos - totalSpan else rawMoonPos
-        val sunSprite = environmentTextureRegionsRepository.getSunSprite()
-        val moonSprite = environmentTextureRegionsRepository.getMoonPhaseSprite(gameWorld.moonPhase)
+        val rawSunPos = (skyWidth * normalizedTime) + (viewport.width / 2 - skyWidth / 2)
+        val sunPositionX = rawSunPos - skyBodyWidth + ((skyBodyWidth - sunSprite.width) / 2f)
+        val rawMoonPos = rawSunPos + skyWidth
+        val moonPositionX = (if (rawMoonPos >= totalSpan) rawMoonPos - totalSpan else rawMoonPos) -
+            skyBodyWidth + ((skyBodyWidth - moonSprite.width) / 2f)
 
         sunSprite.setOriginCenter()
 
         spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE)
         spriteBatch.drawSprite(
             sprite = sunSprite,
-            x = viewport.x + sunPositionX - sunSprite.width / 2,
+            x = viewport.x + sunPositionX,
             y = viewport.y + viewport.height * 0.25f - sunSprite.height / 2,
         )
         spriteBatch.drawSprite(
             sprite = moonSprite,
-            x = viewport.x + moonPositionX - moonSprite.width / 2,
+            x = viewport.x + moonPositionX,
             y = viewport.y + viewport.height * 0.25f - moonSprite.height / 2,
         )
         spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)

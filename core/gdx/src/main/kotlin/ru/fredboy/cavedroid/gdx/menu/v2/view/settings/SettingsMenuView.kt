@@ -51,7 +51,10 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                             .pad(10f)
 
                         textButton(
-                            viewModel.getFormattedString("dynamicCamera", state.dynamicCamera.toLocalizedToggle(viewModel)),
+                            viewModel.getFormattedString(
+                                "dynamicCamera",
+                                state.dynamicCamera.toLocalizedToggle(viewModel),
+                            ),
                         ) {
                             onClickWithSound(viewModel) {
                                 viewModel.onDynamicCameraClick(!state.dynamicCamera)
@@ -62,7 +65,10 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
 
                         if (state.showFullscreenButton) {
                             textButton(
-                                viewModel.getFormattedString("fullscreen", state.fullscreen.toLocalizedToggle(viewModel)),
+                                viewModel.getFormattedString(
+                                    "fullscreen",
+                                    state.fullscreen.toLocalizedToggle(viewModel),
+                                ),
                             ) {
                                 onClickWithSound(viewModel) {
                                     viewModel.onFullscreenClick(!state.fullscreen)
@@ -91,6 +97,19 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                         }
 
                         row()
+
+//                        textButton(
+//                            viewModel.getFormattedString(
+//                                "smoothLighting",
+//                                state.smoothLighting.toLocalizedToggle(viewModel),
+//                            ),
+//                        ) {
+//                            onClickWithSound(viewModel) {
+//                                viewModel.onSmoothLightingClick(!state.smoothLighting)
+//                            }
+//                        }
+//
+//                        row()
 
                         if (state.showPersonalizedAdsToggle) {
                             textButton(

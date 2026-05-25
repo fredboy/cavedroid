@@ -29,6 +29,12 @@ class PlayerAdapterImpl @Inject constructor(
     override val height: Float
         get() = player.height
 
+    override val aimX: Float
+        get() = player.aimX
+
+    override val aimY: Float
+        get() = player.aimY
+
     override val cursorX: Float
         get() = player.cursorX.toFloat()
 

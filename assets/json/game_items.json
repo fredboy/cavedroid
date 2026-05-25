@@ -402,7 +402,7 @@
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
-            "chance": 0.05,
+            "chance": 0.125,
             "amount": 1
           }
         },
@@ -411,7 +411,7 @@
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
-            "chance": 0.01,
+            "chance": 0.025,
             "amount": 1
           }
         },
@@ -422,7 +422,7 @@
             "type": "random_range",
             "min": 1,
             "max": 2,
-            "chance": 0.02
+            "chance": 0.05
           }
         }
       ],
@@ -464,7 +464,7 @@
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
-            "chance": 0.05,
+            "chance": 0.125,
             "amount": 1
           }
         },
@@ -475,7 +475,7 @@
             "type": "random_range",
             "min": 1,
             "max": 2,
-            "chance": 0.02
+            "chance": 0.05
           }
         }
       ],
@@ -516,7 +516,7 @@
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
-            "chance": 0.05,
+            "chance": 0.125,
             "amount": 1
           }
         },
@@ -525,7 +525,7 @@
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
-            "chance": 0.01,
+            "chance": 0.025,
             "amount": 1
           }
         },
@@ -536,7 +536,7 @@
             "type": "random_range",
             "min": 1,
             "max": 2,
-            "chance": 0.02
+            "chance": 0.05
           }
         }
       ],
@@ -726,7 +726,7 @@
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
-            "chance": 0.125,
+            "chance": 0.25,
             "amount": 1
           }
         }

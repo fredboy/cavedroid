@@ -4,6 +4,7 @@ import com.badlogic.gdx.Files
 import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
 import ru.fredboy.cavedroid.common.api.PreferencesStore
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
+import ru.fredboy.cavedroid.domain.configuration.model.LightingBackend
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -95,5 +96,12 @@ class ApplicationContextStore @Inject constructor(
         set(value) = synchronized(lock) {
             applicationContext.personalizedAdsConsent = value
             preferencesStore.setPreference(PreferenceKeys.PERSONALIZED_ADS_CONSENT, value?.toString())
+        }
+
+    var lightingBackend: LightingBackend
+        get() = synchronized(lock) { applicationContext.lightingBackend }
+        set(value) = synchronized(lock) {
+            applicationContext.lightingBackend = value
+            preferencesStore.setPreference(PreferenceKeys.LIGHTING_BACKEND, value.name)
         }
 }

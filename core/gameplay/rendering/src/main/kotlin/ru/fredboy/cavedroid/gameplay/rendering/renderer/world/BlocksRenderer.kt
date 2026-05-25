@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.gameplay.rendering.renderer.world
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -34,6 +35,9 @@ abstract class BlocksRenderer(
 
     private val Block.canSeeThrough
         get() = isNone() || params.isTransparent
+
+    private val Block.castsForegroundShadow
+        get() = !isNone() && !params.isTransparent && params.hasCollision
 
     private fun blockDamageSprite(index: Int): Sprite? {
         if (index !in 0..<getBlockDamageFrameCount()) {
@@ -80,25 +84,66 @@ abstract class BlocksRenderer(
         val backgroundBlock = gameWorld.getBackMap(x, y)
         val isDefaultBackground = backgroundBlock.isNone() && y >= gameWorld.generatorConfig.seaLevel
 
-        if (foregroundBlock.canSeeThrough && (!backgroundBlock.isNone() || isDefaultBackground)) {
-            val shapeColor = shapeRenderer.color.cpy()
-
-            if (isDefaultBackground) {
-                shapeRenderer.color.apply { a = 0.75f }
-            }
-
-            val marginLeft = backgroundBlock.params.spriteMarginsMeters.left
-            val marginTop = backgroundBlock.params.spriteMarginsMeters.top
-
-            shapeRenderer.rect(
-                /* x = */ drawX + marginLeft,
-                /* y = */ drawY + marginTop,
-                /* width = */ backgroundBlock.width,
-                /* height = */ backgroundBlock.height,
-            )
-
-            shapeRenderer.color = shapeColor
+        if (!foregroundBlock.canSeeThrough || (backgroundBlock.isNone() && !isDefaultBackground)) {
+            return
         }
+
+        shapeRenderer.color = Color(0.0f, 0.0f, 0.0f, 0.4f)
+
+        if (isDefaultBackground) {
+            shapeRenderer.color.a = 0.75f
+        }
+
+        val marginLeft = backgroundBlock.params.spriteMarginsMeters.left
+        val marginTop = backgroundBlock.params.spriteMarginsMeters.top
+
+        shapeRenderer.rect(
+            /* x = */ drawX + marginLeft,
+            /* y = */ drawY + marginTop,
+            /* width = */ backgroundBlock.width,
+            /* height = */ backgroundBlock.height,
+        )
+
+        if (!isDefaultBackground) {
+            drawForegroundEdgeShadow(shapeRenderer, x, y, drawX, drawY)
+        }
+    }
+
+    private fun drawForegroundEdgeShadow(
+        shapeRenderer: ShapeRenderer,
+        x: Int,
+        y: Int,
+        drawX: Float,
+        drawY: Float,
+    ) {
+        val foreTop = gameWorld.getForeMap(x, y - 1).castsForegroundShadow
+        val foreBottom = gameWorld.getForeMap(x, y + 1).castsForegroundShadow
+        val foreLeft = gameWorld.getForeMap(x - 1, y).castsForegroundShadow
+        val foreRight = gameWorld.getForeMap(x + 1, y).castsForegroundShadow
+        val foreTopLeft = gameWorld.getForeMap(x - 1, y - 1).castsForegroundShadow
+        val foreTopRight = gameWorld.getForeMap(x + 1, y - 1).castsForegroundShadow
+        val foreBottomLeft = gameWorld.getForeMap(x - 1, y + 1).castsForegroundShadow
+        val foreBottomRight = gameWorld.getForeMap(x + 1, y + 1).castsForegroundShadow
+
+        val topLeft = foreTop || foreLeft || foreTopLeft
+        val topRight = foreTop || foreRight || foreTopRight
+        val bottomRight = foreBottom || foreRight || foreBottomRight
+        val bottomLeft = foreBottom || foreLeft || foreBottomLeft
+
+        if (!topLeft && !topRight && !bottomRight && !bottomLeft) {
+            return
+        }
+
+        shapeRenderer.rect(
+            /* x = */ drawX,
+            /* y = */ drawY,
+            /* width = */ 1f,
+            /* height = */ 1f,
+            /* col1 = */ if (topLeft) SHADOW_DARK else SHADOW_FADE,
+            /* col2 = */ if (topRight) SHADOW_DARK else SHADOW_FADE,
+            /* col3 = */ if (bottomRight) SHADOW_DARK else SHADOW_FADE,
+            /* col4 = */ if (bottomLeft) SHADOW_DARK else SHADOW_FADE,
+        )
     }
 
     protected fun drawBackMap(spriteBatch: SpriteBatch, x: Int, y: Int, drawX: Float, drawY: Float) {
@@ -205,5 +250,7 @@ abstract class BlocksRenderer(
 
     companion object {
         private const val MAX_BLOCK_DAMAGE_INDEX = 10
+        private val SHADOW_DARK = Color(0f, 0f, 0f, 0.6f)
+        private val SHADOW_FADE = Color(0f, 0f, 0f, 0.4f)
     }
 }

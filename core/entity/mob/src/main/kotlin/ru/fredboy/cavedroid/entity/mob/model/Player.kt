@@ -56,11 +56,14 @@ class Player(
 
     var gameMode = GameMode.SURVIVAL
 
+    var aimX = 0f
+    var aimY = 0f
+
     var cursorX = 0f
     var cursorY = 0f
 
-    var holdCursor = true
-    var cursorToPlayer = Vector2()
+    var holdAim = true
+    var aimToPlayer = Vector2()
 
     val selectedX get() = floor(cursorX).toInt()
     val selectedY get() = cursorY.toInt()
@@ -356,6 +359,8 @@ class Player(
         spawn(spawnPoint.x, spawnPoint.y, mobPhysicsFactory)
         cursorX = position.x
         cursorY = position.y
+        aimX = position.x
+        aimY = position.y
     }
 
     fun initSight(mobWorldAdapter: MobWorldAdapter) {
@@ -441,20 +446,23 @@ class Player(
     }
 
     fun rayCastCursor(mobWorldAdapter: MobWorldAdapter, onCallback: () -> Unit = {}) {
-        val cursor = Vector2(cursorX, cursorY)
+        val cursor = Vector2(aimX, aimY)
 
         if (gameMode.isSurvival()) {
             val plToCursor = cursor
                 .sub(position)
                 .limit2(SURVIVAL_CURSOR_RANGE_2)
 
-            cursorX = position.x + plToCursor.x
-            cursorY = position.y + plToCursor.y
+            cursor.x = position.x + plToCursor.x
+            cursor.y = position.y + plToCursor.y
         }
 
-        cursorY = MathUtils.clamp(cursorY, 0f, mobWorldAdapter.height.toFloat())
+        cursor.y = MathUtils.clamp(cursor.y, 0f, mobWorldAdapter.height.toFloat())
 
-        cursor.set(cursorX, cursorY)
+        aimX = cursor.x
+        aimY = cursor.y
+        cursorX = cursor.x
+        cursorY = cursor.y
 
         if (position.dst2(cursor) < 0.001f) {
             return
@@ -479,13 +487,6 @@ class Player(
 
                     cursorX = x
                     cursorY = y
-
-                    if (holdCursor) {
-                        cursorToPlayer.set(
-                            cursorX - position.x,
-                            cursorY - position.y,
-                        )
-                    }
                 }
 
                 onCallback()
