@@ -45,7 +45,7 @@ class PlaceBlockItemToForegroundAction @Inject constructor(
                     gameWorld.getBackMap(x, y).params.hasCollision
                 )
 
-        if (!attachToBottom && !attachToNeighbour) {
+        if (placeable.block.params.requiresBlock && !attachToBottom && !attachToNeighbour) {
             return false
         }
 
