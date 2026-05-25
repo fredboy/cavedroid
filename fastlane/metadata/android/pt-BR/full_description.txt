@@ -1,11 +1,31 @@
-<p>Este jogo é uma aventura de sobrevivência em estilo sandbox ambientada em um mundo voxel bidimensional gerado proceduralmente. Os jogadores podem explorar paisagens variadas, incluindo cavernas e biomas, coletar recursos, fabricar ferramentas, armaduras e comida, e construir estruturas para sobreviver. O mundo conta com ciclo dia/noite, iluminação dinâmica, fluidos e criaturas interativas.</p>
+Um sandbox 2D pixelado de bolso onde cada mundo é seu para minerar,
+construir e sobreviver. Grátis. Joga totalmente offline. Código aberto.
 
-<p><strong>Recursos:</strong></p>
-<ul>
-  <li>Geração procedural de mundos com minérios, cavernas, colinas e biomas.</li>
-  <li>Sistema de fabricação com receitas para ferramentas, armaduras e consumíveis.</li>
-  <li>Animais e criaturas hostis com comportamentos e drops únicos.</li>
-  <li>Iluminação dinâmica, fluidos e renderização suave do terreno.</li>
-  <li>Ações do jogador como construir, minerar, fabricar, combater e explorar.</li>
-  <li>Sistemas de inventário e sobrevivência, incluindo comida, saúde e equipamento.</li>
-</ul>
+Percorra paisagens geradas proceduralmente que dão a volta no
+horizonte. Atravesse campos, suba colinas arborizadas e desça a
+cavernas iluminadas por tochas. O dia vira noite, os monstros aparecem,
+e quanto mais fundo você cava, mais difícil é voltar para casa.
+
+O QUE VOCÊ PODE FAZER
+Quebre e coloque qualquer bloco. Corte árvores, minere carvão, ferro,
+ouro e diamante. Fabrique ferramentas, armaduras, tochas, comida e
+armas — empunhe uma espada no corpo-a-corpo ou abata esqueletos à
+distância com um arco. Funda minérios. Cace criaturas, desvie da lava
+nas profundezas. Construa um abrigo, uma fortaleza, uma ponte no céu —
+o que imaginar sobre uma grade.
+
+RECURSOS
+► Mundos gerados proceduralmente com biomas, colinas, cavernas e minérios escondidos
+► Ciclo dia/noite com iluminação dinâmica — tochas iluminam de verdade
+► Receitas de fabricação para ferramentas, armaduras, armas, comida e blocos decorativos
+► Combate corpo a corpo e à distância — espadas, arco e flechas
+► Animais amigáveis e criaturas hostis com comportamentos e drops próprios
+► Fluidos baseados em física — a água flui, a lava queima
+► Loop completo de sobrevivência: inventário, fome, saúde, armadura
+► Controles táteis confortáveis
+
+Em desenvolvimento ativo — novas funcionalidades a cada versão. Achou
+um bug ou tem uma ideia? Abra uma issue no GitHub:
+https://github.com/fredboy/cavedroid
+
+Boa escavação!

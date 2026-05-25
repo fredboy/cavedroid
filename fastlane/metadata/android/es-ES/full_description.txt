@@ -1,11 +1,32 @@
-<p>Este juego es una aventura de supervivencia tipo sandbox ambientada en un mundo vóxel bidimensional generado proceduralmente. Los jugadores pueden explorar paisajes diversos, incluidos cuevas y biomas, recolectar recursos, fabricar herramientas, armaduras y comida, y construir estructuras para sobrevivir. El mundo cuenta con un ciclo día/noche, iluminación dinámica, fluidos y criaturas interactivas.</p>
+Una sandbox 2D pixelada de bolsillo donde cada mundo es tuyo para
+minar, construir y sobrevivir. Gratis. Funciona sin conexión.
+Código abierto.
 
-<p><strong>Características:</strong></p>
-<ul>
-  <li>Generación procedural de mundos con menas, cuevas, colinas y biomas.</li>
-  <li>Sistema de fabricación con recetas para herramientas, armaduras y consumibles.</li>
-  <li>Animales y criaturas hostiles con comportamientos y botines únicos.</li>
-  <li>Iluminación dinámica, fluidos y renderizado fluido del terreno.</li>
-  <li>Acciones del jugador como construir, minar, fabricar, combatir y explorar.</li>
-  <li>Sistemas de inventario y supervivencia, incluyendo comida, salud y equipo.</li>
-</ul>
+Recorre paisajes generados proceduralmente que se enroscan en el
+horizonte. Cruza praderas, sube colinas boscosas y desciende a cuevas
+iluminadas por antorchas. El día se hace noche, salen los monstruos, y
+cuanto más profundo cavas, más difícil es volver a casa.
+
+LO QUE PUEDES HACER
+Rompe y coloca cualquier bloque. Tala árboles, mina carbón, hierro, oro
+y diamante. Fabrica herramientas, armadura, antorchas, comida y armas
+— blande una espada de cerca o abate esqueletos a distancia con un
+arco. Funde minerales. Caza criaturas, esquiva la lava en lo profundo.
+Construye un refugio, una fortaleza, un puente en el cielo — lo que
+imagines sobre una cuadrícula.
+
+CARACTERÍSTICAS
+► Mundos generados proceduralmente con biomas, colinas, cuevas y menas ocultas
+► Ciclo día/noche con iluminación dinámica — las antorchas iluminan de verdad
+► Recetas de fabricación para herramientas, armadura, armas, comida y bloques decorativos
+► Combate cuerpo a cuerpo y a distancia — espadas, arco y flechas
+► Animales amigables y criaturas hostiles con comportamientos y botines propios
+► Fluidos basados en física — el agua fluye, la lava quema
+► Bucle de supervivencia completo: inventario, hambre, salud, armadura
+► Controles táctiles cómodos
+
+En desarrollo activo — nuevas funciones en cada versión. ¿Encontraste
+un bug o tienes una idea? Abre un issue en GitHub:
+https://github.com/fredboy/cavedroid
+
+¡Disfruta cavando!

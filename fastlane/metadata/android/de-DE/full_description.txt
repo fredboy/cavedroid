@@ -1,11 +1,33 @@
-<p>Dieses Spiel ist ein Sandbox-Survival-Abenteuer, das in einer zweidimensionalen, prozedural generierten Voxelwelt spielt. Spieler können vielfältige Landschaften erkunden, darunter Höhlen und Biome, Ressourcen sammeln, Werkzeuge, Rüstungen und Nahrung herstellen sowie Strukturen bauen, um zu überleben. Die Welt bietet einen Tag-Nacht-Zyklus, dynamische Beleuchtung, Flüssigkeiten und interaktive Kreaturen.</p>
+Eine Hosentaschen-Pixel-Sandbox in 2D, in der jede Welt dir gehört —
+zum Abbauen, Bauen und Überleben. Kostenlos. Komplett offline.
+Open Source.
 
-<p><strong>Features:</strong></p>
-<ul>
-  <li>Prozedurale Weltgenerierung mit Erzen, Höhlen, Hügeln und Biomen.</li>
-  <li>Crafting-System mit Rezepten für Werkzeuge, Rüstungen und Verbrauchsgegenstände.</li>
-  <li>Tiere und feindliche Kreaturen mit einzigartigen Verhaltensweisen und Drops.</li>
-  <li>Dynamische Beleuchtung, Flüssigkeiten und flüssiges Geländerendering.</li>
-  <li>Spieleraktionen wie Bauen, Abbauen, Crafting, Kampf und Erkundung.</li>
-  <li>Inventar- und Überlebenssysteme, einschließlich Nahrung, Gesundheit und Ausrüstung.</li>
-</ul>
+Streife durch prozedural generierte Landschaften, die am Horizont
+wieder von vorn beginnen. Wandere über grüne Wiesen, erklimme bewaldete
+Hügel und steige hinab in fackelbeleuchtete Höhlen. Der Tag wird zur
+Nacht, Monster kommen heraus, und je tiefer du gräbst, desto schwerer
+findest du zurück nach oben.
+
+WAS DU TUN KANNST
+Brich und platziere jeden Block. Fälle Bäume, baue Kohle, Eisen, Gold
+und Diamant ab. Stelle Werkzeuge, Rüstung, Fackeln, Essen und Waffen
+her — schwinge im Nahkampf ein Schwert oder erlege Skelette aus der
+Ferne mit dem Bogen. Schmelze Erze. Jage Kreaturen, weiche Lava in der
+Tiefe aus. Baue einen Unterschlupf, eine Festung, eine Himmelsbrücke —
+was immer du dir auf einem Raster vorstellen kannst.
+
+FEATURES
+► Prozedural generierte Welten mit Biomen, Hügeln, Höhlen und versteckten Erzen
+► Tag-Nacht-Zyklus mit dynamischer Beleuchtung — Fackeln erhellen wirklich die Dunkelheit
+► Crafting-Rezepte für Werkzeuge, Rüstung, Waffen, Essen und Deko-Blöcke
+► Nah- und Fernkampf — Schwerter, Bogen und Pfeile
+► Friedliche Tiere und feindliche Kreaturen mit eigenem Verhalten und Drops
+► Physikbasierte Flüssigkeiten — Wasser fließt, Lava verbrennt
+► Vollständige Survival-Mechanik: Inventar, Hunger, Gesundheit, Rüstung
+► Touch-freundliche Steuerung
+
+In aktiver Entwicklung — neue Features kommen mit jeder Veröffentlichung.
+Bug gefunden oder eine Idee? Öffne ein Issue auf GitHub:
+https://github.com/fredboy/cavedroid
+
+Viel Spaß beim Buddeln!

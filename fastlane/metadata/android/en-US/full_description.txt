@@ -1,11 +1,30 @@
-<p>This game is a sandbox survival adventure set in a two-dimensional procedurally generated voxel world. Players can explore diverse landscapes, including caves and biomes, gather resources, craft tools, armor, and food, and build structures to survive. The world features a day/night cycle, dynamic lighting, fluids, and interactive mobs.</p>
+A pocket-sized 2D pixel sandbox where every world is yours to mine, build,
+and survive in. Free to play. Plays fully offline. Open source.
 
-<p><strong>Features include:</strong></p>
-<ul>
-  <li>Procedural world generation with ores, caves, hills, and biomes.</li>
-  <li>Crafting system with recipes for tools, armor, and consumables.</li>
-  <li>Animals and hostile mobs with unique behaviors and drops.</li>
-  <li>Dynamic lighting, fluids, and smooth terrain rendering.</li>
-  <li>Player actions including building, mining, crafting, combat, and exploration.</li>
-  <li>Inventory and survival systems, including food, health, and equipment.</li>
-</ul>
+Wander procedurally generated landscapes that wrap around the horizon.
+Cross grassy meadows, climb forested hills, and descend into torchlit
+caves. Day turns to night, monsters come out, and the deeper you dig,
+the harder it gets to make it home.
+
+THINGS YOU CAN DO
+Break and place any block. Chop trees, mine coal, iron, gold, and
+diamond. Craft tools, armor, torches, food, and weapons — swing a sword
+up close or pick off skeletons at range with a bow. Smelt ores. Hunt
+mobs, dodge lava in the deep. Build a shelter, a fortress, a sky-bridge
+— whatever you can imagine on a grid.
+
+FEATURES
+► Procedurally generated worlds with biomes, hills, caves, and hidden ores
+► Day/night cycle with dynamic lighting — torches actually light up the dark
+► Crafting recipes for tools, armor, weapons, food, and decorative blocks
+► Melee and ranged combat — swords, bow and arrows
+► Friendly animals and hostile mobs with their own behaviors and drops
+► Physics-based fluids — water flows, lava burns
+► Full survival loop: inventory, hunger, health, armor
+► Touch-friendly controls
+
+In active development — new features land with every release. Found a
+bug or have an idea? Open an issue on GitHub:
+https://github.com/fredboy/cavedroid
+
+Enjoy the dig!
