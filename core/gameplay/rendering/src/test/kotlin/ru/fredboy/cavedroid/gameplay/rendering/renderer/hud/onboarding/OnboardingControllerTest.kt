@@ -40,8 +40,7 @@ class OnboardingControllerTest {
         every { mobController.player } returns player
         every { player.controlVector } returns controlVector
         every { player.velocity } returns velocityProxy
-        every { player.cursorX } returns cursorX
-        every { player.cursorY } returns cursorY
+        every { player.aimToPlayer } returns Vector2(cursorX, cursorY)
         every { player.isHittingWithDamage } returns hittingWithDamage
     }
 
@@ -66,30 +65,34 @@ class OnboardingControllerTest {
                 update(2f)
                 controlVector.set(0f, 0f)
             }
+
             OnboardingStep.Jump -> {
                 velocityVector.y = -5f
                 update(0.016f)
                 update(2f)
                 velocityVector.y = 0f
             }
+
             OnboardingStep.Aim -> {
                 update(0.016f) // baseline
-                every { player.cursorX } returns 5f
-                every { player.cursorY } returns 5f
+                every { player.aimToPlayer } returns Vector2(5f, 5f)
                 update(0.016f)
                 update(2f)
             }
+
             OnboardingStep.Break -> {
                 every { player.isHittingWithDamage } returns true
                 update(0.016f)
                 update(2f)
                 every { player.isHittingWithDamage } returns false
             }
+
             OnboardingStep.Place -> {
                 notifyPlace()
                 update(0.016f)
                 update(2f)
             }
+
             OnboardingStep.OpenInventory -> {
                 every { gameWindowsManager.currentWindowType } returns GameWindowType.SURVIVAL_INVENTORY
                 update(0.016f)
@@ -330,7 +333,7 @@ class OnboardingControllerTest {
         assertEquals(true, controller.state?.awaitingInput)
 
         // change cursor
-        every { player.cursorX } returns 12f
+        every { player.aimToPlayer } returns Vector2(12f, 12f)
         controller.update(0.016f)
         assertEquals(false, controller.state?.awaitingInput)
     }
