@@ -284,7 +284,7 @@ class GameInputProcessor @Inject constructor(
         private const val TAG = "GameInputProcessor"
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
-        private const val DRAG_THRESHOLD = 1f
+        private const val DRAG_THRESHOLD = 0.5f
 
         private val nullButton = TouchButton(Rectangle(), -1, true)
     }
