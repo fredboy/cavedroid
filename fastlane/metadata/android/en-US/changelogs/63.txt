@@ -1,6 +1,6 @@
-- Improved survival HUD for a better gameplay experience.
-- Added smooth lighting and shadows on background blocks.
-- Fixed issues with item placement and inventory controls.
-- Enhanced the dynamic camera for smoother viewing.
-- Adjusted sunset and sunrise visuals with a gradient effect.
-- Increased the drop probability for seeds and saplings.
+- Improve survival HUD for better visibility.
+- Enjoy new lighting effects with the added BFS lighting backend and smooth-lighting setting.
+- Fix issues with torch placement and rendering of the sun and moon.
+- Prevent items from getting stuck in inventory.
+- Remember your last open creative tab for easier gameplay.
+- Minor improvements and bug fixes.

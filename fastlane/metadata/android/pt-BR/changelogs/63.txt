@@ -1,6 +1,6 @@
-- Melhoria na HUD de sobrevivência para uma experiência de jogo mais fluida.
-- Adicionadas sombras e iluminação suave nos blocos de fundo.
-- Corrigidos problemas de colocação de itens e controles de inventário.
-- Melhorias na câmera dinâmica para uma visualização mais suave.
-- Efeito de gradiente para o nascer e pôr do sol nos gráficos.
-- Aumentada a probabilidade de drops de sementes e mudas.
+- Melhoria na HUD de sobrevivência para melhor visibilidade.
+- Aproveite os novos efeitos de iluminação com o novo backend de iluminação BFS e configuração de iluminação suave.
+- Corrigidos problemas de colocação de tochas e renderização do sol e da lua.
+- Impede que itens fiquem presos no inventário.
+- Lembre-se da sua última aba criativa aberta para facilitar o jogo.
+- Melhorias menores e correções de bugs.
