@@ -312,8 +312,8 @@ class GameWorld @Inject constructor(
     }
 
     fun update(delta: Float) {
-        currentGameTime += (delta * timeMultiplier)
-        totalGameTimeSec += (delta * timeMultiplier)
+        currentGameTime += (delta * timeMultiplier * 100)
+        totalGameTimeSec += (delta * timeMultiplier * 100)
 
         if (currentGameTime >= DAY_DURATION_SEC) {
             currentGameTime -= DAY_DURATION_SEC
