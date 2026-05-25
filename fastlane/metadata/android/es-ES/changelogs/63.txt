@@ -1,0 +1,6 @@
+- Mejora en el HUD de supervivencia para una mejor experiencia de juego.
+- Se añadieron sombras y iluminación suave en los bloques de fondo.
+- Se solucionaron problemas con la colocación de objetos y los controles de inventario.
+- Mejora en la cámara dinámica para una visualización más fluida.
+- Efecto de degradado en el amanecer y atardecer para mejorar los gráficos.
+- Se incrementó la probabilidad de aparición de semillas y plántulas.

@@ -1,0 +1,6 @@
+- Verbesserte Überlebensanzeige für ein besseres Spielerlebnis.
+- Hinzugefügt: sanfte Beleuchtung und Schatten auf Hintergrundblöcken.
+- Probleme mit der Platzierung von Items und Inventarkontrollen behoben.
+- Dynamische Kamera für flüssigeres Spielen optimiert.
+- Sonnenaufgang und -untergang jetzt mit Farbverlauf.
+- Höhere Wahrscheinlichkeit für Samen- und Setzling-Drops.

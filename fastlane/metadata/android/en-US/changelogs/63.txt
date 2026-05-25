@@ -1,0 +1,6 @@
+- Improved survival HUD for a better gameplay experience.
+- Added smooth lighting and shadows on background blocks.
+- Fixed issues with item placement and inventory controls.
+- Enhanced the dynamic camera for smoother viewing.
+- Adjusted sunset and sunrise visuals with a gradient effect.
+- Increased the drop probability for seeds and saplings.
