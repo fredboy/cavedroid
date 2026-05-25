@@ -26,8 +26,10 @@ import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.IHudRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.world.IWorldRenderer
 import javax.inject.Inject
+import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.ceil
+import kotlin.math.cos
 import kotlin.math.floor
 
 @GameScope
@@ -84,6 +86,10 @@ class GameRenderer @Inject constructor(
     private val activeLightChunks = mutableSetOf<Pair<Int, Int>>()
     private val scratchVisibleChunks = mutableSetOf<Pair<Int, Int>>()
     private val scratchEnteredChunks = mutableSetOf<Pair<Int, Int>>()
+
+    private val baseSkyColor = Color()
+    private val skyLeftColor = Color()
+    private val skyRightColor = Color()
 
     init {
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f)
@@ -224,16 +230,58 @@ class GameRenderer @Inject constructor(
         resetCameraToPlayer()
     }
 
-    private fun getSkyColor(): Color {
-        val color = MIDNIGHT_COLOR.cpy().lerp(NOON_COLOR, gameWorld.getSunlight())
+    private fun updateSkyColors() {
+        val sunlight = gameWorld.getSunlight()
+        val normalizedTime = gameWorld.getNormalizedTime()
+
+        val base = baseSkyColor.apply {
+            if (sunlight < 0.5f) {
+                set(MIDNIGHT_COLOR).lerp(HORIZON_COLOR, sunlight * 2f)
+            } else {
+                set(HORIZON_COLOR).lerp(NOON_COLOR, (sunlight - 0.5f) * 2f)
+            }
+        }
+
+        val twilight = (1f - 2f * abs(sunlight - 0.5f)).coerceIn(0f, 1f)
+        val warmSide = -cos(normalizedTime * PI.toFloat())
+        val warmBlend = twilight * abs(warmSide)
+        val darkBlend = warmBlend * 0.5f
+
+        if (warmSide < 0f) {
+            skyLeftColor.set(base).lerp(HORIZON_COLOR, warmBlend)
+            skyRightColor.set(base).lerp(MIDNIGHT_COLOR, darkBlend)
+        } else {
+            skyLeftColor.set(base).lerp(MIDNIGHT_COLOR, darkBlend)
+            skyRightColor.set(base).lerp(HORIZON_COLOR, warmBlend)
+        }
+
         val intensity = gameWorld.weatherIntensity
         if (intensity > 0f) {
             val factor = 1f - intensity * (1f - RAIN_SKY_DARKENING)
-            color.r *= factor
-            color.g *= factor
-            color.b *= factor
+            skyLeftColor.r *= factor
+            skyLeftColor.g *= factor
+            skyLeftColor.b *= factor
+            skyRightColor.r *= factor
+            skyRightColor.g *= factor
+            skyRightColor.b *= factor
         }
-        return color
+    }
+
+    private fun drawSky() {
+        val x = camera.position.x - camera.viewportWidth / 2f
+        val y = camera.position.y - camera.viewportHeight / 2f
+        shaper.begin(ShapeRenderer.ShapeType.Filled)
+        shaper.rect(
+            /* x = */ x,
+            /* y = */ y,
+            /* width = */ camera.viewportWidth,
+            /* height = */ camera.viewportHeight,
+            /* col1 = */ skyLeftColor,
+            /* col2 = */ skyRightColor,
+            /* col3 = */ skyRightColor,
+            /* col4 = */ skyLeftColor,
+        )
+        shaper.end()
     }
 
     fun render(delta: Float) {
@@ -251,9 +299,11 @@ class GameRenderer @Inject constructor(
         spriter.projectionMatrix = camera.combined
         shaper.projectionMatrix = camera.combined
 
-        val bgColor = getSkyColor()
-        Gdx.gl.glClearColor(bgColor.r, bgColor.g, bgColor.b, 1f)
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+
+        updateSkyColors()
+        drawSky()
 
         spriter.begin()
         val cameraViewport = Rectangle(
@@ -302,6 +352,7 @@ class GameRenderer @Inject constructor(
 
     companion object {
         private val MIDNIGHT_COLOR = Color(0f, 0f, 0.1f, 1f)
+        private val HORIZON_COLOR = Color(0.9f, 0.45f, 0.25f, 1f)
         private val NOON_COLOR = Color(0.4f, 0.7f, 1f, 1f)
 
         private const val RAIN_SKY_DARKENING = 0.3f
