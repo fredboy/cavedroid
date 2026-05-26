@@ -6,10 +6,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageFrameCountUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageSpriteUseCase
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
+import ru.fredboy.cavedroid.game.controller.fire.FireController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindWorldRenderer
@@ -26,6 +29,7 @@ class BackgroundBlocksRenderer @Inject constructor(
     getBlockDamageFrameCount: GetBlockDamageFrameCountUseCase,
     getBlockDamageSprite: GetBlockDamageSpriteUseCase,
     itemsRepository: ItemsRepository,
+    fireController: FireController,
 ) : BlocksRenderer(
     gameWorld = gameWorld,
     mobsController = mobController,
@@ -33,6 +37,7 @@ class BackgroundBlocksRenderer @Inject constructor(
     getBlockDamageFrameCount = getBlockDamageFrameCount,
     getBlockDamageSprite = getBlockDamageSprite,
     itemsRepository = itemsRepository,
+    fireController = fireController,
 ) {
 
     override val renderLayer get() = RENDER_LAYER
@@ -86,6 +91,10 @@ class BackgroundBlocksRenderer @Inject constructor(
         )
 
         Gdx.gl.glDisable(GL20.GL_BLEND)
+
+        forEachBlockInArea(viewport) { x, y ->
+            drawFireIfNeed(spriteBatch, x, y, x.toFloat(), y.toFloat(), Layer.BACKGROUND)
+        }
 
         drawChunks(
             spriteBatch = spriteBatch,

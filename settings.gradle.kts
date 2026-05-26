@@ -55,6 +55,7 @@ include("core:game:controller:container")
 include("core:game:controller:mob")
 include("core:game:controller:projectile")
 include("core:game:controller:stats")
+include("core:game:controller:fire")
 
 // ui windows module
 include("core:game:window")

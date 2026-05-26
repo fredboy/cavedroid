@@ -141,7 +141,17 @@ class UseItemMouseInputHandler @Inject constructor(
                 mobController.player.position.cpy().sub(mob.position).len() <= MOB_HIT_RANGE
         } ?: return false
 
-        return useMobActionMap[mob.params.key]?.perform(mob) ?: false
+        if (useMobActionMap[mob.params.key]?.perform(mob) == true) {
+            return true
+        }
+
+        return mobController.player.activeItem
+            .takeIf { it.item is Item.FlintAndSteel && it.amount > 0 && it.durability > 0 }
+            ?.let {
+                mobController.player.durateActiveDurable()
+                mob.ignite(8f)
+                true
+            } ?: false
     }
 
     private fun handleUp() {
@@ -217,6 +227,7 @@ class UseItemMouseInputHandler @Inject constructor(
         private const val TAG = "UseItemMouseInputActionHandler"
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)
         private const val TOUCH_HOLD_TIME_SEC = 0.5f
+        private const val FLINT_AND_STEEL_IGNITION = 8f
 
         private const val MOB_HIT_RANGE = 3f
     }

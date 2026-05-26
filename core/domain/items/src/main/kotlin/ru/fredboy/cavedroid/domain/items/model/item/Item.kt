@@ -8,79 +8,118 @@ import kotlin.math.min
 import ru.fredboy.cavedroid.domain.items.model.block.Block as DomainBlockModel
 
 @OptIn(ExperimentalContracts::class)
-sealed class Item {
+fun Item.isNone(): Boolean {
+    contract { returns(true) implies (this@isNone is Item.None) }
+    return this is Item.None
+}
 
-    abstract val params: CommonItemParams
-    abstract val sprite: Sprite
+@OptIn(ExperimentalContracts::class)
+fun Item.isPlaceable(): Boolean {
+    contract { returns(true) implies (this@isPlaceable is Item.Placeable) }
+    return this is Item.Placeable
+}
 
-    override fun hashCode(): Int = params.key.hashCode()
+@OptIn(ExperimentalContracts::class)
+fun Item.isSlab(): Boolean {
+    contract { returns(true) implies (this@isSlab is Item.Slab) }
+    return this is Item.Slab
+}
 
-    override fun equals(other: Any?): Boolean = params.key == (other as Item).params.key
+@OptIn(ExperimentalContracts::class)
+fun Item.isTool(): Boolean {
+    contract { returns(true) implies (this@isTool is Item.Tool) }
+    return this is Item.Tool
+}
 
-    fun isNone(): Boolean {
-        contract { returns(true) implies (this@Item is None) }
-        return this is None
-    }
+@OptIn(ExperimentalContracts::class)
+fun Item.isShears(): Boolean {
+    contract { returns(true) implies (this@isShears is Item.Shears) }
+    return this is Item.Shears
+}
 
-    fun isPlaceable(): Boolean {
-        contract { returns(true) implies (this@Item is Placeable) }
-        return this is Placeable
-    }
+@OptIn(ExperimentalContracts::class)
+fun Item.isUsable(): Boolean {
+    contract { returns(true) implies (this@isUsable is Item.Usable) }
+    return this is Item.Usable
+}
 
-    fun isSlab(): Boolean {
-        contract { returns(true) implies (this@Item is Slab) }
-        return this is Slab
-    }
+@OptIn(ExperimentalContracts::class)
+fun Item.isFood(): Boolean {
+    contract { returns(true) implies (this@isFood is Item.Food) }
+    return this is Item.Food
+}
 
-    fun isTool(): Boolean {
-        contract { returns(true) implies (this@Item is Tool) }
-        return this is Tool
-    }
+sealed interface Item {
 
-    fun isShears(): Boolean {
-        contract { returns(true) implies (this@Item is Shears) }
-        return this is Shears
-    }
+    val params: CommonItemParams
+    val sprite: Sprite
 
-    fun isUsable(): Boolean {
-        contract { returns(true) implies (this@Item is Usable) }
-        return this is Usable
-    }
-
-    fun isFood(): Boolean {
-        contract { returns(true) implies (this@Item is Food) }
-        return this is Food
-    }
-
-    @JvmOverloads
     fun toInventoryItem(amount: Int = 1, durability: Int = 1): InventoryItem {
-        val durability = if (durability == 0) {
+        val effectiveDurability = if (durability == 0) {
             (this as? Durable)?.durability ?: 1
         } else {
             durability
         }
 
-        return InventoryItem(this, amount, min(durability, (this as? Durable)?.durability ?: 1))
+        return InventoryItem(this, amount, min(effectiveDurability, (this as? Durable)?.durability ?: 1))
+    }
+
+    sealed interface Durable : Item {
+        val durability: Int
+    }
+
+    sealed interface Tool : Durable {
+        val mobDamageMultiplier: Float
+        val blockDamageMultiplier: Float
+        val level: Int
+    }
+
+    sealed interface Armor : Durable {
+        val protection: Int
+        val material: String
+    }
+
+    sealed interface Usable : Item {
+        val useActionKey: String
+        val mobKey: String?
+    }
+
+    sealed interface Placeable : Item {
+        val block: DomainBlockModel
+        override val sprite: Sprite get() = block.sprite
     }
 
     data class Normal(
         override val params: CommonItemParams,
         override val sprite: Sprite,
-    ) : Item()
+    ) : Item
 
-    sealed class Durable : Item() {
-        abstract val durability: Int
+    data class None(
+        override val params: CommonItemParams,
+    ) : Item {
+        override val sprite: Sprite
+            get() = throw IllegalAccessException("Trying to get sprite of None")
     }
 
-    sealed class Tool : Durable() {
-        abstract val mobDamageMultiplier: Float
-        abstract val blockDamageMultiplier: Float
-        abstract val level: Int
-    }
+    data class GenericUsable(
+        override val params: CommonItemParams,
+        override val sprite: Sprite,
+        override val useActionKey: String,
+        override val mobKey: String?,
+    ) : Usable
 
-    sealed class Armor : Durable() {
-        abstract val protection: Int
-        abstract val material: String
+    data class FlintAndSteel(
+        override val params: CommonItemParams,
+        override val sprite: Sprite,
+        override val durability: Int,
+    ) : Durable,
+        Usable {
+        override val useActionKey: String get() = USE_ACTION_KEY
+        override val mobKey: String? get() = null
+
+        companion object {
+            const val USE_ACTION_KEY = "use_flint_and_steel"
+        }
     }
 
     data class Helmet(
@@ -89,7 +128,7 @@ sealed class Item {
         override val protection: Int,
         override val durability: Int,
         override val material: String,
-    ) : Armor()
+    ) : Armor
 
     data class Chestplate(
         override val params: CommonItemParams,
@@ -97,7 +136,7 @@ sealed class Item {
         override val protection: Int,
         override val durability: Int,
         override val material: String,
-    ) : Armor()
+    ) : Armor
 
     data class Leggings(
         override val params: CommonItemParams,
@@ -105,7 +144,7 @@ sealed class Item {
         override val protection: Int,
         override val durability: Int,
         override val material: String,
-    ) : Armor()
+    ) : Armor
 
     data class Boots(
         override val params: CommonItemParams,
@@ -113,37 +152,18 @@ sealed class Item {
         override val protection: Int,
         override val durability: Int,
         override val material: String,
-    ) : Armor()
-
-    sealed class Placeable : Item() {
-        abstract val block: DomainBlockModel
-        override val sprite: Sprite get() = block.sprite
-    }
-
-    data class None(
-        override val params: CommonItemParams,
-    ) : Item() {
-        override val sprite: Sprite
-            get() = throw IllegalAccessException("Trying to get sprite of None")
-    }
-
-    data class Usable(
-        override val params: CommonItemParams,
-        override val sprite: Sprite,
-        val useActionKey: String,
-        val mobKey: String?,
-    ) : Item()
+    ) : Armor
 
     data class Block(
         override val params: CommonItemParams,
         override val block: DomainBlockModel,
-    ) : Placeable()
+    ) : Placeable
 
     data class Slab(
         override val params: CommonItemParams,
         val topPartBlock: DomainBlockModel.Slab,
         val bottomPartBlock: DomainBlockModel.Slab,
-    ) : Placeable() {
+    ) : Placeable {
         override val block get() = bottomPartBlock
     }
 
@@ -154,7 +174,7 @@ sealed class Item {
         override val blockDamageMultiplier: Float,
         override val level: Int,
         override val durability: Int,
-    ) : Tool()
+    ) : Tool
 
     data class Shovel(
         override val params: CommonItemParams,
@@ -163,7 +183,7 @@ sealed class Item {
         override val blockDamageMultiplier: Float,
         override val level: Int,
         override val durability: Int,
-    ) : Tool()
+    ) : Tool
 
     data class Axe(
         override val params: CommonItemParams,
@@ -172,7 +192,7 @@ sealed class Item {
         override val blockDamageMultiplier: Float,
         override val level: Int,
         override val durability: Int,
-    ) : Tool()
+    ) : Tool
 
     data class Pickaxe(
         override val params: CommonItemParams,
@@ -181,7 +201,7 @@ sealed class Item {
         override val blockDamageMultiplier: Float,
         override val level: Int,
         override val durability: Int,
-    ) : Tool()
+    ) : Tool
 
     data class Shears(
         override val params: CommonItemParams,
@@ -190,7 +210,7 @@ sealed class Item {
         override val blockDamageMultiplier: Float,
         override val level: Int,
         override val durability: Int,
-    ) : Tool()
+    ) : Tool
 
     data class Hoe(
         override val params: CommonItemParams,
@@ -199,14 +219,14 @@ sealed class Item {
         override val blockDamageMultiplier: Float,
         override val level: Int,
         override val durability: Int,
-    ) : Tool()
+    ) : Tool
 
     data class Bow(
         override val params: CommonItemParams,
         override val sprite: Sprite,
         override val durability: Int,
         val stateSprites: List<Sprite>,
-    ) : Tool() {
+    ) : Tool {
         override val mobDamageMultiplier: Float = 1f
         override val blockDamageMultiplier: Float = 1f
         override val level: Int = 1
@@ -217,5 +237,5 @@ sealed class Item {
         override val sprite: Sprite,
         val heal: Int,
         val saturation: Float,
-    ) : Item()
+    ) : Item
 }

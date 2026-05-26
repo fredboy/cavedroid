@@ -3,9 +3,11 @@ package ru.fredboy.cavedroid.gdx.game
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
+import ru.fredboy.cavedroid.domain.save.model.FireEntry
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
+import ru.fredboy.cavedroid.game.controller.fire.FireController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.controller.stats.StatsController
@@ -25,6 +27,7 @@ class GameSaveHelper @Inject constructor(
     private val projectileController: ProjectileController,
     private val statsController: StatsController,
     private val growBlocksControllerTask: GameWorldGrowBlocksControllerTask,
+    private val fireController: FireController,
 ) {
 
     fun saveGame(overwrite: Boolean) {
@@ -46,6 +49,9 @@ class GameSaveHelper @Inject constructor(
             gameWorld = gameWorld,
             projectileController = projectileController,
             growBlockEntries = growBlocksControllerTask.snapshot(),
+            fireEntries = fireController.snapshot().map {
+                FireEntry(x = it.x, y = it.y, layer = it.layer, age = it.age)
+            },
         )
 
         statsController.onSaveCheckpoint()

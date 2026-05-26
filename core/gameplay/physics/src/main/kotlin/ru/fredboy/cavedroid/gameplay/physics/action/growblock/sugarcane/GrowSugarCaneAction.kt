@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.gameplay.physics.action.growblock.sugarcane
 
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.items.model.item.isNone
 import ru.fredboy.cavedroid.domain.items.usecase.GetBlockByKeyUseCase
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.physics.action.annotation.BindGrowBlockAction

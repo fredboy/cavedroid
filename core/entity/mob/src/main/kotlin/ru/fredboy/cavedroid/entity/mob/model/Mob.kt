@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.TimeUtils
 import com.badlogic.gdx.utils.Timer
+import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.common.utils.Vector2Proxy
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.drop.DropAmount
@@ -129,6 +130,35 @@ abstract class Mob(
 
     var cliffEdgeCounters = IntArray(2)
 
+    var fireTicksRemaining: Float = 0f
+        private set
+
+    var fireDamageAccumulator: Float = 0f
+
+    val isOnFire: Boolean
+        get() = fireTicksRemaining > 0f
+
+    fun ignite(durationSec: Float) {
+        if (isDead || durationSec <= 0f || this is Player && gameMode == GameMode.CREATIVE) return
+        if (durationSec > fireTicksRemaining) {
+            fireTicksRemaining = durationSec
+        }
+    }
+
+    fun extinguish() {
+        fireTicksRemaining = 0f
+        fireDamageAccumulator = 0f
+    }
+
+    fun decreaseFireTicks(delta: Float) {
+        if (fireTicksRemaining > 0f) {
+            fireTicksRemaining = (fireTicksRemaining - delta).coerceAtLeast(0f)
+            if (fireTicksRemaining == 0f) {
+                fireDamageAccumulator = 0f
+            }
+        }
+    }
+
     var isPullingBow = false
         set(value) {
             if (value != field) {
@@ -215,6 +245,7 @@ abstract class Mob(
     fun kill() {
         isDead = true
         makingSound = SoundType.Death
+        extinguish()
     }
 
     fun reduceBreath() {

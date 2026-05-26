@@ -14,6 +14,7 @@ import ru.fredboy.cavedroid.common.CaveDroidConstants.MAX_SAVES_COUNT
 import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.data.save.mapper.ContainerControllerMapper
 import ru.fredboy.cavedroid.data.save.mapper.DropControllerMapper
+import ru.fredboy.cavedroid.data.save.mapper.FireControllerMapper
 import ru.fredboy.cavedroid.data.save.mapper.GameSaveInfoMapper
 import ru.fredboy.cavedroid.data.save.mapper.GrowBlocksMapper
 import ru.fredboy.cavedroid.data.save.mapper.MobControllerMapper
@@ -23,6 +24,7 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
+import ru.fredboy.cavedroid.domain.save.model.FireEntry
 import ru.fredboy.cavedroid.domain.save.model.GameMapSaveData
 import ru.fredboy.cavedroid.domain.save.model.GameSaveInfo
 import ru.fredboy.cavedroid.domain.save.model.GrowBlockEntry
@@ -61,6 +63,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     private val gameSaveInfoMapper: GameSaveInfoMapper,
     private val projectileControllerMapper: ProjectileControllerMapper,
     private val growBlocksMapper: GrowBlocksMapper,
+    private val fireControllerMapper: FireControllerMapper,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
     private val applicationContextRepository: ApplicationContextRepository,
 ) : SaveDataRepository {
@@ -388,6 +391,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         gameWorld: GameWorld,
         projectileController: ProjectileController,
         growBlockEntries: List<GrowBlockEntry>,
+        fireEntries: List<FireEntry>,
     ) {
         val savesPath = getSavePath(gameDataFolder, saveGameDirectory)
 
@@ -396,6 +400,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         val containersFile = file("$savesPath/$CONTAINERS_FILE")
         val projectilesFile = file("$savesPath/$PROJECTILES_FILE")
         val growBlocksFile = file("$savesPath/$GROW_BLOCKS_FILE")
+        val fireFile = file("$savesPath/$FIRE_FILE")
 
         val dropBytes = ProtoBuf.encodeToByteArray(dropControllerMapper.mapSaveData(dropController))
         val mobsBytes = ProtoBuf.encodeToByteArray(mobControllerMapper.mapSaveData(mobController))
@@ -403,12 +408,14 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             ProtoBuf.encodeToByteArray(containerControllerMapper.mapSaveData(containerController))
         val projectilesBytes = ProtoBuf.encodeToByteArray(projectileControllerMapper.mapSaveData(projectileController))
         val growBlocksBytes = ProtoBuf.encodeToByteArray(growBlocksMapper.mapSaveData(growBlockEntries))
+        val fireBytes = ProtoBuf.encodeToByteArray(fireControllerMapper.mapSaveData(fireEntries))
 
         dropFile.writeBytes(dropBytes, false)
         mobsFile.writeBytes(mobsBytes, false)
         containersFile.writeBytes(containersBytes, false)
         projectilesFile.writeBytes(projectilesBytes, false)
         growBlocksFile.writeBytes(growBlocksBytes, false)
+        GZIPOutputStream(fireFile.write(false)).use { it.write(fireBytes) }
 
         saveMap(gameWorld, savesPath)
 
@@ -430,6 +437,22 @@ internal class SaveDataRepositoryImpl @Inject constructor(
 
         return ProtoBuf.decodeFromByteArray<SaveDataDto.GrowBlocksSaveDataDto>(growBlocksFile.readBytes())
             .let(growBlocksMapper::mapEntries)
+    }
+
+    override fun loadFireEntries(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+    ): List<FireEntry> {
+        val savesPath = getSavePath(gameDataFolder, saveGameDirectory)
+        val fireFile = file("$savesPath/$FIRE_FILE")
+
+        if (!fireFile.exists()) {
+            return emptyList()
+        }
+
+        val bytes = GZIPInputStream(fireFile.read()).use { it.readBytes() }
+        return ProtoBuf.decodeFromByteArray<SaveDataDto.FireControllerSaveDataDto>(bytes)
+            .let(fireControllerMapper::mapEntries)
     }
 
     override fun loadMap(
@@ -608,6 +631,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         private const val DROP_FILE = "drop.dat"
         private const val PROJECTILES_FILE = "projectiles.dat"
         private const val GROW_BLOCKS_FILE = "grow_blocks.dat"
+        private const val FIRE_FILE = "fire.dat.gz"
         private const val MOBS_FILE = "mobs.dat"
         private const val CONTAINERS_FILE = "containers.dat"
         private const val DICT_FILE = "dict"

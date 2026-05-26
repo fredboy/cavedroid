@@ -244,6 +244,23 @@ sealed class SaveDataDto {
     ) : SaveDataDto()
 
     @Serializable
+    data class FireEntryDto(
+        override val version: Int,
+        val x: Int,
+        val y: Int,
+        val age: Float,
+        // Defaults to FOREGROUND for backward compatibility with the very
+        // first iteration of fire saves (which had no layer field).
+        val layer: Int = 0,
+    ) : SaveDataDto()
+
+    @Serializable
+    data class FireControllerSaveDataDto(
+        override val version: Int,
+        val entries: List<FireEntryDto>,
+    ) : SaveDataDto()
+
+    @Serializable
     data class WorldSaveDataDto(
         override val version: Int,
         val name: String,

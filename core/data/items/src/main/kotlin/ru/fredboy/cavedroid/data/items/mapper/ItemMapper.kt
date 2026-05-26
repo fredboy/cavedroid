@@ -31,11 +31,17 @@ class ItemMapper @Inject constructor(
                 sprite = requireNotNull(loadSprite(dto)),
             )
 
-            "usable" -> Item.Usable(
+            "usable" -> Item.GenericUsable(
                 params = params,
                 sprite = requireNotNull(loadSprite(dto)),
                 useActionKey = requireNotNull(dto.actionKey),
                 mobKey = dto.mobKey,
+            )
+
+            "flint_and_steel" -> Item.FlintAndSteel(
+                params = params,
+                sprite = requireNotNull(loadSprite(dto)),
+                durability = requireNotNull(dto.durability),
             )
 
             "shovel" -> Item.Shovel(

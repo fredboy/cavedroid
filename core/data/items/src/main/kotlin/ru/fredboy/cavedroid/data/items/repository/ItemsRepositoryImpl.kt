@@ -18,6 +18,7 @@ import ru.fredboy.cavedroid.domain.items.model.craft.CraftingEntry
 import ru.fredboy.cavedroid.domain.items.model.craft.CraftingRecipe
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.domain.items.model.item.isNone
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import java.util.*
 import javax.inject.Inject

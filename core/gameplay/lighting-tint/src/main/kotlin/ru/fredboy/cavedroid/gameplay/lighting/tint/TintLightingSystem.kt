@@ -60,6 +60,8 @@ class TintLightingSystem : LightingSystem {
 
     override fun createFurnaceLight(x: Float, y: Float): LightHandle = NoOpLightHandle
 
+    override fun createFireLight(x: Float, y: Float): LightHandle = NoOpLightHandle
+
     override fun dispose() {
         shaper.dispose()
         _gameWorld = null

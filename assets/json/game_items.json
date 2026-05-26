@@ -89,6 +89,7 @@
       "material": "stone"
     },
     "planks_oak": {
+      "combustible": true,
       "hp": 180,
       "texture": "planks_oak",
       "tool_level": 0,
@@ -105,6 +106,7 @@
       "material": "wood"
     },
     "planks_spruce": {
+      "combustible": true,
       "hp": 180,
       "texture": "planks_spruce",
       "tool_level": 0,
@@ -121,6 +123,7 @@
       "material": "wood"
     },
     "planks_birch": {
+      "combustible": true,
       "hp": 180,
       "texture": "planks_birch",
       "tool_level": 0,
@@ -137,6 +140,7 @@
       "material": "wood"
     },
     "crafting_table": {
+      "combustible": true,
       "hp": 180,
       "collision": false,
       "background": true,
@@ -367,6 +371,7 @@
       "material": "stone"
     },
     "log_oak": {
+      "combustible": true,
       "hp": 180,
       "texture": "log_oak",
       "tool_level": 0,
@@ -383,6 +388,7 @@
       "material": "wood"
     },
     "leaves_oak": {
+      "combustible": true,
       "hp": 21,
       "texture": "leaves_oak",
       "tool_level": 1,
@@ -429,6 +435,7 @@
       "material": "grass"
     },
     "log_spruce": {
+      "combustible": true,
       "hp": 180,
       "texture": "log_spruce",
       "tool_level": 0,
@@ -445,6 +452,7 @@
       "material": "wood"
     },
     "leaves_spruce": {
+      "combustible": true,
       "hp": 21,
       "texture": "leaves_spruce",
       "tool_level": 1,
@@ -482,6 +490,7 @@
       "material": "grass"
     },
     "log_birch": {
+      "combustible": true,
       "hp": 180,
       "texture": "log_birch",
       "tool_level": 0,
@@ -498,6 +507,7 @@
       "material": "wood"
     },
     "leaves_birch": {
+      "combustible": true,
       "hp": 21,
       "texture": "leaves_birch",
       "tool_level": 1,
@@ -634,6 +644,7 @@
     },
     "bed_l": {
       "hp": 21,
+      "combustible": true,
       "collision": false,
       "background": true,
       "transparent": true,
@@ -655,6 +666,7 @@
     },
     "bed_r": {
       "hp": 21,
+      "combustible": true,
       "collision": false,
       "background": true,
       "transparent": true,
@@ -862,6 +874,7 @@
       "material": "grass"
     },
     "wool_colored_white": {
+      "combustible": true,
       "hp": 75,
       "drop": "wool_colored_white",
       "texture": "wool_colored_white",
@@ -879,6 +892,7 @@
       "material": "grass"
     },
     "wool_colored_orange": {
+      "combustible": true,
       "hp": 75,
       "drop": "wool_colored_orange",
       "texture": "wool_colored_orange",
@@ -896,6 +910,7 @@
       "material": "grass"
     },
     "wool_colored_magenta": {
+      "combustible": true,
       "hp": 75,
       "drop": "wool_colored_magenta",
       "texture": "wool_colored_magenta",
@@ -913,6 +928,7 @@
       "material": "grass"
     },
     "wool_colored_light_blue": {
+      "combustible": true,
       "hp": 75,
       "drop": "wool_colored_light_blue",
       "texture": "wool_colored_light_blue",
@@ -930,6 +946,7 @@
       "material": "grass"
     },
     "wool_colored_yellow": {
+      "combustible": true,
       "hp": 75,
       "drop": "wool_colored_yellow",
       "texture": "wool_colored_yellow",
@@ -947,6 +964,7 @@
       "material": "grass"
     },
     "wool_colored_lime": {
+      "combustible": true,
       "hp": 75,
       "drop": "wool_colored_lime",
       "texture": "wool_colored_lime",
@@ -964,6 +982,7 @@
       "material": "grass"
     },
     "wool_colored_pink": {
+      "combustible": true,
       "hp": 75,
       "drop": "wool_colored_pink",
       "texture": "wool_colored_pink",
@@ -981,6 +1000,7 @@
       "material": "grass"
     },
     "wool_colored_gray": {
+      "combustible": true,
       "hp": 75,
       "drop": "wool_colored_gray",
       "texture": "wool_colored_gray",
@@ -998,6 +1018,7 @@
       "material": "grass"
     },
     "wool_colored_light_gray": {
+      "combustible": true,
       "hp": 75,
       "drop": "wool_colored_light_gray",
       "texture": "wool_colored_light_gray",
@@ -1015,6 +1036,7 @@
       "material": "grass"
     },
     "wool_colored_cyan": {
+      "combustible": true,
       "hp": 75,
       "drop": "wool_colored_cyan",
       "texture": "wool_colored_cyan",
@@ -1032,6 +1054,7 @@
       "material": "grass"
     },
     "wool_colored_purple": {
+      "combustible": true,
       "hp": 75,
       "drop": "wool_colored_purple",
       "texture": "wool_colored_purple",
@@ -1049,6 +1072,7 @@
       "material": "grass"
     },
     "wool_colored_blue": {
+      "combustible": true,
       "hp": 75,
       "drop": "wool_colored_blue",
       "texture": "wool_colored_blue",
@@ -1066,6 +1090,7 @@
       "material": "grass"
     },
     "wool_colored_brown": {
+      "combustible": true,
       "hp": 75,
       "drop": "wool_colored_brown",
       "texture": "wool_colored_brown",
@@ -1083,6 +1108,7 @@
       "material": "grass"
     },
     "wool_colored_green": {
+      "combustible": true,
       "hp": 75,
       "drop": "wool_colored_green",
       "texture": "wool_colored_green",
@@ -1100,6 +1126,7 @@
       "material": "grass"
     },
     "wool_colored_red": {
+      "combustible": true,
       "hp": 75,
       "drop": "wool_colored_red",
       "texture": "wool_colored_red",
@@ -1117,6 +1144,7 @@
       "material": "grass"
     },
     "wool_colored_black": {
+      "combustible": true,
       "hp": 75,
       "drop": "wool_colored_black",
       "texture": "wool_colored_black",
@@ -1332,6 +1360,7 @@
       "top": 8,
       "sprite_top": 8,
       "hp": 180,
+      "combustible": true,
       "transparent": true,
       "drop": "oak_slab",
       "meta": "slab",
@@ -1355,6 +1384,7 @@
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 180,
+      "combustible": true,
       "transparent": true,
       "drop": "oak_slab",
       "meta": "slab",
@@ -1378,6 +1408,7 @@
       "top": 8,
       "sprite_top": 8,
       "hp": 180,
+      "combustible": true,
       "transparent": true,
       "drop": "spruce_slab",
       "meta": "slab",
@@ -1401,6 +1432,7 @@
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 180,
+      "combustible": true,
       "transparent": true,
       "drop": "spruce_slab",
       "meta": "slab",
@@ -1424,6 +1456,7 @@
       "top": 8,
       "sprite_top": 8,
       "hp": 180,
+      "combustible": true,
       "transparent": true,
       "drop": "birch_slab",
       "meta": "slab",
@@ -1447,6 +1480,7 @@
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 180,
+      "combustible": true,
       "transparent": true,
       "drop": "birch_slab",
       "meta": "slab",
@@ -1916,6 +1950,7 @@
     },
     "door_wood_top_left_open": {
       "hp": 270,
+      "combustible": true,
       "collision": false,
       "background": true,
       "transparent": true,
@@ -1938,6 +1973,7 @@
     },
     "door_wood_bottom_left_open": {
       "hp": 270,
+      "combustible": true,
       "collision": false,
       "background": true,
       "transparent": true,
@@ -1962,6 +1998,7 @@
       "right": 13,
       "sprite_right": 13,
       "hp": 270,
+      "combustible": true,
       "collision": true,
       "background": false,
       "transparent": true,
@@ -1986,6 +2023,7 @@
       "right": 13,
       "sprite_right": 13,
       "hp": 270,
+      "combustible": true,
       "collision": true,
       "background": false,
       "transparent": true,
@@ -2008,6 +2046,7 @@
     },
     "door_wood_top_right_open": {
       "hp": 270,
+      "combustible": true,
       "collision": false,
       "background": true,
       "transparent": true,
@@ -2030,6 +2069,7 @@
     },
     "door_wood_bottom_right_open": {
       "hp": 270,
+      "combustible": true,
       "collision": false,
       "background": true,
       "transparent": true,
@@ -2054,6 +2094,7 @@
       "left": 13,
       "sprite_left": 13,
       "hp": 270,
+      "combustible": true,
       "collision": true,
       "background": false,
       "transparent": true,
@@ -2078,6 +2119,7 @@
       "left": 13,
       "sprite_left": 13,
       "hp": 270,
+      "combustible": true,
       "collision": true,
       "background": false,
       "transparent": true,
@@ -2100,6 +2142,7 @@
     },
     "trapdoor_wood_open": {
       "hp": 270,
+      "combustible": true,
       "collision": false,
       "background": true,
       "transparent": true,
@@ -2124,6 +2167,7 @@
     },
     "trapdoor_wood_closed": {
       "bottom": 12,
+      "combustible": true,
       "sprite_bottom": 12,
       "hp": 270,
       "collision": true,
@@ -2150,6 +2194,7 @@
     },
     "ladder": {
       "hp": 36,
+      "combustible": true,
       "collision": false,
       "background": true,
       "transparent": true,
@@ -2457,6 +2502,20 @@
         }
       ],
       "material": "grass"
+    },
+    "fire": {
+      "collision": false,
+      "meta": "fire",
+      "texture": "fire",
+      "animated": true,
+      "frames": 8,
+      "damage": 4,
+      "density": 15,
+      "casts_shadows": false,
+      "light_info": {
+        "light_distance": 15
+      },
+      "replaceable": true
     }
   },
   "items": {
@@ -3258,6 +3317,14 @@
     "flint": {
       "name": "Flint",
       "texture": "flint"
+    },
+    "flint_and_steel": {
+      "name": "Flint and Steel",
+      "type": "flint_and_steel",
+      "texture": "flint_and_steel",
+      "origin_x": 0.125,
+      "max_stack": 1,
+      "durability": 64
     },
     "clay_ball": {
       "name": "Clay ball",

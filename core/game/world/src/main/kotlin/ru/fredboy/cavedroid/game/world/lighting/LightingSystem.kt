@@ -16,5 +16,6 @@ interface LightingSystem : Disposable {
     fun isMobExposedToSun(mob: Mob): Boolean
     fun createPlayerSightLight(body: Body, x: Float, y: Float): LightHandle
     fun createFurnaceLight(x: Float, y: Float): LightHandle
+    fun createFireLight(x: Float, y: Float): LightHandle
     fun refreshChunks(chunks: Iterable<Pair<Int, Int>>)
 }

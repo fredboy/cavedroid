@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.gameplay.controls.action.usemob
 
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.items.model.item.isShears
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.model.SheepMob

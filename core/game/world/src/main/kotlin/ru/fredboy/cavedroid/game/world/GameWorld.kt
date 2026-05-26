@@ -4,10 +4,13 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Disposable
+import ru.fredboy.cavedroid.common.coroutines.GdxMainThread
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.removeFirst
 import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.items.model.item.isNone
+import ru.fredboy.cavedroid.domain.items.model.item.isSlab
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
@@ -179,6 +182,12 @@ class GameWorld @Inject constructor(
     }
 
     private fun setMap(x: Int, y: Int, layer: Layer, value: Block, dropOld: Boolean, destroyedByPlayer: Boolean) {
+        if (!GdxMainThread.isMainThread()) {
+            logger.w {
+                "setMap($x, $y, $layer) called off the main thread from ${Thread.currentThread().name}"
+            }
+        }
+
         if (y !in 0..<height) {
             return
         }
