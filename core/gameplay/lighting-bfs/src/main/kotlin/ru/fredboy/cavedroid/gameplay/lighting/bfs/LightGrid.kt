@@ -165,7 +165,7 @@ class LightGrid(
         clearTransientEmitter(id)
         if (level <= 0 || y < 0 || y >= height) return
         val cx = wrapX(x)
-        if (opaque[index(cx, y)]) return
+//        if (opaque[index(cx, y)]) return
         val capped = level.coerceAtMost(MAX_LEVEL)
         transientEmitters[id] = TransientEmitter(cx, y, capped)
         val current = block[index(cx, y)].toInt() and 0xFF

@@ -1,11 +1,13 @@
 package ru.fredboy.cavedroid.domain.items.model.block
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.utils.PIXELS_PER_METER
+import ru.fredboy.cavedroid.common.utils.applyTint
 import ru.fredboy.cavedroid.common.utils.colorFromHexString
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.items.model.drop.DropAmount
@@ -81,7 +83,7 @@ sealed class Block {
 
     fun requireSprite() = requireNotNull(sprite)
 
-    fun draw(spriter: SpriteBatch, x: Float, y: Float) {
+    fun draw(spriter: SpriteBatch, x: Float, y: Float, tint: Color? = null) {
         sprite.apply {
             setBounds(
                 /* x = */ x + params.spriteMarginsMeters.left,
@@ -89,7 +91,9 @@ sealed class Block {
                 /* width = */ spriteWidthMeters,
                 /* height = */ spriteHeightMeters,
             )
+            val oldColor = tint?.let { color.cpy().also { applyTint(tint) } } ?: color
             draw(spriter)
+            setColor(oldColor)
         }
     }
 
@@ -131,6 +135,11 @@ sealed class Block {
     fun isNone(): Boolean {
         contract { returns(true) implies (this@Block is None) }
         return this is None
+    }
+
+    fun isFire(): Boolean {
+        contract { returns(true) implies (this@Block is Fire) }
+        return this is Fire
     }
 
     fun getRectangle(x: Int, y: Int): Rectangle = Rectangle(
@@ -209,7 +218,7 @@ sealed class Block {
             }
         } ?: sprite
 
-        fun draw(spriter: SpriteBatch, x: Float, y: Float, isActive: Boolean) {
+        fun draw(spriter: SpriteBatch, x: Float, y: Float, isActive: Boolean, tint: Color? = null) {
             getSprite(isActive).apply {
                 setBounds(
                     /* x = */ x + params.spriteMarginsMeters.left,
@@ -217,7 +226,10 @@ sealed class Block {
                     /* width = */ spriteWidthMeters,
                     /* height = */ spriteHeightMeters,
                 )
+
+                val oldColor = tint?.let { color.cpy().also { applyTint(tint) } } ?: color
                 draw(spriter)
+                setColor(oldColor)
             }
         }
     }
@@ -265,6 +277,10 @@ sealed class Block {
         override val params: CommonBlockParams,
         override val climbSpeedFactor: Float,
     ) : Climbable()
+
+    data class Fire(
+        override val params: CommonBlockParams,
+    ) : Block()
 
     companion object {
         private const val ANIMATION_FRAME_DURATION_MS = 100L

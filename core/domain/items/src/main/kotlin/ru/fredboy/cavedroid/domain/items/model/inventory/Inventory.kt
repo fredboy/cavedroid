@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.domain.items.model.inventory
 
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.domain.items.model.item.isNone
 
 class Inventory @JvmOverloads constructor(
     val size: Int,

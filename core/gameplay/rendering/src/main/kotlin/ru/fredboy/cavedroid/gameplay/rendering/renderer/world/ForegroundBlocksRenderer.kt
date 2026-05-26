@@ -8,7 +8,9 @@ import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageFrameCountUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageSpriteUseCase
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
+import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
+import ru.fredboy.cavedroid.game.controller.fire.FireController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindWorldRenderer
@@ -25,6 +27,7 @@ class ForegroundBlocksRenderer @Inject constructor(
     getBlockDamageFrameCount: GetBlockDamageFrameCountUseCase,
     getBlockDamageSprite: GetBlockDamageSpriteUseCase,
     itemsRepository: ItemsRepository,
+    fireController: FireController,
 ) : BlocksRenderer(
     gameWorld = gameWorld,
     mobsController = mobController,
@@ -32,6 +35,7 @@ class ForegroundBlocksRenderer @Inject constructor(
     getBlockDamageFrameCount = getBlockDamageFrameCount,
     getBlockDamageSprite = getBlockDamageSprite,
     itemsRepository = itemsRepository,
+    fireController = fireController,
 ) {
 
     override val renderLayer get() = RENDER_LAYER
@@ -61,6 +65,7 @@ class ForegroundBlocksRenderer @Inject constructor(
             if (gameWorld.getForeMap(x, y).params.animationInfo != null) {
                 drawForeMap(spriteBatch, x, y, x.toFloat(), y.toFloat())
             }
+            drawFireIfNeed(spriteBatch, x, y, x.toFloat(), y.toFloat(), Layer.FOREGROUND)
         }
 
         drawBlockDamage(spriteBatch)

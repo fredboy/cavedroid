@@ -22,6 +22,7 @@ import ru.fredboy.cavedroid.common.api.NoOpCloudStatsSync
 import ru.fredboy.cavedroid.common.api.NoOpInlineTextInput
 import ru.fredboy.cavedroid.common.api.PreferencesStore
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
+import ru.fredboy.cavedroid.common.coroutines.GdxMainThread
 import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.utils.DEFAULT_VIEWPORT_WIDTH
 import ru.fredboy.cavedroid.common.utils.ratio
@@ -82,6 +83,7 @@ class CaveDroidApplication(
     }
 
     override fun create() {
+        GdxMainThread.init()
         val width = DEFAULT_VIEWPORT_WIDTH
         val height = width / Gdx.graphics.ratio
 

@@ -29,6 +29,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
 import ru.fredboy.cavedroid.entity.projectile.abstraction.ProjectileWorldAdapter
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
+import ru.fredboy.cavedroid.game.controller.fire.FireController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.mob.MobSoundManager
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
@@ -206,6 +207,34 @@ object GameModule {
             growBlockActions = growBlockActions,
             initialEntries = initialEntries,
         )
+    }
+
+    @Provides
+    @GameScope
+    fun provideFireController(
+        applicationContextRepository: ApplicationContextRepository,
+        gameContextRepository: GameContextRepository,
+        saveDataRepository: SaveDataRepository,
+        gameWorld: GameWorld,
+        lightingSystem: LightingSystem,
+    ): FireController {
+        val seed = if (gameContextRepository.isLoadGame()) {
+            saveDataRepository.loadFireEntries(
+                gameDataFolder = applicationContextRepository.getGameDirectory(),
+                saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
+            )
+        } else {
+            emptyList()
+        }
+
+        return FireController(
+            gameWorld = gameWorld,
+            lightingSystem = lightingSystem,
+        ).apply {
+            seed.forEach { entry ->
+                addFire(entry.x, entry.y, entry.layer)?.age = entry.age
+            }
+        }
     }
 
     @Provides

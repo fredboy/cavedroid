@@ -25,6 +25,10 @@ import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 import kotlin.math.max
 
+@Deprecated(
+    "Replaced by BfsLightingSystem. Kept only for parity with older saves; not maintained.",
+    level = DeprecationLevel.WARNING,
+)
 class Box2dLightingSystem(
     private val gameContextRepository: GameContextRepository,
 ) : LightingSystem,
@@ -184,6 +188,15 @@ class Box2dLightingSystem(
             setSoftnessLength(3f)
         }
         return Box2dLightHandle(light)
+    }
+
+    override fun createFireLight(x: Float, y: Float): LightHandle = NoOpLightHandle
+
+    private object NoOpLightHandle : LightHandle {
+        override var isActive: Boolean = true
+        override fun setPosition(x: Float, y: Float) = Unit
+        override fun update() = Unit
+        override fun dispose() = Unit
     }
 
     private fun updateChunk(blockX: Int, blockY: Int) {

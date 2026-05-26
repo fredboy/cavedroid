@@ -39,4 +39,5 @@ data class BlockDto(
     @SerialName("replaceable") val replaceable: Boolean = false,
     @SerialName("material") val material: String? = null,
     @SerialName("action_sound_key") val actionSoundKey: String? = null,
+    @SerialName("combustible") val combustible: Boolean = false,
 )
