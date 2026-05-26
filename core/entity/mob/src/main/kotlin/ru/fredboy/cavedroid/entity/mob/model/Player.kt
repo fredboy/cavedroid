@@ -451,14 +451,16 @@ class Player(
     fun rayCastCursor(mobWorldAdapter: MobWorldAdapter, onCallback: () -> Unit = {}) {
         val cursor = Vector2(aimX, aimY)
 
-        if (gameMode.isSurvival()) {
-            val plToCursor = cursor
-                .sub(position)
-                .limit2(SURVIVAL_CURSOR_RANGE_2)
-
-            cursor.x = position.x + plToCursor.x
-            cursor.y = position.y + plToCursor.y
+        val range = when (gameMode) {
+            GameMode.SURVIVAL -> SURVIVAL_CURSOR_RANGE_2
+            GameMode.CREATIVE -> CREATIVE_CURSOR_RANGE_2
         }
+        val plToCursor = cursor
+            .sub(position)
+            .limit2(range)
+
+        cursor.x = position.x + plToCursor.x
+        cursor.y = position.y + plToCursor.y
 
         cursor.y = MathUtils.clamp(cursor.y, 0f, mobWorldAdapter.height.toFloat())
 
@@ -615,5 +617,6 @@ class Player(
         private const val HAND_ITEM_ANGLE_DEG = 30f
 
         private const val SURVIVAL_CURSOR_RANGE_2 = 36f
+        private const val CREATIVE_CURSOR_RANGE_2 = 81f
     }
 }

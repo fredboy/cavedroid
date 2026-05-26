@@ -383,10 +383,19 @@ abstract class Mob(
             velocity.x = 0f
         }
 
-        if (position.x > mobWorldAdapter.width) {
-            body.setTransform(Vector2(position.x - mobWorldAdapter.width, position.y), 0f)
-        } else if (position.x < 0) {
-            body.setTransform(Vector2(position.x + mobWorldAdapter.width, position.y), 0f)
+        val worldWidth = mobWorldAdapter.width.toFloat()
+        val seamDeltaX = when {
+            position.x > worldWidth -> -worldWidth
+            position.x < 0f -> worldWidth
+            else -> 0f
+        }
+
+        if (seamDeltaX != 0f) {
+            body.setTransform(position.x + seamDeltaX, position.y, 0f)
+            if (this is Player) {
+                aimX += seamDeltaX
+                cursorX += seamDeltaX
+            }
         }
 
         if (position.y > mobWorldAdapter.height) {

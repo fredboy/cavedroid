@@ -69,8 +69,6 @@ include("core:game:world")
 include("core:gameplay:controls")
 include("core:gameplay:physics")
 include("core:gameplay:rendering")
-include("core:gameplay:lighting-box2d")
-include("core:gameplay:lighting-tint")
 include("core:gameplay:lighting-bfs")
 
 /**
