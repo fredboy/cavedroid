@@ -61,7 +61,6 @@ private fun String.sanitizeForYandex(): String {
 dependencies {
     useCommonLibs()
     useGdxModule()
-    useLightingTint()
     useLightingBfs()
     useTeaVMBackend()
     useKotlinxSerializationJson()

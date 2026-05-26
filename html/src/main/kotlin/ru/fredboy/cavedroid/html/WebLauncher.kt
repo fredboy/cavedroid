@@ -14,9 +14,7 @@ import ru.fredboy.cavedroid.common.api.NoOpInlineTextInput
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.gameplay.lighting.bfs.BfsLightingSystemFactory
-import ru.fredboy.cavedroid.gameplay.lighting.tint.TintLightingSystemFactory
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
-import ru.fredboy.cavedroid.gdx.di.DelegatingLightingSystemFactory
 import java.util.Locale
 
 object WebLauncher {
@@ -49,11 +47,7 @@ object WebLauncher {
             isTouchScreen = isMobileBrowser,
             isDebug = false,
             preferencesStore = preferencesStore,
-            lightingSystemFactory = DelegatingLightingSystemFactory(
-                preferencesStore = preferencesStore,
-                legacy = TintLightingSystemFactory(),
-                bfs = BfsLightingSystemFactory(),
-            ),
+            lightingSystemFactory = BfsLightingSystemFactory(),
             dispatchers = AppDispatchers(
                 io = GdxMainDispatcher,
                 background = GdxMainDispatcher,

@@ -69,7 +69,7 @@ class BfsLightingSystem(
 
     override fun refreshChunks(chunks: Iterable<Pair<Int, Int>>) = Unit
 
-    override fun render(camera: OrthographicCamera, cameraJumped: Boolean) {
+    override fun render(camera: OrthographicCamera) {
         if (_gameWorld == null) return
         overlay.render(camera, gameWorld.getSunlight())
     }

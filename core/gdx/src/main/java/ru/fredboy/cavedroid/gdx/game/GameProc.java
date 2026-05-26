@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Timer;
+import kotlin.random.Random;
 import ru.fredboy.cavedroid.common.di.GameScope;
 import ru.fredboy.cavedroid.common.model.GameMode;
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository;
@@ -121,8 +122,8 @@ public class GameProc implements Disposable {
         mMobsController.update(delta);
         mDropController.update(delta);
         mProjectileController.update(delta);
-        mGameInputProcessor.update(delta);
         mGameRenderer.render(delta);
+        mGameInputProcessor.update(delta);
         mContainerController.update(delta);
         mWeatherSoundController.update();
         mStatsController.update(delta);
