@@ -14,7 +14,6 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.item.Item
-import ru.fredboy.cavedroid.domain.items.model.item.isNone
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.entity.mob.model.Direction
 import ru.fredboy.cavedroid.entity.mob.model.Player
@@ -124,22 +123,19 @@ class TouchCursorInputHandler @Inject constructor(
     private fun tryHitMob(): Boolean {
         mobController.mobs.forEach { mob ->
             if (mob.position.dst(player.cursorX, player.cursorY) < 1f) {
-                useMobActionMap[mob.params.key]?.perform(mob)?.takeIf { it } ?: player.hitMob(mob)
+                useMobActionMap[mob.params.key]?.perform(mob)?.takeIf { it }
+                    ?: mobController.player.activeItem
+                        .takeIf { it.item is Item.FlintAndSteel && it.amount > 0 && it.durability > 0 }
+                        ?.let {
+                            mobController.player.durateActiveDurable()
+                            mob.ignite(8f)
+                            true
+                        }
+                    ?: player.hitMob(mob)
                 return true
             }
         }
         return false
-    }
-
-    private fun playFoodSound() {
-        val sound = foodSoundAssetsRepository.getFoodSound() ?: return
-        soundPlayer.playSoundAtPosition(
-            sound = sound,
-            soundX = mobController.player.position.x,
-            soundY = mobController.player.position.y,
-            playerX = mobController.player.position.x,
-            playerY = mobController.player.position.y,
-        )
     }
 
     private fun shootBow() {
@@ -241,19 +237,19 @@ class TouchCursorInputHandler @Inject constructor(
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return applicationContextRepository.isTouch() &&
-            gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-            (
+                gameWindowsManager.currentWindowType == GameWindowType.NONE &&
                 (
-                    action.actionKey is MouseInputActionKey.Screen &&
                         (
-                            action.screenX > applicationContextRepository.getWidth() / 2f &&
-                                !action.actionKey.touchUp ||
-                                (action.actionKey.pointer == pointer)
-                            )
-                    ) ||
-                    (action.actionKey is MouseInputActionKey.Dragged && action.actionKey.pointer == pointer)
-                ) &&
-            !action.isInsideHotbar(gameContextRepository, getTextureRegionByNameUseCase)
+                                action.actionKey is MouseInputActionKey.Screen &&
+                                        (
+                                                action.screenX > applicationContextRepository.getWidth() / 2f &&
+                                                        !action.actionKey.touchUp ||
+                                                        (action.actionKey.pointer == pointer)
+                                                )
+                                ) ||
+                                (action.actionKey is MouseInputActionKey.Dragged && action.actionKey.pointer == pointer)
+                        ) &&
+                !action.isInsideHotbar(gameContextRepository, getTextureRegionByNameUseCase)
     }
 
     override fun handle(action: MouseInputAction) {
