@@ -35,7 +35,7 @@ class MobPhysicsFactoryImpl @Inject constructor(
         body.createMainBodyFixture(mob.width, mob.height, physicsCategory, collidesOwnCategory)
         body.createFeetFixtures(mob.width, mob.height, physicsCategory, collidesOwnCategory)
         body.createGroundSensor(mob.width, mob.height)
-        body.createAutoJumpSensor(mob.height)
+        body.createAutoJumpSensor(mob.width, mob.height)
         body.createCliffEdgeSensor(mob.width, mob.height)
 
         return body
@@ -147,21 +147,21 @@ class MobPhysicsFactoryImpl @Inject constructor(
         }
     }
 
-    private fun Body.createAutoJumpSensor(height: Float) {
+    private fun Body.createAutoJumpSensor(width: Float, height: Float) {
         val sensorShapeR = PolygonShape().apply {
             setAsBox(
-                0.4f,
+                0.3375f,
                 0.125f,
-                Vector2(0.4f, height / 2 - 0.8f),
+                Vector2(width / 2f + 0.3375f, height / 2f - 0.8f),
                 0f,
             )
         }
 
         val sensorShapeL = PolygonShape().apply {
             setAsBox(
-                0.4f,
+                0.3375f,
                 0.125f,
-                Vector2(-0.4f, height / 2 - 0.8f),
+                Vector2(-width / 2f - 0.3375f, height / 2 - 0.8f),
                 0f,
             )
         }

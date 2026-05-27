@@ -41,8 +41,8 @@ abstract class BaseMobBehavior<MOB : Mob>(
             val dir = Direction.fromVector(controlVector)
             width = 1f
             x = when (dir) {
-                Direction.LEFT -> x.floor
-                Direction.RIGHT -> x.ceil
+                Direction.LEFT -> position.x.floor
+                Direction.RIGHT -> position.x.ceil
             } - width / 2f
             y -= 1f
         }

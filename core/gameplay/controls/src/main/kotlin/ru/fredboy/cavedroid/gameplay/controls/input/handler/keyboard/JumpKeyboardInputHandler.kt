@@ -26,7 +26,7 @@ class JumpKeyboardInputHandler @Inject constructor(
         val player = mobController.player
         player.jump()
         if (player.canClimb) {
-            player.climb = true
+            player.tryClimb = true
         } else {
             player.addExhaustion(
                 if (player.isSprinting) Player.EXHAUSTION_PER_SPRINT_JUMP else Player.EXHAUSTION_PER_JUMP,

@@ -127,6 +127,12 @@ class PlayerMobBehavior(
     ) {
         sight?.update()
 
+        if (tryClimb) {
+            climbUp()
+        } else {
+            climb = false
+        }
+
         if (isPullingBow && !canShootBow()) {
             isPullingBow = false
         }
