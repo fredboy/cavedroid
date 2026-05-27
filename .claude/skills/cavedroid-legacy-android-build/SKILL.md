@@ -1,6 +1,6 @@
 ---
 name: cavedroid-legacy-android-build
-description: Use when the user wants to build CaveDroid for Android API 16/17 (Jelly Bean) devices, or when diagnosing the "Couldn't load shared library 'gdx'" / "cannot locate '__memcpy_chk'" crash on old Android. Encodes the libGDX/ktx/box2dlights version downgrade required (the stock 1.12+ natives reference Bionic symbols that don't exist before API 18), every API port the older libraries demand, and the verification step that proves the resulting .so files will actually load.
+description: Use when the user wants to build CaveDroid for Android API 16/17 (Jelly Bean) devices, or when diagnosing the "Couldn't load shared library 'gdx'" / "cannot locate '__memcpy_chk'" crash on old Android. Encodes the libGDX/ktx version downgrade required (the stock 1.12+ natives reference Bionic symbols that don't exist before API 18), every API port the older libraries demand, and the verification step that proves the resulting .so files will actually load.
 ---
 
 # CaveDroid: building for legacy Android (API 16/17)
@@ -52,10 +52,9 @@ Edit `buildSrc/src/main/kotlin/Versions.kt`:
 ```kotlin
 const val gdx = "1.9.10"          // was 1.12.1 / 1.13.1
 const val libKtx = "1.9.10-b6"    // was 1.13.1-rc1 — must track libGDX major.minor
-const val box2dLights = "1.4"     // was 1.5 — 1.5 needs libGDX 1.9.11+
 ```
 
-Don't bump these one at a time. ktx and box2dlights are coupled to libGDX's ABI; mixing 1.9.10 gdx with 1.13.x ktx will fail at link time, not compile time.
+Don't bump these one at a time. ktx is coupled to libGDX's ABI; mixing 1.9.10 gdx with 1.13.x ktx will fail at link time, not compile time.
 
 ## API ports the downgrade forces
 
@@ -146,20 +145,6 @@ Add to `android/src/main/AndroidManifest.xml` directly under `<manifest>`:
 
 Both package names are required — AGP fails the merge for each library separately, so a single-entry override will produce a second identical-looking error after the first is fixed. Don't try to set `android:minSdkVersion` here; AGP rejects that when `defaultConfig.minSdk` is also set. The `xmlns:tools="http://schemas.android.com/tools"` declaration is already on the root `<manifest>` element.
 
-### `box2dLight.Light.direction` — protected field in box2dlights 1.4
-
-box2dlights 1.5 exposed a public setter; 1.4 didn't. Use the package-private accessor pattern already established in `core/common/src/main/kotlin/box2dLight/DirectionalLightExtention.kt`:
-
-```kotlin
-package box2dLight
-
-fun Light.setDirectionCompat(direction: Float) {
-    this.direction = direction
-}
-```
-
-Then call sites: `sight.setDirectionCompat(0f)` instead of `sight.direction = 0f`. The trick is that Kotlin top-level functions in package `box2dLight` get JVM package-private access — same mechanism `publicUpdate()` uses to call protected `Light.update()`.
-
 ## Verification step (do this, don't skip)
 
 Compile alone proves nothing — the bug we're fixing is a *load-time* failure. After the build, confirm the natives packaged **inside the APK** don't reference the broken symbol:
@@ -209,7 +194,7 @@ git diff -- ':!legacy-migration.patch' > legacy-migration.patch
 
 The `':!legacy-migration.patch'` pathspec is required when the patch already exists in `HEAD` — the redirect truncates the destination *before* `git diff` runs, so a naive `git diff > legacy-migration.patch` captures the patch's own deletion + rewrite, producing a self-referential patch that no longer applies cleanly. Exclude the patch file from the diff to avoid this.
 
-Sanity-check the patch covers what you expect — at minimum it should touch `buildSrc/.../Versions.kt`, `android/build.gradle.kts` (the `minSdk` lowering), `android/src/main/AndroidManifest.xml` (the `<uses-sdk tools:overrideLibrary="co.touchlab.kermit,co.touchlab.kermit.core" />` line), `android/proguard-rules.pro` (the `-dontwarn com.badlogic.gdx.jnigen.**` line), the `box2dLight/DirectionalLightExtention.kt` helper, and every source file listed under "API ports the downgrade forces" above. If any of those are missing, the working tree was not in the right state when you ran `git diff`.
+Sanity-check the patch covers what you expect — at minimum it should touch `buildSrc/.../Versions.kt`, `android/build.gradle.kts` (the `minSdk` lowering), `android/src/main/AndroidManifest.xml` (the `<uses-sdk tools:overrideLibrary="co.touchlab.kermit,co.touchlab.kermit.core" />` line), `android/proguard-rules.pro` (the `-dontwarn com.badlogic.gdx.jnigen.**` line), and every source file listed under "API ports the downgrade forces" above. If any of those are missing, the working tree was not in the right state when you ran `git diff`.
 
 Optional but recommended: after capturing the patch, revert the code/build edits with `git restore` (preserving only `legacy-migration.patch`, the skill, and the README sections). The next legacy release runs:
 
