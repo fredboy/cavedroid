@@ -40,4 +40,5 @@ data class BlockDto(
     @SerialName("material") val material: String? = null,
     @SerialName("action_sound_key") val actionSoundKey: String? = null,
     @SerialName("combustible") val combustible: Boolean = false,
+    @SerialName("requires_background") val requiresBackground: Boolean = false,
 )

@@ -82,6 +82,7 @@ class BlockMapper @Inject constructor(
         actionSoundKey = dto.actionSoundKey,
         dropsSingleItem = dto.pickSingleDrop,
         combustible = dto.combustible,
+        requiresBackground = dto.requiresBackground,
     )
 
     private fun mapLightInfo(info: BlockLightDto?): BlockLightInfo? {

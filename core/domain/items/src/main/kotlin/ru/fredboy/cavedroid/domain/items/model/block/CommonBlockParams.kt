@@ -29,6 +29,7 @@ data class CommonBlockParams(
     val material: BlockMaterial?,
     val actionSoundKey: String?,
     val combustible: Boolean,
+    val requiresBackground: Boolean,
 ) {
     val spriteMarginsMeters by lazy { spriteMargins.toMeters() }
 

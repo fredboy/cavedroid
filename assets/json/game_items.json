@@ -2195,6 +2195,7 @@
     "ladder": {
       "hp": 36,
       "combustible": true,
+      "requires_background": true,
       "collision": false,
       "background": true,
       "transparent": true,
