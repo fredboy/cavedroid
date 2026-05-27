@@ -40,8 +40,9 @@ class GrowSugarCaneAction @Inject constructor(
         return false
     }
 
-    private fun isWaterAdjacent(x: Int, y: Int): Boolean = gameWorld.getForeMap(x - 1, y).isWater() ||
-            gameWorld.getForeMap(x + 1, y).isWater()
+    private fun isWaterAdjacent(x: Int, y: Int): Boolean {
+        return gameWorld.getForeMap(x - 1, y).isWater() || gameWorld.getForeMap(x + 1, y).isWater()
+    }
 
     companion object {
         const val BLOCK_KEY = "sugar_cane"
