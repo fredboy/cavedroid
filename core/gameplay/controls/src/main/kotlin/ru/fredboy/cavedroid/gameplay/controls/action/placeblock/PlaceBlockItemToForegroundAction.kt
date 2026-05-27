@@ -50,6 +50,12 @@ class PlaceBlockItemToForegroundAction @Inject constructor(
             return false
         }
 
+        if (placeable.block.params.requiresBackground &&
+            !gameWorld.getBackMap(x, y).params.run { hasCollision && isFullBlock }
+        ) {
+            return false
+        }
+
         return if (gameWorld.placeToForeground(x, y, placeable.block)) {
             mobController.player.decreaseCurrentItemCount()
             statsRepository.recordBlockPlaced()
