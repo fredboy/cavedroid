@@ -1,5 +1,7 @@
 package ru.fredboy.cavedroid.html
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.teavm.jso.JSBody
 import org.teavm.jso.browser.Window
 import org.teavm.jso.dom.events.Event
@@ -7,6 +9,7 @@ import org.teavm.jso.dom.events.EventListener
 import org.teavm.jso.dom.html.HTMLElement
 import org.teavm.jso.dom.html.HTMLInputElement
 import ru.fredboy.cavedroid.common.api.InlineTextInput
+import ru.fredboy.cavedroid.common.api.SoftKeyboardObserver
 
 @JSBody(
     params = ["el", "start", "end"],
@@ -84,9 +87,14 @@ private const val OVERLAY_CSS = """
 // styled overlay so they can see what they're typing.
 private const val OVERLAY_VIEWPORT_FRACTION = 0.6
 
-class WebInlineTextInput : InlineTextInput {
+class WebInlineTextInput :
+    InlineTextInput,
+    SoftKeyboardObserver {
 
     override val isSupported: Boolean = true
+
+    private val _isVisible = MutableStateFlow(false)
+    override val isVisible: StateFlow<Boolean> = _isVisible
 
     private var container: HTMLElement? = null
     private var input: HTMLInputElement? = null
@@ -137,6 +145,8 @@ class WebInlineTextInput : InlineTextInput {
         style.removeProperty("font-family")
         style.removeProperty("text-align")
         containerEl.style.setProperty("display", "none")
+
+        _isVisible.value = false
     }
 
     private fun applyOverlayMode() {
@@ -171,6 +181,8 @@ class WebInlineTextInput : InlineTextInput {
         istyle.setProperty("text-align", "left")
         // Input sits above the backdrop container.
         istyle.setProperty("z-index", "2147483647")
+
+        _isVisible.value = true
     }
 
     private fun isKeyboardLikelyVisible(): Boolean {

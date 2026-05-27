@@ -11,6 +11,7 @@ import ru.fredboy.cavedroid.common.api.CloudStatsSync
 import ru.fredboy.cavedroid.common.api.NoOpAdController
 import ru.fredboy.cavedroid.common.api.NoOpCloudStatsSync
 import ru.fredboy.cavedroid.common.api.NoOpInlineTextInput
+import ru.fredboy.cavedroid.common.api.NoOpSoftKeyboardObserver
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.gameplay.lighting.bfs.BfsLightingSystemFactory
@@ -41,6 +42,8 @@ object WebLauncher {
 
         val preferencesStore = WebPreferencesStore()
 
+        val inlineTextInput by lazy { WebInlineTextInput() }
+
         val app = CaveDroidApplication(
             gameDataDirectoryPath = "",
             gameDataFileType = Files.FileType.Local,
@@ -56,13 +59,18 @@ object WebLauncher {
             adController = adController,
             cloudStatsSync = cloudStatsSync,
             inlineTextInput = if (isMobileBrowser) {
-                WebInlineTextInput()
+                inlineTextInput
             } else {
                 NoOpInlineTextInput
             },
             defaultLocaleProvider = { defaultLocale(yandexAvailable) },
             loggingSeverity = Severity.Info,
             isYandexGamesBuild = yandexAvailable,
+            softKeyboardObserver = if (isMobileBrowser) {
+                inlineTextInput
+            } else {
+                NoOpSoftKeyboardObserver
+            },
         ).let { app ->
             if (yandexAvailable) {
                 YandexGamesLifecycleGameDecorator(app)

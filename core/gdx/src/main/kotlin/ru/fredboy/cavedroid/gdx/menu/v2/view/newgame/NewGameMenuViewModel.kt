@@ -26,25 +26,14 @@ class NewGameMenuViewModel(
     // Web routes typing through InlineTextInput; the scene2d field never opens
     // the platform soft keyboard, so observer events are irrelevant and would
     // never fire anyway. Pin the state to "menu" mode for that path.
-    val stateFlow: StateFlow<NewGameMenuState> = if (inlineTextInput.isSupported) {
-        softKeyboardObserver.isVisible
-            .map<Boolean, NewGameMenuState> { NewGameMenuState.Show(isKeyboardUp = false) }
-            .distinctUntilChanged()
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000L),
-                initialValue = NewGameMenuState.Show(isKeyboardUp = false),
-            )
-    } else {
-        softKeyboardObserver.isVisible
-            .map<Boolean, NewGameMenuState> { visible -> NewGameMenuState.Show(isKeyboardUp = visible) }
-            .distinctUntilChanged()
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000L),
-                initialValue = NewGameMenuState.Show(isKeyboardUp = false),
-            )
-    }
+    val stateFlow: StateFlow<NewGameMenuState> = softKeyboardObserver.isVisible
+        .map<Boolean, NewGameMenuState> { visible -> NewGameMenuState.Show(isKeyboardUp = visible) }
+        .distinctUntilChanged()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = NewGameMenuState.Show(isKeyboardUp = false),
+        )
 
     fun onWorldNameChanged(text: String, cursor: Int) {
         worldName = text
