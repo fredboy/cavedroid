@@ -56,7 +56,11 @@ abstract class AbstractInventoryWindow {
         val selectedItem = selectedItem
 
         if (selectedItem.isNoneOrNull() && !clickedItem.isNoneOrNull()) {
-            val half = InventoryItem(clickedItem.item, MathUtils.ceil(clickedItem.amount.toFloat() / 2f))
+            val half = InventoryItem(
+                item = clickedItem.item,
+                _amount = MathUtils.ceil(clickedItem.amount.toFloat() / 2f),
+                _durability = clickedItem.durability,
+            )
             this.selectedItem = half
             this.selectItemPointer = pointer
             clickedItem.subtract(half.amount)
