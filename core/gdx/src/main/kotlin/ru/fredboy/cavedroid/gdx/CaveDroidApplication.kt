@@ -20,7 +20,9 @@ import ru.fredboy.cavedroid.common.api.InlineTextInput
 import ru.fredboy.cavedroid.common.api.NoOpAdController
 import ru.fredboy.cavedroid.common.api.NoOpCloudStatsSync
 import ru.fredboy.cavedroid.common.api.NoOpInlineTextInput
+import ru.fredboy.cavedroid.common.api.NoOpSoftKeyboardObserver
 import ru.fredboy.cavedroid.common.api.PreferencesStore
+import ru.fredboy.cavedroid.common.api.SoftKeyboardObserver
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainThread
 import ru.fredboy.cavedroid.common.model.StartGameConfig
@@ -47,6 +49,7 @@ class CaveDroidApplication(
     private val adController: AdController = NoOpAdController(),
     private val cloudStatsSync: CloudStatsSync = NoOpCloudStatsSync(),
     private val inlineTextInput: InlineTextInput = NoOpInlineTextInput,
+    private val softKeyboardObserver: SoftKeyboardObserver = NoOpSoftKeyboardObserver,
     private val defaultLocaleProvider: () -> Locale? = { safeDefaultLocale() },
     private val isYandexGamesBuild: Boolean = false,
     loggingSeverity: Severity = Severity.Info,
@@ -128,6 +131,7 @@ class CaveDroidApplication(
             .preferencesStore(preferencesStore)
             .adController(adController)
             .inlineTextInput(inlineTextInput)
+            .softKeyboardObserver(softKeyboardObserver)
             .lightingSystemFactory(lightingSystemFactory)
             .appDispatchers(dispatchers)
             .build()

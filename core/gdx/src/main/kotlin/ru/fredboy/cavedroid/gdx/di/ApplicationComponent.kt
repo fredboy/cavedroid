@@ -8,6 +8,7 @@ import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.CloudStatsSync
 import ru.fredboy.cavedroid.common.api.InlineTextInput
 import ru.fredboy.cavedroid.common.api.PreferencesStore
+import ru.fredboy.cavedroid.common.api.SoftKeyboardObserver
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.utils.TooltipManager
@@ -125,6 +126,8 @@ interface ApplicationComponent {
 
     val inlineTextInput: InlineTextInput
 
+    val softKeyboardObserver: SoftKeyboardObserver
+
     val lightingSystemFactory: LightingSystemFactory
 
     val appDispatchers: AppDispatchers
@@ -149,6 +152,9 @@ interface ApplicationComponent {
 
         @BindsInstance
         fun inlineTextInput(impl: InlineTextInput): Builder
+
+        @BindsInstance
+        fun softKeyboardObserver(impl: SoftKeyboardObserver): Builder
 
         @BindsInstance
         fun lightingSystemFactory(factory: LightingSystemFactory): Builder

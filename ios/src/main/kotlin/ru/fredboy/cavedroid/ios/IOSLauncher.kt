@@ -32,6 +32,7 @@ object IOSLauncher : IOSApplication.Delegate() {
         }
 
         val preferencesStore = IOSPreferencesStore()
+        val softKeyboardObserver = IOSSoftKeyboardObserver()
 
         val caveDroidApplication = CaveDroidApplication(
             gameDataDirectoryPath = dataDir,
@@ -45,6 +46,7 @@ object IOSLauncher : IOSApplication.Delegate() {
                 background = Dispatchers.Default,
                 main = GdxMainDispatcher,
             ),
+            softKeyboardObserver = softKeyboardObserver,
         )
 
         return IOSApplication(caveDroidApplication, config)
