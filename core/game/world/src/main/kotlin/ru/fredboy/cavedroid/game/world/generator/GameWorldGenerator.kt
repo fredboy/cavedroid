@@ -435,7 +435,7 @@ class GameWorldGenerator(
         }
 
         for (x in 0 until config.width) {
-            for (y in heights[x] until config.height - 1) {
+            for (y in config.seaLevel until config.height - 1) {
                 if (!caveMap[x][y]) {
                     val filler = random.nextDouble()
                     foreMap[x][y] = when {
