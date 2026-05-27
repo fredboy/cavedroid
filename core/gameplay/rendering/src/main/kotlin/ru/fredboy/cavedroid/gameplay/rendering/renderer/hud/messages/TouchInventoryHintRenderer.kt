@@ -43,7 +43,7 @@ class TouchInventoryHintRenderer @Inject constructor(
         if (!isTouch || !inventoryHintController.isVisible) return
         val windowType = gameWindowsManager.currentWindowType
         if (windowType == GameWindowType.NONE || windowType == GameWindowType.CREATIVE_INVENTORY) return
-        if (gameWindowsManager.currentWindow?.safeCast<CreativeInventoryTabsWindow>()?.selectedTab?.isInventory != true) {
+        if (gameWindowsManager.currentWindow?.safeCast<CreativeInventoryTabsWindow>()?.selectedTab?.isInventory == false) {
             return
         }
 
