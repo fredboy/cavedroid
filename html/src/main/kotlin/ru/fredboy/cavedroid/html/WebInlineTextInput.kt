@@ -143,6 +143,8 @@ class WebInlineTextInput : InlineTextInput, SoftKeyboardObserver {
         style.removeProperty("font-family")
         style.removeProperty("text-align")
         containerEl.style.setProperty("display", "none")
+
+        _isVisible.value = false
     }
 
     private fun applyOverlayMode() {
@@ -177,6 +179,8 @@ class WebInlineTextInput : InlineTextInput, SoftKeyboardObserver {
         istyle.setProperty("text-align", "left")
         // Input sits above the backdrop container.
         istyle.setProperty("z-index", "2147483647")
+
+        _isVisible.value = true
     }
 
     private fun isKeyboardLikelyVisible(): Boolean {
@@ -294,7 +298,6 @@ class WebInlineTextInput : InlineTextInput, SoftKeyboardObserver {
                 if (isKeyboardLikelyVisible()) {
                     wasKeyboardVisible = true
                     if (shouldShowOverlay()) {
-                        _isVisible.value = true
                         applyOverlayMode()
                     } else {
                         applyInvisibleMode()
@@ -302,7 +305,6 @@ class WebInlineTextInput : InlineTextInput, SoftKeyboardObserver {
                 } else if (wasKeyboardVisible) {
                     wasKeyboardVisible = false
                     applyInvisibleMode()
-                    _isVisible.value = false
                     inputEl.blur()
                 }
             },
