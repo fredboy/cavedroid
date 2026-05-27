@@ -87,7 +87,9 @@ private const val OVERLAY_CSS = """
 // styled overlay so they can see what they're typing.
 private const val OVERLAY_VIEWPORT_FRACTION = 0.6
 
-class WebInlineTextInput : InlineTextInput, SoftKeyboardObserver {
+class WebInlineTextInput :
+    InlineTextInput,
+    SoftKeyboardObserver {
 
     override val isSupported: Boolean = true
 

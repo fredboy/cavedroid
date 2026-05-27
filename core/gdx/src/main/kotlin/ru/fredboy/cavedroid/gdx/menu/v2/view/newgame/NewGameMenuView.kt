@@ -61,6 +61,7 @@ private fun attachFieldListeners(field: TextField, viewModel: NewGameMenuViewMod
                 initialText = field.text,
                 initialCursor = field.cursorPosition,
             ) { newText, newCursor ->
+                viewModel.worldName = newText
                 field.text = newText
                 field.cursorPosition = newCursor
             }
