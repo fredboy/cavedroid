@@ -38,6 +38,7 @@ class AndroidLauncher : AndroidApplication() {
         }
 
         val preferencesStore = AndroidPreferencesStore(applicationContext)
+        val softKeyboardObserver = AndroidSoftKeyboardObserver(this)
 
         initialize(
             /* listener = */
@@ -54,6 +55,7 @@ class AndroidLauncher : AndroidApplication() {
                     main = GdxMainDispatcher,
                 ),
                 adController = adController,
+                softKeyboardObserver = softKeyboardObserver,
                 loggingSeverity = if (BuildConfig.DEBUG) Severity.Debug else Severity.Info,
             ),
             /* config = */ config,
