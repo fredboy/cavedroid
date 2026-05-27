@@ -248,8 +248,10 @@ class CaveDroidApplication(
             logger.w { "Cannot respawn when active screen is not death screen" }
             return
         }
+        applicationComponent.soundPlayer.pauseAll()
         adController.showInterstitial {
             Gdx.app.postRunnable {
+                applicationComponent.soundPlayer.resumeAll()
                 gameScreen.respawnPlayer()
                 setScreen(gameScreen)
             }
