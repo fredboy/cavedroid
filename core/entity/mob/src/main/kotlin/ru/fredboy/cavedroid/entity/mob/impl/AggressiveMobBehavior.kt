@@ -35,11 +35,15 @@ class AggressiveMobBehavior :
 
         controlVector.x = speed * direction.basis
 
-        if (!canClimb && controlVector.x != 0f && cliffEdgeCounters[Direction.fromVector(controlVector).index] <= 0) {
+        if (canJump && !canClimb && controlVector.x != 0f && cliffEdgeCounters[Direction.fromVector(controlVector).index] <= 0) {
             controlVector.x = 0f
         }
 
-        climb = canSwim
+        if (canSwim) {
+            climbUp()
+        } else {
+            climb = false
+        }
     }
 
     companion object {

@@ -93,6 +93,8 @@ abstract class Mob(
 
     private var lastJumpMs = 0L
 
+    private var lastClimbMs = 0L
+
     private var pendingBodyTransform: Vector2? = null
 
     var climb = false
@@ -443,7 +445,7 @@ abstract class Mob(
     abstract fun changeDir()
 
     open fun jump() {
-        if (!canJump) {
+        if (canClimb || !canJump) {
             return
         }
 
@@ -454,6 +456,22 @@ abstract class Mob(
         )
 
         lastJumpMs = TimeUtils.millis()
+    }
+
+    fun climbUp() {
+        if (!canClimb) {
+            climb = false
+            return
+        }
+
+        if (climb) {
+            return
+        }
+
+        if (TimeUtils.timeSinceMillis(lastClimbMs) >= CLIMB_COOLDOWN_MS) {
+            climb = true
+            lastClimbMs = TimeUtils.millis()
+        }
     }
 
     override fun dispose() {
@@ -497,6 +515,8 @@ abstract class Mob(
         private const val JUMP_VELOCITY = -8.6f
 
         private const val JUMP_COOLDOWN_MS = 500L
+
+        private const val CLIMB_COOLDOWN_MS = 600L
 
         private const val STEP_TIMEOUT_MS = 200L
         private const val SPLASH_TIMEOUT_MS = 750L

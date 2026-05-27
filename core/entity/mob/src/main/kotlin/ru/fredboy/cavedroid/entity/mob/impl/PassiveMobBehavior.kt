@@ -47,7 +47,7 @@ class PassiveMobBehavior :
             jump()
         }
 
-        if (!canClimb && controlVector.x != 0f && cliffEdgeCounters[Direction.fromVector(controlVector).index] <= 0) {
+        if (canJump && !canClimb && controlVector.x != 0f && cliffEdgeCounters[Direction.fromVector(controlVector).index] <= 0) {
             controlVector.x = 0f
             targetCoordinates = null
         } else if (targetCoordinates == null && (takingDamage || MathUtils.randomBoolean(0.001f))) {
@@ -72,7 +72,11 @@ class PassiveMobBehavior :
             controlVector.setZero()
         }
 
-        climb = canSwim
+        if (canSwim) {
+            climbUp()
+        } else {
+            climb = false
+        }
 
         if (MathUtils.randomBoolean(0.00005f)) {
             when {
@@ -96,6 +100,6 @@ class PassiveMobBehavior :
     }
 
     companion object {
-        private const val WALK_RADIUS = 8f
+        private const val WALK_RADIUS = 80f
     }
 }

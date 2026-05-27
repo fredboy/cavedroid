@@ -25,7 +25,7 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
     override fun exec() {
         logger.i {
             "Spawn controller task started. " +
-                "Current time: ${gameWorld.totalGameTimeSec}. Last spawn time: ${gameWorld.lastSpawnGameTime}"
+                    "Current time: ${gameWorld.totalGameTimeSec}. Last spawn time: ${gameWorld.lastSpawnGameTime}"
         }
 
         val surfaceCandidates = mobParamsRepository.getAllParams()
@@ -43,7 +43,7 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
             }
 
         val canSpawnSurface = (!gameWorld.isDayTime() || mobController.mobs.size < maintainedMobsCount) &&
-            surfaceCandidates.isNotEmpty()
+                surfaceCandidates.isNotEmpty()
         val canSpawnCave = mobController.mobs.size < maintainedMobsCount && caveCandidates.isNotEmpty()
 
         var spawnCount = 0

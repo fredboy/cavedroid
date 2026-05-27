@@ -101,6 +101,14 @@ class Player(
 
     var isInBed = false
 
+    var tryClimb = false
+        set(value) {
+            if (!value) {
+                climb = false
+            }
+            field = value
+        }
+
     var activeSlot
         get() = _activeSlot
         set(value) {
