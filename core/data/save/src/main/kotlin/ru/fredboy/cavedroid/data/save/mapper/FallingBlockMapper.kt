@@ -32,6 +32,7 @@ class FallingBlockMapper @Inject constructor(
         blockKey = fallingBlock.block.params.key,
         key = fallingBlock.params.key,
         breath = fallingBlock.breath,
+        fireTicksRemaining = fallingBlock.fireTicksRemaining,
     )
 
     fun mapFallingBlock(
@@ -52,6 +53,7 @@ class FallingBlockMapper @Inject constructor(
             isFlyMode = saveDataDto.flyMode
             health = saveDataDto.health
             breath = saveDataDto.breath ?: params.maxBreath
+            fireTicksRemaining = saveDataDto.fireTicksRemaining
         }
     }
 

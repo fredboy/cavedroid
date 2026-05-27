@@ -55,6 +55,7 @@ sealed class SaveDataDto {
         abstract val maxHealth: Int
         abstract val health: Int
         abstract val breath: Int?
+        abstract val fireTicksRemaining: Float
     }
 
     @Serializable
@@ -157,6 +158,7 @@ sealed class SaveDataDto {
         val hasFur: Boolean = false,
         override val breath: Int? = null,
         val woolColor: String? = null,
+        override val fireTicksRemaining: Float = 0f,
     ) : MobSaveDataDto()
 
     @Serializable
@@ -179,6 +181,7 @@ sealed class SaveDataDto {
         override val health: Int,
         val blockKey: String,
         override val breath: Int? = null,
+        override val fireTicksRemaining: Float = 0f,
     ) : MobSaveDataDto()
 
     @Serializable
@@ -219,6 +222,7 @@ sealed class SaveDataDto {
         val foodTickTimer: Int,
         override val breath: Int? = null,
         val wearingArmor: InventorySaveDataDto? = null,
+        override val fireTicksRemaining: Float = 0f,
     ) : MobSaveDataDto()
 
     @Serializable

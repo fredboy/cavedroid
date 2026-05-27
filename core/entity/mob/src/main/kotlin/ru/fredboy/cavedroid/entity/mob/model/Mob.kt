@@ -131,7 +131,6 @@ abstract class Mob(
     var cliffEdgeCounters = IntArray(2)
 
     var fireTicksRemaining: Float = 0f
-        private set
 
     var fireDamageAccumulator: Float = 0f
 
