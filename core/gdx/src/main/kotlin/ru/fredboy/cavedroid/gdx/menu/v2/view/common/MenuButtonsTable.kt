@@ -45,11 +45,11 @@ fun <S> KWidget<S>.menuButtonsTable(
                 center()
                 top()
             }
-        }
 
-        row()
-            .expandY()
-            .center()
+            row()
+                .expandY()
+                .center()
+        }
 
         table {
             defaults()

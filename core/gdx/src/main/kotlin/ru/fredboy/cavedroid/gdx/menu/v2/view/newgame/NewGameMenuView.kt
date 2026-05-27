@@ -75,7 +75,10 @@ private fun attachFieldListeners(field: TextField, viewModel: NewGameMenuViewMod
 private fun Stage.buildDefaultLayout(viewModel: NewGameMenuViewModel): TextField {
     lateinit var worldNameField: TextField
     actors {
-        menuButtonsTable {
+        menuButtonsTable(
+            withGameLogo = false,
+            withVersion = false,
+        ) {
             worldNameField = textField(viewModel.worldName).apply {
                 cursorPosition = viewModel.cursorPosition.coerceIn(0, text.length)
             }
