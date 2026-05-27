@@ -23,6 +23,7 @@ import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.window.inventory.CreativeInventoryTabsWindow
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.IHudRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.WindowsRenderer
+import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.messages.InventoryHintController
 import javax.inject.Inject
 import kotlin.math.min
 
@@ -36,6 +37,7 @@ class CreativeTabsWindowRenderer @Inject constructor(
     private val getFont: GetFontUseCase,
     private val wearableTextureAssetsRepository: WearableTextureAssetsRepository,
     private val itemsRepository: ItemsRepository,
+    private val inventoryHintController: InventoryHintController,
 ) : AbstractWindowRenderer(),
     IHudRenderer {
 
@@ -325,13 +327,15 @@ class CreativeTabsWindowRenderer @Inject constructor(
                 height = 20f,
             )
 
-            val itemName = selectedItem.item.params.name
-            spriteBatch.drawString(
-                font = getFont(),
-                str = itemName,
-                x = viewport.width / 2f - getStringWidth(itemName) / 2f,
-                y = windowY + windowTexture.regionHeight + getStringHeight(itemName) + selectedTabTexture.regionHeight,
-            )
+            if (!inventoryHintController.isVisible) {
+                val itemName = selectedItem.item.params.name
+                spriteBatch.drawString(
+                    font = getFont(),
+                    str = itemName,
+                    x = viewport.width / 2f - getStringWidth(itemName) / 2f,
+                    y = windowY + windowTexture.regionHeight + getStringHeight(itemName) + selectedTabTexture.regionHeight,
+                )
+            }
         }
     }
 

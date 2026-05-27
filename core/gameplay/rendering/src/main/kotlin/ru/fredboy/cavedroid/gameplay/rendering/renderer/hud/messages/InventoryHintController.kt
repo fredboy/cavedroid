@@ -10,7 +10,8 @@ class InventoryHintController @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
 ) : InventoryHintEvents {
 
-    private var dismissed: Boolean = applicationContextRepository.isInventoryHintShown()
+    private var dismissed: Boolean = !applicationContextRepository.isTouch() ||
+        applicationContextRepository.isInventoryHintShown()
     private var fadeElapsedSec: Float = -1f
 
     var hintIndex = 0
@@ -44,13 +45,18 @@ class InventoryHintController @Inject constructor(
         fadeElapsedSec = 0f
     }
 
-    override fun notifyItemHeld() {
+    override fun notifyItemPlacedByOne() {
         if (hintIndex != 1 || dismissed || fadeElapsedSec >= 0f) return
         fadeElapsedSec = 0f
     }
 
+    override fun notifyItemHeld() {
+        if (hintIndex != 2 || dismissed || fadeElapsedSec >= 0f) return
+        fadeElapsedSec = 0f
+    }
+
     companion object {
-        private const val TOTAL_HINTS = 2
+        private const val TOTAL_HINTS = 3
         private const val FADE_DURATION_SEC = 2f
     }
 }
