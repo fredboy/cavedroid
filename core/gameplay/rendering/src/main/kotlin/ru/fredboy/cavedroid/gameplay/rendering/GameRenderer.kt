@@ -100,15 +100,11 @@ class GameRenderer @Inject constructor(
             y = player.y / 2f + player.aimY / 2f
         }
 
-        if (!getVisibleWorldRect().contains(player.x, player.y)) {
-            camera.position.set(cameraTargetPosition)
-            return
-        }
-
         val moveVector = cameraTargetPosition.sub(camera.position)
 
         if (!moveVector.isZero(0.05f)) {
-            moveVector.scl(min(1f, 8f * delta))
+            val l = moveVector.len()
+            moveVector.nor().scl(min(l, 30f * delta))
         }
 
         camera.position.add(moveVector)
