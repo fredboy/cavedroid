@@ -177,7 +177,14 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
             this(priority, Runnable { gameWorld.setForeMap(x, y, block) })
 
         constructor(fluid: Block.Fluid, x: Int, y: Int) :
-            this(fluid, x, y, ((5 - fluid.state) + 1) * (if (fluid.isLava()) 2 else 1))
+            this(
+                ((5 - fluid.state) + 1) * (if (fluid.isLava()) 2 else 1),
+                Runnable {
+                    if (fluidCanFlowThere(fluid, gameWorld.getForeMap(x, y))) {
+                        gameWorld.setForeMap(x, y, fluid)
+                    }
+                },
+            )
 
         fun exec() = command.run()
     }
