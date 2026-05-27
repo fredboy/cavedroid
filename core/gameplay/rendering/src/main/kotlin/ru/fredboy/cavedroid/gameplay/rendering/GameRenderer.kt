@@ -18,6 +18,7 @@ import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
+import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
@@ -207,7 +208,11 @@ class GameRenderer @Inject constructor(
             skyRightColor.set(base).lerp(HORIZON_COLOR, warmBlend)
         }
 
-        val intensity = gameWorld.weatherIntensity
+        val biomeFactor = gameWorld.biomeProximityFactor(
+            centerX = player.x,
+            rangeBlocks = WEATHER_SKY_FADE_BLOCKS,
+        ) { it != Biome.DESERT }
+        val intensity = gameWorld.weatherIntensity * biomeFactor
         if (intensity > 0f) {
             val factor = 1f - intensity * (1f - RAIN_SKY_DARKENING)
             skyLeftColor.r *= factor
@@ -299,6 +304,7 @@ class GameRenderer @Inject constructor(
         private val NOON_COLOR = Color(0.4f, 0.7f, 1f, 1f)
 
         private const val RAIN_SKY_DARKENING = 0.3f
+        private const val WEATHER_SKY_FADE_BLOCKS = 16f
 
         private const val CAMERA_DELTA = 1f / 60f
     }

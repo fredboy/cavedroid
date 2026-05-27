@@ -9,8 +9,6 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.removeFirst
 import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
 import ru.fredboy.cavedroid.domain.items.model.block.Block
-import ru.fredboy.cavedroid.domain.items.model.item.isNone
-import ru.fredboy.cavedroid.domain.items.model.item.isSlab
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
@@ -125,6 +123,37 @@ class GameWorld @Inject constructor(
     }
 
     fun getBiomeAt(x: Int): Biome = biomes[transformX(x)]
+
+    fun biomeProximityFactor(
+        centerX: Float,
+        rangeBlocks: Float,
+        predicate: (Biome) -> Boolean,
+    ): Float {
+        val centerBlock = MathUtils.floor(centerX)
+        if (predicate(getBiomeAt(centerBlock))) return 1f
+
+        val maxSteps = MathUtils.ceil(rangeBlocks) + 1
+        var minDistance = Float.POSITIVE_INFINITY
+
+        for (d in 1..maxSteps) {
+            if (predicate(getBiomeAt(centerBlock - d))) {
+                // matching block's right edge is at (centerBlock - d + 1)
+                minDistance = centerX - (centerBlock - d + 1).toFloat()
+                break
+            }
+        }
+        for (d in 1..maxSteps) {
+            if (predicate(getBiomeAt(centerBlock + d))) {
+                // matching block's left edge is at (centerBlock + d)
+                val dist = (centerBlock + d).toFloat() - centerX
+                if (dist < minDistance) minDistance = dist
+                break
+            }
+        }
+
+        if (minDistance >= rangeBlocks) return 0f
+        return 1f - minDistance / rangeBlocks
+    }
 
     private fun nextWeatherDuration(next: Weather): Float = when (next) {
         Weather.CLEAR -> Random.nextFloat() * (CLEAR_MAX_SEC - CLEAR_MIN_SEC) + CLEAR_MIN_SEC
