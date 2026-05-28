@@ -1,0 +1,2 @@
+- Fixed an issue where sand and gravel were not falling as expected.
+- Minor improvements and bug fixes.

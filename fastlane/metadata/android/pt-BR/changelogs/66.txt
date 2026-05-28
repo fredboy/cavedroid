@@ -1,0 +1,2 @@
+- Corrigido um problema onde a areia e a gravel não caíam como esperado.
+- Melhorias menores e correções de bugs.
