@@ -21,7 +21,7 @@ class UpdateRequiresBlockAction @Inject constructor(
             return
         }
 
-        if (!block.params.requiresBlock) {
+        if (!block.params.requiresBlock && !block.params.isFallable) {
             return
         }
 
