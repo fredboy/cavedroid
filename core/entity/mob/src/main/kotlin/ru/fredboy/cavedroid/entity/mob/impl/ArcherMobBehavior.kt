@@ -74,7 +74,7 @@ class ArcherMobBehavior :
             projectileAdapter.addProjectile(
                 itemKey = "arrow",
                 damage = 4,
-                dropOnGround = MathUtils.randomBoolean(0.1f),
+                dropOnGround = MathUtils.randomBoolean(0.01f),
                 x = shooterX,
                 y = shooterY,
                 width = 1f,
