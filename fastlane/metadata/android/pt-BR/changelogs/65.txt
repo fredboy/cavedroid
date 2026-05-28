@@ -1,0 +1,2 @@
+- Corrigido um problema que impedia o escoamento adequado dos líquidos.
+- Melhorias gerais e correções de bugs.
