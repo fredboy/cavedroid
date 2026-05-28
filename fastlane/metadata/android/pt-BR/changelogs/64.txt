@@ -1,0 +1,4 @@
+- Adicionadas mecânicas de fogo e uma nova receita de isqueiro. 
+- Melhorado o comportamento dos mobs: mobs amigáveis não vão aparecer no deserto e mobs hostis têm visibilidade e condições de aparição limitadas.
+- Corrigidos vários problemas de jogabilidade, incluindo movimento da câmera e durabilidade de itens no inventário.
+- Aprimoradas as dicas do inventário para toques e interações com mobs. 
