@@ -1,5 +1,5 @@
 diff --git a/android/build.gradle.kts b/android/build.gradle.kts
-index b936053d..1703cf33 100644
+index 3a88ef44..b1d92a24 100644
 --- a/android/build.gradle.kts
 +++ b/android/build.gradle.kts
 @@ -60,7 +60,7 @@ android {
@@ -35,7 +35,7 @@ index 66ba35ec..8feee9c3 100644
              android:allowBackup="true"
              android:icon="@drawable/ic_launcher"
 diff --git a/buildSrc/src/main/kotlin/Versions.kt b/buildSrc/src/main/kotlin/Versions.kt
-index 660e37fd..d0fd1b99 100644
+index 76c5fdef..54454d0e 100644
 --- a/buildSrc/src/main/kotlin/Versions.kt
 +++ b/buildSrc/src/main/kotlin/Versions.kt
 @@ -10,7 +10,7 @@ object Versions {
@@ -47,15 +47,7 @@ index 660e37fd..d0fd1b99 100644
  
      /**
       * Dagger version
-@@ -66,14 +66,14 @@ object Versions {
-      *
-      * [Source](https://github.com/libgdx/box2dlights)
-      */
--    const val box2dLights = "1.5"
-+    const val box2dLights = "1.4"
- 
-     /**
-      * Kotlin extensions for libGDX.
+@@ -66,7 +66,7 @@ object Versions {
       *
       * [Source](https://github.com/libktx/ktx)
       */
@@ -65,7 +57,7 @@ index 660e37fd..d0fd1b99 100644
      /**
       * Kotlin coroutines
 diff --git a/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt b/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt
-index 8504e5d8..2552d1cb 100644
+index 421ebfb6..13e2f0c3 100644
 --- a/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt
 +++ b/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt
 @@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx
@@ -76,7 +68,7 @@ index 8504e5d8..2552d1cb 100644
  import com.badlogic.gdx.utils.TimeUtils
  import kotlinx.serialization.ExperimentalSerializationApi
  import kotlinx.serialization.decodeFromByteArray
-@@ -338,7 +339,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
+@@ -344,7 +345,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
              return
          }
  
@@ -86,10 +78,10 @@ index 8504e5d8..2552d1cb 100644
              halfHeight - screenshotHalfSize,
              screenshotHalfSize shl 1,
 diff --git a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/GameInputProcessor.kt b/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/GameInputProcessor.kt
-index d9cfc2ca..ce46aafa 100644
+index 10018a97..f4851396 100644
 --- a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/GameInputProcessor.kt
 +++ b/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/GameInputProcessor.kt
-@@ -110,8 +110,6 @@ class GameInputProcessor @Inject constructor(
+@@ -114,8 +114,6 @@ class GameInputProcessor @Inject constructor(
          )
      }
  
@@ -98,7 +90,7 @@ index d9cfc2ca..ce46aafa 100644
      override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
          val (touchX, touchY) = gameContextRepository.getCameraContext().getViewportCoordinates(screenX, screenY)
  
-@@ -147,13 +145,13 @@ class GameInputProcessor @Inject constructor(
+@@ -153,13 +151,13 @@ class GameInputProcessor @Inject constructor(
  
      override fun mouseMoved(p0: Int, p1: Int): Boolean = false
  
@@ -116,7 +108,7 @@ index d9cfc2ca..ce46aafa 100644
          return handleMouseAction(action)
      }
 diff --git a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/mouse/MouseCursorInputHandler.kt b/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/mouse/MouseCursorInputHandler.kt
-index 09ccc5a5..b21d185a 100644
+index c75f69a8..b6109252 100644
 --- a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/mouse/MouseCursorInputHandler.kt
 +++ b/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/mouse/MouseCursorInputHandler.kt
 @@ -38,7 +38,7 @@ class MouseCursorInputHandler @Inject constructor(
@@ -129,10 +121,10 @@ index 09ccc5a5..b21d185a 100644
      }
  
 diff --git a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/mouse/UseItemMouseInputHandler.kt b/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/mouse/UseItemMouseInputHandler.kt
-index 55f6c9b9..91135eb3 100644
+index 7758421c..68346f99 100644
 --- a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/mouse/UseItemMouseInputHandler.kt
 +++ b/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/mouse/UseItemMouseInputHandler.kt
-@@ -183,7 +183,7 @@ class UseItemMouseInputHandler @Inject constructor(
+@@ -196,7 +196,7 @@ class UseItemMouseInputHandler @Inject constructor(
              x = mobController.player.position.x + mobController.player.direction.basis,
              y = mobController.player.position.y - mobController.player.height / 3f,
              velocity = Vector2.X.cpy()
@@ -142,10 +134,10 @@ index 55f6c9b9..91135eb3 100644
          )
          mobController.player.isPullingBow = false
 diff --git a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/touch/TouchCursorInputHandler.kt b/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/touch/TouchCursorInputHandler.kt
-index 4ec77fc9..37aebf8c 100644
+index eadac220..6026d5fc 100644
 --- a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/touch/TouchCursorInputHandler.kt
 +++ b/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/touch/TouchCursorInputHandler.kt
-@@ -153,7 +153,7 @@ class TouchCursorInputHandler @Inject constructor(
+@@ -150,7 +150,7 @@ class TouchCursorInputHandler @Inject constructor(
              x = mobController.player.position.x + mobController.player.direction.basis,
              y = mobController.player.position.y - mobController.player.height / 3f,
              velocity = Vector2.X.cpy()
@@ -154,7 +146,7 @@ index 4ec77fc9..37aebf8c 100644
                  .scl(300f * ((mobController.player.bowState.toFloat() + 1f) / 3f)),
          )
          mobController.player.isPullingBow = false
-@@ -323,7 +323,7 @@ class TouchCursorInputHandler @Inject constructor(
+@@ -322,7 +322,7 @@ class TouchCursorInputHandler @Inject constructor(
      private fun getPlayerHeadRotation(mouseWorldX: Float, mouseWorldY: Float): Float {
          val h = mouseWorldX - player.position.x
          val v = mouseWorldY - (player.position.y - player.height / 2f + player.width / 2f)
@@ -163,41 +155,8 @@ index 4ec77fc9..37aebf8c 100644
          return MathUtils.clamp(rotation, -45f, 45f)
      }
  
-diff --git a/core/gameplay/lighting-box2d/src/main/kotlin/box2dLight/DirectionalLightExtention.kt b/core/gameplay/lighting-box2d/src/main/kotlin/box2dLight/DirectionalLightExtention.kt
-index 2898e99c..a8c22bd4 100644
---- a/core/gameplay/lighting-box2d/src/main/kotlin/box2dLight/DirectionalLightExtention.kt
-+++ b/core/gameplay/lighting-box2d/src/main/kotlin/box2dLight/DirectionalLightExtention.kt
-@@ -3,3 +3,7 @@ package box2dLight
- fun Light.publicUpdate() {
-     update()
- }
-+
-+fun Light.setDirectionCompat(direction: Float) {
-+    this.direction = direction
-+}
-diff --git a/core/gameplay/lighting-box2d/src/main/kotlin/ru/fredboy/cavedroid/gameplay/lighting/box2d/Box2dLightingSystem.kt b/core/gameplay/lighting-box2d/src/main/kotlin/ru/fredboy/cavedroid/gameplay/lighting/box2d/Box2dLightingSystem.kt
-index 440e25c6..7b9a9ec4 100644
---- a/core/gameplay/lighting-box2d/src/main/kotlin/ru/fredboy/cavedroid/gameplay/lighting/box2d/Box2dLightingSystem.kt
-+++ b/core/gameplay/lighting-box2d/src/main/kotlin/ru/fredboy/cavedroid/gameplay/lighting/box2d/Box2dLightingSystem.kt
-@@ -5,6 +5,7 @@ import box2dLight.Light
- import box2dLight.PointLight
- import box2dLight.RayHandler
- import box2dLight.publicUpdate
-+import box2dLight.setDirectionCompat
- import com.badlogic.gdx.graphics.Color
- import com.badlogic.gdx.graphics.OrthographicCamera
- import com.badlogic.gdx.math.MathUtils
-@@ -123,7 +124,7 @@ class Box2dLightingSystem(
-         if (MathUtils.isEqual(90f, sunAngle, 0.1f)) {
-             sunAngle = 90.1f
-         }
--        sunLight.direction = sunAngle
-+        sunLight.setDirectionCompat(sunAngle)
-         sunLight.color = Color().apply { a = max(gameWorld.getSunlight(), 0.1f) }
-         sunLight.publicUpdate()
-     }
 diff --git a/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/hud/CrosshairRenderer.kt b/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/hud/CrosshairRenderer.kt
-index 922657d5..862d71c0 100644
+index f9128b44..acb439e6 100644
 --- a/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/hud/CrosshairRenderer.kt
 +++ b/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/hud/CrosshairRenderer.kt
 @@ -2,10 +2,10 @@ package ru.fredboy.cavedroid.gameplay.rendering.renderer.hud
@@ -287,7 +246,7 @@ index 591b1f5b..824c49bf 100644
                      expand = true,
                      fill = true,
 diff --git a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/singleplayer/SinglePlayerMenuView.kt b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/singleplayer/SinglePlayerMenuView.kt
-index 43c29421..638c5919 100644
+index 0466bf82..426d7a54 100644
 --- a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/singleplayer/SinglePlayerMenuView.kt
 +++ b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/singleplayer/SinglePlayerMenuView.kt
 @@ -1,7 +1,9 @@
@@ -308,7 +267,7 @@ index 43c29421..638c5919 100644
  import ktx.scene2d.imageButton
  import ktx.scene2d.label
  import ktx.scene2d.scrollPane
-@@ -186,12 +187,10 @@ private fun <S> KWidget<S>.saveItem(
+@@ -189,12 +190,10 @@ private fun <S> KWidget<S>.saveItem(
          isDisabled = true
  
          saveInfo.screenshot?.let { screenshot ->

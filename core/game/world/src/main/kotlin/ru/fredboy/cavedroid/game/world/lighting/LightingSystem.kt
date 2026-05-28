@@ -12,9 +12,11 @@ interface LightingSystem : Disposable {
     fun attachToGameWorld(gameWorld: GameWorld)
     fun update(delta: Float)
     fun recalculate()
-    fun render(camera: OrthographicCamera, cameraJumped: Boolean)
+    fun render(camera: OrthographicCamera)
     fun isMobExposedToSun(mob: Mob): Boolean
     fun createPlayerSightLight(body: Body, x: Float, y: Float): LightHandle
     fun createFurnaceLight(x: Float, y: Float): LightHandle
+    fun createFireLight(x: Float, y: Float): LightHandle
     fun refreshChunks(chunks: Iterable<Pair<Int, Int>>)
+    fun getEffectiveBrightness(x: Int, y: Int, sunBrightness: Float): Float
 }

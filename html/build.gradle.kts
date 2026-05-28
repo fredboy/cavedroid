@@ -61,7 +61,6 @@ private fun String.sanitizeForYandex(): String {
 dependencies {
     useCommonLibs()
     useGdxModule()
-    useLightingTint()
     useLightingBfs()
     useTeaVMBackend()
     useKotlinxSerializationJson()
@@ -122,12 +121,33 @@ private val sourceRoots: String by lazy {
         .joinToString(File.pathSeparator) { it.absolutePath }
 }
 
+// gdx-teavm's WebBackend copies index.html into the dist but ignores arbitrary
+// static files in src/main/resources/webapp. This task back-fills the rest so
+// fonts (LanaPixel.ttf) and any other static webapp resources land alongside
+// index.html. We deliberately use a plain task + project.copy {} instead of a
+// Copy-typed task: the JS build writes to the same directory, and Gradle's
+// stale-output cleanup would otherwise treat dist/webapp as exclusively this
+// task's output and wipe the JS build's files.
+tasks.register("copyWebStaticAssets") {
+    group = "build"
+    description = "Copy non-HTML files from src/main/resources/webapp into the TeaVM dist."
+    doLast {
+        copy {
+            from(layout.projectDirectory.dir("src/main/resources/webapp")) {
+                exclude("*.html")
+            }
+            into(layout.buildDirectory.dir("dist/webapp"))
+        }
+    }
+}
+
 private fun JavaExec.configureWebBuild(
     sourceMaps: Boolean,
     obfuscate: Boolean,
     optimization: String,
 ) {
     dependsOn("assemble", "copyLicenseReport", "generateAttributionIndex")
+    finalizedBy("copyWebStaticAssets")
     mainClass.set(webBuildClassName)
     classpath = sourceSets["main"].runtimeClasspath
     workingDir = layout.projectDirectory.asFile

@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Disposable
+import ru.fredboy.cavedroid.common.coroutines.GdxMainThread
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.removeFirst
 import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
@@ -123,6 +124,37 @@ class GameWorld @Inject constructor(
 
     fun getBiomeAt(x: Int): Biome = biomes[transformX(x)]
 
+    fun biomeProximityFactor(
+        centerX: Float,
+        rangeBlocks: Float,
+        predicate: (Biome) -> Boolean,
+    ): Float {
+        val centerBlock = MathUtils.floor(centerX)
+        if (predicate(getBiomeAt(centerBlock))) return 1f
+
+        val maxSteps = MathUtils.ceil(rangeBlocks) + 1
+        var minDistance = Float.POSITIVE_INFINITY
+
+        for (d in 1..maxSteps) {
+            if (predicate(getBiomeAt(centerBlock - d))) {
+                // matching block's right edge is at (centerBlock - d + 1)
+                minDistance = centerX - (centerBlock - d + 1).toFloat()
+                break
+            }
+        }
+        for (d in 1..maxSteps) {
+            if (predicate(getBiomeAt(centerBlock + d))) {
+                // matching block's left edge is at (centerBlock + d)
+                val dist = (centerBlock + d).toFloat() - centerX
+                if (dist < minDistance) minDistance = dist
+                break
+            }
+        }
+
+        if (minDistance >= rangeBlocks) return 0f
+        return 1f - minDistance / rangeBlocks
+    }
+
     private fun nextWeatherDuration(next: Weather): Float = when (next) {
         Weather.CLEAR -> Random.nextFloat() * (CLEAR_MAX_SEC - CLEAR_MIN_SEC) + CLEAR_MIN_SEC
         Weather.RAIN -> Random.nextFloat() * (RAIN_MAX_SEC - RAIN_MIN_SEC) + RAIN_MIN_SEC
@@ -179,6 +211,12 @@ class GameWorld @Inject constructor(
     }
 
     private fun setMap(x: Int, y: Int, layer: Layer, value: Block, dropOld: Boolean, destroyedByPlayer: Boolean) {
+        if (!GdxMainThread.isMainThread()) {
+            logger.w {
+                "setMap($x, $y, $layer) called off the main thread from ${Thread.currentThread().name}"
+            }
+        }
+
         if (y !in 0..<height) {
             return
         }
@@ -309,6 +347,10 @@ class GameWorld @Inject constructor(
         }
 
         skipNight = true
+    }
+
+    fun getLightAt(x: Int, y: Int): Float {
+        return lightingSystem.getEffectiveBrightness(x, y, getSunlight())
     }
 
     fun update(delta: Float) {

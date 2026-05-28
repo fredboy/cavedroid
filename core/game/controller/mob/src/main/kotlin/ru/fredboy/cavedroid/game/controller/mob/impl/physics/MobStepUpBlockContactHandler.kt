@@ -39,7 +39,7 @@ class MobStepUpBlockContactHandler @Inject constructor() : AbstractContactHandle
 
         with(entityA as Mob) {
             // on the ground or swimming
-            if (!canJump && !climb) {
+            if (!canJump && velocity.y > 0f) {
                 return false
             }
 
@@ -62,7 +62,7 @@ class MobStepUpBlockContactHandler @Inject constructor() : AbstractContactHandle
             val mobRect = hitbox
 
             // not higher than half block
-            if (mobRect.y + mobRect.height > blockRect.y + 0.5f) {
+            if (mobRect.y + mobRect.height > blockRect.y + 0.75f) {
                 return false
             }
 

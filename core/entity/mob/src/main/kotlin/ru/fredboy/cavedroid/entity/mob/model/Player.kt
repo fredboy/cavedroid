@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.entity.mob.model
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
@@ -15,6 +14,9 @@ import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.inventory.Inventory
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.domain.items.model.item.isNone
+import ru.fredboy.cavedroid.domain.items.model.item.isShears
+import ru.fredboy.cavedroid.domain.items.model.item.isTool
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
 import ru.fredboy.cavedroid.domain.items.usecase.GetFallbackItemUseCase
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
@@ -97,6 +99,14 @@ class Player(
     private var _activeSlot = 0
 
     var isInBed = false
+
+    var tryClimb = false
+        set(value) {
+            if (!value) {
+                climb = false
+            }
+            field = value
+        }
 
     var activeSlot
         get() = _activeSlot
@@ -243,7 +253,7 @@ class Player(
 
         val rightHandAnim = getRightHandAnim(delta)
 
-        val backgroundTintColor = tintColor.cpy().sub(Color(0xAAAAAA shl 8))
+        val backgroundTintColor = tintColor.cpy().sub(BG_BODY_TINT)
 
         if (looksLeft()) {
             backHandAnim = rightHandAnim
@@ -448,14 +458,16 @@ class Player(
     fun rayCastCursor(mobWorldAdapter: MobWorldAdapter, onCallback: () -> Unit = {}) {
         val cursor = Vector2(aimX, aimY)
 
-        if (gameMode.isSurvival()) {
-            val plToCursor = cursor
-                .sub(position)
-                .limit2(SURVIVAL_CURSOR_RANGE_2)
-
-            cursor.x = position.x + plToCursor.x
-            cursor.y = position.y + plToCursor.y
+        val range = when (gameMode) {
+            GameMode.SURVIVAL -> SURVIVAL_CURSOR_RANGE_2
+            GameMode.CREATIVE -> CREATIVE_CURSOR_RANGE_2
         }
+        val plToCursor = cursor
+            .sub(position)
+            .limit2(range)
+
+        cursor.x = position.x + plToCursor.x
+        cursor.y = position.y + plToCursor.y
 
         cursor.y = MathUtils.clamp(cursor.y, 0f, mobWorldAdapter.height.toFloat())
 
@@ -612,5 +624,6 @@ class Player(
         private const val HAND_ITEM_ANGLE_DEG = 30f
 
         private const val SURVIVAL_CURSOR_RANGE_2 = 36f
+        private const val CREATIVE_CURSOR_RANGE_2 = 81f
     }
 }

@@ -4,5 +4,7 @@ interface InventoryHintEvents {
 
     fun notifyItemMoved()
 
+    fun notifyItemPlacedByOne()
+
     fun notifyItemHeld()
 }

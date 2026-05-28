@@ -61,6 +61,7 @@ class PlayerMapper @Inject constructor(
         foodTickTimer = player.foodTickTimer,
         breath = player.breath,
         wearingArmor = inventoryMapper.mapSaveData(player.wearingArmor),
+        fireTicksRemaining = player.fireTicksRemaining,
     )
 
     fun mapPlayer(
@@ -105,6 +106,7 @@ class PlayerMapper @Inject constructor(
             foodTickTimer = saveDataDto.foodTickTimer
             breath = saveDataDto.breath ?: params.maxBreath
             wearingArmor = saveDataDto.wearingArmor?.let(inventoryMapper::mapWearingArmor) ?: wearingArmor
+            fireTicksRemaining = saveDataDto.fireTicksRemaining
             isDead = health <= 0
         }
     }

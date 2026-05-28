@@ -11,12 +11,11 @@ import ru.fredboy.cavedroid.common.api.CloudStatsSync
 import ru.fredboy.cavedroid.common.api.NoOpAdController
 import ru.fredboy.cavedroid.common.api.NoOpCloudStatsSync
 import ru.fredboy.cavedroid.common.api.NoOpInlineTextInput
+import ru.fredboy.cavedroid.common.api.NoOpSoftKeyboardObserver
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.gameplay.lighting.bfs.BfsLightingSystemFactory
-import ru.fredboy.cavedroid.gameplay.lighting.tint.TintLightingSystemFactory
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
-import ru.fredboy.cavedroid.gdx.di.DelegatingLightingSystemFactory
 import java.util.Locale
 
 object WebLauncher {
@@ -43,17 +42,15 @@ object WebLauncher {
 
         val preferencesStore = WebPreferencesStore()
 
+        val inlineTextInput by lazy { WebInlineTextInput() }
+
         val app = CaveDroidApplication(
             gameDataDirectoryPath = "",
             gameDataFileType = Files.FileType.Local,
             isTouchScreen = isMobileBrowser,
             isDebug = false,
             preferencesStore = preferencesStore,
-            lightingSystemFactory = DelegatingLightingSystemFactory(
-                preferencesStore = preferencesStore,
-                legacy = TintLightingSystemFactory(),
-                bfs = BfsLightingSystemFactory(),
-            ),
+            lightingSystemFactory = BfsLightingSystemFactory(),
             dispatchers = AppDispatchers(
                 io = GdxMainDispatcher,
                 background = GdxMainDispatcher,
@@ -62,13 +59,18 @@ object WebLauncher {
             adController = adController,
             cloudStatsSync = cloudStatsSync,
             inlineTextInput = if (isMobileBrowser) {
-                WebInlineTextInput()
+                inlineTextInput
             } else {
                 NoOpInlineTextInput
             },
             defaultLocaleProvider = { defaultLocale(yandexAvailable) },
             loggingSeverity = Severity.Info,
             isYandexGamesBuild = yandexAvailable,
+            softKeyboardObserver = if (isMobileBrowser) {
+                inlineTextInput
+            } else {
+                NoOpSoftKeyboardObserver
+            },
         ).let { app ->
             if (yandexAvailable) {
                 YandexGamesLifecycleGameDecorator(app)

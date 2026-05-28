@@ -8,6 +8,7 @@ import ru.fredboy.cavedroid.common.utils.PIXELS_PER_METER
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.common.utils.drawString
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.domain.items.model.item.isNone
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 

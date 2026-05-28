@@ -55,6 +55,7 @@ include("core:game:controller:container")
 include("core:game:controller:mob")
 include("core:game:controller:projectile")
 include("core:game:controller:stats")
+include("core:game:controller:fire")
 
 // ui windows module
 include("core:game:window")
@@ -68,8 +69,6 @@ include("core:game:world")
 include("core:gameplay:controls")
 include("core:gameplay:physics")
 include("core:gameplay:rendering")
-include("core:gameplay:lighting-box2d")
-include("core:gameplay:lighting-tint")
 include("core:gameplay:lighting-bfs")
 
 /**

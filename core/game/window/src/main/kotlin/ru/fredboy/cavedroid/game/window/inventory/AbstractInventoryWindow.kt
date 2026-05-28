@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.game.window.inventory
 import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem.Companion.isNoneOrNull
+import ru.fredboy.cavedroid.domain.items.model.item.isNone
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import kotlin.math.max
@@ -55,7 +56,11 @@ abstract class AbstractInventoryWindow {
         val selectedItem = selectedItem
 
         if (selectedItem.isNoneOrNull() && !clickedItem.isNoneOrNull()) {
-            val half = InventoryItem(clickedItem.item, MathUtils.ceil(clickedItem.amount.toFloat() / 2f))
+            val half = InventoryItem(
+                item = clickedItem.item,
+                _amount = MathUtils.ceil(clickedItem.amount.toFloat() / 2f),
+                _durability = clickedItem.durability,
+            )
             this.selectedItem = half
             this.selectItemPointer = pointer
             clickedItem.subtract(half.amount)

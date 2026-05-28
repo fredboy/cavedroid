@@ -18,7 +18,7 @@ class GrowSugarCaneAction @Inject constructor(
         if (gameWorld.getForeMap(x, y).params.key != BLOCK_KEY) return false
 
         // Only the topmost cane in a stack attempts to grow; lower canes stop ticking.
-        if (gameWorld.getForeMap(x, y - 1).params.key == BLOCK_KEY) return true
+        if (gameWorld.getForeMap(x, y - 1).params.key == BLOCK_KEY) return false
 
         // Walk down to find the soil block and count the current stack height.
         var stackHeight = 1
@@ -28,7 +28,7 @@ class GrowSugarCaneAction @Inject constructor(
             groundY++
         }
 
-        if (stackHeight >= MAX_HEIGHT) return true
+        if (stackHeight >= MAX_HEIGHT) return false
         if (groundY >= gameWorld.height) return false
 
         val ground = gameWorld.getForeMap(x, groundY)
@@ -37,11 +37,12 @@ class GrowSugarCaneAction @Inject constructor(
         if (!gameWorld.getForeMap(x, y - 1).isNone()) return false
 
         gameWorld.setForeMap(x, y - 1, getBlockByKeyUseCase[BLOCK_KEY])
-        return true
+        return false
     }
 
-    private fun isWaterAdjacent(x: Int, y: Int): Boolean = gameWorld.getForeMap(x - 1, y).isWater() ||
-        gameWorld.getForeMap(x + 1, y).isWater()
+    private fun isWaterAdjacent(x: Int, y: Int): Boolean {
+        return gameWorld.getForeMap(x - 1, y).isWater() || gameWorld.getForeMap(x + 1, y).isWater()
+    }
 
     companion object {
         const val BLOCK_KEY = "sugar_cane"

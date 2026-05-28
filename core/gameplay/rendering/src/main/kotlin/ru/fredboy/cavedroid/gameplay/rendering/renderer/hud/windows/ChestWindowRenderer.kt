@@ -16,6 +16,7 @@ import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.window.inventory.ChestInventoryWindow
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.IHudRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.WindowsRenderer
+import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.messages.InventoryHintController
 import javax.inject.Inject
 
 @GameScope
@@ -26,6 +27,7 @@ class ChestWindowRenderer @Inject constructor(
     private val getStringWidth: GetStringWidthUseCase,
     private val getStringHeight: GetStringHeightUseCase,
     private val getFont: GetFontUseCase,
+    private val inventoryHintController: InventoryHintController,
 ) : AbstractWindowRenderer(),
     IHudRenderer {
 
@@ -102,13 +104,15 @@ class ChestWindowRenderer @Inject constructor(
                 height = 20f,
             )
 
-            val itemName = selectedItem.item.params.name
-            spriteBatch.drawString(
-                font = getFont(),
-                str = itemName,
-                x = viewport.width / 2f - getStringWidth(itemName) / 2f,
-                y = windowY + windowTexture.regionHeight + getStringHeight(itemName),
-            )
+            if (!inventoryHintController.isVisible) {
+                val itemName = selectedItem.item.params.name
+                spriteBatch.drawString(
+                    font = getFont(),
+                    str = itemName,
+                    x = viewport.width / 2f - getStringWidth(itemName) / 2f,
+                    y = windowY + windowTexture.regionHeight + getStringHeight(itemName),
+                )
+            }
         }
     }
 

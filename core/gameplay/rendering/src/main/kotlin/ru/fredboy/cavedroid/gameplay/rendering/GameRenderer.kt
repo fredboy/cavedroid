@@ -13,13 +13,12 @@ import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.common.utils.drawString
-import ru.fredboy.cavedroid.common.utils.floorDiv
-import ru.fredboy.cavedroid.common.utils.floorMod
 import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
+import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
@@ -28,9 +27,8 @@ import ru.fredboy.cavedroid.gameplay.rendering.renderer.world.IWorldRenderer
 import javax.inject.Inject
 import kotlin.math.PI
 import kotlin.math.abs
-import kotlin.math.ceil
 import kotlin.math.cos
-import kotlin.math.floor
+import kotlin.math.min
 
 @GameScope
 class GameRenderer @Inject constructor(
@@ -81,68 +79,12 @@ class GameRenderer @Inject constructor(
 
     private val spriter = SpriteBatch()
 
-    private var lastCameraX = Float.NaN
-
-    private val activeLightChunks = mutableSetOf<Pair<Int, Int>>()
-    private val scratchVisibleChunks = mutableSetOf<Pair<Int, Int>>()
-    private val scratchEnteredChunks = mutableSetOf<Pair<Int, Int>>()
-
     private val baseSkyColor = Color()
     private val skyLeftColor = Color()
     private val skyRightColor = Color()
 
     init {
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f)
-    }
-
-    private fun refreshVisibleLightChunks() {
-        val chunkSize = lightingSystem.chunkSize
-        if (chunkSize <= 0) return
-
-        val worldWidth = gameWorld.width
-        val worldHeight = gameWorld.height
-        if (worldWidth <= 0 || worldHeight <= 0) return
-
-        val visibleX = camera.position.x - camera.viewportWidth / 2f
-        val visibleY = camera.position.y - camera.viewportHeight / 2f
-        val visibleRight = visibleX + camera.viewportWidth
-        val visibleBottom = visibleY + camera.viewportHeight
-
-        val minBlockX = floor(visibleX).toInt() - chunkSize
-        val maxBlockX = ceil(visibleRight).toInt() + chunkSize
-        val minBlockY = floor(visibleY).toInt() - chunkSize
-        val maxBlockY = ceil(visibleBottom).toInt() + chunkSize
-
-        val chunkMinX = (minBlockX floorDiv chunkSize) * chunkSize
-        val chunkMaxX = (maxBlockX floorDiv chunkSize) * chunkSize
-        val chunkMinY = (minBlockY floorDiv chunkSize) * chunkSize
-        val chunkMaxY = (maxBlockY floorDiv chunkSize) * chunkSize
-
-        scratchVisibleChunks.clear()
-        var cx = chunkMinX
-        while (cx <= chunkMaxX) {
-            val wrappedX = cx floorMod worldWidth
-            val wrappedChunkX = wrappedX - (wrappedX floorMod chunkSize)
-            var cy = chunkMinY
-            while (cy <= chunkMaxY) {
-                if (cy in 0 until worldHeight) {
-                    scratchVisibleChunks.add(wrappedChunkX to cy)
-                }
-                cy += chunkSize
-            }
-            cx += chunkSize
-        }
-
-        scratchEnteredChunks.clear()
-        scratchEnteredChunks.addAll(scratchVisibleChunks)
-        scratchEnteredChunks.removeAll(activeLightChunks)
-
-        if (scratchEnteredChunks.isNotEmpty()) {
-            lightingSystem.refreshChunks(scratchEnteredChunks)
-        }
-
-        activeLightChunks.clear()
-        activeLightChunks.addAll(scratchVisibleChunks)
     }
 
     private fun updateStaticCameraPosition(targetX: Float, targetY: Float) {
@@ -159,21 +101,28 @@ class GameRenderer @Inject constructor(
             y = player.y / 2f + player.aimY / 2f
         }
 
-        if (!gameContextRepository.getCameraContext().visibleWorld.contains(player.x, player.y)) {
-            camera.position.set(cameraTargetPosition)
-            return
-        }
-
         val moveVector = cameraTargetPosition.sub(camera.position)
 
         if (!moveVector.isZero(0.05f)) {
-            moveVector.nor().scl(30f * delta)
+            val l = moveVector.len()
+            moveVector.nor().scl(min(l, 30f * delta))
         }
 
         camera.position.add(moveVector)
     }
 
+    private fun wrapCameraToPlayerSeam() {
+        val worldWidth = gameWorld.width.toFloat()
+        val cameraToPlayer = player.x - camera.position.x
+        if (cameraToPlayer > worldWidth / 2f) {
+            camera.position.add(Vector3(worldWidth, 0f, 0f))
+        } else if (cameraToPlayer < -worldWidth / 2f) {
+            camera.position.sub(Vector3(worldWidth, 0f, 0f))
+        }
+    }
+
     private fun updateCameraPosition(delta: Float) {
+        wrapCameraToPlayerSeam()
         if (applicationContextRepository.useDynamicCamera()) {
             updateDynamicCameraPosition(delta)
         } else {
@@ -185,13 +134,17 @@ class GameRenderer @Inject constructor(
             width = hudCamera.viewportWidth
             height = hudCamera.viewportHeight
         }
-        gameContextRepository.getCameraContext().visibleWorld.apply {
-            x = camera.position.x - camera.viewportWidth / 2
-            y = camera.position.y - camera.viewportHeight / 2
-            width = camera.viewportWidth
-            height = camera.viewportHeight
-        }
+        gameContextRepository.getCameraContext().visibleWorld.set(getVisibleWorldRect())
         camera.update()
+    }
+
+    private fun getVisibleWorldRect(): Rectangle {
+        return Rectangle(
+            camera.position.x - camera.viewportWidth / 2,
+            camera.position.y - camera.viewportHeight / 2,
+            camera.viewportWidth,
+            camera.viewportHeight,
+        )
     }
 
     private fun handleMousePosition() {
@@ -255,7 +208,11 @@ class GameRenderer @Inject constructor(
             skyRightColor.set(base).lerp(HORIZON_COLOR, warmBlend)
         }
 
-        val intensity = gameWorld.weatherIntensity
+        val biomeFactor = gameWorld.biomeProximityFactor(
+            centerX = player.x,
+            rangeBlocks = WEATHER_SKY_FADE_BLOCKS,
+        ) { it != Biome.DESERT }
+        val intensity = gameWorld.weatherIntensity * biomeFactor
         if (intensity > 0f) {
             val factor = 1f - intensity * (1f - RAIN_SKY_DARKENING)
             skyLeftColor.r *= factor
@@ -287,15 +244,6 @@ class GameRenderer @Inject constructor(
     fun render(delta: Float) {
         updateCameraPosition(delta)
 
-        val cameraJumped = !lastCameraX.isNaN() &&
-            abs(camera.position.x - lastCameraX) > gameWorld.width / 2f
-        lastCameraX = camera.position.x
-
-        if (cameraJumped) {
-            activeLightChunks.clear()
-        }
-        refreshVisibleLightChunks()
-
         spriter.projectionMatrix = camera.combined
         shaper.projectionMatrix = camera.combined
 
@@ -316,7 +264,7 @@ class GameRenderer @Inject constructor(
 
         spriter.end()
 
-        lightingSystem.render(camera, cameraJumped)
+        lightingSystem.render(camera)
 
         if (gameContextRepository.shouldShowInfo()) {
             debugRenderer?.render(gameWorld.world, camera.combined)
@@ -356,5 +304,8 @@ class GameRenderer @Inject constructor(
         private val NOON_COLOR = Color(0.4f, 0.7f, 1f, 1f)
 
         private const val RAIN_SKY_DARKENING = 0.3f
+        private const val WEATHER_SKY_FADE_BLOCKS = 16f
+
+        private const val CAMERA_DELTA = 1f / 60f
     }
 }

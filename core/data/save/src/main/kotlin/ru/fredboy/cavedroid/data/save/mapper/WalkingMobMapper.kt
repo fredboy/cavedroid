@@ -38,6 +38,7 @@ class WalkingMobMapper @Inject constructor(
         hasFur = (mob as? SheepMob)?.hasFur ?: false,
         breath = mob.breath,
         woolColor = (mob as? SheepMob)?.woolToColor?.first,
+        fireTicksRemaining = mob.fireTicksRemaining,
     )
 
     fun mapPassiveMob(
@@ -69,6 +70,7 @@ class WalkingMobMapper @Inject constructor(
             isFlyMode = saveDataDto.flyMode
             health = saveDataDto.health
             breath = saveDataDto.breath ?: params.maxBreath
+            fireTicksRemaining = saveDataDto.fireTicksRemaining
         }
     }
 

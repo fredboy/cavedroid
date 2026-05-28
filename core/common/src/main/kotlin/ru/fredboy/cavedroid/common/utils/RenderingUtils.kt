@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
+import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
@@ -139,4 +140,14 @@ fun SpriteBatch.withScissors(
     block.invoke()
     flush()
     Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST)
+}
+
+fun Sprite.applyTint(tint: Color) {
+    val src = tint.cpy().mul(tint.a)
+    val dst = color.cpy().mul(1f - tint.a)
+    color = (src + dst).apply { a = color.a }
+}
+
+operator fun Color.plus(other: Color): Color {
+    return cpy().add(other)
 }

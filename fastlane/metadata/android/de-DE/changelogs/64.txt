@@ -1,0 +1,4 @@
+- Feuermechanik und ein neues Rezept für Feuerstein und Stahl hinzugefügt. 
+- Verbesserungen am Verhalten der Mobs: freundliche Mobs erscheinen nicht in Wüsten, und feindliche Mobs haben nun begrenzte Sicht und Spawn-Bedingungen. 
+- Diverse Gameplay-Probleme behoben, darunter Kamerabewegung und Haltbarkeit von Gegenständen im Inventar. 
+- Verbesserte Steuerungshinweise für das Inventar. 

@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import co.touchlab.kermit.Severity
 import com.badlogic.gdx.Files
 import com.badlogic.gdx.backends.android.AndroidApplication
@@ -12,9 +13,7 @@ import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.gameplay.lighting.bfs.BfsLightingSystemFactory
-import ru.fredboy.cavedroid.gameplay.lighting.box2d.Box2dLightingSystemFactory
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
-import ru.fredboy.cavedroid.gdx.di.DelegatingLightingSystemFactory
 
 class AndroidLauncher : AndroidApplication() {
 
@@ -40,6 +39,7 @@ class AndroidLauncher : AndroidApplication() {
         }
 
         val preferencesStore = AndroidPreferencesStore(applicationContext)
+        val softKeyboardObserver = AndroidSoftKeyboardObserver(this)
 
         initialize(
             /* listener = */
@@ -49,17 +49,14 @@ class AndroidLauncher : AndroidApplication() {
                 isTouchScreen = true,
                 isDebug = BuildConfig.DEBUG,
                 preferencesStore = preferencesStore,
-                lightingSystemFactory = DelegatingLightingSystemFactory(
-                    preferencesStore = preferencesStore,
-                    legacy = Box2dLightingSystemFactory(),
-                    bfs = BfsLightingSystemFactory(),
-                ),
+                lightingSystemFactory = BfsLightingSystemFactory(),
                 dispatchers = AppDispatchers(
                     io = Dispatchers.IO,
                     background = Dispatchers.Default,
                     main = GdxMainDispatcher,
                 ),
                 adController = adController,
+                softKeyboardObserver = softKeyboardObserver,
                 loggingSeverity = if (BuildConfig.DEBUG) Severity.Debug else Severity.Info,
             ),
             /* config = */ config,
@@ -68,7 +65,18 @@ class AndroidLauncher : AndroidApplication() {
 
     override fun onResume() {
         super.onResume()
+        pinScreenBrightness()
         adController.resume()
+    }
+
+    private fun pinScreenBrightness() {
+        val systemBrightness = try {
+            Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS)
+        } catch (_: Settings.SettingNotFoundException) {
+            return
+        }
+        val normalized = (systemBrightness / 255f).coerceIn(0f, 1f)
+        window.attributes = window.attributes.apply { screenBrightness = normalized }
     }
 
     override fun onPause() {

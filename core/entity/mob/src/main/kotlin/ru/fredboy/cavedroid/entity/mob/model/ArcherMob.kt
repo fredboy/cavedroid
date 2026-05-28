@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.entity.mob.model
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import ru.fredboy.cavedroid.common.utils.applyOrigin
 import ru.fredboy.cavedroid.common.utils.drawSprite
@@ -42,7 +41,7 @@ class ArcherMob(
     ) {
         updateAnimation(delta)
 
-        val backgroundTintColor = tintColor.cpy().sub(Color(0xAAAAAA shl 8))
+        val backgroundTintColor = tintColor.cpy().sub(BG_BODY_TINT)
 
         params.sprites.forEach { spriteData ->
             val sprite = spriteData.sprite

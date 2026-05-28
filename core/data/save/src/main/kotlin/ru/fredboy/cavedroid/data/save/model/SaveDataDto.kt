@@ -55,6 +55,7 @@ sealed class SaveDataDto {
         abstract val maxHealth: Int
         abstract val health: Int
         abstract val breath: Int?
+        abstract val fireTicksRemaining: Float
     }
 
     @Serializable
@@ -157,6 +158,7 @@ sealed class SaveDataDto {
         val hasFur: Boolean = false,
         override val breath: Int? = null,
         val woolColor: String? = null,
+        override val fireTicksRemaining: Float = 0f,
     ) : MobSaveDataDto()
 
     @Serializable
@@ -179,6 +181,7 @@ sealed class SaveDataDto {
         override val health: Int,
         val blockKey: String,
         override val breath: Int? = null,
+        override val fireTicksRemaining: Float = 0f,
     ) : MobSaveDataDto()
 
     @Serializable
@@ -219,6 +222,7 @@ sealed class SaveDataDto {
         val foodTickTimer: Int,
         override val breath: Int? = null,
         val wearingArmor: InventorySaveDataDto? = null,
+        override val fireTicksRemaining: Float = 0f,
     ) : MobSaveDataDto()
 
     @Serializable
@@ -241,6 +245,23 @@ sealed class SaveDataDto {
     data class GrowBlocksSaveDataDto(
         override val version: Int,
         val entries: List<GrowBlockEntryDto>,
+    ) : SaveDataDto()
+
+    @Serializable
+    data class FireEntryDto(
+        override val version: Int,
+        val x: Int,
+        val y: Int,
+        val age: Float,
+        // Defaults to FOREGROUND for backward compatibility with the very
+        // first iteration of fire saves (which had no layer field).
+        val layer: Int = 0,
+    ) : SaveDataDto()
+
+    @Serializable
+    data class FireControllerSaveDataDto(
+        override val version: Int,
+        val entries: List<FireEntryDto>,
     ) : SaveDataDto()
 
     @Serializable

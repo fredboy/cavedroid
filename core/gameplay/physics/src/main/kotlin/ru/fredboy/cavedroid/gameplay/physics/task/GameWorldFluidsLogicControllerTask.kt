@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gameplay.physics.task
 
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.items.model.item.isNone
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
@@ -176,7 +177,14 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
             this(priority, Runnable { gameWorld.setForeMap(x, y, block) })
 
         constructor(fluid: Block.Fluid, x: Int, y: Int) :
-            this(fluid, x, y, ((5 - fluid.state) + 1) * (if (fluid.isLava()) 2 else 1))
+            this(
+                ((5 - fluid.state) + 1) * (if (fluid.isLava()) 2 else 1),
+                Runnable {
+                    if (fluidCanFlowThere(fluid, gameWorld.getForeMap(x, y))) {
+                        gameWorld.setForeMap(x, y, fluid)
+                    }
+                },
+            )
 
         fun exec() = command.run()
     }

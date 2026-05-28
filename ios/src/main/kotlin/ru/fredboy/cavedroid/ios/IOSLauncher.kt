@@ -13,9 +13,7 @@ import org.robovm.apple.uikit.UIApplication
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.gameplay.lighting.bfs.BfsLightingSystemFactory
-import ru.fredboy.cavedroid.gameplay.lighting.box2d.Box2dLightingSystemFactory
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
-import ru.fredboy.cavedroid.gdx.di.DelegatingLightingSystemFactory
 
 object IOSLauncher : IOSApplication.Delegate() {
     override fun createApplication(): IOSApplication? {
@@ -34,6 +32,7 @@ object IOSLauncher : IOSApplication.Delegate() {
         }
 
         val preferencesStore = IOSPreferencesStore()
+        val softKeyboardObserver = IOSSoftKeyboardObserver()
 
         val caveDroidApplication = CaveDroidApplication(
             gameDataDirectoryPath = dataDir,
@@ -41,16 +40,13 @@ object IOSLauncher : IOSApplication.Delegate() {
             isTouchScreen = true,
             isDebug = false,
             preferencesStore = preferencesStore,
-            lightingSystemFactory = DelegatingLightingSystemFactory(
-                preferencesStore = preferencesStore,
-                legacy = Box2dLightingSystemFactory(),
-                bfs = BfsLightingSystemFactory(),
-            ),
+            lightingSystemFactory = BfsLightingSystemFactory(),
             dispatchers = AppDispatchers(
                 io = Dispatchers.IO,
                 background = Dispatchers.Default,
                 main = GdxMainDispatcher,
             ),
+            softKeyboardObserver = softKeyboardObserver,
         )
 
         return IOSApplication(caveDroidApplication, config)

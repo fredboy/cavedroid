@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.TimeUtils
 import com.badlogic.gdx.utils.Timer
+import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.common.utils.Vector2Proxy
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.drop.DropAmount
@@ -92,6 +93,8 @@ abstract class Mob(
 
     private var lastJumpMs = 0L
 
+    private var lastClimbMs = 0L
+
     private var pendingBodyTransform: Vector2? = null
 
     var climb = false
@@ -128,6 +131,34 @@ abstract class Mob(
     var autojumpCounters = IntArray(2)
 
     var cliffEdgeCounters = IntArray(2)
+
+    var fireTicksRemaining: Float = 0f
+
+    var fireDamageAccumulator: Float = 0f
+
+    val isOnFire: Boolean
+        get() = fireTicksRemaining > 0f
+
+    fun ignite(durationSec: Float) {
+        if (isDead || durationSec <= 0f || this is Player && gameMode == GameMode.CREATIVE) return
+        if (durationSec > fireTicksRemaining) {
+            fireTicksRemaining = durationSec
+        }
+    }
+
+    fun extinguish() {
+        fireTicksRemaining = 0f
+        fireDamageAccumulator = 0f
+    }
+
+    fun decreaseFireTicks(delta: Float) {
+        if (fireTicksRemaining > 0f) {
+            fireTicksRemaining = (fireTicksRemaining - delta).coerceAtLeast(0f)
+            if (fireTicksRemaining == 0f) {
+                fireDamageAccumulator = 0f
+            }
+        }
+    }
 
     var isPullingBow = false
         set(value) {
@@ -215,6 +246,7 @@ abstract class Mob(
     fun kill() {
         isDead = true
         makingSound = SoundType.Death
+        extinguish()
     }
 
     fun reduceBreath() {
@@ -352,10 +384,19 @@ abstract class Mob(
             velocity.x = 0f
         }
 
-        if (position.x > mobWorldAdapter.width) {
-            body.setTransform(Vector2(position.x - mobWorldAdapter.width, position.y), 0f)
-        } else if (position.x < 0) {
-            body.setTransform(Vector2(position.x + mobWorldAdapter.width, position.y), 0f)
+        val worldWidth = mobWorldAdapter.width.toFloat()
+        val seamDeltaX = when {
+            position.x > worldWidth -> -worldWidth
+            position.x < 0f -> worldWidth
+            else -> 0f
+        }
+
+        if (seamDeltaX != 0f) {
+            body.setTransform(position.x + seamDeltaX, position.y, 0f)
+            if (this is Player) {
+                aimX += seamDeltaX
+                cursorX += seamDeltaX
+            }
         }
 
         if (position.y > mobWorldAdapter.height) {
@@ -404,7 +445,7 @@ abstract class Mob(
     abstract fun changeDir()
 
     open fun jump() {
-        if (!canJump) {
+        if (canClimb || !canJump) {
             return
         }
 
@@ -415,6 +456,22 @@ abstract class Mob(
         )
 
         lastJumpMs = TimeUtils.millis()
+    }
+
+    fun climbUp() {
+        if (!canClimb) {
+            climb = false
+            return
+        }
+
+        if (climb) {
+            return
+        }
+
+        if (TimeUtils.timeSinceMillis(lastClimbMs) >= CLIMB_COOLDOWN_MS) {
+            climb = true
+            lastClimbMs = TimeUtils.millis()
+        }
     }
 
     override fun dispose() {
@@ -459,9 +516,14 @@ abstract class Mob(
 
         private const val JUMP_COOLDOWN_MS = 500L
 
+        private const val CLIMB_COOLDOWN_MS = 600L
+
         private const val STEP_TIMEOUT_MS = 200L
         private const val SPLASH_TIMEOUT_MS = 750L
 
         private const val BOW_PULL_TIME_S = 1f
+
+        @JvmStatic
+        protected val BG_BODY_TINT = Color(0x888888 shl 8)
     }
 }

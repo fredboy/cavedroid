@@ -147,12 +147,14 @@ abstract class AbstractInventoryItemsMouseInputHandler(
                     window.onLeftCLick(items, itemsRepository, index, action.actionKey.pointer)
                 } else {
                     window.onRightClick(items, itemsRepository, index, action.actionKey.pointer)
+                    inventoryHintEvents.notifyItemPlacedByOne()
                 }
             }
         } else if (action.actionKey is MouseInputActionKey.Left) {
             window.onLeftCLick(items, itemsRepository, index)
         } else {
             window.onRightClick(items, itemsRepository, index)
+            inventoryHintEvents.notifyItemPlacedByOne()
         }
         inventoryHintEvents.notifyItemMoved()
     }

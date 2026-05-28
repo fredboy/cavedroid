@@ -16,6 +16,7 @@ import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.entity.container.model.Furnace
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
+import ru.fredboy.cavedroid.game.controller.fire.FireController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.utils.ChunkFrameBuffer
@@ -29,9 +30,12 @@ abstract class BlocksRenderer(
     protected val getBlockDamageFrameCount: GetBlockDamageFrameCountUseCase,
     protected val getBlockDamageSprite: GetBlockDamageSpriteUseCase,
     protected val itemsRepository: ItemsRepository,
+    protected val fireController: FireController,
 ) : IWorldRenderer {
 
     protected abstract val background: Boolean
+
+    private val fireBlock: Block.Fire? by lazy { itemsRepository.getBlockByKey(FIRE_BLOCK_KEY) as? Block.Fire }
 
     private val Block.canSeeThrough
         get() = isNone() || params.isTransparent
@@ -82,29 +86,13 @@ abstract class BlocksRenderer(
     ) {
         val foregroundBlock = gameWorld.getForeMap(x, y)
         val backgroundBlock = gameWorld.getBackMap(x, y)
-        val isDefaultBackground = backgroundBlock.isNone() && y >= gameWorld.generatorConfig.seaLevel
+        val isFixedBackground = backgroundBlock.isNone() && y >= gameWorld.generatorConfig.seaLevel
 
-        if (!foregroundBlock.canSeeThrough || (backgroundBlock.isNone() && !isDefaultBackground)) {
+        if (!foregroundBlock.canSeeThrough || (backgroundBlock.isNone() && !isFixedBackground)) {
             return
         }
 
-        shapeRenderer.color = Color(0.0f, 0.0f, 0.0f, 0.4f)
-
-        if (isDefaultBackground) {
-            shapeRenderer.color.a = 0.75f
-        }
-
-        val marginLeft = backgroundBlock.params.spriteMarginsMeters.left
-        val marginTop = backgroundBlock.params.spriteMarginsMeters.top
-
-        shapeRenderer.rect(
-            /* x = */ drawX + marginLeft,
-            /* y = */ drawY + marginTop,
-            /* width = */ backgroundBlock.width,
-            /* height = */ backgroundBlock.height,
-        )
-
-        if (!isDefaultBackground) {
+        if (!isFixedBackground) {
             drawForegroundEdgeShadow(shapeRenderer, x, y, drawX, drawY)
         }
     }
@@ -147,21 +135,23 @@ abstract class BlocksRenderer(
     }
 
     protected fun drawBackMap(spriteBatch: SpriteBatch, x: Int, y: Int, drawX: Float, drawY: Float) {
+        val belowSeaLevel = y >= gameWorld.generatorConfig.seaLevel
         val foregroundBlock = gameWorld.getForeMap(x, y)
-        val backgroundBlock = gameWorld.getBackMap(x, y).let { block ->
-            if (block.isNone() && y >= gameWorld.generatorConfig.seaLevel) {
-                itemsRepository.getBlockByKey(gameWorld.generatorConfig.defaultBackgroundBlockKey)
-            } else {
-                block
-            }
+        val backgroundBlock = gameWorld.getBackMap(x, y)
+
+        if (belowSeaLevel) {
+            val fixedBackgroundBlock = itemsRepository
+                .getBlockByKey(gameWorld.generatorConfig.defaultBackgroundBlockKey)
+
+            fixedBackgroundBlock.draw(spriteBatch, drawX, drawY, FIXED_BACKGROUND_TINT)
         }
 
         if (foregroundBlock.canSeeThrough && !backgroundBlock.isNone()) {
             if (backgroundBlock is Block.Furnace) {
                 val furnace = containerController.getContainer(x, y, Layer.BACKGROUND.z) as? Furnace
-                backgroundBlock.draw(spriteBatch, drawX, drawY, furnace?.isActive ?: false)
+                backgroundBlock.draw(spriteBatch, drawX, drawY, furnace?.isActive ?: false, BACKGROUND_TINT)
             } else {
-                backgroundBlock.draw(spriteBatch, drawX, drawY)
+                backgroundBlock.draw(spriteBatch, drawX, drawY, BACKGROUND_TINT)
             }
         }
 
@@ -187,6 +177,14 @@ abstract class BlocksRenderer(
         containerController.getContainer(x, y, Layer.FOREGROUND.z)
             ?.safeCast<Furnace>()
             ?.let { furnace -> furnace.lightSource?.update() }
+    }
+
+    protected fun drawFireIfNeed(spriteBatch: SpriteBatch, x: Int, y: Int, drawX: Float, drawY: Float, layer: Layer) {
+        val fire = fireController.getFireAt(x, y, layer)
+        if (fire != null) {
+            fireBlock?.draw(spriteBatch, drawX, drawY, BACKGROUND_TINT.takeIf { layer == Layer.BACKGROUND })
+            fire.lightHandle?.update()
+        }
     }
 
     private fun drawAttachedToNeighbour(
@@ -249,8 +247,11 @@ abstract class BlocksRenderer(
     }
 
     companion object {
+        private const val FIRE_BLOCK_KEY = "fire"
         private const val MAX_BLOCK_DAMAGE_INDEX = 10
         private val SHADOW_DARK = Color(0f, 0f, 0f, 0.6f)
-        private val SHADOW_FADE = Color(0f, 0f, 0f, 0.4f)
+        private val SHADOW_FADE = Color(0f, 0f, 0f, 0f)
+        private val BACKGROUND_TINT = Color(0f, 0f, 0f, 0.5f)
+        private val FIXED_BACKGROUND_TINT = Color(0f, 0f, 0f, 0.75f)
     }
 }

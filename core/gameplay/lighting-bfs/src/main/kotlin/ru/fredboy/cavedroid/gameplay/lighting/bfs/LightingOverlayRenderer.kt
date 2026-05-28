@@ -64,7 +64,8 @@ class LightingOverlayRenderer(
                 val up = if (j > 0) raw[i + (j - 1) * w] else center
                 val down = if (j < h - 1) raw[i + (j + 1) * w] else center
                 val avg = (center + left + right + up + down) * 0.2f
-                val channel = (avg * 255f).toInt().coerceIn(0, 255)
+                val brightness = max(center, avg)
+                val channel = (brightness * 255f).toInt().coerceIn(0, 255)
                 val rgba = (channel shl 24) or (channel shl 16) or (channel shl 8) or 0xFF
                 pix.drawPixel(i, j, rgba)
             }

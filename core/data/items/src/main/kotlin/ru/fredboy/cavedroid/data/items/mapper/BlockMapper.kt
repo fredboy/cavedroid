@@ -41,6 +41,7 @@ class BlockMapper @Inject constructor(
             "chest" -> Chest(commonBlockParams)
             "ladder" -> Block.Ladder(commonBlockParams, dto.density ?: 0f)
             "web" -> Block.Web(commonBlockParams, requireNotNull(dto.density))
+            "fire" -> Block.Fire(commonBlockParams)
             "none" -> None(commonBlockParams)
             else -> Normal(commonBlockParams)
         }
@@ -80,6 +81,8 @@ class BlockMapper @Inject constructor(
         material = mapMaterial(dto),
         actionSoundKey = dto.actionSoundKey,
         dropsSingleItem = dto.pickSingleDrop,
+        combustible = dto.combustible,
+        requiresBackground = dto.requiresBackground,
     )
 
     private fun mapLightInfo(info: BlockLightDto?): BlockLightInfo? {

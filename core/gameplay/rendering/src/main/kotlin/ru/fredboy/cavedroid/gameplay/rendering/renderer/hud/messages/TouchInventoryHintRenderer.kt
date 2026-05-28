@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.drawMultilineCentered
+import ru.fredboy.cavedroid.common.utils.safeCast
 import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
@@ -13,6 +14,7 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
+import ru.fredboy.cavedroid.game.window.inventory.CreativeInventoryTabsWindow
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindHudRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.IHudRenderer
 import javax.inject.Inject
@@ -41,6 +43,9 @@ class TouchInventoryHintRenderer @Inject constructor(
         if (!isTouch || !inventoryHintController.isVisible) return
         val windowType = gameWindowsManager.currentWindowType
         if (windowType == GameWindowType.NONE || windowType == GameWindowType.CREATIVE_INVENTORY) return
+        if (gameWindowsManager.currentWindow?.safeCast<CreativeInventoryTabsWindow>()?.selectedTab?.isInventory == false) {
+            return
+        }
 
         inventoryHintController.tick(delta)
         val alpha = inventoryHintController.alpha
@@ -65,7 +70,11 @@ class TouchInventoryHintRenderer @Inject constructor(
 
     companion object {
         private const val RENDER_LAYER = 100810
-        private val HINT_KEYS = listOf("touchInventoryHint", "touchInventoryStackSplitHint")
+        private val HINT_KEYS = listOf(
+            "touchInventoryDragHint",
+            "touchInventoryPlaceOneHint",
+            "touchInventoryStackSplitHint",
+        )
         private const val BOTTOM_MARGIN = 8f
         private const val LINE_SPACING = 4f
     }

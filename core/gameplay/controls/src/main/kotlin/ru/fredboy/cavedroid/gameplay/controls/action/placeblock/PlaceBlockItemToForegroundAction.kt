@@ -5,6 +5,7 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.domain.items.model.item.isSlab
 import ru.fredboy.cavedroid.domain.stats.repository.StatsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
@@ -46,6 +47,12 @@ class PlaceBlockItemToForegroundAction @Inject constructor(
                 )
 
         if (placeable.block.params.requiresBlock && !attachToBottom && !attachToNeighbour) {
+            return false
+        }
+
+        if (placeable.block.params.requiresBackground &&
+            !gameWorld.getBackMap(x, y).params.run { hasCollision && isFullBlock }
+        ) {
             return false
         }
 

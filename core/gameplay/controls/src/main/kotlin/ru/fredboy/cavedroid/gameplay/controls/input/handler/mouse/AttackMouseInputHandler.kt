@@ -39,9 +39,9 @@ class AttackMouseInputHandler @Inject constructor(
             val worldX = action.screenX.meters + gameContextRepository.getCameraContext().visibleWorld.x
             val worldY = action.screenY.meters + gameContextRepository.getCameraContext().visibleWorld.y
 
-            val mob = mobController.mobs.firstOrNull { mob ->
+            val mob = mobController.mobs.lastOrNull { mob ->
                 mob.hitbox.contains(worldX, worldY) &&
-                    mobController.player.position.cpy().sub(mob.position).len() <= MOB_HIT_RANGE
+                    mobController.player.position.cpy().sub(mob.position).len2() <= MOB_HIT_RANGE_2
             }
 
             if (mob != null) {
@@ -53,6 +53,6 @@ class AttackMouseInputHandler @Inject constructor(
     }
 
     companion object {
-        private const val MOB_HIT_RANGE = 3f
+        private const val MOB_HIT_RANGE_2 = 36f
     }
 }

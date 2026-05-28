@@ -27,6 +27,12 @@ class ArcherMobBehavior :
         delta: Float,
     ) {
         if (playerAdapter.gameMode.isCreative() || position.dst(playerAdapter.x, playerAdapter.y) > TRIGGER_DISTANCE) {
+            lostSightElapsedSec = Float.MAX_VALUE
+            passiveBehavior.update(this, worldAdapter, playerAdapter, projectileAdapter, delta)
+            return
+        }
+
+        if (!canStillTrackPlayer(worldAdapter, playerAdapter, delta, requireWalkableAngle = false)) {
             passiveBehavior.update(this, worldAdapter, playerAdapter, projectileAdapter, delta)
             return
         }
@@ -43,13 +49,19 @@ class ArcherMobBehavior :
 
         controlVector.x = speed * direction.basis
 
-        if (!canClimb && controlVector.x != 0f && cliffEdgeCounters[Direction.fromVector(controlVector).index] <= 0) {
+        if (canJump && !canClimb && controlVector.x != 0f && cliffEdgeCounters[Direction.fromVector(controlVector).index] <= 0) {
             controlVector.x = 0f
         }
 
-        climb = canSwim
+        if (canSwim) {
+            climbUp()
+        } else {
+            climb = false
+        }
 
-        if (abs(position.x - playerAdapter.x) <= SHOOTING_RANGE && abs(position.y - playerAdapter.y) <= 1f) {
+        if (abs(position.x - playerAdapter.x) <= SHOOTING_RANGE &&
+            abs(position.y - playerAdapter.y) <= SHOOTING_RANGE
+        ) {
             controlVector.x = 0f
             isPullingBow = true
         } else {
@@ -57,22 +69,32 @@ class ArcherMobBehavior :
         }
 
         if (bowCharge > 2f) {
+            val shooterX = position.x + direction.basis
+            val shooterY = position.y - height / 3f
+            val dx = playerAdapter.x - shooterX
+            val dy = playerAdapter.y - shooterY
+            // +Y is down here; bias the aim upward (negative Y) to compensate
+            // for the arrow's gravity drop over distance.
+            val aim = Vector2(dx, dy - abs(dx) * GRAVITY_COMPENSATION).nor().scl(ARROW_FORCE)
+
             projectileAdapter.addProjectile(
                 itemKey = "arrow",
                 damage = 4,
-                dropOnGround = MathUtils.randomBoolean(0.1f),
-                x = position.x + direction.basis,
-                y = position.y - height / 3f,
+                dropOnGround = MathUtils.randomBoolean(0.01f),
+                x = shooterX,
+                y = shooterY,
                 width = 1f,
                 height = 0.25f,
-                velocity = Vector2(300f * direction.basis, 0f),
+                velocity = aim,
             )
             isPullingBow = false
         }
     }
 
     companion object {
-        private const val TRIGGER_DISTANCE = 16f
-        private const val SHOOTING_RANGE = 4f
+        private const val TRIGGER_DISTANCE = 32f
+        private const val SHOOTING_RANGE = 16f
+        private const val ARROW_FORCE = 300f
+        private const val GRAVITY_COMPENSATION = 0.1f
     }
 }

@@ -39,6 +39,8 @@ class DebugInfoStringsProvider @Inject constructor(
             "Game mode: ${player.gameMode}",
             "Block damage: ${player.blockDamage}",
             "Player can climb: ${player.canClimb}",
+            "Player climb: ${player.climb}",
+            "Player tryClimb: ${player.tryClimb}",
             "Player can jump: ${player.canJump}",
             "Player fly mode: ${player.isFlyMode}",
             "Static bodies: ${gameWorldSolidBlockBodiesManager.bodies.size}",

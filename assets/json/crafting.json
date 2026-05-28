@@ -3607,6 +3607,25 @@
         "count": 1
       }
     ]
+  },
+  "flint_and_steel": {
+    "recipes": [
+      {
+        "input": [
+          "flint",
+          "iron_ingot",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
   }
 }
 

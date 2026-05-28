@@ -3,8 +3,6 @@ object Dependencies {
     object LibGDX {
         const val gdx = "com.badlogicgames.gdx:gdx:${Versions.gdx}"
 
-        const val box2dLights = "com.badlogicgames.box2dlights:box2dlights:${Versions.box2dLights}"
-
         object Box2d {
             const val box2d = "com.badlogicgames.gdx:gdx-box2d:${Versions.gdx}"
 

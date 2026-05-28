@@ -20,8 +20,11 @@ import ru.fredboy.cavedroid.common.api.InlineTextInput
 import ru.fredboy.cavedroid.common.api.NoOpAdController
 import ru.fredboy.cavedroid.common.api.NoOpCloudStatsSync
 import ru.fredboy.cavedroid.common.api.NoOpInlineTextInput
+import ru.fredboy.cavedroid.common.api.NoOpSoftKeyboardObserver
 import ru.fredboy.cavedroid.common.api.PreferencesStore
+import ru.fredboy.cavedroid.common.api.SoftKeyboardObserver
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
+import ru.fredboy.cavedroid.common.coroutines.GdxMainThread
 import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.utils.DEFAULT_VIEWPORT_WIDTH
 import ru.fredboy.cavedroid.common.utils.ratio
@@ -46,6 +49,7 @@ class CaveDroidApplication(
     private val adController: AdController = NoOpAdController(),
     private val cloudStatsSync: CloudStatsSync = NoOpCloudStatsSync(),
     private val inlineTextInput: InlineTextInput = NoOpInlineTextInput,
+    private val softKeyboardObserver: SoftKeyboardObserver = NoOpSoftKeyboardObserver,
     private val defaultLocaleProvider: () -> Locale? = { safeDefaultLocale() },
     private val isYandexGamesBuild: Boolean = false,
     loggingSeverity: Severity = Severity.Info,
@@ -82,6 +86,7 @@ class CaveDroidApplication(
     }
 
     override fun create() {
+        GdxMainThread.init()
         val width = DEFAULT_VIEWPORT_WIDTH
         val height = width / Gdx.graphics.ratio
 
@@ -126,6 +131,7 @@ class CaveDroidApplication(
             .preferencesStore(preferencesStore)
             .adController(adController)
             .inlineTextInput(inlineTextInput)
+            .softKeyboardObserver(softKeyboardObserver)
             .lightingSystemFactory(lightingSystemFactory)
             .appDispatchers(dispatchers)
             .build()
@@ -246,8 +252,10 @@ class CaveDroidApplication(
             logger.w { "Cannot respawn when active screen is not death screen" }
             return
         }
+        applicationComponent.soundPlayer.pauseAll()
         adController.showInterstitial {
             Gdx.app.postRunnable {
+                applicationComponent.soundPlayer.resumeAll()
                 gameScreen.respawnPlayer()
                 setScreen(gameScreen)
             }

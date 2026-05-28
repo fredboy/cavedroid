@@ -3,17 +3,20 @@ package ru.fredboy.cavedroid.gdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Timer;
+import kotlin.random.Random;
 import ru.fredboy.cavedroid.common.di.GameScope;
 import ru.fredboy.cavedroid.common.model.GameMode;
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository;
 import ru.fredboy.cavedroid.game.controller.container.ContainerController;
 import ru.fredboy.cavedroid.game.controller.drop.DropController;
+import ru.fredboy.cavedroid.game.controller.fire.FireController;
 import ru.fredboy.cavedroid.game.controller.mob.MobController;
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController;
 import ru.fredboy.cavedroid.game.controller.stats.StatsController;
 import ru.fredboy.cavedroid.game.world.GameWorld;
 import ru.fredboy.cavedroid.gameplay.controls.GameInputProcessor;
 import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldBlocksLogicControllerTask;
+import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldFireLogicControllerTask;
 import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldFluidsLogicControllerTask;
 import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldGrowBlocksControllerTask;
 import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldMobDamageControllerTask;
@@ -35,6 +38,8 @@ public class GameProc implements Disposable {
     private final GameWorldGrowBlocksControllerTask mGameWorldGrowBlocksControllerTask;
     private final GameWorldMobDamageControllerTask mGameWorldMobDamageControllerTask;
     private final GameWorldMobSpawnControllerTask mGameWorldMobSpawnControllerTask;
+    private final GameWorldFireLogicControllerTask mGameWorldFireLogicControllerTask;
+    private final FireController mFireController;
     private final GameInputProcessor mGameInputProcessor;
     private final GameWorld mGameWorld;
     private final ProjectileController mProjectileController;
@@ -60,7 +65,9 @@ public class GameProc implements Disposable {
                     ProjectileController projectileController,
                     WeatherSoundController weatherSoundController,
                     StatsController statsController,
-                    OnboardingController onboardingController
+                    OnboardingController onboardingController,
+                    GameWorldFireLogicControllerTask gameWorldFireLogicControllerTask,
+                    FireController fireController
     ) {
         mGameRenderer = gameRenderer;
         mMobsController = mobsController;
@@ -77,6 +84,8 @@ public class GameProc implements Disposable {
         mWeatherSoundController = weatherSoundController;
         mStatsController = statsController;
         mOnboardingController = onboardingController;
+        mGameWorldFireLogicControllerTask = gameWorldFireLogicControllerTask;
+        mFireController = fireController;
 
         mWorldLogicTimer.scheduleTask(gameWorldFluidsLogicControllerTask, 0,
                 GameWorldFluidsLogicControllerTask.FLUID_UPDATE_INTERVAL_SEC);
@@ -90,6 +99,8 @@ public class GameProc implements Disposable {
         mWorldLogicTimer.scheduleTask(gameWorldMobSpawnControllerTask,
                 GameWorldMobSpawnControllerTask.SPAWN_INTERVAL_SEC,
                 GameWorldMobSpawnControllerTask.SPAWN_INTERVAL_SEC);
+        mWorldLogicTimer.scheduleTask(gameWorldFireLogicControllerTask, 0,
+                GameWorldFireLogicControllerTask.FIRE_UPDATE_INTERVAL_SEC);
 
         if (!gameContextRepository.isLoadGame() ||
                 mGameWorld.getTotalGameTimeSec() - mGameWorld.getLastSpawnGameTime()
@@ -111,8 +122,8 @@ public class GameProc implements Disposable {
         mMobsController.update(delta);
         mDropController.update(delta);
         mProjectileController.update(delta);
-        mGameInputProcessor.update(delta);
         mGameRenderer.render(delta);
+        mGameInputProcessor.update(delta);
         mContainerController.update(delta);
         mWeatherSoundController.update();
         mStatsController.update(delta);
@@ -146,6 +157,7 @@ public class GameProc implements Disposable {
         mGameWorldGrowBlocksControllerTask.shutdownBlocking();
         mGameWorldMobDamageControllerTask.shutdownBlocking();
         mGameWorldMobSpawnControllerTask.shutdownBlocking();
+        mGameWorldFireLogicControllerTask.shutdownBlocking();
         mWorldLogicTimer.stop();
 
         mWeatherSoundController.dispose();
@@ -154,6 +166,7 @@ public class GameProc implements Disposable {
         mDropController.dispose();
         mMobsController.dispose();
         mContainerController.dispose();
+        mFireController.dispose();
         mStatsController.dispose();
         mGameWorld.dispose();
     }

@@ -19,13 +19,13 @@ class ClimbOrDescendKeyboardInputHandler @Inject constructor(
             action.actionKey is KeyboardInputActionKey.Down
         ) &&
         (action.isKeyDown == mobController.player.canClimb || !action.isKeyDown) &&
-        !mobController.player.canJump &&
+        (!action.isKeyDown && mobController.player.tryClimb || !mobController.player.canJump) &&
         !mobController.player.isFlyMode
 
     override fun handle(action: KeyboardInputAction) {
         when (action.actionKey) {
             is KeyboardInputActionKey.Up -> {
-                mobController.player.climb = action.isKeyDown
+                mobController.player.tryClimb = action.isKeyDown
             }
 
             is KeyboardInputActionKey.Down -> {

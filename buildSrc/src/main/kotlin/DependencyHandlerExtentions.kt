@@ -63,6 +63,7 @@ fun DependencyHandler.useEntityModules() {
 fun DependencyHandler.useGameModules() {
     useModule(":core:game:controller:container")
     useModule(":core:game:controller:drop")
+    useModule(":core:game:controller:fire")
     useModule(":core:game:controller:mob")
     useModule(":core:game:controller:projectile")
     useModule(":core:game:controller:stats")
@@ -74,14 +75,6 @@ fun DependencyHandler.useGameplayModules() {
     useModule(":core:gameplay:controls")
     useModule(":core:gameplay:physics")
     useModule(":core:gameplay:rendering")
-}
-
-fun DependencyHandler.useLightingBox2d() {
-    useModule(":core:gameplay:lighting-box2d")
-}
-
-fun DependencyHandler.useLightingTint() {
-    useModule(":core:gameplay:lighting-tint")
 }
 
 fun DependencyHandler.useLightingBfs() {
@@ -104,7 +97,6 @@ fun DependencyHandler.useAutomultibind() {
 fun DependencyHandler.useLibgdx() {
     implementation(Dependencies.LibGDX.gdx)
     implementation(Dependencies.LibGDX.Box2d.box2d)
-    implementation(Dependencies.LibGDX.box2dLights)
 }
 
 fun DependencyHandler.useLibKtx() {

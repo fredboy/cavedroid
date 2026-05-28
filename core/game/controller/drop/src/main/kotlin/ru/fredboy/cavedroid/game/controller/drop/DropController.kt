@@ -10,6 +10,7 @@ import ru.fredboy.cavedroid.domain.assets.repository.DropSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.domain.items.model.item.isNone
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
@@ -17,8 +18,9 @@ import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.drop.model.Drop
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
-import java.util.*
+import java.util.LinkedList
 import javax.inject.Inject
+import kotlin.math.abs
 
 @GameScope
 class DropController @Inject constructor(
@@ -55,7 +57,7 @@ class DropController @Inject constructor(
     }
 
     private fun addDrop(drop: Drop, x: Float, y: Float, initialForce: Vector2? = null) {
-        if (drop.item.isNone()) {
+        if (drop.item.isNone() || abs(playerAdapter.x - x) > DROP_MAX_APPEAR_DISTANCE) {
             return
         }
 
@@ -162,6 +164,7 @@ class DropController @Inject constructor(
     }
 
     companion object {
-        private const val DROP_TTL_ML = 600_000
+        private const val DROP_TTL_ML = 120_000
+        private const val DROP_MAX_APPEAR_DISTANCE = 96f
     }
 }

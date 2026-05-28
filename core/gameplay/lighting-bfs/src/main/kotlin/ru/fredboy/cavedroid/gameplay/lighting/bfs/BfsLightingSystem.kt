@@ -69,7 +69,7 @@ class BfsLightingSystem(
 
     override fun refreshChunks(chunks: Iterable<Pair<Int, Int>>) = Unit
 
-    override fun render(camera: OrthographicCamera, cameraJumped: Boolean) {
+    override fun render(camera: OrthographicCamera) {
         if (_gameWorld == null) return
         overlay.render(camera, gameWorld.getSunlight())
     }
@@ -85,6 +85,16 @@ class BfsLightingSystem(
         if (_gameWorld == null) return NoOpLightHandle
         val id = transientEmitterIds.incrementAndGet()
         return FurnaceLightHandle(id, x, y)
+    }
+
+    override fun createFireLight(x: Float, y: Float): LightHandle {
+        if (_gameWorld == null) return NoOpLightHandle
+        val id = transientEmitterIds.incrementAndGet()
+        return FireLightHandle(id, x, y)
+    }
+
+    override fun getEffectiveBrightness(x: Int, y: Int, sunBrightness: Float): Float {
+        return grid.effective(x, y, sunBrightness)
     }
 
     override fun dispose() {
@@ -153,6 +163,53 @@ class BfsLightingSystem(
         }
     }
 
+    private inner class FireLightHandle(
+        private val id: Long,
+        startX: Float,
+        startY: Float,
+    ) : LightHandle {
+
+        private var posX: Float = startX
+        private var posY: Float = startY
+        private var active: Boolean = true
+
+        init {
+            applyToGrid()
+        }
+
+        override var isActive: Boolean
+            get() = active
+            set(value) {
+                if (value == active) return
+                active = value
+                applyToGrid()
+            }
+
+        override fun setPosition(x: Float, y: Float) {
+            posX = x
+            posY = y
+            applyToGrid()
+        }
+
+        override fun update() {
+            applyToGrid()
+        }
+
+        override fun dispose() {
+            active = false
+            applyToGrid()
+        }
+
+        private fun applyToGrid() {
+            val currentGrid = _grid ?: return
+            if (active) {
+                currentGrid.setTransientEmitter(id, posX.toInt(), posY.toInt(), FIRE_LEVEL)
+            } else {
+                currentGrid.clearTransientEmitter(id)
+            }
+        }
+    }
+
     private object NoOpLightHandle : LightHandle {
         override var isActive: Boolean = true
         override fun setPosition(x: Float, y: Float) = Unit
@@ -165,6 +222,7 @@ class BfsLightingSystem(
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         private const val FURNACE_LEVEL = 13
+        private const val FIRE_LEVEL = 11
 
         private fun ru.fredboy.cavedroid.domain.items.model.block.BlockLightInfo.toLevel(): Int {
             val raw = (lightBrightness * LightGrid.MAX_LEVEL_F).roundToInt()

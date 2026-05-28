@@ -66,6 +66,7 @@ class FallingBlock(
                 damageToPlayer = 0,
                 takesSunDamage = false,
                 maxBreath = -1,
+                maxSpawnLight = 1f,
             )
         }
     }

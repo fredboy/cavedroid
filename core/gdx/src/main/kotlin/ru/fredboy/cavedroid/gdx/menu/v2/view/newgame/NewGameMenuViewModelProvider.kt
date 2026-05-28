@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.newgame
 
 import ru.fredboy.cavedroid.common.api.InlineTextInput
+import ru.fredboy.cavedroid.common.api.SoftKeyboardObserver
 import ru.fredboy.cavedroid.common.di.MenuScope
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.common.mvvm.ViewModelProvider
@@ -13,6 +14,7 @@ import kotlin.reflect.KClass
 @BindViewModelProvider
 class NewGameMenuViewModelProvider @Inject constructor(
     private val inlineTextInput: InlineTextInput,
+    private val softKeyboardObserver: SoftKeyboardObserver,
     private val baseViewModelDependencies: BaseViewModelDependencies,
 ) : ViewModelProvider<NewGameMenuNavKey, NewGameMenuViewModel> {
 
@@ -23,6 +25,7 @@ class NewGameMenuViewModelProvider @Inject constructor(
         return NewGameMenuViewModel(
             navBackStack = navBackStack,
             inlineTextInput = inlineTextInput,
+            softKeyboardObserver = softKeyboardObserver,
             baseViewModelDependencies = baseViewModelDependencies,
         )
     }
