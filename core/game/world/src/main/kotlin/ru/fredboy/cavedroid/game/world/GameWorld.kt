@@ -43,7 +43,7 @@ class GameWorld @Inject constructor(
     val width: Int
     val height: Int
 
-    var currentGameTime = DAY_DURATION_SEC * 0.5f
+    var currentGameTime = DAY_DURATION_SEC * 0.125f
     var totalGameTimeSec = currentGameTime
     var lastSpawnGameTime = 0f
 

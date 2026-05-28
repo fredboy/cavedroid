@@ -121,7 +121,7 @@ class TouchCursorInputHandler @Inject constructor(
     }
 
     private fun tryHitMob(): Boolean {
-        mobController.mobs.forEach { mob ->
+        mobController.mobs.asReversed().forEach { mob ->
             if (mob.position.dst(player.cursorX, player.cursorY) < 1f) {
                 useMobActionMap[mob.params.key]?.perform(mob)?.takeIf { it }
                     ?: mobController.player.activeItem

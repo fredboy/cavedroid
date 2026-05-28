@@ -60,7 +60,7 @@ class ArcherMobBehavior :
         }
 
         if (abs(position.x - playerAdapter.x) <= SHOOTING_RANGE &&
-            abs(position.y - playerAdapter.y) <= SHOOTING_RANGE / 2f
+            abs(position.y - playerAdapter.y) <= SHOOTING_RANGE
         ) {
             controlVector.x = 0f
             isPullingBow = true
@@ -92,8 +92,8 @@ class ArcherMobBehavior :
     }
 
     companion object {
-        private const val TRIGGER_DISTANCE = 16f
-        private const val SHOOTING_RANGE = 8f
+        private const val TRIGGER_DISTANCE = 32f
+        private const val SHOOTING_RANGE = 16f
         private const val ARROW_FORCE = 300f
         private const val GRAVITY_COMPENSATION = 0.1f
     }

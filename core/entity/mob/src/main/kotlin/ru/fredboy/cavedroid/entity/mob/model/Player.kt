@@ -254,7 +254,7 @@ class Player(
 
         val rightHandAnim = getRightHandAnim(delta)
 
-        val backgroundTintColor = tintColor.cpy().sub(Color(0xAAAAAA shl 8))
+        val backgroundTintColor = tintColor.cpy().sub(BG_BODY_TINT)
 
         if (looksLeft()) {
             backHandAnim = rightHandAnim
