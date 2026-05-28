@@ -1,0 +1,2 @@
+- Se solucionó un problema que impedía que los líquidos se drenaran correctamente.
+- Mejoras menores y corrección de errores.

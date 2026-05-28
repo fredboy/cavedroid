@@ -20,6 +20,7 @@ CaveDroid — это **2D-игра в стиле Minecraft** для Android, Des
 ![Скриншот 4](fastlane/metadata/android/en-US/images/phoneScreenshots/4.png)
 ![Скриншот 5](fastlane/metadata/android/en-US/images/phoneScreenshots/5.png)
 ![Скриншот 6](fastlane/metadata/android/en-US/images/phoneScreenshots/6.png)
+![Скриншот 7](fastlane/metadata/android/en-US/images/phoneScreenshots/7.png)
 
 </details>
 

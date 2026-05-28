@@ -20,6 +20,7 @@ Explore, mine, and build in a looped world.
 ![Screenshot 4](fastlane/metadata/android/en-US/images/phoneScreenshots/4.png)
 ![Screenshot 5](fastlane/metadata/android/en-US/images/phoneScreenshots/5.png)
 ![Screenshot 6](fastlane/metadata/android/en-US/images/phoneScreenshots/6.png)
+![Screenshot 7](fastlane/metadata/android/en-US/images/phoneScreenshots/7.png)
 
 </details>
 
