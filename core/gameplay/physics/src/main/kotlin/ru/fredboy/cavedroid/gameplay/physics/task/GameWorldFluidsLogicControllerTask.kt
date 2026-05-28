@@ -1,12 +1,12 @@
 package ru.fredboy.cavedroid.gameplay.physics.task
 
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.PriorityMap
+import ru.fredboy.cavedroid.common.utils.PriorityMapValue
 import ru.fredboy.cavedroid.domain.items.model.block.Block
-import ru.fredboy.cavedroid.domain.items.model.item.isNone
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
-import java.util.*
 import javax.inject.Inject
 import kotlin.math.min
 import kotlin.reflect.KClass
@@ -22,9 +22,7 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
 
     private val fluidStatesMap = mutableMapOf<KClass<out Block.Fluid>, List<Block.Fluid>>()
 
-    private val updateQueue = PriorityQueue<UpdateCommand>(16) { c1, c2 ->
-        c1.priority.compareTo(c2.priority)
-    }
+    private val updateMap = PriorityMap<Pair<Int, Int>, UpdateCommand>()
 
     init {
         val waters = itemsRepository.getBlocksByType(Block.Water::class.java)
@@ -78,10 +76,10 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
             if (noFluidNearby(x, y)) {
                 val nexState = getNextStateBlock(fluid)
                 if (nexState == null) {
-                    updateQueue.offer(UpdateCommand(-1) { gameWorld.resetForeMap(x, y) })
+                    updateMap[x to y] = UpdateCommand(-1, x, y) { gameWorld.resetForeMap(x, y) }
                     return true
                 }
-                updateQueue.offer(UpdateCommand(nexState, x, y))
+                updateMap[x to y] = UpdateCommand(nexState, x, y)
             }
         }
 
@@ -101,18 +99,18 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
             fluidCanFlowThere(currentFluid, targetBlock) -> UpdateCommand(nextStateFluid, x, y)
 
             currentFluid.isWater() && targetBlock is Block.Lava && targetBlock.state > 0 ->
-                UpdateCommand(100) { gameWorld.setForeMap(x, y, itemsRepository.getBlockByKey("cobblestone")) }
+                UpdateCommand(100, x, y) { gameWorld.setForeMap(x, y, itemsRepository.getBlockByKey("cobblestone")) }
 
             currentFluid.isWater() && targetBlock.isLava() ->
-                UpdateCommand(100) { gameWorld.setForeMap(x, y, itemsRepository.getBlockByKey("obsidian")) }
+                UpdateCommand(100, x, y) { gameWorld.setForeMap(x, y, itemsRepository.getBlockByKey("obsidian")) }
 
             currentFluid.isLava() && targetBlock.isWater() ->
-                UpdateCommand(200) { gameWorld.setForeMap(x, y, itemsRepository.getBlockByKey("stone")) }
+                UpdateCommand(200, x, y) { gameWorld.setForeMap(x, y, itemsRepository.getBlockByKey("stone")) }
 
             else -> null
         }
 
-        command?.let(updateQueue::offer)
+        command?.let { updateMap[command.x to command.y] = command }
     }
 
     private fun flowFluid(x: Int, y: Int) {
@@ -153,9 +151,10 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
             }
         }
 
-        while (!updateQueue.isEmpty()) {
-            updateQueue.poll().exec()
+        updateMap.values.forEach { command ->
+            command.exec()
         }
+        updateMap.clear()
     }
 
     override fun exec() {
@@ -169,22 +168,21 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
     }
 
     private inner class UpdateCommand(
-        val priority: Int,
+        override val priority: Int,
+        val x: Int,
+        val y: Int,
         val command: Runnable,
-    ) {
+    ) : PriorityMapValue {
 
         constructor(block: Block, x: Int, y: Int, priority: Int) :
-            this(priority, Runnable { gameWorld.setForeMap(x, y, block) })
+            this(priority, x, y, Runnable { gameWorld.setForeMap(x, y, block) })
 
-        constructor(fluid: Block.Fluid, x: Int, y: Int) :
-            this(
-                ((5 - fluid.state) + 1) * (if (fluid.isLava()) 2 else 1),
-                Runnable {
-                    if (fluidCanFlowThere(fluid, gameWorld.getForeMap(x, y))) {
-                        gameWorld.setForeMap(x, y, fluid)
-                    }
-                },
-            )
+        constructor(fluid: Block.Fluid, x: Int, y: Int) : this(
+            priority = ((5 - fluid.state) + 1) * (if (fluid.isLava()) 2 else 1),
+            x = x,
+            y = y,
+            command = Runnable { gameWorld.setForeMap(x, y, fluid) },
+        )
 
         fun exec() = command.run()
     }
