@@ -27,9 +27,9 @@ class AttackMouseInputHandler @Inject constructor(
 
     override fun checkConditions(action: MouseInputAction): Boolean {
         return !applicationContextRepository.isTouch() &&
-                gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-                !action.isInsideHotbar(gameContextRepository, textureRegions) &&
-                action.actionKey is MouseInputActionKey.Left
+            gameWindowsManager.currentWindowType == GameWindowType.NONE &&
+            !action.isInsideHotbar(gameContextRepository, textureRegions) &&
+            action.actionKey is MouseInputActionKey.Left
     }
 
     override fun handle(action: MouseInputAction) {
@@ -41,7 +41,7 @@ class AttackMouseInputHandler @Inject constructor(
 
             val mob = mobController.mobs.lastOrNull { mob ->
                 mob.hitbox.contains(worldX, worldY) &&
-                        mobController.player.position.cpy().sub(mob.position).len2() <= MOB_HIT_RANGE_2
+                    mobController.player.position.cpy().sub(mob.position).len2() <= MOB_HIT_RANGE_2
             }
 
             if (mob != null) {

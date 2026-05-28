@@ -74,8 +74,8 @@ class ArcherMob(
             spriteBatch.drawSprite(
                 sprite = sprite,
                 x = x +
-                        (width - sprite.width - spriteData.offsetX) * direction.index +
-                        spriteData.offsetX * (1 - direction.index),
+                    (width - sprite.width - spriteData.offsetX) * direction.index +
+                    spriteData.offsetX * (1 - direction.index),
                 y = y + spriteData.offsetY,
                 rotation = animationValue,
             )
