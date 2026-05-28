@@ -122,6 +122,7 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
         val spawnPosX = spawnX.toFloat()
         val spawnPosY = floorY.toFloat() - params.height / 2f
         if (!canFitAt(spawnPosX, spawnPosY, params)) return false
+        if (gameWorld.getLightAt(spawnX, floorY) > params.maxSpawnLight) return false
 
         mobFactory.create(spawnPosX, spawnPosY, params.key)
         return true

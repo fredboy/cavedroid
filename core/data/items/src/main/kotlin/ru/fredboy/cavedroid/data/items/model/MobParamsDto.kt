@@ -17,4 +17,5 @@ data class MobParamsDto(
     @SerialName("sprites") val sprites: List<MobSpriteDto>,
     @SerialName("drop_info") val dropInfo: List<DropInfoDto> = listOf(),
     @SerialName("breath") val breath: Int,
+    @SerialName("max_spawn_light") val maxSpawnLight: Float = 1f,
 )

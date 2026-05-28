@@ -93,6 +93,10 @@ class BfsLightingSystem(
         return FireLightHandle(id, x, y)
     }
 
+    override fun getEffectiveBrightness(x: Int, y: Int, sunBrightness: Float): Float {
+        return grid.effective(x, y, sunBrightness)
+    }
+
     override fun dispose() {
         _gameWorld?.removeBlockPlacedListener(this)
         _overlay?.dispose()
