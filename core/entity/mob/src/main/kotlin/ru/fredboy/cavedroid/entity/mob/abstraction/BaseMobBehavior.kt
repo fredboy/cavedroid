@@ -80,7 +80,7 @@ abstract class BaseMobBehavior<MOB : Mob>(
         targetX: Float,
         targetY: Float,
     ): Boolean {
-        losStart.set(position.x, position.y)
+        losStart.set(position.x, position.y - height / 2f)
         losEnd.set(targetX, targetY)
         if (losStart.epsilonEquals(losEnd)) {
             return true
@@ -88,6 +88,12 @@ abstract class BaseMobBehavior<MOB : Mob>(
         losBlocked = false
         worldAdapter.getBox2dWorld().rayCast(losCallback, losStart, losEnd)
         return !losBlocked
+    }
+
+    private fun MOB.seesPlayer(playerAdapter: PlayerAdapter, worldAdapter: MobWorldAdapter): Boolean {
+        return hasLineOfSightTo(worldAdapter, playerAdapter.x, playerAdapter.y) ||
+            hasLineOfSightTo(worldAdapter, playerAdapter.x, playerAdapter.y - playerAdapter.height / 2f) ||
+            hasLineOfSightTo(worldAdapter, playerAdapter.x, playerAdapter.y + playerAdapter.height / 2f)
     }
 
     protected fun MOB.canStillTrackPlayer(
@@ -99,7 +105,7 @@ abstract class BaseMobBehavior<MOB : Mob>(
         val dx = playerAdapter.x - position.x
         val dy = playerAdapter.y - position.y
         val angleOk = !requireWalkableAngle || abs(dx) < 0.01 || abs(dy / dx) < 1.732f // arctan(60)
-        val reachable = angleOk && hasLineOfSightTo(worldAdapter, playerAdapter.x, playerAdapter.y)
+        val reachable = angleOk && seesPlayer(playerAdapter, worldAdapter)
 
         if (reachable) {
             lostSightElapsedSec = 0f
