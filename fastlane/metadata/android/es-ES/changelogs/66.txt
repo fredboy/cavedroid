@@ -1,0 +1,2 @@
+- Se corrigió un problema donde la arena y la grava no caían como se esperaba.
+- Mejoras menores y corrección de errores.
