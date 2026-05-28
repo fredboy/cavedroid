@@ -27,6 +27,12 @@ class ArcherMobBehavior :
         delta: Float,
     ) {
         if (playerAdapter.gameMode.isCreative() || position.dst(playerAdapter.x, playerAdapter.y) > TRIGGER_DISTANCE) {
+            lostSightElapsedSec = Float.MAX_VALUE
+            passiveBehavior.update(this, worldAdapter, playerAdapter, projectileAdapter, delta)
+            return
+        }
+
+        if (!canStillTrackPlayer(worldAdapter, playerAdapter, delta, requireWalkableAngle = false)) {
             passiveBehavior.update(this, worldAdapter, playerAdapter, projectileAdapter, delta)
             return
         }
@@ -54,7 +60,7 @@ class ArcherMobBehavior :
         }
 
         if (abs(position.x - playerAdapter.x) <= SHOOTING_RANGE &&
-            abs(position.y - playerAdapter.y) <= SHOOTING_RANGE / 2f
+            abs(position.y - playerAdapter.y) <= SHOOTING_RANGE
         ) {
             controlVector.x = 0f
             isPullingBow = true
@@ -74,7 +80,7 @@ class ArcherMobBehavior :
             projectileAdapter.addProjectile(
                 itemKey = "arrow",
                 damage = 4,
-                dropOnGround = MathUtils.randomBoolean(0.1f),
+                dropOnGround = MathUtils.randomBoolean(0.01f),
                 x = shooterX,
                 y = shooterY,
                 width = 1f,
@@ -86,8 +92,8 @@ class ArcherMobBehavior :
     }
 
     companion object {
-        private const val TRIGGER_DISTANCE = 16f
-        private const val SHOOTING_RANGE = 8f
+        private const val TRIGGER_DISTANCE = 32f
+        private const val SHOOTING_RANGE = 16f
         private const val ARROW_FORCE = 300f
         private const val GRAVITY_COMPENSATION = 0.1f
     }

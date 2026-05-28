@@ -252,6 +252,7 @@
     "animation_range": 15,
     "damage_to_player": 2,
     "takes_sun_damage": true,
+    "max_spawn_light": 0.5,
     "drop_info": [
       {
         "key": "rotten_flesh",
@@ -657,6 +658,7 @@
     "animation_range": 15,
     "damage_to_player": 2,
     "takes_sun_damage": true,
+    "max_spawn_light": 0.5,
     "drop_info": [
       {
         "key": "bone",

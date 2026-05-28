@@ -33,6 +33,7 @@ class MobParamsMapper @Inject constructor(
             damageToPlayer = dto.damageToPlayer,
             takesSunDamage = dto.takesSunDamage,
             maxBreath = dto.breath,
+            maxSpawnLight = dto.maxSpawnLight,
         )
     }
 

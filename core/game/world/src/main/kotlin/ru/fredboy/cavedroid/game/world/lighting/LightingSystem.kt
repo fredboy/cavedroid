@@ -18,4 +18,5 @@ interface LightingSystem : Disposable {
     fun createFurnaceLight(x: Float, y: Float): LightHandle
     fun createFireLight(x: Float, y: Float): LightHandle
     fun refreshChunks(chunks: Iterable<Pair<Int, Int>>)
+    fun getEffectiveBrightness(x: Int, y: Int, sunBrightness: Float): Float
 }

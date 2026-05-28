@@ -1,0 +1,4 @@
+- Nuevas mecánicas de fuego y una receta de yesca y acero. 
+- Se mejoró el comportamiento de los mobs: los mobs amistosos no aparecerán en los desiertos y los hostiles ahora tienen visibilidad y condiciones de aparición limitadas.
+- Arreglados diversos problemas de juego, incluyendo el movimiento de la cámara y la durabilidad de los objetos en el inventario.
+- Mejoradas las pistas del inventario para controles táctiles y la interacción con mobs. 

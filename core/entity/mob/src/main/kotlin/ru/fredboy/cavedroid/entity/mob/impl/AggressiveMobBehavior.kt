@@ -19,6 +19,12 @@ class AggressiveMobBehavior :
 
     override fun WalkingMob.updateMob(worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, projectileAdapter: ProjectileAdapter, delta: Float) {
         if (playerAdapter.gameMode.isCreative() || position.dst(playerAdapter.x, playerAdapter.y) > TRIGGER_DISTANCE) {
+            lostSightElapsedSec = Float.MAX_VALUE
+            passiveBehavior.update(this, worldAdapter, playerAdapter, projectileAdapter, delta)
+            return
+        }
+
+        if (!canStillTrackPlayer(worldAdapter, playerAdapter, delta, requireWalkableAngle = false)) {
             passiveBehavior.update(this, worldAdapter, playerAdapter, projectileAdapter, delta)
             return
         }
@@ -47,6 +53,6 @@ class AggressiveMobBehavior :
     }
 
     companion object {
-        private const val TRIGGER_DISTANCE = 16f
+        private const val TRIGGER_DISTANCE = 32f
     }
 }

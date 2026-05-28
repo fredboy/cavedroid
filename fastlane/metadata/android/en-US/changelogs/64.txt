@@ -1,0 +1,4 @@
+- Added fire mechanics and a new flint and steel recipe. 
+- Improved mob behavior: friendly mobs won't spawn in deserts, and hostile mobs now have limited visibility and spawning conditions.
+- Fixed various gameplay issues, including camera movement and item durability in the inventory.
+- Enhanced touch controls for inventory hints and improved mob interaction. 

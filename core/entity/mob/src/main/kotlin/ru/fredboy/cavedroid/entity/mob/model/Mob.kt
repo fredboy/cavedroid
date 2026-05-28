@@ -522,5 +522,8 @@ abstract class Mob(
         private const val SPLASH_TIMEOUT_MS = 750L
 
         private const val BOW_PULL_TIME_S = 1f
+
+        @JvmStatic
+        protected val BG_BODY_TINT = Color(0x888888 shl 8)
     }
 }

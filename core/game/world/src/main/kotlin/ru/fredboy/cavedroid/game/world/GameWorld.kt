@@ -349,6 +349,10 @@ class GameWorld @Inject constructor(
         skipNight = true
     }
 
+    fun getLightAt(x: Int, y: Int): Float {
+        return lightingSystem.getEffectiveBrightness(x, y, getSunlight())
+    }
+
     fun update(delta: Float) {
         currentGameTime += (delta * timeMultiplier)
         totalGameTimeSec += (delta * timeMultiplier)

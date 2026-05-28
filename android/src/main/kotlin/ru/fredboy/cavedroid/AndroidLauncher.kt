@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import co.touchlab.kermit.Severity
 import com.badlogic.gdx.Files
 import com.badlogic.gdx.backends.android.AndroidApplication
@@ -64,7 +65,18 @@ class AndroidLauncher : AndroidApplication() {
 
     override fun onResume() {
         super.onResume()
+        pinScreenBrightness()
         adController.resume()
+    }
+
+    private fun pinScreenBrightness() {
+        val systemBrightness = try {
+            Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS)
+        } catch (_: Settings.SettingNotFoundException) {
+            return
+        }
+        val normalized = (systemBrightness / 255f).coerceIn(0f, 1f)
+        window.attributes = window.attributes.apply { screenBrightness = normalized }
     }
 
     override fun onPause() {

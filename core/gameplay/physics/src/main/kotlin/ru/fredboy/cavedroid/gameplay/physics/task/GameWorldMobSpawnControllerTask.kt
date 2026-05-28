@@ -7,6 +7,7 @@ import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
+import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobFactory
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
@@ -49,7 +50,8 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
         var spawnCount = 0
         var caveSpawns = 0
         for (x in 0..<gameWorld.width step SPAWN_CHUNK_SIZE) {
-            if (canSpawnSurface) {
+            val isDayInDesert = gameWorld.isDayTime() && gameWorld.getBiomeAt(x) == Biome.DESERT
+            if (canSpawnSurface && !isDayInDesert) {
                 val surfaceX = x + MathUtils.random(SPAWN_CHUNK_SIZE - 1)
                 if (trySpawnAtSurface(surfaceX, surfaceCandidates)) {
                     logger.d { "Spawned on surface at x: $surfaceX" }
@@ -120,6 +122,7 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
         val spawnPosX = spawnX.toFloat()
         val spawnPosY = floorY.toFloat() - params.height / 2f
         if (!canFitAt(spawnPosX, spawnPosY, params)) return false
+        if (gameWorld.getLightAt(spawnX, floorY) > params.maxSpawnLight) return false
 
         mobFactory.create(spawnPosX, spawnPosY, params.key)
         return true
@@ -147,7 +150,7 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
         private const val TAG = "GameWorldMobSpawnControllerTask"
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
-        private const val SPAWN_CHUNK_SIZE = 16
+        private const val SPAWN_CHUNK_SIZE = 32
         private const val CAVE_SCAN_ATTEMPTS = 8
         private const val CAVE_FLOOR_SCAN_DEPTH = 8
 

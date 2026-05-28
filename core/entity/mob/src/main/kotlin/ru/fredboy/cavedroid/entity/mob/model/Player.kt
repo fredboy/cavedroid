@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.entity.mob.model
 
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
@@ -254,7 +253,7 @@ class Player(
 
         val rightHandAnim = getRightHandAnim(delta)
 
-        val backgroundTintColor = tintColor.cpy().sub(Color(0xAAAAAA shl 8))
+        val backgroundTintColor = tintColor.cpy().sub(BG_BODY_TINT)
 
         if (looksLeft()) {
             backHandAnim = rightHandAnim

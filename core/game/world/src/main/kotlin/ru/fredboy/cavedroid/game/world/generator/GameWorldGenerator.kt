@@ -2,7 +2,6 @@ package ru.fredboy.cavedroid.game.world.generator
 
 import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.items.model.block.Block
-import ru.fredboy.cavedroid.domain.items.model.item.isNone
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.model.Biome
 import kotlin.math.abs
@@ -435,8 +434,8 @@ class GameWorldGenerator(
         }
 
         for (x in 0 until config.width) {
-            for (y in heights[x] until config.height - 1) {
-                if (!caveMap[x][y]) {
+            for (y in config.seaLevel until config.height - 1) {
+                if (!caveMap[x][y] && !foreMap[x][y].isFluid()) {
                     val filler = random.nextDouble()
                     foreMap[x][y] = when {
                         filler < 0.95 -> itemsRepository.fallbackBlock
