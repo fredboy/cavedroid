@@ -150,7 +150,7 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
         private const val TAG = "GameWorldMobSpawnControllerTask"
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
-        private const val SPAWN_CHUNK_SIZE = 16
+        private const val SPAWN_CHUNK_SIZE = 32
         private const val CAVE_SCAN_ATTEMPTS = 8
         private const val CAVE_FLOOR_SCAN_DEPTH = 8
 
