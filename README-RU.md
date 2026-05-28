@@ -14,13 +14,13 @@ CaveDroid — это **2D-игра в стиле Minecraft** для Android, Des
 <details>
   <summary>Скриншоты</summary>
 
-![Скриншот 1](fastlane/metadata/android/en-US/images/phoneScreenshots/1.png)
-![Скриншот 2](fastlane/metadata/android/en-US/images/phoneScreenshots/2.png)
-![Скриншот 3](fastlane/metadata/android/en-US/images/phoneScreenshots/3.png)
-![Скриншот 4](fastlane/metadata/android/en-US/images/phoneScreenshots/4.png)
-![Скриншот 5](fastlane/metadata/android/en-US/images/phoneScreenshots/5.png)
-![Скриншот 6](fastlane/metadata/android/en-US/images/phoneScreenshots/6.png)
-![Скриншот 7](fastlane/metadata/android/en-US/images/phoneScreenshots/7.png)
+![Скриншот 1](fastlane/metadata/android/ru-RU/images/phoneScreenshots/1.png)
+![Скриншот 2](fastlane/metadata/android/ru-RU/images/phoneScreenshots/2.png)
+![Скриншот 3](fastlane/metadata/android/ru-RU/images/phoneScreenshots/3.png)
+![Скриншот 4](fastlane/metadata/android/ru-RU/images/phoneScreenshots/4.png)
+![Скриншот 5](fastlane/metadata/android/ru-RU/images/phoneScreenshots/5.png)
+![Скриншот 6](fastlane/metadata/android/ru-RU/images/phoneScreenshots/6.png)
+![Скриншот 7](fastlane/metadata/android/ru-RU/images/phoneScreenshots/7.png)
 
 </details>
 
