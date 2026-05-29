@@ -60,6 +60,7 @@ private fun attachFieldListeners(field: TextField, viewModel: NewGameMenuViewMod
             viewModel.inlineTextInput.trigger(
                 initialText = field.text,
                 initialCursor = field.cursorPosition,
+                buttonText = viewModel.getLocalizedString("done"),
             ) { newText, newCursor ->
                 viewModel.worldName = newText
                 field.text = newText
