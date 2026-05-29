@@ -16,7 +16,7 @@ abstract class AbstractInventoryWindow {
 
     var selectItemPointer: Int = -1
 
-    fun onLeftCLick(
+    open fun onLeftCLick(
         items: MutableList<InventoryItem>,
         itemsRepository: ItemsRepository,
         index: Int,
