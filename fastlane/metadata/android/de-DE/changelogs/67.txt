@@ -1,0 +1,2 @@
+- Fehler behoben, dass Pfeiltreffer nicht in den Statistiken gezählt wurden.
+- Berührungsempfindlichkeit beim Ziehen verringert für bessere Kontrolle.

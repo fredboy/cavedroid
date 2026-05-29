@@ -1,0 +1,2 @@
+- Se corrigió el conteo de golpes de flechas en las estadísticas.
+- Se redujo la sensibilidad del arrastre táctil para un mejor control.
