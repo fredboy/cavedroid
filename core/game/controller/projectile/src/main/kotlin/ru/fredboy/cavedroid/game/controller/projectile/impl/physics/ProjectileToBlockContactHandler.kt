@@ -40,6 +40,8 @@ class ProjectileToBlockContactHandler @Inject constructor(
                 mobKey = "chicken",
             )
         }
+
+        onTargetHit?.invoke(this, entityB)
     }
 
     override fun Projectile.handleEndContact(contact: Contact, entityB: Block) = Unit

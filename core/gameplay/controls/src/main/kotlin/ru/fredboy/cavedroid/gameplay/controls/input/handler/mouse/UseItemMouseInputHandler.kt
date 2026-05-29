@@ -12,6 +12,7 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
+import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.projectile.model.Projectile
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
@@ -192,6 +193,13 @@ class UseItemMouseInputHandler @Inject constructor(
                 width = 1f,
                 height = 0.25f,
                 dropOnGround = true,
+                onTargetHit = onTargetHit@{ projectile, target ->
+                    if (target !is Mob) {
+                        return@onTargetHit
+                    }
+
+                    mobController.player.onMobAttacked?.invoke(target, projectile.damage)
+                },
             ),
             x = mobController.player.position.x + mobController.player.direction.basis,
             y = mobController.player.position.y - mobController.player.height / 3f,
