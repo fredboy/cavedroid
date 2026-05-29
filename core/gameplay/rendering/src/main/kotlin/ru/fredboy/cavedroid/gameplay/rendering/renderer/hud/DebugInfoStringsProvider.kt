@@ -45,7 +45,7 @@ class DebugInfoStringsProvider @Inject constructor(
             "Player fly mode: ${player.isFlyMode}",
             "Static bodies: ${gameWorldSolidBlockBodiesManager.bodies.size}",
             "Fixtures: ${gameWorld.world.fixtureCount}",
-            "Projectiles: ${projectileController.projectiles.size}",
+            "Projectiles: ${projectileController.projectiles.count()}",
         )
     }
 }

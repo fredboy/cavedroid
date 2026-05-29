@@ -1,0 +1,2 @@
+- Fixed arrow hits not counting in stats.
+- Decreased touch drag sensitivity for better control.

@@ -22,6 +22,7 @@ class Projectile(
     val width: Float,
     val height: Float,
     val dropOnGround: Boolean,
+    val onTargetHit: ((projectile: Projectile, target: Any) -> Unit)? = null,
 ) : Disposable {
 
     private var _body: Body? = null

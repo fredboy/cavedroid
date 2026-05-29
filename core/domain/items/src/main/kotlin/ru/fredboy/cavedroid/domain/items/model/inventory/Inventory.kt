@@ -47,7 +47,7 @@ class Inventory @JvmOverloads constructor(
             endIndex = size - 1,
         )
 
-        _items[0] = item.toInventoryItem(1, (item as? Item.Durable)?.durability ?: 1)
+        _items[0] = item.toInventoryItem(item.params.maxStack, (item as? Item.Durable)?.durability ?: 1)
 
         for (i in _items.indices) {
             onItemAddedListener?.invoke(items[i], i)
