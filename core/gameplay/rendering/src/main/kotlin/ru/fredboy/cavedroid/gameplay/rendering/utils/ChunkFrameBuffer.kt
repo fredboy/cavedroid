@@ -46,15 +46,15 @@ class ChunkFrameBuffer<Renderer : RenderingTool>(
     private val chunkWorldY = chunkY * CHUNK_SIZE
 
     private val onBlockPlacedListener = OnBlockPlacedListener { _, x, y, _ ->
-        if (y < chunkWorldY || y >= chunkWorldY + CHUNK_SIZE) return@OnBlockPlacedListener
-        if (wrapsIntoRange(x, chunkWorldX, CHUNK_SIZE, gameWorld.width)) {
+        if (y < chunkWorldY - 1 || y >= chunkWorldY + CHUNK_SIZE + 1) return@OnBlockPlacedListener
+        if (wrapsIntoRange(x, chunkWorldX - 1, chunkWorldX + CHUNK_SIZE + 1, CHUNK_SIZE, gameWorld.width)) {
             dirty = true
         }
     }
 
     private val furnaceStateChangedListener = FurnaceStateChangedListener { x, y, _, _ ->
-        if (y < chunkWorldY || y >= chunkWorldY + CHUNK_SIZE) return@FurnaceStateChangedListener
-        if (wrapsIntoRange(x, chunkWorldX, CHUNK_SIZE, gameWorld.width)) {
+        if (y < chunkWorldY - 1 || y >= chunkWorldY + CHUNK_SIZE + 1) return@FurnaceStateChangedListener
+        if (wrapsIntoRange(x, chunkWorldX - 1, chunkWorldX + CHUNK_SIZE + 1, CHUNK_SIZE, gameWorld.width)) {
             dirty = true
         }
     }
