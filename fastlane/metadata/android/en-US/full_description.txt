@@ -1,17 +1,30 @@
-A pocket-sized 2D pixel sandbox where every world is yours to mine, build, and survive in.
+A pocket-sized 2D pixel sandbox where every world is yours to mine, build,
+and survive in. Free to play. Plays fully offline. Open source.
 
-Wander procedurally generated landscapes that wrap around the horizon. Cross grassy meadows, climb forested hills, and descend into torchlit caves. Day turns to night, monsters come out, and the deeper you dig, the harder it gets to make it home.
+Wander procedurally generated landscapes that wrap around the horizon.
+Cross grassy meadows, climb forested hills, and descend into torchlit
+caves. Day turns to night, monsters come out, and the deeper you dig,
+the harder it gets to make it home.
 
 THINGS YOU CAN DO
-Break and place any block. Chop trees, mine coal, iron, gold, and diamond. Craft tools, armor, torches, food, and weapons — swing a sword up close or pick off skeletons at range with a bow. Smelt ores. Hunt mobs, dodge lava in the deep. Build a shelter, a fortress, a sky-bridge — whatever you can imagine.
+Break and place any block. Chop trees, mine coal, iron, gold, and
+diamond. Craft tools, armor, torches, food, and weapons — swing a sword
+up close or pick off skeletons at range with a bow. Smelt ores. Hunt
+mobs, dodge lava in the deep. Build a shelter, a fortress, a sky-bridge
+— whatever you can imagine on a grid.
 
 FEATURES
-- Procedurally generated worlds with biomes, hills, caves, and hidden ores
-- Day/night cycle with dynamic lighting — torches actually light up the dark
-- Crafting recipes for tools, armor, weapons, food, and decorative blocks
-- Melee and ranged combat — swords, bow and arrows
-- Friendly animals and hostile mobs with their own behaviors and drops
-- Physics-based fluids — water flows, lava burns
-- Full survival loop: inventory, hunger, health, armor
+► Procedurally generated worlds with biomes, hills, caves, and hidden ores
+► Day/night cycle with dynamic lighting — torches actually light up the dark
+► Crafting recipes for tools, armor, weapons, food, and decorative blocks
+► Melee and ranged combat — swords, bow and arrows
+► Friendly animals and hostile mobs with their own behaviors and drops
+► Physics-based fluids — water flows, lava burns
+► Full survival loop: inventory, hunger, health, armor
+► Touch-friendly controls
+
+In active development — new features land with every release. Found a
+bug or have an idea? Open an issue on GitHub:
+https://github.com/fredboy/cavedroid
 
 Enjoy the dig!
