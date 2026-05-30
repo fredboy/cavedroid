@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.gameplay.rendering.renderer.world
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
@@ -251,7 +252,9 @@ abstract class BlocksRenderer(
         while (iterator.hasNext()) {
             val entry = iterator.next()
             if (entry.key.first !in keepX || entry.key.second !in keepY) {
-                entry.value.dispose()
+                Gdx.app.postRunnable {
+                    entry.value.dispose()
+                }
                 iterator.remove()
             }
         }
