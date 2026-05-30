@@ -27,7 +27,18 @@ interface WorldBlockStore : Disposable {
      * [Int.MAX_VALUE] (there is no period). Use [isInfinite] to branch on topology rather than
      * comparing against this value.
      */
+    @Deprecated(message = "Do not use! Use start/end to compare against world bounds")
     val width: Int
+
+    /**
+     * The minimal x coordinate of the world
+     */
+    val start: Int
+
+    /**
+     * The maximum x coordinate of the world
+     */
+    val end: Int
 
     val height: Int
 

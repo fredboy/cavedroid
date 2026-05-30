@@ -176,14 +176,21 @@ class Drop(
             body.setTransform(position.x, overlappingRect.y - DROP_SIZE / 2f, 0f)
         }
 
+        wrapAroundLoopedWorld(dropWorldAdapter)
+
+        if (position.y > dropWorldAdapter.height) {
+            isPickedUp = true
+        }
+    }
+    private fun wrapAroundLoopedWorld(dropWorldAdapter: DropWorldAdapter) {
+        if (dropWorldAdapter.isInfinite) {
+            return
+        }
+
         if (position.x > dropWorldAdapter.width) {
             body.setTransform(Vector2(position.x - dropWorldAdapter.width, position.y), 0f)
         } else if (position.x < 0) {
             body.setTransform(Vector2(position.x + dropWorldAdapter.width, position.y), 0f)
-        }
-
-        if (position.y > dropWorldAdapter.height) {
-            isPickedUp = true
         }
     }
 

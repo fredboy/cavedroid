@@ -96,8 +96,8 @@ class ChunkGenerator(
         val bandStart = startX - OVERSCAN
         val bandW = CHUNK_W + 2 * OVERSCAN
 
-        val foreBand = Array(bandW) { Array(height) { fallback } }
-        val backBand = Array(bandW) { Array(height) { fallback } }
+        val foreBand = Array(bandW) { Array(height) { fallback as Block } }
+        val backBand = Array(bandW) { Array(height) { fallback as Block } }
         val surfaceHeights = IntArray(bandW) { surfaceHeight(bandStart + it) }
         val bandBiomes = Array(bandW) { biomeAt(bandStart + it) }
 

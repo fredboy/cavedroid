@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gameplay.physics.task
 
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.UniqueQueue
+import ru.fredboy.cavedroid.common.utils.floorDiv
 import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.items.model.item.isNone
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
@@ -45,7 +46,7 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
     }
 
     private fun markChunksDirtyIfNeed(x: Int, y: Int, reason: String) {
-        val chunkX = x - (x % CHUNK_SIZE)
+        val chunkX = (x floorDiv CHUNK_SIZE) * CHUNK_SIZE
         val chunkY = y - (y % CHUNK_SIZE)
         val coordinates = chunkX to chunkY
 

@@ -34,7 +34,12 @@ class FireController @Inject constructor(
     }
 
     private fun key(x: Int, y: Int, layer: Layer): Long {
-        val wrappedX = ((x % gameWorld.width) + gameWorld.width) % gameWorld.width
+        val wrappedX = if (!gameWorld.isInfinite) {
+            ((x % gameWorld.width) + gameWorld.width) % gameWorld.width
+        } else {
+            x
+        }
+
         // 16 bits per axis is plenty for any sane world, and `layer.ordinal`
         // fits in the high byte without overlapping any of them.
         return (layer.ordinal.toLong() shl 48) or

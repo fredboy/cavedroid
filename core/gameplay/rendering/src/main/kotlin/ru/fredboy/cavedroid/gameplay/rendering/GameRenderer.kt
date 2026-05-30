@@ -133,6 +133,11 @@ class GameRenderer @Inject constructor(
         } else {
             updateStaticCameraPositionToPlayer()
         }
+        updateCameraContext()
+        camera.update()
+    }
+
+    private fun updateCameraContext() {
         gameContextRepository.getCameraContext().viewport.apply {
             x = hudCamera.position.x - hudCamera.viewportWidth / 2
             y = hudCamera.position.y - hudCamera.viewportHeight / 2
@@ -140,7 +145,6 @@ class GameRenderer @Inject constructor(
             height = hudCamera.viewportHeight
         }
         gameContextRepository.getCameraContext().visibleWorld.set(getVisibleWorldRect())
-        camera.update()
     }
 
     private fun getVisibleWorldRect(): Rectangle {
@@ -292,6 +296,7 @@ class GameRenderer @Inject constructor(
 
     fun resetCameraToPlayer() {
         updateStaticCameraPositionToPlayer()
+        updateCameraContext()
         camera.update()
     }
 

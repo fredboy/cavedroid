@@ -21,6 +21,8 @@ class FiniteLoopingBlockStore(
 ) : WorldBlockStore {
 
     override val width: Int = generatorConfig.width
+    override val start: Int = 0
+    override val end: Int = width - 1
     override val height: Int = generatorConfig.height
     override val isInfinite: Boolean = false
 

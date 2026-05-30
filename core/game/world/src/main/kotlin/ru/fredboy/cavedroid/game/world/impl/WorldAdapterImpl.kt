@@ -36,8 +36,12 @@ internal class WorldAdapterImpl @Inject constructor(
     override val height: Int
         get() = gameWorld.height
 
+    @Deprecated("Use start/end")
     override val width: Int
         get() = gameWorld.width
+
+    override val isInfinite: Boolean
+        get() = gameWorld.isInfinite
 
     override fun setForegroundBlock(x: Int, y: Int, block: Block) {
         gameWorld.setForeMap(x, y, block)

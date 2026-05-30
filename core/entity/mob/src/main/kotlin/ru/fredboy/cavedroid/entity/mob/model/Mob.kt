@@ -384,6 +384,18 @@ abstract class Mob(
             velocity.x = 0f
         }
 
+        wrapAroundLoopedWorld(mobWorldAdapter)
+
+        if (position.y > mobWorldAdapter.height) {
+            kill()
+        }
+    }
+
+    private fun wrapAroundLoopedWorld(mobWorldAdapter: MobWorldAdapter) {
+        if (mobWorldAdapter.isInfinite) {
+            return
+        }
+
         val worldWidth = mobWorldAdapter.width.toFloat()
         val seamDeltaX = when {
             position.x > worldWidth -> -worldWidth
@@ -397,10 +409,6 @@ abstract class Mob(
                 aimX += seamDeltaX
                 cursorX += seamDeltaX
             }
-        }
-
-        if (position.y > mobWorldAdapter.height) {
-            kill()
         }
     }
 

@@ -35,6 +35,8 @@ class InfiniteBlockStore(
 
     override val width: Int = Int.MAX_VALUE
     override val height: Int = generatorConfig.height
+    override val start: Int = Int.MIN_VALUE
+    override val end: Int = Int.MAX_VALUE
     override val isInfinite: Boolean = true
 
     override val foreMap: Array<Array<Block>>

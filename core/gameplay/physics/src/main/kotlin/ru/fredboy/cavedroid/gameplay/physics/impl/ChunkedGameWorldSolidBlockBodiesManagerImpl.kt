@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.ChainShape
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.effectiveMirrorBand
+import ru.fredboy.cavedroid.common.utils.floorDiv
 import ru.fredboy.cavedroid.common.utils.mirrorSidesFor
 import ru.fredboy.cavedroid.common.utils.neighbourCoordinates
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -87,7 +88,7 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
     }
 
     private fun updateChunk(blockX: Int, blockY: Int) {
-        val chunkX1 = blockX - blockX % CHUNK_SIZE
+        val chunkX1 = (blockX floorDiv CHUNK_SIZE) * CHUNK_SIZE
         val chunkY1 = blockY - blockY % CHUNK_SIZE
 
         _bodies.remove(chunkX1 to chunkY1)?.let { body ->

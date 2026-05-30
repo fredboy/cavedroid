@@ -38,7 +38,17 @@ class GameWorld @Inject constructor(
     val backMap: Array<Array<Block>> get() = blockStore.backMap
     val biomes: Array<Biome> get() = blockStore.biomes
 
-    val width: Int get() = blockStore.width
+    val start: Int get() = blockStore.start
+    val end: Int get() = blockStore.end
+
+    @Deprecated("Use start/end")
+    val width: Int get() = if (!isInfinite) {
+        blockStore.width
+    } else {
+        logger.v { "Trying to get width of an infinite world" }
+        blockStore.width
+    }
+
     val height: Int get() = blockStore.height
     val isInfinite: Boolean get() = blockStore.isInfinite
 

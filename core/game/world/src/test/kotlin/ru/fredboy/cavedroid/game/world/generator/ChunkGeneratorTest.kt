@@ -2,12 +2,12 @@ package ru.fredboy.cavedroid.game.world.generator
 
 import io.mockk.every
 import io.mockk.mockk
-import ru.fredboy.cavedroid.domain.items.model.block.Block
-import ru.fredboy.cavedroid.domain.items.model.block.CommonBlockParams
-import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.items.model.block.CommonBlockParams
+import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 
 class ChunkGeneratorTest {
 
