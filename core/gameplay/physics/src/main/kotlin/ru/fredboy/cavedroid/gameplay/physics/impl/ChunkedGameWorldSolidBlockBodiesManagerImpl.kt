@@ -31,6 +31,11 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
         get() = effectiveMirrorBand(MIRROR_BAND_BLOCKS, gameWorld.width)
 
     override fun initialize() {
+        if (gameWorld.isInfinite) {
+            // Infinite worlds create/destroy bodies lazily as chunks stream in/out (see M4 wiring).
+            return
+        }
+
         for (x in 0..<gameWorld.width step CHUNK_SIZE) {
             for (y in 0..<gameWorld.height step CHUNK_SIZE) {
                 updateChunk(x, y)

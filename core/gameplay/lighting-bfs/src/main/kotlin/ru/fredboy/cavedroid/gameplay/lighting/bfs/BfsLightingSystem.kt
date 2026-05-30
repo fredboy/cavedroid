@@ -27,12 +27,6 @@ class BfsLightingSystem(
     private val gameWorld: GameWorld
         get() = requireNotNull(_gameWorld)
 
-    private val grid: LightGrid
-        get() = requireNotNull(_grid)
-
-    private val overlay: LightingOverlayRenderer
-        get() = requireNotNull(_overlay)
-
     override val chunkSize: Int = 1
 
     override fun attachToGameWorld(gameWorld: GameWorld) {
@@ -42,19 +36,29 @@ class BfsLightingSystem(
         }
 
         _gameWorld = gameWorld
+
+        if (gameWorld.isInfinite) {
+            // TODO(M5): replace with a windowed light grid that follows the player. For now infinite
+            // worlds run unlit (full daylight brightness) rather than allocating a grid for the
+            // whole (unbounded) world.
+            logger.w { "BfsLightingSystem running in degraded mode for infinite world" }
+            return
+        }
+
         _grid = LightGrid(gameWorld.width, gameWorld.height).also { lightGrid ->
             lightGrid.rebuildAll(
                 isOpaque = { x, y -> isOpaque(gameWorld, x, y) },
                 blockEmission = { x, y -> emissionAt(gameWorld, x, y) },
             )
         }
-        _overlay = LightingOverlayRenderer(gameContextRepository, gameWorld, grid)
+        _overlay = LightingOverlayRenderer(gameContextRepository, gameWorld, requireNotNull(_grid))
 
         gameWorld.addBlockPlacedListener(this)
     }
 
     override fun onBlockPlaced(block: Block, x: Int, y: Int, layer: Layer) {
         val world = _gameWorld ?: return
+        val grid = _grid ?: return
         grid.onCellChanged(
             x = x,
             y = y,
@@ -70,12 +74,13 @@ class BfsLightingSystem(
     override fun refreshChunks(chunks: Iterable<Pair<Int, Int>>) = Unit
 
     override fun render(camera: OrthographicCamera) {
-        if (_gameWorld == null) return
+        val overlay = _overlay ?: return
         overlay.render(camera, gameWorld.getSunlight())
     }
 
     override fun isMobExposedToSun(mob: Mob): Boolean {
         val world = _gameWorld ?: return false
+        val grid = _grid ?: return false
         return grid.isSkyExposed(mob.mapX, mob.upperMapY.coerceIn(0, world.height - 1))
     }
 
@@ -94,6 +99,7 @@ class BfsLightingSystem(
     }
 
     override fun getEffectiveBrightness(x: Int, y: Int, sunBrightness: Float): Float {
+        val grid = _grid ?: return sunBrightness
         return grid.effective(x, y, sunBrightness)
     }
 

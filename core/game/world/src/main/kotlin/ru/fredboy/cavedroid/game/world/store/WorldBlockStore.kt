@@ -56,6 +56,17 @@ interface WorldBlockStore : Disposable {
 
     fun getBiomeAt(x: Int): Biome
 
-    /** Lifecycle hook so streaming stores can load/evict chunks around the player. No-op for finite worlds. */
-    fun onPlayerMoved(playerX: Int) = Unit
+    /**
+     * Per-frame hook (called from `GameWorld.update`). Streaming stores load/evict chunks around the
+     * current view here. No-op for finite worlds.
+     */
+    fun update() = Unit
+
+    /** Registers a listener notified when chunks are loaded/unloaded. No-op for finite worlds. */
+    fun addChunkListener(listener: ChunkListener) = Unit
+
+    fun removeChunkListener(listener: ChunkListener) = Unit
+
+    /** Iterates the chunk indices currently resident in memory. No-op for finite worlds. */
+    fun forEachLoadedChunk(action: (chunkX: Int) -> Unit) = Unit
 }

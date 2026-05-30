@@ -60,6 +60,21 @@ internal class WorldAdapterImpl @Inject constructor(
     }
 
     override fun findSpawnPoint(): Vector2 {
+        val charParams = mobParamsRepository.getMobParamsByKey("char")
+
+        if (gameWorld.isInfinite) {
+            // Infinite worlds spawn at the origin column; the streaming store keeps it resident.
+            val spawnX = 0
+            var surfaceY = gameWorld.height - 1
+            for (sy in 0 until gameWorld.height) {
+                if (getForegroundBlock(spawnX, sy).params.hasCollision) {
+                    surfaceY = sy
+                    break
+                }
+            }
+            return Vector2(spawnX + .5f - (charParams?.width ?: 1f) / 2, surfaceY - (charParams?.height ?: 1f))
+        }
+
         var x = width / 2
         var y = 0
 
@@ -80,7 +95,6 @@ internal class WorldAdapterImpl @Inject constructor(
             }
         }
 
-        val charParams = mobParamsRepository.getMobParamsByKey("char")
         return Vector2(x + .5f - (charParams?.width ?: 1f) / 2, y - (charParams?.height ?: 1f))
     }
 

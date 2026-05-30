@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.gdx.game.di
 
-import co.touchlab.kermit.Logger
 import com.badlogic.gdx.utils.TimeUtils
 import dagger.Module
 import dagger.Provides
@@ -43,6 +42,7 @@ import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystemFactory
 import ru.fredboy.cavedroid.game.world.store.FiniteLoopingBlockStore
+import ru.fredboy.cavedroid.game.world.store.InfiniteBlockStore
 import ru.fredboy.cavedroid.game.world.store.WorldBlockStore
 import ru.fredboy.cavedroid.gameplay.physics.action.growblock.IGrowBlockAction
 import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldGrowBlocksControllerTask
@@ -279,18 +279,12 @@ object GameModule {
                 initialBiomes = mapData?.biomes,
             )
 
-            WorldType.INFINITE -> {
-                // TODO(M3): build the streaming InfiniteBlockStore. Until then, fall back to a
-                // finite looping world so the menu option does not crash.
-                Logger.withTag("GameModule").w { "Infinite world not yet implemented; using looping world" }
-                FiniteLoopingBlockStore(
-                    itemsRepository = itemsRepository,
-                    generatorConfig = generatorConfig,
-                    initialForeMap = mapData?.foreMap,
-                    initialBackMap = mapData?.backMap,
-                    initialBiomes = mapData?.biomes,
-                )
-            }
+            WorldType.INFINITE -> InfiniteBlockStore(
+                itemsRepository = itemsRepository,
+                generatorConfig = generatorConfig,
+                gameContextRepository = gameContextRepository,
+                // TODO(M7): wire chunkLoader/chunkPersister to per-chunk save files.
+            )
         }
 
         return GameWorld(
