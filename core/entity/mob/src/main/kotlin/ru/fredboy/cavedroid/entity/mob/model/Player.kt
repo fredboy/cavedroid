@@ -8,6 +8,7 @@ import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.common.utils.applyOrigin
 import ru.fredboy.cavedroid.common.utils.drawSprite
+import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -67,8 +68,8 @@ class Player(
     var holdAim = true
     var aimToPlayer = Vector2()
 
-    val selectedX get() = floor(cursorX).toInt()
-    val selectedY get() = cursorY.toInt()
+    val selectedX get() = cursorX.floorToInt()
+    val selectedY get() = cursorY.floorToInt()
 
     var controlMode = ControlMode.CURSOR
     var blockDamage = 0f

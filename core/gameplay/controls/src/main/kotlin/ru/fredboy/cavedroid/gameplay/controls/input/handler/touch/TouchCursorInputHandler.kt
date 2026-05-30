@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.api.OnboardingEvents
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.common.utils.takeIfTrue
 import ru.fredboy.cavedroid.domain.assets.repository.BlockActionSoundAssetsRepository
@@ -320,9 +321,9 @@ class TouchCursorInputHandler @Inject constructor(
 
         player.headRotation = getPlayerHeadRotation(worldX, worldY)
 
-        if (worldX.toInt() < player.position.x.toInt()) {
+        if (worldX.floorToInt() < player.position.x.floorToInt()) {
             player.direction = Direction.LEFT
-        } else if (worldX.toInt() > player.position.x.toInt()) {
+        } else if (worldX.floorToInt() > player.position.x.floorToInt()) {
             player.direction = Direction.RIGHT
         }
     }

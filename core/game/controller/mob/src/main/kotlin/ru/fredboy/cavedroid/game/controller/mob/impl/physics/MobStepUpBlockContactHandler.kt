@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.game.controller.mob.impl.physics
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Contact
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.floor
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.abstraction.AbstractContactHandler
 import ru.fredboy.cavedroid.domain.world.model.ContactSensorType
@@ -91,8 +92,8 @@ class MobStepUpBlockContactHandler @Inject constructor() : AbstractContactHandle
     private fun Mob.getBlockCoordinates(contact: Contact, block: Block): Pair<Int, Int> {
         val horizontalPrecision = CONTACT_PRECISION * if (controlVector.x < 0f) -1 else 1
         return contact.worldManifold.points.first().let { vec ->
-            val x = (vec.x + horizontalPrecision).toInt()
-            val y = (vec.y - block.params.collisionMargins.top + CONTACT_PRECISION).toInt()
+            val x = (vec.x + horizontalPrecision).floor.toInt()
+            val y = (vec.y - block.params.collisionMargins.top + CONTACT_PRECISION).floor.toInt()
             x to y
         }
     }

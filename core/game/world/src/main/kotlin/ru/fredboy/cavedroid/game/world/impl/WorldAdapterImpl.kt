@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.World
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.floor
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
@@ -136,8 +137,8 @@ internal class WorldAdapterImpl @Inject constructor(
     }
 
     override fun getClimbable(hitbox: Rectangle): Block.Climbable? {
-        val (startX, endX) = hitbox.x.toInt() to (hitbox.x + hitbox.width).toInt()
-        val (startY, endY) = hitbox.y.toInt() to (hitbox.y + hitbox.height).toInt()
+        val (startX, endX) = hitbox.x.floor.toInt() to (hitbox.x + hitbox.width).floor.toInt()
+        val (startY, endY) = hitbox.y.floor.toInt() to (hitbox.y + hitbox.height).floor.toInt()
 
         var medium: Block.Climbable? = null
         for (x in startX..endX) {

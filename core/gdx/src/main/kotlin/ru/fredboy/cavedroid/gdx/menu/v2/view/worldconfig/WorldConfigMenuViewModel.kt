@@ -14,6 +14,8 @@ import ru.fredboy.cavedroid.common.model.WorldSize
 import ru.fredboy.cavedroid.common.model.WorldType
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.common.utils.WorldNameSanitizer
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
+import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
 
@@ -24,6 +26,8 @@ class WorldConfigMenuViewModel(
     private val worldName: String,
     private val gameMode: GameMode,
     private val seed: Long,
+    private val saveDataRepository: SaveDataRepository,
+    private val applicationContextRepository: ApplicationContextRepository,
     baseViewModelDependencies: BaseViewModelDependencies,
 ) : BaseViewModel(baseViewModelDependencies) {
 
@@ -58,7 +62,11 @@ class WorldConfigMenuViewModel(
                 applicationController.startGame(
                     StartGameConfig.New(
                         worldName = worldName,
-                        saveDirectory = worldNameSanitizer.sanitizeWorldName(worldName),
+                        saveDirectory = saveDataRepository.getActualSaveDirName(
+                            gameDataFolder = applicationContextRepository.getGameDirectory(),
+                            saveGameDirectory = worldNameSanitizer.sanitizeWorldName(worldName),
+                            overwrite = false,
+                        ),
                         gameMode = gameMode,
                         worldSize = size,
                         seed = seed,

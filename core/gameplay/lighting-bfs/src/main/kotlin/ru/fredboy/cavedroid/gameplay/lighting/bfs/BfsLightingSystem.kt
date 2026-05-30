@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gameplay.lighting.bfs
 
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.physics.box2d.Body
+import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.lighting.LightHandle
@@ -105,7 +106,7 @@ class BfsLightingSystem(
 
     private fun cameraCenterX(): Int {
         val visible = gameContextRepository.getCameraContext().visibleWorld
-        return (visible.x + visible.width / 2f).toInt()
+        return (visible.x + visible.width / 2f).floorToInt()
     }
 
     override fun recalculate() = Unit
@@ -201,7 +202,7 @@ class BfsLightingSystem(
         private fun applyToGrid() {
             val currentGrid = _grid ?: return
             if (active) {
-                currentGrid.setTransientEmitter(id, posX.toInt(), posY.toInt(), FURNACE_LEVEL)
+                currentGrid.setTransientEmitter(id, posX.floorToInt(), posY.toInt(), FURNACE_LEVEL)
             } else {
                 currentGrid.clearTransientEmitter(id)
             }

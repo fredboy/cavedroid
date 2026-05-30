@@ -64,6 +64,7 @@ class ChunkGenerator(
 
     private val heightNoise = PerlinNoise(Random(config.seed))
     private val caveNoise = PerlinNoise(Random(config.seed xor CAVE_NOISE_SALT))
+    private val biomeNoise = PerlinNoise(Random(config.seed xor BIOME_NOISE_SALT))
 
     private val height get() = config.height
 
@@ -89,9 +90,47 @@ class ChunkGenerator(
     }
 
     /**
+     * Full overscan band for [chunkX]: the chunk plus [OVERSCAN] columns on each side, before the
+     * kept slice is extracted. The overscan columns are what cross-chunk features write through, so
+     * comparing one chunk's overscan against its neighbour's kept columns is how the seam invariant
+     * is verified (see [GeneratedBand.foreBand] indexing via [bandStart]).
+     */
+    data class GeneratedBand(
+        val foreBand: Array<Array<Block>>,
+        val backBand: Array<Array<Block>>,
+        /** World column of band index 0, i.e. `chunkX * CHUNK_W - OVERSCAN`. */
+        val bandStart: Int,
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is GeneratedBand) return false
+            return bandStart == other.bandStart &&
+                foreBand.contentDeepEquals(other.foreBand) &&
+                backBand.contentDeepEquals(other.backBand)
+        }
+
+        override fun hashCode(): Int {
+            var result = foreBand.contentDeepHashCode()
+            result = 31 * result + backBand.contentDeepHashCode()
+            result = 31 * result + bandStart
+            return result
+        }
+    }
+
+    /**
      * Generates the chunk at index [chunkX] (covering world columns `[chunkX * CHUNK_W, +CHUNK_W)`).
      */
     fun generateChunk(chunkX: Int): GeneratedChunk {
+        val band = generateBand(chunkX)
+        val fore = Array(CHUNK_W) { band.foreBand[OVERSCAN + it] }
+        val back = Array(CHUNK_W) { band.backBand[OVERSCAN + it] }
+        val biomes = Array(CHUNK_W) { biomeAt(band.bandStart + OVERSCAN + it) }
+
+        return GeneratedChunk(fore, back, biomes)
+    }
+
+    /** Generates the full overscan [GeneratedBand] for [chunkX]; [generateChunk] slices the keep. */
+    fun generateBand(chunkX: Int): GeneratedBand {
         val startX = chunkX * CHUNK_W
         val bandStart = startX - OVERSCAN
         val bandW = CHUNK_W + 2 * OVERSCAN
@@ -128,11 +167,7 @@ class ChunkGenerator(
             cleanupColumn(surfaceHeights[j], foreBand[j])
         }
 
-        val fore = Array(CHUNK_W) { foreBand[OVERSCAN + it] }
-        val back = Array(CHUNK_W) { backBand[OVERSCAN + it] }
-        val biomes = Array(CHUNK_W) { bandBiomes[OVERSCAN + it] }
-
-        return GeneratedChunk(fore, back, biomes)
+        return GeneratedBand(foreBand, backBand, bandStart)
     }
 
     // region pure position helpers
@@ -160,10 +195,18 @@ class ChunkGenerator(
         return total / maxValue
     }
 
-    /** Biome at world column [x] — pure, deterministic per [WorldGeneratorConfig.minBiomeSize] cell. */
+    /**
+     * Biome at world column [x] — pure and deterministic, constant within each
+     * [WorldGeneratorConfig.minBiomeSize] cell.
+     *
+     * A cell's biome is sampled from a low-frequency noise field keyed on the cell index, so
+     * neighbouring cells correlate and biomes form contiguous, multi-cell regions. Picking each
+     * cell independently at random (the previous approach) dropped isolated cells — e.g. a lone
+     * desert column wedged into winter — which looked out of place.
+     */
     fun biomeAt(x: Int): Biome {
         val cell = Math.floorDiv(x, config.minBiomeSize)
-        val r = Random(columnSeed(cell, BIOME_SALT)).nextDouble()
+        val r = biomeNoise.noise2D(cell * BIOME_SCALE, BIOME_NOISE_Y)
         val index = (r * config.biomes.size).toInt().coerceIn(0, config.biomes.lastIndex)
         return config.biomes[index]
     }
@@ -478,7 +521,7 @@ class ChunkGenerator(
         const val CHUNK_W = 16
 
         /** Max horizontal reach of any cross-chunk feature (ore vein width / tree canopy). */
-        private const val OVERSCAN = 4
+        const val OVERSCAN = 4
 
         private const val HEIGHT_SCALE = 0.01
         private const val HEIGHT_OCTAVES = 4
@@ -491,15 +534,20 @@ class ChunkGenerator(
         private const val CAVE_THRESHOLD = 0.62
         private const val SURFACE_CAVE_BUFFER = 4
 
+        // Noise frequency for biome selection, in cells. ~0.3 makes one noise feature span ~3 cells,
+        // so biomes settle into contiguous regions a few cells wide instead of flipping every cell.
+        private const val BIOME_SCALE = 0.3
+        private const val BIOME_NOISE_Y = 0.5
+
         private const val MIX_A = -0x61c8864680b583ebL // 0x9E3779B97F4A7C15
         private const val MIX_B = -0x3d4d51c2d82b14b1L // 0xC2B2AE3D27D4EB4F
         private const val MIX_C = -0x7ee3623a03d3c8d9L // 0x811C9DC5_... scramble constant
 
-        private const val BIOME_SALT = 0x1111_1111L
         private const val TERRAIN_SALT = 0x2222_2222L
         private const val ORE_SALT = 0x3333_3333L
         private const val CAVE_SPECKLE_SALT = 0x4444_4444L
         private const val FEATURE_SALT = 0x5555_5555L
         private const val CAVE_NOISE_SALT = 0x6666_6666L
+        private const val BIOME_NOISE_SALT = 0x7777_7777L
     }
 }

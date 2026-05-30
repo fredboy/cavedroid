@@ -1,5 +1,7 @@
 package ru.fredboy.cavedroid.game.world.store
 
+import co.touchlab.kermit.Logger
+import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
@@ -86,7 +88,7 @@ class InfiniteBlockStore(
 
     override fun update() {
         val visible = gameContextRepository.getCameraContext().visibleWorld
-        val centerX = (visible.x + visible.width / 2f).toInt()
+        val centerX = (visible.x + visible.width / 2f).floorToInt()
         val centerChunk = chunkIndex(centerX)
         if (centerChunk == lastCenterChunk) return
         lastCenterChunk = centerChunk
@@ -133,7 +135,8 @@ class InfiniteBlockStore(
     private fun ensureChunk(chunkX: Int): Chunk {
         chunks[chunkX]?.let { return it }
 
-        val chunk = chunkLoader(chunkX) ?: generator.generateChunk(chunkX).let { generated ->
+        val loaded = chunkLoader(chunkX)
+        val chunk = loaded ?: generator.generateChunk(chunkX).let { generated ->
             Chunk(
                 chunkX = chunkX,
                 fore = generated.foreMap,
@@ -143,8 +146,63 @@ class InfiniteBlockStore(
         }
 
         chunks[chunkX] = chunk
+
+        if (DEBUG_SEAMS) {
+            logger.d {
+                "chunk $chunkX ${if (loaded != null) "LOADED" else "GENERATED"}; " +
+                    "neighbours L=${chunks.containsKey(chunkX - 1)} R=${chunks.containsKey(chunkX + 1)}"
+            }
+            checkSeam(chunkX - 1, chunkX)
+            checkSeam(chunkX, chunkX + 1)
+        }
+
         listeners.forEach { it.onChunkLoaded(chunkX) }
         return chunk
+    }
+
+    /**
+     * Debug seam check: a chunk "knows its neighbour" iff the columns the left chunk computes in its
+     * right overscan (but discards) match what the right chunk actually holds. We compare only the
+     * region at/above the surface — caves, lava and support-cleanup run on kept columns only, so the
+     * underground deliberately differs between an overscan column and a kept column.
+     *
+     * Fresh-vs-fresh mismatches mean a generator stitching bug. If a side was loaded from disk,
+     * mismatches above the surface are usually player edits — the log notes which side was loaded.
+     */
+    private fun checkSeam(leftX: Int, rightX: Int) {
+        val left = chunks[leftX] ?: return
+        val right = chunks[rightX] ?: return
+
+        val leftBand = generator.generateBand(leftX)
+        val overscan = ChunkGenerator.OVERSCAN
+
+        // Right chunk's columns 0 until OVERSCAN live in the left band's right overscan.
+        for (local in 0 until overscan) {
+            val worldX = rightX * ChunkGenerator.CHUNK_W + local
+            val bandIndex = worldX - leftBand.bandStart
+            val surface = generator.surfaceHeight(worldX)
+
+            for (y in 0 until surface) {
+                val expectedFore = leftBand.foreBand[bandIndex][y]
+                val actualFore = right.fore[local][y]
+                if (expectedFore.params.key != actualFore.params.key) {
+                    logger.w {
+                        "SEAM MISMATCH ${leftX}->$rightX at x=$worldX y=$y (surface=$surface) FORE: " +
+                            "left-overscan='${expectedFore.params.key}' right-chunk='${actualFore.params.key}'"
+                    }
+                    return
+                }
+                val expectedBack = leftBand.backBand[bandIndex][y]
+                val actualBack = right.back[local][y]
+                if (expectedBack.params.key != actualBack.params.key) {
+                    logger.w {
+                        "SEAM MISMATCH ${leftX}->$rightX at x=$worldX y=$y (surface=$surface) BACK: " +
+                            "left-overscan='${expectedBack.params.key}' right-chunk='${actualBack.params.key}'"
+                    }
+                    return
+                }
+            }
+        }
     }
 
     private fun evictChunk(chunkX: Int) {
@@ -160,6 +218,16 @@ class InfiniteBlockStore(
     private fun localX(x: Int): Int = Math.floorMod(x, ChunkGenerator.CHUNK_W)
 
     companion object {
+        private const val TAG = "InfiniteBlockStore"
+        private val logger = Logger.withTag(TAG)
+
+        /**
+         * Flip to true to trace chunk generate/load and verify the seam invariant on every chunk
+         * that becomes resident. Off in production: [checkSeam] regenerates a neighbour band per
+         * resident chunk, which is too expensive to run unconditionally.
+         */
+        private const val DEBUG_SEAMS = true
+
         // Chunks loaded on each side of the centre chunk. Must cover the viewport plus the lighting
         // window (±96 blocks ≈ 6 chunks) so light rebuilds read real terrain.
         private const val LOAD_RADIUS = 6

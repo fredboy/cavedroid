@@ -5,6 +5,8 @@ import ru.fredboy.cavedroid.common.di.MenuScope
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.common.mvvm.ViewModelProvider
 import ru.fredboy.cavedroid.common.utils.WorldNameSanitizer
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
+import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.di.BindViewModelProvider
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
 import javax.inject.Inject
@@ -16,6 +18,8 @@ class WorldConfigMenuViewModelProvider @Inject constructor(
     private val applicationController: ApplicationController,
     private val worldNameSanitizer: WorldNameSanitizer,
     private val baseViewModelDependencies: BaseViewModelDependencies,
+    private val saveDataRepository: SaveDataRepository,
+    private val applicationContextRepository: ApplicationContextRepository,
 ) : ViewModelProvider<WorldConfigMenuNavKey, WorldConfigMenuViewModel> {
 
     override val viewModelClass: KClass<WorldConfigMenuViewModel>
@@ -30,6 +34,8 @@ class WorldConfigMenuViewModelProvider @Inject constructor(
             gameMode = navKey.gameMode,
             seed = navKey.seed,
             baseViewModelDependencies = baseViewModelDependencies,
+            saveDataRepository = saveDataRepository,
+            applicationContextRepository = applicationContextRepository,
         )
     }
 }

@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.TimeUtils
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.common.utils.Vector2Proxy
+import ru.fredboy.cavedroid.common.utils.floor
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.drop.DropAmount
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
@@ -55,10 +56,10 @@ abstract class Mob(
 
     val controlVector = Vector2()
 
-    val mapX get() = body.position.x.toInt()
-    val upperMapY get() = (body.position.y - height / 2).toInt()
-    val middleMapY get() = body.position.y.toInt()
-    val lowerMapY get() = (body.position.y + height / 2).toInt()
+    val mapX get() = body.position.x.floor.toInt()
+    val upperMapY get() = (body.position.y - height / 2).floor.toInt()
+    val middleMapY get() = body.position.y.floor.toInt()
+    val lowerMapY get() = (body.position.y + height / 2).floor.toInt()
 
     val hitbox: Rectangle get() = Rectangle(position.x - width / 2f, position.y - height / 2f, width, height)
 
