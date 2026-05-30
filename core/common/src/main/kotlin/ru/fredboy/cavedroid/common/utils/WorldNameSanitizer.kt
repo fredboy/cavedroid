@@ -9,7 +9,7 @@ class WorldNameSanitizer @Inject constructor() {
     fun sanitizeWorldName(input: String): String {
         var safe = input.replace(Regex("[^a-zA-Z0-9 _.-]"), "_")
 
-        safe = safe.trim().trim('.', '_')
+        safe = safe.trim().trim('.', '_', ' ')
 
         safe = safe.replace(Regex("_+"), "_")
 
