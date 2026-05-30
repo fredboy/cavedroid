@@ -18,6 +18,7 @@ import ru.fredboy.cavedroid.domain.world.model.Weather
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
 import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
+import ru.fredboy.cavedroid.game.world.store.ChunkListener
 import ru.fredboy.cavedroid.game.world.store.WorldBlockStore
 import java.lang.ref.WeakReference
 import java.util.LinkedList
@@ -95,6 +96,13 @@ class GameWorld @Inject constructor(
     fun removeBlockDestroyedListener(listener: OnBlockDestroyedListener) {
         onBlockDestroyedListeners.removeFirst { it.get() == listener }
     }
+
+    /** Subscribes to chunk load/unload events. Only fires for infinite (streaming) worlds. */
+    fun addChunkListener(listener: ChunkListener) = blockStore.addChunkListener(listener)
+
+    fun removeChunkListener(listener: ChunkListener) = blockStore.removeChunkListener(listener)
+
+    fun forEachLoadedChunk(action: (chunkX: Int) -> Unit) = blockStore.forEachLoadedChunk(action)
 
     fun getBiomeAt(x: Int): Biome = blockStore.getBiomeAt(x)
 

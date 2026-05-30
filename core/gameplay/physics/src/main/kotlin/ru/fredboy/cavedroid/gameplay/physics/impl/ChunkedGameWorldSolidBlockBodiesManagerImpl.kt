@@ -16,6 +16,8 @@ import ru.fredboy.cavedroid.domain.world.model.ChunkUserData
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
+import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
+import ru.fredboy.cavedroid.game.world.store.ChunkListener
 import java.util.*
 import javax.inject.Inject
 import kotlin.experimental.or
@@ -23,7 +25,8 @@ import kotlin.experimental.or
 @GameScope
 class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
     private val itemsRepository: ItemsRepository,
-) : GameWorldSolidBlockBodiesManager() {
+) : GameWorldSolidBlockBodiesManager(),
+    ChunkListener {
 
     private val _mirrorBodies = mutableMapOf<Triple<Int, Int, Int>, Body>()
 
@@ -32,13 +35,33 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
 
     override fun initialize() {
         if (gameWorld.isInfinite) {
-            // Infinite worlds create/destroy bodies lazily as chunks stream in/out (see M4 wiring).
+            // Infinite worlds create/destroy bodies lazily as chunks stream in/out.
+            gameWorld.addChunkListener(this)
+            gameWorld.forEachLoadedChunk(::onChunkLoaded)
             return
         }
 
         for (x in 0..<gameWorld.width step CHUNK_SIZE) {
             for (y in 0..<gameWorld.height step CHUNK_SIZE) {
                 updateChunk(x, y)
+            }
+        }
+    }
+
+    override fun onChunkLoaded(chunkX: Int) {
+        val startX = chunkX * ChunkGenerator.CHUNK_W
+        for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
+            for (y in 0 until gameWorld.height step CHUNK_SIZE) {
+                updateChunk(x, y)
+            }
+        }
+    }
+
+    override fun onChunkUnloaded(chunkX: Int) {
+        val startX = chunkX * ChunkGenerator.CHUNK_W
+        for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
+            for (y in 0 until gameWorld.height step CHUNK_SIZE) {
+                _bodies.remove(x to y)?.let { body -> world.destroyBody(body) }
             }
         }
     }
@@ -57,6 +80,7 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
     }
 
     override fun dispose() {
+        gameWorld.removeChunkListener(this)
         _mirrorBodies.values.forEach { body -> body.world.destroyBody(body) }
         _mirrorBodies.clear()
         super.dispose()
@@ -76,8 +100,12 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
         _bodies[chunkX1 to chunkY1] = body
         populateBodyFixtures(body, clusters, userData, xOffset = 0)
 
-        mirrorSidesFor(chunkX1, gameWorld.width, mirrorBand).forEach { sideSign ->
-            updateMirrorChunk(chunkX1, chunkY1, sideSign, clusters, userData)
+        // The mirror band only makes sense for a finite, horizontally-looping world; infinite
+        // worlds have no seam to mirror across.
+        if (!gameWorld.isInfinite) {
+            mirrorSidesFor(chunkX1, gameWorld.width, mirrorBand).forEach { sideSign ->
+                updateMirrorChunk(chunkX1, chunkY1, sideSign, clusters, userData)
+            }
         }
     }
 
