@@ -31,6 +31,7 @@ suspend fun Stage.singlePlayerMenuView(viewModel: SinglePlayerMenuViewModel) = v
             } else {
                 savesList(viewModel, state)
             }
+
             is SinglePlayerMenuState.LoadingList -> loadingList(viewModel)
         }
     }
@@ -149,7 +150,7 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
                 }.cell(
                     width = buttonWidth,
                     height = 60f,
-                    padRight = 16f,
+                    padRight = 8f,
                 )
 
                 if (viewModel.isImportSupported) {
@@ -164,7 +165,8 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
                     }.cell(
                         width = buttonWidth,
                         height = 60f,
-                        padRight = 16f,
+                        padLeft = 8f,
+                        padRight = 8f,
                     )
                 }
 
@@ -173,7 +175,7 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
                 }.cell(
                     width = buttonWidth,
                     height = 60f,
-                    padLeft = 16f,
+                    padLeft = 8f,
                 )
             }.cell(
                 expandX = true,

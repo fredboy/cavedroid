@@ -14,6 +14,7 @@ import ktx.actors.onClick
 import ktx.scene2d.Scene2DSkin
 import ktx.scene2d.Scene2dDsl
 import ktx.scene2d.actors
+import ktx.scene2d.label
 import ktx.scene2d.table
 import ktx.scene2d.textButton
 import ktx.scene2d.textField
@@ -89,18 +90,52 @@ private fun Stage.buildDefaultLayout(viewModel: NewGameMenuViewModel): TextField
             withGameLogo = false,
             withVersion = false,
         ) {
-            worldNameField = textField(viewModel.worldName).apply {
-                cursorPosition = viewModel.cursorPosition.coerceIn(0, text.length)
-            }
-            attachFieldListeners(worldNameField, viewModel, isSeed = false)
+            table {
+                defaults()
+                    .height(60f)
+                    .pad(8f)
 
-            row()
+                label("${viewModel.getLocalizedString("name")}: ")
+                    .cell(
+                        growX = false,
+                        fillX = false,
+                        minWidth = 50f,
+                        maxWidth = 250f,
+                        align = Align.left,
+                    )
+                worldNameField = textField(viewModel.worldName).apply {
+                    cursorPosition = viewModel.cursorPosition.coerceIn(0, text.length)
+                }.cell(
+                    growX = true,
+                    expandX = true,
+                    fillX = true,
+                )
+                attachFieldListeners(worldNameField, viewModel, isSeed = false)
 
-            textField(viewModel.enteredSeed) {
-                messageText = viewModel.getLocalizedString("seed")
-                cursorPosition = viewModel.seedCursorPosition.coerceIn(0, text.length)
-                attachFieldListeners(this, viewModel, isSeed = true)
-            }
+                row()
+
+                label("${viewModel.getLocalizedString("seed")}: ")
+                    .cell(
+                        growX = false,
+                        fillX = false,
+                        minWidth = 50f,
+                        maxWidth = 250f,
+                        align = Align.left,
+                    )
+                textField(viewModel.enteredSeed) {
+                    messageText = viewModel.getLocalizedString("seed")
+                    cursorPosition = viewModel.seedCursorPosition.coerceIn(0, text.length)
+                    attachFieldListeners(this, viewModel, isSeed = true)
+                }.cell(
+                    growX = true,
+                    expandX = true,
+                    fillX = true,
+                )
+
+                row()
+            }.cell(
+                pad = 40f,
+            )
 
             row()
 
@@ -134,8 +169,7 @@ private fun Stage.buildDefaultLayout(viewModel: NewGameMenuViewModel): TextField
 
 @Scene2dDsl
 private fun Stage.buildKeyboardUpLayout(viewModel: NewGameMenuViewModel): TextField {
-    lateinit var worldNameField: TextField
-    lateinit var seedField: TextField
+    lateinit var textField: TextField
     actors {
         table {
             setFillParent(true)
@@ -154,18 +188,19 @@ private fun Stage.buildKeyboardUpLayout(viewModel: NewGameMenuViewModel): TextFi
                     .height(60f)
                     .pad(10f)
 
-                worldNameField = textField(viewModel.worldName).apply {
-                    cursorPosition = viewModel.cursorPosition.coerceIn(0, text.length)
+                textField = if (viewModel.editingSeed) {
+                    textField(viewModel.enteredSeed).apply {
+                        messageText = viewModel.getLocalizedString("seed")
+                        cursorPosition = viewModel.seedCursorPosition.coerceIn(0, text.length)
+                    }
+                } else {
+                    textField(viewModel.worldName).apply {
+                        cursorPosition = viewModel.cursorPosition.coerceIn(0, text.length)
+                    }
                 }
-                attachFieldListeners(worldNameField, viewModel, isSeed = false)
+                attachFieldListeners(textField, viewModel, isSeed = viewModel.editingSeed)
 
                 row()
-
-                seedField = textField(viewModel.enteredSeed).apply {
-                    messageText = viewModel.getLocalizedString("seed")
-                    cursorPosition = viewModel.seedCursorPosition.coerceIn(0, text.length)
-                }
-                attachFieldListeners(seedField, viewModel, isSeed = true)
             }.cell(expandY = true, align = Align.top)
         }
     }
@@ -176,7 +211,7 @@ private fun Stage.buildKeyboardUpLayout(viewModel: NewGameMenuViewModel): TextFi
             override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 var actor: Actor? = event.target
                 while (actor != null) {
-                    if (actor === worldNameField || actor === seedField) return false
+                    if (actor === textField) return false
                     actor = actor.parent
                 }
                 Gdx.input.setOnscreenKeyboardVisible(false)
@@ -184,5 +219,5 @@ private fun Stage.buildKeyboardUpLayout(viewModel: NewGameMenuViewModel): TextFi
             }
         },
     )
-    return if (viewModel.editingSeed) seedField else worldNameField
+    return textField
 }
