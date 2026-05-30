@@ -8,6 +8,7 @@ class GameContext(
     internal var saveGameDirectory: String,
     internal val worldName: String,
     internal val requestedWorldWidth: Int?,
+    internal val requestedSeed: Long?,
     internal var showInfo: Boolean,
     internal var showMap: Boolean,
     internal var joystick: Joystick,

@@ -28,6 +28,7 @@ class WorldConfigMenuViewModelProvider @Inject constructor(
             navBackStack = navBackStack,
             worldName = navKey.worldName,
             gameMode = navKey.gameMode,
+            seed = navKey.seed,
             baseViewModelDependencies = baseViewModelDependencies,
         )
     }

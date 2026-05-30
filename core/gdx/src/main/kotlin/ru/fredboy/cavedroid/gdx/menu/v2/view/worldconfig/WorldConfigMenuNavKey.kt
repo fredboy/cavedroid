@@ -6,4 +6,5 @@ import ru.fredboy.cavedroid.common.mvvm.NavKey
 data class WorldConfigMenuNavKey(
     val worldName: String,
     val gameMode: GameMode,
+    val seed: Long,
 ) : NavKey

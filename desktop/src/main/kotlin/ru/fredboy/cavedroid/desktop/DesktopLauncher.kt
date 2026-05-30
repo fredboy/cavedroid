@@ -65,6 +65,7 @@ internal object DesktopLauncher {
                 background = Dispatchers.Default,
                 main = GdxMainDispatcher,
             ),
+            saveTransferController = DesktopSaveTransferController(),
             loggingSeverity = when {
                 verbose -> Severity.Verbose
                 debug -> Severity.Debug

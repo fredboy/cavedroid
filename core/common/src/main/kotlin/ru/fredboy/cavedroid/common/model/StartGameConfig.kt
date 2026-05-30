@@ -11,6 +11,7 @@ sealed interface StartGameConfig {
         override val saveDirectory: String,
         val gameMode: GameMode,
         val worldSize: WorldSize,
+        val seed: Long,
     ) : StartGameConfig
 
     data class Load(

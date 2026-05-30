@@ -20,10 +20,10 @@ data class WorldGeneratorConfig(
 
         const val DEFAULT_WIDTH: Int = 1024
 
-        fun getDefault(width: Int = DEFAULT_WIDTH): WorldGeneratorConfig = WorldGeneratorConfig(
+        fun getDefault(width: Int = DEFAULT_WIDTH, seed: Long = TimeUtils.millis()): WorldGeneratorConfig = WorldGeneratorConfig(
             width = width,
             height = 256,
-            seed = TimeUtils.millis(),
+            seed = seed,
             maxSurfaceHeight = 160,
             minSurfaceHeight = 64,
             biomes = listOf(

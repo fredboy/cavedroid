@@ -33,6 +33,7 @@ class GameScreen @Inject constructor(
         saveGameDirectory = gameConfig.saveDirectory,
         worldName = gameConfig.worldName,
         requestedWorldWidth = (gameConfig as? StartGameConfig.New)?.worldSize?.blocks,
+        requestedSeed = (gameConfig as? StartGameConfig.New)?.seed,
         showInfo = false,
         showMap = false,
         joystick = Joystick(requireNotNull(mobParamsRepository.getMobParamsByKey("char")).speed),

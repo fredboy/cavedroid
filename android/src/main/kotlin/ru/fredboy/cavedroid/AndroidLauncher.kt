@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -18,6 +19,7 @@ import ru.fredboy.cavedroid.gdx.CaveDroidApplication
 class AndroidLauncher : AndroidApplication() {
 
     private lateinit var adController: AdController
+    private lateinit var saveTransferController: AndroidSaveTransferController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +31,7 @@ class AndroidLauncher : AndroidApplication() {
         }
 
         adController = createAdController(this)
+        saveTransferController = AndroidSaveTransferController(this)
 
         val config = AndroidApplicationConfiguration()
         config.useImmersiveMode = true
@@ -57,6 +60,7 @@ class AndroidLauncher : AndroidApplication() {
                 ),
                 adController = adController,
                 softKeyboardObserver = softKeyboardObserver,
+                saveTransferController = saveTransferController,
                 loggingSeverity = if (BuildConfig.DEBUG) Severity.Debug else Severity.Info,
             ),
             /* config = */ config,
@@ -67,6 +71,13 @@ class AndroidLauncher : AndroidApplication() {
         super.onResume()
         pinScreenBrightness()
         adController.resume()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (saveTransferController.handleActivityResult(requestCode, resultCode, data)) {
+            return
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun pinScreenBrightness() {

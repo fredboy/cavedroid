@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.domain.save.repository
 
 import ru.fredboy.cavedroid.domain.save.model.FireEntry
 import ru.fredboy.cavedroid.domain.save.model.GameMapSaveData
+import ru.fredboy.cavedroid.domain.save.model.GameSaveDetails
 import ru.fredboy.cavedroid.domain.save.model.GameSaveInfo
 import ru.fredboy.cavedroid.domain.save.model.GrowBlockEntry
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
@@ -93,6 +94,18 @@ interface SaveDataRepository {
     ): ProjectileController
 
     fun getSavesInfo(gameDataFolder: String): List<GameSaveInfo>
+
+    /** Directories that look like saves but whose data failed to load. */
+    fun findCorruptedSaveDirectories(gameDataFolder: String): List<String>
+
+    fun getSaveDetails(gameDataFolder: String, saveDir: String): GameSaveDetails
+
+    fun renameSave(gameDataFolder: String, saveDir: String, newName: String)
+
+    fun exportSaveToZip(gameDataFolder: String, saveDir: String): ByteArray
+
+    /** Imports a zipped save into a new slot and returns the new directory name. */
+    fun importSaveFromZip(gameDataFolder: String, zipBytes: ByteArray): String
 
     fun deleteSave(gameDataFolder: String, saveDir: String)
 }

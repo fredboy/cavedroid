@@ -13,6 +13,8 @@ interface GameContextRepository {
 
     fun getRequestedWorldWidth(): Int?
 
+    fun getRequestedSeed(): Long?
+
     fun isLoadGame(): Boolean
 
     fun shouldShowInfo(): Boolean
