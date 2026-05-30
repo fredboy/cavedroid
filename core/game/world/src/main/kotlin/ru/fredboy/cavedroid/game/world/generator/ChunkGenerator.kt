@@ -3,6 +3,8 @@ package ru.fredboy.cavedroid.game.world.generator
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.model.Biome
+import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator.Companion.CHUNK_W
+import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator.Companion.OVERSCAN
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -77,8 +79,8 @@ class ChunkGenerator(
             if (this === other) return true
             if (other !is GeneratedChunk) return false
             return foreMap.contentDeepEquals(other.foreMap) &&
-                backMap.contentDeepEquals(other.backMap) &&
-                biomes.contentEquals(other.biomes)
+                    backMap.contentDeepEquals(other.backMap) &&
+                    biomes.contentEquals(other.biomes)
         }
 
         override fun hashCode(): Int {
@@ -105,8 +107,8 @@ class ChunkGenerator(
             if (this === other) return true
             if (other !is GeneratedBand) return false
             return bandStart == other.bandStart &&
-                foreBand.contentDeepEquals(other.foreBand) &&
-                backBand.contentDeepEquals(other.backBand)
+                    foreBand.contentDeepEquals(other.foreBand) &&
+                    backBand.contentDeepEquals(other.backBand)
         }
 
         override fun hashCode(): Int {
@@ -336,16 +338,17 @@ class ChunkGenerator(
             if (n > CAVE_THRESHOLD) {
                 val filler = rng.nextDouble()
                 fore[y] = when {
-                    filler < 0.95 -> fallback
-                    filler < 0.98 -> web
-                    filler < 0.99 -> water
-                    else -> lava
+                    y <= config.seaLevel || filler >= 0.3 -> fallback
+                    filler < 0.01 -> web
+                    filler < 0.02 -> water
+                    filler < 0.03 -> lava
+                    else -> fallback
                 }
             }
         }
 
         for (y in config.lavaLevel until height - 1) {
-            if (fore[y].isNone()) {
+            if (!fore[y].params.hasCollision) {
                 fore[y] = lava
             }
         }
@@ -368,8 +371,32 @@ class ChunkGenerator(
 
         when (bandBiomes[jBand]) {
             Biome.PLAINS -> when {
-                plant < 5 -> generateTree(jBand, surfaceHeights, foreBand, backBand, bandW, rng, "log_oak", "leaves_oak", 5, 7)
-                plant < 10 -> generateTree(jBand, surfaceHeights, foreBand, backBand, bandW, rng, "log_birch", "leaves_birch", 5, 7)
+                plant < 5 -> generateTree(
+                    jBand,
+                    surfaceHeights,
+                    foreBand,
+                    backBand,
+                    bandW,
+                    rng,
+                    "log_oak",
+                    "leaves_oak",
+                    5,
+                    7
+                )
+
+                plant < 10 -> generateTree(
+                    jBand,
+                    surfaceHeights,
+                    foreBand,
+                    backBand,
+                    bandW,
+                    rng,
+                    "log_birch",
+                    "leaves_birch",
+                    5,
+                    7
+                )
+
                 plant < 40 -> placeOnSurface(jBand, surfaceHeight, foreBand, bandW, block(plainsPlants.random(rng)))
             }
 
@@ -386,7 +413,13 @@ class ChunkGenerator(
         applySugarCane(jBand, surfaceHeight, foreBand, bandW, rng)
     }
 
-    private fun placeOnSurface(jBand: Int, surfaceHeight: Int, foreBand: Array<Array<Block>>, bandW: Int, value: Block) {
+    private fun placeOnSurface(
+        jBand: Int,
+        surfaceHeight: Int,
+        foreBand: Array<Array<Block>>,
+        bandW: Int,
+        value: Block
+    ) {
         if (jBand !in 0 until bandW) return
         val h = surfaceHeight - 1
         if (h > 0 && foreBand[jBand][h].isNone()) {
@@ -531,8 +564,8 @@ class ChunkGenerator(
 
         private const val CAVE_SCALE_X = 0.08
         private const val CAVE_SCALE_Y = 0.12
-        private const val CAVE_THRESHOLD = 0.62
-        private const val SURFACE_CAVE_BUFFER = 4
+        private const val CAVE_THRESHOLD = 0.74
+        private const val SURFACE_CAVE_BUFFER = 8
 
         // Noise frequency for biome selection, in cells. ~0.3 makes one noise feature span ~3 cells,
         // so biomes settle into contiguous regions a few cells wide instead of flipping every cell.
