@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.domain.configuration.repository
 
 import ru.fredboy.cavedroid.common.model.Joystick
+import ru.fredboy.cavedroid.common.model.WorldType
 import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 
 interface GameContextRepository {
@@ -14,6 +15,8 @@ interface GameContextRepository {
     fun getRequestedWorldWidth(): Int?
 
     fun getRequestedSeed(): Long?
+
+    fun getWorldType(): WorldType
 
     fun isLoadGame(): Boolean
 

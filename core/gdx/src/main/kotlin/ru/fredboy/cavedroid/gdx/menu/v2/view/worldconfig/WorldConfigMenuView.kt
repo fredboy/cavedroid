@@ -82,6 +82,14 @@ private fun Stage.show(viewModel: WorldConfigMenuViewModel) {
 
                         row()
                     }
+
+                    textButton(viewModel.getLocalizedString("worldType_infinite")) {
+                        onClickWithSound(viewModel) {
+                            viewModel.onInfiniteClick()
+                        }
+                    }
+
+                    row()
                 }
             }.also { pane ->
                 setScrollFocus(pane)

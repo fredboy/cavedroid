@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.data.configuration.repository
 
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.model.Joystick
+import ru.fredboy.cavedroid.common.model.WorldType
 import ru.fredboy.cavedroid.data.configuration.store.GameContextStore
 import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -25,6 +26,8 @@ class GameContextRepositoryImpl @Inject constructor(
     override fun getRequestedWorldWidth(): Int? = gameContextStore.requestedWorldWidth
 
     override fun getRequestedSeed(): Long? = gameContextStore.requestedSeed
+
+    override fun getWorldType(): WorldType = gameContextStore.worldType
 
     override fun shouldShowInfo(): Boolean = gameContextStore.showInfo
 

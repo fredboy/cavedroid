@@ -11,6 +11,7 @@ import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.model.WorldSize
+import ru.fredboy.cavedroid.common.model.WorldType
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.common.utils.WorldNameSanitizer
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
@@ -41,6 +42,14 @@ class WorldConfigMenuViewModel(
     }
 
     fun onSizeClick(size: WorldSize) {
+        startGame(worldType = WorldType.LOOPING, size = size)
+    }
+
+    fun onInfiniteClick() {
+        startGame(worldType = WorldType.INFINITE, size = WorldSize.DEFAULT)
+    }
+
+    private fun startGame(worldType: WorldType, size: WorldSize) {
         viewModelScope.launch {
             _stateFlow.emit(WorldConfigMenuState.Generating)
             delay(50)
@@ -53,6 +62,7 @@ class WorldConfigMenuViewModel(
                         gameMode = gameMode,
                         worldSize = size,
                         seed = seed,
+                        worldType = worldType,
                     ),
                 )
             }
