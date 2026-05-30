@@ -22,11 +22,66 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 @Scene2dDsl
 suspend fun Stage.singlePlayerMenuView(viewModel: SinglePlayerMenuViewModel) = viewModel.also {
     viewModel.stateFlow.collect { state ->
+        clear()
         when (state) {
             is SinglePlayerMenuState.LoadingWorld -> loading(viewModel)
             is SinglePlayerMenuState.LoadingFailed -> loadingFailed(viewModel)
-            is SinglePlayerMenuState.ShowList -> savesList(viewModel, state)
+            is SinglePlayerMenuState.ShowList -> if (state.corruptedDirs.isNotEmpty()) {
+                corruptedSavesDialog(viewModel, state.corruptedDirs)
+            } else {
+                savesList(viewModel, state)
+            }
             is SinglePlayerMenuState.LoadingList -> loadingList(viewModel)
+        }
+    }
+}
+
+@Scene2dDsl
+private fun Stage.corruptedSavesDialog(viewModel: SinglePlayerMenuViewModel, corruptedDirs: List<String>) {
+    actors {
+        table {
+            setFillParent(true)
+            background(
+                TiledDrawable(
+                    TextureRegionDrawable(
+                        skin.getRegion("background"),
+                    ),
+                ),
+            )
+            pad(8f)
+
+            label(viewModel.getLocalizedString("corruptedSavesMessage")) {
+                setAlignment(Align.center)
+                setWrap(true)
+            }.cell(
+                expandX = true,
+                fillX = true,
+                align = Align.center,
+            )
+
+            row()
+
+            table {
+                textButton(viewModel.getLocalizedString("deleteCorrupted")) {
+                    onClickWithSound(viewModel) { viewModel.onDeleteCorruptedClick(corruptedDirs) }
+                }.cell(
+                    width = 400f,
+                    height = 60f,
+                    padRight = 16f,
+                )
+
+                textButton(viewModel.getLocalizedString("keep")) {
+                    onClickWithSound(viewModel) { viewModel.onDismissCorruptedClick() }
+                }.cell(
+                    width = 400f,
+                    height = 60f,
+                    padLeft = 16f,
+                )
+            }.cell(
+                expandX = true,
+                fillX = true,
+                padTop = 32f,
+            )
         }
     }
 }

@@ -633,6 +633,16 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             .sortedByDescending { it.lastModifiedTimestamp }
     }
 
+    override fun findCorruptedSaveDirectories(gameDataFolder: String): List<String> {
+        return file("$gameDataFolder/$SAVES_DIR").list()
+            .asSequence()
+            .filter { it.isDirectory }
+            .filter { isSaveDir(it) }
+            .filter { saveDir -> runCatching { loadMapData(saveDir.path()) }.isFailure }
+            .map { it.name() }
+            .toList()
+    }
+
     override fun getSaveDetails(gameDataFolder: String, saveDir: String): GameSaveDetails {
         val savesPath = getSavePath(gameDataFolder, saveDir)
         val meta = loadMapData(savesPath)

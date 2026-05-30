@@ -95,6 +95,9 @@ interface SaveDataRepository {
 
     fun getSavesInfo(gameDataFolder: String): List<GameSaveInfo>
 
+    /** Directories that look like saves but whose data failed to load. */
+    fun findCorruptedSaveDirectories(gameDataFolder: String): List<String>
+
     fun getSaveDetails(gameDataFolder: String, saveDir: String): GameSaveDetails
 
     fun renameSave(gameDataFolder: String, saveDir: String, newName: String)

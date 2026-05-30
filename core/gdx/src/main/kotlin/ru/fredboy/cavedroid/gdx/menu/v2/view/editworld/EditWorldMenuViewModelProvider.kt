@@ -6,6 +6,7 @@ import ru.fredboy.cavedroid.common.api.SoftKeyboardObserver
 import ru.fredboy.cavedroid.common.di.MenuScope
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.common.mvvm.ViewModelProvider
+import ru.fredboy.cavedroid.common.utils.WorldNameSanitizer
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.di.BindViewModelProvider
@@ -19,6 +20,7 @@ class EditWorldMenuViewModelProvider @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
     private val saveDataRepository: SaveDataRepository,
     private val saveTransferController: SaveTransferController,
+    private val worldNameSanitizer: WorldNameSanitizer,
     private val inlineTextInput: InlineTextInput,
     private val softKeyboardObserver: SoftKeyboardObserver,
     private val baseViewModelDependencies: BaseViewModelDependencies,
@@ -32,6 +34,7 @@ class EditWorldMenuViewModelProvider @Inject constructor(
             applicationContextRepository = applicationContextRepository,
             saveDataRepository = saveDataRepository,
             saveTransferController = saveTransferController,
+            worldNameSanitizer = worldNameSanitizer,
             inlineTextInput = inlineTextInput,
             softKeyboardObserver = softKeyboardObserver,
             navBackStack = navBackStack,

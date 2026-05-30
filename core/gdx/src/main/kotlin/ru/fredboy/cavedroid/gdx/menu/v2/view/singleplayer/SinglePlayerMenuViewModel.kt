@@ -38,6 +38,8 @@ class SinglePlayerMenuViewModel(
 
     private val loadedTextures = mutableListOf<Texture>()
 
+    private var corruptedDialogDismissed = false
+
     private val reloadTrigger = MutableSharedFlow<Trigger>(replay = 0)
 
     private val saveInfoFlow = reloadTrigger
@@ -63,6 +65,14 @@ class SinglePlayerMenuViewModel(
                     saveDataRepository.getSavesInfo(appDir)
                 }
 
+                val corruptedDirs = if (corruptedDialogDismissed) {
+                    emptyList()
+                } else {
+                    withContext(ioDispatcher) {
+                        saveDataRepository.findCorruptedSaveDirectories(appDir)
+                    }
+                }
+
                 val list = saves.map { saveInfo ->
                     SaveInfoVo(
                         version = saveInfo.version,
@@ -83,7 +93,7 @@ class SinglePlayerMenuViewModel(
                     )
                 }
 
-                emit(SinglePlayerMenuState.ShowList(list))
+                emit(SinglePlayerMenuState.ShowList(list, corruptedDirs = corruptedDirs))
             }
         }
 
@@ -157,6 +167,26 @@ class SinglePlayerMenuViewModel(
                 }
                 reloadTrigger.emit(Trigger.LOAD_LIST)
             }
+        }
+    }
+
+    fun onDeleteCorruptedClick(corruptedDirs: List<String>) {
+        viewModelScope.launch {
+            reloadTrigger.emit(Trigger.IMPORTING)
+            withContext(ioDispatcher) {
+                val appDir = applicationContextRepository.getGameDirectory()
+                corruptedDirs.forEach { dir ->
+                    saveDataRepository.deleteSave(gameDataFolder = appDir, saveDir = dir)
+                }
+            }
+            reloadTrigger.emit(Trigger.LOAD_LIST)
+        }
+    }
+
+    fun onDismissCorruptedClick() {
+        corruptedDialogDismissed = true
+        viewModelScope.launch {
+            reloadTrigger.emit(Trigger.LOAD_LIST)
         }
     }
 

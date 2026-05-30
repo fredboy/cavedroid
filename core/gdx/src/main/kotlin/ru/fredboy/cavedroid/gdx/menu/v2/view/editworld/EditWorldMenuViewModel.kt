@@ -13,6 +13,7 @@ import ru.fredboy.cavedroid.common.api.InlineTextInput
 import ru.fredboy.cavedroid.common.api.SaveTransferController
 import ru.fredboy.cavedroid.common.api.SoftKeyboardObserver
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
+import ru.fredboy.cavedroid.common.utils.WorldNameSanitizer
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.save.model.GameSaveDetails
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
@@ -23,6 +24,7 @@ class EditWorldMenuViewModel(
     private val applicationContextRepository: ApplicationContextRepository,
     private val saveDataRepository: SaveDataRepository,
     private val saveTransferController: SaveTransferController,
+    private val worldNameSanitizer: WorldNameSanitizer,
     val inlineTextInput: InlineTextInput,
     softKeyboardObserver: SoftKeyboardObserver,
     private val navBackStack: NavBackStack,
@@ -127,7 +129,7 @@ class EditWorldMenuViewModel(
                     )
                 }
                 saveTransferController.exportSave(
-                    suggestedFileName = "${details.name}.$SAVE_FILE_EXTENSION",
+                    suggestedFileName = "${worldNameSanitizer.sanitizeWorldName(details.name)}.$SAVE_FILE_EXTENSION",
                     zipBytes = zipBytes,
                 ) { success ->
                     viewModelScope.launch {
