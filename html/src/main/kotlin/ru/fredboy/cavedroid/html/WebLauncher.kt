@@ -11,6 +11,7 @@ import ru.fredboy.cavedroid.common.api.CloudStatsSync
 import ru.fredboy.cavedroid.common.api.NoOpAdController
 import ru.fredboy.cavedroid.common.api.NoOpCloudStatsSync
 import ru.fredboy.cavedroid.common.api.NoOpInlineTextInput
+import ru.fredboy.cavedroid.common.api.NoOpSaveTransferController
 import ru.fredboy.cavedroid.common.api.NoOpSoftKeyboardObserver
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
@@ -71,7 +72,11 @@ object WebLauncher {
             } else {
                 NoOpSoftKeyboardObserver
             },
-            saveTransferController = WebSaveTransferController(),
+            saveTransferController = if (yandexAvailable) {
+                NoOpSaveTransferController
+            } else {
+                WebSaveTransferController()
+            },
         ).let { app ->
             if (yandexAvailable) {
                 YandexGamesLifecycleGameDecorator(app)
