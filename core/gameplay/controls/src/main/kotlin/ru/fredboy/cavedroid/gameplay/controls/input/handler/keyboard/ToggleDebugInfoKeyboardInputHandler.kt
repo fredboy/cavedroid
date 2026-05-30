@@ -19,4 +19,8 @@ class ToggleDebugInfoKeyboardInputHandler @Inject constructor(
     override fun handle(action: KeyboardInputAction) {
         gameContextRepository.setShowInfo(!gameContextRepository.shouldShowInfo())
     }
+
+    override fun reset() {
+        // no-op
+    }
 }

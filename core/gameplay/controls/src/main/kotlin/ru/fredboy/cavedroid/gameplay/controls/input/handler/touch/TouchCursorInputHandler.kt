@@ -346,6 +346,14 @@ class TouchCursorInputHandler @Inject constructor(
         }
     }
 
+    override fun reset() {
+        cancelHold()
+        pointer = -1
+        wasDragged = false
+        player.isPullingBow = false
+        player.stopHitting()
+    }
+
     companion object {
         private const val TAG = "TouchWorldInputHandler"
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)

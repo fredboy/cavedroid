@@ -27,4 +27,8 @@ class GoLeftKeyboardInputHandler @Inject constructor(
             mobController.player.controlVector.x = 0f
         }
     }
+
+    override fun reset() {
+        mobController.player.controlVector.x = 0f
+    }
 }

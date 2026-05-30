@@ -30,4 +30,8 @@ class OpenInventoryKeyboardInputHandler @Inject constructor(
             GameMode.SURVIVAL -> gameWindowsManager.openSurvivalInventory()
         }
     }
+
+    override fun reset() {
+        gameWindowsManager.closeWindow()
+    }
 }

@@ -81,4 +81,8 @@ class SelectCreativeInventoryItemMouseInputHandler @Inject constructor(
         val item = getItemByIndexUseCase[itemIndex]
         mobController.player.inventory.addItem(item)
     }
+
+    override fun reset() {
+        // no-op
+    }
 }

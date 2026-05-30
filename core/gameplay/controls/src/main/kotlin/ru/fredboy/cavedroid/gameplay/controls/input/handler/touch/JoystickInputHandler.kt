@@ -125,4 +125,10 @@ class JoystickInputHandler @Inject constructor(
             }
         }
     }
+
+    override fun reset() {
+        activateTimeMs = TimeUtils.millis()
+        gameContextRepository.getJoystick().deactivate()
+        active = false
+    }
 }

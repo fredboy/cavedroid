@@ -35,4 +35,8 @@ class CloseGameWindowKeyboardInputHandler @Inject constructor(
         }
         gameWindowsManager.closeWindow()
     }
+
+    override fun reset() {
+        // no-op
+    }
 }

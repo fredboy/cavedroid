@@ -26,4 +26,8 @@ class TurnOnFlyModeKeyboardInputHandler @Inject constructor(
         mobsController.player.isFlyMode = true
         mobsController.player.velocity.y = 0f
     }
+
+    override fun reset() {
+        // no-op
+    }
 }

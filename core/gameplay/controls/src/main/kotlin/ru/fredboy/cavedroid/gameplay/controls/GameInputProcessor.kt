@@ -280,6 +280,13 @@ class GameInputProcessor @Inject constructor(
         mouseCursorInputHandler.handle(action)
     }
 
+    fun reset() {
+        mouseInputHandlers.forEach { it.reset() }
+        keyboardInputHandlers.forEach { it.reset() }
+        dragging = false
+        pointerToTouchedKey.clear()
+    }
+
     companion object {
         private const val TAG = "GameInputProcessor"
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)

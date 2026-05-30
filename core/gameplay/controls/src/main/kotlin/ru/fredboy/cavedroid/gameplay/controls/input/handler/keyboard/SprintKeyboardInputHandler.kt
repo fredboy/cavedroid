@@ -21,4 +21,8 @@ class SprintKeyboardInputHandler @Inject constructor(
     override fun handle(action: KeyboardInputAction) {
         mobController.player.isSprinting = action.isKeyDown
     }
+
+    override fun reset() {
+        mobController.player.isSprinting = false
+    }
 }

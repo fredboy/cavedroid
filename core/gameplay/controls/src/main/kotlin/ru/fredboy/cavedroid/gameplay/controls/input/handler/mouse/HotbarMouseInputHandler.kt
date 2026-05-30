@@ -39,7 +39,7 @@ class HotbarMouseInputHandler @Inject constructor(
             (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
                 action.isInsideHotbar(gameContextRepository, textureRegions) ||
                 action.actionKey is MouseInputActionKey.Scroll
-            ) &&
+            ) && !action.actionKey.touchUp &&
         gameWindowsManager.currentWindowType == GameWindowType.NONE
 
     private fun cancelHold() {
@@ -124,6 +124,10 @@ class HotbarMouseInputHandler @Inject constructor(
         } else {
             handleDown(action)
         }
+    }
+
+    override fun reset() {
+        cancelHold()
     }
 
     companion object {

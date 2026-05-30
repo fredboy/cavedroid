@@ -102,4 +102,8 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
         }
         gameWindowsManager.closeWindow()
     }
+
+    override fun reset() {
+        // no-op
+    }
 }

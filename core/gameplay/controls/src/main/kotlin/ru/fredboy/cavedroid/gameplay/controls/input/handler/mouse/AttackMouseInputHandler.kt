@@ -52,6 +52,10 @@ class AttackMouseInputHandler @Inject constructor(
         }
     }
 
+    override fun reset() {
+        mobController.player.stopHitting()
+    }
+
     companion object {
         private const val MOB_HIT_RANGE_2 = 36f
     }

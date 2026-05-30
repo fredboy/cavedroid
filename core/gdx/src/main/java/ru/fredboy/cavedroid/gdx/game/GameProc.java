@@ -136,6 +136,7 @@ public class GameProc implements Disposable {
     }
 
     public void onGamePaused() {
+        mGameInputProcessor.reset();
         mWorldLogicTimer.stop();
     }
 
@@ -148,6 +149,7 @@ public class GameProc implements Disposable {
     }
 
     public void respawnPlayer() {
+        mGameInputProcessor.reset();
         mMobsController.respawnPlayer();
     }
 

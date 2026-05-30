@@ -39,6 +39,10 @@ abstract class AbstractInventoryItemsMouseInputHandler(
 
     protected abstract val windowTexture: TextureRegion
 
+    override fun reset() {
+        cancelHold()
+    }
+
     protected abstract fun getWindowRect(viewport: Rectangle): Rectangle
 
     private fun cancelHold() {
