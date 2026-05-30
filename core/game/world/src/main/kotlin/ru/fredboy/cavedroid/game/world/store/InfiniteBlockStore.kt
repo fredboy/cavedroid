@@ -149,10 +149,11 @@ class InfiniteBlockStore(
     private fun localX(x: Int): Int = Math.floorMod(x, ChunkGenerator.CHUNK_W)
 
     companion object {
-        /** Chunks loaded on each side of the centre chunk. Must cover the viewport plus a buffer. */
-        private const val LOAD_RADIUS = 4
+        // Chunks loaded on each side of the centre chunk. Must cover the viewport plus the lighting
+        // window (±96 blocks ≈ 6 chunks) so light rebuilds read real terrain.
+        private const val LOAD_RADIUS = 6
 
         /** Chunks beyond this distance are evicted. Hysteresis vs. [LOAD_RADIUS] avoids thrashing. */
-        private const val UNLOAD_RADIUS = 6
+        private const val UNLOAD_RADIUS = 8
     }
 }
