@@ -445,7 +445,7 @@ abstract class Mob(
     abstract fun changeDir()
 
     open fun jump() {
-        if (canClimb || !canJump) {
+        if (!canJump) {
             return
         }
 
