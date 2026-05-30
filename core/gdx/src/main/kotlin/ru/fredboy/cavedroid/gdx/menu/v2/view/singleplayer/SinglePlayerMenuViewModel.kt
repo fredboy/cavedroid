@@ -15,22 +15,26 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import ru.fredboy.cavedroid.common.api.ApplicationController
+import ru.fredboy.cavedroid.common.api.SaveTransferController
 import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
-import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.DeleteWorldMenuNavKey
+import ru.fredboy.cavedroid.gdx.menu.v2.view.editworld.EditWorldMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.newgame.NewGameMenuNavKey
 
 class SinglePlayerMenuViewModel(
     private val applicationContextRepository: ApplicationContextRepository,
     private val applicationController: ApplicationController,
     private val saveDataRepository: SaveDataRepository,
+    private val saveTransferController: SaveTransferController,
     private val navBackStack: NavBackStack,
     baseViewModelDependencies: BaseViewModelDependencies,
 ) : BaseViewModel(baseViewModelDependencies) {
+
+    val isImportSupported: Boolean get() = saveTransferController.isSupported
 
     private val loadedTextures = mutableListOf<Texture>()
 
@@ -45,6 +49,10 @@ class SinglePlayerMenuViewModel(
 
             if (trigger == Trigger.LOAD_FAILED) {
                 return@flatMapConcat flowOf(SinglePlayerMenuState.LoadingFailed)
+            }
+
+            if (trigger == Trigger.IMPORTING) {
+                return@flatMapConcat flowOf(SinglePlayerMenuState.LoadingList)
             }
 
             flow {
@@ -123,8 +131,33 @@ class SinglePlayerMenuViewModel(
         }
     }
 
-    fun onDeleteClick(save: SaveInfoVo) {
-        navBackStack.push(DeleteWorldMenuNavKey(worldName = save.name, saveDirectory = save.directory))
+    fun onEditClick(save: SaveInfoVo) {
+        navBackStack.push(EditWorldMenuNavKey(worldName = save.name, saveDirectory = save.directory))
+    }
+
+    fun onImportClick() {
+        if (!saveTransferController.isSupported) {
+            return
+        }
+        saveTransferController.importSave { bytes ->
+            if (bytes == null) {
+                return@importSave
+            }
+            viewModelScope.launch {
+                reloadTrigger.emit(Trigger.IMPORTING)
+                try {
+                    withContext(ioDispatcher) {
+                        saveDataRepository.importSaveFromZip(
+                            gameDataFolder = applicationContextRepository.getGameDirectory(),
+                            zipBytes = bytes,
+                        )
+                    }
+                } catch (e: Exception) {
+                    logger.e(e) { "Failed to import save" }
+                }
+                reloadTrigger.emit(Trigger.LOAD_LIST)
+            }
+        }
     }
 
     fun onBackClick() {
@@ -154,6 +187,7 @@ class SinglePlayerMenuViewModel(
         LOAD_LIST,
         LOADING_WORLD,
         LOAD_FAILED,
+        IMPORTING,
     }
 
     companion object {

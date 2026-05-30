@@ -52,7 +52,7 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
                             viewModel = viewModel,
                             saveInfo = save,
                             onLoad = { viewModel.onLoadClick(save) },
-                            onDelete = { viewModel.onDeleteClick(save) },
+                            onEdit = { viewModel.onEditClick(save) },
                         ).cell(
                             expandX = true,
                             fillX = true,
@@ -77,6 +77,12 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
                 .bottom()
 
             table {
+                val buttonWidth = if (viewModel.isImportSupported) {
+                    266f
+                } else {
+                    400f
+                }
+
                 textButton(viewModel.getLocalizedString("newWorld")) {
                     onClickWithSound(viewModel) {
                         if (!isDisabled) {
@@ -86,15 +92,31 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
 
                     isDisabled = state.saves.size >= MAX_SAVES_COUNT
                 }.cell(
-                    width = 400f,
+                    width = buttonWidth,
                     height = 60f,
                     padRight = 16f,
                 )
 
+                if (viewModel.isImportSupported) {
+                    textButton(viewModel.getLocalizedString("importSave")) {
+                        onClickWithSound(viewModel) {
+                            if (!isDisabled) {
+                                viewModel.onImportClick()
+                            }
+                        }
+
+                        isDisabled = state.saves.size >= MAX_SAVES_COUNT
+                    }.cell(
+                        width = buttonWidth,
+                        height = 60f,
+                        padRight = 16f,
+                    )
+                }
+
                 textButton(viewModel.getLocalizedString("back")) {
                     onClickWithSound(viewModel) { viewModel.onBackClick() }
                 }.cell(
-                    width = 400f,
+                    width = buttonWidth,
                     height = 60f,
                     padLeft = 16f,
                 )
@@ -179,7 +201,7 @@ private fun <S> KWidget<S>.saveItem(
     viewModel: SinglePlayerMenuViewModel,
     saveInfo: SaveInfoVo,
     onLoad: () -> Unit,
-    onDelete: () -> Unit,
+    onEdit: () -> Unit,
 ): KTableWidget = table {
     background("shade_tile")
     pad(8f)
@@ -247,7 +269,7 @@ private fun <S> KWidget<S>.saveItem(
             .width(300f)
             .height(60f)
 
-        val loadButton = textButton(viewModel.getLocalizedString("load")) {
+        textButton(viewModel.getLocalizedString("load")) {
             isDisabled = !saveInfo.isSupported
 
             onClickWithSound(viewModel) {
@@ -262,18 +284,13 @@ private fun <S> KWidget<S>.saveItem(
 
         row()
 
-        textButton(viewModel.getLocalizedString("delete")) {
+        textButton(viewModel.getLocalizedString("edit")) {
             onClickWithSound(viewModel) {
                 if (isDisabled) {
                     return@onClickWithSound
                 }
 
-                onDelete()
-                loadButton.isDisabled = true
-                loadButton.touchable = Touchable.disabled
-
-                touchable = Touchable.disabled
-                isDisabled = true
+                onEdit()
             }
         }
     }.right()

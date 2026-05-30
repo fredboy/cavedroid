@@ -1,7 +1,8 @@
-package ru.fredboy.cavedroid.gdx.menu.v2.view.singleplayer
+package ru.fredboy.cavedroid.gdx.menu.v2.view.editworld
 
-import ru.fredboy.cavedroid.common.api.ApplicationController
+import ru.fredboy.cavedroid.common.api.InlineTextInput
 import ru.fredboy.cavedroid.common.api.SaveTransferController
+import ru.fredboy.cavedroid.common.api.SoftKeyboardObserver
 import ru.fredboy.cavedroid.common.di.MenuScope
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.common.mvvm.ViewModelProvider
@@ -14,24 +15,27 @@ import kotlin.reflect.KClass
 
 @MenuScope
 @BindViewModelProvider
-class SinglePlayerMenuViewModelProvider @Inject constructor(
+class EditWorldMenuViewModelProvider @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
-    private val applicationController: ApplicationController,
     private val saveDataRepository: SaveDataRepository,
     private val saveTransferController: SaveTransferController,
+    private val inlineTextInput: InlineTextInput,
+    private val softKeyboardObserver: SoftKeyboardObserver,
     private val baseViewModelDependencies: BaseViewModelDependencies,
-) : ViewModelProvider<SinglePlayerMenuNavKey, SinglePlayerMenuViewModel> {
+) : ViewModelProvider<EditWorldMenuNavKey, EditWorldMenuViewModel> {
 
-    override val viewModelClass: KClass<SinglePlayerMenuViewModel>
-        get() = SinglePlayerMenuViewModel::class
+    override val viewModelClass: KClass<EditWorldMenuViewModel>
+        get() = EditWorldMenuViewModel::class
 
-    override fun get(navKey: SinglePlayerMenuNavKey, navBackStack: NavBackStack): SinglePlayerMenuViewModel {
-        return SinglePlayerMenuViewModel(
+    override fun get(navKey: EditWorldMenuNavKey, navBackStack: NavBackStack): EditWorldMenuViewModel {
+        return EditWorldMenuViewModel(
             applicationContextRepository = applicationContextRepository,
-            applicationController = applicationController,
             saveDataRepository = saveDataRepository,
             saveTransferController = saveTransferController,
+            inlineTextInput = inlineTextInput,
+            softKeyboardObserver = softKeyboardObserver,
             navBackStack = navBackStack,
+            saveDirectory = navKey.saveDirectory,
             baseViewModelDependencies = baseViewModelDependencies,
         )
     }

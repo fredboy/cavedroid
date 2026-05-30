@@ -23,12 +23,12 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.common.RootNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.death.DeathScreenNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.death.DeathScreenViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.death.deathScreenView
-import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.DeleteWorldMenuNavKey
-import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.DeleteWorldMenuViewModel
-import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.deleteWorldMenuView
 import ru.fredboy.cavedroid.gdx.menu.v2.view.disclaimer.AdsDisclaimerNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.disclaimer.AdsDisclaimerViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.disclaimer.adsDisclaimerView
+import ru.fredboy.cavedroid.gdx.menu.v2.view.editworld.EditWorldMenuNavKey
+import ru.fredboy.cavedroid.gdx.menu.v2.view.editworld.EditWorldMenuViewModel
+import ru.fredboy.cavedroid.gdx.menu.v2.view.editworld.editWorldMenuView
 import ru.fredboy.cavedroid.gdx.menu.v2.view.help.HelpMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.help.HelpMenuViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.help.helpMenuView
@@ -133,9 +133,9 @@ class MenuNavigationController @Inject constructor(
                 render(viewModel) { singlePlayerMenuView(viewModel) }
             }
 
-            is DeleteWorldMenuNavKey -> {
-                val viewModel = findViewModel<DeleteWorldMenuNavKey, DeleteWorldMenuViewModel>(navKey, cachedViewModel)
-                render(viewModel) { deleteWorldMenuView(viewModel) }
+            is EditWorldMenuNavKey -> {
+                val viewModel = findViewModel<EditWorldMenuNavKey, EditWorldMenuViewModel>(navKey, cachedViewModel)
+                render(viewModel) { editWorldMenuView(viewModel) }
             }
 
             is PauseMenuNavKey -> {

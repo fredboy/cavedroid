@@ -1,8 +1,8 @@
-package ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld
+package ru.fredboy.cavedroid.gdx.menu.v2.view.editworld
 
 import ru.fredboy.cavedroid.common.mvvm.NavKey
 
-data class DeleteWorldMenuNavKey(
+data class EditWorldMenuNavKey(
     val worldName: String,
     val saveDirectory: String,
 ) : NavKey

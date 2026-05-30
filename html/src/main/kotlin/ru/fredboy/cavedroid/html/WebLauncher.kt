@@ -71,6 +71,7 @@ object WebLauncher {
             } else {
                 NoOpSoftKeyboardObserver
             },
+            saveTransferController = WebSaveTransferController(),
         ).let { app ->
             if (yandexAvailable) {
                 YandexGamesLifecycleGameDecorator(app)

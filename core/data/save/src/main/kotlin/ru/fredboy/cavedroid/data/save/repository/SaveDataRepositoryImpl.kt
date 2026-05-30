@@ -12,6 +12,7 @@ import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import ru.fredboy.cavedroid.common.CaveDroidConstants.MAX_SAVES_COUNT
 import ru.fredboy.cavedroid.common.model.GameMode
+import ru.fredboy.cavedroid.common.utils.DateFormatter
 import ru.fredboy.cavedroid.data.save.mapper.ContainerControllerMapper
 import ru.fredboy.cavedroid.data.save.mapper.DropControllerMapper
 import ru.fredboy.cavedroid.data.save.mapper.FireControllerMapper
@@ -26,6 +27,7 @@ import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.domain.save.model.FireEntry
 import ru.fredboy.cavedroid.domain.save.model.GameMapSaveData
+import ru.fredboy.cavedroid.domain.save.model.GameSaveDetails
 import ru.fredboy.cavedroid.domain.save.model.GameSaveInfo
 import ru.fredboy.cavedroid.domain.save.model.GrowBlockEntry
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
@@ -48,6 +50,7 @@ import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.mob.MobSoundManager
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.world.GameWorld
+import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.util.zip.Deflater
 import java.util.zip.GZIPInputStream
@@ -66,6 +69,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     private val fireControllerMapper: FireControllerMapper,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
     private val applicationContextRepository: ApplicationContextRepository,
+    private val dateFormatter: DateFormatter,
 ) : SaveDataRepository {
 
     private val fileType: Files.FileType
@@ -307,10 +311,20 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     private fun saveMapData(gameWorld: GameWorld, savesPath: String, worldName: String, gameMode: GameMode) {
         val metaFile = file("$savesPath/$META_FILE")
 
+        val now = TimeUtils.millis()
+        // On the first save (no existing meta) the world was just generated, so
+        // its generatorConfig holds the real seed; on re-saves the original seed
+        // and creation time are preserved (a loaded world's generatorConfig seed
+        // is a fresh meaningless value).
+        val existing = metaFile.takeIf { it.exists() }
+            ?.let { runCatching { loadMapData(savesPath) }.getOrNull() }
+        val createdTimestamp = existing?.let { it.createdTimestamp ?: it.timestamp } ?: now
+        val seed = if (existing != null) existing.seed else gameWorld.generatorConfig.seed
+
         val worldSaveDataDto = SaveDataDto.WorldSaveDataDto(
             version = MAP_SAVE_VERSION.toInt(),
             name = worldName,
-            timestamp = TimeUtils.millis(),
+            timestamp = now,
             gameTime = gameWorld.currentGameTime,
             moonPhase = gameWorld.moonPhase,
             gameMode = gameMode,
@@ -320,6 +334,8 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             weatherTimer = gameWorld.weatherTimer,
             weatherIntensity = gameWorld.weatherIntensity,
             currentStreakStartDayIndex = gameWorld.currentStreakStartDayIndex,
+            createdTimestamp = createdTimestamp,
+            seed = seed,
         )
 
         val bytes = ProtoBuf.encodeToByteArray(worldSaveDataDto)
@@ -597,18 +613,149 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             .asSequence()
             .filter { it.isDirectory }
             .filter { isSaveDir(it) }
-            .map { saveDir ->
-                val saveData = loadMapData(saveDir.path())
-                gameSaveInfoMapper.map(
-                    dto = saveData,
-                    dir = saveDir.name(),
-                    expectedVersion = MAP_SAVE_VERSION.toInt(),
-                    screenshotHandle = saveDir.child(SCREENSHOT_FILE).takeIf { it.exists() },
-                )
+            .mapNotNull { saveDir ->
+                // A single corrupt/unreadable meta.dat must not break the whole
+                // list — skip it instead of throwing.
+                runCatching {
+                    val saveData = loadMapData(saveDir.path())
+                    gameSaveInfoMapper.map(
+                        dto = saveData,
+                        dir = saveDir.name(),
+                        expectedVersion = MAP_SAVE_VERSION.toInt(),
+                        screenshotHandle = saveDir.child(SCREENSHOT_FILE).takeIf { it.exists() },
+                    )
+                }.onFailure { error ->
+                    logger.w(error) { "Skipping unreadable save '${saveDir.name()}'" }
+                }.getOrNull()
             }
             .take(MAX_SAVES_COUNT)
             .toList()
             .sortedByDescending { it.lastModifiedTimestamp }
+    }
+
+    override fun getSaveDetails(gameDataFolder: String, saveDir: String): GameSaveDetails {
+        val savesPath = getSavePath(gameDataFolder, saveDir)
+        val meta = loadMapData(savesPath)
+        val (width, height) = readMapDimensions(savesPath)
+
+        val sizeBytes = file(savesPath).list()
+            .filter { !it.isDirectory }
+            .sumOf { it.length() }
+
+        return GameSaveDetails(
+            name = meta.name,
+            directory = saveDir,
+            gameMode = meta.gameMode,
+            widthBlocks = width,
+            heightBlocks = height,
+            sizeBytes = sizeBytes,
+            version = meta.version,
+            isSupported = meta.version == MAP_SAVE_VERSION.toInt(),
+            seed = meta.seed,
+            lastModifiedString = dateFormatter.format(meta.timestamp),
+            createdString = meta.createdTimestamp?.let(dateFormatter::format),
+            screenshotHandle = file("$savesPath/$SCREENSHOT_FILE").takeIf { it.exists() },
+        )
+    }
+
+    private fun readMapDimensions(savesPath: String): Pair<Int, Int> {
+        // The foremap header (written by compressMap) is: version byte, then the
+        // width and height as 4-byte ints. Read just that prefix.
+        val header = ByteArray(1 + (Int.SIZE_BYTES shl 1))
+        GZIPInputStream(file("$savesPath/$FOREMAP_FILE").read()).use { stream ->
+            var read = 0
+            while (read < header.size) {
+                val count = stream.read(header, read, header.size - read)
+                if (count < 0) break
+                read += count
+            }
+        }
+        val width = ByteBuffer.wrap(header, 1, Int.SIZE_BYTES).getInt()
+        val height = ByteBuffer.wrap(header, 1 + Int.SIZE_BYTES, Int.SIZE_BYTES).getInt()
+        return width to height
+    }
+
+    override fun renameSave(gameDataFolder: String, saveDir: String, newName: String) {
+        val savesPath = getSavePath(gameDataFolder, saveDir)
+        val meta = loadMapData(savesPath)
+        val renamed = meta.copy(name = newName.trim())
+        file("$savesPath/$META_FILE").writeBytes(ProtoBuf.encodeToByteArray(renamed), false)
+    }
+
+    // A save is exported as a flat, length-prefixed archive rather than a real
+    // zip: java.util.zip's ZipOutputStream/ZipInputStream are not faithfully
+    // emulated under TeaVM (web) and silently corrupt the bytes. This format
+    // relies only on primitives that work on every platform.
+    //   magic("CDA1") | entryCount:int | { nameLen:int, name, contentLen:int, content }*
+    override fun exportSaveToZip(gameDataFolder: String, saveDir: String): ByteArray {
+        val savesPath = getSavePath(gameDataFolder, saveDir)
+        val output = ByteArrayOutputStream()
+
+        val files = file(savesPath).list().filter { !it.isDirectory }
+
+        output.write(ARCHIVE_MAGIC)
+        output.write(files.size.toByteArray())
+        files.forEach { entry ->
+            val nameBytes = entry.name().encodeToByteArray()
+            val content = entry.readBytes()
+            output.write(nameBytes.size.toByteArray())
+            output.write(nameBytes)
+            output.write(content.size.toByteArray())
+            output.write(content)
+        }
+
+        return output.toByteArray()
+    }
+
+    override fun importSaveFromZip(gameDataFolder: String, zipBytes: ByteArray): String {
+        require(getSavesInfo(gameDataFolder).size < MAX_SAVES_COUNT) {
+            "Cannot import: maximum number of saves reached"
+        }
+
+        val buffer = ByteBuffer.wrap(zipBytes)
+        val magic = ByteArray(ARCHIVE_MAGIC.size)
+        require(buffer.remaining() >= magic.size) { "Invalid save archive" }
+        buffer.get(magic)
+        require(magic.contentEquals(ARCHIVE_MAGIC)) { "Invalid save archive" }
+
+        val entryCount = buffer.getInt()
+        require(entryCount in 0..MAX_ARCHIVE_ENTRIES) { "Invalid save archive" }
+
+        val newDir = getActualSaveDirName(gameDataFolder, IMPORTED_SAVE_DIR, overwrite = false)
+        val savesPath = getSavePath(gameDataFolder, newDir)
+        val saveDirHandle = file(savesPath)
+
+        try {
+            repeat(entryCount) {
+                val nameLen = buffer.getInt()
+                require(nameLen in 0..MAX_ARCHIVE_NAME_LENGTH && nameLen <= buffer.remaining()) {
+                    "Invalid save archive"
+                }
+                val nameBytes = ByteArray(nameLen)
+                buffer.get(nameBytes)
+
+                val contentLen = buffer.getInt()
+                require(contentLen in 0..buffer.remaining()) { "Invalid save archive" }
+                val content = ByteArray(contentLen)
+                buffer.get(content)
+
+                // Guard against path traversal: keep only the bare file name.
+                val name = nameBytes.decodeToString().substringAfterLast('/')
+                if (name.isNotEmpty()) {
+                    file("$savesPath/$name").writeBytes(content, false)
+                }
+            }
+        } catch (e: Exception) {
+            runCatching { saveDirHandle.deleteDirectory() }
+            throw e
+        }
+
+        if (!isSaveDir(saveDirHandle)) {
+            runCatching { saveDirHandle.deleteDirectory() }
+            throw IllegalArgumentException("Imported archive is not a valid save")
+        }
+
+        return newDir
     }
 
     override fun deleteSave(gameDataFolder: String, saveDir: String) {
@@ -628,6 +775,11 @@ internal class SaveDataRepositoryImpl @Inject constructor(
 
         private const val MAP_SAVE_VERSION: UByte = 7u
         private const val SAVES_DIR = "saves"
+        private const val IMPORTED_SAVE_DIR = "imported"
+
+        private val ARCHIVE_MAGIC = "CDA1".encodeToByteArray()
+        private const val MAX_ARCHIVE_ENTRIES = 64
+        private const val MAX_ARCHIVE_NAME_LENGTH = 255
         private const val DROP_FILE = "drop.dat"
         private const val PROJECTILES_FILE = "projectiles.dat"
         private const val GROW_BLOCKS_FILE = "grow_blocks.dat"

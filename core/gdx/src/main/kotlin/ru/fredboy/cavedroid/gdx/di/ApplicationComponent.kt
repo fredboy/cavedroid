@@ -8,6 +8,7 @@ import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.CloudStatsSync
 import ru.fredboy.cavedroid.common.api.InlineTextInput
 import ru.fredboy.cavedroid.common.api.PreferencesStore
+import ru.fredboy.cavedroid.common.api.SaveTransferController
 import ru.fredboy.cavedroid.common.api.SoftKeyboardObserver
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
@@ -128,6 +129,8 @@ interface ApplicationComponent {
 
     val softKeyboardObserver: SoftKeyboardObserver
 
+    val saveTransferController: SaveTransferController
+
     val lightingSystemFactory: LightingSystemFactory
 
     val appDispatchers: AppDispatchers
@@ -155,6 +158,9 @@ interface ApplicationComponent {
 
         @BindsInstance
         fun softKeyboardObserver(impl: SoftKeyboardObserver): Builder
+
+        @BindsInstance
+        fun saveTransferController(impl: SaveTransferController): Builder
 
         @BindsInstance
         fun lightingSystemFactory(factory: LightingSystemFactory): Builder
