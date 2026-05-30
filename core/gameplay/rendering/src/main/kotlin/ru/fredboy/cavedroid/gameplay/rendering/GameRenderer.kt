@@ -112,6 +112,11 @@ class GameRenderer @Inject constructor(
     }
 
     private fun wrapCameraToPlayerSeam() {
+        if (gameWorld.isInfinite) {
+            // No seam to wrap across in an infinite world.
+            return
+        }
+
         val worldWidth = gameWorld.width.toFloat()
         val cameraToPlayer = player.x - camera.position.x
         if (cameraToPlayer > worldWidth / 2f) {

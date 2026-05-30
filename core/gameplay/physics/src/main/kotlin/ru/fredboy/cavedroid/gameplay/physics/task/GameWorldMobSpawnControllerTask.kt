@@ -21,7 +21,13 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
     private val mobFactory: MobFactory,
 ) : BaseGameWorldControllerTask() {
 
-    private val maintainedMobsCount = gameWorld.width / SPAWN_CHUNK_SIZE
+    // Infinite worlds maintain mobs only within a window around the player; finite worlds use the
+    // whole (looped) world width.
+    private val spawnSpan: Int
+        get() = if (gameWorld.isInfinite) INFINITE_SPAWN_SPAN else gameWorld.width
+
+    private val maintainedMobsCount: Int
+        get() = spawnSpan / SPAWN_CHUNK_SIZE
 
     override fun exec() {
         logger.i {
@@ -47,9 +53,15 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
             surfaceCandidates.isNotEmpty()
         val canSpawnCave = mobController.mobs.size < maintainedMobsCount && caveCandidates.isNotEmpty()
 
+        val originX = if (gameWorld.isInfinite) {
+            mobController.player.mapX - spawnSpan / 2
+        } else {
+            0
+        }
+
         var spawnCount = 0
         var caveSpawns = 0
-        for (x in 0..<gameWorld.width step SPAWN_CHUNK_SIZE) {
+        for (x in originX until originX + spawnSpan step SPAWN_CHUNK_SIZE) {
             val isDayInDesert = gameWorld.isDayTime() && gameWorld.getBiomeAt(x) == Biome.DESERT
             if (canSpawnSurface && !isDayInDesert) {
                 val surfaceX = x + MathUtils.random(SPAWN_CHUNK_SIZE - 1)
@@ -151,6 +163,11 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         private const val SPAWN_CHUNK_SIZE = 32
+
+        // Window (in blocks, centred on the player) used for spawning in infinite worlds. Kept within
+        // the streamed/resident region so spawn scans hit generated terrain.
+        private const val INFINITE_SPAWN_SPAN = 128
+
         private const val CAVE_SCAN_ATTEMPTS = 8
         private const val CAVE_FLOOR_SCAN_DEPTH = 8
 

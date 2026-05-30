@@ -243,12 +243,28 @@ abstract class BlocksRenderer(
             }
         }
 
+        // Evict off-screen render chunks so an infinite world doesn't leak frame buffers as the
+        // player roams. Finite worlds are bounded, so this just trims briefly off-screen chunks.
+        val keepX = (minChunkX - CHUNK_RETAIN_MARGIN)..(maxChunkX + CHUNK_RETAIN_MARGIN)
+        val keepY = (minChunkY - CHUNK_RETAIN_MARGIN)..(maxChunkY + CHUNK_RETAIN_MARGIN)
+        val iterator = chunks.iterator()
+        while (iterator.hasNext()) {
+            val entry = iterator.next()
+            if (entry.key.first !in keepX || entry.key.second !in keepY) {
+                entry.value.dispose()
+                iterator.remove()
+            }
+        }
+
         drawBlockDamage(spriteBatch)
     }
 
     companion object {
         private const val FIRE_BLOCK_KEY = "fire"
         private const val MAX_BLOCK_DAMAGE_INDEX = 10
+
+        /** Render chunks kept beyond the viewport before being evicted (in render-chunk units). */
+        private const val CHUNK_RETAIN_MARGIN = 2
         private val SHADOW_DARK = Color(0f, 0f, 0f, 0.6f)
         private val SHADOW_FADE = Color(0f, 0f, 0f, 0f)
         private val BACKGROUND_TINT = Color(0f, 0f, 0f, 0.5f)
