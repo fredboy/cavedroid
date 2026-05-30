@@ -7,6 +7,7 @@ import ru.fredboy.cavedroid.domain.assets.repository.DropSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
+import ru.fredboy.cavedroid.entity.drop.model.Drop
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import javax.inject.Inject
@@ -23,6 +24,18 @@ class DropControllerMapper @Inject constructor(
         version = SAVE_DATA_VERSION,
         drops = dropController.getAllDrop().map(dropMapper::mapSaveData),
     )
+
+    fun mapEmptySaveData(): SaveDataDto.DropControllerSaveDataDto = SaveDataDto.DropControllerSaveDataDto(
+        version = SAVE_DATA_VERSION,
+        drops = emptyList(),
+    )
+
+    fun mapDropSaveData(drop: Drop): SaveDataDto.DropSaveDataDto = dropMapper.mapSaveData(drop)
+
+    fun mapDrop(
+        saveDataDto: SaveDataDto.DropSaveDataDto,
+        dropWorldAdapter: DropWorldAdapter,
+    ): Drop = dropMapper.mapDrop(saveDataDto, dropWorldAdapter)
 
     fun mapDropController(
         saveDataDto: SaveDataDto.DropControllerSaveDataDto,

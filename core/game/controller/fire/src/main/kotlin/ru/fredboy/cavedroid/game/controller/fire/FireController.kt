@@ -2,19 +2,29 @@ package ru.fredboy.cavedroid.game.controller.fire
 
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.save.model.FireEntry
+import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.domain.world.lighting.LightHandle
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
+import ru.fredboy.cavedroid.game.world.store.ChunkListener
 import javax.inject.Inject
 
 @GameScope
 class FireController @Inject constructor(
     private val gameWorld: GameWorld,
     private val lightingSystem: LightingSystem,
+    private val saveDataRepository: SaveDataRepository,
+    private val applicationContextRepository: ApplicationContextRepository,
+    private val gameContextRepository: GameContextRepository,
 ) : OnBlockDestroyedListener,
+    ChunkListener,
     Disposable {
 
     data class FireInstance(
@@ -31,6 +41,10 @@ class FireController @Inject constructor(
 
     init {
         gameWorld.addBlockDestroyedListener(this)
+        if (gameWorld.isInfinite) {
+            gameWorld.addChunkListener(this)
+            gameWorld.forEachLoadedChunk(::onChunkLoaded)
+        }
     }
 
     private fun key(x: Int, y: Int, layer: Layer): Long {
@@ -108,7 +122,47 @@ class FireController @Inject constructor(
         removeFire(x, y, layer)
     }
 
+    override fun onChunkLoaded(chunkX: Int) {
+        saveDataRepository.loadChunkFire(
+            gameDataFolder = applicationContextRepository.getGameDirectory(),
+            saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
+            chunkX = chunkX,
+        ).forEach { entry ->
+            addFire(entry.x, entry.y, entry.layer)?.age = entry.age
+        }
+    }
+
+    override fun onChunkUnloaded(chunkX: Int) {
+        val entries = chunkFireEntries(chunkX)
+        saveChunkFire(chunkX, entries)
+        entries.forEach { removeFire(it.x, it.y, it.layer) }
+    }
+
+    /** Persists the fire of every resident chunk without removing it (used on full save). */
+    fun flushChunks() {
+        if (!gameWorld.isInfinite) {
+            return
+        }
+        gameWorld.forEachLoadedChunk { chunkX -> saveChunkFire(chunkX, chunkFireEntries(chunkX)) }
+    }
+
+    private fun chunkFireEntries(chunkX: Int): List<FireEntry> = fires.values
+        .filter { Math.floorDiv(it.x, ChunkGenerator.CHUNK_W) == chunkX }
+        .map { FireEntry(x = it.x, y = it.y, layer = it.layer, age = it.age) }
+
+    private fun saveChunkFire(chunkX: Int, entries: List<FireEntry>) {
+        saveDataRepository.saveChunkFire(
+            gameDataFolder = applicationContextRepository.getGameDirectory(),
+            saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
+            chunkX = chunkX,
+            entries = entries,
+        )
+    }
+
     override fun dispose() {
+        if (gameWorld.isInfinite) {
+            gameWorld.removeChunkListener(this)
+        }
         fires.values.forEach { it.lightHandle?.dispose() }
         fires.clear()
         gameWorld.removeBlockDestroyedListener(this)

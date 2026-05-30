@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.domain.save.repository
 
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.save.model.ChunkEntitiesSaveData
 import ru.fredboy.cavedroid.domain.save.model.ChunkSaveData
 import ru.fredboy.cavedroid.domain.save.model.FireEntry
 import ru.fredboy.cavedroid.domain.save.model.GameMapSaveData
@@ -10,10 +11,14 @@ import ru.fredboy.cavedroid.domain.save.model.GrowBlockEntry
 import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
+import ru.fredboy.cavedroid.entity.container.model.Container
+import ru.fredboy.cavedroid.entity.container.model.ContainerCoordinates
 import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
+import ru.fredboy.cavedroid.entity.drop.model.Drop
 import ru.fredboy.cavedroid.entity.mob.MobQueue
+import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
@@ -78,6 +83,53 @@ interface SaveDataRepository {
         saveGameDirectory: String,
         chunkX: Int,
     ): ChunkSaveData?
+
+    /** Persists the mobs/drops/containers belonging to one infinite-world chunk (deletes the file when empty). */
+    fun saveChunkEntities(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+        mobs: List<Mob>,
+        drops: List<Drop>,
+        containers: Map<ContainerCoordinates, Container>,
+    )
+
+    /** Loads and reconstructs the entities of one infinite-world chunk, or null if none were saved. */
+    fun loadChunkEntities(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+        mobPhysicsFactory: MobPhysicsFactory,
+        dropWorldAdapter: DropWorldAdapter,
+    ): ChunkEntitiesSaveData?
+
+    /** Persists the fire instances of one infinite-world chunk (deletes the file when empty). */
+    fun saveChunkFire(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+        entries: List<FireEntry>,
+    )
+
+    fun loadChunkFire(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+    ): List<FireEntry>
+
+    /** Persists the pending grow-block timers of one infinite-world chunk (deletes the file when empty). */
+    fun saveChunkGrowBlocks(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+        entries: List<GrowBlockEntry>,
+    )
+
+    fun loadChunkGrowBlocks(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+    ): List<GrowBlockEntry>
 
     fun loadContainerController(
         gameDataFolder: String,

@@ -200,7 +200,9 @@ object GameModule {
         gameWorld: GameWorld,
         growBlockActions: Map<String, @JvmSuppressWildcards IGrowBlockAction>,
     ): GameWorldGrowBlocksControllerTask {
-        val initialEntries = if (gameContextRepository.isLoadGame()) {
+        // Infinite worlds restore grow timers per chunk as chunks stream in, so the global file is
+        // only used by finite worlds.
+        val initialEntries = if (gameContextRepository.isLoadGame() && !gameWorld.isInfinite) {
             saveDataRepository.loadGrowBlockEntries(
                 gameDataFolder = applicationContextRepository.getGameDirectory(),
                 saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
@@ -212,6 +214,9 @@ object GameModule {
         return GameWorldGrowBlocksControllerTask(
             gameWorld = gameWorld,
             growBlockActions = growBlockActions,
+            saveDataRepository = saveDataRepository,
+            applicationContextRepository = applicationContextRepository,
+            gameContextRepository = gameContextRepository,
             initialEntries = initialEntries,
         )
     }
@@ -225,7 +230,9 @@ object GameModule {
         gameWorld: GameWorld,
         lightingSystem: LightingSystem,
     ): FireController {
-        val seed = if (gameContextRepository.isLoadGame()) {
+        // Infinite worlds restore fire per chunk as chunks stream in, so the global file is only used
+        // by finite worlds.
+        val seed = if (gameContextRepository.isLoadGame() && !gameWorld.isInfinite) {
             saveDataRepository.loadFireEntries(
                 gameDataFolder = applicationContextRepository.getGameDirectory(),
                 saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
@@ -237,6 +244,9 @@ object GameModule {
         return FireController(
             gameWorld = gameWorld,
             lightingSystem = lightingSystem,
+            saveDataRepository = saveDataRepository,
+            applicationContextRepository = applicationContextRepository,
+            gameContextRepository = gameContextRepository,
         ).apply {
             seed.forEach { entry ->
                 addFire(entry.x, entry.y, entry.layer)?.age = entry.age

@@ -265,6 +265,14 @@ sealed class SaveDataDto {
     ) : SaveDataDto()
 
     @Serializable
+    data class ChunkEntitiesSaveDataDto(
+        override val version: Int,
+        val mobs: List<@Contextual MobSaveDataDto>,
+        val drops: List<DropSaveDataDto>,
+        val containers: Map<String, @Contextual ContainerSaveDataDto>,
+    ) : SaveDataDto()
+
+    @Serializable
     data class WorldSaveDataDto(
         override val version: Int,
         val name: String,

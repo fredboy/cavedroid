@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gameplay.physics.task
 
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
+import kotlinx.coroutines.time.withTimeoutOrNull
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
@@ -11,6 +12,8 @@ import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobFactory
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
+import ru.fredboy.cavedroid.game.world.store.ChunkListener
 import javax.inject.Inject
 
 @GameScope
@@ -19,22 +22,44 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobParamsRepository: MobParamsRepository,
     private val mobFactory: MobFactory,
-) : BaseGameWorldControllerTask() {
+) : BaseGameWorldControllerTask(), ChunkListener {
 
-    // Infinite worlds maintain mobs only within a window around the player; finite worlds use the
-    // whole (looped) world width.
-    private val spawnSpan: Int
-        get() = if (gameWorld.isInfinite) INFINITE_SPAWN_SPAN else gameWorld.width
-
-    private val maintainedMobsCount: Int
-        get() = spawnSpan / SPAWN_CHUNK_SIZE
+    private var listenerAdded = false
 
     override fun exec() {
-        logger.i {
-            "Spawn controller task started. " +
-                "Current time: ${gameWorld.totalGameTimeSec}. Last spawn time: ${gameWorld.lastSpawnGameTime}"
+        if (!listenerAdded) {
+            logger.d { "Adding spawn chunk listener after first task run" }
+            listenerAdded = true
+            gameWorld.addChunkListener(this)
         }
 
+        logger.i {
+            "Spawn controller task started. " +
+                    "Current time: ${gameWorld.totalGameTimeSec}. Last spawn time: ${gameWorld.lastSpawnGameTime}"
+        }
+
+        val spawnSpan = if (gameWorld.isInfinite) ChunkGenerator.CHUNK_W else gameWorld.width
+
+        val originX = if (gameWorld.isInfinite) {
+            mobController.player.mapX - spawnSpan / 2
+        } else {
+            0
+        }
+
+        val mobsPerSpan = if (gameWorld.isInfinite) {
+            spawnSpan / SPAWN_CHUNK_SIZE
+        } else {
+            getInfiniteChunkMobsCount()
+        }
+
+        doSpawn(originX, spawnSpan, mobsPerSpan)
+
+        gameWorld.lastSpawnGameTime = gameWorld.totalGameTimeSec
+    }
+
+    private fun getInfiniteChunkMobsCount(): Int = (-0..MAX_CHUNK_MOBS).random().coerceAtLeast(0)
+
+    private fun doSpawn(originX: Int, span: Int, mobsPerSpan: Int) {
         val surfaceCandidates = mobParamsRepository.getAllParams()
             .filter {
                 when (it.behaviorType) {
@@ -45,23 +70,16 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
             }
 
         val caveCandidates = mobParamsRepository.getAllParams()
-            .filter {
-                it.behaviorType == MobBehaviorType.AGGRESSIVE || it.behaviorType == MobBehaviorType.ARCHER
-            }
+            .filter { it.behaviorType == MobBehaviorType.AGGRESSIVE || it.behaviorType == MobBehaviorType.ARCHER }
 
-        val canSpawnSurface = (!gameWorld.isDayTime() || mobController.mobs.size < maintainedMobsCount) &&
-            surfaceCandidates.isNotEmpty()
-        val canSpawnCave = mobController.mobs.size < maintainedMobsCount && caveCandidates.isNotEmpty()
+        val spanMobs = mobController.mobs.count { it.mapX in originX..(originX + span) }
+        val canSpawnSurface = (!gameWorld.isDayTime() || spanMobs < mobsPerSpan) && surfaceCandidates.isNotEmpty()
+        val canSpawnCave = spanMobs < mobsPerSpan && caveCandidates.isNotEmpty()
 
-        val originX = if (gameWorld.isInfinite) {
-            mobController.player.mapX - spawnSpan / 2
-        } else {
-            0
-        }
 
         var spawnCount = 0
         var caveSpawns = 0
-        for (x in originX until originX + spawnSpan step SPAWN_CHUNK_SIZE) {
+        for (x in originX until originX + span step SPAWN_CHUNK_SIZE) {
             val isDayInDesert = gameWorld.isDayTime() && gameWorld.getBiomeAt(x) == Biome.DESERT
             if (canSpawnSurface && !isDayInDesert) {
                 val surfaceX = x + MathUtils.random(SPAWN_CHUNK_SIZE - 1)
@@ -81,8 +99,11 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
             }
         }
 
-        gameWorld.lastSpawnGameTime = gameWorld.totalGameTimeSec
-        logger.i { "Spawn controller task finished. Spawn count: $spawnCount. Of them in caves: $caveSpawns" }
+        if (spawnCount > 0) {
+            logger.i { "Spawn finished at $originX..${originX + span}. Spawn count: $spawnCount. Of them in caves: $caveSpawns" }
+        } else {
+            logger.d { "Nothing spawned" }
+        }
     }
 
     private fun trySpawnAtSurface(spawnX: Int, candidates: List<MobParams>): Boolean {
@@ -129,6 +150,15 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
         return false
     }
 
+    override fun onChunkLoaded(chunkX: Int) {
+        logger.d { "Spawning chunk mobs at $chunkX" }
+        doSpawn(chunkX * ChunkGenerator.CHUNK_W, ChunkGenerator.CHUNK_W, getInfiniteChunkMobsCount())
+    }
+
+    override fun onChunkUnloaded(chunkX: Int) {
+        // no-op
+    }
+
     private fun trySpawnAbove(spawnX: Int, floorY: Int, candidates: List<MobParams>): Boolean {
         val params = candidates.random()
         val spawnPosX = spawnX.toFloat()
@@ -158,15 +188,17 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
         return !blocked
     }
 
+    override fun dispose() {
+        gameWorld.removeChunkListener(this)
+    }
+
     companion object {
         private const val TAG = "GameWorldMobSpawnControllerTask"
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
-        private const val SPAWN_CHUNK_SIZE = 32
+        private const val SPAWN_CHUNK_SIZE = 16
 
-        // Window (in blocks, centred on the player) used for spawning in infinite worlds. Kept within
-        // the streamed/resident region so spawn scans hit generated terrain.
-        private const val INFINITE_SPAWN_SPAN = 128
+        private const val MAX_CHUNK_MOBS = 3
 
         private const val CAVE_SCAN_ATTEMPTS = 8
         private const val CAVE_FLOOR_SCAN_DEPTH = 8

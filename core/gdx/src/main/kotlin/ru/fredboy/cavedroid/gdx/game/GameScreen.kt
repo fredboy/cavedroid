@@ -82,6 +82,7 @@ class GameScreen @Inject constructor(
     fun newGame(gameConfig: StartGameConfig.New) {
         resetGameComponent()
         gameComponent = getGameComponent(gameConfig).apply {
+            chunkEntityStreamer.initialize()
             gameProc.setPlayerGameMode(gameConfig.gameMode)
             gameRenderer.render(0f)
             gameSaveHelper.saveGame(false)
@@ -90,7 +91,9 @@ class GameScreen @Inject constructor(
 
     fun loadGame(gameConfig: StartGameConfig.Load) {
         resetGameComponent()
-        gameComponent = getGameComponent(gameConfig)
+        gameComponent = getGameComponent(gameConfig).apply {
+            chunkEntityStreamer.initialize()
+        }
     }
 
     fun saveGame() {

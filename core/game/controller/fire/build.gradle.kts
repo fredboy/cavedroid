@@ -11,8 +11,10 @@ dependencies {
     useDagger()
 
     useCommonLibs()
+    useModule(":core:domain:configuration")
     useModule(":core:domain:items")
     useModule(":core:domain:world")
+    useDomainSaveModule()
     useModule(":core:game:world")
 
     testImplementation(Dependencies.Test.junitJupiter)

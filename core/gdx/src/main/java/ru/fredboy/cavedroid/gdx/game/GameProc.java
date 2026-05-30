@@ -109,6 +109,7 @@ public class GameProc implements Disposable {
         }
 
         mGameRenderer.resetCameraToPlayer();
+        mGameWorld.update(0f);
         mGameRenderer.render(0f);
         mGameWorld.getLightingSystem().recalculate();
     }
