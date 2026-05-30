@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Disposable
+import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.coroutines.GdxMainThread
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.removeFirst
@@ -35,6 +36,7 @@ class GameWorld @Inject constructor(
     initialBackMap: Array<Array<Block>>?,
     initialBiomes: Array<Biome>?,
     requestedWidth: Int?,
+    requestedSeed: Long?,
 ) : Disposable {
     val foreMap: Array<Array<Block>>
     val backMap: Array<Array<Block>>
@@ -57,6 +59,7 @@ class GameWorld @Inject constructor(
 
     val generatorConfig: WorldGeneratorConfig = WorldGeneratorConfig.getDefault(
         width = initialForeMap?.size ?: requestedWidth ?: WorldGeneratorConfig.DEFAULT_WIDTH,
+        seed = requestedSeed ?: TimeUtils.millis(),
     )
 
     val world: World = World(Vector2(0f, 32f), false)

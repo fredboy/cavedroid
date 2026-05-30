@@ -24,6 +24,8 @@ class GameContextRepositoryImpl @Inject constructor(
 
     override fun getRequestedWorldWidth(): Int? = gameContextStore.requestedWorldWidth
 
+    override fun getRequestedSeed(): Long? = gameContextStore.requestedSeed
+
     override fun shouldShowInfo(): Boolean = gameContextStore.showInfo
 
     override fun shouldShowMap(): Boolean = gameContextStore.showMap

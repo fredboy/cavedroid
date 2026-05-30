@@ -22,6 +22,7 @@ class WorldConfigMenuViewModel(
     private val navBackStack: NavBackStack,
     private val worldName: String,
     private val gameMode: GameMode,
+    private val seed: Long,
     baseViewModelDependencies: BaseViewModelDependencies,
 ) : BaseViewModel(baseViewModelDependencies) {
 
@@ -51,6 +52,7 @@ class WorldConfigMenuViewModel(
                         saveDirectory = worldNameSanitizer.sanitizeWorldName(worldName),
                         gameMode = gameMode,
                         worldSize = size,
+                        seed = seed,
                     ),
                 )
             }

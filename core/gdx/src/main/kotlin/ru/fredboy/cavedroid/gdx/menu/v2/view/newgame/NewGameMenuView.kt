@@ -41,7 +41,7 @@ private fun Stage.rebuild(viewModel: NewGameMenuViewModel, isKeyboardUp: Boolean
     }
 }
 
-private fun attachFieldListeners(field: TextField, viewModel: NewGameMenuViewModel) {
+private fun attachFieldListeners(field: TextField, viewModel: NewGameMenuViewModel, isSeed: Boolean) {
     // Drive the IME ourselves from user gestures + the observer; scene2d's
     // focus-driven show/hide would race with the rebuild and re-fire the
     // observer, causing layout flicker.
@@ -50,19 +50,28 @@ private fun attachFieldListeners(field: TextField, viewModel: NewGameMenuViewMod
     field.addListener(
         object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
-                viewModel.onWorldNameChanged(field.text, field.cursorPosition)
+                if (isSeed) {
+                    viewModel.onSeedChanged(field.text, field.cursorPosition)
+                } else {
+                    viewModel.onWorldNameChanged(field.text, field.cursorPosition)
+                }
             }
         },
     )
 
     field.onClick {
+        viewModel.editingSeed = isSeed
         if (viewModel.inlineTextInput.isSupported) {
             viewModel.inlineTextInput.trigger(
                 initialText = field.text,
                 initialCursor = field.cursorPosition,
                 buttonText = viewModel.getLocalizedString("done"),
             ) { newText, newCursor ->
-                viewModel.worldName = newText
+                if (isSeed) {
+                    viewModel.enteredSeed = newText
+                } else {
+                    viewModel.worldName = newText
+                }
                 field.text = newText
                 field.cursorPosition = newCursor
             }
@@ -83,7 +92,15 @@ private fun Stage.buildDefaultLayout(viewModel: NewGameMenuViewModel): TextField
             worldNameField = textField(viewModel.worldName).apply {
                 cursorPosition = viewModel.cursorPosition.coerceIn(0, text.length)
             }
-            attachFieldListeners(worldNameField, viewModel)
+            attachFieldListeners(worldNameField, viewModel, isSeed = false)
+
+            row()
+
+            textField(viewModel.enteredSeed) {
+                messageText = viewModel.getLocalizedString("seed")
+                cursorPosition = viewModel.seedCursorPosition.coerceIn(0, text.length)
+                attachFieldListeners(this, viewModel, isSeed = true)
+            }
 
             row()
 
@@ -118,6 +135,7 @@ private fun Stage.buildDefaultLayout(viewModel: NewGameMenuViewModel): TextField
 @Scene2dDsl
 private fun Stage.buildKeyboardUpLayout(viewModel: NewGameMenuViewModel): TextField {
     lateinit var worldNameField: TextField
+    lateinit var seedField: TextField
     actors {
         table {
             setFillParent(true)
@@ -139,18 +157,26 @@ private fun Stage.buildKeyboardUpLayout(viewModel: NewGameMenuViewModel): TextFi
                 worldNameField = textField(viewModel.worldName).apply {
                     cursorPosition = viewModel.cursorPosition.coerceIn(0, text.length)
                 }
-                attachFieldListeners(worldNameField, viewModel)
+                attachFieldListeners(worldNameField, viewModel, isSeed = false)
+
+                row()
+
+                seedField = textField(viewModel.enteredSeed).apply {
+                    messageText = viewModel.getLocalizedString("seed")
+                    cursorPosition = viewModel.seedCursorPosition.coerceIn(0, text.length)
+                }
+                attachFieldListeners(seedField, viewModel, isSeed = true)
             }.cell(expandY = true, align = Align.top)
         }
     }
-    // Tap outside the field dismisses the IME; the observer then fires and
+    // Tap outside the fields dismisses the IME; the observer then fires and
     // collapses the layout back to the default state.
     root.addListener(
         object : InputListener() {
             override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 var actor: Actor? = event.target
                 while (actor != null) {
-                    if (actor === worldNameField) return false
+                    if (actor === worldNameField || actor === seedField) return false
                     actor = actor.parent
                 }
                 Gdx.input.setOnscreenKeyboardVisible(false)
@@ -158,5 +184,5 @@ private fun Stage.buildKeyboardUpLayout(viewModel: NewGameMenuViewModel): TextFi
             }
         },
     )
-    return worldNameField
+    return if (viewModel.editingSeed) seedField else worldNameField
 }

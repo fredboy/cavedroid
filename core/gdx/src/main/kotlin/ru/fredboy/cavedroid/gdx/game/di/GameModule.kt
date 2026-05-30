@@ -268,6 +268,7 @@ object GameModule {
             initialBackMap = mapData?.backMap,
             initialBiomes = mapData?.biomes,
             requestedWidth = gameContextRepository.getRequestedWorldWidth(),
+            requestedSeed = gameContextRepository.getRequestedSeed(),
         ).apply {
             mapData?.let {
                 this.currentGameTime = mapData.gameTime
