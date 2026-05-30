@@ -12,6 +12,7 @@ import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import ru.fredboy.cavedroid.common.CaveDroidConstants.MAX_SAVES_COUNT
 import ru.fredboy.cavedroid.common.model.GameMode
+import ru.fredboy.cavedroid.common.model.WorldType
 import ru.fredboy.cavedroid.common.utils.DateFormatter
 import ru.fredboy.cavedroid.data.save.mapper.ContainerControllerMapper
 import ru.fredboy.cavedroid.data.save.mapper.DropControllerMapper
@@ -25,6 +26,7 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
+import ru.fredboy.cavedroid.domain.save.model.ChunkSaveData
 import ru.fredboy.cavedroid.domain.save.model.FireEntry
 import ru.fredboy.cavedroid.domain.save.model.GameMapSaveData
 import ru.fredboy.cavedroid.domain.save.model.GameSaveDetails
@@ -247,6 +249,29 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     private fun internalLoadMap(
         savesPath: String,
     ): GameMapSaveData {
+        val meta = loadMapData(savesPath)
+        val worldType = if (meta.worldType == WorldType.INFINITE.ordinal) WorldType.INFINITE else WorldType.LOOPING
+
+        if (worldType == WorldType.INFINITE) {
+            // Infinite worlds keep no whole-map files; terrain lives in per-chunk files and is
+            // regenerated from the seed. Return metadata only.
+            return GameMapSaveData(
+                foreMap = null,
+                backMap = null,
+                biomes = null,
+                gameTime = meta.gameTime,
+                moonPhase = meta.moonPhase,
+                totalGameTime = meta.totalGameTime ?: meta.gameTime,
+                lastSpawnGameTime = meta.lastSpawnGameTime ?: 0f,
+                weather = meta.weather?.let { Weather.entries.getOrNull(it) },
+                weatherTimer = meta.weatherTimer,
+                weatherIntensity = meta.weatherIntensity,
+                currentStreakStartDayIndex = meta.currentStreakStartDayIndex ?: 0,
+                worldType = WorldType.INFINITE,
+                seed = meta.seed,
+            )
+        }
+
         val dict = file("$savesPath/$DICT_FILE").readString().split("\n")
 
         val foreMap: Array<Array<Block>>
@@ -268,8 +293,6 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             null
         }
 
-        val meta = loadMapData(savesPath)
-
         return GameMapSaveData(
             foreMap = foreMap,
             backMap = backMap,
@@ -282,6 +305,8 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             weatherTimer = meta.weatherTimer,
             weatherIntensity = meta.weatherIntensity,
             currentStreakStartDayIndex = meta.currentStreakStartDayIndex ?: 0,
+            worldType = WorldType.LOOPING,
+            seed = meta.seed,
         )
     }
 
@@ -336,11 +361,53 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             currentStreakStartDayIndex = gameWorld.currentStreakStartDayIndex,
             createdTimestamp = createdTimestamp,
             seed = seed,
+            worldType = if (gameWorld.isInfinite) WorldType.INFINITE.ordinal else WorldType.LOOPING.ordinal,
         )
 
         val bytes = ProtoBuf.encodeToByteArray(worldSaveDataDto)
 
         metaFile.writeBytes(bytes, false)
+    }
+
+    private fun chunkPath(savesPath: String, chunkX: Int): String = "$savesPath/$CHUNKS_DIR/$chunkX"
+
+    override fun saveInfiniteChunk(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+        foreMap: Array<Array<Block>>,
+        backMap: Array<Array<Block>>,
+        biomes: Array<Biome>,
+    ) {
+        val path = chunkPath(getSavePath(gameDataFolder, saveGameDirectory), chunkX)
+        val dict = buildBlocksDictionary(foreMap, backMap)
+
+        saveDict(file("$path/$DICT_FILE"), dict)
+        GZIPOutputStream(file("$path/$FOREMAP_FILE").write(false)).use { it.write(compressMap(foreMap, dict)) }
+        GZIPOutputStream(file("$path/$BACKMAP_FILE").write(false)).use { it.write(compressMap(backMap, dict)) }
+        GZIPOutputStream(file("$path/$BIOMES_FILE").write(false)).use { it.write(compressBiomes(biomes)) }
+    }
+
+    override fun loadInfiniteChunk(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+    ): ChunkSaveData? {
+        val path = chunkPath(getSavePath(gameDataFolder, saveGameDirectory), chunkX)
+        val dictFile = file("$path/$DICT_FILE")
+        if (!dictFile.exists()) {
+            return null
+        }
+
+        val dict = dictFile.readString().split("\n")
+        val foreMap = GZIPInputStream(file("$path/$FOREMAP_FILE").read())
+            .use { decompressMap(it.readBytes(), dict, itemsRepository) }
+        val backMap = GZIPInputStream(file("$path/$BACKMAP_FILE").read())
+            .use { decompressMap(it.readBytes(), dict, itemsRepository) }
+        val biomes = GZIPInputStream(file("$path/$BIOMES_FILE").read())
+            .use { decompressBiomes(it.readBytes()) }
+
+        return ChunkSaveData(foreMap = foreMap, backMap = backMap, biomes = biomes)
     }
 
     private fun loadMapData(savesPath: String): SaveDataDto.WorldSaveDataDto {
@@ -433,7 +500,12 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         growBlocksFile.writeBytes(growBlocksBytes, false)
         GZIPOutputStream(fireFile.write(false)).use { it.write(fireBytes) }
 
-        saveMap(gameWorld, savesPath)
+        if (gameWorld.isInfinite) {
+            // Terrain is persisted per chunk; flush whatever is resident and dirty.
+            gameWorld.flushDirtyChunks()
+        } else {
+            saveMap(gameWorld, savesPath)
+        }
 
         saveMapData(gameWorld, savesPath, worldName, mobController.player.gameMode)
 
@@ -595,13 +667,12 @@ internal class SaveDataRepositoryImpl @Inject constructor(
 
         val files = dir.list()?.map { it.name() }?.toSet() ?: return false
 
+        // Whole-map files (dict/foremap/backmap) only exist for finite worlds; infinite worlds
+        // store terrain per chunk, so only the always-present files are required.
         val requiredFiles = setOf(
             DROP_FILE,
             MOBS_FILE,
             CONTAINERS_FILE,
-            DICT_FILE,
-            FOREMAP_FILE,
-            BACKMAP_FILE,
             META_FILE,
         )
 
@@ -646,7 +717,12 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     override fun getSaveDetails(gameDataFolder: String, saveDir: String): GameSaveDetails {
         val savesPath = getSavePath(gameDataFolder, saveDir)
         val meta = loadMapData(savesPath)
-        val (width, height) = readMapDimensions(savesPath)
+        val (width, height) = if (meta.worldType == WorldType.INFINITE.ordinal) {
+            // Infinite worlds have no fixed dimensions; 0 width signals "infinite" to the UI.
+            0 to 0
+        } else {
+            readMapDimensions(savesPath)
+        }
 
         val sizeBytes = file(savesPath).list()
             .filter { !it.isDirectory }
@@ -801,6 +877,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         private const val BACKMAP_FILE = "backmap.dat.gz"
         private const val BIOMES_FILE = "biomes.dat.gz"
         private const val META_FILE = "meta.dat"
+        private const val CHUNKS_DIR = "chunks"
 
         private const val SCREENSHOT_FILE = "screenshot.png"
     }

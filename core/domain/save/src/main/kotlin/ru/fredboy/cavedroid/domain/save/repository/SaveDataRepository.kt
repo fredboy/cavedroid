@@ -1,10 +1,13 @@
 package ru.fredboy.cavedroid.domain.save.repository
 
+import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.save.model.ChunkSaveData
 import ru.fredboy.cavedroid.domain.save.model.FireEntry
 import ru.fredboy.cavedroid.domain.save.model.GameMapSaveData
 import ru.fredboy.cavedroid.domain.save.model.GameSaveDetails
 import ru.fredboy.cavedroid.domain.save.model.GameSaveInfo
 import ru.fredboy.cavedroid.domain.save.model.GrowBlockEntry
+import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
 import ru.fredboy.cavedroid.entity.drop.DropQueue
@@ -58,6 +61,23 @@ interface SaveDataRepository {
         gameDataFolder: String,
         saveGameDirectory: String,
     ): GameMapSaveData
+
+    /** Persists a single infinite-world chunk's block data. */
+    fun saveInfiniteChunk(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+        foreMap: Array<Array<Block>>,
+        backMap: Array<Array<Block>>,
+        biomes: Array<Biome>,
+    )
+
+    /** Loads a previously-persisted infinite-world chunk, or null if it was never modified/saved. */
+    fun loadInfiniteChunk(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+    ): ChunkSaveData?
 
     fun loadContainerController(
         gameDataFolder: String,

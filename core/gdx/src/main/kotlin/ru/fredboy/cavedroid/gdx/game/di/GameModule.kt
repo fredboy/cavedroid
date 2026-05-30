@@ -41,6 +41,7 @@ import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesMana
 import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystemFactory
+import ru.fredboy.cavedroid.game.world.store.Chunk
 import ru.fredboy.cavedroid.game.world.store.FiniteLoopingBlockStore
 import ru.fredboy.cavedroid.game.world.store.InfiniteBlockStore
 import ru.fredboy.cavedroid.game.world.store.WorldBlockStore
@@ -264,13 +265,28 @@ object GameModule {
             null
         }
 
+        // Loaded games take their topology + seed from the save's metadata; new games from the
+        // menu selection.
+        val worldType = if (gameContextRepository.isLoadGame()) {
+            mapData?.worldType ?: WorldType.LOOPING
+        } else {
+            gameContextRepository.getWorldType()
+        }
+        val seed = if (gameContextRepository.isLoadGame()) {
+            mapData?.seed ?: gameContextRepository.getRequestedSeed()
+        } else {
+            gameContextRepository.getRequestedSeed()
+        }
+
         val generatorConfig = WorldGeneratorConfig.getDefault(
             width = mapData?.foreMap?.size ?: gameContextRepository.getRequestedWorldWidth()
                 ?: WorldGeneratorConfig.DEFAULT_WIDTH,
-            seed = gameContextRepository.getRequestedSeed() ?: TimeUtils.millis(),
+            seed = seed ?: TimeUtils.millis(),
         )
 
-        val blockStore: WorldBlockStore = when (gameContextRepository.getWorldType()) {
+        val gameDataFolder = applicationContextRepository.getGameDirectory()
+
+        val blockStore: WorldBlockStore = when (worldType) {
             WorldType.LOOPING -> FiniteLoopingBlockStore(
                 itemsRepository = itemsRepository,
                 generatorConfig = generatorConfig,
@@ -283,7 +299,23 @@ object GameModule {
                 itemsRepository = itemsRepository,
                 generatorConfig = generatorConfig,
                 gameContextRepository = gameContextRepository,
-                // TODO(M7): wire chunkLoader/chunkPersister to per-chunk save files.
+                chunkLoader = { chunkX ->
+                    saveDataRepository.loadInfiniteChunk(
+                        gameDataFolder = gameDataFolder,
+                        saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
+                        chunkX = chunkX,
+                    )?.let { data -> Chunk(chunkX, data.foreMap, data.backMap, data.biomes) }
+                },
+                chunkPersister = { chunk ->
+                    saveDataRepository.saveInfiniteChunk(
+                        gameDataFolder = gameDataFolder,
+                        saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
+                        chunkX = chunk.chunkX,
+                        foreMap = chunk.fore,
+                        backMap = chunk.back,
+                        biomes = chunk.biomes,
+                    )
+                },
             )
         }
 

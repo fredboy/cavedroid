@@ -280,5 +280,7 @@ sealed class SaveDataDto {
         val currentStreakStartDayIndex: Int? = null,
         val createdTimestamp: Long? = null,
         val seed: Long? = null,
+        // WorldType ordinal; null (absent) means a legacy finite/looping world.
+        val worldType: Int? = null,
     ) : SaveDataDto()
 }

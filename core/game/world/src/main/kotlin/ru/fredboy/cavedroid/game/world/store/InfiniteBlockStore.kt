@@ -104,6 +104,15 @@ class InfiniteBlockStore(
         chunks.keys.toList().forEach(action)
     }
 
+    override fun flushDirtyChunks() {
+        chunks.values.forEach { chunk ->
+            if (chunk.dirty) {
+                chunkPersister(chunk)
+                chunk.dirty = false
+            }
+        }
+    }
+
     override fun dispose() {
         chunks.values.forEach { chunk -> if (chunk.dirty) chunkPersister(chunk) }
         chunks.clear()

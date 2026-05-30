@@ -69,4 +69,7 @@ interface WorldBlockStore : Disposable {
 
     /** Iterates the chunk indices currently resident in memory. No-op for finite worlds. */
     fun forEachLoadedChunk(action: (chunkX: Int) -> Unit) = Unit
+
+    /** Persists every resident chunk that has unsaved edits. No-op for finite worlds. */
+    fun flushDirtyChunks() = Unit
 }
