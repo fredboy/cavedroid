@@ -126,6 +126,16 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                             row()
                         }
 
+                        if (state.showDebugSetting) {
+                            textButton("Show debug: ${state.preferShowDebug}") {
+                                onClickWithSound(viewModel) {
+                                    viewModel.onShowDebugClick(!state.preferShowDebug)
+                                }
+                            }
+
+                            row()
+                        }
+
                         textButton(viewModel.getLocalizedString("resetHints")) {
                             onClickWithSound(viewModel) {
                                 if (!isDisabled) {

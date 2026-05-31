@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.api.OnboardingEvents
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.common.utils.takeIfTrue
 import ru.fredboy.cavedroid.domain.assets.repository.BlockActionSoundAssetsRepository
@@ -174,6 +175,7 @@ class TouchCursorInputHandler @Inject constructor(
             shootBow()
         }
 
+        val wasHitting = mobController.player.isHitting
         player.stopHitting()
 
         if (buttonHoldTask?.isScheduled != true) {
@@ -182,7 +184,7 @@ class TouchCursorInputHandler @Inject constructor(
 
         cancelHold()
 
-        if (wasDragged) {
+        if (wasDragged || wasHitting) {
             return
         }
 
@@ -257,7 +259,7 @@ class TouchCursorInputHandler @Inject constructor(
                     ) ||
                     (action.actionKey is MouseInputActionKey.Dragged && action.actionKey.pointer == pointer)
                 ) &&
-            !action.isInsideHotbar(gameContextRepository, getTextureRegionByNameUseCase)
+            (!action.isInsideHotbar(gameContextRepository, getTextureRegionByNameUseCase) || action.actionKey.pointer == pointer)
     }
 
     override fun handle(action: MouseInputAction) {
@@ -268,7 +270,7 @@ class TouchCursorInputHandler @Inject constructor(
                 touchDownAimCoords.set(player.aimX, player.aimY)
                 touchDownPlayerPos.set(player.position)
                 wasDragged = false
-                mobController.player.holdAim = false
+                mobController.player.holdAim = true
                 handleTouchDown(action)
             } else {
                 handleUp()
@@ -282,7 +284,6 @@ class TouchCursorInputHandler @Inject constructor(
                 )
             }
         } else if (action.actionKey is MouseInputActionKey.Dragged && pointer != -1) {
-            wasDragged = true
             handleTouchDown(action)
         }
     }
@@ -305,24 +306,31 @@ class TouchCursorInputHandler @Inject constructor(
         setPlayerDirectionToCursor()
 
         if (player.selectedX != pastSelectedX || player.selectedY != pastSelectedY) {
+            wasDragged = true
             player.blockDamage = 0f
         }
     }
 
     private fun updateCursorPosition(action: MouseInputAction) {
-        val moveX = action.screenX - touchDownCoords.x
-        val moveY = action.screenY - touchDownCoords.y
+        val moveX = (action.screenX - touchDownCoords.x)
+        val moveY = (action.screenY - touchDownCoords.y)
         val worldX = touchDownAimCoords.x + moveX.meters + (player.position.x - touchDownPlayerPos.x)
         val worldY = touchDownAimCoords.y + moveY.meters + (player.position.y - touchDownPlayerPos.y)
 
         player.aimX = worldX
         player.aimY = worldY
+        if (player.holdAim) {
+            mobController.player.aimToPlayer.set(
+                worldX - player.position.x,
+                worldY - player.position.y,
+            )
+        }
 
         player.headRotation = getPlayerHeadRotation(worldX, worldY)
 
-        if (worldX.toInt() < player.position.x.toInt()) {
+        if (worldX.floorToInt() < player.position.x.floorToInt()) {
             player.direction = Direction.LEFT
-        } else if (worldX.toInt() > player.position.x.toInt()) {
+        } else if (worldX.floorToInt() > player.position.x.floorToInt()) {
             player.direction = Direction.RIGHT
         }
     }
@@ -344,6 +352,14 @@ class TouchCursorInputHandler @Inject constructor(
         } else {
             player.direction = Direction.RIGHT
         }
+    }
+
+    override fun reset() {
+        cancelHold()
+        pointer = -1
+        wasDragged = false
+        player.isPullingBow = false
+        player.stopHitting()
     }
 
     companion object {

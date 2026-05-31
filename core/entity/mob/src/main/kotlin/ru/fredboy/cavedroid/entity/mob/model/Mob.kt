@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.TimeUtils
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.common.utils.Vector2Proxy
+import ru.fredboy.cavedroid.common.utils.floor
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.drop.DropAmount
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
@@ -55,10 +56,10 @@ abstract class Mob(
 
     val controlVector = Vector2()
 
-    val mapX get() = body.position.x.toInt()
-    val upperMapY get() = (body.position.y - height / 2).toInt()
-    val middleMapY get() = body.position.y.toInt()
-    val lowerMapY get() = (body.position.y + height / 2).toInt()
+    val mapX get() = body.position.x.floor.toInt()
+    val upperMapY get() = (body.position.y - height / 2).floor.toInt()
+    val middleMapY get() = body.position.y.floor.toInt()
+    val lowerMapY get() = (body.position.y + height / 2).floor.toInt()
 
     val hitbox: Rectangle get() = Rectangle(position.x - width / 2f, position.y - height / 2f, width, height)
 
@@ -244,6 +245,7 @@ abstract class Mob(
     fun looksRight() = direction == Direction.RIGHT
 
     fun kill() {
+        controlVector.setZero()
         isDead = true
         makingSound = SoundType.Death
         extinguish()
@@ -357,6 +359,9 @@ abstract class Mob(
         projectileAdapter: ProjectileAdapter,
         delta: Float,
     ) {
+        if (isDead) {
+            return
+        }
         if (isPullingBow) {
             bowCharge += delta
         }
@@ -376,12 +381,24 @@ abstract class Mob(
         if (!controlVector.isZero) {
             velocity.x = controlVector.x * effectiveSpeedMultiplier
             if (isFlyMode) {
-                velocity.y = controlVector.y
+                velocity.y = controlVector.y * effectiveSpeedMultiplier
             } else if (!canClimb) {
                 controlVector.y = 0f
             }
         } else if (!isFlyMode) {
             velocity.x = 0f
+        }
+
+        wrapAroundLoopedWorld(mobWorldAdapter)
+
+        if (position.y > mobWorldAdapter.height) {
+            kill()
+        }
+    }
+
+    private fun wrapAroundLoopedWorld(mobWorldAdapter: MobWorldAdapter) {
+        if (mobWorldAdapter.isInfinite) {
+            return
         }
 
         val worldWidth = mobWorldAdapter.width.toFloat()
@@ -397,10 +414,6 @@ abstract class Mob(
                 aimX += seamDeltaX
                 cursorX += seamDeltaX
             }
-        }
-
-        if (position.y > mobWorldAdapter.height) {
-            kill()
         }
     }
 
@@ -445,7 +458,7 @@ abstract class Mob(
     abstract fun changeDir()
 
     open fun jump() {
-        if (canClimb || !canJump) {
+        if (!canJump) {
             return
         }
 

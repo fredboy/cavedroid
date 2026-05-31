@@ -113,4 +113,8 @@ class MouseCursorInputHandler @Inject constructor(
             tooltipManager.showMouseTooltip(getCreativeTooltip(action).orEmpty())
         }
     }
+
+    override fun reset() {
+        // no-op
+    }
 }

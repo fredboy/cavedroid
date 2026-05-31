@@ -187,10 +187,17 @@ class EditWorldMenuViewModel(
         val screenshot = screenshotHandle
             ?.let { handle -> Texture(handle).also(loadedTextures::add) }
 
+        val sizeString = when (size) {
+            is GameSaveDetails.Size.Infinite -> getLocalizedString("worldType_infinite")
+            is GameSaveDetails.Size.Finite -> (size as GameSaveDetails.Size.Finite).run {
+                "$widthBlocks × $heightBlocks"
+            }
+        }
+
         return SaveDetailsVo(
             name = name,
             gameMode = gameMode,
-            mapSize = "$widthBlocks × $heightBlocks",
+            mapSize = sizeString,
             diskSize = formatSize(sizeBytes),
             version = version,
             isSupported = isSupported,

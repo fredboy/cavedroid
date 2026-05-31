@@ -40,3 +40,5 @@ infix fun Int.floorMod(y: Int): Int {
     }
     return mod
 }
+
+fun Float.floorToInt(): Int = floor.toInt()

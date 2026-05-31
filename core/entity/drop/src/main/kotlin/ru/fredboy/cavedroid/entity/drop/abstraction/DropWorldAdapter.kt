@@ -7,10 +7,12 @@ import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 
 interface DropWorldAdapter {
-
+    @Deprecated("Use start/end")
     val width: Int
 
     val height: Int
+
+    val isInfinite: Boolean
 
     fun addOnBlockDestroyedListener(listener: OnBlockDestroyedListener)
 

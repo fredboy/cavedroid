@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.utils.Vector2Proxy
+import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.Item
@@ -166,24 +167,31 @@ class Drop(
         }
 
         val overlappingBlock = dropWorldAdapter.getForegroundBlock(
-            x = position.x.toInt(),
-            y = position.y.toInt(),
+            x = position.x.floorToInt(),
+            y = position.y.floorToInt(),
         )
 
-        val overlappingRect = overlappingBlock.getRectangle(position.x.toInt(), position.y.toInt())
+        val overlappingRect = overlappingBlock.getRectangle(position.x.floorToInt(), position.y.floorToInt())
 
         if (controlVector.isZero && overlappingBlock.params.hasCollision && hitbox.overlaps(overlappingRect)) {
             body.setTransform(position.x, overlappingRect.y - DROP_SIZE / 2f, 0f)
+        }
+
+        wrapAroundLoopedWorld(dropWorldAdapter)
+
+        if (position.y > dropWorldAdapter.height) {
+            isPickedUp = true
+        }
+    }
+    private fun wrapAroundLoopedWorld(dropWorldAdapter: DropWorldAdapter) {
+        if (dropWorldAdapter.isInfinite) {
+            return
         }
 
         if (position.x > dropWorldAdapter.width) {
             body.setTransform(Vector2(position.x - dropWorldAdapter.width, position.y), 0f)
         } else if (position.x < 0) {
             body.setTransform(Vector2(position.x + dropWorldAdapter.width, position.y), 0f)
-        }
-
-        if (position.y > dropWorldAdapter.height) {
-            isPickedUp = true
         }
     }
 

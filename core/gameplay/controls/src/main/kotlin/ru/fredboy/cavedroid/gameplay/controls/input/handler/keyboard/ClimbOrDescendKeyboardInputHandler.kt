@@ -35,4 +35,9 @@ class ClimbOrDescendKeyboardInputHandler @Inject constructor(
             else -> {}
         }
     }
+
+    override fun reset() {
+        mobController.player.tryClimb = false
+        mobController.player.descend = false
+    }
 }

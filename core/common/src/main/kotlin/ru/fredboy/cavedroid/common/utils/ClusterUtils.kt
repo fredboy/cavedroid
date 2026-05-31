@@ -1,7 +1,7 @@
 package ru.fredboy.cavedroid.common.utils
 
 fun neighbourCoordinates(x: Int, y: Int, chunkSize: Int): List<Pair<Int, Int>> {
-    val chunkX1 = x - x % chunkSize
+    val chunkX1 = (x floorDiv chunkSize) * chunkSize
     val chunkY1 = y - y % chunkSize
     val chunkX2 = chunkX1 + chunkSize
     val chunkY2 = chunkY1 + chunkSize

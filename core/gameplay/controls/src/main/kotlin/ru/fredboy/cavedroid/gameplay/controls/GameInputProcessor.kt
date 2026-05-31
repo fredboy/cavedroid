@@ -9,6 +9,7 @@ import ru.fredboy.cavedroid.domain.assets.model.TouchButton
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
+import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.gameplay.controls.input.IKeyboardInputHandler
@@ -32,6 +33,7 @@ class GameInputProcessor @Inject constructor(
     private val mouseInputHandlers: Set<@JvmSuppressWildcards IMouseInputHandler>,
     private val keyboardInputHandlers: Set<@JvmSuppressWildcards IKeyboardInputHandler>,
     private val gameWindowsManager: GameWindowsManager,
+    private val mobController: MobController,
 ) : InputProcessor {
 
     private var dragging = false
@@ -166,6 +168,11 @@ class GameInputProcessor @Inject constructor(
 
     @Suppress("unused")
     fun update(delta: Float) {
+        if (mobController.player.isDead) {
+            reset()
+            return
+        }
+
         handleMousePosition()
 
         gameContextRepository.getJoystick()
@@ -280,11 +287,18 @@ class GameInputProcessor @Inject constructor(
         mouseCursorInputHandler.handle(action)
     }
 
+    fun reset() {
+        mouseInputHandlers.forEach { it.reset() }
+        keyboardInputHandlers.forEach { it.reset() }
+        dragging = false
+        pointerToTouchedKey.clear()
+    }
+
     companion object {
         private const val TAG = "GameInputProcessor"
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
-        private const val DRAG_THRESHOLD = 1f
+        private const val DRAG_THRESHOLD = 0.5f
 
         private val nullButton = TouchButton(Rectangle(), -1, true)
     }

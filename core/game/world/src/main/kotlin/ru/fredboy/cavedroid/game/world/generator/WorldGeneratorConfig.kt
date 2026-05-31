@@ -27,9 +27,9 @@ data class WorldGeneratorConfig(
             maxSurfaceHeight = 160,
             minSurfaceHeight = 64,
             biomes = listOf(
-                Biome.PLAINS,
-                Biome.PLAINS,
                 Biome.DESERT,
+                Biome.PLAINS,
+                Biome.PLAINS,
                 Biome.WINTER,
             ),
             minBiomeSize = 64,

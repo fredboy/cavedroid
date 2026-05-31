@@ -128,6 +128,8 @@ class CaveDroidApplication(
                         preferencesStore.getPreference(PreferenceKeys.LIGHTING_BACKEND),
                     ),
                     isYandexGamesBuild = isYandexGamesBuild,
+                    preferShowDebug = preferencesStore.getPreference(PreferenceKeys.PREFER_SHOW_DEBUG_KEY)
+                        ?.toBooleanStrictOrNull() ?: true,
                 ),
             )
             .applicationController(applicationControllerOverride ?: this)

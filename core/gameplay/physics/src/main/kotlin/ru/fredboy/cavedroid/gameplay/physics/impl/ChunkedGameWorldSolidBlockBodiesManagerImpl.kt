@@ -6,8 +6,15 @@ import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.ChainShape
 import com.badlogic.gdx.physics.box2d.FixtureDef
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.effectiveMirrorBand
+import ru.fredboy.cavedroid.common.utils.floorDiv
 import ru.fredboy.cavedroid.common.utils.mirrorSidesFor
 import ru.fredboy.cavedroid.common.utils.neighbourCoordinates
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -16,24 +23,65 @@ import ru.fredboy.cavedroid.domain.world.model.ChunkUserData
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
-import java.util.*
+import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
+import ru.fredboy.cavedroid.game.world.store.ChunkListener
+import java.util.LinkedList
 import javax.inject.Inject
 import kotlin.experimental.or
 
 @GameScope
 class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
     private val itemsRepository: ItemsRepository,
-) : GameWorldSolidBlockBodiesManager() {
+    private val appDispatchers: AppDispatchers,
+) : GameWorldSolidBlockBodiesManager(),
+    ChunkListener {
 
     private val _mirrorBodies = mutableMapOf<Triple<Int, Int, Int>, Body>()
+
+    private val job = Job()
+    private val coroutineScope = CoroutineScope(appDispatchers.main + job)
 
     private val mirrorBand: Int
         get() = effectiveMirrorBand(MIRROR_BAND_BLOCKS, gameWorld.width)
 
     override fun initialize() {
+        if (gameWorld.isInfinite) {
+            // Infinite worlds create/destroy bodies lazily as chunks stream in/out.
+            gameWorld.addChunkListener(this)
+            gameWorld.forEachLoadedChunk { chunkX ->
+                val startX = chunkX * ChunkGenerator.CHUNK_W
+                for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
+                    for (y in 0 until gameWorld.height step CHUNK_SIZE) {
+                        runBlocking { updateChunk(x, y) }
+                    }
+                }
+            }
+            return
+        }
+
         for (x in 0..<gameWorld.width step CHUNK_SIZE) {
             for (y in 0..<gameWorld.height step CHUNK_SIZE) {
-                updateChunk(x, y)
+                runBlocking { updateChunk(x, y) }
+            }
+        }
+    }
+
+    override fun onChunkLoaded(chunkX: Int) {
+        val startX = chunkX * ChunkGenerator.CHUNK_W
+        for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
+            for (y in 0 until gameWorld.height step CHUNK_SIZE) {
+                coroutineScope.launch {
+                    updateChunk(x, y)
+                }
+            }
+        }
+    }
+
+    override fun onChunkUnloaded(chunkX: Int) {
+        val startX = chunkX * ChunkGenerator.CHUNK_W
+        for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
+            for (y in 0 until gameWorld.height step CHUNK_SIZE) {
+                _bodies.remove(x to y)?.let { body -> world.destroyBody(body) }
             }
         }
     }
@@ -48,31 +96,40 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
             return
         }
 
-        updateChunk(x, y)
+        coroutineScope.launch {
+            updateChunk(x, y)
+        }
     }
 
     override fun dispose() {
+        gameWorld.removeChunkListener(this)
         _mirrorBodies.values.forEach { body -> body.world.destroyBody(body) }
         _mirrorBodies.clear()
         super.dispose()
     }
 
-    private fun updateChunk(blockX: Int, blockY: Int) {
-        val chunkX1 = blockX - blockX % CHUNK_SIZE
+    private suspend fun updateChunk(blockX: Int, blockY: Int) {
+        val chunkX1 = (blockX floorDiv CHUNK_SIZE) * CHUNK_SIZE
         val chunkY1 = blockY - blockY % CHUNK_SIZE
 
         _bodies.remove(chunkX1 to chunkY1)?.let { body ->
             world.destroyBody(body)
         }
 
-        val (clusters, userData) = getChunkData(chunkX1, chunkY1)
+        val (clusters, userData) = withContext(appDispatchers.background) {
+            getChunkData(chunkX1, chunkY1)
+        }
 
         val body = createBody(chunkX1, chunkY1, xOffset = 0)
         _bodies[chunkX1 to chunkY1] = body
         populateBodyFixtures(body, clusters, userData, xOffset = 0)
 
-        mirrorSidesFor(chunkX1, gameWorld.width, mirrorBand).forEach { sideSign ->
-            updateMirrorChunk(chunkX1, chunkY1, sideSign, clusters, userData)
+        // The mirror band only makes sense for a finite, horizontally-looping world; infinite
+        // worlds have no seam to mirror across.
+        if (!gameWorld.isInfinite) {
+            mirrorSidesFor(chunkX1, gameWorld.width, mirrorBand).forEach { sideSign ->
+                updateMirrorChunk(chunkX1, chunkY1, sideSign, clusters, userData)
+            }
         }
     }
 

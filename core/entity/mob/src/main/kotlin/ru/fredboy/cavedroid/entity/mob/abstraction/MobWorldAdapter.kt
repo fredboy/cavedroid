@@ -11,7 +11,10 @@ interface MobWorldAdapter {
 
     val height: Int
 
+    @Deprecated("Use start/end")
     val width: Int
+
+    val isInfinite: Boolean
 
     fun setForegroundBlock(x: Int, y: Int, block: Block)
 

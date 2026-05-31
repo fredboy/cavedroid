@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gameplay.lighting.bfs
 
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.physics.box2d.Body
+import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.lighting.LightHandle
@@ -22,16 +23,13 @@ class BfsLightingSystem(
     private var _grid: LightGrid? = null
     private var _overlay: LightingOverlayRenderer? = null
 
+    // Absolute world x of the window grid's column 0 (infinite worlds only; 0 for finite).
+    private var windowOriginX = 0
+
     private val transientEmitterIds = AtomicLong(0L)
 
     private val gameWorld: GameWorld
         get() = requireNotNull(_gameWorld)
-
-    private val grid: LightGrid
-        get() = requireNotNull(_grid)
-
-    private val overlay: LightingOverlayRenderer
-        get() = requireNotNull(_overlay)
 
     override val chunkSize: Int = 1
 
@@ -42,19 +40,34 @@ class BfsLightingSystem(
         }
 
         _gameWorld = gameWorld
-        _grid = LightGrid(gameWorld.width, gameWorld.height).also { lightGrid ->
-            lightGrid.rebuildAll(
-                isOpaque = { x, y -> isOpaque(gameWorld, x, y) },
-                blockEmission = { x, y -> emissionAt(gameWorld, x, y) },
-            )
+
+        if (gameWorld.isInfinite) {
+            // Infinite worlds can't allocate a grid for the (unbounded) world, so light a window that
+            // follows the camera and is rebuilt as it drifts (see [update]). At attach the camera is
+            // not yet in world units, so centre on the spawn column (0); [update] re-centres next frame.
+            windowOriginX = -WINDOW_WIDTH / 2
+            rebuildWindowGrid(gameWorld)
+        } else {
+            windowOriginX = 0
+            _grid = LightGrid(gameWorld.width, gameWorld.height).also { lightGrid ->
+                lightGrid.rebuildAll(
+                    isOpaque = { x, y -> isOpaque(gameWorld, x, y) },
+                    blockEmission = { x, y -> emissionAt(gameWorld, x, y) },
+                )
+            }
+            _overlay = LightingOverlayRenderer(gameContextRepository, gameWorld, requireNotNull(_grid))
         }
-        _overlay = LightingOverlayRenderer(gameContextRepository, gameWorld, grid)
 
         gameWorld.addBlockPlacedListener(this)
     }
 
     override fun onBlockPlaced(block: Block, x: Int, y: Int, layer: Layer) {
         val world = _gameWorld ?: return
+        val grid = _grid ?: return
+        if (world.isInfinite && x !in windowOriginX until windowOriginX + WINDOW_WIDTH) {
+            // Outside the lit window; it'll be rebuilt from the world when the window re-centres.
+            return
+        }
         grid.onCellChanged(
             x = x,
             y = y,
@@ -63,19 +76,51 @@ class BfsLightingSystem(
         )
     }
 
-    override fun update(delta: Float) = Unit
+    override fun update(delta: Float) {
+        val world = _gameWorld ?: return
+        if (!world.isInfinite) return
+
+        val center = cameraCenterX()
+        val windowCenter = windowOriginX + WINDOW_WIDTH / 2
+        if (kotlin.math.abs(center - windowCenter) >= RECENTER_THRESHOLD) {
+            windowOriginX = center - WINDOW_WIDTH / 2
+            rebuildWindowGrid(world)
+        }
+    }
+
+    private fun rebuildWindowGrid(gameWorld: GameWorld) {
+        val grid = LightGrid(WINDOW_WIDTH, gameWorld.height, windowOriginX)
+        grid.rebuildAll(
+            isOpaque = { x, y -> isOpaque(gameWorld, x + windowOriginX, y) },
+            blockEmission = { x, y -> emissionAt(gameWorld, x + windowOriginX, y) },
+        )
+        _grid = grid
+
+        val overlay = _overlay
+        if (overlay == null) {
+            _overlay = LightingOverlayRenderer(gameContextRepository, gameWorld, grid)
+        } else {
+            overlay.updateGrid(grid)
+        }
+    }
+
+    private fun cameraCenterX(): Int {
+        val visible = gameContextRepository.getCameraContext().visibleWorld
+        return (visible.x + visible.width / 2f).floorToInt()
+    }
 
     override fun recalculate() = Unit
 
     override fun refreshChunks(chunks: Iterable<Pair<Int, Int>>) = Unit
 
     override fun render(camera: OrthographicCamera) {
-        if (_gameWorld == null) return
+        val overlay = _overlay ?: return
         overlay.render(camera, gameWorld.getSunlight())
     }
 
     override fun isMobExposedToSun(mob: Mob): Boolean {
         val world = _gameWorld ?: return false
+        val grid = _grid ?: return false
         return grid.isSkyExposed(mob.mapX, mob.upperMapY.coerceIn(0, world.height - 1))
     }
 
@@ -94,6 +139,7 @@ class BfsLightingSystem(
     }
 
     override fun getEffectiveBrightness(x: Int, y: Int, sunBrightness: Float): Float {
+        val grid = _grid ?: return sunBrightness
         return grid.effective(x, y, sunBrightness)
     }
 
@@ -156,7 +202,7 @@ class BfsLightingSystem(
         private fun applyToGrid() {
             val currentGrid = _grid ?: return
             if (active) {
-                currentGrid.setTransientEmitter(id, posX.toInt(), posY.toInt(), FURNACE_LEVEL)
+                currentGrid.setTransientEmitter(id, posX.floorToInt(), posY.toInt(), FURNACE_LEVEL)
             } else {
                 currentGrid.clearTransientEmitter(id)
             }
@@ -223,6 +269,12 @@ class BfsLightingSystem(
 
         private const val FURNACE_LEVEL = 13
         private const val FIRE_LEVEL = 11
+
+        // Lit window for infinite worlds. Must stay within the block store's resident region so the
+        // rebuild reads real terrain, and wide enough that the viewport plus light radius never
+        // reaches the wrap-prone window edges.
+        private const val WINDOW_WIDTH = 192
+        private const val RECENTER_THRESHOLD = 32
 
         private fun ru.fredboy.cavedroid.domain.items.model.block.BlockLightInfo.toLevel(): Int {
             val raw = (lightBrightness * LightGrid.MAX_LEVEL_F).roundToInt()

@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Disposable
-import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.coroutines.GdxMainThread
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.removeFirst
@@ -17,9 +16,10 @@ import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.domain.world.model.Weather
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
-import ru.fredboy.cavedroid.game.world.generator.GameWorldGenerator
 import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
+import ru.fredboy.cavedroid.game.world.store.ChunkListener
+import ru.fredboy.cavedroid.game.world.store.WorldBlockStore
 import java.lang.ref.WeakReference
 import java.util.LinkedList
 import javax.inject.Inject
@@ -32,18 +32,25 @@ class GameWorld @Inject constructor(
     private val gameWorldSolidBlockBodiesManager: GameWorldSolidBlockBodiesManager,
     private val environmentTextureRegionsRepository: EnvironmentTextureRegionsRepositoryTexture,
     val lightingSystem: LightingSystem,
-    initialForeMap: Array<Array<Block>>?,
-    initialBackMap: Array<Array<Block>>?,
-    initialBiomes: Array<Biome>?,
-    requestedWidth: Int?,
-    requestedSeed: Long?,
+    private val blockStore: WorldBlockStore,
 ) : Disposable {
-    val foreMap: Array<Array<Block>>
-    val backMap: Array<Array<Block>>
-    val biomes: Array<Biome>
+    val foreMap: Array<Array<Block>> get() = blockStore.foreMap
+    val backMap: Array<Array<Block>> get() = blockStore.backMap
+    val biomes: Array<Biome> get() = blockStore.biomes
 
-    val width: Int
-    val height: Int
+    val start: Int get() = blockStore.start
+    val end: Int get() = blockStore.end
+
+    @Deprecated("Use start/end")
+    val width: Int get() = if (!isInfinite) {
+        blockStore.width
+    } else {
+        logger.v { "Trying to get width of an infinite world" }
+        blockStore.width
+    }
+
+    val height: Int get() = blockStore.height
+    val isInfinite: Boolean get() = blockStore.isInfinite
 
     var currentGameTime = DAY_DURATION_SEC * 0.125f
     var totalGameTimeSec = currentGameTime
@@ -57,10 +64,7 @@ class GameWorld @Inject constructor(
     var weatherTimer: Float = nextWeatherDuration(Weather.CLEAR)
     var weatherIntensity: Float = 0f
 
-    val generatorConfig: WorldGeneratorConfig = WorldGeneratorConfig.getDefault(
-        width = initialForeMap?.size ?: requestedWidth ?: WorldGeneratorConfig.DEFAULT_WIDTH,
-        seed = requestedSeed ?: TimeUtils.millis(),
-    )
+    val generatorConfig: WorldGeneratorConfig get() = blockStore.generatorConfig
 
     val world: World = World(Vector2(0f, 32f), false)
 
@@ -82,20 +86,6 @@ class GameWorld @Inject constructor(
     private val onBlockDestroyedListeners = LinkedList<WeakReference<OnBlockDestroyedListener>>()
 
     init {
-        width = generatorConfig.width
-        height = generatorConfig.height
-
-        if (initialForeMap != null && initialBackMap != null) {
-            foreMap = initialForeMap
-            backMap = initialBackMap
-            biomes = initialBiomes ?: Array(width) { Biome.PLAINS }
-        } else {
-            val generated = GameWorldGenerator(generatorConfig, itemsRepository).generate()
-            foreMap = generated.foreMap
-            backMap = generated.backMap
-            biomes = generated.biomes
-        }
-
         physicsController.attachToGameWorld(this)
         gameWorldSolidBlockBodiesManager.attachToGameWorld(this)
         lightingSystem.attachToGameWorld(this)
@@ -117,15 +107,17 @@ class GameWorld @Inject constructor(
         onBlockDestroyedListeners.removeFirst { it.get() == listener }
     }
 
-    private fun transformX(x: Int): Int {
-        var transformed = x % width
-        if (transformed < 0) {
-            transformed = width + x
-        }
-        return transformed
-    }
+    /** Subscribes to chunk load/unload events. Only fires for infinite (streaming) worlds. */
+    fun addChunkListener(listener: ChunkListener) = blockStore.addChunkListener(listener)
 
-    fun getBiomeAt(x: Int): Biome = biomes[transformX(x)]
+    fun removeChunkListener(listener: ChunkListener) = blockStore.removeChunkListener(listener)
+
+    fun forEachLoadedChunk(action: (chunkX: Int) -> Unit) = blockStore.forEachLoadedChunk(action)
+
+    /** Persists resident chunks with unsaved edits (infinite worlds only). */
+    fun flushDirtyChunks() = blockStore.flushDirtyChunks()
+
+    fun getBiomeAt(x: Int): Biome = blockStore.getBiomeAt(x)
 
     fun biomeProximityFactor(
         centerX: Float,
@@ -163,24 +155,7 @@ class GameWorld @Inject constructor(
         Weather.RAIN -> Random.nextFloat() * (RAIN_MAX_SEC - RAIN_MIN_SEC) + RAIN_MIN_SEC
     }
 
-    private fun getMap(x: Int, y: Int, layer: Layer): Block {
-        val fallback = itemsRepository.fallbackBlock
-
-        if (y !in 0..<height) {
-            return fallback
-        }
-
-        val transformedX = transformX(x)
-
-        if (transformedX !in 0..<width) {
-            return fallback
-        }
-
-        return when (layer) {
-            Layer.FOREGROUND -> foreMap[transformedX][y]
-            Layer.BACKGROUND -> backMap[transformedX][y]
-        }
-    }
+    private fun getMap(x: Int, y: Int, layer: Layer): Block = blockStore.getBlock(x, y, layer)
 
     private fun notifyBlockPlaced(x: Int, y: Int, layer: Layer, value: Block) {
         onBlockPlacedListeners.removeAll { listener ->
@@ -220,17 +195,13 @@ class GameWorld @Inject constructor(
             }
         }
 
-        if (y !in 0..<height) {
+        if (!blockStore.isInBounds(x, y)) {
             return
         }
 
-        val transformedX = transformX(x)
+        val transformedX = blockStore.transformX(x)
 
-        if (transformedX !in 0..<width) {
-            return
-        }
-
-        val currentBlock = getMap(transformedX, y, layer)
+        val currentBlock = blockStore.getBlock(transformedX, y, layer)
 
         if (currentBlock == value) {
             return
@@ -242,10 +213,7 @@ class GameWorld @Inject constructor(
                 notifyBlockDestroyed(transformedX, y, layer, currentBlock, dropOld, destroyedByPlayer)
             }
 
-        when (layer) {
-            Layer.FOREGROUND -> foreMap[transformedX][y] = value
-            Layer.BACKGROUND -> backMap[transformedX][y] = value
-        }
+        blockStore.setBlock(transformedX, y, layer, value)
 
         notifyBlockPlaced(transformedX, y, layer, value)
     }
@@ -357,6 +325,9 @@ class GameWorld @Inject constructor(
     }
 
     fun update(delta: Float) {
+        // Stream chunks in/out around the view before physics steps and rendering consume them.
+        blockStore.update()
+
         currentGameTime += (delta * timeMultiplier)
         totalGameTimeSec += (delta * timeMultiplier)
 
@@ -397,6 +368,7 @@ class GameWorld @Inject constructor(
         physicsController.dispose()
         gameWorldSolidBlockBodiesManager.dispose()
         world.dispose()
+        blockStore.dispose()
     }
 
     companion object {

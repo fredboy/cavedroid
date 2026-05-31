@@ -132,10 +132,10 @@ fun SpriteBatch.withScissors(
     flush()
     Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST)
     Gdx.gl.glScissor(
-        /* x = */ (x * scaleX).toInt(),
-        /* y = */ ((viewportHeight - y - height) * scaleY).toInt(),
-        /* width = */ (width * scaleX).toInt(),
-        /* height = */ (height * scaleY).toInt(),
+        /* x = */ (x * scaleX).floor.toInt(),
+        /* y = */ ((viewportHeight - y - height) * scaleY).floor.toInt(),
+        /* width = */ (width * scaleX).floor.toInt(),
+        /* height = */ (height * scaleY).floor.toInt(),
     )
     block.invoke()
     flush()

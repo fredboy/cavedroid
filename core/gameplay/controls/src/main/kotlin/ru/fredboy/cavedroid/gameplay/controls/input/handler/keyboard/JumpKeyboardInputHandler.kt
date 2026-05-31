@@ -33,4 +33,8 @@ class JumpKeyboardInputHandler @Inject constructor(
             )
         }
     }
+
+    override fun reset() {
+        mobController.player.tryClimb = false
+    }
 }

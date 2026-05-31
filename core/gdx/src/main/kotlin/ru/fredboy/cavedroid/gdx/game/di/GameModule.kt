@@ -1,10 +1,13 @@
 package ru.fredboy.cavedroid.gdx.game.di
 
+import com.badlogic.gdx.utils.TimeUtils
 import dagger.Module
 import dagger.Provides
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.SoundPlayer
+import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.model.WorldType
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.domain.assets.repository.DropSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
@@ -36,8 +39,13 @@ import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.GameWorldContactListener
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
+import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystemFactory
+import ru.fredboy.cavedroid.game.world.store.Chunk
+import ru.fredboy.cavedroid.game.world.store.FiniteLoopingBlockStore
+import ru.fredboy.cavedroid.game.world.store.InfiniteBlockStore
+import ru.fredboy.cavedroid.game.world.store.WorldBlockStore
 import ru.fredboy.cavedroid.gameplay.physics.action.growblock.IGrowBlockAction
 import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldGrowBlocksControllerTask
 
@@ -193,7 +201,9 @@ object GameModule {
         gameWorld: GameWorld,
         growBlockActions: Map<String, @JvmSuppressWildcards IGrowBlockAction>,
     ): GameWorldGrowBlocksControllerTask {
-        val initialEntries = if (gameContextRepository.isLoadGame()) {
+        // Infinite worlds restore grow timers per chunk as chunks stream in, so the global file is
+        // only used by finite worlds.
+        val initialEntries = if (gameContextRepository.isLoadGame() && !gameWorld.isInfinite) {
             saveDataRepository.loadGrowBlockEntries(
                 gameDataFolder = applicationContextRepository.getGameDirectory(),
                 saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
@@ -205,6 +215,9 @@ object GameModule {
         return GameWorldGrowBlocksControllerTask(
             gameWorld = gameWorld,
             growBlockActions = growBlockActions,
+            saveDataRepository = saveDataRepository,
+            applicationContextRepository = applicationContextRepository,
+            gameContextRepository = gameContextRepository,
             initialEntries = initialEntries,
         )
     }
@@ -218,7 +231,9 @@ object GameModule {
         gameWorld: GameWorld,
         lightingSystem: LightingSystem,
     ): FireController {
-        val seed = if (gameContextRepository.isLoadGame()) {
+        // Infinite worlds restore fire per chunk as chunks stream in, so the global file is only used
+        // by finite worlds.
+        val seed = if (gameContextRepository.isLoadGame() && !gameWorld.isInfinite) {
             saveDataRepository.loadFireEntries(
                 gameDataFolder = applicationContextRepository.getGameDirectory(),
                 saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
@@ -230,6 +245,9 @@ object GameModule {
         return FireController(
             gameWorld = gameWorld,
             lightingSystem = lightingSystem,
+            saveDataRepository = saveDataRepository,
+            applicationContextRepository = applicationContextRepository,
+            gameContextRepository = gameContextRepository,
         ).apply {
             seed.forEach { entry ->
                 addFire(entry.x, entry.y, entry.layer)?.age = entry.age
@@ -248,6 +266,7 @@ object GameModule {
         gameWorldSolidBlockBodiesManager: GameWorldSolidBlockBodiesManager,
         environmentTextureRegionsRepository: EnvironmentTextureRegionsRepositoryTexture,
         lightingSystem: LightingSystem,
+        appDispatchers: AppDispatchers,
     ): GameWorld {
         val mapData = if (gameContextRepository.isLoadGame()) {
             saveDataRepository.loadMap(
@@ -258,17 +277,68 @@ object GameModule {
             null
         }
 
+        // Loaded games take their topology + seed from the save's metadata; new games from the
+        // menu selection.
+        val worldType = if (gameContextRepository.isLoadGame()) {
+            mapData?.worldType ?: WorldType.LOOPING
+        } else {
+            gameContextRepository.getWorldType()
+        }
+        val seed = if (gameContextRepository.isLoadGame()) {
+            mapData?.seed ?: gameContextRepository.getRequestedSeed()
+        } else {
+            gameContextRepository.getRequestedSeed()
+        }
+
+        val generatorConfig = WorldGeneratorConfig.getDefault(
+            width = mapData?.foreMap?.size ?: gameContextRepository.getRequestedWorldWidth()
+                ?: WorldGeneratorConfig.DEFAULT_WIDTH,
+            seed = seed ?: TimeUtils.millis(),
+        )
+
+        val gameDataFolder = applicationContextRepository.getGameDirectory()
+
+        val blockStore: WorldBlockStore = when (worldType) {
+            WorldType.LOOPING -> FiniteLoopingBlockStore(
+                itemsRepository = itemsRepository,
+                generatorConfig = generatorConfig,
+                initialForeMap = mapData?.foreMap,
+                initialBackMap = mapData?.backMap,
+                initialBiomes = mapData?.biomes,
+            )
+
+            WorldType.INFINITE -> InfiniteBlockStore(
+                itemsRepository = itemsRepository,
+                generatorConfig = generatorConfig,
+                gameContextRepository = gameContextRepository,
+                appDispatchers = appDispatchers,
+                chunkLoader = { chunkX ->
+                    saveDataRepository.loadInfiniteChunk(
+                        gameDataFolder = gameDataFolder,
+                        saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
+                        chunkX = chunkX,
+                    )?.let { data -> Chunk(chunkX, data.foreMap, data.backMap, data.biomes) }
+                },
+                chunkPersister = { chunk ->
+                    saveDataRepository.saveInfiniteChunk(
+                        gameDataFolder = gameDataFolder,
+                        saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
+                        chunkX = chunk.chunkX,
+                        foreMap = chunk.fore,
+                        backMap = chunk.back,
+                        biomes = chunk.biomes,
+                    )
+                },
+            )
+        }
+
         return GameWorld(
             itemsRepository = itemsRepository,
             physicsController = physicsController,
             gameWorldSolidBlockBodiesManager = gameWorldSolidBlockBodiesManager,
             environmentTextureRegionsRepository = environmentTextureRegionsRepository,
             lightingSystem = lightingSystem,
-            initialForeMap = mapData?.foreMap,
-            initialBackMap = mapData?.backMap,
-            initialBiomes = mapData?.biomes,
-            requestedWidth = gameContextRepository.getRequestedWorldWidth(),
-            requestedSeed = gameContextRepository.getRequestedSeed(),
+            blockStore = blockStore,
         ).apply {
             mapData?.let {
                 this.currentGameTime = mapData.gameTime

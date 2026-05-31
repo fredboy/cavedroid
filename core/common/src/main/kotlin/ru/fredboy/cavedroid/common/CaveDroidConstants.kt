@@ -33,6 +33,8 @@ object CaveDroidConstants {
         const val PERSONALIZED_ADS_CONSENT = "personalized_ads_consent"
 
         const val LIGHTING_BACKEND = "lighting_backend"
+
+        const val PREFER_SHOW_DEBUG_KEY = "prefer_show_debug"
     }
 
     val SUPPORTED_LOCALES = listOf(Locale("en"), Locale("es"), Locale("pt"), Locale("de"), Locale("ru"))

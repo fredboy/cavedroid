@@ -231,6 +231,12 @@ class UseItemMouseInputHandler @Inject constructor(
         }
     }
 
+    override fun reset() {
+        cancelHold()
+        mobController.player.isPullingBow = false
+        mobController.player.stopHitting()
+    }
+
     companion object {
         private const val TAG = "UseItemMouseInputActionHandler"
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)

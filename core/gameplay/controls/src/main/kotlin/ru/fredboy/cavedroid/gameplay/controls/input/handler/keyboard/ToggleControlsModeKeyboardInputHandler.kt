@@ -28,4 +28,8 @@ class ToggleControlsModeKeyboardInputHandler @Inject constructor(
             mobController.player.controlMode = Player.ControlMode.WALK
         }
     }
+
+    override fun reset() {
+        // no-op
+    }
 }

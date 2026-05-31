@@ -7,8 +7,7 @@ data class GameSaveDetails(
     val name: String,
     val directory: String,
     val gameMode: GameMode,
-    val widthBlocks: Int,
-    val heightBlocks: Int,
+    val size: Size,
     val sizeBytes: Long,
     val version: Int,
     val isSupported: Boolean,
@@ -16,4 +15,10 @@ data class GameSaveDetails(
     val lastModifiedString: String,
     val createdString: String?,
     val screenshotHandle: FileHandle?,
-)
+) {
+
+    sealed interface Size {
+        data object Infinite : Size
+        data class Finite(val widthBlocks: Int, val heightBlocks: Int) : Size
+    }
+}

@@ -109,6 +109,7 @@ public class GameProc implements Disposable {
         }
 
         mGameRenderer.resetCameraToPlayer();
+        mGameWorld.update(0f);
         mGameRenderer.render(0f);
         mGameWorld.getLightingSystem().recalculate();
     }
@@ -135,6 +136,7 @@ public class GameProc implements Disposable {
     }
 
     public void onGamePaused() {
+        mGameInputProcessor.reset();
         mWorldLogicTimer.stop();
     }
 
@@ -147,6 +149,7 @@ public class GameProc implements Disposable {
     }
 
     public void respawnPlayer() {
+        mGameInputProcessor.reset();
         mMobsController.respawnPlayer();
     }
 
