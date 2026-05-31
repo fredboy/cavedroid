@@ -87,7 +87,7 @@ class SettingsMenuViewModel(
             showPersonalizedAdsToggle = showPersonalizedAdsToggle,
             personalizedAds = values[5],
             showFullscreenButton = Gdx.graphics.supportsDisplayModeChange() &&
-                    Gdx.app.type != Application.ApplicationType.WebGL,
+                Gdx.app.type != Application.ApplicationType.WebGL,
             canResetHints = values[6],
             showDebugSetting = applicationContextRepository.isDebug(),
             preferShowDebug = values[7],
@@ -100,7 +100,7 @@ class SettingsMenuViewModel(
 
     private fun computeCanResetHints(): Boolean {
         return applicationContextRepository.isOnboardingShown() ||
-                applicationContextRepository.isInventoryHintShown()
+            applicationContextRepository.isInventoryHintShown()
     }
 
     private fun createState(): SettingsMenuState {
@@ -113,7 +113,7 @@ class SettingsMenuViewModel(
             showPersonalizedAdsToggle = showPersonalizedAdsToggle,
             personalizedAds = applicationContextRepository.getPersonalizedAdsConsent() ?: false,
             showFullscreenButton = Gdx.graphics.supportsDisplayModeChange() &&
-                    Gdx.app.type != Application.ApplicationType.WebGL,
+                Gdx.app.type != Application.ApplicationType.WebGL,
             canResetHints = computeCanResetHints(),
             showDebugSetting = applicationContextRepository.isDebug(),
             preferShowDebug = applicationContextRepository.preferShowDebug,

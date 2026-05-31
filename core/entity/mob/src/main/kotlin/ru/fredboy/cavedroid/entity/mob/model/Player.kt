@@ -26,7 +26,6 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.impl.PlayerMobBehavior
 import kotlin.math.abs
-import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 

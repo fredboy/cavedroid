@@ -2,7 +2,6 @@ package ru.fredboy.cavedroid.gameplay.physics.task
 
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
-import kotlinx.coroutines.time.withTimeoutOrNull
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
@@ -22,7 +21,8 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobParamsRepository: MobParamsRepository,
     private val mobFactory: MobFactory,
-) : BaseGameWorldControllerTask(), ChunkListener {
+) : BaseGameWorldControllerTask(),
+    ChunkListener {
 
     private var listenerAdded = false
 
@@ -35,7 +35,7 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
 
         logger.i {
             "Spawn controller task started. " +
-                    "Current time: ${gameWorld.totalGameTimeSec}. Last spawn time: ${gameWorld.lastSpawnGameTime}"
+                "Current time: ${gameWorld.totalGameTimeSec}. Last spawn time: ${gameWorld.lastSpawnGameTime}"
         }
 
         val spawnSpan = if (gameWorld.isInfinite) ChunkGenerator.CHUNK_W else gameWorld.width
@@ -75,7 +75,6 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
         val spanMobs = mobController.mobs.count { it.mapX in originX..(originX + span) }
         val canSpawnSurface = (!gameWorld.isDayTime() || spanMobs < mobsPerSpan) && surfaceCandidates.isNotEmpty()
         val canSpawnCave = spanMobs < mobsPerSpan && caveCandidates.isNotEmpty()
-
 
         var spawnCount = 0
         var caveSpawns = 0

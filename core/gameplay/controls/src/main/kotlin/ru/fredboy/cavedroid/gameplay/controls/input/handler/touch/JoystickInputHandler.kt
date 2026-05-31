@@ -82,7 +82,8 @@ class JoystickInputHandler @Inject constructor(
                     action.isInsideHotbar(
                         gameContextRepository,
                         textureRegions,
-                    ) && !action.actionKey.touchUp
+                    ) &&
+                    !action.actionKey.touchUp
                 )
     }
 

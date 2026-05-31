@@ -27,7 +27,7 @@ class CommandExecutor @Inject constructor(
         mobController.player.apply {
             val transform = Vector2(
                 x - position.x,
-                y - position.y
+                y - position.y,
             )
             applyPendingTransform(transform)
         }

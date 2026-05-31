@@ -79,8 +79,8 @@ class ChunkGenerator(
             if (this === other) return true
             if (other !is GeneratedChunk) return false
             return foreMap.contentDeepEquals(other.foreMap) &&
-                    backMap.contentDeepEquals(other.backMap) &&
-                    biomes.contentEquals(other.biomes)
+                backMap.contentDeepEquals(other.backMap) &&
+                biomes.contentEquals(other.biomes)
         }
 
         override fun hashCode(): Int {
@@ -107,8 +107,8 @@ class ChunkGenerator(
             if (this === other) return true
             if (other !is GeneratedBand) return false
             return bandStart == other.bandStart &&
-                    foreBand.contentDeepEquals(other.foreBand) &&
-                    backBand.contentDeepEquals(other.backBand)
+                foreBand.contentDeepEquals(other.foreBand) &&
+                backBand.contentDeepEquals(other.backBand)
         }
 
         override fun hashCode(): Int {
@@ -381,7 +381,7 @@ class ChunkGenerator(
                     "log_oak",
                     "leaves_oak",
                     5,
-                    7
+                    7,
                 )
 
                 plant < 10 -> generateTree(
@@ -394,7 +394,7 @@ class ChunkGenerator(
                     "log_birch",
                     "leaves_birch",
                     5,
-                    7
+                    7,
                 )
 
                 plant < 40 -> placeOnSurface(jBand, surfaceHeight, foreBand, bandW, block(plainsPlants.random(rng)))
@@ -418,7 +418,7 @@ class ChunkGenerator(
         surfaceHeight: Int,
         foreBand: Array<Array<Block>>,
         bandW: Int,
-        value: Block
+        value: Block,
     ) {
         if (jBand !in 0 until bandW) return
         val h = surfaceHeight - 1
