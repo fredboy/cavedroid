@@ -36,10 +36,14 @@ class WorldConfigMenuViewModel(
     val stateFlow = _stateFlow.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
-        initialValue = WorldConfigMenuState.Show,
+        initialValue = WorldConfigMenuState.Generating,
     )
 
     val worldSizes: List<WorldSize> = WorldSize.entries.toList()
+
+    override fun onShow() {
+        startGame(WorldType.INFINITE, WorldSize.DEFAULT)
+    }
 
     fun getWorldSizeLabel(size: WorldSize): String {
         return getLocalizedString("worldSize_${size.name.lowercase()}")

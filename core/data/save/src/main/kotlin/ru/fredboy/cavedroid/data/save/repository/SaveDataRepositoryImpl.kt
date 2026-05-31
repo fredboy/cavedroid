@@ -862,11 +862,10 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     override fun getSaveDetails(gameDataFolder: String, saveDir: String): GameSaveDetails {
         val savesPath = getSavePath(gameDataFolder, saveDir)
         val meta = loadMapData(savesPath)
-        val (width, height) = if (meta.worldType == WorldType.INFINITE.ordinal) {
-            // Infinite worlds have no fixed dimensions; 0 width signals "infinite" to the UI.
-            0 to 0
+        val size = if (meta.worldType == WorldType.INFINITE.ordinal) {
+            GameSaveDetails.Size.Infinite
         } else {
-            readMapDimensions(savesPath)
+            readMapDimensions(savesPath).let { (width, height) -> GameSaveDetails.Size.Finite(width, height) }
         }
 
         val sizeBytes = file(savesPath).list()
@@ -877,8 +876,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             name = meta.name,
             directory = saveDir,
             gameMode = meta.gameMode,
-            widthBlocks = width,
-            heightBlocks = height,
+            size = size,
             sizeBytes = sizeBytes,
             version = meta.version,
             isSupported = meta.version == MAP_SAVE_VERSION.toInt(),
