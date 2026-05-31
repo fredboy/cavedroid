@@ -159,7 +159,7 @@ class PlayerMobBehavior(
             jump()
         }
 
-        if (holdAim && !controlVector.isZero) {
+        if (holdAim) {
             aimX = position.x + aimToPlayer.x
             aimY = position.y + aimToPlayer.y
         }

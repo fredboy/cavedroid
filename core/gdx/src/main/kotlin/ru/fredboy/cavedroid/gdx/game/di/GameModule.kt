@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.SoundPlayer
+import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.model.WorldType
 import ru.fredboy.cavedroid.common.utils.TooltipManager
@@ -265,6 +266,7 @@ object GameModule {
         gameWorldSolidBlockBodiesManager: GameWorldSolidBlockBodiesManager,
         environmentTextureRegionsRepository: EnvironmentTextureRegionsRepositoryTexture,
         lightingSystem: LightingSystem,
+        appDispatchers: AppDispatchers,
     ): GameWorld {
         val mapData = if (gameContextRepository.isLoadGame()) {
             saveDataRepository.loadMap(
@@ -309,6 +311,7 @@ object GameModule {
                 itemsRepository = itemsRepository,
                 generatorConfig = generatorConfig,
                 gameContextRepository = gameContextRepository,
+                appDispatchers = appDispatchers,
                 chunkLoader = { chunkX ->
                     saveDataRepository.loadInfiniteChunk(
                         gameDataFolder = gameDataFolder,

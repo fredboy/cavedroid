@@ -1,7 +1,15 @@
 package ru.fredboy.cavedroid.game.world.store
 
 import co.touchlab.kermit.Logger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.utils.floorToInt
+import ru.fredboy.cavedroid.common.utils.safeCast
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
@@ -9,6 +17,8 @@ import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
 import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
+import ru.fredboy.cavedroid.game.world.store.InfiniteBlockStore.ChunkEntry.Companion.chunkEntry
+import ru.fredboy.cavedroid.game.world.store.InfiniteBlockStore.Companion.LOAD_RADIUS
 
 /**
  * Unbounded, Minecraft-like world. Holds only the chunks near the current view; the rest are
@@ -25,12 +35,16 @@ class InfiniteBlockStore(
     private val itemsRepository: ItemsRepository,
     override val generatorConfig: WorldGeneratorConfig,
     private val gameContextRepository: GameContextRepository,
+    private val appDispatchers: AppDispatchers,
     private val chunkLoader: (chunkX: Int) -> Chunk? = { null },
     private val chunkPersister: (Chunk) -> Unit = { },
 ) : WorldBlockStore {
 
+    private val job = Job()
+    private val coroutineScope = CoroutineScope(job + appDispatchers.background)
+
     private val generator = ChunkGenerator(generatorConfig, itemsRepository)
-    private val chunks = HashMap<Int, Chunk>()
+    private val chunks = HashMap<Int, ChunkEntry>()
     private val listeners = mutableListOf<ChunkListener>()
 
     private var lastCenterChunk = Int.MIN_VALUE
@@ -52,7 +66,7 @@ class InfiniteBlockStore(
 
     init {
         // Pre-load the spawn region so the first render and spawn search have terrain to work with.
-        stream(centerChunk = 0)
+        runBlocking { stream(centerChunk = 0) }
         lastCenterChunk = 0
     }
 
@@ -62,7 +76,7 @@ class InfiniteBlockStore(
 
     override fun getBlock(x: Int, y: Int, layer: Layer): Block {
         if (y !in 0 until height) return itemsRepository.fallbackBlock
-        val chunk = chunks[chunkIndex(x)] ?: return itemsRepository.fallbackBlock
+        val chunk = chunks[chunkIndex(x)]?.safeCast<ChunkEntry.Loaded>()?.chunk ?: return itemsRepository.fallbackBlock
         val lx = localX(x)
         return when (layer) {
             Layer.FOREGROUND -> chunk.fore[lx][y]
@@ -72,7 +86,7 @@ class InfiniteBlockStore(
 
     override fun setBlock(x: Int, y: Int, layer: Layer, value: Block) {
         if (y !in 0 until height) return
-        val chunk = chunks[chunkIndex(x)] ?: return
+        val chunk = chunks[chunkIndex(x)]?.safeCast<ChunkEntry.Loaded>()?.chunk ?: return
         val lx = localX(x)
         when (layer) {
             Layer.FOREGROUND -> chunk.fore[lx][y] = value
@@ -83,7 +97,8 @@ class InfiniteBlockStore(
 
     override fun getBiomeAt(x: Int): Biome {
         // Biome is a pure function of x, so answer even for chunks that are not resident.
-        return chunks[chunkIndex(x)]?.biomes?.get(localX(x)) ?: generator.biomeAt(x)
+        return chunks[chunkIndex(x)]?.safeCast<ChunkEntry.Loaded>()
+            ?.chunk?.biomes?.get(localX(x)) ?: generator.biomeAt(x)
     }
 
     override fun update() {
@@ -92,7 +107,10 @@ class InfiniteBlockStore(
         val centerChunk = chunkIndex(centerX)
         if (centerChunk == lastCenterChunk) return
         lastCenterChunk = centerChunk
-        stream(centerChunk)
+
+        coroutineScope.launch {
+            stream(centerChunk)
+        }
     }
 
     override fun addChunkListener(listener: ChunkListener) {
@@ -109,55 +127,61 @@ class InfiniteBlockStore(
     }
 
     override fun flushDirtyChunks() {
-        chunks.values.forEach { chunk ->
+        chunks.values.forEach { entry ->
+            val chunk = entry.safeCast<ChunkEntry.Loaded>()?.chunk ?: return@forEach
             if (chunk.dirty) {
-                chunkPersister(chunk)
                 chunk.dirty = false
+                coroutineScope.launch(appDispatchers.io) {
+                    chunkPersister(chunk)
+                }
             }
+
         }
     }
 
     override fun dispose() {
-        chunks.values.forEach { chunk -> if (chunk.dirty) chunkPersister(chunk) }
+        coroutineScope.cancel()
+        flushDirtyChunks()
         chunks.clear()
         listeners.clear()
     }
 
-    private fun stream(centerChunk: Int) {
+    private suspend fun stream(centerChunk: Int) {
         for (cx in centerChunk - LOAD_RADIUS..centerChunk + LOAD_RADIUS) {
             ensureChunk(cx)
         }
 
         val keep = (centerChunk - UNLOAD_RADIUS)..(centerChunk + UNLOAD_RADIUS)
-        chunks.keys.filter { it !in keep }.forEach(::evictChunk)
+        chunks.keys.filterNot { it in keep }
+            .forEach { evictChunk(it) }
     }
 
-    private fun ensureChunk(chunkX: Int): Chunk {
-        chunks[chunkX]?.let { return it }
+    private suspend fun ensureChunk(chunkX: Int) {
+        chunks[chunkX]?.let { return }
+        chunks[chunkX] = chunkEntry()
 
-        val loaded = chunkLoader(chunkX)
-        val chunk = loaded ?: generator.generateChunk(chunkX).let { generated ->
-            Chunk(
-                chunkX = chunkX,
-                fore = generated.foreMap,
-                back = generated.backMap,
-                biomes = generated.biomes,
-            )
+        val loaded = withContext(appDispatchers.io) {
+            chunkLoader(chunkX)
         }
 
-        chunks[chunkX] = chunk
-
-        if (DEBUG_SEAMS) {
-            logger.v {
-                "chunk $chunkX ${if (loaded != null) "LOADED" else "GENERATED"}; " +
-                    "neighbours L=${chunks.containsKey(chunkX - 1)} R=${chunks.containsKey(chunkX + 1)}"
+        val chunk = loaded ?: withContext(appDispatchers.background) {
+            generator.generateChunk(chunkX).let { generated ->
+                Chunk(
+                    chunkX = chunkX,
+                    fore = generated.foreMap,
+                    back = generated.backMap,
+                    biomes = generated.biomes,
+                )
             }
-            checkSeam(chunkX - 1, chunkX)
-            checkSeam(chunkX, chunkX + 1)
         }
 
-        listeners.forEach { it.onChunkLoaded(chunkX) }
-        return chunk
+        chunks[chunkX] = chunkEntry(chunk)
+
+        listeners.forEach {
+            withContext(appDispatchers.main) {
+                it.onChunkLoaded(chunkX)
+            }
+        }
     }
 
     /**
@@ -170,8 +194,8 @@ class InfiniteBlockStore(
      * mismatches above the surface are usually player edits — the log notes which side was loaded.
      */
     private fun checkSeam(leftX: Int, rightX: Int) {
-        val left = chunks[leftX] ?: return
-        val right = chunks[rightX] ?: return
+        val left = chunks[leftX]?.safeCast<ChunkEntry.Loaded>()?.chunk ?: return
+        val right = chunks[rightX]?.safeCast<ChunkEntry.Loaded>()?.chunk ?: return
 
         val leftBand = generator.generateBand(leftX)
         val overscan = ChunkGenerator.OVERSCAN
@@ -186,18 +210,18 @@ class InfiniteBlockStore(
                 val expectedFore = leftBand.foreBand[bandIndex][y]
                 val actualFore = right.fore[local][y]
                 if (expectedFore.params.key != actualFore.params.key) {
-                    logger.w {
+                    logger.d {
                         "SEAM MISMATCH ${leftX}->$rightX at x=$worldX y=$y (surface=$surface) FORE: " +
-                            "left-overscan='${expectedFore.params.key}' right-chunk='${actualFore.params.key}'"
+                                "left-overscan='${expectedFore.params.key}' right-chunk='${actualFore.params.key}'"
                     }
                     return
                 }
                 val expectedBack = leftBand.backBand[bandIndex][y]
                 val actualBack = right.back[local][y]
                 if (expectedBack.params.key != actualBack.params.key) {
-                    logger.w {
+                    logger.d {
                         "SEAM MISMATCH ${leftX}->$rightX at x=$worldX y=$y (surface=$surface) BACK: " +
-                            "left-overscan='${expectedBack.params.key}' right-chunk='${actualBack.params.key}'"
+                                "left-overscan='${expectedBack.params.key}' right-chunk='${actualBack.params.key}'"
                     }
                     return
                 }
@@ -205,11 +229,22 @@ class InfiniteBlockStore(
         }
     }
 
-    private fun evictChunk(chunkX: Int) {
-        val chunk = chunks.remove(chunkX) ?: return
-        listeners.forEach { it.onChunkUnloaded(chunkX) }
+    private suspend fun evictChunk(chunkX: Int) {
+        logger.d { "Evict chunk $chunkX" }
+
+        val chunk = withContext(appDispatchers.main) {
+            chunks.remove(chunkX)?.safeCast<ChunkEntry.Loaded>()?.chunk
+        } ?: return
+
+        listeners.forEach {
+            withContext(appDispatchers.main) {
+                it.onChunkUnloaded(chunkX)
+            }
+        }
         if (chunk.dirty) {
-            chunkPersister(chunk)
+            withContext(appDispatchers.io) {
+                chunkPersister(chunk)
+            }
         }
     }
 
@@ -217,16 +252,22 @@ class InfiniteBlockStore(
 
     private fun localX(x: Int): Int = Math.floorMod(x, ChunkGenerator.CHUNK_W)
 
+    private sealed interface ChunkEntry {
+        data class Loaded(
+            val chunk: Chunk,
+        ) : ChunkEntry
+
+        data object Loading : ChunkEntry
+
+        companion object {
+            fun chunkEntry(chunk: Chunk) = Loaded(chunk)
+            fun chunkEntry() = Loading
+        }
+    }
+
     companion object {
         private const val TAG = "InfiniteBlockStore"
         private val logger = Logger.withTag(TAG)
-
-        /**
-         * Flip to true to trace chunk generate/load and verify the seam invariant on every chunk
-         * that becomes resident. Off in production: [checkSeam] regenerates a neighbour band per
-         * resident chunk, which is too expensive to run unconditionally.
-         */
-        private const val DEBUG_SEAMS = true
 
         // Chunks loaded on each side of the centre chunk. Must cover the viewport plus the lighting
         // window (±96 blocks ≈ 6 chunks) so light rebuilds read real terrain.
