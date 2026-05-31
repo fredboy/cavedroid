@@ -36,7 +36,7 @@ class GameScreen @Inject constructor(
         requestedWorldWidth = (gameConfig as? StartGameConfig.New)?.worldSize?.blocks,
         requestedSeed = (gameConfig as? StartGameConfig.New)?.seed,
         worldType = (gameConfig as? StartGameConfig.New)?.worldType ?: WorldType.DEFAULT,
-        showInfo = false,
+        showInfo = applicationContextRepository.preferShowDebug,
         showMap = false,
         joystick = Joystick(requireNotNull(mobParamsRepository.getMobParamsByKey("char")).speed),
         cameraContext = CameraContext(

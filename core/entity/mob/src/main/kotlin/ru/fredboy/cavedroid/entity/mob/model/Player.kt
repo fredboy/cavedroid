@@ -80,7 +80,7 @@ class Player(
         }
 
     override val effectiveSpeedMultiplier: Float
-        get() = if (isSprinting && !isFlyMode) SPRINT_SPEED_MULTIPLIER else 1f
+        get() = if (isSprinting) SPRINT_SPEED_MULTIPLIER else 1f
 
     var foodLevel: Int = MAX_FOOD_LEVEL
     var saturationLevel: Float = INITIAL_SATURATION

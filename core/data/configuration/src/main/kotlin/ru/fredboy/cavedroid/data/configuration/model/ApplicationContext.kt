@@ -21,4 +21,5 @@ class ApplicationContext(
     internal var personalizedAdsConsent: Boolean?,
     internal var lightingBackend: LightingBackend,
     internal val isYandexGamesBuild: Boolean,
+    internal var preferShowDebug: Boolean,
 )

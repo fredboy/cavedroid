@@ -104,4 +104,11 @@ class ApplicationContextStore @Inject constructor(
             applicationContext.lightingBackend = value
             preferencesStore.setPreference(PreferenceKeys.LIGHTING_BACKEND, value.name)
         }
+
+    var preferShowDebug: Boolean
+        get() = synchronized(lock) { applicationContext.preferShowDebug }
+        set(value) = synchronized(lock) {
+            applicationContext.preferShowDebug = value
+            preferencesStore.setPreference(PreferenceKeys.PREFER_SHOW_DEBUG_KEY, value.toString())
+        }
 }

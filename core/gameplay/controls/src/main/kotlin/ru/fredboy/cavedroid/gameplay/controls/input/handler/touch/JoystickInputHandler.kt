@@ -32,6 +32,9 @@ class JoystickInputHandler @Inject constructor(
 
     private var active = false
         set(value) {
+            if (field == value) {
+                return
+            }
             if (!value) {
                 resetVelocity()
                 if (TimeUtils.timeSinceMillis(activateTimeMs) < 200L) {
@@ -79,7 +82,7 @@ class JoystickInputHandler @Inject constructor(
                     action.isInsideHotbar(
                         gameContextRepository,
                         textureRegions,
-                    )
+                    ) && !action.actionKey.touchUp
                 )
     }
 
@@ -94,6 +97,8 @@ class JoystickInputHandler @Inject constructor(
         gameContextRepository.getJoystick().deactivate()
         mobController.player.controlMode = Player.ControlMode.CURSOR
         active = false
+        mobController.player.tryClimb = false
+        mobController.player.descend = false
     }
 
     private fun handleDragged() {
@@ -106,8 +111,11 @@ class JoystickInputHandler @Inject constructor(
 
         mobController.player.controlVector.x = joyVector.x
 
-        if (mobController.player.isFlyMode || mobController.player.canClimb) {
+        if (mobController.player.isFlyMode) {
             mobController.player.controlVector.y = joyVector.y
+        } else if (mobController.player.canClimb) {
+            mobController.player.tryClimb = joyVector.y < -(mobController.player.params.speed / 4f)
+            mobController.player.descend = joyVector.y > (mobController.player.params.speed / 4f)
         }
 
         mobController.player.isSprinting = joystick.rawDistance > Joystick.SPRINT_DISTANCE

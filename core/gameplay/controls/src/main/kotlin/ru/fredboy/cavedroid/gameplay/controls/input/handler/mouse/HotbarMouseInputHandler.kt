@@ -35,12 +35,18 @@ class HotbarMouseInputHandler @Inject constructor(
     private var buttonHoldTask: Timer.Task? = null
 
     override fun checkConditions(action: MouseInputAction): Boolean = buttonHoldTask?.isScheduled == true ||
-        (
-            (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
-                action.isInsideHotbar(gameContextRepository, textureRegions) ||
-                action.actionKey is MouseInputActionKey.Scroll
-            ) && !action.actionKey.touchUp &&
-        gameWindowsManager.currentWindowType == GameWindowType.NONE
+            (
+                    (action.actionKey is MouseInputActionKey.Left ||
+                            (action.actionKey is MouseInputActionKey.Screen &&
+                                    (!gameContextRepository.getJoystick().active ||
+                                            action.actionKey.pointer != gameContextRepository.getJoystick().pointer))) &&
+                            action.isInsideHotbar(gameContextRepository, textureRegions) ||
+                            action.actionKey is MouseInputActionKey.Scroll
+                    ) &&
+            gameWindowsManager.currentWindowType == GameWindowType.NONE && (
+            action.actionKey is MouseInputActionKey.Scroll || !action.actionKey.touchUp ||
+                    buttonHoldTask?.isScheduled == true
+                    )
 
     private fun cancelHold() {
         buttonHoldTask?.cancel()
@@ -57,12 +63,12 @@ class HotbarMouseInputHandler @Inject constructor(
     }
 
     private fun getActionSlot(action: MouseInputAction): Int = (
-        (
-            action.screenX -
-                (gameContextRepository.getCameraContext().viewport.width / 2 - hotbarTexture.regionWidth / 2)
-            ) /
-            HOTBAR_CELL_WIDTH
-        ).toInt()
+            (
+                    action.screenX -
+                            (gameContextRepository.getCameraContext().viewport.width / 2 - hotbarTexture.regionWidth / 2)
+                    ) /
+                    HOTBAR_CELL_WIDTH
+            ).toInt()
 
     private fun handleHold(action: MouseInputAction) {
 //        buttonHoldTask = null

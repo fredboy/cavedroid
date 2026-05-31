@@ -10,4 +10,6 @@ data class SettingsMenuState(
     val personalizedAds: Boolean,
     val showFullscreenButton: Boolean,
     val canResetHints: Boolean,
+    val showDebugSetting: Boolean,
+    val preferShowDebug: Boolean,
 )

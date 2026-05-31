@@ -63,6 +63,11 @@ class SettingsMenuViewModel(
         .onStart { emit(computeCanResetHints()) }
         .distinctUntilChanged()
 
+    private val _showDebugInfoFlow = MutableSharedFlow<Boolean>(replay = 0)
+    private val showDebugInfoFlow: Flow<Boolean> = _showDebugInfoFlow
+        .onStart { emit(applicationContextRepository.preferShowDebug) }
+        .distinctUntilChanged()
+
     val stateFlow: StateFlow<SettingsMenuState> = combine(
         dynamicCameraFlow,
         fullscreenFlow,
@@ -71,6 +76,7 @@ class SettingsMenuViewModel(
         smoothLightingFlow,
         personalizedAdsFlow,
         canResetHintsFlow,
+        showDebugInfoFlow,
     ) { values ->
         SettingsMenuState(
             dynamicCamera = values[0],
@@ -81,8 +87,10 @@ class SettingsMenuViewModel(
             showPersonalizedAdsToggle = showPersonalizedAdsToggle,
             personalizedAds = values[5],
             showFullscreenButton = Gdx.graphics.supportsDisplayModeChange() &&
-                Gdx.app.type != Application.ApplicationType.WebGL,
+                    Gdx.app.type != Application.ApplicationType.WebGL,
             canResetHints = values[6],
+            showDebugSetting = applicationContextRepository.isDebug(),
+            preferShowDebug = values[7],
         )
     }.stateIn(
         scope = viewModelScope,
@@ -92,7 +100,7 @@ class SettingsMenuViewModel(
 
     private fun computeCanResetHints(): Boolean {
         return applicationContextRepository.isOnboardingShown() ||
-            applicationContextRepository.isInventoryHintShown()
+                applicationContextRepository.isInventoryHintShown()
     }
 
     private fun createState(): SettingsMenuState {
@@ -105,8 +113,10 @@ class SettingsMenuViewModel(
             showPersonalizedAdsToggle = showPersonalizedAdsToggle,
             personalizedAds = applicationContextRepository.getPersonalizedAdsConsent() ?: false,
             showFullscreenButton = Gdx.graphics.supportsDisplayModeChange() &&
-                Gdx.app.type != Application.ApplicationType.WebGL,
+                    Gdx.app.type != Application.ApplicationType.WebGL,
             canResetHints = computeCanResetHints(),
+            showDebugSetting = applicationContextRepository.isDebug(),
+            preferShowDebug = applicationContextRepository.preferShowDebug,
         )
     }
 
@@ -134,6 +144,10 @@ class SettingsMenuViewModel(
         viewModelScope.launch { _personalizedAdsFlow.emit(enabled) }
     }
 
+    fun onShowDebugClick(enabled: Boolean) {
+        viewModelScope.launch { _showDebugInfoFlow.emit(enabled) }
+    }
+
     fun onDoneClick() {
         stateFlow.value.run {
             applicationContextRepository.setFullscreen(fullscreen)
@@ -147,6 +161,7 @@ class SettingsMenuViewModel(
                 applicationContextRepository.setPersonalizedAdsConsent(personalizedAds)
                 adController.setPersonalizedAdsEnabled(personalizedAds)
             }
+            applicationContextRepository.preferShowDebug = preferShowDebug
         }
         navBackStack.pop()
     }

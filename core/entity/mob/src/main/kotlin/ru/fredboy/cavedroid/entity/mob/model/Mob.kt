@@ -245,6 +245,7 @@ abstract class Mob(
     fun looksRight() = direction == Direction.RIGHT
 
     fun kill() {
+        controlVector.setZero()
         isDead = true
         makingSound = SoundType.Death
         extinguish()
@@ -358,6 +359,9 @@ abstract class Mob(
         projectileAdapter: ProjectileAdapter,
         delta: Float,
     ) {
+        if (isDead) {
+            return
+        }
         if (isPullingBow) {
             bowCharge += delta
         }
@@ -377,7 +381,7 @@ abstract class Mob(
         if (!controlVector.isZero) {
             velocity.x = controlVector.x * effectiveSpeedMultiplier
             if (isFlyMode) {
-                velocity.y = controlVector.y
+                velocity.y = controlVector.y * effectiveSpeedMultiplier
             } else if (!canClimb) {
                 controlVector.y = 0f
             }
