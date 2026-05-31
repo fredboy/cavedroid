@@ -148,7 +148,7 @@ class InfiniteBlockStore(
         chunks[chunkX] = chunk
 
         if (DEBUG_SEAMS) {
-            logger.d {
+            logger.v {
                 "chunk $chunkX ${if (loaded != null) "LOADED" else "GENERATED"}; " +
                     "neighbours L=${chunks.containsKey(chunkX - 1)} R=${chunks.containsKey(chunkX + 1)}"
             }

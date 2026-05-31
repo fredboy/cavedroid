@@ -41,6 +41,7 @@ tasks.register<JavaExec>("run") {
     classpath = sourceSets["main"].runtimeClasspath
     workingDir = sourceSets["main"].resources.sourceDirectories.first()
     args("--debug")
+    standardInput = System.`in`
 }
 
 tasks.register<JavaExec>("runTouch") {
@@ -49,6 +50,7 @@ tasks.register<JavaExec>("runTouch") {
     classpath = sourceSets["main"].runtimeClasspath
     workingDir = sourceSets["main"].resources.sourceDirectories.first()
     args("--touch", "--debug")
+    standardInput = System.`in`
 }
 
 tasks.register<Jar>("dist") {

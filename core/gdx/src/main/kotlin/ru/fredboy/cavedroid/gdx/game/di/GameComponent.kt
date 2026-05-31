@@ -15,6 +15,7 @@ import ru.fredboy.cavedroid.game.world.di.GameWorldModule
 import ru.fredboy.cavedroid.gameplay.physics.di.PhysicsModule
 import ru.fredboy.cavedroid.gameplay.rendering.GameRenderer
 import ru.fredboy.cavedroid.gdx.di.ApplicationComponent
+import ru.fredboy.cavedroid.gdx.game.CommandExecutor
 import ru.fredboy.cavedroid.gdx.game.DeathScreen
 import ru.fredboy.cavedroid.gdx.game.GameProc
 import ru.fredboy.cavedroid.gdx.game.GameSaveHelper
@@ -73,6 +74,8 @@ interface GameComponent {
     val gameRenderer: GameRenderer
 
     val deathScreen: DeathScreen
+
+    val commandExecutor: CommandExecutor
 
     @Component.Builder
     interface Builder {
