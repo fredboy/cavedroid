@@ -184,51 +184,6 @@ class InfiniteBlockStore(
         }
     }
 
-    /**
-     * Debug seam check: a chunk "knows its neighbour" iff the columns the left chunk computes in its
-     * right overscan (but discards) match what the right chunk actually holds. We compare only the
-     * region at/above the surface — caves, lava and support-cleanup run on kept columns only, so the
-     * underground deliberately differs between an overscan column and a kept column.
-     *
-     * Fresh-vs-fresh mismatches mean a generator stitching bug. If a side was loaded from disk,
-     * mismatches above the surface are usually player edits — the log notes which side was loaded.
-     */
-    private fun checkSeam(leftX: Int, rightX: Int) {
-        val left = chunks[leftX]?.safeCast<ChunkEntry.Loaded>()?.chunk ?: return
-        val right = chunks[rightX]?.safeCast<ChunkEntry.Loaded>()?.chunk ?: return
-
-        val leftBand = generator.generateBand(leftX)
-        val overscan = ChunkGenerator.OVERSCAN
-
-        // Right chunk's columns 0 until OVERSCAN live in the left band's right overscan.
-        for (local in 0 until overscan) {
-            val worldX = rightX * ChunkGenerator.CHUNK_W + local
-            val bandIndex = worldX - leftBand.bandStart
-            val surface = generator.surfaceHeight(worldX)
-
-            for (y in 0 until surface) {
-                val expectedFore = leftBand.foreBand[bandIndex][y]
-                val actualFore = right.fore[local][y]
-                if (expectedFore.params.key != actualFore.params.key) {
-                    logger.d {
-                        "SEAM MISMATCH ${leftX}->$rightX at x=$worldX y=$y (surface=$surface) FORE: " +
-                                "left-overscan='${expectedFore.params.key}' right-chunk='${actualFore.params.key}'"
-                    }
-                    return
-                }
-                val expectedBack = leftBand.backBand[bandIndex][y]
-                val actualBack = right.back[local][y]
-                if (expectedBack.params.key != actualBack.params.key) {
-                    logger.d {
-                        "SEAM MISMATCH ${leftX}->$rightX at x=$worldX y=$y (surface=$surface) BACK: " +
-                                "left-overscan='${expectedBack.params.key}' right-chunk='${actualBack.params.key}'"
-                    }
-                    return
-                }
-            }
-        }
-    }
-
     private suspend fun evictChunk(chunkX: Int) {
         logger.d { "Evict chunk $chunkX" }
 
