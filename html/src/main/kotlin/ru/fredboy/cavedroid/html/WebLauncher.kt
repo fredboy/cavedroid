@@ -17,6 +17,7 @@ import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
 import ru.fredboy.cavedroid.gameplay.lighting.bfs.BfsLightingSystemFactory
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
+import ru.fredboy.cavedroid.html.spike.EcsAiSpike
 import java.util.Locale
 
 object WebLauncher {
@@ -28,6 +29,9 @@ object WebLauncher {
         // inside the exception-handling path, masking the actual error.
         // Disabling recovery surfaces real exceptions cleanly.
         System.setProperty("kotlinx.coroutines.stacktrace.recovery", "false")
+
+        // S0 spike (#147): run the Ashley + gdx-ai TeaVM check, then continue booting normally.
+        runCatching { EcsAiSpike.run() }
 
         val config = WebApplicationConfiguration().apply {
             width = 0
