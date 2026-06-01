@@ -26,3 +26,7 @@ Constraints:
 - Declarative, composable AI instead of class hierarchies.
 - gdx-ai is stable but not actively developed — acceptable as a dependency.
 - Global `GdxAI` singletons need careful per-session init under our DI/`SessionScope`.
+
+## Spike result (S0, #131)
+
+Verified on TeaVM/web (2026-06-01): a gdx-ai `BehaviorTree` builds and steps in the browser, and `ClassReflection.newInstance` works — so the reflective `.tree` parser is expected to work too. **Decision: GO.** Still to confirm during E4: the full `.tree` DSL parse and driving `GdxAI.getTimepiece()` from the deterministic tick clock (#148).

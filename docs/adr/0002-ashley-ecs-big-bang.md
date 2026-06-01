@@ -20,3 +20,7 @@ Gating risk: Ashley uses reflection — verify it runs under TeaVM/web first (S0
 - `*WorldAdapter`, controllers and spawn queues are deleted.
 - Logic moves into pure, testable systems.
 - No always-shippable intermediate states; correctness is validated by tests + the parity suite before 2.0.
+
+## Spike result (S0, #131)
+
+Verified on TeaVM/web (`html:runWeb`, 2026-06-01): an Ashley `Engine` + `ComponentMapper` + `Family` + `IteratingSystem` run in the browser, and libGDX `ClassReflection.newInstance` (the reflection Ashley relies on) works. **Decision: GO** — no array-backed fallback ECS needed.
