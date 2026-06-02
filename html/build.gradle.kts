@@ -10,6 +10,17 @@ plugins {
 private val appName = providers.gradleProperty("cavedroid.appName").get()
 private val appVersionName = providers.gradleProperty("cavedroid.versionName").get()
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+    }
+}
+
 // TeaVM ships browser-friendly stubs for a handful of java.util.concurrent.*
 // classes via its standard "emu" package convention. Classes live under
 // emu.java.* and src/main/resources/META-INF/teavm.properties maps the

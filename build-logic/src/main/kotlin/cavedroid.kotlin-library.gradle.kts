@@ -1,4 +1,5 @@
 import org.gradle.accessors.dm.LibrariesForLibs
+import org.gradle.api.attributes.java.TargetJvmVersion
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -10,17 +11,34 @@ plugins {
 val libs = the<LibrariesForLibs>()
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(25)
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_1_8)
+    }
+}
+
+tasks.named<KotlinCompile>("compileTestKotlin").configure {
+    compilerOptions {
         jvmTarget.set(JvmTarget.JVM_17)
+    }
+}
+
+tasks.named<JavaCompile>("compileTestJava").configure {
+    sourceCompatibility = "17"
+    targetCompatibility = "17"
+}
+
+listOf("testCompileClasspath", "testRuntimeClasspath").forEach { configurationName ->
+    configurations.named(configurationName).configure {
+        attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 17)
     }
 }
 
