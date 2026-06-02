@@ -3,8 +3,12 @@ import java.nio.file.StandardOpenOption
 
 plugins {
     id("cavedroid.kotlin-library")
+    id("cavedroid.license-report")
     alias(libs.plugins.kotlin.serialization)
 }
+
+private val appName = providers.gradleProperty("cavedroid.appName").get()
+private val appVersionName = providers.gradleProperty("cavedroid.versionName").get()
 
 // TeaVM ships browser-friendly stubs for a handful of java.util.concurrent.*
 // classes via its standard "emu" package convention. Classes live under
@@ -241,7 +245,7 @@ tasks.register<Zip>("packageWebDist") {
     dependsOn("buildJsRelease")
 
     archiveBaseName.set("cavedroid-web")
-    archiveVersion.set(ApplicationInfo.versionName)
+    archiveVersion.set(appVersionName)
     destinationDirectory.set(layout.buildDirectory.dir("dist"))
 
     from(layout.buildDirectory.dir("dist/webapp")) {
@@ -271,7 +275,7 @@ tasks.register<Copy>("applyYandexIndexHtml") {
         "beginToken" to "%",
         "endToken" to "%",
         "tokens" to mapOf(
-            "TITLE" to ApplicationInfo.name,
+            "TITLE" to appName,
             "JS_SCRIPT" to "<script type=\"text/javascript\" charset=\"utf-8\" src=\"app.js\"></script>",
             "MODE" to "main()",
             "WIDTH" to "800",
@@ -287,7 +291,7 @@ tasks.register<Zip>("packageWebDistYandex") {
     dependsOn("buildJsYandex", "applyYandexIndexHtml")
 
     archiveBaseName.set("cavedroid-web-yandex")
-    archiveVersion.set(ApplicationInfo.versionName)
+    archiveVersion.set(appVersionName)
     destinationDirectory.set(layout.buildDirectory.dir("dist"))
 
     from(layout.buildDirectory.dir("dist/webapp")) {

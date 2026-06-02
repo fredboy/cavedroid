@@ -82,8 +82,7 @@ private class VelocityComponent : Component {
     var y = 0f
 }
 
-private class MovementSystem :
-    IteratingSystem(Family.all(PositionComponent::class.java, VelocityComponent::class.java).get()) {
+private class MovementSystem : IteratingSystem(Family.all(PositionComponent::class.java, VelocityComponent::class.java).get()) {
 
     private val position = ComponentMapper.getFor(PositionComponent::class.java)
     private val velocity = ComponentMapper.getFor(VelocityComponent::class.java)

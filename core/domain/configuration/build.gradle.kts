@@ -1,6 +1,6 @@
 plugins {
     id("cavedroid.kotlin-library")
-    alias(libs.plugins.ksp)
+    id("com.google.devtools.ksp")
     id("cavedroid.libgdx")
 }
 

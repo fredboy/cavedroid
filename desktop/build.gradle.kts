@@ -9,8 +9,13 @@ import kotlin.apply
 
 plugins {
     id("cavedroid.kotlin-library")
+    id("cavedroid.license-report")
     alias(libs.plugins.construo)
 }
+
+private val appName = providers.gradleProperty("cavedroid.appName").get()
+private val appPackageName = providers.gradleProperty("cavedroid.packageName").get()
+private val appVersionName = providers.gradleProperty("cavedroid.versionName").get()
 
 private val desktopLauncherClassName = "ru.fredboy.cavedroid.desktop.DesktopLauncher"
 
@@ -71,7 +76,7 @@ tasks.register<Jar>("dist") {
 
 tasks.register<ProGuardTask>("proguard") {
     injars(tasks.named("dist"))
-    outjars(layout.buildDirectory.file("libs/release-${ApplicationInfo.versionName}.jar"))
+    outjars(layout.buildDirectory.file("libs/release-$appVersionName.jar"))
 
     configuration("proguard-rules.pro")
 
@@ -85,7 +90,7 @@ tasks.register<ProGuardTask>("proguard") {
 tasks.register<Jar>("generateSignedJar") {
     dependsOn("proguard")
 
-    val proguardJar = layout.buildDirectory.file("libs/release-${ApplicationInfo.versionName}.jar").get().asFile
+    val proguardJar = layout.buildDirectory.file("libs/release-$appVersionName.jar").get().asFile
     from(zipTree(proguardJar))
 
     archiveBaseName.set("release-signed")
@@ -167,8 +172,8 @@ tasks.processResources.apply {
 
 construo {
     name.set("cavedroid")
-    humanName.set(ApplicationInfo.name)
-    version.set(ApplicationInfo.versionName)
+    humanName.set(appName)
+    version.set(appVersionName)
     mainClass.set(desktopLauncherClassName)
     outputDir.set(layout.buildDirectory.dir("dist"))
     jarTask.set("generateSignedJar")
@@ -181,7 +186,7 @@ construo {
         create<Target.MacOs>("macM1") {
             architecture.set(Target.Architecture.AARCH64)
             jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.16%2B8/OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.16_8.tar.gz")
-            identifier.set(ApplicationInfo.packageName)
+            identifier.set(appPackageName)
             macIcon.set(project.file("macos/AppIcon.icns"))
         }
         create<Target.Windows>("winX64") {

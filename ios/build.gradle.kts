@@ -4,8 +4,14 @@ import java.nio.file.StandardOpenOption
 
 plugins {
     id("cavedroid.kotlin-library")
+    id("cavedroid.license-report")
     id("robovm")
 }
+
+private val appName = providers.gradleProperty("cavedroid.appName").get()
+private val appPackageName = providers.gradleProperty("cavedroid.packageName").get()
+private val appVersionName = providers.gradleProperty("cavedroid.versionName").get()
+private val appVersionCode = providers.gradleProperty("cavedroid.versionCode").get()
 
 dependencies {
     implementation(projects.core.common)
@@ -35,23 +41,23 @@ val generatePlist by tasks.registering {
                     <key>CFBundleDevelopmentRegion</key>
                     <string>ru</string>
                     <key>CFBundleDisplayName</key>
-                    <string>${ApplicationInfo.name}</string>
+                    <string>$appName</string>
                     <key>CFBundleExecutable</key>
                     <string>IOSLauncher</string>
                     <key>CFBundleIdentifier</key>
-                    <string>${ApplicationInfo.packageName}</string>
+                    <string>$appPackageName</string>
                     <key>CFBundleInfoDictionaryVersion</key>
                     <string>6.0</string>
                     <key>CFBundleName</key>
-                    <string>${ApplicationInfo.name}</string>
+                    <string>$appName</string>
                     <key>CFBundlePackageType</key>
                     <string>APPL</string>
                     <key>CFBundleShortVersionString</key>
-                    <string>${ApplicationInfo.versionName}</string>
+                    <string>$appVersionName</string>
                     <key>CFBundleSignature</key>
                     <string>????</string>
                     <key>CFBundleVersion</key>
-                    <string>${ApplicationInfo.versionCode}</string>
+                    <string>$appVersionCode</string>
                     <key>LSRequiresIPhoneOS</key>
                     <true/>
                     <key>UIViewControllerBasedStatusBarAppearance</key>

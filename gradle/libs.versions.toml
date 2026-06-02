@@ -21,6 +21,8 @@ junit = "5.11.4"
 mockk = "1.13.13"
 firebase = "34.13.0"
 mobileads = "8.0.0"
+google-services = "4.4.4"
+firebase-crashlytics-plugin = "3.0.7"
 
 [libraries]
 gdx = { module = "com.badlogicgames.gdx:gdx", version.ref = "gdx" }
@@ -58,6 +60,7 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 ksp-gradle-plugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 ktlint-gradle-plugin = { module = "org.jlleitschuh.gradle.ktlint:org.jlleitschuh.gradle.ktlint.gradle.plugin", version.ref = "ktlint-gradle" }
+license-report-gradle-plugin = { module = "com.github.jk1:gradle-license-report", version.ref = "license-report" }
 
 [bundles]
 coroutines = ["kotlinx-coroutines-core"]
@@ -76,3 +79,5 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }
 construo = { id = "io.github.fourlastor.construo", version.ref = "construo" }
 license-report = { id = "com.github.jk1.dependency-license-report", version.ref = "license-report" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-plugin" }

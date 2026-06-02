@@ -38,7 +38,6 @@ All Gradle tasks run via `./gradlew` (use `gradlew.bat` on Windows — note that
 # Lint
 ./gradlew ktlintCheck                  # check
 ./gradlew ktlintFormat                 # auto-format
-./gradlew buildSrc:ktlintCheck         # CI also runs this for buildSrc
 
 # Tests (JUnit Jupiter)
 ./gradlew test                         # run tests across all modules
@@ -63,19 +62,12 @@ Conventions, derived from the existing tests in `core/common/mvvm` and
   mock them or extract the logic under test into a pure helper.
 - **kotlinx-coroutines-test** for `runTest` when the unit under test launches
   coroutines (see `core/common/mvvm`).
-- Test dependencies are referenced through `Dependencies.Test.*` and
-  `Dependencies.Kotlin.coroutinesTest`. Add the standard block to the module's
-  `build.gradle.kts`:
-
-  ```kotlin
-  testImplementation(Dependencies.Test.junitJupiter)
-  testRuntimeOnly(Dependencies.Test.junitJupiterEngine)
-  testRuntimeOnly(Dependencies.Test.junitPlatformLauncher)
-  testImplementation(Dependencies.Test.mockk)              // optional
-  testImplementation(Dependencies.Kotlin.coroutinesTest)    // optional
-
-  tasks.test { useJUnitPlatform() }
-  ```
+- Test wiring is provided by the `cavedroid.kotlin-library` convention plugin:
+  applying `id("cavedroid.kotlin-library")` already adds JUnit Jupiter, mockk and
+  `kotlinx-coroutines-test`, and calls `useJUnitPlatform()`. A module that opts
+  into the convention does not need to repeat any of that. Test artifacts live in
+  the version catalog (`libs.junit.jupiter`, `libs.mockk`,
+  `libs.kotlinx.coroutines.test`, etc.).
 
 When the SUT is heavy (Box2D bodies, RayHandler, Stage), prefer extracting the
 testable logic into a pure helper in `core:common` and unit-testing the helper.
@@ -127,7 +119,12 @@ The `core` graph follows a clean-architecture-ish split. **Module dependencies f
 - **`core:gameplay:*`** — cross-cutting systems: `controls`, `physics` (Box2D), `rendering`, plus the swappable lighting backends `lighting-box2d` (Box2DLights — desktop/android/ios) and `lighting-tint` (full-screen day/night tint — web fallback, no per-block lights).
 - **`core:gdx`** — top-level integration: the `CaveDroidApplication : Game` class, `MenuScreen`/`GameScreen`/`PauseMenuScreen`, the menu's MVVM-ish navigation framework (`menu/v2/navigation`), and the **two Dagger components** (`ApplicationComponent`, `GameComponent`).
 
-The `buildSrc/` module centralizes versions and exposes ergonomic dependency helpers: each module's `build.gradle.kts` reads almost like a manifest (`useCommonLibs()`, `useDagger()`, `useDomainModules()`, `useGameModules()`, `useLibgdx()`, `useLibKtx()`, `useAutomultibind()`, `useKotlinxSerializationJson()`, etc., defined in `buildSrc/src/main/kotlin/DependencyHandlerExtentions.kt`). When adding dependencies, prefer extending these helpers over inlining versions.
+Build logic lives in two places (there is **no `buildSrc/`** anymore):
+
+- **`gradle/libs.versions.toml`** — the version catalog: all versions, libraries, bundles and plugins. Modules reference dependencies as `libs.*` and sibling modules as type-safe project accessors (`projects.core.common`, `projects.core.gameplay.lightingBfs`, …; `enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")`).
+- **`build-logic/`** — an included build (wired in `settings.gradle.kts`'s `pluginManagement`) holding the convention (precompiled-script) plugins: `cavedroid.kotlin-library` (Kotlin/JVM 17 + ktlint + JUnit-platform test wiring), `cavedroid.dagger` (applies KSP + binds `dagger`/`dagger-compiler`), `cavedroid.libgdx`, `cavedroid.automultibind`, and `cavedroid.license-report` (applies the jk1 plugin and the default notices renderer; also carries `PerFlavorTextReportRenderer`). A module's `build.gradle.kts` reads like a manifest: `plugins { id("cavedroid.kotlin-library"); id("cavedroid.dagger") }` then `dependencies { implementation(projects.…); implementation(libs.…) }`.
+
+KSP and kotlin-android are applied by **bare `id(...)` (no version)** in modules that also pull a `cavedroid.*` convention — the Kotlin/KSP gradle-plugin markers are already on the classpath via `build-logic`, so a versioned `alias(...)` would clash. `kotlin-serialization` and `construo` use `alias(libs.plugins.*)` (those markers are not on the classpath). When adding dependencies, add them to the catalog and reference `libs.*`; for shared behavior, extend a convention plugin in `build-logic`.
 
 ### Dependency injection (Dagger + KSP + automultibind)
 
@@ -151,14 +148,14 @@ Both wire into `processResources` / `preBuild` automatically — don't commit th
 
 ### Versioning
 
-`buildSrc/src/main/kotlin/ApplicationInfo.kt` (`versionName`, `versionCode`) and `core/common/.../CaveDroidConstants.kt` (`VERSION`) must stay in lockstep. `scripts/up-version.sh <new-version>` is the only sanctioned way to bump them.
+App metadata lives in root `gradle.properties` (`cavedroid.appName`, `cavedroid.packageName`, `cavedroid.versionName`, `cavedroid.versionCode`) and is read in build scripts via `providers.gradleProperty(...)`. `cavedroid.versionName`/`cavedroid.versionCode` and `core/common/.../CaveDroidConstants.kt` (`VERSION`) must stay in lockstep. `scripts/up-version.sh <new-version>` is the only sanctioned way to bump them.
 
 ### Android product flavors (`foss` vs `store`)
 
 The Android module ships **two flavors** on the `distribution` dimension, declared in `android/build.gradle.kts`:
 
 - **`foss`** — no proprietary deps. Firebase Crashlytics and Yandex Mobile Ads are excluded; the `process*GoogleServices` / `*CrashlyticsMappingFile*` tasks are disabled in `androidComponents { onVariants(... "foss") }`. `BANNER_AD_UNIT_ID` / `INTERSTITIAL_AD_UNIT_ID` BuildConfig fields are `null`.
-- **`store`** — bundles Firebase Crashlytics (via `storeImplementation platform(Firebase.bom) + Firebase.crashlytics`) and Yandex Mobile Ads (`Dependencies.Yandex.mobileads`). Ad unit IDs come from `yandex.properties` at repo root (`bannerAdUnitId`, `interstitialAdUnitId`); missing properties fall back to `null` BuildConfig fields.
+- **`store`** — bundles Firebase Crashlytics (via `storeImplementation platform(libs.firebase.bom) + libs.firebase.crashlytics`) and Yandex Mobile Ads (`libs.yandex.mobileads`). Ad unit IDs come from `yandex.properties` at repo root (`bannerAdUnitId`, `interstitialAdUnitId`); missing properties fall back to `null` BuildConfig fields.
 
 Build either flavor with `./gradlew :android:assembleFossDebug` or `:android:assembleStoreDebug`. CI/local debug-only flows can still use the convenience `:android:assembleDebug` (assembles both).
 

@@ -1,16 +1,3 @@
-import com.github.jk1.license.render.TextReportRenderer
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
-plugins {
-    ktlintGradle
-    // Version comes from buildSrc's `implementation` dependency on the plugin (needed there so
-    // PerFlavorTextReportRenderer can reference its types). Adding a version here would clash
-    // with the existing classpath entry.
-    id("com.github.jk1.dependency-license-report")
-    id("com.google.gms.google-services") version "4.4.4" apply false
-    id("com.google.firebase.crashlytics") version "3.0.7" apply false
-}
-
 buildscript {
     repositories {
         mavenLocal()
@@ -22,49 +9,26 @@ buildscript {
     }
 
     dependencies {
-        classpath(Dependencies.androidGradlePlugin)
-        classpath(Dependencies.Kotlin.gradlePlugin)
-        classpath(Dependencies.RoboVM.gradlePlugin)
-        classpath(Dependencies.proGuardPlugin)
+        classpath("com.mobidevelop.robovm:robovm-gradle-plugin:2.3.23")
+        classpath("com.guardsquare:proguard-gradle:7.7.0")
     }
 }
 
+plugins {
+    alias(libs.plugins.ktlint)
+    id("cavedroid.license-report")
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.firebase.crashlytics) apply false
+}
+
 allprojects {
-    version = ApplicationInfo.versionName
+    version = providers.gradleProperty("cavedroid.versionName").get()
 
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
-    apply(plugin = "com.github.jk1.dependency-license-report")
 
     ktlint {
         version.set("1.6.0")
-    }
-
-    plugins.withId("org.jetbrains.kotlin.jvm") {
-        plugins.withId("org.jetbrains.kotlin.jvm") {
-            extensions.configure<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension> {
-                jvmToolchain {
-                    languageVersion.set(JavaLanguageVersion.of(17))
-                }
-            }
-
-            extensions.configure<JavaPluginExtension> {
-                toolchain {
-                    languageVersion.set(JavaLanguageVersion.of(17))
-                }
-            }
-
-            tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-                compilerOptions {
-                    jvmTarget.set(JvmTarget.JVM_17)
-                }
-            }
-        }
-    }
-
-    licenseReport {
-        excludeOwnGroup = true
-        renderers = arrayOf(TextReportRenderer())
-        excludes = arrayOf("CaveCraft.*")
     }
 
     repositories {

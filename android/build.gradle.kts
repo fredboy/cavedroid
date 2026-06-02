@@ -10,12 +10,16 @@ import java.util.Properties
 private val natives by configurations.creating
 
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
-
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
+    alias(libs.plugins.android.application)
+    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
+    id("cavedroid.license-report")
 }
+
+private val appPackageName = providers.gradleProperty("cavedroid.packageName").get()
+private val appVersionName = providers.gradleProperty("cavedroid.versionName").get()
+private val appVersionCode = providers.gradleProperty("cavedroid.versionCode").get().toInt()
 
 private val keystorePropertiesFile = rootProject.file("keystore.properties")
 private val keystoreProperties = if (keystorePropertiesFile.exists()) {
@@ -36,7 +40,7 @@ private val yandexProperties = if (yandexPropertiesFile.exists()) {
 }
 
 android {
-    namespace = ApplicationInfo.packageName
+    namespace = appPackageName
     compileSdk = 36
 
     sourceSets {
@@ -54,17 +58,17 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = ApplicationInfo.sourceCompatibility
-        targetCompatibility = ApplicationInfo.sourceCompatibility
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     defaultConfig {
-        applicationId = ApplicationInfo.packageName
+        applicationId = appPackageName
         minSdk = 23
         targetSdk = 36
 
-        versionCode = ApplicationInfo.versionCode
-        versionName = ApplicationInfo.versionName
+        versionCode = appVersionCode
+        versionName = appVersionName
 
         multiDexEnabled = true
     }
@@ -103,7 +107,7 @@ android {
     applicationVariants.asSequence()
         .flatMap { variant -> variant.outputs.asSequence() }
         .mapNotNull { output -> output as? com.android.build.gradle.internal.api.BaseVariantOutputImpl }
-        .forEach { output -> output.outputFileName = "android-${ApplicationInfo.versionName}.apk" }
+        .forEach { output -> output.outputFileName = "android-$appVersionName.apk" }
 
     val releaseConfig = signingConfigs.create("release_config")
     with(releaseConfig) {
