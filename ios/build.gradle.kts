@@ -3,24 +3,29 @@ import java.nio.file.Files
 import java.nio.file.StandardOpenOption
 
 plugins {
-    kotlin("jvm")
+    id("cavedroid.kotlin-library")
+    id("cavedroid.license-report")
     id("robovm")
 }
 
-java.sourceCompatibility = ApplicationInfo.sourceCompatibility
-java.targetCompatibility = ApplicationInfo.sourceCompatibility
+private val appName = providers.gradleProperty("cavedroid.appName").get()
+private val appPackageName = providers.gradleProperty("cavedroid.packageName").get()
+private val appVersionName = providers.gradleProperty("cavedroid.versionName").get()
+private val appVersionCode = providers.gradleProperty("cavedroid.versionCode").get()
 
 dependencies {
-    useCommonLibs()
-    useGdxModule()
-    useLightingBfs()
+    implementation(projects.core.common)
+    implementation(libs.kermit)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(projects.core.gdx)
+    implementation(projects.core.gameplay.lightingBfs)
 
-    implementation(Dependencies.LibGDX.gdx)
-    implementation(Dependencies.RoboVM.rt)
-    implementation(Dependencies.RoboVM.cocoatouch)
-    implementation(Dependencies.LibGDX.Ios.backend)
-    implementation(Dependencies.LibGDX.Ios.natives)
-    implementation(Dependencies.LibGDX.Box2d.Natives.ios)
+    implementation(libs.gdx)
+    implementation(libs.robovm.rt)
+    implementation(libs.robovm.cocoatouch)
+    implementation(libs.gdx.backend.robovm)
+    implementation(variantOf(libs.gdx.platform) { classifier("natives-ios") })
+    implementation(variantOf(libs.gdx.box2d.platform) { classifier("natives-ios") })
 }
 
 val generatePlist by tasks.registering {
@@ -36,23 +41,23 @@ val generatePlist by tasks.registering {
                     <key>CFBundleDevelopmentRegion</key>
                     <string>ru</string>
                     <key>CFBundleDisplayName</key>
-                    <string>${ApplicationInfo.name}</string>
+                    <string>$appName</string>
                     <key>CFBundleExecutable</key>
                     <string>IOSLauncher</string>
                     <key>CFBundleIdentifier</key>
-                    <string>${ApplicationInfo.packageName}</string>
+                    <string>$appPackageName</string>
                     <key>CFBundleInfoDictionaryVersion</key>
                     <string>6.0</string>
                     <key>CFBundleName</key>
-                    <string>${ApplicationInfo.name}</string>
+                    <string>$appName</string>
                     <key>CFBundlePackageType</key>
                     <string>APPL</string>
                     <key>CFBundleShortVersionString</key>
-                    <string>${ApplicationInfo.versionName}</string>
+                    <string>$appVersionName</string>
                     <key>CFBundleSignature</key>
                     <string>????</string>
                     <key>CFBundleVersion</key>
-                    <string>${ApplicationInfo.versionCode}</string>
+                    <string>$appVersionCode</string>
                     <key>LSRequiresIPhoneOS</key>
                     <true/>
                     <key>UIViewControllerBasedStatusBarAppearance</key>

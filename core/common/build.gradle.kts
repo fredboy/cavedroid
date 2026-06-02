@@ -1,21 +1,10 @@
 plugins {
-    kotlin("jvm")
-    ksp
+    id("cavedroid.kotlin-library")
+    id("cavedroid.dagger")
 }
-
-java.sourceCompatibility = ApplicationInfo.sourceCompatibility
-java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
-    useLibgdx()
-    useDagger()
-    useKotlinxCoroutines()
-
-    testImplementation(Dependencies.Test.junitJupiter)
-    testRuntimeOnly(Dependencies.Test.junitJupiterEngine)
-    testRuntimeOnly(Dependencies.Test.junitPlatformLauncher)
-}
-
-tasks.test {
-    useJUnitPlatform()
+    implementation(libs.gdx)
+    implementation(libs.gdx.box2d)
+    implementation(libs.kotlinx.coroutines.core)
 }

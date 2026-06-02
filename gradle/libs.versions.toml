@@ -1,0 +1,83 @@
+[versions]
+agp = "9.0.1"
+gdx = "1.13.1"
+gdx-teavm = "1.5.6"
+ashley = "1.7.4"
+gdx-ai = "1.8.2"
+dagger = "2.59.2"
+kotlin = "2.3.21"
+ksp = "2.3.9"
+kotlinx-serialization = "1.11.0"
+kotlinx-coroutines = "1.11.0"
+automultibind = "1.0.6"
+ktlint-gradle = "14.2.0"
+robovm = "2.3.24"
+libktx = "1.13.1-rc1"
+proguard = "7.7.0"
+construo = "2.1.0"
+license-report = "3.1.2"
+kermit = "2.1.0"
+junit = "6.1.0"
+mockk = "1.14.11"
+firebase = "34.14.0"
+mobileads = "8.1.0"
+google-services = "4.4.4"
+firebase-crashlytics-plugin = "3.0.7"
+
+[libraries]
+gdx = { module = "com.badlogicgames.gdx:gdx", version.ref = "gdx" }
+gdx-box2d = { module = "com.badlogicgames.gdx:gdx-box2d", version.ref = "gdx" }
+gdx-box2d-platform = { module = "com.badlogicgames.gdx:gdx-box2d-platform", version.ref = "gdx" }
+gdx-platform = { module = "com.badlogicgames.gdx:gdx-platform", version.ref = "gdx" }
+gdx-backend-android = { module = "com.badlogicgames.gdx:gdx-backend-android", version.ref = "gdx" }
+gdx-backend-lwjgl3 = { module = "com.badlogicgames.gdx:gdx-backend-lwjgl3", version.ref = "gdx" }
+gdx-backend-robovm = { module = "com.badlogicgames.gdx:gdx-backend-robovm", version.ref = "gdx" }
+gdx-backend-web = { module = "com.github.xpenatan.gdx-teavm:backend-web", version.ref = "gdx-teavm" }
+ashley = { module = "com.badlogicgames.ashley:ashley", version.ref = "ashley" }
+gdx-ai = { module = "com.badlogicgames.gdx:gdx-ai", version.ref = "gdx-ai" }
+ktx-scene2d = { module = "io.github.libktx:ktx-scene2d", version.ref = "libktx" }
+ktx-actors = { module = "io.github.libktx:ktx-actors", version.ref = "libktx" }
+dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
+dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
+kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
+automultibind-annotations = { module = "ru.fredboy:automultibind-annotations", version.ref = "automultibind" }
+automultibind-ksp = { module = "ru.fredboy:automultibind-ksp", version.ref = "automultibind" }
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+yandex-mobileads = { module = "com.yandex.android:mobileads", version.ref = "mobileads" }
+robovm-rt = { module = "com.mobidevelop.robovm:robovm-rt", version.ref = "robovm" }
+robovm-cocoatouch = { module = "com.mobidevelop.robovm:robovm-cocoatouch", version.ref = "robovm" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+ksp-gradle-plugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+ktlint-gradle-plugin = { module = "org.jlleitschuh.gradle.ktlint:org.jlleitschuh.gradle.ktlint.gradle.plugin", version.ref = "ktlint-gradle" }
+license-report-gradle-plugin = { module = "com.github.jk1:gradle-license-report", version.ref = "license-report" }
+
+[bundles]
+coroutines = ["kotlinx-coroutines-core"]
+serialization = ["kotlinx-serialization-json", "kotlinx-serialization-protobuf"]
+ktx = ["ktx-scene2d", "ktx-actors"]
+test = ["junit-jupiter", "mockk"]
+test-runtime = ["junit-jupiter-engine", "junit-platform-launcher"]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }
+construo = { id = "io.github.fourlastor.construo", version.ref = "construo" }
+license-report = { id = "com.github.jk1.dependency-license-report", version.ref = "license-report" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-plugin" }

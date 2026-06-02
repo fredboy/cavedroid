@@ -10,12 +10,15 @@ import java.util.Properties
 private val natives by configurations.creating
 
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
-
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
+    id("cavedroid.license-report")
 }
+
+private val appPackageName = providers.gradleProperty("cavedroid.packageName").get()
+private val appVersionName = providers.gradleProperty("cavedroid.versionName").get()
+private val appVersionCode = providers.gradleProperty("cavedroid.versionCode").get().toInt()
 
 private val keystorePropertiesFile = rootProject.file("keystore.properties")
 private val keystoreProperties = if (keystorePropertiesFile.exists()) {
@@ -36,35 +39,35 @@ private val yandexProperties = if (yandexPropertiesFile.exists()) {
 }
 
 android {
-    namespace = ApplicationInfo.packageName
+    namespace = appPackageName
     compileSdk = 36
 
     sourceSets {
 
         named("main") {
-            jniLibs.srcDir("libs")
+            jniLibs.directories.add("libs")
             assets {
-                srcDirs("src/main/assets", "build/generated/extraRes/shared")
+                directories.addAll(listOf("src/main/assets", "build/generated/extraRes/shared"))
             }
         }
 
         named("debug") {
-            res.srcDir("src/debug/res")
+            res.directories.add("src/debug/res")
         }
     }
 
     compileOptions {
-        sourceCompatibility = ApplicationInfo.sourceCompatibility
-        targetCompatibility = ApplicationInfo.sourceCompatibility
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
-        applicationId = ApplicationInfo.packageName
+        applicationId = appPackageName
         minSdk = 23
         targetSdk = 36
 
-        versionCode = ApplicationInfo.versionCode
-        versionName = ApplicationInfo.versionName
+        versionCode = appVersionCode
+        versionName = appVersionName
 
         multiDexEnabled = true
     }
@@ -93,17 +96,12 @@ android {
 
     sourceSets {
         named("foss") {
-            assets.srcDirs("build/generated/extraRes/foss")
+            assets.directories.add("build/generated/extraRes/foss")
         }
         named("store") {
-            assets.srcDirs("build/generated/extraRes/store")
+            assets.directories.add("build/generated/extraRes/store")
         }
     }
-
-    applicationVariants.asSequence()
-        .flatMap { variant -> variant.outputs.asSequence() }
-        .mapNotNull { output -> output as? com.android.build.gradle.internal.api.BaseVariantOutputImpl }
-        .forEach { output -> output.outputFileName = "android-${ApplicationInfo.versionName}.apk" }
 
     val releaseConfig = signingConfigs.create("release_config")
     with(releaseConfig) {
@@ -140,7 +138,7 @@ android {
 
     kotlin {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
+            jvmTarget.set(JvmTarget.JVM_1_8)
         }
     }
 }
@@ -148,7 +146,7 @@ android {
 // called every time gradle gets executed, takes the native dependencies of
 // the natives configuration, and extracts them to the proper libs/ folders
 // so they get packed with the APK.
-task("copyAndroidNatives") {
+tasks.register("copyAndroidNatives") {
     doFirst {
         val armeabiV7Dir = file("libs/armeabi-v7a/").apply { mkdirs() }
         val arm64Dir = file("libs/arm64-v8a/").apply { mkdirs() }
@@ -274,24 +272,26 @@ androidComponents {
 }
 
 dependencies {
-    useCommonLibs()
-    useGdxModule()
-    useLightingBfs()
+    implementation(projects.core.common)
+    implementation(libs.kermit)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(projects.core.gdx)
+    implementation(projects.core.gameplay.lightingBfs)
 
-    implementation(Dependencies.LibGDX.gdx)
-    implementation(Dependencies.LibGDX.Android.backend)
+    implementation(libs.gdx)
+    implementation(libs.gdx.backend.android)
 
-    "storeImplementation"(platform(Dependencies.Google.Firebase.bom))
-    "storeImplementation"(Dependencies.Google.Firebase.crashlytics)
-    "storeImplementation"(Dependencies.Yandex.mobileads)
+    "storeImplementation"(platform(libs.firebase.bom))
+    "storeImplementation"(libs.firebase.crashlytics)
+    "storeImplementation"(libs.yandex.mobileads)
 
-    natives(Dependencies.LibGDX.Android.Natives.armeabi)
-    natives(Dependencies.LibGDX.Android.Natives.arm64)
-    natives(Dependencies.LibGDX.Android.Natives.x86)
-    natives(Dependencies.LibGDX.Android.Natives.x86_64)
+    natives(variantOf(libs.gdx.platform) { classifier("natives-armeabi-v7a") })
+    natives(variantOf(libs.gdx.platform) { classifier("natives-arm64-v8a") })
+    natives(variantOf(libs.gdx.platform) { classifier("natives-x86") })
+    natives(variantOf(libs.gdx.platform) { classifier("natives-x86_64") })
 
-    natives(Dependencies.LibGDX.Box2d.Natives.Android.armeabi)
-    natives(Dependencies.LibGDX.Box2d.Natives.Android.arm64)
-    natives(Dependencies.LibGDX.Box2d.Natives.Android.x86)
-    natives(Dependencies.LibGDX.Box2d.Natives.Android.x86_64)
+    natives(variantOf(libs.gdx.box2d.platform) { classifier("natives-armeabi-v7a") })
+    natives(variantOf(libs.gdx.box2d.platform) { classifier("natives-arm64-v8a") })
+    natives(variantOf(libs.gdx.box2d.platform) { classifier("natives-x86") })
+    natives(variantOf(libs.gdx.box2d.platform) { classifier("natives-x86_64") })
 }

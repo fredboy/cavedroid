@@ -2,12 +2,24 @@ import java.nio.file.Files
 import java.nio.file.StandardOpenOption
 
 plugins {
-    kotlin("jvm")
-    kotlinxSerialization
+    id("cavedroid.kotlin-library")
+    id("cavedroid.license-report")
+    alias(libs.plugins.kotlin.serialization)
 }
 
-java.sourceCompatibility = ApplicationInfo.sourceCompatibility
-java.targetCompatibility = ApplicationInfo.sourceCompatibility
+private val appName = providers.gradleProperty("cavedroid.appName").get()
+private val appVersionName = providers.gradleProperty("cavedroid.versionName").get()
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+    }
+}
 
 // TeaVM ships browser-friendly stubs for a handful of java.util.concurrent.*
 // classes via its standard "emu" package convention. Classes live under
@@ -59,13 +71,18 @@ private fun String.sanitizeForYandex(): String {
 }
 
 dependencies {
-    useCommonLibs()
-    useGdxModule()
-    useLightingBfs()
-    useTeaVMBackend()
-    useKotlinxSerializationJson()
+    implementation(projects.core.common)
+    implementation(libs.kermit)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(projects.core.gdx)
+    implementation(projects.core.gameplay.lightingBfs)
+    implementation(libs.gdx.backend.web)
+    implementation(libs.kotlinx.serialization.json)
 
-    implementation(Dependencies.LibGDX.gdx)
+    implementation(libs.gdx)
+
+    implementation(libs.ashley)
+    implementation(libs.gdx.ai)
 }
 
 tasks.register<Copy>("copyLicenseReport") {
@@ -239,7 +256,7 @@ tasks.register<Zip>("packageWebDist") {
     dependsOn("buildJsRelease")
 
     archiveBaseName.set("cavedroid-web")
-    archiveVersion.set(ApplicationInfo.versionName)
+    archiveVersion.set(appVersionName)
     destinationDirectory.set(layout.buildDirectory.dir("dist"))
 
     from(layout.buildDirectory.dir("dist/webapp")) {
@@ -269,7 +286,7 @@ tasks.register<Copy>("applyYandexIndexHtml") {
         "beginToken" to "%",
         "endToken" to "%",
         "tokens" to mapOf(
-            "TITLE" to ApplicationInfo.name,
+            "TITLE" to appName,
             "JS_SCRIPT" to "<script type=\"text/javascript\" charset=\"utf-8\" src=\"app.js\"></script>",
             "MODE" to "main()",
             "WIDTH" to "800",
@@ -285,7 +302,7 @@ tasks.register<Zip>("packageWebDistYandex") {
     dependsOn("buildJsYandex", "applyYandexIndexHtml")
 
     archiveBaseName.set("cavedroid-web-yandex")
-    archiveVersion.set(ApplicationInfo.versionName)
+    archiveVersion.set(appVersionName)
     destinationDirectory.set(layout.buildDirectory.dir("dist"))
 
     from(layout.buildDirectory.dir("dist/webapp")) {
