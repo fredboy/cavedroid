@@ -16,5 +16,6 @@ Tracking: GitHub milestone **CaveDroid 2.0**, apex issue **#143**.
 | [0008](0008-build-catalog-jdk.md) | Build: version catalog + build-logic; JDK 25 toolchain / Java 8 target |
 | [0009](0009-gdx-ai.md) | AI via gdx-ai (behavior trees + FSM + steering); pathfinding deferred |
 | [0010](0010-engine-capabilities-saving-menu-mvvm.md) | Saving and menu MVVM are engine capabilities (menu MVVM redesigned) |
+| [0011](0011-scripting-and-command-system.md) | Scripting (Lua/LuaJ) + CLI + command executor as an engine capability; use-actions become scripts |
 
 Status legend: **Accepted** — agreed; will be implemented as part of the 2.0 epics.
