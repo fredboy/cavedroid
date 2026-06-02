@@ -30,7 +30,6 @@ object WebLauncher {
         // Disabling recovery surfaces real exceptions cleanly.
         System.setProperty("kotlinx.coroutines.stacktrace.recovery", "false")
 
-        // S0 spike (#147): run the Ashley + gdx-ai TeaVM check, then continue booting normally.
         runCatching { EcsAiSpike.run() }
 
         val config = WebApplicationConfiguration().apply {

@@ -67,7 +67,6 @@ dependencies {
 
     implementation(Dependencies.LibGDX.gdx)
 
-    // S0 spike (#147): verify Ashley + gdx-ai survive TeaVM. Throwaway — remove with the spike.
     implementation("com.badlogicgames.ashley:ashley:1.7.4")
     implementation("com.badlogicgames.gdx:gdx-ai:1.8.2")
 }

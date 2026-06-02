@@ -1,17 +1,9 @@
-# Version catalog for CaveDroid 2.0 (epic E0.1, issue #150).
-# SKELETON — mirrors the current buildSrc/Versions.kt + Dependencies.kt so modules
-# can migrate to `libs.*` / `libs.bundles.*` / `libs.plugins.*`. Version bumps (E0.5,
-# #154) and the build-logic convention plugins (E0.2, #151) come next; until modules
-# are migrated (E0.3, #152) this file is additive and does not affect the build.
-#
-# New for 2.0: ashley + gdx-ai (ECS + AI, ADR 0002/0009).
-
 [versions]
 agp = "8.11.0"
 gdx = "1.13.1"
 gdx-teavm = "1.5.6"
-ashley = "1.7.4"            # NEW — Ashley ECS (verify on TeaVM in S0, #147)
-gdx-ai = "1.8.2"            # NEW — behavior trees / FSM / steering (S0, #146)
+ashley = "1.7.4"
+gdx-ai = "1.8.2"
 dagger = "2.57"
 kotlin = "2.2.10"
 ksp = "2.2.10-2.0.2"
@@ -31,56 +23,43 @@ firebase = "34.13.0"
 mobileads = "8.0.0"
 
 [libraries]
-# libGDX core + Box2D
 gdx = { module = "com.badlogicgames.gdx:gdx", version.ref = "gdx" }
 gdx-box2d = { module = "com.badlogicgames.gdx:gdx-box2d", version.ref = "gdx" }
 gdx-box2d-platform = { module = "com.badlogicgames.gdx:gdx-box2d-platform", version.ref = "gdx" }
 gdx-platform = { module = "com.badlogicgames.gdx:gdx-platform", version.ref = "gdx" }
-# libGDX backends
 gdx-backend-android = { module = "com.badlogicgames.gdx:gdx-backend-android", version.ref = "gdx" }
 gdx-backend-lwjgl3 = { module = "com.badlogicgames.gdx:gdx-backend-lwjgl3", version.ref = "gdx" }
 gdx-backend-robovm = { module = "com.badlogicgames.gdx:gdx-backend-robovm", version.ref = "gdx" }
 gdx-backend-web = { module = "com.github.xpenatan.gdx-teavm:backend-web", version.ref = "gdx-teavm" }
-# ECS + AI (new for 2.0)
 ashley = { module = "com.badlogicgames.ashley:ashley", version.ref = "ashley" }
 gdx-ai = { module = "com.badlogicgames.gdx:gdx-ai", version.ref = "gdx-ai" }
-# KTX
 ktx-scene2d = { module = "io.github.libktx:ktx-scene2d", version.ref = "libktx" }
 ktx-actors = { module = "io.github.libktx:ktx-actors", version.ref = "libktx" }
-# Dagger
 dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
-# Kotlin / coroutines / serialization
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinx-serialization" }
-# automultibind (in-house KSP multibinding processor)
 automultibind-annotations = { module = "ru.fredboy:automultibind-annotations", version.ref = "automultibind" }
 automultibind-ksp = { module = "ru.fredboy:automultibind-ksp", version.ref = "automultibind" }
-# logging
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
-# Firebase / ads (store flavor)
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 yandex-mobileads = { module = "com.yandex.android:mobileads", version.ref = "mobileads" }
-# RoboVM
 robovm-rt = { module = "com.mobidevelop.robovm:robovm-rt", version.ref = "robovm" }
 robovm-cocoatouch = { module = "com.mobidevelop.robovm:robovm-cocoatouch", version.ref = "robovm" }
-# test
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
-# Gradle plugin artifacts — consumed by build-logic convention plugins (not by app modules)
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 ksp-gradle-plugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 ktlint-gradle-plugin = { module = "org.jlleitschuh.gradle.ktlint:org.jlleitschuh.gradle.ktlint.gradle.plugin", version.ref = "ktlint-gradle" }
 
 [bundles]
-# wired into convention plugins (E0.2, #151)
 coroutines = ["kotlinx-coroutines-core"]
 serialization = ["kotlinx-serialization-json", "kotlinx-serialization-protobuf"]
 ktx = ["ktx-scene2d", "ktx-actors"]

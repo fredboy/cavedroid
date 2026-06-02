@@ -13,20 +13,6 @@ import com.badlogic.gdx.ai.btree.Task
 import com.badlogic.gdx.ai.btree.branch.Sequence
 import com.badlogic.gdx.utils.reflect.ClassReflection
 
-/**
- * S0 spike (issue #131 / #147) — proves whether **Ashley ECS** and **gdx-ai**
- * survive TeaVM in the browser. Both rely on libGDX reflection
- * ([ClassReflection]), which TeaVM only supports with explicit metadata, so the
- * point of this spike is to find out what works and what needs reflection
- * config BEFORE we commit to the ECS-first rewrite (ADR 0002 / 0009).
- *
- * Throwaway: called once from [ru.fredboy.cavedroid.html.WebLauncher]. Each
- * check is isolated in try/catch and only logs — it never blocks the app.
- * Run `./gradlew html:runWeb` and read the browser console for `SPIKE` lines.
- *
- * If `:html` fails to COMPILE after adding the ashley/gdx-ai deps, that itself
- * is a gate result (a class in the reachable graph is TeaVM-incompatible).
- */
 object EcsAiSpike {
 
     private val logger = Logger.withTag("EcsAiSpike")
@@ -39,7 +25,6 @@ object EcsAiSpike {
         logger.i { "SPIKE done" }
     }
 
-    /** Ashley: Engine + ComponentMapper + Family + IteratingSystem. */
     private fun ashleyCheck() {
         try {
             val engine = Engine()
@@ -62,11 +47,6 @@ object EcsAiSpike {
         }
     }
 
-    /**
-     * The actual TeaVM gate: libGDX [ClassReflection.newInstance] is how both
-     * Ashley (component lookups) and gdx-ai's behavior-tree parser instantiate
-     * types by class. If this throws on web, we need reflection metadata.
-     */
     private fun reflectionCheck() {
         try {
             val task = ClassReflection.newInstance(BarkTask::class.java)
@@ -76,7 +56,6 @@ object EcsAiSpike {
         }
     }
 
-    /** gdx-ai: build a BehaviorTree programmatically and step it. */
     private fun behaviorTreeCheck() {
         try {
             val blackboard = Blackboard()
@@ -117,15 +96,10 @@ private class MovementSystem :
     }
 }
 
-/** Blackboard for the gdx-ai behavior tree. */
 class Blackboard {
     var barks = 0
 }
 
-/**
- * Top-level (reflection-friendly) leaf task with a public no-arg constructor —
- * exactly the shape gdx-ai's `.tree` parser instantiates via reflection.
- */
 class BarkTask : LeafTask<Blackboard>() {
     override fun execute(): Status {
         `object`.barks++
