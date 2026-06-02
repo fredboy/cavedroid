@@ -1,33 +1,31 @@
 plugins {
-    kotlin("jvm")
-    ksp
-    kotlinxSerialization
+    id("cavedroid.kotlin-library")
+    id("cavedroid.dagger")
+    id("cavedroid.libgdx")
+    alias(libs.plugins.kotlin.serialization)
 }
 
-java.sourceCompatibility = ApplicationInfo.sourceCompatibility
-java.targetCompatibility = ApplicationInfo.sourceCompatibility
-
 dependencies {
-    useCommonLibs()
-    useLibgdx()
-    useKotlinxSerializationProtobuf()
-    useDagger()
+    implementation(projects.core.common)
+    implementation(libs.kermit)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.protobuf)
 
-    useModule(":core:domain:assets")
-    useModule(":core:domain:configuration")
-    useModule(":core:domain:items")
-    useModule(":core:domain:world")
-    useModule(":core:domain:save")
+    implementation(projects.core.domain.assets)
+    implementation(projects.core.domain.configuration)
+    implementation(projects.core.domain.items)
+    implementation(projects.core.domain.world)
+    implementation(projects.core.domain.save)
 
-    useModule(":core:entity:container")
-    useModule(":core:entity:drop")
-    useModule(":core:entity:mob")
-    useModule(":core:entity:projectile")
+    implementation(projects.core.entity.container)
+    implementation(projects.core.entity.drop)
+    implementation(projects.core.entity.mob)
+    implementation(projects.core.entity.projectile)
 
-    useModule(":core:game:controller:container")
-    useModule(":core:game:controller:drop")
-    useModule(":core:game:controller:mob")
-    useModule(":core:game:controller:projectile")
+    implementation(projects.core.game.controller.container)
+    implementation(projects.core.game.controller.drop)
+    implementation(projects.core.game.controller.mob)
+    implementation(projects.core.game.controller.projectile)
 
-    useModule(":core:game:world")
+    implementation(projects.core.game.world)
 }

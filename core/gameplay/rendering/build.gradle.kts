@@ -1,29 +1,36 @@
 plugins {
-    kotlin("jvm")
-    ksp
+    id("cavedroid.kotlin-library")
+    id("cavedroid.dagger")
+    id("cavedroid.automultibind")
+    id("cavedroid.libgdx")
 }
-
-java.sourceCompatibility = ApplicationInfo.sourceCompatibility
-java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
-    useLibgdx()
-    useDagger()
-    useAutomultibind()
+    implementation(projects.core.common)
+    implementation(libs.kermit)
+    implementation(libs.kotlinx.coroutines.core)
 
-    useCommonLibs()
-    useCommonModule()
-    useDataModules()
-    useDomainModules()
-    useEntityModules()
-    useGameModules()
+    implementation(projects.core.data.assets)
+    implementation(projects.core.data.configuration)
+    implementation(projects.core.data.items)
+    implementation(projects.core.data.save)
 
-    testImplementation(Dependencies.Test.junitJupiter)
-    testRuntimeOnly(Dependencies.Test.junitJupiterEngine)
-    testRuntimeOnly(Dependencies.Test.junitPlatformLauncher)
-    testImplementation(Dependencies.Test.mockk)
-}
+    implementation(projects.core.domain.assets)
+    implementation(projects.core.domain.configuration)
+    implementation(projects.core.domain.items)
+    implementation(projects.core.domain.world)
 
-tasks.test {
-    useJUnitPlatform()
+    implementation(projects.core.entity.container)
+    implementation(projects.core.entity.drop)
+    implementation(projects.core.entity.mob)
+    implementation(projects.core.entity.projectile)
+
+    implementation(projects.core.game.controller.container)
+    implementation(projects.core.game.controller.drop)
+    implementation(projects.core.game.controller.fire)
+    implementation(projects.core.game.controller.mob)
+    implementation(projects.core.game.controller.projectile)
+    implementation(projects.core.game.controller.stats)
+    implementation(projects.core.game.window)
+    implementation(projects.core.game.world)
 }

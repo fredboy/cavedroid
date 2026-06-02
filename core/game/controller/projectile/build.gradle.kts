@@ -1,19 +1,20 @@
 plugins {
-    kotlin("jvm")
-    ksp
+    id("cavedroid.kotlin-library")
+    id("cavedroid.dagger")
+    id("cavedroid.automultibind")
+    id("cavedroid.libgdx")
 }
 
-java.sourceCompatibility = ApplicationInfo.sourceCompatibility
-java.targetCompatibility = ApplicationInfo.sourceCompatibility
-
 dependencies {
-    useAutomultibind()
-    useLibgdx()
-    useDagger()
+    implementation(projects.core.common)
+    implementation(libs.kermit)
+    implementation(libs.kotlinx.coroutines.core)
 
-    useCommonLibs()
-    useDomainModules()
-    useModule(":core:entity:projectile")
-    useModule(":core:entity:drop")
-    useModule(":core:entity:mob")
+    implementation(projects.core.domain.assets)
+    implementation(projects.core.domain.configuration)
+    implementation(projects.core.domain.items)
+    implementation(projects.core.domain.world)
+    implementation(projects.core.entity.projectile)
+    implementation(projects.core.entity.drop)
+    implementation(projects.core.entity.mob)
 }

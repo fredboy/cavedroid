@@ -1,22 +1,10 @@
 plugins {
-    kotlin("jvm")
+    id("cavedroid.kotlin-library")
+    id("cavedroid.libgdx")
 }
-
-java.sourceCompatibility = ApplicationInfo.sourceCompatibility
-java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
-    useLibgdx()
-    useLibKtx()
-    useKotlinxCoroutines()
-
-    testImplementation(Dependencies.Test.junitJupiter)
-    testRuntimeOnly(Dependencies.Test.junitJupiterEngine)
-    testRuntimeOnly(Dependencies.Test.junitPlatformLauncher)
-    testImplementation(Dependencies.Test.mockk)
-    testImplementation(Dependencies.Kotlin.coroutinesTest)
-}
-
-tasks.test {
-    useJUnitPlatform()
+    implementation(libs.ktx.scene2d)
+    implementation(libs.ktx.actors)
+    implementation(libs.kotlinx.coroutines.core)
 }

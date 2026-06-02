@@ -1,18 +1,16 @@
 plugins {
-    kotlin("jvm")
-    ksp
-    kotlinxSerialization
+    id("cavedroid.kotlin-library")
+    id("cavedroid.dagger")
+    id("cavedroid.libgdx")
+    alias(libs.plugins.kotlin.serialization)
 }
 
-java.sourceCompatibility = ApplicationInfo.sourceCompatibility
-java.targetCompatibility = ApplicationInfo.sourceCompatibility
-
 dependencies {
-    useCommonLibs()
-    useLibgdx()
-    useKotlinxSerializationProtobuf()
-    useDagger()
+    implementation(projects.core.common)
+    implementation(libs.kermit)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.protobuf)
 
-    useDomainStatsModule()
-    useModule(":core:domain:configuration")
+    implementation(projects.core.domain.stats)
+    implementation(projects.core.domain.configuration)
 }

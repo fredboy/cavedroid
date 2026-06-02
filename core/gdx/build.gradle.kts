@@ -1,25 +1,47 @@
 plugins {
-    kotlin("jvm")
-    ksp
+    id("cavedroid.kotlin-library")
+    id("cavedroid.dagger")
+    id("cavedroid.automultibind")
+    id("cavedroid.libgdx")
 }
 
-java.sourceCompatibility = ApplicationInfo.sourceCompatibility
-java.targetCompatibility = ApplicationInfo.sourceCompatibility
-
 dependencies {
-    useAutomultibind()
-    useLibgdx()
-    useLibKtx()
-    useDagger()
+    implementation(libs.ktx.scene2d)
+    implementation(libs.ktx.actors)
 
-    useCommonLibs()
-    useMvvmModule()
-    useDataModules()
-    useDomainModules()
-    useDomainSaveModule()
-    useDomainStatsModule()
-    useDataStatsModule()
-    useEntityModules()
-    useGameModules()
-    useGameplayModules()
+    implementation(projects.core.common)
+    implementation(libs.kermit)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(projects.core.common.mvvm)
+
+    implementation(projects.core.data.assets)
+    implementation(projects.core.data.configuration)
+    implementation(projects.core.data.items)
+    implementation(projects.core.data.save)
+    implementation(projects.core.data.stats)
+
+    implementation(projects.core.domain.assets)
+    implementation(projects.core.domain.configuration)
+    implementation(projects.core.domain.items)
+    implementation(projects.core.domain.world)
+    implementation(projects.core.domain.save)
+    implementation(projects.core.domain.stats)
+
+    implementation(projects.core.entity.container)
+    implementation(projects.core.entity.drop)
+    implementation(projects.core.entity.mob)
+    implementation(projects.core.entity.projectile)
+
+    implementation(projects.core.game.controller.container)
+    implementation(projects.core.game.controller.drop)
+    implementation(projects.core.game.controller.fire)
+    implementation(projects.core.game.controller.mob)
+    implementation(projects.core.game.controller.projectile)
+    implementation(projects.core.game.controller.stats)
+    implementation(projects.core.game.window)
+    implementation(projects.core.game.world)
+
+    implementation(projects.core.gameplay.controls)
+    implementation(projects.core.gameplay.physics)
+    implementation(projects.core.gameplay.rendering)
 }

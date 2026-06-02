@@ -1,14 +1,13 @@
 plugins {
-    kotlin("jvm")
-    ksp
+    id("cavedroid.kotlin-library")
+    id("cavedroid.dagger")
+    id("cavedroid.libgdx")
 }
 
-java.sourceCompatibility = ApplicationInfo.sourceCompatibility
-java.targetCompatibility = ApplicationInfo.sourceCompatibility
-
 dependencies {
-    useDagger()
-    useLibgdx()
-    useCommonLibs()
-    useModule(":core:domain:configuration")
+    implementation(projects.core.common)
+    implementation(libs.kermit)
+    implementation(libs.kotlinx.coroutines.core)
+
+    implementation(projects.core.domain.configuration)
 }

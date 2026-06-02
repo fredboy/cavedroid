@@ -1,26 +1,17 @@
 plugins {
     `java-library`
-    kotlin("jvm")
+    id("cavedroid.kotlin-library")
+    id("cavedroid.libgdx")
 }
-
-java.sourceCompatibility = ApplicationInfo.sourceCompatibility
-java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
-    useLibgdx()
+    implementation(projects.core.common)
+    implementation(libs.kermit)
+    implementation(libs.kotlinx.coroutines.core)
 
-    useCommonLibs()
-    useModule(":core:domain:items")
-    useModule(":core:domain:world")
-    useModule(":core:entity:mob")
-    useApiModule(":core:domain:configuration")
-    useApiModule(":core:game:world")
-
-    testImplementation(Dependencies.Test.junitJupiter)
-    testRuntimeOnly(Dependencies.Test.junitJupiterEngine)
-    testRuntimeOnly(Dependencies.Test.junitPlatformLauncher)
-}
-
-tasks.test {
-    useJUnitPlatform()
+    implementation(projects.core.domain.items)
+    implementation(projects.core.domain.world)
+    implementation(projects.core.entity.mob)
+    api(projects.core.domain.configuration)
+    api(projects.core.game.world)
 }
