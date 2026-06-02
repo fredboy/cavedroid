@@ -11,7 +11,6 @@ private val natives by configurations.creating
 
 plugins {
     alias(libs.plugins.android.application)
-    id("org.jetbrains.kotlin.android")
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
     id("cavedroid.license-report")
@@ -46,14 +45,14 @@ android {
     sourceSets {
 
         named("main") {
-            jniLibs.srcDir("libs")
+            jniLibs.directories.add("libs")
             assets {
-                srcDirs("src/main/assets", "build/generated/extraRes/shared")
+                directories.addAll(listOf("src/main/assets", "build/generated/extraRes/shared"))
             }
         }
 
         named("debug") {
-            res.srcDir("src/debug/res")
+            res.directories.add("src/debug/res")
         }
     }
 
@@ -97,17 +96,12 @@ android {
 
     sourceSets {
         named("foss") {
-            assets.srcDirs("build/generated/extraRes/foss")
+            assets.directories.add("build/generated/extraRes/foss")
         }
         named("store") {
-            assets.srcDirs("build/generated/extraRes/store")
+            assets.directories.add("build/generated/extraRes/store")
         }
     }
-
-    applicationVariants.asSequence()
-        .flatMap { variant -> variant.outputs.asSequence() }
-        .mapNotNull { output -> output as? com.android.build.gradle.internal.api.BaseVariantOutputImpl }
-        .forEach { output -> output.outputFileName = "android-$appVersionName.apk" }
 
     val releaseConfig = signingConfigs.create("release_config")
     with(releaseConfig) {
@@ -152,7 +146,7 @@ android {
 // called every time gradle gets executed, takes the native dependencies of
 // the natives configuration, and extracts them to the proper libs/ folders
 // so they get packed with the APK.
-task("copyAndroidNatives") {
+tasks.register("copyAndroidNatives") {
     doFirst {
         val armeabiV7Dir = file("libs/armeabi-v7a/").apply { mkdirs() }
         val arm64Dir = file("libs/arm64-v8a/").apply { mkdirs() }
