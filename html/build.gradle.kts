@@ -2,12 +2,9 @@ import java.nio.file.Files
 import java.nio.file.StandardOpenOption
 
 plugins {
-    kotlin("jvm")
-    kotlinxSerialization
+    id("cavedroid.kotlin-library")
+    alias(libs.plugins.kotlin.serialization)
 }
-
-java.sourceCompatibility = ApplicationInfo.sourceCompatibility
-java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 // TeaVM ships browser-friendly stubs for a handful of java.util.concurrent.*
 // classes via its standard "emu" package convention. Classes live under
@@ -59,16 +56,18 @@ private fun String.sanitizeForYandex(): String {
 }
 
 dependencies {
-    useCommonLibs()
-    useGdxModule()
-    useLightingBfs()
-    useTeaVMBackend()
-    useKotlinxSerializationJson()
+    implementation(projects.core.common)
+    implementation(libs.kermit)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(projects.core.gdx)
+    implementation(projects.core.gameplay.lightingBfs)
+    implementation(libs.gdx.backend.web)
+    implementation(libs.kotlinx.serialization.json)
 
-    implementation(Dependencies.LibGDX.gdx)
+    implementation(libs.gdx)
 
-    implementation("com.badlogicgames.ashley:ashley:1.7.4")
-    implementation("com.badlogicgames.gdx:gdx-ai:1.8.2")
+    implementation(libs.ashley)
+    implementation(libs.gdx.ai)
 }
 
 tasks.register<Copy>("copyLicenseReport") {

@@ -3,24 +3,23 @@ import java.nio.file.Files
 import java.nio.file.StandardOpenOption
 
 plugins {
-    kotlin("jvm")
+    id("cavedroid.kotlin-library")
     id("robovm")
 }
 
-java.sourceCompatibility = ApplicationInfo.sourceCompatibility
-java.targetCompatibility = ApplicationInfo.sourceCompatibility
-
 dependencies {
-    useCommonLibs()
-    useGdxModule()
-    useLightingBfs()
+    implementation(projects.core.common)
+    implementation(libs.kermit)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(projects.core.gdx)
+    implementation(projects.core.gameplay.lightingBfs)
 
-    implementation(Dependencies.LibGDX.gdx)
-    implementation(Dependencies.RoboVM.rt)
-    implementation(Dependencies.RoboVM.cocoatouch)
-    implementation(Dependencies.LibGDX.Ios.backend)
-    implementation(Dependencies.LibGDX.Ios.natives)
-    implementation(Dependencies.LibGDX.Box2d.Natives.ios)
+    implementation(libs.gdx)
+    implementation(libs.robovm.rt)
+    implementation(libs.robovm.cocoatouch)
+    implementation(libs.gdx.backend.robovm)
+    implementation(variantOf(libs.gdx.platform) { classifier("natives-ios") })
+    implementation(variantOf(libs.gdx.box2d.platform) { classifier("natives-ios") })
 }
 
 val generatePlist by tasks.registering {

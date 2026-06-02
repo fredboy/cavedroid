@@ -8,12 +8,9 @@ import java.util.Properties
 import kotlin.apply
 
 plugins {
-    kotlin("jvm")
-    construo
+    id("cavedroid.kotlin-library")
+    alias(libs.plugins.construo)
 }
-
-java.sourceCompatibility = ApplicationInfo.sourceCompatibility
-java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 private val desktopLauncherClassName = "ru.fredboy.cavedroid.desktop.DesktopLauncher"
 
@@ -196,12 +193,14 @@ construo {
 }
 
 dependencies {
-    useCommonLibs()
-    useGdxModule()
-    useLightingBfs()
+    implementation(projects.core.common)
+    implementation(libs.kermit)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(projects.core.gdx)
+    implementation(projects.core.gameplay.lightingBfs)
 
-    implementation(Dependencies.LibGDX.gdx)
-    implementation(Dependencies.LibGDX.Desktop.backend)
-    implementation(Dependencies.LibGDX.Desktop.natives)
-    implementation(Dependencies.LibGDX.Box2d.Natives.desktop)
+    implementation(libs.gdx)
+    implementation(libs.gdx.backend.lwjgl3)
+    implementation(variantOf(libs.gdx.platform) { classifier("natives-desktop") })
+    implementation(variantOf(libs.gdx.box2d.platform) { classifier("natives-desktop") })
 }

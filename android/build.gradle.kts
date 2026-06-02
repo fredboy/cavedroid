@@ -274,24 +274,26 @@ androidComponents {
 }
 
 dependencies {
-    useCommonLibs()
-    useGdxModule()
-    useLightingBfs()
+    implementation(projects.core.common)
+    implementation(libs.kermit)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(projects.core.gdx)
+    implementation(projects.core.gameplay.lightingBfs)
 
-    implementation(Dependencies.LibGDX.gdx)
-    implementation(Dependencies.LibGDX.Android.backend)
+    implementation(libs.gdx)
+    implementation(libs.gdx.backend.android)
 
-    "storeImplementation"(platform(Dependencies.Google.Firebase.bom))
-    "storeImplementation"(Dependencies.Google.Firebase.crashlytics)
-    "storeImplementation"(Dependencies.Yandex.mobileads)
+    "storeImplementation"(platform(libs.firebase.bom))
+    "storeImplementation"(libs.firebase.crashlytics)
+    "storeImplementation"(libs.yandex.mobileads)
 
-    natives(Dependencies.LibGDX.Android.Natives.armeabi)
-    natives(Dependencies.LibGDX.Android.Natives.arm64)
-    natives(Dependencies.LibGDX.Android.Natives.x86)
-    natives(Dependencies.LibGDX.Android.Natives.x86_64)
+    natives(variantOf(libs.gdx.platform) { classifier("natives-armeabi-v7a") })
+    natives(variantOf(libs.gdx.platform) { classifier("natives-arm64-v8a") })
+    natives(variantOf(libs.gdx.platform) { classifier("natives-x86") })
+    natives(variantOf(libs.gdx.platform) { classifier("natives-x86_64") })
 
-    natives(Dependencies.LibGDX.Box2d.Natives.Android.armeabi)
-    natives(Dependencies.LibGDX.Box2d.Natives.Android.arm64)
-    natives(Dependencies.LibGDX.Box2d.Natives.Android.x86)
-    natives(Dependencies.LibGDX.Box2d.Natives.Android.x86_64)
+    natives(variantOf(libs.gdx.box2d.platform) { classifier("natives-armeabi-v7a") })
+    natives(variantOf(libs.gdx.box2d.platform) { classifier("natives-arm64-v8a") })
+    natives(variantOf(libs.gdx.box2d.platform) { classifier("natives-x86") })
+    natives(variantOf(libs.gdx.box2d.platform) { classifier("natives-x86_64") })
 }
