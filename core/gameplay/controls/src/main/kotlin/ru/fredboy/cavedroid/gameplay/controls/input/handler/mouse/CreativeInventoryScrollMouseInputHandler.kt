@@ -129,6 +129,11 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
         }
     }
 
+    override fun reset() {
+        dragStartY = 0f
+        gameWindowsManager.isDragging = false
+    }
+
     companion object {
         private val logger = Logger.withTag("CreativeInventoryScrollMouseInputHandler")
         private const val DRAG_SENSITIVITY = 16f

@@ -49,6 +49,10 @@ class DropItemKeyboardInputHandler @Inject constructor(
         playerAdapter.decreaseCurrentItemCount(dropAmount)
     }
 
+    override fun reset() {
+        // no-op
+    }
+
     companion object {
         const val DROP_DISTANCE = 1.25f
     }
