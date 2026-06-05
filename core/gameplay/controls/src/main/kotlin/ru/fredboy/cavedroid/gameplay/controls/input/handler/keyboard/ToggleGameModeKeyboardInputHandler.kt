@@ -23,4 +23,8 @@ class ToggleGameModeKeyboardInputHandler @Inject constructor(
             GameMode.CREATIVE -> GameMode.SURVIVAL
         }
     }
+
+    override fun reset() {
+        // np-op
+    }
 }

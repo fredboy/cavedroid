@@ -19,4 +19,8 @@ class ToggleMinimapKeyboardInputHandler @Inject constructor(
     override fun handle(action: KeyboardInputAction) {
         gameContextRepository.setShowMap(!gameContextRepository.shouldShowMap())
     }
+
+    override fun reset() {
+        // no-op
+    }
 }

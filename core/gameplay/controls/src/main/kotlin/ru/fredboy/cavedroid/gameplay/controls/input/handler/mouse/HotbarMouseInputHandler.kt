@@ -36,11 +36,25 @@ class HotbarMouseInputHandler @Inject constructor(
 
     override fun checkConditions(action: MouseInputAction): Boolean = buttonHoldTask?.isScheduled == true ||
         (
-            (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
+            (
+                action.actionKey is MouseInputActionKey.Left ||
+                    (
+                        action.actionKey is MouseInputActionKey.Screen &&
+                            (
+                                !gameContextRepository.getJoystick().active ||
+                                    action.actionKey.pointer != gameContextRepository.getJoystick().pointer
+                                )
+                        )
+                ) &&
                 action.isInsideHotbar(gameContextRepository, textureRegions) ||
                 action.actionKey is MouseInputActionKey.Scroll
             ) &&
-        gameWindowsManager.currentWindowType == GameWindowType.NONE
+        gameWindowsManager.currentWindowType == GameWindowType.NONE &&
+        (
+            action.actionKey is MouseInputActionKey.Scroll ||
+                !action.actionKey.touchUp ||
+                buttonHoldTask?.isScheduled == true
+            )
 
     private fun cancelHold() {
         buttonHoldTask?.cancel()
@@ -124,6 +138,10 @@ class HotbarMouseInputHandler @Inject constructor(
         } else {
             handleDown(action)
         }
+    }
+
+    override fun reset() {
+        cancelHold()
     }
 
     companion object {

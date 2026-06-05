@@ -25,4 +25,8 @@ class FlyUpKeyboardInputHandler @Inject constructor(
             mobController.player.controlVector.y = 0f
         }
     }
+
+    override fun reset() {
+        mobController.player.controlVector.y = 0f
+    }
 }

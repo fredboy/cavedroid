@@ -43,6 +43,10 @@ class MouseCursorInputHandler @Inject constructor(
     }
 
     private fun handleMouse(action: MouseInputAction) {
+        if (gameWindowsManager.currentWindowType != GameWindowType.NONE) {
+            return
+        }
+
         val worldX = action.screenX.meters + gameContextRepository.getCameraContext().visibleWorld.x
         val worldY = action.screenY.meters + gameContextRepository.getCameraContext().visibleWorld.y
 
@@ -112,5 +116,9 @@ class MouseCursorInputHandler @Inject constructor(
         if (gameWindowsManager.currentWindowType == GameWindowType.CREATIVE_INVENTORY) {
             tooltipManager.showMouseTooltip(getCreativeTooltip(action).orEmpty())
         }
+    }
+
+    override fun reset() {
+        // no-op
     }
 }

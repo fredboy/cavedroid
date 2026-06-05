@@ -108,7 +108,7 @@ class CaveDroidApplication(
                     height = height,
                     isFullscreen = isFullscreen,
                     useDynamicCamera = preferencesStore.getPreference(PreferenceKeys.DYNAMIC_CAMERA)
-                        ?.toBooleanStrictOrNull() ?: false,
+                        ?.toBooleanStrictOrNull() ?: isTouchScreen,
                     isAutoJumpEnabled = preferencesStore.getPreference(PreferenceKeys.AUTO_JUMP)
                         ?.toBooleanStrictOrNull() ?: true,
                     locale = preferencesStore.getPreference(PreferenceKeys.LOCALE)

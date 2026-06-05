@@ -3,10 +3,12 @@ package ru.fredboy.cavedroid.game.controller.mob.impl.physics
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Contact
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.safeCast
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.abstraction.AbstractContactHandler
 import ru.fredboy.cavedroid.domain.world.model.ContactSensorType
 import ru.fredboy.cavedroid.entity.mob.model.Mob
+import ru.fredboy.cavedroid.entity.mob.model.Player
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
@@ -39,7 +41,7 @@ class MobStepUpBlockContactHandler @Inject constructor() : AbstractContactHandle
 
         with(entityA as Mob) {
             // on the ground or swimming
-            if (!canJump && velocity.y > 0f) {
+            if (!canJump && !climb && safeCast<Player>()?.tryClimb != true) {
                 return false
             }
 
@@ -62,7 +64,7 @@ class MobStepUpBlockContactHandler @Inject constructor() : AbstractContactHandle
             val mobRect = hitbox
 
             // not higher than half block
-            if (mobRect.y + mobRect.height > blockRect.y + 0.75f) {
+            if (mobRect.y + mobRect.height > blockRect.y + 0.5f) {
                 return false
             }
 

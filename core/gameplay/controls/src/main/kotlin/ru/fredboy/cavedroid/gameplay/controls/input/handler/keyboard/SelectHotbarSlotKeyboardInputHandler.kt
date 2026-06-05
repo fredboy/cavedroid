@@ -20,4 +20,8 @@ class SelectHotbarSlotKeyboardInputHandler @Inject constructor(
     override fun handle(action: KeyboardInputAction) {
         mobController.player.activeSlot = (action.actionKey as KeyboardInputActionKey.SelectHotbarSlot).slot
     }
+
+    override fun reset() {
+        // no-op
+    }
 }
