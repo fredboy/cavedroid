@@ -6,12 +6,6 @@ import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.ChainShape
 import com.badlogic.gdx.physics.box2d.FixtureDef
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
-import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.effectiveMirrorBand
 import ru.fredboy.cavedroid.common.utils.floorDiv
@@ -32,14 +26,10 @@ import kotlin.experimental.or
 @GameScope
 class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
     private val itemsRepository: ItemsRepository,
-    private val appDispatchers: AppDispatchers,
 ) : GameWorldSolidBlockBodiesManager(),
     ChunkListener {
 
     private val _mirrorBodies = mutableMapOf<Triple<Int, Int, Int>, Body>()
-
-    private val job = Job()
-    private val coroutineScope = CoroutineScope(appDispatchers.main + job)
 
     private val mirrorBand: Int
         get() = effectiveMirrorBand(MIRROR_BAND_BLOCKS, gameWorld.width)
@@ -52,7 +42,7 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
                 val startX = chunkX * ChunkGenerator.CHUNK_W
                 for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
                     for (y in 0 until gameWorld.height step CHUNK_SIZE) {
-                        runBlocking { updateChunk(x, y) }
+                        updateChunk(x, y)
                     }
                 }
             }
@@ -61,7 +51,7 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
 
         for (x in 0..<gameWorld.width step CHUNK_SIZE) {
             for (y in 0..<gameWorld.height step CHUNK_SIZE) {
-                runBlocking { updateChunk(x, y) }
+                updateChunk(x, y)
             }
         }
     }
@@ -70,9 +60,7 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
         val startX = chunkX * ChunkGenerator.CHUNK_W
         for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
             for (y in 0 until gameWorld.height step CHUNK_SIZE) {
-                coroutineScope.launch {
-                    updateChunk(x, y)
-                }
+                updateChunk(x, y)
             }
         }
     }
@@ -96,9 +84,7 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
             return
         }
 
-        coroutineScope.launch {
-            updateChunk(x, y)
-        }
+        updateChunk(x, y)
     }
 
     override fun dispose() {
@@ -108,7 +94,7 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
         super.dispose()
     }
 
-    private suspend fun updateChunk(blockX: Int, blockY: Int) {
+    private fun updateChunk(blockX: Int, blockY: Int) {
         val chunkX1 = (blockX floorDiv CHUNK_SIZE) * CHUNK_SIZE
         val chunkY1 = blockY - blockY % CHUNK_SIZE
 
@@ -116,9 +102,7 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
             world.destroyBody(body)
         }
 
-        val (clusters, userData) = withContext(appDispatchers.background) {
-            getChunkData(chunkX1, chunkY1)
-        }
+        val (clusters, userData) = getChunkData(chunkX1, chunkY1)
 
         val body = createBody(chunkX1, chunkY1, xOffset = 0)
         _bodies[chunkX1 to chunkY1] = body
@@ -288,7 +272,7 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
             clusters = clusters.filter { cluster ->
                 cluster.points.none { (x, y) ->
                     !cluster.block.params.hasCollision &&
-                        (x == boundX.first || x == boundX.last || y == boundY.first || y == boundY.last)
+                            (x == boundX.first || x == boundX.last || y == boundY.first || y == boundY.last)
                 }
             },
             userData = ChunkUserData(

@@ -40,8 +40,8 @@ class InfiniteBlockStore(
     private val chunkPersister: (Chunk) -> Unit = { },
 ) : WorldBlockStore {
 
-    private val job = Job()
-    private val coroutineScope = CoroutineScope(job + appDispatchers.background)
+//    private val job = Job()
+//    private val coroutineScope = CoroutineScope(job + appDispatchers.background)
 
     private val generator = ChunkGenerator(generatorConfig, itemsRepository)
     private val chunks = HashMap<Int, ChunkEntry>()
@@ -108,9 +108,9 @@ class InfiniteBlockStore(
         if (centerChunk == lastCenterChunk) return
         lastCenterChunk = centerChunk
 
-        coroutineScope.launch {
+//        coroutineScope.launch {
             stream(centerChunk)
-        }
+//        }
     }
 
     override fun addChunkListener(listener: ChunkListener) {
@@ -131,21 +131,21 @@ class InfiniteBlockStore(
             val chunk = entry.safeCast<ChunkEntry.Loaded>()?.chunk ?: return@forEach
             if (chunk.dirty) {
                 chunk.dirty = false
-                coroutineScope.launch(appDispatchers.io) {
+//                coroutineScope.launch(appDispatchers.io) {
                     chunkPersister(chunk)
-                }
+//                }
             }
         }
     }
 
     override fun dispose() {
-        coroutineScope.cancel()
+//        coroutineScope.cancel()
         flushDirtyChunks()
         chunks.clear()
         listeners.clear()
     }
 
-    private suspend fun stream(centerChunk: Int) {
+    private fun stream(centerChunk: Int) {
         for (cx in centerChunk - LOAD_RADIUS..centerChunk + LOAD_RADIUS) {
             ensureChunk(cx)
         }
@@ -155,15 +155,15 @@ class InfiniteBlockStore(
             .forEach { evictChunk(it) }
     }
 
-    private suspend fun ensureChunk(chunkX: Int) {
+    private fun ensureChunk(chunkX: Int) {
         chunks[chunkX]?.let { return }
         chunks[chunkX] = chunkEntry()
 
-        val loaded = withContext(appDispatchers.io) {
+        val loaded = //withContext(appDispatchers.io) {
             chunkLoader(chunkX)
-        }
+//        }
 
-        val chunk = loaded ?: withContext(appDispatchers.background) {
+        val chunk = loaded ?: //withContext(appDispatchers.background) {
             generator.generateChunk(chunkX).let { generated ->
                 Chunk(
                     chunkX = chunkX,
@@ -171,34 +171,34 @@ class InfiniteBlockStore(
                     back = generated.backMap,
                     biomes = generated.biomes,
                 )
-            }
+//            }
         }
 
         chunks[chunkX] = chunkEntry(chunk)
 
         listeners.forEach {
-            withContext(appDispatchers.main) {
+//            withContext(appDispatchers.main) {
                 it.onChunkLoaded(chunkX)
-            }
+//            }
         }
     }
 
-    private suspend fun evictChunk(chunkX: Int) {
+    private fun evictChunk(chunkX: Int) {
         logger.d { "Evict chunk $chunkX" }
 
-        val chunk = withContext(appDispatchers.main) {
-            chunks.remove(chunkX)?.safeCast<ChunkEntry.Loaded>()?.chunk
-        } ?: return
+        val chunk = // withContext(appDispatchers.main) {
+            chunks.remove(chunkX)?.safeCast<ChunkEntry.Loaded>()?.chunk ?: return
+//        } ?: return
 
         listeners.forEach {
-            withContext(appDispatchers.main) {
+//            withContext(appDispatchers.main) {
                 it.onChunkUnloaded(chunkX)
-            }
+//            }
         }
         if (chunk.dirty) {
-            withContext(appDispatchers.io) {
+//            withContext(appDispatchers.io) {
                 chunkPersister(chunk)
-            }
+//            }
         }
     }
 
