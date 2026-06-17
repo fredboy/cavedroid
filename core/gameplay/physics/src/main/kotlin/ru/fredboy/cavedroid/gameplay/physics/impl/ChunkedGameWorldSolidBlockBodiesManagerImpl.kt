@@ -43,6 +43,8 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
 
     private val _mirrorBodies = mutableMapOf<Triple<Int, Int, Int>, Body>()
 
+    private val loadingChunks = mutableSetOf<Int>()
+
     private val mirrorBand: Int
         get() = effectiveMirrorBand(MIRROR_BAND_BLOCKS, gameWorld.width)
 
@@ -79,19 +81,31 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
                     updateChunk(x, y)
                 }
             }
+            notifyChunkBodiesReady(chunkX)
         } else {
             logger.d { "Launching chunk loading coroutine." }
+            loadingChunks.add(chunkX)
             coroutineScope.launch {
                 for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
                     for (y in 0 until gameWorld.height step CHUNK_SIZE) {
                         updateChunkAsync(x, y)
                     }
                 }
+                if (loadingChunks.remove(chunkX)) {
+                    notifyChunkBodiesReady(chunkX)
+                } else {
+                    destroyChunkBodies(chunkX)
+                }
             }
         }
     }
 
     override fun onChunkUnloaded(chunkX: Int) {
+        loadingChunks.remove(chunkX)
+        destroyChunkBodies(chunkX)
+    }
+
+    private fun destroyChunkBodies(chunkX: Int) {
         val startX = chunkX * ChunkGenerator.CHUNK_W
         for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
             for (y in 0 until gameWorld.height step CHUNK_SIZE) {
@@ -115,6 +129,7 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
 
     override fun dispose() {
         coroutineScope.cancel()
+        loadingChunks.clear()
         gameWorld.removeChunkListener(this)
         _mirrorBodies.values.forEach { body -> body.world.destroyBody(body) }
         _mirrorBodies.clear()

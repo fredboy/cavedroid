@@ -15,6 +15,7 @@ import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.domain.world.model.Weather
+import ru.fredboy.cavedroid.game.world.abstraction.ChunkBodiesReadyListener
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
 import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
@@ -111,6 +112,10 @@ class GameWorld @Inject constructor(
     fun addChunkListener(listener: ChunkListener) = blockStore.addChunkListener(listener)
 
     fun removeChunkListener(listener: ChunkListener) = blockStore.removeChunkListener(listener)
+
+    fun addChunkBodiesReadyListener(listener: ChunkBodiesReadyListener) = gameWorldSolidBlockBodiesManager.addChunkBodiesReadyListener(listener)
+
+    fun removeChunkBodiesReadyListener(listener: ChunkBodiesReadyListener) = gameWorldSolidBlockBodiesManager.removeChunkBodiesReadyListener(listener)
 
     fun forEachLoadedChunk(action: (chunkX: Int) -> Unit) = blockStore.forEachLoadedChunk(action)
 
