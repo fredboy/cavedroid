@@ -1,13 +1,14 @@
 package ru.fredboy.cavedroid.game.world.store
 
 import co.touchlab.kermit.Logger
+import com.badlogic.gdx.Gdx
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
+import ru.fredboy.cavedroid.common.coroutines.GdxMainThread
 import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.common.utils.safeCast
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -40,8 +41,8 @@ class InfiniteBlockStore(
     private val chunkPersister: (Chunk) -> Unit = { },
 ) : WorldBlockStore {
 
-//    private val job = Job()
-//    private val coroutineScope = CoroutineScope(job + appDispatchers.background)
+    private val job = Job()
+    private val coroutineScope = CoroutineScope(job + appDispatchers.background)
 
     private val generator = ChunkGenerator(generatorConfig, itemsRepository)
     private val chunks = HashMap<Int, ChunkEntry>()
@@ -108,9 +109,13 @@ class InfiniteBlockStore(
         if (centerChunk == lastCenterChunk) return
         lastCenterChunk = centerChunk
 
-//        coroutineScope.launch {
-            stream(centerChunk)
-//        }
+        if (centerChunk !in chunks.keys) {
+            logger.d { "Blocking stream around $centerChunk" }
+            runBlocking { stream(centerChunk) }
+        } else {
+            logger.d { "Async stream around $centerChunk" }
+            coroutineScope.launch { stream(centerChunk) }
+        }
     }
 
     override fun addChunkListener(listener: ChunkListener) {
@@ -131,74 +136,77 @@ class InfiniteBlockStore(
             val chunk = entry.safeCast<ChunkEntry.Loaded>()?.chunk ?: return@forEach
             if (chunk.dirty) {
                 chunk.dirty = false
-//                coroutineScope.launch(appDispatchers.io) {
-                    chunkPersister(chunk)
-//                }
+                chunkPersister(chunk)
             }
         }
     }
 
     override fun dispose() {
-//        coroutineScope.cancel()
+        coroutineScope.cancel()
         flushDirtyChunks()
         chunks.clear()
         listeners.clear()
     }
 
     private fun stream(centerChunk: Int) {
-        for (cx in centerChunk - LOAD_RADIUS..centerChunk + LOAD_RADIUS) {
-            ensureChunk(cx)
-        }
-
         val keep = (centerChunk - UNLOAD_RADIUS)..(centerChunk + UNLOAD_RADIUS)
         chunks.keys.filterNot { it in keep }
             .forEach { evictChunk(it) }
+
+        for (cx in centerChunk - LOAD_RADIUS..centerChunk + LOAD_RADIUS) {
+            ensureChunk(cx)
+        }
     }
 
     private fun ensureChunk(chunkX: Int) {
         chunks[chunkX]?.let { return }
         chunks[chunkX] = chunkEntry()
 
-        val loaded = //withContext(appDispatchers.io) {
-            chunkLoader(chunkX)
-//        }
+        val loaded = chunkLoader(chunkX)
 
-        val chunk = loaded ?: //withContext(appDispatchers.background) {
-            generator.generateChunk(chunkX).let { generated ->
-                Chunk(
-                    chunkX = chunkX,
-                    fore = generated.foreMap,
-                    back = generated.backMap,
-                    biomes = generated.biomes,
-                )
-//            }
+        val chunk = loaded ?: generator.generateChunk(chunkX).let { generated ->
+            Chunk(
+                chunkX = chunkX,
+                fore = generated.foreMap,
+                back = generated.backMap,
+                biomes = generated.biomes,
+            )
         }
 
         chunks[chunkX] = chunkEntry(chunk)
 
-        listeners.forEach {
-//            withContext(appDispatchers.main) {
+        if (!GdxMainThread.isMainThread()) {
+            Gdx.app.postRunnable {
+                listeners.forEach {
+                    it.onChunkLoaded(chunkX)
+                }
+            }
+        } else {
+            listeners.forEach {
                 it.onChunkLoaded(chunkX)
-//            }
+            }
         }
     }
 
     private fun evictChunk(chunkX: Int) {
         logger.d { "Evict chunk $chunkX" }
 
-        val chunk = // withContext(appDispatchers.main) {
-            chunks.remove(chunkX)?.safeCast<ChunkEntry.Loaded>()?.chunk ?: return
-//        } ?: return
+        val chunk = chunks.remove(chunkX)?.safeCast<ChunkEntry.Loaded>()?.chunk ?: return
 
-        listeners.forEach {
-//            withContext(appDispatchers.main) {
+        if (!GdxMainThread.isMainThread()) {
+            Gdx.app.postRunnable {
+                listeners.forEach {
+                    it.onChunkUnloaded(chunkX)
+                }
+            }
+        } else {
+            listeners.forEach {
                 it.onChunkUnloaded(chunkX)
-//            }
+            }
         }
+
         if (chunk.dirty) {
-//            withContext(appDispatchers.io) {
-                chunkPersister(chunk)
-//            }
+            chunkPersister(chunk)
         }
     }
 

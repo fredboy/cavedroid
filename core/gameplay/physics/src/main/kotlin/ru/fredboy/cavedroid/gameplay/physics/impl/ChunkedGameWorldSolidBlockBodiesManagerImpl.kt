@@ -1,11 +1,19 @@
 package ru.fredboy.cavedroid.gameplay.physics.impl
 
+import co.touchlab.kermit.Logger
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.ChainShape
 import com.badlogic.gdx.physics.box2d.FixtureDef
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
+import ru.fredboy.cavedroid.common.coroutines.GdxMainThread
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.effectiveMirrorBand
 import ru.fredboy.cavedroid.common.utils.floorDiv
@@ -26,8 +34,12 @@ import kotlin.experimental.or
 @GameScope
 class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
     private val itemsRepository: ItemsRepository,
+    private val appDispatchers: AppDispatchers,
 ) : GameWorldSolidBlockBodiesManager(),
     ChunkListener {
+
+    private val job = Job()
+    private val coroutineScope = CoroutineScope(job + appDispatchers.main)
 
     private val _mirrorBodies = mutableMapOf<Triple<Int, Int, Int>, Body>()
 
@@ -58,9 +70,23 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
 
     override fun onChunkLoaded(chunkX: Int) {
         val startX = chunkX * ChunkGenerator.CHUNK_W
-        for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
-            for (y in 0 until gameWorld.height step CHUNK_SIZE) {
-                updateChunk(x, y)
+
+        // TODO: Hardcoded cached chunks size
+        if (_bodies.size < 208) {
+            logger.d { "Blocking main thread for chunk loading." }
+            for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
+                for (y in 0 until gameWorld.height step CHUNK_SIZE) {
+                    updateChunk(x, y)
+                }
+            }
+        } else {
+            logger.d { "Launching chunk loading coroutine." }
+            coroutineScope.launch {
+                for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
+                    for (y in 0 until gameWorld.height step CHUNK_SIZE) {
+                        updateChunkAsync(x, y)
+                    }
+                }
             }
         }
     }
@@ -88,6 +114,7 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
     }
 
     override fun dispose() {
+        coroutineScope.cancel()
         gameWorld.removeChunkListener(this)
         _mirrorBodies.values.forEach { body -> body.world.destroyBody(body) }
         _mirrorBodies.clear()
@@ -103,6 +130,31 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
         }
 
         val (clusters, userData) = getChunkData(chunkX1, chunkY1)
+
+        val body = createBody(chunkX1, chunkY1, xOffset = 0)
+        _bodies[chunkX1 to chunkY1] = body
+        populateBodyFixtures(body, clusters, userData, xOffset = 0)
+
+        // The mirror band only makes sense for a finite, horizontally-looping world; infinite
+        // worlds have no seam to mirror across.
+        if (!gameWorld.isInfinite) {
+            mirrorSidesFor(chunkX1, gameWorld.width, mirrorBand).forEach { sideSign ->
+                updateMirrorChunk(chunkX1, chunkY1, sideSign, clusters, userData)
+            }
+        }
+    }
+
+    private suspend fun updateChunkAsync(blockX: Int, blockY: Int) = withContext(appDispatchers.main) {
+        val chunkX1 = (blockX floorDiv CHUNK_SIZE) * CHUNK_SIZE
+        val chunkY1 = blockY - blockY % CHUNK_SIZE
+
+        _bodies.remove(chunkX1 to chunkY1)?.let { body ->
+            world.destroyBody(body)
+        }
+
+        val (clusters, userData) = withContext(appDispatchers.background) {
+            getChunkData(chunkX1, chunkY1)
+        }
 
         val body = createBody(chunkX1, chunkY1, xOffset = 0)
         _bodies[chunkX1 to chunkY1] = body
@@ -142,6 +194,11 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
         userData: ChunkUserData,
         xOffset: Int,
     ) {
+        if (!GdxMainThread.isMainThread()) {
+            logger.w { "populateBodyFixtures called on background thread! Nothing is done to avoid crash." }
+            return
+        }
+
         body.userData = userData
 
         clusters.forEach { cluster ->
@@ -339,5 +396,8 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
     companion object {
         private const val CHUNK_SIZE = 16
         private const val MIRROR_BAND_BLOCKS = 80
+
+        private const val TAG = "ChunkedGameWorldSolidBlockBodiesManagerImpl"
+        private val logger = Logger.withTag(TAG)
     }
 }
