@@ -1,153 +1,175 @@
 
 skin.png
-size: 256, 256
+size: 2048, 2048
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
 background
   rotate: false
-  xy: 1, 80
+  xy: 941, 1278
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 button_disabled
   rotate: false
-  xy: 1, 233
+  xy: 515, 1274
   size: 200, 20
   orig: 200, 20
   offset: 0, 0
   index: -1
 button_disabled_square
   rotate: false
-  xy: 203, 179
+  xy: 225, 246
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 button_disabled_v
   rotate: false
-  xy: 225, 53
+  xy: 1, 19
   size: 20, 200
   orig: 20, 200
   offset: 0, 0
   index: -1
 button_down
   rotate: false
-  xy: 1, 211
+  xy: 1, 246
   size: 200, 20
   orig: 200, 20
   offset: 0, 0
   index: -1
 button_down_square
   rotate: false
-  xy: 203, 157
+  xy: 515, 1208
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 button_hover
   rotate: false
-  xy: 1, 189
+  xy: 515, 1252
   size: 200, 20
   orig: 200, 20
   offset: 0, 0
   index: -1
 button_hover_square
   rotate: false
-  xy: 1, 98
+  xy: 537, 1230
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 button_up
   rotate: false
-  xy: 1, 167
+  xy: 717, 1274
   size: 200, 20
   orig: 200, 20
   offset: 0, 0
   index: -1
 button_up_square
   rotate: false
-  xy: 23, 120
+  xy: 739, 1252
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 checkbox_off
   rotate: false
-  xy: 203, 233
+  xy: 203, 246
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 checkbox_off_hover
   rotate: false
-  xy: 1, 120
+  xy: 515, 1230
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 checkbox_on
   rotate: false
-  xy: 166, 145
+  xy: 717, 1252
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 checkbox_on_hover
   rotate: false
-  xy: 203, 211
+  xy: 919, 1274
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 cursor
   rotate: false
-  xy: 188, 157
+  xy: 166, 226
   size: 5, 8
   orig: 5, 8
   offset: 0, 0
   index: -1
+f771
+  rotate: false
+  xy: 1, 782
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+f772
+  rotate: false
+  xy: 1, 268
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
 gamelogo
   rotate: false
-  xy: 1, 142
+  xy: 1, 221
   size: 163, 23
   orig: 163, 23
   offset: 0, 0
   index: -1
 help
   rotate: false
-  xy: 45, 124
+  xy: 23, 203
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 knob
   rotate: false
-  xy: 247, 233
+  xy: 515, 1186
   size: 8, 20
   orig: 8, 20
   offset: 0, 0
   index: -1
 knob_h
   rotate: false
-  xy: 203, 201
+  xy: 166, 236
   size: 20, 8
   orig: 20, 8
   offset: 0, 0
   index: -1
 lang
   rotate: false
-  xy: 1, 62
+  xy: 247, 250
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 shade
   rotate: false
-  xy: 23, 102
+  xy: 1, 1
   size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+bg
+  rotate: false
+  xy: 1, 1
+  size: 16, 16
+  split: 4, 4, 4, 4
   orig: 16, 16
   offset: 0, 0
   index: -1

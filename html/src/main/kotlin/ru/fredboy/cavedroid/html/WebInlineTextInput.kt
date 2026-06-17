@@ -45,10 +45,13 @@ private external fun viewportHeight(): Double
 )
 private external fun viewportOffsetTop(): Double
 
+// Comparing window references is safe even cross-origin (unlike reading
+// properties off window.top). True when the page is embedded in an iframe,
+// e.g. the game running on Yandex Games.
 @JSBody(
-    script = "return window.innerHeight;",
+    script = "return window.self !== window.top;",
 )
-private external fun windowInnerHeight(): Double
+private external fun isInIframe(): Boolean
 
 @JSBody(
     params = ["listener"],
@@ -60,15 +63,23 @@ private external fun windowInnerHeight(): Double
 )
 private external fun addViewportResizeListener(listener: EventListener<Event>)
 
+// Injects the @font-face rule and immediately asks the browser to fetch the
+// font via the CSS Font Loading API, so it's cached well before the overlay is
+// first shown. Without this the .ttf is only downloaded when the overlay first
+// renders, leaving the field briefly unstyled (or blank, with font-display:
+// block). document.fonts.load returns a promise we don't need to await.
 @JSBody(
-    params = ["css"],
+    params = ["css", "fontSpec"],
     script = """
         var s = document.createElement('style');
         s.textContent = css;
         document.head.appendChild(s);
+        if (document.fonts && document.fonts.load) {
+            document.fonts.load(fontSpec);
+        }
     """,
 )
-private external fun injectStyle(css: String)
+private external fun injectStyleAndPreloadFont(css: String, fontSpec: String)
 
 // LanaPixel.ttf lives at the webapp root (see html/src/main/resources/webapp/);
 // the assets/textures/background.png path matches what the menu skin uses.
@@ -79,6 +90,10 @@ private const val OVERLAY_CSS = """
         font-display: block;
     }
 """
+
+// A font spec accepted by document.fonts.load(); the size is arbitrary, only
+// the family matters for triggering the fetch. Matches the overlay's family.
+private const val FONT_PRELOAD_SPEC = "32px 'LanaPixel'"
 
 // When the keyboard is up and the visual viewport keeps at least this fraction
 // of window.innerHeight, the scene2d field is likely still visible — keep the
@@ -98,6 +113,7 @@ class WebInlineTextInput :
 
     private var container: HTMLElement? = null
     private var input: HTMLInputElement? = null
+    private var doneButton: HTMLElement? = null
     private var valueChangedCallback: ((String, Int) -> Unit)? = null
 
     // True once we've observed the soft keyboard come up during the current
@@ -105,17 +121,48 @@ class WebInlineTextInput :
     // came up yet" so the initial focus-in doesn't auto-blur itself.
     private var wasKeyboardVisible = false
 
+    // Viewport height captured at focus time, before the soft keyboard opens.
+    // The (non-iframe) resize listener judges keyboard visibility relative to
+    // this baseline.
+    private var baselineViewportHeight = 0.0
+
+    // Inside a cross-origin iframe (e.g. the game embedded on Yandex Games) the
+    // soft keyboard resizes only the top-level visual viewport, which we can't
+    // observe from here, and navigator.virtualKeyboard is blocked by the default
+    // permission policy. With no way to measure keyboard coverage we always show
+    // the styled overlay while focused and rely on an explicit Done button (plus
+    // Enter / blur / tap-outside) for dismissal.
+    private val inIframe: Boolean by lazy { isInIframe() }
+
+    init {
+        // Constructed at game start (see WebLauncher) — register the overlay
+        // font and start downloading it now so it's ready by the first trigger().
+        injectStyleAndPreloadFont(OVERLAY_CSS, FONT_PRELOAD_SPEC)
+    }
+
     override fun trigger(
         initialText: String,
         initialCursor: Int,
+        buttonText: String,
         onValueChanged: (String, Int) -> Unit,
     ) {
         val element = input ?: createElements().also { input = it }
+        doneButton?.textContent = buttonText
         valueChangedCallback = onValueChanged
         element.value = initialText
-        // Always start in invisible mode; the resize listener promotes to the
-        // styled overlay only if the keyboard ends up covering too much.
-        applyInvisibleMode()
+        if (inIframe) {
+            // Keyboard coverage is unobservable in a cross-origin iframe, so show
+            // the overlay up front and let the Done button dismiss it.
+            applyOverlayMode()
+        } else {
+            // Capture the keyboard-down viewport height so the resize listener
+            // can judge visibility relative to it. Measured before focus()
+            // raises the keyboard.
+            baselineViewportHeight = viewportHeight()
+            // Start invisible; the resize listener promotes to the styled
+            // overlay only if the keyboard ends up covering too much.
+            applyInvisibleMode()
+        }
         element.blur()
         element.focus()
         setInputSelection(element, initialCursor, initialCursor)
@@ -144,7 +191,10 @@ class WebInlineTextInput :
         style.setProperty("z-index", "2147483647")
         style.removeProperty("font-family")
         style.removeProperty("text-align")
+        style.removeProperty("right")
+        style.removeProperty("transform")
         containerEl.style.setProperty("display", "none")
+        doneButton?.style?.setProperty("display", "none")
 
         _isVisible.value = false
     }
@@ -154,6 +204,11 @@ class WebInlineTextInput :
         val containerEl = container ?: return
         val offsetTop = viewportOffsetTop()
         val height = viewportHeight()
+        // Anchor the row near the top of the viewport so the soft keyboard
+        // (whose height we can't measure in an iframe) can't cover it. The input
+        // and the Done button are both centered on this line via translateY(-50%)
+        // so they stay vertically aligned with each other.
+        val anchorY = offsetTop + 48.0
 
         val cstyle = containerEl.style
         cstyle.setProperty("display", "block")
@@ -162,10 +217,14 @@ class WebInlineTextInput :
 
         val istyle = inputEl.style
         istyle.setProperty("position", "fixed")
-        istyle.setProperty("top", "${offsetTop}px")
-        istyle.setProperty("left", "20%")
-        istyle.setProperty("width", "60%")
-        istyle.setProperty("height", "${height}px")
+        istyle.setProperty("top", "${anchorY}px")
+        istyle.setProperty("transform", "translateY(-50%)")
+        istyle.setProperty("left", "16px")
+        // Stretch from the left margin up to the space reserved for the Done
+        // button; no explicit height so it wraps to a single content line.
+        istyle.setProperty("right", "160px")
+        istyle.removeProperty("width")
+        istyle.removeProperty("height")
         istyle.setProperty("box-sizing", "border-box")
         istyle.setProperty("padding", "16px")
         istyle.setProperty("margin", "0")
@@ -182,23 +241,27 @@ class WebInlineTextInput :
         // Input sits above the backdrop container.
         istyle.setProperty("z-index", "2147483647")
 
+        doneButton?.let { btn ->
+            btn.style.setProperty("display", "block")
+            btn.style.setProperty("top", "${anchorY}px")
+        }
+
         _isVisible.value = true
     }
 
     private fun isKeyboardLikelyVisible(): Boolean {
         // Treat the keyboard as visible when the visual viewport is meaningfully
-        // shorter than the window — 100px guards against URL-bar collapse/expand
-        // and minor viewport jitter on mobile browsers.
-        return windowInnerHeight() - viewportHeight() > 100.0
+        // shorter than the focus-time baseline — 100px guards against URL-bar
+        // collapse/expand and minor viewport jitter on mobile browsers.
+        return baselineViewportHeight - viewportHeight() > 100.0
     }
 
     private fun shouldShowOverlay(): Boolean {
-        return viewportHeight() < OVERLAY_VIEWPORT_FRACTION * windowInnerHeight()
+        return viewportHeight() < OVERLAY_VIEWPORT_FRACTION * baselineViewportHeight
     }
 
     private fun createElements(): HTMLInputElement {
-        injectStyle(OVERLAY_CSS)
-
+        // The @font-face was already injected (and the font fetched) in init.
         val document = Window.current().document
 
         val containerEl = document.createElement("div") as HTMLElement
@@ -267,11 +330,39 @@ class WebInlineTextInput :
         inputEl.addEventListener("keypress", stopProp)
         inputEl.addEventListener("keyup", stopProp)
 
+        // Explicit dismissal affordance for the overlay. It matters most inside
+        // an iframe, where the soft keyboard's back button neither blurs the
+        // input nor reaches us as a viewport event, so there's no other way to
+        // auto-close. The capture-phase blur listener below also blurs on any
+        // tap whose target isn't the input (the button included); the click
+        // handler is the explicit, keyboard-accessible path.
+        val buttonEl = document.createElement("button") as HTMLElement
+        buttonEl.textContent = "Done"
+        val bstyle = buttonEl.style
+        bstyle.setProperty("position", "fixed")
+        bstyle.setProperty("right", "16px")
+        // top is set per-overlay; translateY(-50%) keeps it vertically centered
+        // on that anchor, matching the input.
+        bstyle.setProperty("transform", "translateY(-50%)")
+        bstyle.setProperty("display", "none")
+        bstyle.setProperty("padding", "8px 24px")
+        bstyle.setProperty("margin", "0")
+        bstyle.setProperty("border", "none")
+        bstyle.setProperty("background", "rgba(255, 255, 255, 0.9)")
+        bstyle.setProperty("color", "#000000")
+        bstyle.setProperty("font-family", "'LanaPixel', monospace")
+        bstyle.setProperty("font-size", "28px")
+        bstyle.setProperty("cursor", "pointer")
+        bstyle.setProperty("z-index", "2147483647")
+        buttonEl.addEventListener("click", EventListener<Event> { inputEl.blur() })
+        doneButton = buttonEl
+
         // Both elements live directly on the body. The input is a sibling of
         // the backdrop, not a child, so toggling the backdrop's display can't
         // hide (and therefore unfocus) the input.
         document.body.appendChild(containerEl)
         document.body.appendChild(inputEl)
+        document.body.appendChild(buttonEl)
 
         applyInvisibleMode()
 
@@ -297,6 +388,10 @@ class WebInlineTextInput :
         // blur to dismiss.
         addViewportResizeListener(
             EventListener<Event> {
+                // In an iframe the overlay is driven by focus + the Done button;
+                // the visual viewport never reflects the keyboard here, so don't
+                // let stray resize events flip modes or blur.
+                if (inIframe) return@EventListener
                 if (isKeyboardLikelyVisible()) {
                     wasKeyboardVisible = true
                     if (shouldShowOverlay()) {

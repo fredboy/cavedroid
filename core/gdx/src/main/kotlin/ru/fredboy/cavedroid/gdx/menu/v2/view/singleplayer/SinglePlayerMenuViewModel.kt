@@ -15,24 +15,30 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import ru.fredboy.cavedroid.common.api.ApplicationController
+import ru.fredboy.cavedroid.common.api.SaveTransferController
 import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
-import ru.fredboy.cavedroid.gdx.menu.v2.view.deleteworld.DeleteWorldMenuNavKey
+import ru.fredboy.cavedroid.gdx.menu.v2.view.editworld.EditWorldMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.newgame.NewGameMenuNavKey
 
 class SinglePlayerMenuViewModel(
     private val applicationContextRepository: ApplicationContextRepository,
     private val applicationController: ApplicationController,
     private val saveDataRepository: SaveDataRepository,
+    private val saveTransferController: SaveTransferController,
     private val navBackStack: NavBackStack,
     baseViewModelDependencies: BaseViewModelDependencies,
 ) : BaseViewModel(baseViewModelDependencies) {
 
+    val isImportSupported: Boolean get() = saveTransferController.isSupported
+
     private val loadedTextures = mutableListOf<Texture>()
+
+    private var corruptedDialogDismissed = false
 
     private val reloadTrigger = MutableSharedFlow<Trigger>(replay = 0)
 
@@ -47,12 +53,24 @@ class SinglePlayerMenuViewModel(
                 return@flatMapConcat flowOf(SinglePlayerMenuState.LoadingFailed)
             }
 
+            if (trigger == Trigger.IMPORTING) {
+                return@flatMapConcat flowOf(SinglePlayerMenuState.LoadingList)
+            }
+
             flow {
 //                emit(SinglePlayerMenuState.LoadingList)
 
                 val appDir = applicationContextRepository.getGameDirectory()
                 val saves = withContext(ioDispatcher) {
                     saveDataRepository.getSavesInfo(appDir)
+                }
+
+                val corruptedDirs = if (corruptedDialogDismissed) {
+                    emptyList()
+                } else {
+                    withContext(ioDispatcher) {
+                        saveDataRepository.findCorruptedSaveDirectories(appDir)
+                    }
                 }
 
                 val list = saves.map { saveInfo ->
@@ -75,7 +93,7 @@ class SinglePlayerMenuViewModel(
                     )
                 }
 
-                emit(SinglePlayerMenuState.ShowList(list))
+                emit(SinglePlayerMenuState.ShowList(list, corruptedDirs = corruptedDirs))
             }
         }
 
@@ -123,8 +141,53 @@ class SinglePlayerMenuViewModel(
         }
     }
 
-    fun onDeleteClick(save: SaveInfoVo) {
-        navBackStack.push(DeleteWorldMenuNavKey(worldName = save.name, saveDirectory = save.directory))
+    fun onEditClick(save: SaveInfoVo) {
+        navBackStack.push(EditWorldMenuNavKey(worldName = save.name, saveDirectory = save.directory))
+    }
+
+    fun onImportClick() {
+        if (!saveTransferController.isSupported) {
+            return
+        }
+        saveTransferController.importSave { bytes ->
+            if (bytes == null) {
+                return@importSave
+            }
+            viewModelScope.launch {
+                reloadTrigger.emit(Trigger.IMPORTING)
+                try {
+                    withContext(ioDispatcher) {
+                        saveDataRepository.importSaveFromZip(
+                            gameDataFolder = applicationContextRepository.getGameDirectory(),
+                            zipBytes = bytes,
+                        )
+                    }
+                } catch (e: Exception) {
+                    logger.e(e) { "Failed to import save" }
+                }
+                reloadTrigger.emit(Trigger.LOAD_LIST)
+            }
+        }
+    }
+
+    fun onDeleteCorruptedClick(corruptedDirs: List<String>) {
+        viewModelScope.launch {
+            reloadTrigger.emit(Trigger.IMPORTING)
+            withContext(ioDispatcher) {
+                val appDir = applicationContextRepository.getGameDirectory()
+                corruptedDirs.forEach { dir ->
+                    saveDataRepository.deleteSave(gameDataFolder = appDir, saveDir = dir)
+                }
+            }
+            reloadTrigger.emit(Trigger.LOAD_LIST)
+        }
+    }
+
+    fun onDismissCorruptedClick() {
+        corruptedDialogDismissed = true
+        viewModelScope.launch {
+            reloadTrigger.emit(Trigger.LOAD_LIST)
+        }
     }
 
     fun onBackClick() {
@@ -154,6 +217,7 @@ class SinglePlayerMenuViewModel(
         LOAD_LIST,
         LOADING_WORLD,
         LOAD_FAILED,
+        IMPORTING,
     }
 
     companion object {

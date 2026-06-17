@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.model.Joystick
 import ru.fredboy.cavedroid.common.model.StartGameConfig
+import ru.fredboy.cavedroid.common.model.WorldType
 import ru.fredboy.cavedroid.data.configuration.model.GameContext
 import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -33,7 +34,9 @@ class GameScreen @Inject constructor(
         saveGameDirectory = gameConfig.saveDirectory,
         worldName = gameConfig.worldName,
         requestedWorldWidth = (gameConfig as? StartGameConfig.New)?.worldSize?.blocks,
-        showInfo = false,
+        requestedSeed = (gameConfig as? StartGameConfig.New)?.seed,
+        worldType = (gameConfig as? StartGameConfig.New)?.worldType ?: WorldType.DEFAULT,
+        showInfo = applicationContextRepository.preferShowDebug,
         showMap = false,
         joystick = Joystick(requireNotNull(mobParamsRepository.getMobParamsByKey("char")).speed),
         cameraContext = CameraContext(
@@ -79,6 +82,7 @@ class GameScreen @Inject constructor(
     fun newGame(gameConfig: StartGameConfig.New) {
         resetGameComponent()
         gameComponent = getGameComponent(gameConfig).apply {
+            chunkEntityStreamer.initialize()
             gameProc.setPlayerGameMode(gameConfig.gameMode)
             gameRenderer.render(0f)
             gameSaveHelper.saveGame(false)
@@ -87,7 +91,9 @@ class GameScreen @Inject constructor(
 
     fun loadGame(gameConfig: StartGameConfig.Load) {
         resetGameComponent()
-        gameComponent = getGameComponent(gameConfig)
+        gameComponent = getGameComponent(gameConfig).apply {
+            chunkEntityStreamer.initialize()
+        }
     }
 
     fun saveGame() {

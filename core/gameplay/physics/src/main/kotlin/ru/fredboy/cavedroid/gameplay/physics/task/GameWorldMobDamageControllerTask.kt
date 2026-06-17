@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.gameplay.physics.task
 
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.entity.mob.model.Mob
@@ -94,8 +95,8 @@ class GameWorldMobDamageControllerTask @Inject constructor(
     }
 
     private fun Mob.isHeadInsideSolidBlock(gameWorld: GameWorld): Boolean {
-        val x = (position.x + direction.basis * (width / 2f - 0.125f)).toInt()
-        val y = (position.y - height / 2f + 0.125f).toInt()
+        val x = (position.x + direction.basis * (width / 2f - 0.125f)).floorToInt()
+        val y = (position.y - height / 2f + 0.125f).floorToInt()
 
         return gameWorld.getForeMap(x, y).let { block ->
             block.params.hasCollision && block.params.isFullBlock && block.getRectangle(x, y).overlaps(hitbox)

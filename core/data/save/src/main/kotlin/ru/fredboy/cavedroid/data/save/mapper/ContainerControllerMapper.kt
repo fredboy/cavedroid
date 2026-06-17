@@ -6,6 +6,7 @@ import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
 import ru.fredboy.cavedroid.entity.container.model.Chest
+import ru.fredboy.cavedroid.entity.container.model.Container
 import ru.fredboy.cavedroid.entity.container.model.ContainerCoordinates
 import ru.fredboy.cavedroid.entity.container.model.Furnace
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter
@@ -29,6 +30,23 @@ class ContainerControllerMapper @Inject constructor(
             }?.let { value -> key.toString() to value }
         }.toMap(),
     )
+
+    fun mapEmptySaveData(): SaveDataDto.ContainerControllerSaveDataDto = SaveDataDto.ContainerControllerSaveDataDto(
+        version = SAVE_DATA_VERSION,
+        containerMap = emptyMap(),
+    )
+
+    fun mapContainerSaveData(container: Container): SaveDataDto.ContainerSaveDataDto? = when (container) {
+        is Furnace -> furnaceMapper.mapSaveData(container)
+        is Chest -> chestMapper.mapSaveData(container)
+        else -> null
+    }
+
+    fun mapContainer(saveDataDto: SaveDataDto.ContainerSaveDataDto): Container? = when (saveDataDto) {
+        is SaveDataDto.FurnaceSaveDataDto -> furnaceMapper.mapFurnace(saveDataDto)
+        is SaveDataDto.ChestSaveDataDto -> chestMapper.mapChest(saveDataDto)
+        else -> null
+    }
 
     fun mapContainerController(
         saveDataDto: SaveDataDto.ContainerControllerSaveDataDto,

@@ -1,0 +1,7 @@
+- Adiciona a exportação/importação de saves e uma tela expandida para edição de mundos.
+- Inclui um diálogo para saves corrompidos e sanitiza os nomes de arquivos exportados.
+- Introduz a entrada de semente no menu de novos mundos para experiências personalizadas.
+- Ajusta a geração de cavernas para explorações mais emocionantes.
+- Corrige problemas de salto e ao subir blocos para um jogo mais suave.
+- Melhora os controles táteis e corrige problemas de flicker.
+- Melhorias menores e correções de bugs.

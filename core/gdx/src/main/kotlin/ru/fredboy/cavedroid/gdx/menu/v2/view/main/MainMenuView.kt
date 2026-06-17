@@ -14,7 +14,9 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 @Scene2dDsl
 fun Stage.mainMenuView(viewModel: MainMenuViewModel) = viewModel.also {
     actors {
-        menuButtonsTable {
+        menuButtonsTable(
+            withVersion = false,
+        ) {
             textButton(viewModel.getLocalizedString("play")) {
                 onClickWithSound(viewModel) {
                     viewModel.onSinglePlayerClick()

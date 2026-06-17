@@ -1,0 +1,7 @@
+- Agrega la exportación/importación de guardados y una pantalla extendida para editar mundos.
+- Añade un diálogo para guardados corruptos y sanitiza los nombres de archivos exportados.
+- Introduce la entrada de semillas en el menú de nuevos mundos para personalizar la experiencia.
+- Ajusta la generación de cuevas para exploraciones más emocionantes.
+- Arregla el salto y la subida de bloques para una jugabilidad más fluida.
+- Mejora los controles táctiles y corrige problemas de parpadeo.
+- Mejoras menores y correcciones de errores.

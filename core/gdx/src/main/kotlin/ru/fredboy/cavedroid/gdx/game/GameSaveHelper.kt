@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.gdx.game
 
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.data.save.streaming.ChunkEntityStreamer
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.save.model.FireEntry
@@ -28,6 +29,7 @@ class GameSaveHelper @Inject constructor(
     private val statsController: StatsController,
     private val growBlocksControllerTask: GameWorldGrowBlocksControllerTask,
     private val fireController: FireController,
+    private val chunkEntityStreamer: ChunkEntityStreamer,
 ) {
 
     fun saveGame(overwrite: Boolean) {
@@ -39,6 +41,16 @@ class GameSaveHelper @Inject constructor(
 
         gameContextRepository.setSaveGameDirectory(actualSaveDir)
 
+        val isInfinite = gameWorld.isInfinite
+
+        // Infinite worlds persist entities/fire/grow-blocks per resident chunk; the global payloads
+        // passed below are then left empty so nothing is double-counted on load.
+        if (isInfinite) {
+            chunkEntityStreamer.flushAll()
+            fireController.flushChunks()
+            growBlocksControllerTask.flushChunks()
+        }
+
         saveDataRepository.save(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
             saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
@@ -48,9 +60,13 @@ class GameSaveHelper @Inject constructor(
             containerController = containerController,
             gameWorld = gameWorld,
             projectileController = projectileController,
-            growBlockEntries = growBlocksControllerTask.snapshot(),
-            fireEntries = fireController.snapshot().map {
-                FireEntry(x = it.x, y = it.y, layer = it.layer, age = it.age)
+            growBlockEntries = if (isInfinite) emptyList() else growBlocksControllerTask.snapshot(),
+            fireEntries = if (isInfinite) {
+                emptyList()
+            } else {
+                fireController.snapshot().map {
+                    FireEntry(x = it.x, y = it.y, layer = it.layer, age = it.age)
+                }
             },
         )
 

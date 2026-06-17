@@ -5,6 +5,7 @@ import dagger.Component
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.data.configuration.di.GameContextModule
 import ru.fredboy.cavedroid.data.configuration.model.GameContext
+import ru.fredboy.cavedroid.data.save.streaming.ChunkEntityStreamer
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.game.controller.container.di.ControllerContainerModule
 import ru.fredboy.cavedroid.game.controller.drop.di.ControllerDropModule
@@ -14,6 +15,7 @@ import ru.fredboy.cavedroid.game.world.di.GameWorldModule
 import ru.fredboy.cavedroid.gameplay.physics.di.PhysicsModule
 import ru.fredboy.cavedroid.gameplay.rendering.GameRenderer
 import ru.fredboy.cavedroid.gdx.di.ApplicationComponent
+import ru.fredboy.cavedroid.gdx.game.CommandExecutor
 import ru.fredboy.cavedroid.gdx.game.DeathScreen
 import ru.fredboy.cavedroid.gdx.game.GameProc
 import ru.fredboy.cavedroid.gdx.game.GameSaveHelper
@@ -63,6 +65,8 @@ interface GameComponent {
 
     val gameProc: GameProc
 
+    val chunkEntityStreamer: ChunkEntityStreamer
+
     val gameContextRepository: GameContextRepository
 
     val gameSaveHelper: GameSaveHelper
@@ -70,6 +74,8 @@ interface GameComponent {
     val gameRenderer: GameRenderer
 
     val deathScreen: DeathScreen
+
+    val commandExecutor: CommandExecutor
 
     @Component.Builder
     interface Builder {

@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -110,13 +111,13 @@ class CreativeInventoryScrollMouseInputHandler @Inject constructor(
 
     private fun handleDrag(action: MouseInputAction) {
         gameWindowsManager.isDragging = true
-        gameWindowsManager.creativeScrollAmount += ((dragStartY - action.screenY) / DRAG_SENSITIVITY).toInt()
+        gameWindowsManager.creativeScrollAmount += ((dragStartY - action.screenY) / DRAG_SENSITIVITY).floorToInt()
         clampScrollAmount()
         dragStartY = action.screenY
     }
 
     private fun handleScroll(action: MouseInputAction) {
-        gameWindowsManager.creativeScrollAmount += (action.actionKey as MouseInputActionKey.Scroll).amountY.toInt()
+        gameWindowsManager.creativeScrollAmount += (action.actionKey as MouseInputActionKey.Scroll).amountY.floorToInt()
         clampScrollAmount()
     }
 

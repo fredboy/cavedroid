@@ -5,6 +5,7 @@ object NoOpInlineTextInput : InlineTextInput {
     override fun trigger(
         initialText: String,
         initialCursor: Int,
+        buttonText: String,
         onValueChanged: (String, Int) -> Unit,
     ) = Unit
 }

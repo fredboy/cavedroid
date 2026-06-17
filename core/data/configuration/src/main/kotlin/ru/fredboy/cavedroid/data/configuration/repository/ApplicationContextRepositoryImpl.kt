@@ -131,6 +131,12 @@ class ApplicationContextRepositoryImpl @Inject constructor(
         applicationContextStore.lightingBackend = backend
     }
 
+    override var preferShowDebug: Boolean
+        get() = applicationContextStore.preferShowDebug
+        set(value) {
+            applicationContextStore.preferShowDebug = value
+        }
+
     companion object {
         private val logger = Logger.withTag("ApplicationContextRepositoryImpl")
     }

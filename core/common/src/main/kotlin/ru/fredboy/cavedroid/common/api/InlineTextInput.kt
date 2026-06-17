@@ -7,6 +7,7 @@ interface InlineTextInput {
     fun trigger(
         initialText: String,
         initialCursor: Int,
+        buttonText: String,
         onValueChanged: (text: String, cursor: Int) -> Unit,
     )
 }

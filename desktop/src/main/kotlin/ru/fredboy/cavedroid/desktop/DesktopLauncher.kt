@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.desktop
 
+import co.touchlab.kermit.Logger
 import co.touchlab.kermit.Severity
 import com.badlogic.gdx.Files
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
@@ -8,11 +9,15 @@ import kotlinx.coroutines.Dispatchers
 import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
+import ru.fredboy.cavedroid.common.utils.safeCast
 import ru.fredboy.cavedroid.desktop.utils.SaveSizePrefsGameDecorator
 import ru.fredboy.cavedroid.gameplay.lighting.bfs.BfsLightingSystemFactory
 import ru.fredboy.cavedroid.gdx.CaveDroidApplication
+import ru.fredboy.cavedroid.gdx.game.GameScreen
 
 internal object DesktopLauncher {
+
+    private val logger = Logger.withTag("DesktopLauncher")
 
     @JvmStatic
     fun main(arg: Array<String>) {
@@ -65,6 +70,7 @@ internal object DesktopLauncher {
                 background = Dispatchers.Default,
                 main = GdxMainDispatcher,
             ),
+            saveTransferController = DesktopSaveTransferController(),
             loggingSeverity = when {
                 verbose -> Severity.Verbose
                 debug -> Severity.Debug
@@ -72,6 +78,26 @@ internal object DesktopLauncher {
             },
         )
 
+        if (debug) {
+            startRepl(caveGame)
+        }
         Lwjgl3Application(SaveSizePrefsGameDecorator(caveGame), config)
+    }
+
+    private fun startRepl(caveGame: CaveDroidApplication) {
+        val replThread = Thread {
+            while (!Thread.currentThread().isInterrupted) {
+                val screen = caveGame.screen?.safeCast<GameScreen>() ?: continue
+                val commandWithArgs = readln()
+
+                try {
+                    screen.gameComponent?.commandExecutor?.execute(commandWithArgs)
+                } catch (exception: Exception) {
+                    logger.w(exception) { "Exception while executing command '$commandWithArgs'" }
+                }
+            }
+        }
+        replThread.isDaemon = true
+        replThread.start()
     }
 }

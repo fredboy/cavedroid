@@ -93,6 +93,18 @@ class ContainerController @Inject constructor(
         retrieveContainer(x, y, z)
     }
 
+    /**
+     * Removes a container from memory when its chunk unloads, disposing any held resources (e.g. a
+     * furnace light). Unlike [destroyContainer] this keeps the contents — they have been persisted to
+     * the chunk and will be restored when the chunk loads again — so the inventory is not dropped.
+     */
+    fun evictContainer(coordinates: ContainerCoordinates) {
+        val container = containerMap.remove(coordinates) ?: return
+        if (container is Disposable) {
+            container.dispose()
+        }
+    }
+
     fun destroyContainer(x: Int, y: Int, z: Int) {
         retrieveContainer(x, y, z)?.let { container ->
             dropAdapter.dropInventory(x.toFloat(), y.toFloat(), container.inventory)

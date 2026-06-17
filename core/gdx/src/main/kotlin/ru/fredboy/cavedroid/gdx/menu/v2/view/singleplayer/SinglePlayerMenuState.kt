@@ -11,5 +11,6 @@ sealed interface SinglePlayerMenuState {
     data class ShowList(
         val saves: List<SaveInfoVo>,
         val showMessageIfEmpty: Boolean = true,
+        val corruptedDirs: List<String> = emptyList(),
     ) : SinglePlayerMenuState
 }

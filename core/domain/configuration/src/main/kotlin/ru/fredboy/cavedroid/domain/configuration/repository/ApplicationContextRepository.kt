@@ -64,4 +64,6 @@ interface ApplicationContextRepository {
     fun getLightingBackend(): LightingBackend
 
     fun setLightingBackend(backend: LightingBackend)
+
+    var preferShowDebug: Boolean
 }

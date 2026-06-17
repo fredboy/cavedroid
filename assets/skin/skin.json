@@ -92,7 +92,7 @@
 	"default": {
 		"font": "lanapixel",
 		"fontColor": "white",
-		"background": "shade_tile",
+		"background": "bg",
 		"cursor": "cursor",
 		"messageFontColor": "white"
 	}

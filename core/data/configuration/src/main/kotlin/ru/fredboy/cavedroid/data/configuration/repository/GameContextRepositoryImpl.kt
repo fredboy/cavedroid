@@ -2,13 +2,16 @@ package ru.fredboy.cavedroid.data.configuration.repository
 
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.model.Joystick
+import ru.fredboy.cavedroid.common.model.WorldType
 import ru.fredboy.cavedroid.data.configuration.store.GameContextStore
 import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import javax.inject.Inject
 
 @GameScope
 class GameContextRepositoryImpl @Inject constructor(
+    private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextStore: GameContextStore,
 ) : GameContextRepository {
 
@@ -24,7 +27,11 @@ class GameContextRepositoryImpl @Inject constructor(
 
     override fun getRequestedWorldWidth(): Int? = gameContextStore.requestedWorldWidth
 
-    override fun shouldShowInfo(): Boolean = gameContextStore.showInfo
+    override fun getRequestedSeed(): Long? = gameContextStore.requestedSeed
+
+    override fun getWorldType(): WorldType = gameContextStore.worldType
+
+    override fun shouldShowInfo(): Boolean = applicationContextRepository.preferShowDebug
 
     override fun shouldShowMap(): Boolean = gameContextStore.showMap
 
@@ -33,7 +40,7 @@ class GameContextRepositoryImpl @Inject constructor(
     override fun getCameraContext(): CameraContext = gameContextStore.cameraContext
 
     override fun setShowInfo(show: Boolean) {
-        gameContextStore.showInfo = show
+        applicationContextRepository.preferShowDebug = show
     }
 
     override fun setShowMap(show: Boolean) {

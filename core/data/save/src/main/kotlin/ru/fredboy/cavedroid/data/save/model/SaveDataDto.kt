@@ -265,6 +265,14 @@ sealed class SaveDataDto {
     ) : SaveDataDto()
 
     @Serializable
+    data class ChunkEntitiesSaveDataDto(
+        override val version: Int,
+        val mobs: List<@Contextual MobSaveDataDto>,
+        val drops: List<DropSaveDataDto>,
+        val containers: Map<String, @Contextual ContainerSaveDataDto>,
+    ) : SaveDataDto()
+
+    @Serializable
     data class WorldSaveDataDto(
         override val version: Int,
         val name: String,
@@ -278,5 +286,9 @@ sealed class SaveDataDto {
         val weatherTimer: Float? = null,
         val weatherIntensity: Float? = null,
         val currentStreakStartDayIndex: Int? = null,
+        val createdTimestamp: Long? = null,
+        val seed: Long? = null,
+        // WorldType ordinal; null (absent) means a legacy finite/looping world.
+        val worldType: Int? = null,
     ) : SaveDataDto()
 }

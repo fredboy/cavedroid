@@ -28,6 +28,6 @@ internal class UiSoundAssetsRepositoryImpl @Inject constructor() : UiSoundAssets
         private const val TAG = "UiSoundAssetsRepositoryImpl"
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
-        private const val BUTTON_SOUND = "sfx/menu/button/button.mp3"
+        private const val BUTTON_SOUND = "sfx/menu/button/button.wav"
     }
 }

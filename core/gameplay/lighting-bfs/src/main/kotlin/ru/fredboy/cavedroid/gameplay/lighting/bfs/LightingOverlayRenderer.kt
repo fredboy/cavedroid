@@ -18,10 +18,15 @@ import kotlin.math.max
 class LightingOverlayRenderer(
     private val gameContextRepository: GameContextRepository,
     private val gameWorld: GameWorld,
-    private val grid: LightGrid,
+    private var grid: LightGrid,
 ) : Disposable {
 
     private val spriteBatch = SpriteBatch()
+
+    /** Points the overlay at a freshly rebuilt window grid (infinite worlds re-centre the window). */
+    fun updateGrid(grid: LightGrid) {
+        this.grid = grid
+    }
 
     private var pixmap: Pixmap? = null
     private var texture: Texture? = null

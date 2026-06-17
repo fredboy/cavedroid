@@ -2,12 +2,14 @@ package ru.fredboy.cavedroid.gameplay.physics.task
 
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.UniqueQueue
+import ru.fredboy.cavedroid.common.utils.floorDiv
 import ru.fredboy.cavedroid.common.utils.ifTrue
-import ru.fredboy.cavedroid.domain.items.model.item.isNone
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
+import ru.fredboy.cavedroid.game.world.store.ChunkListener
 import ru.fredboy.cavedroid.gameplay.physics.action.getRequiresBlockAction
 import ru.fredboy.cavedroid.gameplay.physics.action.updateblock.IUpdateBlockAction
 import java.util.Queue
@@ -17,7 +19,8 @@ import javax.inject.Inject
 class GameWorldBlocksLogicControllerTask @Inject constructor(
     private val gameWorld: GameWorld,
     private val updateBlockActions: Map<String, @JvmSuppressWildcards IUpdateBlockAction>,
-) : BaseGameWorldControllerTask() {
+) : BaseGameWorldControllerTask(),
+    ChunkListener {
 
     private val queueLock = Any()
 
@@ -42,10 +45,40 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
     init {
         gameWorld.addBlockPlacedListener(onBlockPlacedListener)
         gameWorld.addBlockDestroyedListener(onBlockDestroyedListener)
+        gameWorld.addChunkListener(this)
+        gameWorld.forEachLoadedChunk(::onChunkLoaded)
+    }
+
+    override fun onChunkLoaded(chunkX: Int) {
+        val startX = chunkX * ChunkGenerator.CHUNK_W
+
+        synchronized(queueLock) {
+            for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
+                for (y in 0 until gameWorld.height step CHUNK_SIZE) {
+                    dirtyChunks.offer(x to y).ifTrue {
+                        logger.v { "Marking loaded chunk as dirty: ($x, $y)" }
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onChunkUnloaded(chunkX: Int) {
+        val startX = chunkX * ChunkGenerator.CHUNK_W
+
+        synchronized(queueLock) {
+            for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
+                for (y in 0 until gameWorld.height step CHUNK_SIZE) {
+                    dirtyChunks.remove(x to y).ifTrue {
+                        logger.v { "Removing unloaded chunk: ($x, $y)" }
+                    }
+                }
+            }
+        }
     }
 
     private fun markChunksDirtyIfNeed(x: Int, y: Int, reason: String) {
-        val chunkX = x - (x % CHUNK_SIZE)
+        val chunkX = (x floorDiv CHUNK_SIZE) * CHUNK_SIZE
         val chunkY = y - (y % CHUNK_SIZE)
         val coordinates = chunkX to chunkY
 
@@ -118,6 +151,7 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
         super.dispose()
         gameWorld.removeBlockPlacedListener(onBlockPlacedListener)
         gameWorld.removeBlockDestroyedListener(onBlockDestroyedListener)
+        gameWorld.removeChunkListener(this)
     }
 
     companion object {
@@ -126,6 +160,6 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
 
         private const val CHUNK_SIZE = 16
 
-        const val WORLD_BLOCKS_LOGIC_UPDATE_INTERVAL_SEC = 0.25f
+        const val WORLD_BLOCKS_LOGIC_UPDATE_INTERVAL_SEC = 0.025f
     }
 }

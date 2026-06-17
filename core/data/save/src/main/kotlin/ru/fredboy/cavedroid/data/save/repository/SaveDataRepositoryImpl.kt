@@ -12,6 +12,8 @@ import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.ProtoBuf
 import ru.fredboy.cavedroid.common.CaveDroidConstants.MAX_SAVES_COUNT
 import ru.fredboy.cavedroid.common.model.GameMode
+import ru.fredboy.cavedroid.common.model.WorldType
+import ru.fredboy.cavedroid.common.utils.DateFormatter
 import ru.fredboy.cavedroid.data.save.mapper.ContainerControllerMapper
 import ru.fredboy.cavedroid.data.save.mapper.DropControllerMapper
 import ru.fredboy.cavedroid.data.save.mapper.FireControllerMapper
@@ -24,8 +26,11 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
+import ru.fredboy.cavedroid.domain.save.model.ChunkEntitiesSaveData
+import ru.fredboy.cavedroid.domain.save.model.ChunkSaveData
 import ru.fredboy.cavedroid.domain.save.model.FireEntry
 import ru.fredboy.cavedroid.domain.save.model.GameMapSaveData
+import ru.fredboy.cavedroid.domain.save.model.GameSaveDetails
 import ru.fredboy.cavedroid.domain.save.model.GameSaveInfo
 import ru.fredboy.cavedroid.domain.save.model.GrowBlockEntry
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
@@ -33,14 +38,18 @@ import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.domain.world.model.Weather
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
+import ru.fredboy.cavedroid.entity.container.model.Container
+import ru.fredboy.cavedroid.entity.container.model.ContainerCoordinates
 import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
+import ru.fredboy.cavedroid.entity.drop.model.Drop
 import ru.fredboy.cavedroid.entity.mob.MobQueue
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
+import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.projectile.abstraction.ProjectileWorldAdapter
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
@@ -48,6 +57,7 @@ import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.mob.MobSoundManager
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.world.GameWorld
+import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.util.zip.Deflater
 import java.util.zip.GZIPInputStream
@@ -66,6 +76,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     private val fireControllerMapper: FireControllerMapper,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
     private val applicationContextRepository: ApplicationContextRepository,
+    private val dateFormatter: DateFormatter,
 ) : SaveDataRepository {
 
     private val fileType: Files.FileType
@@ -243,6 +254,29 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     private fun internalLoadMap(
         savesPath: String,
     ): GameMapSaveData {
+        val meta = loadMapData(savesPath)
+        val worldType = if (meta.worldType == WorldType.INFINITE.ordinal) WorldType.INFINITE else WorldType.LOOPING
+
+        if (worldType == WorldType.INFINITE) {
+            // Infinite worlds keep no whole-map files; terrain lives in per-chunk files and is
+            // regenerated from the seed. Return metadata only.
+            return GameMapSaveData(
+                foreMap = null,
+                backMap = null,
+                biomes = null,
+                gameTime = meta.gameTime,
+                moonPhase = meta.moonPhase,
+                totalGameTime = meta.totalGameTime ?: meta.gameTime,
+                lastSpawnGameTime = meta.lastSpawnGameTime ?: 0f,
+                weather = meta.weather?.let { Weather.entries.getOrNull(it) },
+                weatherTimer = meta.weatherTimer,
+                weatherIntensity = meta.weatherIntensity,
+                currentStreakStartDayIndex = meta.currentStreakStartDayIndex ?: 0,
+                worldType = WorldType.INFINITE,
+                seed = meta.seed,
+            )
+        }
+
         val dict = file("$savesPath/$DICT_FILE").readString().split("\n")
 
         val foreMap: Array<Array<Block>>
@@ -264,8 +298,6 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             null
         }
 
-        val meta = loadMapData(savesPath)
-
         return GameMapSaveData(
             foreMap = foreMap,
             backMap = backMap,
@@ -278,6 +310,8 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             weatherTimer = meta.weatherTimer,
             weatherIntensity = meta.weatherIntensity,
             currentStreakStartDayIndex = meta.currentStreakStartDayIndex ?: 0,
+            worldType = WorldType.LOOPING,
+            seed = meta.seed,
         )
     }
 
@@ -307,10 +341,20 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     private fun saveMapData(gameWorld: GameWorld, savesPath: String, worldName: String, gameMode: GameMode) {
         val metaFile = file("$savesPath/$META_FILE")
 
+        val now = TimeUtils.millis()
+        // On the first save (no existing meta) the world was just generated, so
+        // its generatorConfig holds the real seed; on re-saves the original seed
+        // and creation time are preserved (a loaded world's generatorConfig seed
+        // is a fresh meaningless value).
+        val existing = metaFile.takeIf { it.exists() }
+            ?.let { runCatching { loadMapData(savesPath) }.getOrNull() }
+        val createdTimestamp = existing?.let { it.createdTimestamp ?: it.timestamp } ?: now
+        val seed = if (existing != null) existing.seed else gameWorld.generatorConfig.seed
+
         val worldSaveDataDto = SaveDataDto.WorldSaveDataDto(
             version = MAP_SAVE_VERSION.toInt(),
             name = worldName,
-            timestamp = TimeUtils.millis(),
+            timestamp = now,
             gameTime = gameWorld.currentGameTime,
             moonPhase = gameWorld.moonPhase,
             gameMode = gameMode,
@@ -320,11 +364,173 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             weatherTimer = gameWorld.weatherTimer,
             weatherIntensity = gameWorld.weatherIntensity,
             currentStreakStartDayIndex = gameWorld.currentStreakStartDayIndex,
+            createdTimestamp = createdTimestamp,
+            seed = seed,
+            worldType = if (gameWorld.isInfinite) WorldType.INFINITE.ordinal else WorldType.LOOPING.ordinal,
         )
 
         val bytes = ProtoBuf.encodeToByteArray(worldSaveDataDto)
 
         metaFile.writeBytes(bytes, false)
+    }
+
+    private fun chunkPath(savesPath: String, chunkX: Int): String = "$savesPath/$CHUNKS_DIR/$chunkX"
+
+    override fun saveInfiniteChunk(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+        foreMap: Array<Array<Block>>,
+        backMap: Array<Array<Block>>,
+        biomes: Array<Biome>,
+    ) {
+        val path = chunkPath(getSavePath(gameDataFolder, saveGameDirectory), chunkX)
+        val dict = buildBlocksDictionary(foreMap, backMap)
+
+        saveDict(file("$path/$DICT_FILE"), dict)
+        GZIPOutputStream(file("$path/$FOREMAP_FILE").write(false)).use { it.write(compressMap(foreMap, dict)) }
+        GZIPOutputStream(file("$path/$BACKMAP_FILE").write(false)).use { it.write(compressMap(backMap, dict)) }
+        GZIPOutputStream(file("$path/$BIOMES_FILE").write(false)).use { it.write(compressBiomes(biomes)) }
+    }
+
+    override fun loadInfiniteChunk(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+    ): ChunkSaveData? {
+        val path = chunkPath(getSavePath(gameDataFolder, saveGameDirectory), chunkX)
+        val dictFile = file("$path/$DICT_FILE")
+        if (!dictFile.exists()) {
+            return null
+        }
+
+        val dict = dictFile.readString().split("\n")
+        val foreMap = GZIPInputStream(file("$path/$FOREMAP_FILE").read())
+            .use { decompressMap(it.readBytes(), dict, itemsRepository) }
+        val backMap = GZIPInputStream(file("$path/$BACKMAP_FILE").read())
+            .use { decompressMap(it.readBytes(), dict, itemsRepository) }
+        val biomes = GZIPInputStream(file("$path/$BIOMES_FILE").read())
+            .use { decompressBiomes(it.readBytes()) }
+
+        return ChunkSaveData(foreMap = foreMap, backMap = backMap, biomes = biomes)
+    }
+
+    override fun saveChunkEntities(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+        mobs: List<Mob>,
+        drops: List<Drop>,
+        containers: Map<ContainerCoordinates, Container>,
+    ) {
+        val path = chunkPath(getSavePath(gameDataFolder, saveGameDirectory), chunkX)
+        val entitiesFile = file("$path/$ENTITIES_FILE")
+
+        if (mobs.isEmpty() && drops.isEmpty() && containers.isEmpty()) {
+            if (entitiesFile.exists()) entitiesFile.delete()
+            return
+        }
+
+        val dto = SaveDataDto.ChunkEntitiesSaveDataDto(
+            version = CHUNK_ENTITIES_VERSION,
+            mobs = mobs.mapNotNull(mobControllerMapper::mapMobSaveData),
+            drops = drops.map(dropControllerMapper::mapDropSaveData),
+            containers = containers.mapNotNull { (coordinates, container) ->
+                containerControllerMapper.mapContainerSaveData(container)?.let { coordinates.toString() to it }
+            }.toMap(),
+        )
+
+        entitiesFile.writeBytes(ProtoBuf.encodeToByteArray(dto), false)
+    }
+
+    override fun loadChunkEntities(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+        mobPhysicsFactory: MobPhysicsFactory,
+        dropWorldAdapter: DropWorldAdapter,
+    ): ChunkEntitiesSaveData? {
+        val path = chunkPath(getSavePath(gameDataFolder, saveGameDirectory), chunkX)
+        val entitiesFile = file("$path/$ENTITIES_FILE")
+        if (!entitiesFile.exists()) {
+            return null
+        }
+
+        val dto = ProtoBuf.decodeFromByteArray<SaveDataDto.ChunkEntitiesSaveDataDto>(entitiesFile.readBytes())
+
+        return ChunkEntitiesSaveData(
+            mobs = dto.mobs.mapNotNull { mobControllerMapper.mapMob(it, mobPhysicsFactory) },
+            drops = dto.drops.map { dropControllerMapper.mapDrop(it, dropWorldAdapter) },
+            containers = dto.containers.mapNotNull { (key, value) ->
+                containerControllerMapper.mapContainer(value)?.let { ContainerCoordinates.fromString(key) to it }
+            }.toMap(),
+        )
+    }
+
+    override fun saveChunkFire(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+        entries: List<FireEntry>,
+    ) {
+        val path = chunkPath(getSavePath(gameDataFolder, saveGameDirectory), chunkX)
+        val fireFile = file("$path/$CHUNK_FIRE_FILE")
+
+        if (entries.isEmpty()) {
+            if (fireFile.exists()) fireFile.delete()
+            return
+        }
+
+        val bytes = ProtoBuf.encodeToByteArray(fireControllerMapper.mapSaveData(entries))
+        GZIPOutputStream(fireFile.write(false)).use { it.write(bytes) }
+    }
+
+    override fun loadChunkFire(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+    ): List<FireEntry> {
+        val path = chunkPath(getSavePath(gameDataFolder, saveGameDirectory), chunkX)
+        val fireFile = file("$path/$CHUNK_FIRE_FILE")
+        if (!fireFile.exists()) {
+            return emptyList()
+        }
+
+        val bytes = GZIPInputStream(fireFile.read()).use { it.readBytes() }
+        return ProtoBuf.decodeFromByteArray<SaveDataDto.FireControllerSaveDataDto>(bytes)
+            .let(fireControllerMapper::mapEntries)
+    }
+
+    override fun saveChunkGrowBlocks(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+        entries: List<GrowBlockEntry>,
+    ) {
+        val path = chunkPath(getSavePath(gameDataFolder, saveGameDirectory), chunkX)
+        val growFile = file("$path/$CHUNK_GROW_FILE")
+
+        if (entries.isEmpty()) {
+            if (growFile.exists()) growFile.delete()
+            return
+        }
+
+        growFile.writeBytes(ProtoBuf.encodeToByteArray(growBlocksMapper.mapSaveData(entries)), false)
+    }
+
+    override fun loadChunkGrowBlocks(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+    ): List<GrowBlockEntry> {
+        val path = chunkPath(getSavePath(gameDataFolder, saveGameDirectory), chunkX)
+        val growFile = file("$path/$CHUNK_GROW_FILE")
+        if (!growFile.exists()) {
+            return emptyList()
+        }
+
+        return ProtoBuf.decodeFromByteArray<SaveDataDto.GrowBlocksSaveDataDto>(growFile.readBytes())
+            .let(growBlocksMapper::mapEntries)
     }
 
     private fun loadMapData(savesPath: String): SaveDataDto.WorldSaveDataDto {
@@ -402,22 +608,49 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         val growBlocksFile = file("$savesPath/$GROW_BLOCKS_FILE")
         val fireFile = file("$savesPath/$FIRE_FILE")
 
-        val dropBytes = ProtoBuf.encodeToByteArray(dropControllerMapper.mapSaveData(dropController))
-        val mobsBytes = ProtoBuf.encodeToByteArray(mobControllerMapper.mapSaveData(mobController))
-        val containersBytes =
-            ProtoBuf.encodeToByteArray(containerControllerMapper.mapSaveData(containerController))
+        val isInfinite = gameWorld.isInfinite
+
+        // For infinite worlds the player stays global while mobs/drops/containers are persisted per
+        // chunk (flushed by the controllers before this call), so the global files carry player-only /
+        // empty payloads to avoid double-loading streamed entities.
+        val mobsBytes = ProtoBuf.encodeToByteArray(
+            if (isInfinite) {
+                mobControllerMapper.mapPlayerOnlySaveData(mobController)
+            } else {
+                mobControllerMapper.mapSaveData(mobController)
+            },
+        )
+        val dropBytes = ProtoBuf.encodeToByteArray(
+            if (isInfinite) dropControllerMapper.mapEmptySaveData() else dropControllerMapper.mapSaveData(dropController),
+        )
+        val containersBytes = ProtoBuf.encodeToByteArray(
+            if (isInfinite) {
+                containerControllerMapper.mapEmptySaveData()
+            } else {
+                containerControllerMapper.mapSaveData(containerController)
+            },
+        )
         val projectilesBytes = ProtoBuf.encodeToByteArray(projectileControllerMapper.mapSaveData(projectileController))
-        val growBlocksBytes = ProtoBuf.encodeToByteArray(growBlocksMapper.mapSaveData(growBlockEntries))
-        val fireBytes = ProtoBuf.encodeToByteArray(fireControllerMapper.mapSaveData(fireEntries))
 
         dropFile.writeBytes(dropBytes, false)
         mobsFile.writeBytes(mobsBytes, false)
         containersFile.writeBytes(containersBytes, false)
         projectilesFile.writeBytes(projectilesBytes, false)
-        growBlocksFile.writeBytes(growBlocksBytes, false)
-        GZIPOutputStream(fireFile.write(false)).use { it.write(fireBytes) }
 
-        saveMap(gameWorld, savesPath)
+        // Grow-blocks and fire are also persisted per chunk for infinite worlds.
+        if (!isInfinite) {
+            growBlocksFile.writeBytes(ProtoBuf.encodeToByteArray(growBlocksMapper.mapSaveData(growBlockEntries)), false)
+            GZIPOutputStream(fireFile.write(false)).use {
+                it.write(ProtoBuf.encodeToByteArray(fireControllerMapper.mapSaveData(fireEntries)))
+            }
+        }
+
+        if (isInfinite) {
+            // Terrain is persisted per chunk; flush whatever is resident and dirty.
+            gameWorld.flushDirtyChunks()
+        } else {
+            saveMap(gameWorld, savesPath)
+        }
 
         saveMapData(gameWorld, savesPath, worldName, mobController.player.gameMode)
 
@@ -579,13 +812,12 @@ internal class SaveDataRepositoryImpl @Inject constructor(
 
         val files = dir.list()?.map { it.name() }?.toSet() ?: return false
 
+        // Whole-map files (dict/foremap/backmap) only exist for finite worlds; infinite worlds
+        // store terrain per chunk, so only the always-present files are required.
         val requiredFiles = setOf(
             DROP_FILE,
             MOBS_FILE,
             CONTAINERS_FILE,
-            DICT_FILE,
-            FOREMAP_FILE,
-            BACKMAP_FILE,
             META_FILE,
         )
 
@@ -597,18 +829,162 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             .asSequence()
             .filter { it.isDirectory }
             .filter { isSaveDir(it) }
-            .map { saveDir ->
-                val saveData = loadMapData(saveDir.path())
-                gameSaveInfoMapper.map(
-                    dto = saveData,
-                    dir = saveDir.name(),
-                    expectedVersion = MAP_SAVE_VERSION.toInt(),
-                    screenshotHandle = saveDir.child(SCREENSHOT_FILE).takeIf { it.exists() },
-                )
+            .mapNotNull { saveDir ->
+                // A single corrupt/unreadable meta.dat must not break the whole
+                // list — skip it instead of throwing.
+                runCatching {
+                    val saveData = loadMapData(saveDir.path())
+                    gameSaveInfoMapper.map(
+                        dto = saveData,
+                        dir = saveDir.name(),
+                        expectedVersion = MAP_SAVE_VERSION.toInt(),
+                        screenshotHandle = saveDir.child(SCREENSHOT_FILE).takeIf { it.exists() },
+                    )
+                }.onFailure { error ->
+                    logger.w(error) { "Skipping unreadable save '${saveDir.name()}'" }
+                }.getOrNull()
             }
             .take(MAX_SAVES_COUNT)
             .toList()
             .sortedByDescending { it.lastModifiedTimestamp }
+    }
+
+    override fun findCorruptedSaveDirectories(gameDataFolder: String): List<String> {
+        return file("$gameDataFolder/$SAVES_DIR").list()
+            .asSequence()
+            .filter { it.isDirectory }
+            .filter { isSaveDir(it) }
+            .filter { saveDir -> runCatching { loadMapData(saveDir.path()) }.isFailure }
+            .map { it.name() }
+            .toList()
+    }
+
+    override fun getSaveDetails(gameDataFolder: String, saveDir: String): GameSaveDetails {
+        val savesPath = getSavePath(gameDataFolder, saveDir)
+        val meta = loadMapData(savesPath)
+        val size = if (meta.worldType == WorldType.INFINITE.ordinal) {
+            GameSaveDetails.Size.Infinite
+        } else {
+            readMapDimensions(savesPath).let { (width, height) -> GameSaveDetails.Size.Finite(width, height) }
+        }
+
+        val sizeBytes = file(savesPath).list()
+            .filter { !it.isDirectory }
+            .sumOf { it.length() }
+
+        return GameSaveDetails(
+            name = meta.name,
+            directory = saveDir,
+            gameMode = meta.gameMode,
+            size = size,
+            sizeBytes = sizeBytes,
+            version = meta.version,
+            isSupported = meta.version == MAP_SAVE_VERSION.toInt(),
+            seed = meta.seed,
+            lastModifiedString = dateFormatter.format(meta.timestamp),
+            createdString = meta.createdTimestamp?.let(dateFormatter::format),
+            screenshotHandle = file("$savesPath/$SCREENSHOT_FILE").takeIf { it.exists() },
+        )
+    }
+
+    private fun readMapDimensions(savesPath: String): Pair<Int, Int> {
+        // The foremap header (written by compressMap) is: version byte, then the
+        // width and height as 4-byte ints. Read just that prefix.
+        val header = ByteArray(1 + (Int.SIZE_BYTES shl 1))
+        GZIPInputStream(file("$savesPath/$FOREMAP_FILE").read()).use { stream ->
+            var read = 0
+            while (read < header.size) {
+                val count = stream.read(header, read, header.size - read)
+                if (count < 0) break
+                read += count
+            }
+        }
+        val width = ByteBuffer.wrap(header, 1, Int.SIZE_BYTES).getInt()
+        val height = ByteBuffer.wrap(header, 1 + Int.SIZE_BYTES, Int.SIZE_BYTES).getInt()
+        return width to height
+    }
+
+    override fun renameSave(gameDataFolder: String, saveDir: String, newName: String) {
+        val savesPath = getSavePath(gameDataFolder, saveDir)
+        val meta = loadMapData(savesPath)
+        val renamed = meta.copy(name = newName.trim())
+        file("$savesPath/$META_FILE").writeBytes(ProtoBuf.encodeToByteArray(renamed), false)
+    }
+
+    // A save is exported as a flat, length-prefixed archive rather than a real
+    // zip: java.util.zip's ZipOutputStream/ZipInputStream are not faithfully
+    // emulated under TeaVM (web) and silently corrupt the bytes. This format
+    // relies only on primitives that work on every platform.
+    //   magic("CDA1") | entryCount:int | { nameLen:int, name, contentLen:int, content }*
+    override fun exportSaveToZip(gameDataFolder: String, saveDir: String): ByteArray {
+        val savesPath = getSavePath(gameDataFolder, saveDir)
+        val output = ByteArrayOutputStream()
+
+        val files = file(savesPath).list().filter { !it.isDirectory }
+
+        output.write(ARCHIVE_MAGIC)
+        output.write(files.size.toByteArray())
+        files.forEach { entry ->
+            val nameBytes = entry.name().encodeToByteArray()
+            val content = entry.readBytes()
+            output.write(nameBytes.size.toByteArray())
+            output.write(nameBytes)
+            output.write(content.size.toByteArray())
+            output.write(content)
+        }
+
+        return output.toByteArray()
+    }
+
+    override fun importSaveFromZip(gameDataFolder: String, zipBytes: ByteArray): String {
+        require(getSavesInfo(gameDataFolder).size < MAX_SAVES_COUNT) {
+            "Cannot import: maximum number of saves reached"
+        }
+
+        val buffer = ByteBuffer.wrap(zipBytes)
+        val magic = ByteArray(ARCHIVE_MAGIC.size)
+        require(buffer.remaining() >= magic.size) { "Invalid save archive" }
+        buffer.get(magic)
+        require(magic.contentEquals(ARCHIVE_MAGIC)) { "Invalid save archive" }
+
+        val entryCount = buffer.getInt()
+        require(entryCount in 0..MAX_ARCHIVE_ENTRIES) { "Invalid save archive" }
+
+        val newDir = getActualSaveDirName(gameDataFolder, IMPORTED_SAVE_DIR, overwrite = false)
+        val savesPath = getSavePath(gameDataFolder, newDir)
+        val saveDirHandle = file(savesPath)
+
+        try {
+            repeat(entryCount) {
+                val nameLen = buffer.getInt()
+                require(nameLen in 0..MAX_ARCHIVE_NAME_LENGTH && nameLen <= buffer.remaining()) {
+                    "Invalid save archive"
+                }
+                val nameBytes = ByteArray(nameLen)
+                buffer.get(nameBytes)
+
+                val contentLen = buffer.getInt()
+                require(contentLen in 0..buffer.remaining()) { "Invalid save archive" }
+                val content = ByteArray(contentLen)
+                buffer.get(content)
+
+                // Guard against path traversal: keep only the bare file name.
+                val name = nameBytes.decodeToString().substringAfterLast('/')
+                if (name.isNotEmpty()) {
+                    file("$savesPath/$name").writeBytes(content, false)
+                }
+            }
+        } catch (e: Exception) {
+            runCatching { saveDirHandle.deleteDirectory() }
+            throw e
+        }
+
+        if (!isSaveDir(saveDirHandle)) {
+            runCatching { saveDirHandle.deleteDirectory() }
+            throw IllegalArgumentException("Imported archive is not a valid save")
+        }
+
+        return newDir
     }
 
     override fun deleteSave(gameDataFolder: String, saveDir: String) {
@@ -628,6 +1004,11 @@ internal class SaveDataRepositoryImpl @Inject constructor(
 
         private const val MAP_SAVE_VERSION: UByte = 7u
         private const val SAVES_DIR = "saves"
+        private const val IMPORTED_SAVE_DIR = "imported"
+
+        private val ARCHIVE_MAGIC = "CDA1".encodeToByteArray()
+        private const val MAX_ARCHIVE_ENTRIES = 64
+        private const val MAX_ARCHIVE_NAME_LENGTH = 255
         private const val DROP_FILE = "drop.dat"
         private const val PROJECTILES_FILE = "projectiles.dat"
         private const val GROW_BLOCKS_FILE = "grow_blocks.dat"
@@ -639,6 +1020,11 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         private const val BACKMAP_FILE = "backmap.dat.gz"
         private const val BIOMES_FILE = "biomes.dat.gz"
         private const val META_FILE = "meta.dat"
+        private const val CHUNKS_DIR = "chunks"
+        private const val ENTITIES_FILE = "entities.dat"
+        private const val CHUNK_FIRE_FILE = "fire.dat.gz"
+        private const val CHUNK_GROW_FILE = "grow_blocks.dat"
+        private const val CHUNK_ENTITIES_VERSION = 1
 
         private const val SCREENSHOT_FILE = "screenshot.png"
     }

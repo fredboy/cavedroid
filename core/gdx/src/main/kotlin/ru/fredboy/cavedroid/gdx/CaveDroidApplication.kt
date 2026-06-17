@@ -20,8 +20,10 @@ import ru.fredboy.cavedroid.common.api.InlineTextInput
 import ru.fredboy.cavedroid.common.api.NoOpAdController
 import ru.fredboy.cavedroid.common.api.NoOpCloudStatsSync
 import ru.fredboy.cavedroid.common.api.NoOpInlineTextInput
+import ru.fredboy.cavedroid.common.api.NoOpSaveTransferController
 import ru.fredboy.cavedroid.common.api.NoOpSoftKeyboardObserver
 import ru.fredboy.cavedroid.common.api.PreferencesStore
+import ru.fredboy.cavedroid.common.api.SaveTransferController
 import ru.fredboy.cavedroid.common.api.SoftKeyboardObserver
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainThread
@@ -50,6 +52,7 @@ class CaveDroidApplication(
     private val cloudStatsSync: CloudStatsSync = NoOpCloudStatsSync(),
     private val inlineTextInput: InlineTextInput = NoOpInlineTextInput,
     private val softKeyboardObserver: SoftKeyboardObserver = NoOpSoftKeyboardObserver,
+    private val saveTransferController: SaveTransferController = NoOpSaveTransferController,
     private val defaultLocaleProvider: () -> Locale? = { safeDefaultLocale() },
     private val isYandexGamesBuild: Boolean = false,
     loggingSeverity: Severity = Severity.Info,
@@ -86,6 +89,8 @@ class CaveDroidApplication(
     }
 
     override fun create() {
+        logger.v { "create()" }
+
         GdxMainThread.init()
         val width = DEFAULT_VIEWPORT_WIDTH
         val height = width / Gdx.graphics.ratio
@@ -125,6 +130,8 @@ class CaveDroidApplication(
                         preferencesStore.getPreference(PreferenceKeys.LIGHTING_BACKEND),
                     ),
                     isYandexGamesBuild = isYandexGamesBuild,
+                    preferShowDebug = preferencesStore.getPreference(PreferenceKeys.PREFER_SHOW_DEBUG_KEY)
+                        ?.toBooleanStrictOrNull() ?: false,
                 ),
             )
             .applicationController(applicationControllerOverride ?: this)
@@ -132,6 +139,7 @@ class CaveDroidApplication(
             .adController(adController)
             .inlineTextInput(inlineTextInput)
             .softKeyboardObserver(softKeyboardObserver)
+            .saveTransferController(saveTransferController)
             .lightingSystemFactory(lightingSystemFactory)
             .appDispatchers(dispatchers)
             .build()
@@ -160,6 +168,8 @@ class CaveDroidApplication(
     }
 
     override fun dispose() {
+        logger.v { "dispose()" }
+
         runCatching {
             runBlocking { applicationComponent.statsRepository.save() }
         }.onFailure { logger.w(it) { "Stats save on dispose failed" } }
@@ -181,6 +191,8 @@ class CaveDroidApplication(
     }
 
     override fun startGame(startGameConfig: StartGameConfig) {
+        logger.v { "startGame($startGameConfig)" }
+
         adController.loadInterstitial()
         val gameScreen = applicationComponent.gameScreen.apply {
             when (startGameConfig) {
@@ -193,15 +205,20 @@ class CaveDroidApplication(
     }
 
     override fun exitGame() {
+        logger.v { "exitGame()" }
+
         setScreen(null)
         Gdx.app.exit()
     }
 
     override fun triggerResize() {
+        logger.v { "triggerResize()" }
         resize(Gdx.graphics.width, Gdx.graphics.height)
     }
 
     override fun pauseGame() {
+        logger.v { "pauseGame()" }
+
         if (screen !is GameScreen) {
             logger.w { "Cannot pause when active screen is not game" }
             return
@@ -211,6 +228,8 @@ class CaveDroidApplication(
     }
 
     override fun resumeGame() {
+        logger.v { "resumeGame()" }
+
         if (screen !is PauseMenuScreen) {
             logger.w { "Cannot resume when active screen is not pause menu" }
             return
@@ -220,6 +239,8 @@ class CaveDroidApplication(
     }
 
     override fun saveGame() {
+        logger.v { "saveGame()" }
+
         val gameScreen = when (val currentScreen = screen) {
             is GameScreen -> currentScreen
             is PauseMenuScreen -> applicationComponent.gameScreen
@@ -233,6 +254,8 @@ class CaveDroidApplication(
     }
 
     override fun showDeathScreen() {
+        logger.v { "showDeathScreen()" }
+
         if (screen !is GameScreen) {
             logger.w { "Cannot show death screen when active screen is not game" }
             return
@@ -247,14 +270,19 @@ class CaveDroidApplication(
     }
 
     override fun respawnPlayer() {
+        logger.v { "respawnPlayer()" }
+
         val gameScreen = applicationComponent.gameScreen
         if (screen !is DeathScreen) {
             logger.w { "Cannot respawn when active screen is not death screen" }
             return
         }
+        val wasSoundEnabled = applicationComponent.applicationContextRepository.isSoundEnabled()
+        applicationComponent.applicationContextRepository.setSoundEnabled(false)
         applicationComponent.soundPlayer.pauseAll()
         adController.showInterstitial {
             Gdx.app.postRunnable {
+                applicationComponent.applicationContextRepository.setSoundEnabled(wasSoundEnabled)
                 applicationComponent.soundPlayer.resumeAll()
                 gameScreen.respawnPlayer()
                 setScreen(gameScreen)
@@ -263,6 +291,8 @@ class CaveDroidApplication(
     }
 
     override fun setScreen(screen: Screen?) {
+        logger.v { "setScreen(${screen?.javaClass?.simpleName})" }
+
         try {
             screen?.show()
             screen?.resize(Gdx.graphics.width, Gdx.graphics.height)
