@@ -1,0 +1,7 @@
+- Fügen Sie die Export-/Importfunktion für Speicherstände und einen erweiterten Bildschirm zur Bearbeitung von Welten hinzu.
+- Ein Dialog für beschädigte Speicherstände wird hinzugefügt und exportierte Dateinamen werden bereinigt.
+- Einführung der weltweiten Saatguteingabe im Menü für neue Welten zur Personalisierung.
+- Anpassung der Höhlengenerierung für aufregendere Erkundungen.
+- Behebung von Sprung- und Blocksteigproblemen für ein flüssigeres Gameplay.
+- Verbesserung der Touch-Steuerung und Behebung von Flackerproblemen.
+- Kleinere Verbesserungen und Fehlerbehebungen.
