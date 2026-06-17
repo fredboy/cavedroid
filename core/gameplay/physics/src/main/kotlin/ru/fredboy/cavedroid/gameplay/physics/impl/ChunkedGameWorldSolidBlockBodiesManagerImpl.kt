@@ -329,7 +329,7 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
             clusters = clusters.filter { cluster ->
                 cluster.points.none { (x, y) ->
                     !cluster.block.params.hasCollision &&
-                            (x == boundX.first || x == boundX.last || y == boundY.first || y == boundY.last)
+                        (x == boundX.first || x == boundX.last || y == boundY.first || y == boundY.last)
                 }
             },
             userData = ChunkUserData(

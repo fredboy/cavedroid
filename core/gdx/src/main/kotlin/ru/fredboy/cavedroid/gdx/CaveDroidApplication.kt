@@ -291,7 +291,7 @@ class CaveDroidApplication(
     }
 
     override fun setScreen(screen: Screen?) {
-        logger.v { "setScreen(${screen?.javaClass?.simpleName.toString()})" }
+        logger.v { "setScreen(${screen?.javaClass?.simpleName})" }
 
         try {
             screen?.show()
