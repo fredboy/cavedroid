@@ -7,7 +7,7 @@ const val PIXELS_PER_METER = 16f
 
 const val DEFAULT_VIEWPORT_WIDTH = 1000f
 
-const val MIN_VIEWPORT_HEIGHT = 360f
+const val MIN_VIEWPORT_HEIGHT = 400f
 
 val Float.meters get() = this / PIXELS_PER_METER
 
@@ -40,3 +40,5 @@ infix fun Int.floorMod(y: Int): Int {
     }
     return mod
 }
+
+fun Float.floorToInt(): Int = floor.toInt()

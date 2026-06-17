@@ -2,9 +2,15 @@ package ru.fredboy.cavedroid.gameplay.lighting.bfs
 
 import kotlin.math.max
 
+/**
+ * @param originX absolute world x of local column 0. Public methods accept absolute coordinates and
+ * translate by this origin, so a windowed grid (infinite worlds) and a full-width grid (finite,
+ * looping worlds, [originX] = 0) share the same call sites. Internal BFS works in local space.
+ */
 class LightGrid(
     val width: Int,
     val height: Int,
+    private val originX: Int = 0,
 ) {
     private val opaque: BooleanArray = BooleanArray(width * height)
     private val emission: ByteArray = ByteArray(width * height)
@@ -24,24 +30,27 @@ class LightGrid(
         return if (m < 0) m + w else m
     }
 
+    /** Translates an absolute world x into an in-range local column. */
+    private fun localX(x: Int): Int = wrapX(x - originX)
+
     fun isOpaqueAt(x: Int, y: Int): Boolean {
         if (y < 0 || y >= height) return false
-        return opaque[index(wrapX(x), y)]
+        return opaque[index(localX(x), y)]
     }
 
     fun skyAt(x: Int, y: Int): Int {
         if (y < 0 || y >= height) return 0
-        return sky[index(wrapX(x), y)].toInt() and 0xFF
+        return sky[index(localX(x), y)].toInt() and 0xFF
     }
 
     fun blockAt(x: Int, y: Int): Int {
         if (y < 0 || y >= height) return 0
-        return block[index(wrapX(x), y)].toInt() and 0xFF
+        return block[index(localX(x), y)].toInt() and 0xFF
     }
 
     fun isSkyExposed(x: Int, y: Int): Boolean {
         if (y < 0 || y >= height) return false
-        return y < heightmap[wrapX(x)]
+        return y < heightmap[localX(x)]
     }
 
     fun effective(x: Int, y: Int, sunBrightness: Float): Float {
@@ -96,7 +105,7 @@ class LightGrid(
 
     fun onCellChanged(x: Int, y: Int, newOpaque: Boolean, newEmission: Int) {
         if (y < 0 || y >= height) return
-        val cx = wrapX(x)
+        val cx = localX(x)
         val idx = index(cx, y)
         val cappedEmission = newEmission.coerceIn(0, MAX_LEVEL)
 
@@ -164,7 +173,7 @@ class LightGrid(
     fun setTransientEmitter(id: Long, x: Int, y: Int, level: Int) {
         clearTransientEmitter(id)
         if (level <= 0 || y < 0 || y >= height) return
-        val cx = wrapX(x)
+        val cx = localX(x)
 //        if (opaque[index(cx, y)]) return
         val capped = level.coerceAtMost(MAX_LEVEL)
         transientEmitters[id] = TransientEmitter(cx, y, capped)

@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.entity.mob.impl
 
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
+import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.entity.mob.abstraction.BaseMobBehavior
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
@@ -19,8 +20,8 @@ class PassiveMobBehavior :
     private var targetCoordinates: Pair<Int, Int>? = null
 
     private fun WalkingMob.getTargetBlock(worldAdapter: MobWorldAdapter): Pair<Int, Int>? {
-        val x = ((position.x - WALK_RADIUS).toInt()..(position.x + WALK_RADIUS).toInt()).random()
-        var y = position.y.toInt() + WALK_RADIUS.toInt()
+        val x = ((position.x - WALK_RADIUS).floorToInt()..(position.x + WALK_RADIUS).floorToInt()).random()
+        var y = position.y.floorToInt() + WALK_RADIUS.floorToInt()
         while (y > position.y - WALK_RADIUS) {
             if (worldAdapter.getForegroundBlock(x, y).params.hasCollision &&
                 !worldAdapter.getForegroundBlock(x, y - 1).params.hasCollision

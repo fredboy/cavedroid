@@ -16,6 +16,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
 import ru.fredboy.cavedroid.entity.mob.model.FallingBlock
+import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.model.WalkingMob
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.mob.MobSoundManager
@@ -47,6 +48,30 @@ class MobControllerMapper @Inject constructor(
         },
         player = playerMapper.mapSaveData(mobController.player),
     )
+
+    /** Player-only controller snapshot — for infinite worlds, where mobs are persisted per chunk. */
+    fun mapPlayerOnlySaveData(mobController: MobController): SaveDataDto.MobControllerSaveDataDto = SaveDataDto.MobControllerSaveDataDto(
+        version = SAVE_DATA_VERSION,
+        mobs = emptyList(),
+        player = playerMapper.mapSaveData(mobController.player),
+    )
+
+    /** Maps a single (non-player) mob, or null for mob types that are not persisted. */
+    fun mapMobSaveData(mob: Mob): SaveDataDto.MobSaveDataDto? = when (mob) {
+        is WalkingMob -> walkingMobMapper.mapSaveData(mob)
+        is FallingBlock -> fallingBlockMapper.mapSaveData(mob)
+        else -> null
+    }
+
+    /** Reconstructs a single (non-player) mob with its physics body, or null for unknown DTO types. */
+    fun mapMob(
+        saveDataDto: SaveDataDto.MobSaveDataDto,
+        mobPhysicsFactory: MobPhysicsFactory,
+    ): Mob? = when (saveDataDto) {
+        is SaveDataDto.WalkingMobSaveDataDto -> walkingMobMapper.mapPassiveMob(saveDataDto, mobPhysicsFactory)
+        is SaveDataDto.FallingBlockSaveDataDto -> fallingBlockMapper.mapFallingBlock(saveDataDto, mobPhysicsFactory)
+        else -> null
+    }
 
     fun mapMobController(
         saveDataDto: SaveDataDto.MobControllerSaveDataDto,

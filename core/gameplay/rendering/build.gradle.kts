@@ -12,6 +12,7 @@ dependencies {
     useAutomultibind()
 
     useCommonLibs()
+    useCommonModule()
     useDataModules()
     useDomainModules()
     useEntityModules()

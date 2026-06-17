@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.domain.save.model
 
+import ru.fredboy.cavedroid.common.model.WorldType
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.domain.world.model.Weather
@@ -16,6 +17,8 @@ data class GameMapSaveData(
     val weatherTimer: Float?,
     val weatherIntensity: Float?,
     val currentStreakStartDayIndex: Int = 0,
+    val worldType: WorldType = WorldType.LOOPING,
+    val seed: Long? = null,
 ) {
 
     override fun equals(other: Any?): Boolean {

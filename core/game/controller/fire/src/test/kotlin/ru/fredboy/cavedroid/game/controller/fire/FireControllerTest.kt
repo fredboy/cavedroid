@@ -45,7 +45,7 @@ class FireControllerTest {
         every { lighting.createFireLight(any(), any()) } returns mockk<LightHandle>(relaxed = true)
         every { gameWorld.addBlockDestroyedListener(any()) } just Runs
         every { gameWorld.removeBlockDestroyedListener(any()) } just Runs
-        return Triple(FireController(gameWorld, lighting), gameWorld, lighting)
+        return Triple(FireController(gameWorld, lighting, mockk(relaxed = true), mockk(relaxed = true), mockk(relaxed = true)), gameWorld, lighting)
     }
 
     @Test
@@ -126,7 +126,7 @@ class FireControllerTest {
         every { lighting.createFireLight(any(), any()) } returns handle
         every { handle.dispose() } just Runs
 
-        val controller = FireController(gameWorld, lighting)
+        val controller = FireController(gameWorld, lighting, mockk(relaxed = true), mockk(relaxed = true), mockk(relaxed = true))
         controller.addFire(7, 8, Layer.FOREGROUND)
         controller.removeFire(7, 8, Layer.FOREGROUND)
 
@@ -146,7 +146,7 @@ class FireControllerTest {
         every { lighting.createFireLight(any(), any()) } returns mockk<LightHandle>(relaxed = true)
         every { gameWorld.addBlockDestroyedListener(capture(listenerSlot)) } just Runs
 
-        val controller = FireController(gameWorld, lighting)
+        val controller = FireController(gameWorld, lighting, mockk(relaxed = true), mockk(relaxed = true), mockk(relaxed = true))
         controller.addFire(2, 3, Layer.FOREGROUND)
         controller.addFire(2, 3, Layer.BACKGROUND)
 

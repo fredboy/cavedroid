@@ -19,6 +19,8 @@ abstract class GameWorldSolidBlockBodiesManager :
 
     val bodies: Map<Pair<Int, Int>, Body> get() = _bodies
 
+    private val bodiesReadyListeners = mutableListOf<ChunkBodiesReadyListener>()
+
     fun attachToGameWorld(gameWorld: GameWorld) {
         _gameWorld = gameWorld
         initialize()
@@ -27,10 +29,27 @@ abstract class GameWorldSolidBlockBodiesManager :
 
     protected abstract fun initialize()
 
+    fun addChunkBodiesReadyListener(listener: ChunkBodiesReadyListener) {
+        bodiesReadyListeners.add(listener)
+    }
+
+    fun removeChunkBodiesReadyListener(listener: ChunkBodiesReadyListener) {
+        bodiesReadyListeners.remove(listener)
+    }
+
+    protected fun notifyChunkBodiesReady(chunkX: Int) {
+        bodiesReadyListeners.toList().forEach { it.onChunkBodiesReady(chunkX) }
+    }
+
     override fun dispose() {
         bodies.forEach { (_, body) -> body.world.destroyBody(body) }
         _bodies.clear()
+        bodiesReadyListeners.clear()
         gameWorld.removeBlockPlacedListener(this)
         _gameWorld = null
     }
+}
+
+fun interface ChunkBodiesReadyListener {
+    fun onChunkBodiesReady(chunkX: Int)
 }

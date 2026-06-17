@@ -22,11 +22,67 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 @Scene2dDsl
 suspend fun Stage.singlePlayerMenuView(viewModel: SinglePlayerMenuViewModel) = viewModel.also {
     viewModel.stateFlow.collect { state ->
+        clear()
         when (state) {
             is SinglePlayerMenuState.LoadingWorld -> loading(viewModel)
             is SinglePlayerMenuState.LoadingFailed -> loadingFailed(viewModel)
-            is SinglePlayerMenuState.ShowList -> savesList(viewModel, state)
+            is SinglePlayerMenuState.ShowList -> if (state.corruptedDirs.isNotEmpty()) {
+                corruptedSavesDialog(viewModel, state.corruptedDirs)
+            } else {
+                savesList(viewModel, state)
+            }
+
             is SinglePlayerMenuState.LoadingList -> loadingList(viewModel)
+        }
+    }
+}
+
+@Scene2dDsl
+private fun Stage.corruptedSavesDialog(viewModel: SinglePlayerMenuViewModel, corruptedDirs: List<String>) {
+    actors {
+        table {
+            setFillParent(true)
+            background(
+                TiledDrawable(
+                    TextureRegionDrawable(
+                        skin.getRegion("background"),
+                    ),
+                ),
+            )
+            pad(8f)
+
+            label(viewModel.getLocalizedString("corruptedSavesMessage")) {
+                setAlignment(Align.center)
+                setWrap(true)
+            }.cell(
+                expandX = true,
+                fillX = true,
+                align = Align.center,
+            )
+
+            row()
+
+            table {
+                textButton(viewModel.getLocalizedString("deleteCorrupted")) {
+                    onClickWithSound(viewModel) { viewModel.onDeleteCorruptedClick(corruptedDirs) }
+                }.cell(
+                    width = 400f,
+                    height = 60f,
+                    padRight = 16f,
+                )
+
+                textButton(viewModel.getLocalizedString("keep")) {
+                    onClickWithSound(viewModel) { viewModel.onDismissCorruptedClick() }
+                }.cell(
+                    width = 400f,
+                    height = 60f,
+                    padLeft = 16f,
+                )
+            }.cell(
+                expandX = true,
+                fillX = true,
+                padTop = 32f,
+            )
         }
     }
 }
@@ -52,7 +108,7 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
                             viewModel = viewModel,
                             saveInfo = save,
                             onLoad = { viewModel.onLoadClick(save) },
-                            onDelete = { viewModel.onDeleteClick(save) },
+                            onEdit = { viewModel.onEditClick(save) },
                         ).cell(
                             expandX = true,
                             fillX = true,
@@ -77,6 +133,12 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
                 .bottom()
 
             table {
+                val buttonWidth = if (viewModel.isImportSupported) {
+                    266f
+                } else {
+                    400f
+                }
+
                 textButton(viewModel.getLocalizedString("newWorld")) {
                     onClickWithSound(viewModel) {
                         if (!isDisabled) {
@@ -86,17 +148,34 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
 
                     isDisabled = state.saves.size >= MAX_SAVES_COUNT
                 }.cell(
-                    width = 400f,
+                    width = buttonWidth,
                     height = 60f,
-                    padRight = 16f,
+                    padRight = 8f,
                 )
+
+                if (viewModel.isImportSupported) {
+                    textButton(viewModel.getLocalizedString("importSave")) {
+                        onClickWithSound(viewModel) {
+                            if (!isDisabled) {
+                                viewModel.onImportClick()
+                            }
+                        }
+
+                        isDisabled = state.saves.size >= MAX_SAVES_COUNT
+                    }.cell(
+                        width = buttonWidth,
+                        height = 60f,
+                        padLeft = 8f,
+                        padRight = 8f,
+                    )
+                }
 
                 textButton(viewModel.getLocalizedString("back")) {
                     onClickWithSound(viewModel) { viewModel.onBackClick() }
                 }.cell(
-                    width = 400f,
+                    width = buttonWidth,
                     height = 60f,
-                    padLeft = 16f,
+                    padLeft = 8f,
                 )
             }.cell(
                 expandX = true,
@@ -179,7 +258,7 @@ private fun <S> KWidget<S>.saveItem(
     viewModel: SinglePlayerMenuViewModel,
     saveInfo: SaveInfoVo,
     onLoad: () -> Unit,
-    onDelete: () -> Unit,
+    onEdit: () -> Unit,
 ): KTableWidget = table {
     background("shade_tile")
     pad(8f)
@@ -247,7 +326,7 @@ private fun <S> KWidget<S>.saveItem(
             .width(300f)
             .height(60f)
 
-        val loadButton = textButton(viewModel.getLocalizedString("load")) {
+        textButton(viewModel.getLocalizedString("load")) {
             isDisabled = !saveInfo.isSupported
 
             onClickWithSound(viewModel) {
@@ -262,18 +341,13 @@ private fun <S> KWidget<S>.saveItem(
 
         row()
 
-        textButton(viewModel.getLocalizedString("delete")) {
+        textButton(viewModel.getLocalizedString("edit")) {
             onClickWithSound(viewModel) {
                 if (isDisabled) {
                     return@onClickWithSound
                 }
 
-                onDelete()
-                loadButton.isDisabled = true
-                loadButton.touchable = Touchable.disabled
-
-                touchable = Touchable.disabled
-                isDisabled = true
+                onEdit()
             }
         }
     }.right()

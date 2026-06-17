@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.singleplayer
 
 import ru.fredboy.cavedroid.common.api.ApplicationController
+import ru.fredboy.cavedroid.common.api.SaveTransferController
 import ru.fredboy.cavedroid.common.di.MenuScope
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.common.mvvm.ViewModelProvider
@@ -17,6 +18,7 @@ class SinglePlayerMenuViewModelProvider @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
     private val applicationController: ApplicationController,
     private val saveDataRepository: SaveDataRepository,
+    private val saveTransferController: SaveTransferController,
     private val baseViewModelDependencies: BaseViewModelDependencies,
 ) : ViewModelProvider<SinglePlayerMenuNavKey, SinglePlayerMenuViewModel> {
 
@@ -28,6 +30,7 @@ class SinglePlayerMenuViewModelProvider @Inject constructor(
             applicationContextRepository = applicationContextRepository,
             applicationController = applicationController,
             saveDataRepository = saveDataRepository,
+            saveTransferController = saveTransferController,
             navBackStack = navBackStack,
             baseViewModelDependencies = baseViewModelDependencies,
         )

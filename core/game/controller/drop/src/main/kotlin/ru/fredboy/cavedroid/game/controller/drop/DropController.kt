@@ -82,6 +82,31 @@ class DropController @Inject constructor(
         drops.forEach(action)
     }
 
+    /** Adds an already-spawned drop (e.g. one streamed in from a loading chunk). */
+    fun addLoadedDrop(drop: Drop) {
+        if (drop.item.isNone()) {
+            return
+        }
+        drops.add(drop)
+    }
+
+    /** Disposes and removes the given drops (e.g. when their chunk is unloaded). */
+    fun removeDrops(toRemove: Collection<Drop>) {
+        if (toRemove.isEmpty()) {
+            return
+        }
+
+        val removeSet = toRemove.toHashSet()
+        val iterator = drops.iterator()
+        while (iterator.hasNext()) {
+            val drop = iterator.next()
+            if (drop in removeSet) {
+                drop.dispose()
+                iterator.remove()
+            }
+        }
+    }
+
     private fun getRandomInitialForce(): Vector2 {
         return Vector2(MathUtils.random(-20f, 20f), -20f)
     }

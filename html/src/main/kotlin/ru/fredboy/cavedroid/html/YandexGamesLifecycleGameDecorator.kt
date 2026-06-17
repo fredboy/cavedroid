@@ -9,10 +9,11 @@ class YandexGamesLifecycleGameDecorator(
     private val delegate: CaveDroidApplication,
 ) : CaveDroidApplicationDecorator by delegate {
 
+    private var readyCalled = false
+
     override fun create() {
         delegate.applicationControllerOverride = this
         delegate.create()
-        YandexGamesBridge.notifyLoadingReady()
 
         YandexGamesBridge.listenGameApiResume {
             if (delegate.screen is GameScreen) {
@@ -28,6 +29,14 @@ class YandexGamesLifecycleGameDecorator(
             }
 
             delegate.applicationComponentOrNull?.soundPlayer?.pauseAll()
+        }
+    }
+
+    override fun render() {
+        delegate.render()
+        if (!readyCalled) {
+            YandexGamesBridge.notifyLoadingReady()
+            readyCalled = true
         }
     }
 

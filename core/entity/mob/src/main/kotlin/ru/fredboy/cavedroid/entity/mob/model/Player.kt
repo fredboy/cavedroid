@@ -8,6 +8,7 @@ import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.common.utils.applyOrigin
 import ru.fredboy.cavedroid.common.utils.drawSprite
+import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -25,7 +26,6 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.impl.PlayerMobBehavior
 import kotlin.math.abs
-import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 
@@ -67,8 +67,8 @@ class Player(
     var holdAim = true
     var aimToPlayer = Vector2()
 
-    val selectedX get() = floor(cursorX).toInt()
-    val selectedY get() = cursorY.toInt()
+    val selectedX get() = cursorX.floorToInt()
+    val selectedY get() = cursorY.floorToInt()
 
     var controlMode = ControlMode.CURSOR
     var blockDamage = 0f
@@ -79,7 +79,7 @@ class Player(
         }
 
     override val effectiveSpeedMultiplier: Float
-        get() = if (isSprinting && !isFlyMode) SPRINT_SPEED_MULTIPLIER else 1f
+        get() = if (isSprinting) SPRINT_SPEED_MULTIPLIER else 1f
 
     var foodLevel: Int = MAX_FOOD_LEVEL
     var saturationLevel: Float = INITIAL_SATURATION

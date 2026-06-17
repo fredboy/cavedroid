@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.World
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.floor
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
@@ -36,8 +37,12 @@ internal class WorldAdapterImpl @Inject constructor(
     override val height: Int
         get() = gameWorld.height
 
+    @Deprecated("Use start/end")
     override val width: Int
         get() = gameWorld.width
+
+    override val isInfinite: Boolean
+        get() = gameWorld.isInfinite
 
     override fun setForegroundBlock(x: Int, y: Int, block: Block) {
         gameWorld.setForeMap(x, y, block)
@@ -60,6 +65,21 @@ internal class WorldAdapterImpl @Inject constructor(
     }
 
     override fun findSpawnPoint(): Vector2 {
+        val charParams = mobParamsRepository.getMobParamsByKey("char")
+
+        if (gameWorld.isInfinite) {
+            // Infinite worlds spawn at the origin column; the streaming store keeps it resident.
+            val spawnX = 0
+            var surfaceY = gameWorld.height - 1
+            for (sy in 0 until gameWorld.height) {
+                if (getForegroundBlock(spawnX, sy).params.hasCollision) {
+                    surfaceY = sy
+                    break
+                }
+            }
+            return Vector2(spawnX + .5f - (charParams?.width ?: 1f) / 2, surfaceY - (charParams?.height ?: 1f))
+        }
+
         var x = width / 2
         var y = 0
 
@@ -80,7 +100,6 @@ internal class WorldAdapterImpl @Inject constructor(
             }
         }
 
-        val charParams = mobParamsRepository.getMobParamsByKey("char")
         return Vector2(x + .5f - (charParams?.width ?: 1f) / 2, y - (charParams?.height ?: 1f))
     }
 
@@ -118,8 +137,8 @@ internal class WorldAdapterImpl @Inject constructor(
     }
 
     override fun getClimbable(hitbox: Rectangle): Block.Climbable? {
-        val (startX, endX) = hitbox.x.toInt() to (hitbox.x + hitbox.width).toInt()
-        val (startY, endY) = hitbox.y.toInt() to (hitbox.y + hitbox.height).toInt()
+        val (startX, endX) = hitbox.x.floor.toInt() to (hitbox.x + hitbox.width).floor.toInt()
+        val (startY, endY) = hitbox.y.floor.toInt() to (hitbox.y + hitbox.height).floor.toInt()
 
         var medium: Block.Climbable? = null
         for (x in startX..endX) {
