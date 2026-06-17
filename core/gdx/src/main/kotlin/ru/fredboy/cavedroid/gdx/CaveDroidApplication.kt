@@ -89,6 +89,8 @@ class CaveDroidApplication(
     }
 
     override fun create() {
+        logger.v { "create()" }
+
         GdxMainThread.init()
         val width = DEFAULT_VIEWPORT_WIDTH
         val height = width / Gdx.graphics.ratio
@@ -166,6 +168,8 @@ class CaveDroidApplication(
     }
 
     override fun dispose() {
+        logger.v { "dispose()" }
+
         runCatching {
             runBlocking { applicationComponent.statsRepository.save() }
         }.onFailure { logger.w(it) { "Stats save on dispose failed" } }
@@ -187,6 +191,8 @@ class CaveDroidApplication(
     }
 
     override fun startGame(startGameConfig: StartGameConfig) {
+        logger.v { "startGame($startGameConfig)" }
+
         adController.loadInterstitial()
         val gameScreen = applicationComponent.gameScreen.apply {
             when (startGameConfig) {
@@ -199,15 +205,20 @@ class CaveDroidApplication(
     }
 
     override fun exitGame() {
+        logger.v { "exitGame()" }
+
         setScreen(null)
         Gdx.app.exit()
     }
 
     override fun triggerResize() {
+        logger.v { "triggerResize()" }
         resize(Gdx.graphics.width, Gdx.graphics.height)
     }
 
     override fun pauseGame() {
+        logger.v { "pauseGame()" }
+
         if (screen !is GameScreen) {
             logger.w { "Cannot pause when active screen is not game" }
             return
@@ -217,6 +228,8 @@ class CaveDroidApplication(
     }
 
     override fun resumeGame() {
+        logger.v { "resumeGame()" }
+
         if (screen !is PauseMenuScreen) {
             logger.w { "Cannot resume when active screen is not pause menu" }
             return
@@ -226,6 +239,8 @@ class CaveDroidApplication(
     }
 
     override fun saveGame() {
+        logger.v { "saveGame()" }
+
         val gameScreen = when (val currentScreen = screen) {
             is GameScreen -> currentScreen
             is PauseMenuScreen -> applicationComponent.gameScreen
@@ -239,6 +254,8 @@ class CaveDroidApplication(
     }
 
     override fun showDeathScreen() {
+        logger.v { "showDeathScreen()" }
+
         if (screen !is GameScreen) {
             logger.w { "Cannot show death screen when active screen is not game" }
             return
@@ -253,6 +270,8 @@ class CaveDroidApplication(
     }
 
     override fun respawnPlayer() {
+        logger.v { "respawnPlayer()" }
+
         val gameScreen = applicationComponent.gameScreen
         if (screen !is DeathScreen) {
             logger.w { "Cannot respawn when active screen is not death screen" }
@@ -272,6 +291,8 @@ class CaveDroidApplication(
     }
 
     override fun setScreen(screen: Screen?) {
+        logger.v { "setScreen(${screen?.javaClass?.simpleName.toString()})" }
+
         try {
             screen?.show()
             screen?.resize(Gdx.graphics.width, Gdx.graphics.height)
