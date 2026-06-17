@@ -1,0 +1,7 @@
+- Add save export/import and extended edit-world screen.
+- Add corrupted-saves dialog and sanitize exported file names.
+- Introduce world seed input in the new world menu for personalized experiences.
+- Adjust cave generation for more exciting exploration.
+- Fix jumping and stepping up blocks for smoother gameplay.
+- Improve touch controls and fix flickering issues.
+- Minor improvements and bug fixes.

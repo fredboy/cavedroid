@@ -182,7 +182,15 @@ class GameInputProcessor @Inject constructor(
                     touchX = applicationContextRepository.getWidth() / Gdx.graphics.width * Gdx.input.getX(joystick.pointer),
                     touchY = applicationContextRepository.getHeight() / Gdx.graphics.height * Gdx.input.getY(joystick.pointer),
                 )
+                if (gameWindowsManager.currentWindowType != GameWindowType.NONE) {
+                    joystick.deactivate()
+                }
             }
+
+        if (gameWindowsManager.currentWindowType != GameWindowType.NONE) {
+            mobController.player.controlVector.setZero()
+            mobController.player.stopHitting()
+        }
     }
 
     private val TouchButton.rectangleOnScreen

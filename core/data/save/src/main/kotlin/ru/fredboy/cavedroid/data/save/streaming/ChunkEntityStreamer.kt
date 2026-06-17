@@ -11,6 +11,7 @@ import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.game.world.abstraction.ChunkBodiesReadyListener
 import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
 import ru.fredboy.cavedroid.game.world.store.ChunkListener
 import javax.inject.Inject
@@ -32,7 +33,8 @@ class ChunkEntityStreamer @Inject constructor(
     private val gameContextRepository: GameContextRepository,
     private val mobPhysicsFactory: MobPhysicsFactory,
     private val dropWorldAdapter: DropWorldAdapter,
-) : ChunkListener {
+) : ChunkListener,
+    ChunkBodiesReadyListener {
 
     private var initialized = false
 
@@ -46,10 +48,13 @@ class ChunkEntityStreamer @Inject constructor(
         }
         initialized = true
         gameWorld.addChunkListener(this)
-        gameWorld.forEachLoadedChunk(::onChunkLoaded)
+        gameWorld.addChunkBodiesReadyListener(this)
+        gameWorld.forEachLoadedChunk(::onChunkBodiesReady)
     }
 
-    override fun onChunkLoaded(chunkX: Int) {
+    override fun onChunkLoaded(chunkX: Int) = Unit
+
+    override fun onChunkBodiesReady(chunkX: Int) {
         val data = saveDataRepository.loadChunkEntities(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
             saveGameDirectory = gameContextRepository.getSaveGameDirectory(),

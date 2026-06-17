@@ -43,6 +43,10 @@ class MouseCursorInputHandler @Inject constructor(
     }
 
     private fun handleMouse(action: MouseInputAction) {
+        if (gameWindowsManager.currentWindowType != GameWindowType.NONE) {
+            return
+        }
+
         val worldX = action.screenX.meters + gameContextRepository.getCameraContext().visibleWorld.x
         val worldY = action.screenY.meters + gameContextRepository.getCameraContext().visibleWorld.y
 

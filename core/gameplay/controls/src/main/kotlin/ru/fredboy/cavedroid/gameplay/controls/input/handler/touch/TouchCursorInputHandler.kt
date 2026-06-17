@@ -10,7 +10,6 @@ import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.common.utils.takeIfTrue
 import ru.fredboy.cavedroid.domain.assets.repository.BlockActionSoundAssetsRepository
-import ru.fredboy.cavedroid.domain.assets.repository.FoodSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -52,7 +51,6 @@ class TouchCursorInputHandler @Inject constructor(
     private val useItemActionMap: Map<String, @JvmSuppressWildcards IUseItemAction>,
     private val useMobActionMap: Map<String, @JvmSuppressWildcards IUseMobAction>,
     private val getTextureRegionByNameUseCase: GetTextureRegionByNameUseCase,
-    private val foodSoundAssetsRepository: FoodSoundAssetsRepository,
     private val soundPlayer: SoundPlayer,
     private val projectileController: ProjectileController,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,

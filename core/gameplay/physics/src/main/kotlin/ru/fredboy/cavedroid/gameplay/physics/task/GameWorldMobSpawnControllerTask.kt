@@ -11,8 +11,8 @@ import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobFactory
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.game.world.abstraction.ChunkBodiesReadyListener
 import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
-import ru.fredboy.cavedroid.game.world.store.ChunkListener
 import javax.inject.Inject
 
 @GameScope
@@ -22,15 +22,15 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
     private val mobParamsRepository: MobParamsRepository,
     private val mobFactory: MobFactory,
 ) : BaseGameWorldControllerTask(),
-    ChunkListener {
+    ChunkBodiesReadyListener {
 
     private var listenerAdded = false
 
     override fun exec() {
         if (!listenerAdded) {
-            logger.d { "Adding spawn chunk listener after first task run" }
+            logger.d { "Adding spawn chunk bodies listener after first task run" }
             listenerAdded = true
-            gameWorld.addChunkListener(this)
+            gameWorld.addChunkBodiesReadyListener(this)
         }
 
         logger.i {
@@ -149,13 +149,9 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
         return false
     }
 
-    override fun onChunkLoaded(chunkX: Int) {
+    override fun onChunkBodiesReady(chunkX: Int) {
         logger.d { "Spawning chunk mobs at $chunkX" }
         doSpawn(chunkX * ChunkGenerator.CHUNK_W, ChunkGenerator.CHUNK_W, getInfiniteChunkMobsCount())
-    }
-
-    override fun onChunkUnloaded(chunkX: Int) {
-        // no-op
     }
 
     private fun trySpawnAbove(spawnX: Int, floorY: Int, candidates: List<MobParams>): Boolean {
@@ -188,7 +184,7 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
     }
 
     override fun dispose() {
-        gameWorld.removeChunkListener(this)
+        gameWorld.removeChunkBodiesReadyListener(this)
     }
 
     companion object {
