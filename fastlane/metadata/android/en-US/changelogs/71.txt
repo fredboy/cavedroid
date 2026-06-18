@@ -1,0 +1,2 @@
+- You can now include chunk subdirectories when exporting and importing your saves!
+- Minor improvements and bug fixes.

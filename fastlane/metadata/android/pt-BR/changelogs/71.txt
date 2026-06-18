@@ -1,0 +1,2 @@
+- Agora você pode incluir subdiretórios de chunks ao exportar e importar seus salvamentos.
+- Melhorias menores e correções de bugs.
