@@ -119,6 +119,8 @@ class GameWorld @Inject constructor(
 
     fun forEachLoadedChunk(action: (chunkX: Int) -> Unit) = blockStore.forEachLoadedChunk(action)
 
+    fun isChunkLoadedAt(x: Int): Boolean = blockStore.isChunkLoaded(blockStore.transformX(x))
+
     /** Persists resident chunks with unsaved edits (infinite worlds only). */
     fun flushDirtyChunks() = blockStore.flushDirtyChunks()
 

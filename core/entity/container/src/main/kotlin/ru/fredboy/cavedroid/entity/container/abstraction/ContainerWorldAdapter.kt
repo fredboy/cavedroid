@@ -14,6 +14,8 @@ interface ContainerWorldAdapter {
         requiredType: KClass<out Block.Container>,
     ): Boolean
 
+    fun isContainerChunkLoaded(coordinates: ContainerCoordinates): Boolean
+
     fun addOnBlockDestroyedListener(listener: OnBlockDestroyedListener)
 
     fun addOnBlockPlacedListener(listener: OnBlockPlacedListener)
