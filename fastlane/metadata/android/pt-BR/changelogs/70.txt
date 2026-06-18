@@ -1,0 +1,2 @@
+- Corrigido um problema com a persistência de contêineres, garantindo que seus itens sejam salvos corretamente.
+- Melhorias pequenas e correções de bugs.

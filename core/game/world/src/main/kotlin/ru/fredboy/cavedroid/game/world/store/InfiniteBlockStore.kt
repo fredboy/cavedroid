@@ -75,6 +75,8 @@ class InfiniteBlockStore(
 
     override fun isInBounds(x: Int, y: Int): Boolean = y in 0 until height
 
+    override fun isChunkLoaded(x: Int): Boolean = chunks[chunkIndex(x)] is ChunkEntry.Loaded
+
     override fun getBlock(x: Int, y: Int, layer: Layer): Block {
         if (y !in 0 until height) return itemsRepository.fallbackBlock
         val chunk = chunks[chunkIndex(x)]?.safeCast<ChunkEntry.Loaded>()?.chunk ?: return itemsRepository.fallbackBlock

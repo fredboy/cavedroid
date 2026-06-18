@@ -116,6 +116,10 @@ internal class WorldAdapterImpl @Inject constructor(
         return block.isContainer() && block::class == requiredType
     }
 
+    override fun isContainerChunkLoaded(coordinates: ContainerCoordinates): Boolean {
+        return gameWorld.isChunkLoadedAt(coordinates.x)
+    }
+
     override fun addOnBlockDestroyedListener(listener: OnBlockDestroyedListener) {
         gameWorld.addBlockDestroyedListener(listener)
     }

@@ -121,6 +121,10 @@ class ContainerController @Inject constructor(
         while (iterator.hasNext()) {
             val (coordinates, container) = iterator.next()
 
+            if (!containerWorldAdapter.isContainerChunkLoaded(coordinates)) {
+                continue
+            }
+
             if (!containerWorldAdapter.checkContainerAtCoordinates(coordinates, container.type)) {
                 logger.w { "Removing orphaned ${container::class.simpleName} at $coordinates" }
                 iterator.remove()

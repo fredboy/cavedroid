@@ -61,6 +61,13 @@ interface WorldBlockStore : Disposable {
     /** True if (x, y) addresses an in-bounds, currently-addressable cell. */
     fun isInBounds(x: Int, y: Int): Boolean
 
+    /**
+     * True if the chunk containing storage-x is currently resident. Always true for finite worlds;
+     * for streaming worlds it distinguishes "this column reads as air because it is genuinely empty"
+     * from "this column reads as air because its chunk is not loaded right now".
+     */
+    fun isChunkLoaded(x: Int): Boolean = true
+
     fun getBlock(x: Int, y: Int, layer: Layer): Block
 
     fun setBlock(x: Int, y: Int, layer: Layer, value: Block)
