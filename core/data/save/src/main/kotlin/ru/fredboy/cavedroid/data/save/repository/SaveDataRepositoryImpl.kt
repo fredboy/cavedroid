@@ -914,18 +914,21 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     // A save is exported as a flat, length-prefixed archive rather than a real
     // zip: java.util.zip's ZipOutputStream/ZipInputStream are not faithfully
     // emulated under TeaVM (web) and silently corrupt the bytes. This format
-    // relies only on primitives that work on every platform.
+    // relies only on primitives that work on every platform. Entry names are
+    // paths relative to the save dir ('/'-separated) so the per-chunk subtree
+    // of infinite worlds survives the round-trip.
     //   magic("CDA1") | entryCount:int | { nameLen:int, name, contentLen:int, content }*
     override fun exportSaveToZip(gameDataFolder: String, saveDir: String): ByteArray {
         val savesPath = getSavePath(gameDataFolder, saveDir)
         val output = ByteArrayOutputStream()
 
-        val files = file(savesPath).list().filter { !it.isDirectory }
+        val files = mutableListOf<Pair<String, FileHandle>>()
+        collectArchiveEntries(file(savesPath), "", files)
 
         output.write(ARCHIVE_MAGIC)
         output.write(files.size.toByteArray())
-        files.forEach { entry ->
-            val nameBytes = entry.name().encodeToByteArray()
+        files.forEach { (relativePath, entry) ->
+            val nameBytes = relativePath.encodeToByteArray()
             val content = entry.readBytes()
             output.write(nameBytes.size.toByteArray())
             output.write(nameBytes)
@@ -934,6 +937,21 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         }
 
         return output.toByteArray()
+    }
+
+    private fun collectArchiveEntries(
+        dir: FileHandle,
+        prefix: String,
+        into: MutableList<Pair<String, FileHandle>>,
+    ) {
+        dir.list().forEach { child ->
+            val relativePath = if (prefix.isEmpty()) child.name() else "$prefix/${child.name()}"
+            if (child.isDirectory) {
+                collectArchiveEntries(child, relativePath, into)
+            } else {
+                into += relativePath to child
+            }
+        }
     }
 
     override fun importSaveFromZip(gameDataFolder: String, zipBytes: ByteArray): String {
@@ -968,8 +986,12 @@ internal class SaveDataRepositoryImpl @Inject constructor(
                 val content = ByteArray(contentLen)
                 buffer.get(content)
 
-                // Guard against path traversal: keep only the bare file name.
-                val name = nameBytes.decodeToString().substringAfterLast('/')
+                // Guard against path traversal: drop empty/'.'/'..' segments and
+                // any drive/leading-slash, keeping a safe '/'-separated relative path.
+                val name = nameBytes.decodeToString()
+                    .split('/')
+                    .filter { it.isNotEmpty() && it != "." && it != ".." }
+                    .joinToString("/")
                 if (name.isNotEmpty()) {
                     file("$savesPath/$name").writeBytes(content, false)
                 }
@@ -1007,7 +1029,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         private const val IMPORTED_SAVE_DIR = "imported"
 
         private val ARCHIVE_MAGIC = "CDA1".encodeToByteArray()
-        private const val MAX_ARCHIVE_ENTRIES = 64
+        private const val MAX_ARCHIVE_ENTRIES = 100_000
         private const val MAX_ARCHIVE_NAME_LENGTH = 255
         private const val DROP_FILE = "drop.dat"
         private const val PROJECTILES_FILE = "projectiles.dat"
