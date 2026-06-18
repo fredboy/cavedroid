@@ -1,0 +1,2 @@
+- Fixed an issue with container persistence, ensuring your items are saved correctly.
+- Minor improvements and bug fixes.

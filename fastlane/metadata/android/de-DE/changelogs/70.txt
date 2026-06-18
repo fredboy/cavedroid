@@ -1,0 +1,2 @@
+- Ein Problem mit der Persistenz von Behältern wurde behoben, sodass deine Items richtig gespeichert werden.
+- Kleinere Verbesserungen und Fehlerbehebungen.
