@@ -1,0 +1,2 @@
+- Jetzt kannst du Chunk-Unterverzeichnisse beim Exportieren und Importieren deiner Speicherstände einfügen.
+- Kleinere Verbesserungen und Fehlerbehebungen.
