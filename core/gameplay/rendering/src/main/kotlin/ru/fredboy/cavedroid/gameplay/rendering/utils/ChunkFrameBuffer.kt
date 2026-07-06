@@ -15,6 +15,7 @@ import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.container.FurnaceStateChangedListener
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.game.world.store.ChunkListener
 
 class ChunkFrameBuffer<Renderer : RenderingTool>(
     private val chunkX: Int,
@@ -59,11 +60,14 @@ class ChunkFrameBuffer<Renderer : RenderingTool>(
         }
     }
 
+    private val chunkListener = FrameBufferChunkListener()
+
     var dirty = true
 
     init {
         gameWorld.addBlockPlacedListener(onBlockPlacedListener)
         containerController.addFurnaceListener(furnaceStateChangedListener)
+        gameWorld.addChunkListener(chunkListener)
     }
 
     fun rebuild(drawFunction: (Renderer, Int, Int, Float, Float) -> Unit) {
@@ -114,6 +118,22 @@ class ChunkFrameBuffer<Renderer : RenderingTool>(
         fbo.dispose()
         gameWorld.removeBlockPlacedListener(onBlockPlacedListener)
         containerController.removeFurnaceListener(furnaceStateChangedListener)
+        gameWorld.removeChunkListener(chunkListener)
+    }
+
+    private inner class FrameBufferChunkListener : ChunkListener {
+
+        override fun onChunkLoaded(chunkX: Int) {
+            if (chunkX != this@ChunkFrameBuffer.chunkX) {
+                return
+            }
+
+            dirty = true
+        }
+
+        override fun onChunkUnloaded(chunkX: Int) {
+            // no-op
+        }
     }
 
     companion object {

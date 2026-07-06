@@ -1,0 +1,2 @@
+- Probleme beim Chunk-Rendering behoben für ein flüssigeres Spielerlebnis.
+- Kleinere Verbesserungen und Fehlerbehebungen.

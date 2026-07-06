@@ -2,12 +2,15 @@ package ru.fredboy.cavedroid.gameplay.rendering.renderer.hud
 
 import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
+import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
+import ru.fredboy.cavedroid.game.world.store.InfiniteBlockStore
 import javax.inject.Inject
 
 @GameScope
@@ -25,8 +28,9 @@ class DebugInfoStringsProvider @Inject constructor(
 
         return listOf(
             "FPS: ${Gdx.graphics.framesPerSecond}",
-            "X: ${player.position.x}",
-            "Y: ${player.position.y} (${gameWorld.height.toFloat() - player.position.y})",
+            "X: ${player.position.x} (Chunk: ${player.position.x.floorToInt() / ChunkGenerator.CHUNK_W})",
+            "Y: ${player.position.y} (${gameWorld.height.toFloat() - player.position.y}) " +
+                    "(Chunk: ${player.position.y.floorToInt() / ChunkGenerator.CHUNK_W})",
             "Cursor: (${player.cursorX}, ${player.cursorY})",
             "Aim: (${player.aimX}, ${player.aimY})",
             "Velocity: ${player.velocity}",
