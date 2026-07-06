@@ -1,0 +1,2 @@
+- Se solucionaron problemas con el renderizado de los chunks para una experiencia de juego más fluida.
+- Mejoras menores y corrección de errores.
