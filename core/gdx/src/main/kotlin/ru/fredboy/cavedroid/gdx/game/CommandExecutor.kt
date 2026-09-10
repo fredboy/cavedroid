@@ -2,12 +2,15 @@ package ru.fredboy.cavedroid.gdx.game
 
 import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.world.model.Weather
 import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
 @GameScope
 class CommandExecutor @Inject constructor(
     private val mobController: MobController,
+    private val gameWorld: GameWorld,
 ) {
 
     fun execute(commandWithArgs: String) {
@@ -20,6 +23,8 @@ class CommandExecutor @Inject constructor(
         val args = commandWithArgs.drop(1)
         when (commandWithArgs.first()) {
             "/tp" -> tp(args[0].toFloat(), args[1].toFloat())
+            "/time" -> time(args[0].toFloat())
+            "/weather" -> weather(args[0])
         }
     }
 
@@ -31,5 +36,13 @@ class CommandExecutor @Inject constructor(
             )
             applyPendingTransform(transform)
         }
+    }
+
+    private fun time(time: Float) {
+        gameWorld.currentGameTime = time
+    }
+
+    private fun weather(weather: String) {
+        gameWorld.weather = Weather.valueOf(weather.uppercase())
     }
 }
