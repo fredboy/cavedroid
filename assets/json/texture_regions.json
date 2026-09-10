@@ -256,5 +256,7 @@
       "h": 28
     }
   },
-  "parallax/plains": {}
+  "parallax/plains": {},
+  "parallax/desert": {},
+  "parallax/winter": {}
 }
