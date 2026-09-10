@@ -26,12 +26,13 @@ class ParallaxRendererTest {
     private val batch = mockk<SpriteBatch>()
     private val shapes = mockk<ShapeRenderer>()
     private val draws = mutableListOf<Pair<Biome, Float>>()
+    private val verticesDrawn = mutableListOf<FloatArray>()
     private val weights = mutableMapOf<Biome, Float>()
 
     private fun renderer(): ParallaxRenderer {
         val textures = Biome.entries.associateWith {
             mockk<Texture> {
-                every { width } returns 3200
+                every { width } returns 4096
                 every { height } returns 582
             }
         }
@@ -49,6 +50,7 @@ class ParallaxRendererTest {
         every { batch.draw(any<Texture>(), any<FloatArray>(), any<Int>(), any<Int>()) } answers {
             val biome = textures.entries.single { it.value === firstArg<Texture>() }.key
             val vertices = secondArg<FloatArray>()
+            verticesDrawn += vertices.copyOf()
             val color = Color()
             Color.abgr8888ToColor(color, vertices[thirdArg<Int>() + SpriteBatch.C1])
             draws += biome to color.a
@@ -58,6 +60,7 @@ class ParallaxRendererTest {
 
     private fun draw(renderer: ParallaxRenderer): Map<Biome, Float> {
         draws.clear()
+        verticesDrawn.clear()
         renderer.draw(batch, shapes, Rectangle(0f, 100f, 40f, 24f), 1f / 60f)
         return draws.toMap()
     }
@@ -80,7 +83,7 @@ class ParallaxRendererTest {
             val alphas = draw(renderer)
             assertEquals(setOf(biome), alphas.keys)
             assertEquals(1f, alphas.getValue(biome), 0.01f)
-            assertEquals(3, draws.size)
+            assertEquals(1, draws.size)
         }
     }
 
@@ -124,5 +127,26 @@ class ParallaxRendererTest {
         weights[Biome.DESERT] = 0f
         assertEquals(setOf(Biome.PLAINS), draw(renderer).keys)
         verify { gameWorld.biomeProximityFactor(42.5f, 16f, any()) }
+    }
+
+    @Test
+    fun `unmirrored tiles cover wide viewports across positive and negative repeat boundaries`() {
+        val renderer = renderer()
+        weights[Biome.PLAINS] = 1f
+        for (cameraX in listOf(-1000000f, -256.25f, -256f, -0.25f, 0f, 0.25f, 256f, 256.25f, 1000000f)) {
+            verticesDrawn.clear()
+            val viewport = Rectangle(cameraX, 100f, 400f, 24f)
+            renderer.draw(batch, shapes, viewport, 1f / 60f)
+
+            assertTrue(verticesDrawn.first()[SpriteBatch.X1] <= viewport.x)
+            assertTrue(verticesDrawn.last()[SpriteBatch.X3] >= viewport.x + viewport.width)
+            for (vertices in verticesDrawn) {
+                assertTrue(vertices[SpriteBatch.U1] < vertices[SpriteBatch.U3])
+                assertEquals(128f, vertices[SpriteBatch.X3] - vertices[SpriteBatch.X1], 0.01f)
+            }
+            for ((left, right) in verticesDrawn.zipWithNext()) {
+                assertEquals(left[SpriteBatch.X3], right[SpriteBatch.X1], 0.01f)
+            }
+        }
     }
 }

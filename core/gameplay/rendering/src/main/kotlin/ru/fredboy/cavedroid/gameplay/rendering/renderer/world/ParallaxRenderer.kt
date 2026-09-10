@@ -39,13 +39,12 @@ class ParallaxRenderer @Inject constructor(
         val parallaxWidth = plains.regionWidth.meters / 2f
         val parallaxHeight = plains.regionHeight.meters / 2f
 
-        val repeatWidth = parallaxWidth * 2f
-
-        var parallaxX = (-viewport.x * 0.5f) % repeatWidth
-        if (parallaxX < 0f) {
-            parallaxX += repeatWidth
+        var scrollOffset = (viewport.x * 0.5f) % parallaxWidth
+        if (scrollOffset < 0f) {
+            scrollOffset += parallaxWidth
         }
-        parallaxX += viewport.x - parallaxWidth
+        val firstTileX = viewport.x - scrollOffset
+        val viewportRight = viewport.x + viewport.width
 
         val seaLevel = gameWorld.generatorConfig.seaLevel.toFloat()
         val parallaxY = min(
@@ -66,38 +65,23 @@ class ParallaxRenderer @Inject constructor(
             tint.a = weight / accumulatedWeight
 
             sprite.setFlip(false, sprite.isFlipY)
-            spriteBatch.drawSprite(
-                sprite = sprite,
-                x = parallaxX,
-                y = parallaxY,
-                width = parallaxWidth,
-                height = parallaxHeight,
-                tint = tint,
-            )
-
-            sprite.setFlip(true, sprite.isFlipY)
-            spriteBatch.drawSprite(
-                sprite = sprite,
-                x = parallaxX - parallaxWidth,
-                y = parallaxY,
-                width = parallaxWidth,
-                height = parallaxHeight,
-                tint = tint,
-            )
-
-            spriteBatch.drawSprite(
-                sprite = sprite,
-                x = parallaxX + parallaxWidth,
-                y = parallaxY,
-                width = parallaxWidth,
-                height = parallaxHeight,
-                tint = tint,
-            )
+            var tileX = firstTileX
+            while (tileX < viewportRight) {
+                spriteBatch.drawSprite(
+                    sprite = sprite,
+                    x = tileX,
+                    y = parallaxY,
+                    width = parallaxWidth,
+                    height = parallaxHeight,
+                    tint = tint,
+                )
+                tileX += parallaxWidth
+            }
         }
     }
 
     companion object {
-        private const val RENDER_LAYER = 99850
-        private const val BIOME_FADE_BLOCKS = 16f
+        private const val RENDER_LAYER = 99750
+        private const val BIOME_FADE_BLOCKS = 4f
     }
 }
