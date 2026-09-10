@@ -126,7 +126,7 @@ class ParallaxRendererTest {
         }
         weights[Biome.DESERT] = 0f
         assertEquals(setOf(Biome.PLAINS), draw(renderer).keys)
-        verify { gameWorld.biomeProximityFactor(42.5f, 16f, any()) }
+        verify { gameWorld.biomeProximityFactor(42.5f, 4f, any()) }
     }
 
     @Test
