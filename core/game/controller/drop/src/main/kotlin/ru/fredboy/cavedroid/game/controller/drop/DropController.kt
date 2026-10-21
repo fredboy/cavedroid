@@ -56,8 +56,8 @@ class DropController @Inject constructor(
         return drops
     }
 
-    private fun addDrop(drop: Drop, x: Float, y: Float, initialForce: Vector2? = null) {
-        if (drop.item.isNone() || abs(playerAdapter.x - x) > DROP_MAX_APPEAR_DISTANCE) {
+    private fun addDrop(drop: Drop, x: Float, y: Float, initialForce: Vector2? = null, checkDistance: Boolean = true) {
+        if (drop.item.isNone() || (checkDistance && abs(playerAdapter.x - x) > DROP_MAX_APPEAR_DISTANCE)) {
             return
         }
 
@@ -115,6 +115,24 @@ class DropController @Inject constructor(
         if (dropQueue.queue.isNotEmpty()) {
             val queued = dropQueue.queue.poll()
             addDrop(queued.x, queued.y, queued.item, getRandomInitialForce())
+        }
+    }
+
+    /** Preserve queued drops even if the camera has already moved away from the evicted chunk. */
+    fun flushPendingSpawns(containsX: (Float) -> Boolean) {
+        val iterator = dropQueue.queue.iterator()
+        while (iterator.hasNext()) {
+            val queued = iterator.next()
+            if (!containsX(queued.x)) continue
+            iterator.remove()
+            val item = queued.item
+            addDrop(
+                Drop(item.item, item.amount, item.durability),
+                queued.x,
+                queued.y,
+                getRandomInitialForce(),
+                checkDistance = false,
+            )
         }
     }
 

@@ -106,8 +106,8 @@ class FireController @Inject constructor(
     }
 
     /**
-     * Snapshot of every active fire — safe to mutate the controller from the
-     * caller (e.g., the logic task wraps mutations in a main-thread runnable).
+     * Snapshot of active fire references. Iterate and mutate them only on the main thread;
+     * this copies the collection, not the instances or their ages.
      */
     fun snapshot(): List<FireInstance> = fires.values.toList()
 

@@ -78,16 +78,20 @@ class MobController @Inject constructor(
         _mobs.remove(mob)
     }
 
-    private fun drainMobQueue() {
-        while (mobQueue.queue.isNotEmpty()) {
-            val qMob = mobQueue.queue.poll()
+    /** Materialize pending spawns before their owning chunk is saved or evicted. */
+    fun flushPendingSpawns(containsX: (Float) -> Boolean = { true }) {
+        val iterator = mobQueue.queue.iterator()
+        while (iterator.hasNext()) {
+            val qMob = iterator.next()
+            if (!containsX(qMob.x)) continue
+            iterator.remove()
             qMob.mob.spawn(qMob.x, qMob.y, mobPhysicsFactory)
             addMob(qMob.mob)
         }
     }
 
     fun update(delta: Float) {
-        drainMobQueue()
+        flushPendingSpawns()
 
         mobs.forEach { mob ->
             mob.update(mobWorldAdapter, playerAdapter, projectileAdapter, delta)
