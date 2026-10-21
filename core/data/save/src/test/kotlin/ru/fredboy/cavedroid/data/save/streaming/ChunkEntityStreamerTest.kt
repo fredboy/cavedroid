@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import io.mockk.verifyOrder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -100,6 +101,43 @@ class ChunkEntityStreamerTest {
         streamer.flushAll()
         streamer.onChunkBodiesReady(2)
         verify(exactly = 1) { saves.loadChunkEntities(any(), any(), 2, any(), any()) }
+    }
+
+    @Test
+    fun `eviction includes queued spawns and leaves other chunks pending`() {
+        load()
+        val queued = mutableListOf(33f to mob(), -0.5f to mob())
+        val spawned = queued.first().second
+        every { mobController.flushPendingSpawns(any()) } answers {
+            val accepts = firstArg<(Float) -> Boolean>()
+            val selected = queued.filter { accepts(it.first) }
+            selected.forEach { mobs.add(it.second) }
+            queued.removeAll(selected.toSet())
+        }
+        streamer.onChunkUnloaded(2)
+        assertEquals(listOf(listOf(savedMob, spawned)), snapshots)
+        assertEquals(listOf(-0.5f), queued.map { it.first })
+        assertEquals(emptyList<Mob>(), mobs)
+        verifyOrder {
+            mobController.flushPendingSpawns(any())
+            drops.flushPendingSpawns(any())
+            saves.saveChunkEntities(any(), any(), 2, any(), any(), any())
+            spawned.dispose()
+        }
+    }
+
+    @Test
+    fun `full save flushes pending spawns before snapshot without evicting`() {
+        load()
+        val queued = mob()
+        every { mobController.flushPendingSpawns(any()) } answers {
+            mobs.add(queued)
+            Unit
+        }
+        streamer.flushAll()
+        assertEquals(listOf(listOf(savedMob, queued)), snapshots)
+        verify(exactly = 0) { queued.dispose() }
+        verify(exactly = 1) { drops.flushPendingSpawns(any()) }
     }
 
     private fun load() {

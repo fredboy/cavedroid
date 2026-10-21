@@ -106,6 +106,8 @@ class ChunkEntityStreamer @Inject constructor(
         // including when an entity has wandered into a chunk that is still being prepared.
         // Restoration and eviction run on the main thread, with no physics step between them.
         restoreChunk(chunkX)
+        mobController.flushPendingSpawns { chunkOf(it) == chunkX }
+        dropController.flushPendingSpawns { chunkOf(it) == chunkX }
         val mobs = mobController.mobs.filter { chunkOf(it.position.x) == chunkX }
         val drops = dropController.getAllDrop().filter { chunkOf(it.position.x) == chunkX }
         val containers = containerController.containerMap.filterKeys { chunkOfInt(it.x) == chunkX }
