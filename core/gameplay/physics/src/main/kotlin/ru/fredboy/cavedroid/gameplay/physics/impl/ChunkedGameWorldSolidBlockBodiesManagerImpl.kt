@@ -36,6 +36,7 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
     private val coroutineScope = CoroutineScope(Job() + appDispatchers.main)
     private val mirrorBodies = mutableMapOf<Triple<Int, Int, Int>, Body>()
     private val synchronousMesher by lazy { ChunkCollisionMesher(itemsRepository.fallbackBlock) }
+    private val streamingStep = StreamingPhysicsStep()
     private val preparation by lazy {
         ChunkBodyPreparation(
             scope = coroutineScope,
@@ -82,6 +83,21 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
         val first = (visible.x.floorToInt() - 1) floorDiv ChunkGenerator.CHUNK_W
         val last = ((visible.x + visible.width).floorToInt() + 1) floorDiv ChunkGenerator.CHUNK_W
         for (chunkX in first..last) preparation.finish(chunkX)
+    }
+
+    override fun step(delta: Float, velocityIterations: Int, positionIterations: Int) {
+        if (!gameWorld.isInfinite) {
+            super.step(delta, velocityIterations, positionIterations)
+            return
+        }
+        streamingStep.step(world, delta, velocityIterations, positionIterations) { chunkX ->
+            if (gameWorld.isChunkLoadedAt(chunkX * ChunkGenerator.CHUNK_W)) {
+                preparation.finish(chunkX)
+                true
+            } else {
+                false
+            }
+        }
     }
 
     override fun onBlockPlaced(block: Block, x: Int, y: Int, layer: Layer) {

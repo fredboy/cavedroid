@@ -366,7 +366,7 @@ class GameWorld @Inject constructor(
 
         box2dAccumulator += delta
         while (box2dAccumulator >= PHYSICS_STEP_DELTA) {
-            world.step(PHYSICS_STEP_DELTA, 6, 2)
+            gameWorldSolidBlockBodiesManager.step(PHYSICS_STEP_DELTA, 6, 2)
             box2dAccumulator -= PHYSICS_STEP_DELTA
         }
     }
