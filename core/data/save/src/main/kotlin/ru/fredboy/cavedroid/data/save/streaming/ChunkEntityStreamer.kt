@@ -37,6 +37,8 @@ class ChunkEntityStreamer @Inject constructor(
     ChunkBodiesReadyListener {
 
     private var initialized = false
+    private val residentChunks = mutableSetOf<Int>()
+    private val restoredChunks = mutableSetOf<Int>()
 
     /**
      * Registers for chunk events and loads the entities of the chunks already resident (the spawn
@@ -49,29 +51,46 @@ class ChunkEntityStreamer @Inject constructor(
         initialized = true
         gameWorld.addChunkListener(this)
         gameWorld.addChunkBodiesReadyListener(this)
-        gameWorld.forEachLoadedChunk(::onChunkBodiesReady)
+        gameWorld.forEachLoadedChunk {
+            onChunkLoaded(it)
+            onChunkBodiesReady(it)
+        }
     }
 
-    override fun onChunkLoaded(chunkX: Int) = Unit
+    override fun onChunkLoaded(chunkX: Int) {
+        residentChunks.add(chunkX)
+    }
 
     override fun onChunkBodiesReady(chunkX: Int) {
+        if (chunkX !in residentChunks) return
+        restoreChunk(chunkX)
+    }
+
+    private fun restoreChunk(chunkX: Int) {
+        if (chunkX in restoredChunks) return
         val data = saveDataRepository.loadChunkEntities(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
             saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
             chunkX = chunkX,
             mobPhysicsFactory = mobPhysicsFactory,
             dropWorldAdapter = dropWorldAdapter,
-        ) ?: return
+        )
 
-        data.mobs.forEach(mobController::addMob)
-        data.drops.forEach(dropController::addLoadedDrop)
-        data.containers.forEach { (coordinates, container) ->
-            containerController.addContainer(coordinates.x, coordinates.y, coordinates.z, container)
+        data?.mobs?.forEach(mobController::addMob)
+        data?.drops?.forEach(dropController::addLoadedDrop)
+        data?.containers?.forEach { (coordinates, container) ->
+            if (coordinates !in containerController.containerMap) {
+                containerController.addContainer(coordinates.x, coordinates.y, coordinates.z, container)
+            }
         }
+        restoredChunks.add(chunkX)
     }
 
     override fun onChunkUnloaded(chunkX: Int) {
+        if (chunkX !in residentChunks) return
         persistChunk(chunkX, evict = true)
+        residentChunks.remove(chunkX)
+        restoredChunks.remove(chunkX)
     }
 
     /** Persists the entities of every resident chunk without evicting them (used on full save). */
@@ -83,6 +102,10 @@ class ChunkEntityStreamer @Inject constructor(
     }
 
     private fun persistChunk(chunkX: Int, evict: Boolean) {
+        // Saving can precede collision preparation. Read the old snapshot before replacing it,
+        // including when an entity has wandered into a chunk that is still being prepared.
+        // Restoration and eviction run on the main thread, with no physics step between them.
+        restoreChunk(chunkX)
         val mobs = mobController.mobs.filter { chunkOf(it.position.x) == chunkX }
         val drops = dropController.getAllDrop().filter { chunkOf(it.position.x) == chunkX }
         val containers = containerController.containerMap.filterKeys { chunkOfInt(it.x) == chunkX }
