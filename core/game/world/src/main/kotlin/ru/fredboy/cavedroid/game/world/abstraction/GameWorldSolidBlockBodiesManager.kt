@@ -29,6 +29,9 @@ abstract class GameWorldSolidBlockBodiesManager :
 
     protected abstract fun initialize()
 
+    /** Finish collision preparation needed by the current view before advancing Box2D. */
+    open fun prepareForStep() = Unit
+
     fun addChunkBodiesReadyListener(listener: ChunkBodiesReadyListener) {
         bodiesReadyListeners.add(listener)
     }

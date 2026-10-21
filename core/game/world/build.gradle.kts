@@ -18,6 +18,7 @@ dependencies {
     testRuntimeOnly(Dependencies.Test.junitJupiterEngine)
     testRuntimeOnly(Dependencies.Test.junitPlatformLauncher)
     testImplementation(Dependencies.Test.mockk)
+    testImplementation(Dependencies.Kotlin.coroutinesTest)
 }
 
 tasks.test {

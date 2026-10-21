@@ -334,6 +334,7 @@ class GameWorld @Inject constructor(
     fun update(delta: Float) {
         // Stream chunks in/out around the view before physics steps and rendering consume them.
         blockStore.update()
+        gameWorldSolidBlockBodiesManager.prepareForStep()
 
         currentGameTime += (delta * timeMultiplier)
         totalGameTimeSec += (delta * timeMultiplier)

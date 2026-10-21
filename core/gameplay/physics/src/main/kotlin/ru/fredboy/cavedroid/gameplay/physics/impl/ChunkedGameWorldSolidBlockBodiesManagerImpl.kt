@@ -1,8 +1,5 @@
 package ru.fredboy.cavedroid.gameplay.physics.impl
 
-import co.touchlab.kermit.Logger
-import com.badlogic.gdx.math.Rectangle
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.ChainShape
@@ -10,24 +7,21 @@ import com.badlogic.gdx.physics.box2d.FixtureDef
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainThread
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.effectiveMirrorBand
 import ru.fredboy.cavedroid.common.utils.floorDiv
+import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.common.utils.mirrorSidesFor
-import ru.fredboy.cavedroid.common.utils.neighbourCoordinates
+import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
-import ru.fredboy.cavedroid.domain.world.model.ChunkUserData
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
 import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
 import ru.fredboy.cavedroid.game.world.store.ChunkListener
-import java.util.LinkedList
 import javax.inject.Inject
 import kotlin.experimental.or
 
@@ -35,384 +29,143 @@ import kotlin.experimental.or
 class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
     private val itemsRepository: ItemsRepository,
     private val appDispatchers: AppDispatchers,
+    private val gameContextRepository: GameContextRepository,
 ) : GameWorldSolidBlockBodiesManager(),
     ChunkListener {
 
-    private val job = Job()
-    private val coroutineScope = CoroutineScope(job + appDispatchers.main)
-
-    private val _mirrorBodies = mutableMapOf<Triple<Int, Int, Int>, Body>()
-
-    private val loadingChunks = mutableSetOf<Int>()
-
-    private val mirrorBand: Int
-        get() = effectiveMirrorBand(MIRROR_BAND_BLOCKS, gameWorld.width)
+    private val coroutineScope = CoroutineScope(Job() + appDispatchers.main)
+    private val mirrorBodies = mutableMapOf<Triple<Int, Int, Int>, Body>()
+    private val synchronousMesher by lazy { ChunkCollisionMesher(itemsRepository.fallbackBlock) }
+    private val preparation by lazy {
+        ChunkBodyPreparation(
+            scope = coroutineScope,
+            background = appDispatchers.background,
+            sectionCount = (gameWorld.height + CHUNK_SIZE - 1) / CHUNK_SIZE,
+            snapshot = { chunkX: Int, section: Int -> snapshot(chunkX * ChunkGenerator.CHUNK_W, section * CHUNK_SIZE) },
+            createBuilder = {
+                val mesher = ChunkCollisionMesher(itemsRepository.fallbackBlock)
+                val build: (CollisionSnapshot) -> CollisionSection = { mesher.prepare(it) }
+                build
+            },
+            install = { chunkX, section, prepared -> install(chunkX * ChunkGenerator.CHUNK_W, section * CHUNK_SIZE, prepared) },
+            onReady = ::notifyChunkBodiesReady,
+        )
+    }
 
     override fun initialize() {
         if (gameWorld.isInfinite) {
-            // Infinite worlds create/destroy bodies lazily as chunks stream in/out.
             gameWorld.addChunkListener(this)
-            gameWorld.forEachLoadedChunk { chunkX ->
-                val startX = chunkX * ChunkGenerator.CHUNK_W
-                for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
-                    for (y in 0 until gameWorld.height step CHUNK_SIZE) {
-                        updateChunk(x, y)
-                    }
-                }
-            }
+            gameWorld.forEachLoadedChunk { preparation.load(it, synchronous = true) }
             return
         }
-
-        for (x in 0..<gameWorld.width step CHUNK_SIZE) {
-            for (y in 0..<gameWorld.height step CHUNK_SIZE) {
-                updateChunk(x, y)
-            }
+        for (x in 0 until gameWorld.width step CHUNK_SIZE) {
+            for (y in 0 until gameWorld.height step CHUNK_SIZE) updateChunk(x, y)
         }
     }
 
     override fun onChunkLoaded(chunkX: Int) {
-        val startX = chunkX * ChunkGenerator.CHUNK_W
-
-        // TODO: Hardcoded cached chunks size
-        if (_bodies.size < 208) {
-            logger.d { "Blocking main thread for chunk loading." }
-            for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
-                for (y in 0 until gameWorld.height step CHUNK_SIZE) {
-                    updateChunk(x, y)
-                }
-            }
-            notifyChunkBodiesReady(chunkX)
-        } else {
-            logger.d { "Launching chunk loading coroutine." }
-            loadingChunks.add(chunkX)
-            coroutineScope.launch {
-                for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
-                    for (y in 0 until gameWorld.height step CHUNK_SIZE) {
-                        updateChunkAsync(x, y)
-                    }
-                }
-                if (loadingChunks.remove(chunkX)) {
-                    notifyChunkBodiesReady(chunkX)
-                } else {
-                    destroyChunkBodies(chunkX)
-                }
-            }
-        }
+        preparation.load(chunkX)
     }
 
     override fun onChunkUnloaded(chunkX: Int) {
-        loadingChunks.remove(chunkX)
-        destroyChunkBodies(chunkX)
-    }
-
-    private fun destroyChunkBodies(chunkX: Int) {
+        preparation.unload(chunkX)
         val startX = chunkX * ChunkGenerator.CHUNK_W
-        for (x in startX until startX + ChunkGenerator.CHUNK_W step CHUNK_SIZE) {
-            for (y in 0 until gameWorld.height step CHUNK_SIZE) {
-                _bodies.remove(x to y)?.let { body -> world.destroyBody(body) }
-            }
+        for (y in 0 until gameWorld.height step CHUNK_SIZE) {
+            _bodies.remove(startX to y)?.let(world::destroyBody)
         }
     }
 
-    override fun onBlockPlaced(
-        block: Block,
-        x: Int,
-        y: Int,
-        layer: Layer,
-    ) {
-        if (layer != Layer.FOREGROUND) {
-            return
-        }
+    override fun prepareForStep() {
+        if (!gameWorld.isInfinite) return
+        val visible = gameContextRepository.getCameraContext().visibleWorld
+        // A one-block margin includes bodies that can overlap the viewport edge.
+        val first = (visible.x.floorToInt() - 1) floorDiv ChunkGenerator.CHUNK_W
+        val last = ((visible.x + visible.width).floorToInt() + 1) floorDiv ChunkGenerator.CHUNK_W
+        for (chunkX in first..last) preparation.finish(chunkX)
+    }
 
-        updateChunk(x, y)
+    override fun onBlockPlaced(block: Block, x: Int, y: Int, layer: Layer) {
+        if (layer != Layer.FOREGROUND || y !in 0 until gameWorld.height) return
+        if (gameWorld.isInfinite) {
+            preparation.rebuild(x floorDiv ChunkGenerator.CHUNK_W, y / CHUNK_SIZE)
+        } else {
+            updateChunk(x, y)
+        }
     }
 
     override fun dispose() {
         coroutineScope.cancel()
-        loadingChunks.clear()
+        if (gameWorld.isInfinite) preparation.clear()
         gameWorld.removeChunkListener(this)
-        _mirrorBodies.values.forEach { body -> body.world.destroyBody(body) }
-        _mirrorBodies.clear()
+        mirrorBodies.values.forEach { it.world.destroyBody(it) }
+        mirrorBodies.clear()
         super.dispose()
     }
 
+    private fun snapshot(x: Int, y: Int): CollisionSnapshot = CollisionSnapshot(
+        x = x,
+        y = y,
+        blocks = Array(CHUNK_SIZE * CHUNK_SIZE) { i -> gameWorld.getForeMap(x + i / CHUNK_SIZE, y + i % CHUNK_SIZE) },
+    )
+
     private fun updateChunk(blockX: Int, blockY: Int) {
-        val chunkX1 = (blockX floorDiv CHUNK_SIZE) * CHUNK_SIZE
-        val chunkY1 = blockY - blockY % CHUNK_SIZE
-
-        _bodies.remove(chunkX1 to chunkY1)?.let { body ->
-            world.destroyBody(body)
-        }
-
-        val (clusters, userData) = getChunkData(chunkX1, chunkY1)
-
-        val body = createBody(chunkX1, chunkY1, xOffset = 0)
-        _bodies[chunkX1 to chunkY1] = body
-        populateBodyFixtures(body, clusters, userData, xOffset = 0)
-
-        // The mirror band only makes sense for a finite, horizontally-looping world; infinite
-        // worlds have no seam to mirror across.
-        if (!gameWorld.isInfinite) {
-            mirrorSidesFor(chunkX1, gameWorld.width, mirrorBand).forEach { sideSign ->
-                updateMirrorChunk(chunkX1, chunkY1, sideSign, clusters, userData)
-            }
+        val x = (blockX floorDiv CHUNK_SIZE) * CHUNK_SIZE
+        val y = (blockY floorDiv CHUNK_SIZE) * CHUNK_SIZE
+        val snapshot = snapshot(x, y)
+        install(x, y, synchronousMesher.prepare(snapshot))
+        val band = effectiveMirrorBand(MIRROR_BAND_BLOCKS, gameWorld.width)
+        for (side in mirrorSidesFor(x, gameWorld.width, band)) {
+            val offset = side * gameWorld.width
+            val body = createBody(x, y, offset, synchronousMesher.prepare(snapshot, offset))
+            mirrorBodies.put(Triple(x, y, side), body)?.let(world::destroyBody)
         }
     }
 
-    private suspend fun updateChunkAsync(blockX: Int, blockY: Int) = withContext(appDispatchers.main) {
-        val chunkX1 = (blockX floorDiv CHUNK_SIZE) * CHUNK_SIZE
-        val chunkY1 = blockY - blockY % CHUNK_SIZE
-
-        _bodies.remove(chunkX1 to chunkY1)?.let { body ->
-            world.destroyBody(body)
-        }
-
-        val (clusters, userData) = withContext(appDispatchers.background) {
-            getChunkData(chunkX1, chunkY1)
-        }
-
-        val body = createBody(chunkX1, chunkY1, xOffset = 0)
-        _bodies[chunkX1 to chunkY1] = body
-        populateBodyFixtures(body, clusters, userData, xOffset = 0)
-
-        // The mirror band only makes sense for a finite, horizontally-looping world; infinite
-        // worlds have no seam to mirror across.
-        if (!gameWorld.isInfinite) {
-            mirrorSidesFor(chunkX1, gameWorld.width, mirrorBand).forEach { sideSign ->
-                updateMirrorChunk(chunkX1, chunkY1, sideSign, clusters, userData)
-            }
-        }
+    private fun install(x: Int, y: Int, prepared: CollisionSection) {
+        val body = createBody(x, y, 0, prepared)
+        // Keep the old body until its replacement is complete; never lose track of a newer body.
+        _bodies.put(x to y, body)?.let(world::destroyBody)
     }
 
-    private fun updateMirrorChunk(
-        chunkX1: Int,
-        chunkY1: Int,
-        sideSign: Int,
-        clusters: List<Cluster>,
-        userData: ChunkUserData,
-    ) {
-        val key = Triple(chunkX1, chunkY1, sideSign)
-
-        _mirrorBodies.remove(key)?.let { body ->
-            world.destroyBody(body)
+    private fun createBody(x: Int, y: Int, xOffset: Int, prepared: CollisionSection): Body {
+        check(GdxMainThread.isMainThread()) { "Collision bodies must be installed on the main thread" }
+        val bodyDef = BodyDef().apply {
+            type = BodyDef.BodyType.StaticBody
+            position.set((x + xOffset).toFloat() + CHUNK_SIZE / 2f, y.toFloat() + CHUNK_SIZE / 2f)
+            fixedRotation = true
         }
-
-        val xOffset = sideSign * gameWorld.width
-        val body = createBody(chunkX1, chunkY1, xOffset)
-        _mirrorBodies[key] = body
-        populateBodyFixtures(body, clusters, userData, xOffset)
-    }
-
-    private fun populateBodyFixtures(
-        body: Body,
-        clusters: List<Cluster>,
-        userData: ChunkUserData,
-        xOffset: Int,
-    ) {
-        if (!GdxMainThread.isMainThread()) {
-            logger.w { "populateBodyFixtures called on background thread! Nothing is done to avoid crash." }
-            return
-        }
-
-        body.userData = userData
-
-        clusters.forEach { cluster ->
-            val vertices = traceOutline(cluster.points)
-                .onEach { vertex ->
-                    vertex.x += xOffset.toFloat()
-                    vertex.x -= body.position.x
-                    vertex.y -= body.position.y
-                }
-
-            if (vertices.size < 2) {
-                return@forEach
-            }
-
-            val shape = ChainShape().apply {
-                this.createChain(vertices.toTypedArray())
-            }
-
+        val body = world.createBody(bodyDef)
+        try {
+            body.userData = prepared.userData
             val fixtureDef = FixtureDef().apply {
-                this.shape = shape
                 density = 1f
                 friction = 0f
                 restitution = 0f
-                filter.categoryBits = PhysicsConstants.CATEGORY_BLOCK
-
-                if (cluster.block.params.castsShadows) {
-                    filter.categoryBits = filter.categoryBits or PhysicsConstants.CATEGORY_OPAQUE
+            }
+            for (fixture in prepared.fixtures) {
+                if (fixture.vertices.size < 4) continue
+                val shape = ChainShape()
+                try {
+                    shape.createChain(fixture.vertices)
+                    fixtureDef.shape = shape
+                    fixtureDef.filter.categoryBits = PhysicsConstants.CATEGORY_BLOCK
+                    if (fixture.block.params.castsShadows) {
+                        fixtureDef.filter.categoryBits = fixtureDef.filter.categoryBits or PhysicsConstants.CATEGORY_OPAQUE
+                    }
+                    body.createFixture(fixtureDef).userData = fixture.block
+                } finally {
+                    shape.dispose()
                 }
             }
-
-            body.createFixture(fixtureDef).apply {
-                this.userData = cluster.block
-            }
-            shape.dispose()
+        } catch (error: Throwable) {
+            world.destroyBody(body)
+            throw error
         }
-    }
-
-    private fun traceOutline(cluster: Set<Pair<Int, Int>>): List<Vector2> {
-        val start = cluster.minWith(compareBy({ it.first }, { it.second }))
-
-        val vertices = LinkedList<Pair<Float, Float>>()
-
-        var current = start
-        var currentCorner = Corner.TOP_LEFT
-
-        do {
-            val block = gameWorld.getForeMap(current.first, current.second)
-
-            val corner = block.getCorner(current.first, current.second, currentCorner)
-
-            if (vertices.isEmpty() || corner != vertices.last()) {
-                vertices.add(corner)
-            }
-
-            val next = when (currentCorner) {
-                Corner.TOP_LEFT -> Pair(current.first, current.second - 1)
-                Corner.TOP_RIGHT -> Pair(current.first + 1, current.second)
-                Corner.BOTTOM_RIGHT -> Pair(current.first, current.second + 1)
-                Corner.BOTTOM_LEFT -> Pair(current.first - 1, current.second)
-            }
-
-            if (next in cluster) {
-                current = next
-                currentCorner = when (currentCorner) {
-                    Corner.TOP_LEFT -> Corner.BOTTOM_LEFT
-                    Corner.TOP_RIGHT -> Corner.TOP_LEFT
-                    Corner.BOTTOM_RIGHT -> Corner.TOP_RIGHT
-                    Corner.BOTTOM_LEFT -> Corner.BOTTOM_RIGHT
-                }
-            } else {
-                currentCorner = when (currentCorner) {
-                    Corner.TOP_LEFT -> Corner.TOP_RIGHT
-                    Corner.TOP_RIGHT -> Corner.BOTTOM_RIGHT
-                    Corner.BOTTOM_RIGHT -> Corner.BOTTOM_LEFT
-                    Corner.BOTTOM_LEFT -> Corner.TOP_LEFT
-                }
-            }
-        } while (current != start || currentCorner != Corner.TOP_LEFT)
-
-        return vertices.map { (x, y) -> Vector2(x, y) } + listOf(
-            gameWorld.getForeMap(start.first, start.second).getCorner(start.first, start.second, Corner.TOP_LEFT)
-                .let { (x, y) -> Vector2(x, y) },
-        )
-    }
-
-    private fun getSolidBlockOrFallback(x: Int, y: Int): Block {
-        return gameWorld.getForeMap(x, y).takeIf { it.params.hasCollision }
-            ?: itemsRepository.fallbackBlock
-    }
-
-    private fun getChunkData(chunkX: Int, chunkY: Int): Chunk {
-        val clusters = mutableListOf<Cluster>()
-        val blocksMap = mutableMapOf<Pair<Int, Int>, Block>()
-
-        val boundX = chunkX until chunkX + CHUNK_SIZE
-        val boundY = chunkY until chunkY + CHUNK_SIZE
-
-        for (x in boundX) {
-            for (y in boundY) {
-                val block = getSolidBlockOrFallback(x, y)
-                blocksMap[x to y] = block
-
-                val neighbourCoordinates = neighbourCoordinates(x, y, CHUNK_SIZE)
-                    .filter { getSolidBlockOrFallback(it.first, it.second) == block }
-                val neighbourClusters = clusters.filter { cluster ->
-                    neighbourCoordinates.any { it in cluster.points }
-                }
-                clusters.removeAll(neighbourClusters)
-
-                val merged = neighbourClusters
-                    .map(Cluster::points)
-                    .flatten()
-                    .takeIf { it.isNotEmpty() }
-                    ?.toMutableSet()
-                    ?: mutableSetOf()
-
-                merged.add(x to y)
-                clusters.add(
-                    Cluster(
-                        points = merged,
-                        block = block,
-                    ),
-                )
-            }
-        }
-
-        return Chunk(
-            clusters = clusters.filter { cluster ->
-                cluster.points.none { (x, y) ->
-                    !cluster.block.params.hasCollision &&
-                        (x == boundX.first || x == boundX.last || y == boundY.first || y == boundY.last)
-                }
-            },
-            userData = ChunkUserData(
-                boundX = boundX,
-                boundY = boundY,
-                blocks = blocksMap,
-            ),
-        )
-    }
-
-    private fun createBody(x: Int, y: Int, xOffset: Int): Body {
-        val rect = Rectangle((x + xOffset).toFloat(), y.toFloat(), CHUNK_SIZE.toFloat(), CHUNK_SIZE.toFloat())
-
-        val bodyDef = BodyDef().apply {
-            type = BodyDef.BodyType.StaticBody
-            rect.getCenter(position)
-            fixedRotation = true
-        }
-
-        return world.createBody(bodyDef)
-    }
-
-    private fun Block.getCorner(x: Int, y: Int, corner: Corner): Pair<Float, Float> {
-        return when (corner) {
-            Corner.TOP_LEFT -> Pair(
-                x.toFloat() + params.collisionMargins.left,
-                y.toFloat() + params.collisionMargins.top,
-            )
-
-            Corner.TOP_RIGHT -> Pair(
-                x.toFloat() + 1f - params.collisionMargins.right,
-                y.toFloat() + params.collisionMargins.top,
-            )
-
-            Corner.BOTTOM_RIGHT -> Pair(
-                x.toFloat() + 1f - params.collisionMargins.right,
-                y.toFloat() + 1f - params.collisionMargins.bottom,
-            )
-
-            Corner.BOTTOM_LEFT -> Pair(
-                x.toFloat() + params.collisionMargins.left,
-                y.toFloat() + 1f - params.collisionMargins.bottom,
-            )
-        }
-    }
-
-    private data class Chunk(
-        val clusters: List<Cluster>,
-        val userData: ChunkUserData,
-    )
-
-    private data class Cluster(
-        val points: Set<Pair<Int, Int>>,
-        val block: Block,
-    )
-
-    private enum class Corner {
-        TOP_LEFT,
-        BOTTOM_RIGHT,
-        BOTTOM_LEFT,
-        TOP_RIGHT,
+        return body
     }
 
     companion object {
-        private const val CHUNK_SIZE = 16
+        private const val CHUNK_SIZE = ChunkCollisionMesher.SIZE
         private const val MIRROR_BAND_BLOCKS = 80
-
-        private const val TAG = "ChunkedGameWorldSolidBlockBodiesManagerImpl"
-        private val logger = Logger.withTag(TAG)
     }
 }

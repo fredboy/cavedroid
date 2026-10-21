@@ -1,16 +1,16 @@
 package ru.fredboy.cavedroid.game.world.store
 
 import co.touchlab.kermit.Logger
-import com.badlogic.gdx.Gdx
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
-import ru.fredboy.cavedroid.common.coroutines.GdxMainThread
 import ru.fredboy.cavedroid.common.utils.floorToInt
-import ru.fredboy.cavedroid.common.utils.safeCast
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
@@ -18,7 +18,6 @@ import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
 import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
-import ru.fredboy.cavedroid.game.world.store.InfiniteBlockStore.ChunkEntry.Companion.chunkEntry
 import ru.fredboy.cavedroid.game.world.store.InfiniteBlockStore.Companion.LOAD_RADIUS
 
 /**
@@ -41,11 +40,15 @@ class InfiniteBlockStore(
     private val chunkPersister: (Chunk) -> Unit = { },
 ) : WorldBlockStore {
 
-    private val job = Job()
-    private val coroutineScope = CoroutineScope(job + appDispatchers.background)
+    private val coroutineScope = CoroutineScope(SupervisorJob() + appDispatchers.main)
 
     private val generator = ChunkGenerator(generatorConfig, itemsRepository)
-    private val chunks = HashMap<Int, ChunkEntry>()
+
+    // Resident terrain, requests and listeners are exclusively owned by the main thread.
+    private val chunks = HashMap<Int, Chunk>()
+    private val loads = HashMap<Int, LoadRequest>()
+    private val pendingSaves = HashMap<Int, PendingSave>()
+    private val storageLock = Any()
     private val listeners = mutableListOf<ChunkListener>()
 
     private var lastCenterChunk = Int.MIN_VALUE
@@ -67,7 +70,7 @@ class InfiniteBlockStore(
 
     init {
         // Pre-load the spawn region so the first render and spawn search have terrain to work with.
-        runBlocking { stream(centerChunk = 0) }
+        for (cx in -LOAD_RADIUS..LOAD_RADIUS) chunks[cx] = loadOrGenerate(cx)
         lastCenterChunk = 0
     }
 
@@ -75,11 +78,11 @@ class InfiniteBlockStore(
 
     override fun isInBounds(x: Int, y: Int): Boolean = y in 0 until height
 
-    override fun isChunkLoaded(x: Int): Boolean = chunks[chunkIndex(x)] is ChunkEntry.Loaded
+    override fun isChunkLoaded(x: Int): Boolean = chunkIndex(x) in chunks
 
     override fun getBlock(x: Int, y: Int, layer: Layer): Block {
         if (y !in 0 until height) return itemsRepository.fallbackBlock
-        val chunk = chunks[chunkIndex(x)]?.safeCast<ChunkEntry.Loaded>()?.chunk ?: return itemsRepository.fallbackBlock
+        val chunk = chunks[chunkIndex(x)] ?: return itemsRepository.fallbackBlock
         val lx = localX(x)
         return when (layer) {
             Layer.FOREGROUND -> chunk.fore[lx][y]
@@ -89,7 +92,7 @@ class InfiniteBlockStore(
 
     override fun setBlock(x: Int, y: Int, layer: Layer, value: Block) {
         if (y !in 0 until height) return
-        val chunk = chunks[chunkIndex(x)]?.safeCast<ChunkEntry.Loaded>()?.chunk ?: return
+        val chunk = chunks[chunkIndex(x)] ?: return
         val lx = localX(x)
         when (layer) {
             Layer.FOREGROUND -> chunk.fore[lx][y] = value
@@ -100,8 +103,7 @@ class InfiniteBlockStore(
 
     override fun getBiomeAt(x: Int): Biome {
         // Biome is a pure function of x, so answer even for chunks that are not resident.
-        return chunks[chunkIndex(x)]?.safeCast<ChunkEntry.Loaded>()
-            ?.chunk?.biomes?.get(localX(x)) ?: generator.biomeAt(x)
+        return chunks[chunkIndex(x)]?.biomes?.get(localX(x)) ?: generator.biomeAt(x)
     }
 
     override fun update() {
@@ -111,12 +113,23 @@ class InfiniteBlockStore(
         if (centerChunk == lastCenterChunk) return
         lastCenterChunk = centerChunk
 
-        if (centerChunk !in chunks.keys) {
-            logger.d { "Blocking stream around $centerChunk" }
-            runBlocking { stream(centerChunk) }
+        val wanted = (centerChunk - LOAD_RADIUS)..(centerChunk + LOAD_RADIUS)
+        val keep = (centerChunk - UNLOAD_RADIUS)..(centerChunk + UNLOAD_RADIUS)
+        loads.keys.filterNot { it in wanted }.forEach { loads.remove(it)?.job?.cancel() }
+        chunks.keys.filterNot { it in keep }.forEach(::evictChunk)
+
+        if (centerChunk !in chunks) {
+            // Initial spawn at a saved position and teleports need terrain before this frame's step.
+            for (cx in wanted) {
+                if (cx in chunks) continue
+                loads.remove(cx)?.job?.cancel()
+                val chunk = pendingSaves[cx]?.chunk?.let(::copyChunk) ?: loadOrGenerate(cx)
+                publish(chunk)
+            }
         } else {
-            logger.d { "Async stream around $centerChunk" }
-            coroutineScope.launch { stream(centerChunk) }
+            for (cx in wanted) {
+                if (cx !in chunks && cx !in loads) requestChunk(cx)
+            }
         }
     }
 
@@ -134,100 +147,126 @@ class InfiniteBlockStore(
     }
 
     override fun flushDirtyChunks() {
-        chunks.values.forEach { entry ->
-            val chunk = entry.safeCast<ChunkEntry.Loaded>()?.chunk ?: return@forEach
+        for (chunk in chunks.values) {
             if (chunk.dirty) {
+                val save = snapshotSave(chunk)
+                persist(save)
                 chunk.dirty = false
-                chunkPersister(chunk)
+                pendingSaves.remove(chunk.chunkX)
             }
+        }
+        // Evicted terrain may still be queued for I/O when a full save or disposal occurs.
+        for (save in pendingSaves.values.toList()) {
+            persist(save)
+            pendingSaves.remove(save.chunk.chunkX)
         }
     }
 
     override fun dispose() {
         coroutineScope.cancel()
+        loads.clear()
         flushDirtyChunks()
         chunks.clear()
         listeners.clear()
     }
 
-    private fun stream(centerChunk: Int) {
-        val keep = (centerChunk - UNLOAD_RADIUS)..(centerChunk + UNLOAD_RADIUS)
-        chunks.keys.filterNot { it in keep }
-            .forEach { evictChunk(it) }
+    private fun requestChunk(chunkX: Int) {
+        val request = LoadRequest()
+        loads[chunkX] = request
+        request.job = coroutineScope.launch(start = CoroutineStart.LAZY) {
+            try {
+                val saved = pendingSaves[chunkX]?.chunk
+                val chunk = if (saved != null) {
+                    copyChunk(saved)
+                } else {
+                    withContext(appDispatchers.background) { loadOrGenerate(chunkX) }
+                }
+                if (loads[chunkX] === request) {
+                    loads.remove(chunkX)
+                    publish(chunk)
+                }
+            } catch (error: CancellationException) {
+                throw error
+            } catch (error: Exception) {
+                logger.e(error) { "Failed to load chunk $chunkX" }
+                lastCenterChunk = Int.MIN_VALUE
+            } finally {
+                if (loads[chunkX] === request) loads.remove(chunkX)
+            }
+        }.also { it.start() }
+    }
 
-        for (cx in centerChunk - LOAD_RADIUS..centerChunk + LOAD_RADIUS) {
-            ensureChunk(cx)
+    private fun loadOrGenerate(chunkX: Int): Chunk {
+        val loaded = synchronized(storageLock) { chunkLoader(chunkX) }
+        return loaded ?: generator.generateChunk(chunkX).let { generated ->
+            Chunk(chunkX, generated.foreMap, generated.backMap, generated.biomes)
         }
     }
 
-    private fun ensureChunk(chunkX: Int) {
-        chunks[chunkX]?.let { return }
-        chunks[chunkX] = chunkEntry()
-
-        val loaded = chunkLoader(chunkX)
-
-        val chunk = loaded ?: generator.generateChunk(chunkX).let { generated ->
-            Chunk(
-                chunkX = chunkX,
-                fore = generated.foreMap,
-                back = generated.backMap,
-                biomes = generated.biomes,
-            )
-        }
-
-        chunks[chunkX] = chunkEntry(chunk)
-
-        if (!GdxMainThread.isMainThread()) {
-            Gdx.app.postRunnable {
-                listeners.forEach {
-                    it.onChunkLoaded(chunkX)
-                }
-            }
-        } else {
-            listeners.forEach {
-                it.onChunkLoaded(chunkX)
-            }
-        }
+    private fun publish(chunk: Chunk) {
+        chunks[chunk.chunkX] = chunk
+        listeners.toList().forEach { it.onChunkLoaded(chunk.chunkX) }
     }
 
     private fun evictChunk(chunkX: Int) {
-        logger.d { "Evict chunk $chunkX" }
-
-        val chunk = chunks.remove(chunkX)?.safeCast<ChunkEntry.Loaded>()?.chunk ?: return
-
-        if (!GdxMainThread.isMainThread()) {
-            Gdx.app.postRunnable {
-                listeners.forEach {
-                    it.onChunkUnloaded(chunkX)
+        val chunk = chunks.remove(chunkX) ?: return
+        if (chunk.dirty) {
+            val save = snapshotSave(chunk)
+            coroutineScope.launch(appDispatchers.io) {
+                try {
+                    persist(save)
+                    withContext(appDispatchers.main) {
+                        if (pendingSaves[chunkX] === save) pendingSaves.remove(chunkX)
+                    }
+                } catch (error: CancellationException) {
+                    throw error
+                } catch (error: Exception) {
+                    // Retain the snapshot for a later reload, explicit save or disposal retry.
+                    logger.e(error) { "Failed to persist chunk $chunkX" }
                 }
             }
-        } else {
-            listeners.forEach {
-                it.onChunkUnloaded(chunkX)
-            }
         }
+        listeners.toList().forEach { it.onChunkUnloaded(chunkX) }
+    }
 
-        if (chunk.dirty) {
-            chunkPersister(chunk)
+    private fun snapshotSave(chunk: Chunk): PendingSave {
+        val sequence = pendingSaves[chunk.chunkX]?.sequence ?: SaveSequence()
+        return PendingSave(copyChunk(chunk), sequence, ++sequence.nextVersion).also {
+            pendingSaves[chunk.chunkX] = it
         }
     }
+
+    private fun persist(save: PendingSave) {
+        synchronized(storageLock) {
+            // A delayed eviction write must never overwrite a newer full-save/disposal snapshot.
+            if (save.version <= save.sequence.persistedVersion) return
+            chunkPersister(save.chunk)
+            save.sequence.persistedVersion = save.version
+        }
+    }
+
+    private fun copyChunk(chunk: Chunk): Chunk = Chunk(
+        chunkX = chunk.chunkX,
+        fore = Array(chunk.fore.size) { chunk.fore[it].copyOf() },
+        back = Array(chunk.back.size) { chunk.back[it].copyOf() },
+        biomes = chunk.biomes.copyOf(),
+        dirty = chunk.dirty,
+    )
 
     private fun chunkIndex(x: Int): Int = Math.floorDiv(x, ChunkGenerator.CHUNK_W)
 
     private fun localX(x: Int): Int = Math.floorMod(x, ChunkGenerator.CHUNK_W)
 
-    private sealed interface ChunkEntry {
-        data class Loaded(
-            val chunk: Chunk,
-        ) : ChunkEntry
-
-        data object Loading : ChunkEntry
-
-        companion object {
-            fun chunkEntry(chunk: Chunk) = Loaded(chunk)
-            fun chunkEntry() = Loading
-        }
+    private class LoadRequest {
+        var job: Job? = null
     }
+
+    private class SaveSequence {
+        var nextVersion = 0L // Main-thread only.
+        var persistedVersion = 0L // Protected by storageLock.
+    }
+
+    private class PendingSave(val chunk: Chunk, val sequence: SaveSequence, val version: Long)
 
     companion object {
         private const val TAG = "InfiniteBlockStore"
