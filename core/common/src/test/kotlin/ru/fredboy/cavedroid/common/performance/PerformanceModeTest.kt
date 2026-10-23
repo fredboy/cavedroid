@@ -5,8 +5,9 @@ import org.junit.jupiter.api.Test
 
 class PerformanceModeTest {
     @Test
-    fun `store release defaults to Firebase and unavailable builds default to OFF`() {
+    fun `store builds default to Firebase and unavailable builds default to OFF`() {
         assertEquals(PerformanceMode.FIREBASE, PerformanceMode.restore(null, firebaseAvailable = true, localAvailable = false))
+        assertEquals(PerformanceMode.FIREBASE, PerformanceMode.restore(null, firebaseAvailable = true, localAvailable = true))
         assertEquals(PerformanceMode.OFF, PerformanceMode.restore(null, firebaseAvailable = false, localAvailable = false))
         assertEquals(PerformanceMode.OFF, PerformanceMode.restore(null, firebaseAvailable = false, localAvailable = true))
     }
@@ -35,8 +36,16 @@ class PerformanceModeTest {
     }
 
     @Test
-    fun `debug toggle retains local diagnostics`() {
+    fun `FOSS debug toggle retains local diagnostics`() {
         assertEquals(PerformanceMode.LOCAL, PerformanceMode.OFF.next(localAvailable = true, firebaseAvailable = false))
         assertEquals(PerformanceMode.OFF, PerformanceMode.LOCAL.next(localAvailable = true, firebaseAvailable = false))
+    }
+
+    @Test
+    fun `store debug offers all modes and restores Firebase selection`() {
+        assertEquals(PerformanceMode.LOCAL, PerformanceMode.OFF.next(localAvailable = true, firebaseAvailable = true))
+        assertEquals(PerformanceMode.FIREBASE, PerformanceMode.LOCAL.next(localAvailable = true, firebaseAvailable = true))
+        assertEquals(PerformanceMode.OFF, PerformanceMode.FIREBASE.next(localAvailable = true, firebaseAvailable = true))
+        assertEquals(PerformanceMode.FIREBASE, PerformanceMode.restore("FIREBASE", firebaseAvailable = true, localAvailable = true))
     }
 }

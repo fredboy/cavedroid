@@ -28,7 +28,7 @@ class AndroidPerformanceMonitor private constructor(
 ) : RecordingPerformanceMonitor(
     clock = PerformanceClock(System::nanoTime),
     output = worker,
-    supportsFirebase = worker.backend.available && !BuildConfig.DEBUG,
+    supportsFirebase = worker.backend.available,
     supportsLocal = BuildConfig.DEBUG,
     heap = { Runtime.getRuntime().let { it.totalMemory() - it.freeMemory() } },
 ) {
