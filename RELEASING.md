@@ -50,6 +50,7 @@ Or fully local (must be on `release/A.B.C`, clean tree, `gh` CLI authenticated):
 
 ```bash
 export GITHUB_TOKEN=$(gh auth token)
+export DEEPSEEK_API_KEY='your-deepseek-api-key'
 ./scripts/finalize-release.sh A.B.C                     # waits up to 30 min for master PR to merge
 ./scripts/finalize-release.sh A.B.C --no-wait           # exits after opening master PR
 ./scripts/finalize-release.sh A.B.C --timeout 3600      # wait up to 1 hour instead
@@ -57,7 +58,7 @@ export GITHUB_TOKEN=$(gh auth token)
 
 The script:
 
-1. AI-generates plaintext changelogs for every supported locale via [GitHub Models](https://github.com/marketplace/models). The locale list lives in `scripts/locales.sh` and must stay in sync with `SUPPORTED_LOCALES` in `CaveDroidConstants.kt`.
+1. AI-generates plaintext changelogs for every supported locale via [DeepSeek](https://api-docs.deepseek.com/). The locale list lives in `scripts/locales.sh` and must stay in sync with `SUPPORTED_LOCALES` in `CaveDroidConstants.kt`.
 2. Writes them to `fastlane/metadata/android/<locale-dir>/changelogs/<versionCode>.txt`, one file per supported locale.
 3. Commits with `[skip ci]` and pushes the release branch.
 4. Opens PR `release/A.B.C → master`, enables auto-merge.
@@ -79,7 +80,7 @@ For auto-merge to be available at all, Settings → General → Pull Requests �
 After `finalize-release.yml` finishes, `release.yml` runs (dispatched explicitly by the finalize step). It:
 
 1. Calls `scripts/build-release-artifacts.sh A.B.C --skip-legacy` (signed Android foss release + desktop Linux/Win + web).
-2. Calls `scripts/gen-release-notes-ai.sh vA.B.C --output release-notes.md` for multilingual markdown release notes (one section per supported locale).
+2. Calls `scripts/gen-release-notes-ai.sh vA.B.C --output release-notes.md` for English markdown release notes.
 3. Creates the GitHub Release with all artifacts attached.
 
 To do this locally instead:
@@ -88,6 +89,7 @@ To do this locally instead:
 # requires keystore.properties at repo root
 ./scripts/build-release-artifacts.sh A.B.C
 export GITHUB_TOKEN=$(gh auth token)
+export DEEPSEEK_API_KEY='your-deepseek-api-key'
 ./scripts/gen-release-notes-ai.sh vA.B.C --output release-A.B.C/RELEASE_NOTES.md
 gh release create vA.B.C --notes-file release-A.B.C/RELEASE_NOTES.md release-A.B.C/*
 ```
@@ -181,12 +183,34 @@ All release logic lives in `scripts/` so it can run locally and in CI. Each scri
 | `up-version.sh A.B.C` | Bump version files in lockstep | Clean tree (called by the others) |
 | `require-clean-work-tree.sh` | Helper guard | — |
 | `start-release.sh A.B.C [--no-push] [--skip-clean-check]` | Cut `release/A.B.C` from develop + version bump | On `develop`, clean tree |
-| `gen-changelog-ai.sh A.B.C [--model M]` | AI-generate fastlane changelogs for all supported locales | `GITHUB_TOKEN` set |
-| `finalize-release.sh A.B.C [--no-push] [--skip-clean-check]` | Run gen-changelog-ai, commit, merge to master+develop, tag | On `release/A.B.C`, clean tree, `GITHUB_TOKEN` set, master+develop fetched locally |
+| `gen-changelog-ai.sh A.B.C [--model M]` | AI-generate fastlane changelogs for all supported locales | `DEEPSEEK_API_KEY` set |
+| `finalize-release.sh A.B.C [--no-push] [--skip-clean-check]` | Run gen-changelog-ai, commit, merge to master+develop, tag | On `release/A.B.C`, clean tree, `GITHUB_TOKEN` and `DEEPSEEK_API_KEY` set, master+develop fetched locally |
 | `build-release-artifacts.sh A.B.C [--skip-legacy]` | Build signed Android foss + desktop Linux/Win + web | `keystore.properties` at repo root |
-| `gen-release-notes-ai.sh vA.B.C [--model M] [--output PATH]` | AI-generate multilingual markdown release notes (one section per supported locale) | `GITHUB_TOKEN` set |
+| `gen-release-notes-ai.sh vA.B.C [--model M] [--output PATH]` | AI-generate English markdown release notes | `DEEPSEEK_API_KEY` set |
 
-`GITHUB_TOKEN` for local use: `export GITHUB_TOKEN=$(gh auth token)`. In CI it's auto-provided and the workflow declares `permissions: { models: read }`.
+### DeepSeek setup
+
+Both AI scripts call `https://api.deepseek.com/chat/completions` with `deepseek-flash` in non-thinking mode. Override the model with `--model MODEL` when invoking either generator directly. See the [DeepSeek API documentation](https://api-docs.deepseek.com/) for supported models.
+
+For local generation, set your DeepSeek API key in the terminal:
+
+```bash
+export DEEPSEEK_API_KEY='your-deepseek-api-key'
+./scripts/gen-changelog-ai.sh A.B.C
+./scripts/gen-release-notes-ai.sh vA.B.C --output release-notes.md
+```
+
+For GitHub Actions, add a repository secret named `DEEPSEEK_API_KEY` under Settings → Secrets and variables → Actions → New repository secret. Alternatively, run this from the repository and paste the key at the prompt:
+
+```bash
+gh secret set DEEPSEEK_API_KEY
+```
+
+`finalize-release.yml` passes this secret to changelog generation; `release.yml` passes it to release-note generation. Keep the updated scripts on the release branch/tag that each workflow checks out, and the updated workflows on the branch used to dispatch them. Normal release workflow commands remain unchanged.
+
+Missing keys stop generation with a configuration error. HTTP errors, invalid JSON, and missing completions fall back to the raw git log and print a warning; review that output before publishing.
+
+GitHub authentication is separate: `export GITHUB_TOKEN=$(gh auth token)` for local release automation. In CI, GitHub provides this token automatically for PRs, tags, workflow dispatch, and publishing releases.
 
 ## CI workflows
 
@@ -210,11 +234,13 @@ Configure in Settings → Secrets and variables → Actions:
 
 | Secret | Required by | Value |
 |---|---|---|
+| `DEEPSEEK_API_KEY` | `finalize-release.yml`, `release.yml` | DeepSeek API key |
 | `ANDROID_KEYSTORE_BASE64` | `release.yml` | `base64 -w0 release.keystore` of your `.jks` / `.keystore` file |
 | `ANDROID_KEYSTORE_PASSWORD` | `release.yml` | keystore password |
 | `ANDROID_KEY_ALIAS` | `release.yml` | key alias inside the keystore |
 | `ANDROID_KEY_PASSWORD` | `release.yml` | key password |
-`GITHUB_TOKEN` (provided automatically) covers AI inference, PR creation, auto-merge enablement, and the explicit `workflow_dispatch` of `release.yml`.
+
+`GITHUB_TOKEN` (provided automatically) covers PR creation, auto-merge enablement, and the explicit `workflow_dispatch` of `release.yml`.
 
 ### Repo settings
 

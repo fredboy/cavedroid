@@ -13,6 +13,8 @@
 # a PR author from approving their own PR, and we deliberately rely on a
 # human review step.
 #
+# Requires DEEPSEEK_API_KEY for changelog generation.
+#
 # Usage:
 #   GITHUB_TOKEN=$(gh auth token) ./scripts/finalize-release.sh A.B.C [flags]
 #
