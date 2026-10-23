@@ -13,4 +13,13 @@ dependencies {
     useCommonLibs()
     useModule(":core:domain:items")
     useModule(":core:domain:world")
+
+    testImplementation(Dependencies.Test.junitJupiter)
+    testRuntimeOnly(Dependencies.Test.junitJupiterEngine)
+    testRuntimeOnly(Dependencies.Test.junitPlatformLauncher)
+    testImplementation(Dependencies.Test.mockk)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

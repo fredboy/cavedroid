@@ -101,6 +101,7 @@ abstract class BaseMobBehavior<MOB : Mob>(
         playerAdapter: PlayerAdapter,
         delta: Float,
         requireWalkableAngle: Boolean,
+        sightGraceSeconds: Float = SIGHT_GRACE_SECONDS,
     ): Boolean {
         val dx = playerAdapter.x - position.x
         val dy = playerAdapter.y - position.y
@@ -112,7 +113,7 @@ abstract class BaseMobBehavior<MOB : Mob>(
             return true
         }
         lostSightElapsedSec += delta
-        return lostSightElapsedSec < SIGHT_GRACE_SECONDS
+        return lostSightElapsedSec < sightGraceSeconds
     }
 
     companion object {

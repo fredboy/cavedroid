@@ -3075,6 +3075,42 @@
         }
       ],
       "use_action": "use_fence_gate"
+    },
+    "chest_mineshaft": {
+      "hp": 180,
+      "collision": false,
+      "background": true,
+      "transparent": false,
+      "casts_shadows": false,
+      "drop": "chest",
+      "texture": "chest",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "meta": "chest",
+      "drop_info": [
+        {
+          "key": "chest",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "wood",
+      "action_sound_key": "door/open",
+      "loot_table": "mineshaft",
+      "use_action": "chest"
+    },
+    "spawner": {
+      "meta": "spawner",
+      "mob_key": "spider",
+      "texture": "spawner",
+      "hp": 300,
+      "transparent": true,
+      "casts_shadows": false,
+      "tool_type": "pickaxe",
+      "material": "metal",
+      "drop_info": []
     }
   },
   "items": {
@@ -4982,6 +5018,15 @@
       "burning_time": 15000,
       "origin_x": 0.5,
       "origin_y": 1
+    },
+    "spawn_egg_spider": {
+      "name": "Spider Spawn Egg",
+      "type": "usable",
+      "texture": "spawn_egg",
+      "tint": "#49362C",
+      "action_key": "use_spawn_egg",
+      "mob_key": "spider",
+      "origin_x": 0.5
     }
   }
 }

@@ -150,6 +150,7 @@ class TouchCursorInputHandler @Inject constructor(
                         return@onTargetHit
                     }
 
+                    target.behavior.onAttackedByPlayer()
                     player.onMobAttacked?.invoke(target, projectile.damage)
                 },
             ),

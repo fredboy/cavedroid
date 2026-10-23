@@ -7,7 +7,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Direction
 import ru.fredboy.cavedroid.entity.mob.model.WalkingMob
 
-class AggressiveMobBehavior :
+class AggressiveMobBehavior(private val sightGraceSeconds: Float = 1f) :
     BaseMobBehavior<WalkingMob>(
         mobType = WalkingMob::class,
     ) {
@@ -24,7 +24,7 @@ class AggressiveMobBehavior :
             return
         }
 
-        if (!canStillTrackPlayer(worldAdapter, playerAdapter, delta, requireWalkableAngle = false)) {
+        if (!canStillTrackPlayer(worldAdapter, playerAdapter, delta, requireWalkableAngle = false, sightGraceSeconds = sightGraceSeconds)) {
             passiveBehavior.update(this, worldAdapter, playerAdapter, projectileAdapter, delta)
             return
         }

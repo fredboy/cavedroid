@@ -68,13 +68,17 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
             .filter {
                 when (it.behaviorType) {
                     MobBehaviorType.PASSIVE, MobBehaviorType.SHEEP -> gameWorld.isDayTime()
-                    MobBehaviorType.AGGRESSIVE, MobBehaviorType.ARCHER -> !gameWorld.isDayTime()
+                    MobBehaviorType.AGGRESSIVE, MobBehaviorType.ARCHER, MobBehaviorType.SPIDER -> !gameWorld.isDayTime()
                     else -> false
                 }
             }
 
         val caveCandidates = mobParamsRepository.getAllParams()
-            .filter { it.behaviorType == MobBehaviorType.AGGRESSIVE || it.behaviorType == MobBehaviorType.ARCHER }
+            .filter {
+                it.behaviorType == MobBehaviorType.AGGRESSIVE ||
+                    it.behaviorType == MobBehaviorType.ARCHER ||
+                    it.behaviorType == MobBehaviorType.SPIDER
+            }
 
         val spanMobs = mobController.mobs.count { it.mapX in originX..(originX + span) }
         val canSpawnSurface = (!gameWorld.isDayTime() || spanMobs < mobsPerSpan) && surfaceCandidates.isNotEmpty()

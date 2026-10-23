@@ -236,6 +236,12 @@ sealed class Block {
 
     data class Chest(
         override val params: CommonBlockParams,
+        val lootTable: String? = null,
+    ) : Container()
+
+    data class Spawner(
+        override val params: CommonBlockParams,
+        val mobKey: String,
     ) : Container()
 
     data class Slab(

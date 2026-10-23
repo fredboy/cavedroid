@@ -37,6 +37,9 @@ internal class WorldAdapterImpl @Inject constructor(
     override val height: Int
         get() = gameWorld.height
 
+    override val seaLevel: Int
+        get() = gameWorld.generatorConfig.seaLevel
+
     @Deprecated("Use start/end")
     override val width: Int
         get() = gameWorld.width
