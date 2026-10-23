@@ -2,6 +2,9 @@ package ru.fredboy.cavedroid.gameplay.physics.task
 
 import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceMetric
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.save.model.GrowBlockEntry
@@ -23,7 +26,8 @@ class GameWorldGrowBlocksControllerTask(
     private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
     initialEntries: List<GrowBlockEntry> = emptyList(),
-) : BaseGameWorldControllerTask(),
+    performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
+) : BaseGameWorldControllerTask(performanceMonitor, PerformanceMetric.TASK_GROW),
     ChunkListener {
 
     private val queueLock = Any()

@@ -23,8 +23,7 @@ class BfsLightingSystem(
     private var _grid: LightGrid? = null
     private var _overlay: LightingOverlayRenderer? = null
 
-    // Absolute world x of the window grid's column 0 (infinite worlds only; 0 for finite).
-    private var windowOriginX = 0
+    private var lightingWindow: LightingWindow? = null
 
     private val transientEmitterIds = AtomicLong(0L)
 
@@ -45,26 +44,31 @@ class BfsLightingSystem(
             // Infinite worlds can't allocate a grid for the (unbounded) world, so light a window that
             // follows the camera and is rebuilt as it drifts (see [update]). At attach the camera is
             // not yet in world units, so centre on the spawn column (0); [update] re-centres next frame.
-            windowOriginX = -WINDOW_WIDTH / 2
-            rebuildWindowGrid(gameWorld)
+            val window = LightingWindow(
+                height = gameWorld.height,
+                isOpaque = { x, y -> isOpaque(gameWorld, x, y) },
+                blockEmission = { x, y -> emissionAt(gameWorld, x, y) },
+            )
+            lightingWindow = window
+            _grid = window.grid
+            gameWorld.addChunkListener(window)
         } else {
-            windowOriginX = 0
             _grid = LightGrid(gameWorld.width, gameWorld.height).also { lightGrid ->
                 lightGrid.rebuildAll(
                     isOpaque = { x, y -> isOpaque(gameWorld, x, y) },
                     blockEmission = { x, y -> emissionAt(gameWorld, x, y) },
                 )
             }
-            _overlay = LightingOverlayRenderer(gameContextRepository, gameWorld, requireNotNull(_grid))
         }
 
+        _overlay = LightingOverlayRenderer(gameContextRepository, gameWorld, requireNotNull(_grid))
         gameWorld.addBlockPlacedListener(this)
     }
 
     override fun onBlockPlaced(block: Block, x: Int, y: Int, layer: Layer) {
         val world = _gameWorld ?: return
         val grid = _grid ?: return
-        if (world.isInfinite && x !in windowOriginX until windowOriginX + WINDOW_WIDTH) {
+        if (lightingWindow?.contains(x) == false) {
             // Outside the lit window; it'll be rebuilt from the world when the window re-centres.
             return
         }
@@ -77,30 +81,10 @@ class BfsLightingSystem(
     }
 
     override fun update(delta: Float) {
-        val world = _gameWorld ?: return
-        if (!world.isInfinite) return
-
-        val center = cameraCenterX()
-        val windowCenter = windowOriginX + WINDOW_WIDTH / 2
-        if (kotlin.math.abs(center - windowCenter) >= RECENTER_THRESHOLD) {
-            windowOriginX = center - WINDOW_WIDTH / 2
-            rebuildWindowGrid(world)
-        }
-    }
-
-    private fun rebuildWindowGrid(gameWorld: GameWorld) {
-        val grid = LightGrid(WINDOW_WIDTH, gameWorld.height, windowOriginX)
-        grid.rebuildAll(
-            isOpaque = { x, y -> isOpaque(gameWorld, x + windowOriginX, y) },
-            blockEmission = { x, y -> emissionAt(gameWorld, x + windowOriginX, y) },
-        )
-        _grid = grid
-
-        val overlay = _overlay
-        if (overlay == null) {
-            _overlay = LightingOverlayRenderer(gameContextRepository, gameWorld, grid)
-        } else {
-            overlay.updateGrid(grid)
+        val window = lightingWindow ?: return
+        if (window.update(cameraCenterX())) {
+            _grid = window.grid
+            _overlay?.updateGrid(window.grid)
         }
     }
 
@@ -145,6 +129,8 @@ class BfsLightingSystem(
 
     override fun dispose() {
         _gameWorld?.removeBlockPlacedListener(this)
+        lightingWindow?.let { _gameWorld?.removeChunkListener(it) }
+        lightingWindow = null
         _overlay?.dispose()
         _overlay = null
         _grid = null
@@ -269,12 +255,6 @@ class BfsLightingSystem(
 
         private const val FURNACE_LEVEL = 13
         private const val FIRE_LEVEL = 11
-
-        // Lit window for infinite worlds. Must stay within the block store's resident region so the
-        // rebuild reads real terrain, and wide enough that the viewport plus light radius never
-        // reaches the wrap-prone window edges.
-        private const val WINDOW_WIDTH = 192
-        private const val RECENTER_THRESHOLD = 32
 
         private fun ru.fredboy.cavedroid.domain.items.model.block.BlockLightInfo.toLevel(): Int {
             val raw = (lightBrightness * LightGrid.MAX_LEVEL_F).roundToInt()

@@ -1,0 +1,7 @@
+- Novos fundos parallax: planícies, deserto, inverno, nuvens e estrelas noturnas
+- Cercas e portões de madeira
+- Aranhas que escalam paredes e ficam mais agressivas quanto mais fundo você vai
+- Minas subterrâneas e geradores de criaturas configuráveis
+- Sombras e iluminação corrigidas ao carregar chunks
+- Corrigida a seleção do idioma do dispositivo
+- Melhorias de desempenho e estabilidade

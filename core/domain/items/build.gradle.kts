@@ -10,4 +10,11 @@ dependencies {
     useCommonLibs()
     useLibgdx()
     useDagger()
+    testImplementation(Dependencies.Test.junitJupiter)
+    testRuntimeOnly(Dependencies.Test.junitJupiterEngine)
+    testRuntimeOnly(Dependencies.Test.junitPlatformLauncher)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

@@ -1,13 +1,10 @@
 package ru.fredboy.cavedroid.gameplay.rendering.renderer.world
 
-import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.common.utils.drawSprite
-import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
 import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.game.world.GameWorld
@@ -15,7 +12,6 @@ import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindWorldRenderer
 import javax.inject.Inject
 import kotlin.math.ceil
 import kotlin.math.floor
-import kotlin.math.max
 
 @GameScope
 @BindWorldRenderer
@@ -35,46 +31,11 @@ class WeatherRenderer @Inject constructor(
         viewport: Rectangle,
         delta: Float,
     ) {
-        drawSunAndMoon(spriteBatch, viewport)
-
         scrollOffsetMeters = (scrollOffsetMeters + delta * SCROLL_SPEED_M_PER_SEC) % TEXTURE_PERIOD_METERS
 
         if (gameWorld.weatherIntensity > 0f) {
             drawPrecipitation(spriteBatch, viewport)
         }
-    }
-
-    private fun drawSunAndMoon(spriteBatch: SpriteBatch, viewport: Rectangle) {
-        val sunSprite = environmentTextureRegionsRepository.getSunSprite()
-        val moonSprite = environmentTextureRegionsRepository.getMoonPhaseSprite(gameWorld.moonPhase)
-        val skyBodyWidth = max(sunSprite.width, moonSprite.width)
-        val skyWidth = max(SKY_SPAN, viewport.width) + skyBodyWidth * 2
-        val totalSpan = skyWidth * 2f
-        val normalizedTime = gameWorld.getNormalizedTime()
-        // Avoid `(sunPositionX + skyWidth) % totalSpan` — TeaVM's Float.rem codegen
-        // drops the parentheses around the divisor and evaluates it as
-        // `((sunPositionX + skyWidth) % skyWidth) * 2f`, so the moon ends up
-        // tracking `2 * sunPositionX` and is visible all day.
-        val rawSunPos = (skyWidth * normalizedTime) + (viewport.width / 2 - skyWidth / 2)
-        val sunPositionX = rawSunPos - skyBodyWidth + ((skyBodyWidth - sunSprite.width) / 2f)
-        val rawMoonPos = rawSunPos + skyWidth
-        val moonPositionX = (if (rawMoonPos >= totalSpan) rawMoonPos - totalSpan else rawMoonPos) -
-            skyBodyWidth + ((skyBodyWidth - moonSprite.width) / 2f)
-
-        sunSprite.setOriginCenter()
-
-        spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE)
-        spriteBatch.drawSprite(
-            sprite = sunSprite,
-            x = viewport.x + sunPositionX,
-            y = viewport.y + viewport.height * 0.25f - sunSprite.height / 2,
-        )
-        spriteBatch.drawSprite(
-            sprite = moonSprite,
-            x = viewport.x + moonPositionX,
-            y = viewport.y + viewport.height * 0.25f - moonSprite.height / 2,
-        )
-        spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
     }
 
     private fun drawPrecipitation(spriteBatch: SpriteBatch, viewport: Rectangle) {
@@ -128,7 +89,5 @@ class WeatherRenderer @Inject constructor(
         private const val TEXTURE_PERIOD_METERS = 16f
         private const val TEXTURE_VARIANTS = 4
         private const val SCROLL_SPEED_M_PER_SEC = 6f
-
-        private val SKY_SPAN = 480.meters
     }
 }

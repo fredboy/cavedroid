@@ -255,5 +255,8 @@
       "w": 26,
       "h": 28
     }
-  }
+  },
+  "parallax/plains": {},
+  "parallax/desert": {},
+  "parallax/winter": {}
 }

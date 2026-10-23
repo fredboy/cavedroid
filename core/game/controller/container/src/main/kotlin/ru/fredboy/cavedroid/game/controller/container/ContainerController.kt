@@ -11,9 +11,11 @@ import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
+import ru.fredboy.cavedroid.entity.container.abstraction.MobSpawnerAdapter
 import ru.fredboy.cavedroid.entity.container.model.Container
 import ru.fredboy.cavedroid.entity.container.model.ContainerCoordinates
 import ru.fredboy.cavedroid.entity.container.model.Furnace
+import ru.fredboy.cavedroid.entity.container.model.Spawner
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter
 import java.lang.ref.WeakReference
 import java.util.LinkedList
@@ -25,6 +27,7 @@ class ContainerController @Inject constructor(
     private val containerWorldAdapter: ContainerWorldAdapter,
     private val containerFactory: ContainerFactory,
     private val dropAdapter: DropAdapter,
+    private val mobSpawnerAdapter: MobSpawnerAdapter,
 ) : OnBlockPlacedListener,
     OnBlockDestroyedListener {
 
@@ -115,7 +118,6 @@ class ContainerController @Inject constructor(
         }
     }
 
-    @Suppress("unused")
     fun update(delta: Float) {
         val iterator = containerMap.iterator()
         while (iterator.hasNext()) {
@@ -130,6 +132,9 @@ class ContainerController @Inject constructor(
                 iterator.remove()
             } else {
                 container.update(getItemByKeyUseCase)
+                if (container is Spawner) {
+                    container.update(delta, coordinates, mobSpawnerAdapter)
+                }
 
                 if (container is Furnace && container.lightSource == null) {
                     container.lightSource = createFurnaceLightSource(coordinates.x, coordinates.y, container)

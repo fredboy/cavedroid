@@ -1,0 +1,7 @@
+- Nuevos fondos parallax: llanuras, desierto, invierno, nubes y estrellas nocturnas
+- Vallas y puertas de madera
+- Arañas que escalan paredes y se vuelven más agresivas cuanto más profundo bajas
+- Minas subterráneas y generadores de criaturas configurables
+- Corregidas las sombras e iluminación al cargar fragmentos
+- Corregida la selección del idioma del dispositivo
+- Mejoras de rendimiento y estabilidad

@@ -1,17 +1,22 @@
 package ru.fredboy.cavedroid.gameplay.physics.task
 
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceMetric
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.common.utils.UniqueQueue
 import ru.fredboy.cavedroid.common.utils.floorDiv
+import ru.fredboy.cavedroid.common.utils.floorMod
 import ru.fredboy.cavedroid.common.utils.ifTrue
+import ru.fredboy.cavedroid.domain.items.model.block.FenceBlocks
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
-import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
 import ru.fredboy.cavedroid.game.world.store.ChunkListener
 import ru.fredboy.cavedroid.gameplay.physics.action.getRequiresBlockAction
 import ru.fredboy.cavedroid.gameplay.physics.action.updateblock.IUpdateBlockAction
+import ru.fredboy.cavedroid.gameplay.physics.action.updateblock.UpdateFenceAction
 import java.util.Queue
 import javax.inject.Inject
 
@@ -19,23 +24,24 @@ import javax.inject.Inject
 class GameWorldBlocksLogicControllerTask @Inject constructor(
     private val gameWorld: GameWorld,
     private val updateBlockActions: Map<String, @JvmSuppressWildcards IUpdateBlockAction>,
-) : BaseGameWorldControllerTask(),
+    performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
+) : BaseGameWorldControllerTask(performanceMonitor, PerformanceMetric.TASK_BLOCKS),
     ChunkListener {
 
     private val queueLock = Any()
 
     private val dirtyChunks: Queue<Pair<Int, Int>> = UniqueQueue()
 
-    private val onBlockPlacedListener = OnBlockPlacedListener { block, x, y, layer ->
-        if (block.isNone() || layer == Layer.BACKGROUND) {
+    private val onBlockPlacedListener = OnBlockPlacedListener { block, x, y, _ ->
+        if (block.isNone()) {
             return@OnBlockPlacedListener
         }
 
         markChunksDirtyIfNeed(x, y, "${block.params.key} placed")
     }
 
-    private val onBlockDestroyedListener = OnBlockDestroyedListener { block, x, y, layer, _, _ ->
-        if (block.isNone() || layer == Layer.BACKGROUND) {
+    private val onBlockDestroyedListener = OnBlockDestroyedListener { block, x, y, _, _, _ ->
+        if (block.isNone()) {
             return@OnBlockDestroyedListener
         }
 
@@ -61,6 +67,11 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
                 }
             }
         }
+
+        for (y in 0 until gameWorld.height step CHUNK_SIZE) {
+            markChunksDirtyIfNeed(startX, y, "neighbor chunk loaded")
+            markChunksDirtyIfNeed(startX + ChunkGenerator.CHUNK_W - 1, y, "neighbor chunk loaded")
+        }
     }
 
     override fun onChunkUnloaded(chunkX: Int) {
@@ -82,7 +93,7 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
         val chunkY = y - (y % CHUNK_SIZE)
         val coordinates = chunkX to chunkY
 
-        val localX = x % CHUNK_SIZE
+        val localX = x - chunkX
         val localY = y % CHUNK_SIZE
 
         val neighbors = buildList {
@@ -107,7 +118,10 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
 
         synchronized(queueLock) {
             neighbors.forEach { neighborCoords ->
-                dirtyChunks.offer(neighborCoords).ifTrue {
+                val (neighborX, neighborY) = neighborCoords
+                if (neighborY !in 0 until gameWorld.height || !gameWorld.isChunkLoadedAt(neighborX)) return@forEach
+                val normalizedX = if (gameWorld.isInfinite) neighborX else neighborX floorMod gameWorld.width
+                dirtyChunks.offer(normalizedX to neighborY).ifTrue {
                     logger.v { "Marking chunk as dirty: $neighborCoords. Reason: $reason" }
                 }
             }
@@ -116,13 +130,17 @@ class GameWorldBlocksLogicControllerTask @Inject constructor(
 
     private fun updateBlock(x: Int, y: Int): Boolean {
         val block = gameWorld.getForeMap(x, y)
+        val hasFence = FenceBlocks.isFence(block) || FenceBlocks.isFence(gameWorld.getBackMap(x, y))
+        if (hasFence) {
+            updateBlockActions[UpdateFenceAction.ACTION_KEY]?.update(x, y)
+        }
 
-        if (block.isNone()) {
-            return false
+        if (block.isNone() || FenceBlocks.isFence(block)) {
+            return hasFence
         }
 
         val blockKey = block.params.key
-        val action = updateBlockActions[blockKey]
+        val action = updateBlockActions[block.params.updateActionKey ?: blockKey]
             ?: updateBlockActions.getRequiresBlockAction()
                 .takeIf { block.params.run { requiresBlock || isFallable || requiresBackground } }
 

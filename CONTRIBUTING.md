@@ -2,7 +2,7 @@
 
 Thanks for your interest in contributing! This document covers how to set up your environment, where to send changes, and the project's coding conventions.
 
-For building and running the game, see [README.md](README.md). For the codebase walkthrough (modules, DI, per-platform notes), see [CLAUDE.md](CLAUDE.md).
+For building and running the game, see [README.md](README.md). For a code map and implementation conventions, see [AGENTS.md](AGENTS.md).
 
 ## Setup
 
@@ -86,7 +86,7 @@ Tests use JUnit Jupiter (5.x), mockk, and `kotlinx-coroutines-test`.
 ./gradlew :core:common:test     # a single module
 ```
 
-Don't instantiate libGDX classes that need a GL context (`Stage`, `RayHandler`, `PointLight`, etc.) in unit tests — mock them or extract logic into a pure helper in `core:common`. See the "Tests" section in [CLAUDE.md](CLAUDE.md) for the per-module `build.gradle.kts` block.
+Don't instantiate libGDX classes that need a GL context (`Stage`, `RayHandler`, `PointLight`, etc.) in unit tests — mock them or extract pure logic into the module that owns it. See the "Verification" section in [AGENTS.md](AGENTS.md) and `core/common/build.gradle.kts` for test setup.
 
 ## Pull requests
 

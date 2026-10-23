@@ -41,4 +41,8 @@ data class BlockDto(
     @SerialName("action_sound_key") val actionSoundKey: String? = null,
     @SerialName("combustible") val combustible: Boolean = false,
     @SerialName("requires_background") val requiresBackground: Boolean = false,
+    @SerialName("update_action") val updateAction: String? = null,
+    @SerialName("mob_key") val mobKey: String? = null,
+    @SerialName("loot_table") val lootTable: String? = null,
+    @SerialName("use_action") val useAction: String? = null,
 )

@@ -1,10 +1,11 @@
 package ru.fredboy.cavedroid.gameplay.physics.task
 
 import com.badlogic.gdx.math.MathUtils
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
+import ru.fredboy.cavedroid.common.coroutines.GdxMainThread
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceMetric
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.game.controller.fire.FireController
@@ -15,22 +16,20 @@ import javax.inject.Inject
 import kotlin.math.min
 
 /**
- * Ticks every [FIRE_UPDATE_INTERVAL_SEC]. Runs on the libGDX Timer thread —
- * reads the world map directly (consistent with the existing fluids/blocks
- * tasks) but defers every world mutation to the libGDX main thread via
- * [AppDispatchers.main] (which wraps `Gdx.app.postRunnable`). Mutations are
- * batched into a single main-thread runnable per tick to avoid per-fire
- * postRunnable churn.
+ * libGDX Timer posts task execution to the main thread. Compute and apply one fire tick in that
+ * same turn so chunk eviction, reload, block edits and shutdown cannot interleave with its actions.
+ * Actions are batched locally so newly ignited fires do not participate in the current tick.
  */
 @GameScope
 class GameWorldFireLogicControllerTask @Inject constructor(
     private val gameWorld: GameWorld,
     private val fireController: FireController,
     private val mobController: MobController,
-    private val appDispatchers: AppDispatchers,
-) : BaseGameWorldControllerTask() {
+    performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
+) : BaseGameWorldControllerTask(performanceMonitor, PerformanceMetric.TASK_FIRE) {
 
     override fun exec() {
+        check(GdxMainThread.isMainThread()) { "Fire ticks must run on the main thread" }
         val pending = mutableListOf<() -> Unit>()
 
         fireController.snapshot().forEach { fire ->
@@ -69,9 +68,7 @@ class GameWorldFireLogicControllerTask @Inject constructor(
 
         if (pending.isEmpty()) return
 
-        CoroutineScope(appDispatchers.main).launch {
-            pending.forEach { it() }
-        }
+        pending.forEach { it() }
     }
 
     private fun spreadFromFire(x: Int, y: Int, sourceLayer: Layer, pending: MutableList<() -> Unit>) {

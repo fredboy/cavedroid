@@ -38,7 +38,8 @@ class BlockMapper @Inject constructor(
             "lava" -> Lava(commonBlockParams, requireNotNull(dto.state), dto.density ?: 0f)
             "slab" -> Slab(commonBlockParams, requireNotNull(dto.fullBlock), requireNotNull(dto.otherPart))
             "furnace" -> Furnace(commonBlockParams)
-            "chest" -> Chest(commonBlockParams)
+            "chest" -> Chest(commonBlockParams, dto.lootTable)
+            "spawner" -> Block.Spawner(commonBlockParams, requireNotNull(dto.mobKey))
             "ladder" -> Block.Ladder(commonBlockParams, dto.density ?: 0f)
             "web" -> Block.Web(commonBlockParams, requireNotNull(dto.density))
             "fire" -> Block.Fire(commonBlockParams)
@@ -83,6 +84,8 @@ class BlockMapper @Inject constructor(
         dropsSingleItem = dto.pickSingleDrop,
         combustible = dto.combustible,
         requiresBackground = dto.requiresBackground,
+        updateActionKey = dto.updateAction,
+        useActionKey = dto.useAction,
     )
 
     private fun mapLightInfo(info: BlockLightDto?): BlockLightInfo? {

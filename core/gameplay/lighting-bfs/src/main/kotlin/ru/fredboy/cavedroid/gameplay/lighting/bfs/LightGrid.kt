@@ -100,6 +100,14 @@ class LightGrid(
                 }
             }
         }
+        // Furnace and fire handles can remain active while streamed terrain is refreshed.
+        for (emitter in transientEmitters.values) {
+            val idx = index(emitter.x, emitter.y)
+            if (emitter.level > (block[idx].toInt() and 0xFF)) {
+                block[idx] = emitter.level.toByte()
+                enqueueAdd(addQueue, emitter.x, emitter.y, emitter.level)
+            }
+        }
         drainBlockAddQueue()
     }
 

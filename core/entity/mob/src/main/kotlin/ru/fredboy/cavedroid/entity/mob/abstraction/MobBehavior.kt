@@ -6,5 +6,7 @@ interface MobBehavior {
 
     val attacksWhenPossible: Boolean get() = false
 
+    fun onAttackedByPlayer() = Unit
+
     fun update(mob: Mob, worldAdapter: MobWorldAdapter, playerAdapter: PlayerAdapter, projectileAdapter: ProjectileAdapter, delta: Float)
 }

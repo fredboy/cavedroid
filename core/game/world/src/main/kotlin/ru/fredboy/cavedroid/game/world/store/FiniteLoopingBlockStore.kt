@@ -1,5 +1,9 @@
 package ru.fredboy.cavedroid.game.world.store
 
+import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceMetric
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.measure
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.model.Biome
@@ -18,6 +22,7 @@ class FiniteLoopingBlockStore(
     initialForeMap: Array<Array<Block>>?,
     initialBackMap: Array<Array<Block>>?,
     initialBiomes: Array<Biome>?,
+    performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
 ) : WorldBlockStore {
 
     override val width: Int = generatorConfig.width
@@ -36,7 +41,9 @@ class FiniteLoopingBlockStore(
             backMap = initialBackMap
             biomes = initialBiomes ?: Array(width) { Biome.PLAINS }
         } else {
-            val generated = GameWorldGenerator(generatorConfig, itemsRepository).generate()
+            val generated = performanceMonitor.currentSession().measure(PerformanceMetric.WORLD_GENERATE) {
+                GameWorldGenerator(generatorConfig, itemsRepository).generate()
+            }
             foreMap = generated.foreMap
             backMap = generated.backMap
             biomes = generated.biomes

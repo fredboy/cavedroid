@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 # Generates plaintext fastlane changelogs for every supported locale via
-# GitHub Models. The list of locales (and their fastlane directory mapping)
+# DeepSeek. The list of locales (and their fastlane directory mapping)
 # lives in scripts/locales.sh.
 #
 # Usage:
-#   GITHUB_TOKEN=$(gh auth token) ./scripts/gen-changelog-ai.sh A.B.C [--model MODEL]
+#   DEEPSEEK_API_KEY=... ./scripts/gen-changelog-ai.sh A.B.C [--model MODEL]
 #
 # Writes:
 #   fastlane/metadata/android/<locale-dir>/changelogs/<versionCode>.txt
@@ -28,7 +28,7 @@ fi
 version=$1
 shift || true
 
-model="openai/gpt-4o-mini"
+model="deepseek-flash"
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --model) model=$2; shift 2 ;;
@@ -41,10 +41,10 @@ if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   exit 1
 fi
 
-if [[ -z "${GITHUB_TOKEN:-}" ]]; then
-  echo >&2 "error: GITHUB_TOKEN is required"
-  echo >&2 "  in CI:    workflow needs 'permissions: { models: read }' (token is auto-provided)"
-  echo >&2 "  locally:  export GITHUB_TOKEN=\$(gh auth token)"
+if [[ -z "${DEEPSEEK_API_KEY:-}" ]]; then
+  echo >&2 "error: DEEPSEEK_API_KEY is required"
+  echo >&2 "  in CI:    add the DEEPSEEK_API_KEY repository Actions secret"
+  echo >&2 "  locally:  export DEEPSEEK_API_KEY=<your DeepSeek API key>"
   exit 1
 fi
 
@@ -96,23 +96,27 @@ ${commits}"
 
 request=$(jq -n --arg model "$model" --arg prompt "$prompt" '{
   model: $model,
-  messages: [{role: "user", content: $prompt}]
+  messages: [{role: "user", content: $prompt}],
+  thinking: {type: "disabled"},
+  stream: false
 }')
 
 set +e
-response=$(curl -sS \
-  -H "Authorization: Bearer $GITHUB_TOKEN" \
+response=$(curl -sS --fail-with-body \
+  --write-out '%{stderr}DeepSeek HTTP %{http_code}; content type: %{content_type}\n' \
+  -H "Authorization: Bearer $DEEPSEEK_API_KEY" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
-  -H "X-GitHub-Api-Version: 2022-11-28" \
   -d "$request" \
-  https://models.github.ai/inference/chat/completions)
+  https://api.deepseek.com/chat/completions)
 curl_status=$?
 set -e
 
 content=""
 if [[ $curl_status -eq 0 ]]; then
-  content=$(printf '%s' "$response" | jq -r '.choices[0].message.content // empty')
+  if ! content=$(printf '%s' "$response" | jq -er '.choices[0].message.content | select(type == "string" and length > 0)' 2>/dev/null); then
+    content=""
+  fi
 fi
 
 use_fallback=0

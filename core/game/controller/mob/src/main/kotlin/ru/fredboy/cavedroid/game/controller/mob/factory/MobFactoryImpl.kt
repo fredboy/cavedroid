@@ -9,6 +9,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobFactory
 import ru.fredboy.cavedroid.entity.mob.model.ArcherMob
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.model.SheepMob
+import ru.fredboy.cavedroid.entity.mob.model.SpiderMob
 import ru.fredboy.cavedroid.entity.mob.model.WalkingMob
 import javax.inject.Inject
 
@@ -33,6 +34,8 @@ class MobFactoryImpl @Inject constructor(
             MobBehaviorType.SHEEP -> SheepMob(mobParams)
 
             MobBehaviorType.ARCHER -> ArcherMob(getItemByKeyUseCase, mobParams)
+
+            MobBehaviorType.SPIDER -> SpiderMob(mobParams)
 
             else -> run {
                 logger.w { "Mobs of type ${mobParams.behaviorType} not yet supported" }

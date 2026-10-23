@@ -1,7 +1,7 @@
 name: Release
 
 # Builds signed release artifacts for a vA.B.C tag and creates a GitHub
-# Release with AI-generated notes for every supported locale.
+# Release with AI-generated English notes via DeepSeek.
 #
 # Triggers:
 #   - workflow_dispatch with tag input — the primary path; how
@@ -13,6 +13,7 @@ name: Release
 # so the same logic can be invoked locally.
 #
 # Required secrets:
+#   DEEPSEEK_API_KEY              — DeepSeek API key for release notes
 #   ANDROID_KEYSTORE_BASE64        — base64-encoded .jks/.keystore file
 #   ANDROID_KEYSTORE_PASSWORD      — keystore password
 #   ANDROID_KEY_ALIAS              — key alias inside the keystore
@@ -38,7 +39,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      models: read
     steps:
       - name: Determine tag
         id: tag
@@ -102,7 +102,7 @@ jobs:
 
       - name: Generate AI release notes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: ./scripts/gen-release-notes-ai.sh "${{ steps.tag.outputs.tag }}" --output release-notes.md
 
       - name: Create GitHub Release

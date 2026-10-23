@@ -283,6 +283,8 @@ dependencies {
 
     "storeImplementation"(platform(Dependencies.Google.Firebase.bom))
     "storeImplementation"(Dependencies.Google.Firebase.crashlytics)
+    "storeImplementation"(Dependencies.Google.Firebase.analytics)
+    "storeImplementation"(Dependencies.Google.Firebase.performance)
 //    "storeImplementation"(Dependencies.Yandex.mobileads)
 
     natives(Dependencies.LibGDX.Android.Natives.armeabi)

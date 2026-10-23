@@ -126,6 +126,18 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                             row()
                         }
 
+                        if (state.performanceAvailable) {
+                            textButton(
+                                viewModel.getFormattedString(
+                                    "performanceMonitoring",
+                                    viewModel.getLocalizedString("performanceMode" + state.performanceMode.name),
+                                ),
+                            ) {
+                                onClickWithSound(viewModel) { viewModel.onPerformanceClick() }
+                            }
+                            row()
+                        }
+
                         if (state.showDebugSetting) {
                             textButton("Show debug: ${state.preferShowDebug}") {
                                 onClickWithSound(viewModel) {

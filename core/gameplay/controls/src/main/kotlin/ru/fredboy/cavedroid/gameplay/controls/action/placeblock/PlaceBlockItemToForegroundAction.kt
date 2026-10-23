@@ -4,8 +4,10 @@ import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.assets.repository.StepsSoundAssetsRepository
+import ru.fredboy.cavedroid.domain.items.model.block.FenceBlocks
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.model.item.isSlab
+import ru.fredboy.cavedroid.domain.items.usecase.GetBlockByKeyUseCase
 import ru.fredboy.cavedroid.domain.stats.repository.StatsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
@@ -21,6 +23,7 @@ class PlaceBlockItemToForegroundAction @Inject constructor(
     private val stepsSoundAssetsRepository: StepsSoundAssetsRepository,
     private val soundPlayer: SoundPlayer,
     private val statsRepository: StatsRepository,
+    private val getBlockByKey: GetBlockByKeyUseCase,
 ) : IPlaceBlockAction {
 
     override fun place(placeable: Item.Placeable, x: Int, y: Int): Boolean {
@@ -28,8 +31,11 @@ class PlaceBlockItemToForegroundAction @Inject constructor(
             return placeSlabAction.place(placeable, x, y)
         }
 
-        val blockRect by lazy { placeable.block.getRectangle(x, y) }
-        if (placeable.block.params.hasCollision &&
+        val block = placeable.block.takeIf(FenceBlocks::isFence)?.let { fence ->
+            getBlockByKey[FenceBlocks.connectedKey(fence, gameWorld.getForeMap(x - 1, y), gameWorld.getForeMap(x + 1, y))]
+        } ?: placeable.block
+        val blockRect by lazy { block.getRectangle(x, y) }
+        if (block.params.hasCollision &&
             (
                 mobController.player.hitbox.overlaps(blockRect) ||
                     mobController.mobs.any { mob -> mob.hitbox.overlaps(blockRect) }
@@ -56,7 +62,7 @@ class PlaceBlockItemToForegroundAction @Inject constructor(
             return false
         }
 
-        return if (gameWorld.placeToForeground(x, y, placeable.block)) {
+        return if (gameWorld.placeToForeground(x, y, block)) {
             mobController.player.decreaseCurrentItemCount()
             statsRepository.recordBlockPlaced()
             true

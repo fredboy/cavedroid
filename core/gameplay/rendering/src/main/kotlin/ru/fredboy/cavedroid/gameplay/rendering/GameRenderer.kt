@@ -11,6 +11,10 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceMetric
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.measure
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.common.utils.drawString
 import ru.fredboy.cavedroid.common.utils.ifTrue
@@ -32,6 +36,7 @@ import kotlin.math.min
 
 @GameScope
 class GameRenderer @Inject constructor(
+    private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
     private val tooltipManager: TooltipManager,
@@ -251,47 +256,63 @@ class GameRenderer @Inject constructor(
     }
 
     fun render(delta: Float) {
-        updateCameraPosition(delta)
+        return performanceMonitor.measure(PerformanceMetric.RENDER_TOTAL) {
+            updateCameraPosition(delta)
 
-        spriter.projectionMatrix = camera.combined
-        shaper.projectionMatrix = camera.combined
+            spriter.projectionMatrix = camera.combined
+            shaper.projectionMatrix = camera.combined
 
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+            Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-        updateSkyColors()
-        drawSky()
+            updateSkyColors()
+            drawSky()
 
-        spriter.begin()
-        val cameraViewport = Rectangle(
-            /* x = */ camera.position.x - camera.viewportWidth / 2,
-            /* y = */ camera.position.y - camera.viewportHeight / 2,
-            /* width = */ camera.viewportWidth,
-            /* height = */ camera.viewportHeight,
-        )
-        worldRenderers.forEach { renderer -> renderer.draw(spriter, shaper, cameraViewport, delta) }
+            spriter.begin()
+            val cameraViewport = Rectangle(
+                /* x = */ camera.position.x - camera.viewportWidth / 2,
+                /* y = */ camera.position.y - camera.viewportHeight / 2,
+                /* width = */ camera.viewportWidth,
+                /* height = */ camera.viewportHeight,
+            )
+            performanceMonitor.measure(PerformanceMetric.RENDER_WORLD) {
+                worldRenderers.forEach { renderer ->
+                    val metric = when (renderer) {
+                        is ru.fredboy.cavedroid.gameplay.rendering.renderer.world.BlocksRenderer -> PerformanceMetric.RENDER_BLOCKS
+                        is ru.fredboy.cavedroid.gameplay.rendering.renderer.world.DropsRenderer -> PerformanceMetric.RENDER_DROPS
+                        is ru.fredboy.cavedroid.gameplay.rendering.renderer.world.ProjectilesRenderer -> PerformanceMetric.RENDER_PROJECTILES
+                        else -> null
+                    }
+                    val start = performanceMonitor.startStage()
+                    renderer.draw(spriter, shaper, cameraViewport, delta)
+                    if (metric != null) performanceMonitor.endStage(metric, start)
+                }
+            }
 
-        spriter.end()
+            spriter.end()
 
-        lightingSystem.render(camera)
+            performanceMonitor.measure(PerformanceMetric.RENDER_LIGHTING) { lightingSystem.render(camera) }
 
-        if (gameContextRepository.shouldShowInfo()) {
-            debugRenderer?.render(gameWorld.world, camera.combined)
+            if (gameContextRepository.shouldShowInfo()) {
+                debugRenderer?.render(gameWorld.world, camera.combined)
+            }
+
+            spriter.projectionMatrix = hudCamera.combined
+            shaper.projectionMatrix = hudCamera.combined
+
+            spriter.begin()
+            val hudCameraViewport = Rectangle(
+                /* x = */ hudCamera.position.x - hudCamera.viewportWidth / 2,
+                /* y = */ hudCamera.position.y - hudCamera.viewportHeight / 2,
+                /* width = */ hudCamera.viewportWidth,
+                /* height = */ hudCamera.viewportHeight,
+            )
+            performanceMonitor.measure(PerformanceMetric.RENDER_HUD) {
+                hudRenderers.forEach { renderer -> renderer.draw(spriter, shaper, hudCameraViewport, delta) }
+            }
+            handleMousePosition()
+            spriter.end()
         }
-
-        spriter.projectionMatrix = hudCamera.combined
-        shaper.projectionMatrix = hudCamera.combined
-
-        spriter.begin()
-        val hudCameraViewport = Rectangle(
-            /* x = */ hudCamera.position.x - hudCamera.viewportWidth / 2,
-            /* y = */ hudCamera.position.y - hudCamera.viewportHeight / 2,
-            /* width = */ hudCamera.viewportWidth,
-            /* height = */ hudCamera.viewportHeight,
-        )
-        hudRenderers.forEach { renderer -> renderer.draw(spriter, shaper, hudCameraViewport, delta) }
-        handleMousePosition()
-        spriter.end()
     }
 
     fun resetCameraToPlayer() {

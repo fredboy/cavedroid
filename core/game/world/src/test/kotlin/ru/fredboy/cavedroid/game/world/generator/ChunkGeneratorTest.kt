@@ -1,7 +1,9 @@
 package ru.fredboy.cavedroid.game.world.generator
 
+import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
@@ -54,6 +56,11 @@ class ChunkGeneratorTest {
             cache.getOrPut(key) { fakeBlock(key) }
         }
         return repo
+    }
+
+    @AfterEach
+    fun clearRecordedCalls() {
+        clearAllMocks()
     }
 
     @Test

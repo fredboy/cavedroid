@@ -10,7 +10,6 @@ import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
 import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
-import ru.fredboy.cavedroid.game.world.store.InfiniteBlockStore
 import javax.inject.Inject
 
 @GameScope
@@ -30,7 +29,7 @@ class DebugInfoStringsProvider @Inject constructor(
             "FPS: ${Gdx.graphics.framesPerSecond}",
             "X: ${player.position.x} (Chunk: ${player.position.x.floorToInt() / ChunkGenerator.CHUNK_W})",
             "Y: ${player.position.y} (${gameWorld.height.toFloat() - player.position.y}) " +
-                    "(Chunk: ${player.position.y.floorToInt() / ChunkGenerator.CHUNK_W})",
+                "(Chunk: ${player.position.y.floorToInt() / ChunkGenerator.CHUNK_W})",
             "Cursor: (${player.cursorX}, ${player.cursorY})",
             "Aim: (${player.aimX}, ${player.aimY})",
             "Velocity: ${player.velocity}",

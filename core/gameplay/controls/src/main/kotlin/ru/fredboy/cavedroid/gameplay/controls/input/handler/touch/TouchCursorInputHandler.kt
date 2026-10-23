@@ -24,6 +24,7 @@ import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.gameplay.controls.action.getUseBlockAction
 import ru.fredboy.cavedroid.gameplay.controls.action.placeToBackgroundAction
 import ru.fredboy.cavedroid.gameplay.controls.action.placeToForegroundAction
 import ru.fredboy.cavedroid.gameplay.controls.action.placeblock.IPlaceBlockAction
@@ -95,15 +96,13 @@ class TouchCursorInputHandler @Inject constructor(
             val item = mobController.player.activeItem.item
             mobController.player.startHitting(false)
             mobController.player.stopHitting()
-            if (item is Item.Placeable) {
-                val placed = placeBlockActionMap.placeToBackgroundAction(
-                    item = item,
-                    x = selectedX,
-                    y = selectedY,
-                )
-                if (placed) {
-                    onboardingEvents.notifyPlace()
-                }
+            val placed = when (item) {
+                is Item.Placeable -> placeBlockActionMap.placeToBackgroundAction(item, selectedX, selectedY)
+                is Item.Usable -> useItemActionMap[item.useActionKey]?.performBackground(item, selectedX, selectedY) ?: false
+                else -> false
+            }
+            if (placed) {
+                onboardingEvents.notifyPlace()
             }
         } else {
             mobController.player.startHitting()
@@ -151,6 +150,7 @@ class TouchCursorInputHandler @Inject constructor(
                         return@onTargetHit
                     }
 
+                    target.behavior.onAttackedByPlayer()
                     player.onMobAttacked?.invoke(target, projectile.damage)
                 },
             ),
@@ -220,7 +220,7 @@ class TouchCursorInputHandler @Inject constructor(
                 .takeIf { !it.isNone() }
             ?: return false
 
-        val handled = useBlockActionMap[block.params.key]?.perform(
+        val handled = useBlockActionMap.getUseBlockAction(block)?.perform(
             block = block,
             x = mobController.player.selectedX,
             y = mobController.player.selectedY,
