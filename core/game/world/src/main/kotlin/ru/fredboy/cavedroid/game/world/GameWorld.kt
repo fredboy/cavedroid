@@ -13,6 +13,7 @@ import ru.fredboy.cavedroid.common.performance.measure
 import ru.fredboy.cavedroid.common.utils.removeFirst
 import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.items.model.block.FenceBlocks
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
@@ -289,8 +290,11 @@ class GameWorld @Inject constructor(
     ): Boolean {
         val wasPlaced = if (value.isNone() ||
             getBackMap(x, y).isNone() &&
-            value.params.hasCollision &&
-            (!value.params.isTransparent || value.params.key == "glass" || value.isChest() || value.isSlab())
+            (
+                FenceBlocks.isFence(value) ||
+                    value.params.hasCollision &&
+                    (!value.params.isTransparent || value.params.key == "glass" || value.isChest() || value.isSlab())
+                )
         ) {
             setBackMap(x, y, value, dropOld, destroyedByPlayer)
             true

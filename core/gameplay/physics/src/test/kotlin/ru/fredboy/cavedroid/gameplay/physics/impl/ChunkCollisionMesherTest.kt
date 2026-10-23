@@ -72,22 +72,11 @@ class ChunkCollisionMesherTest {
     }
 
     @Test
-    fun `material boundaries diagonal contact and margins preserve ordered contours`() {
+    fun `full block material boundaries and diagonal contact preserve ordered contours`() {
         val patterns = listOf<(Int, Int) -> Block>(
             { _, _ -> stone },
             { x, y -> if ((x + y) % 2 == 0) stone else dirt },
             { x, y -> if ((x + y) % 2 == 0) stone else air },
-            { x, y ->
-                if (y > 8) {
-                    stone
-                } else if (x % 3 == 0) {
-                    slab
-                } else if (x % 3 == 1) {
-                    inset
-                } else {
-                    air
-                }
-            },
             { x, y -> if ((x in 2..5 && y in 2..5) || (x in 6..9 && y in 6..9)) stone else air },
         )
         patterns.forEach { assertEquivalent(snapshot(block = it)) }
@@ -96,12 +85,50 @@ class ChunkCollisionMesherTest {
     @Test
     fun `random terrain preserves fixtures at negative and large origins and mirror offsets`() {
         val random = Random(92728)
-        val palette = listOf(air, stone, dirt, slab, inset, insetAir)
+        val palette = listOf(air, stone, dirt)
         repeat(100) { iteration ->
             val x = listOf(-32, 0, 1008, 16_777_216)[iteration % 4]
             val input = snapshot(x = x) { _, _ -> palette[random.nextInt(palette.size)] }
             for (offset in listOf(0, -1024, 1024)) assertEquivalent(input, offset)
         }
+    }
+
+    @Test
+    fun `adjacent full blocks still share a contour`() {
+        val result = mesher.prepare(snapshot { x, y -> if (x in 3..4 && y == 5) stone else air })
+        assertEquals(1, result.fixtures.size)
+        assertEquals(stone, result.fixtures.single().block)
+    }
+
+    @Test
+    fun `partial blocks retain separate rectangles horizontally and vertically`() {
+        val post = Block.Normal(baseParams.copy(key = "post", collisionMargins = BlockInsets.Meters(0.375f, 0f, 0.375f, 0f)))
+        val tall = Block.Normal(baseParams.copy(key = "tall", collisionMargins = BlockInsets.Meters(0f, -0.5f, 0f, 0f)))
+        for (block in listOf(slab, inset, post, tall)) {
+            for (cells in listOf(setOf(3 to 5, 4 to 5), setOf(3 to 5, 3 to 6))) {
+                for (offset in listOf(0, -1024, 1024)) {
+                    val input = snapshot { x, y -> if (x to y in cells) block else air }
+                    val fixtures = mesher.prepare(input, offset).fixtures
+                    assertEquals(2, fixtures.size, "${block.params.key}: $cells")
+                    cells.sortedWith(compareBy({ it.first }, { it.second })).zip(fixtures).forEach { (cell, fixture) ->
+                        val rect = block.getRectangle(input.x + cell.first, input.y + cell.second)
+                        val bodyX = (input.x + offset).toFloat() + 8f
+                        val bodyY = input.y.toFloat() + 8f
+                        val left = rect.x + offset - bodyX
+                        val right = rect.x + rect.width + offset - bodyX
+                        val top = rect.y - bodyY
+                        val bottom = rect.y + rect.height - bodyY
+                        assertEquals(listOf(left, top, right, top, right, bottom, left, bottom, left, top), fixture.vertices.toList())
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `non colliding inset blocks remain air without standalone fixtures`() {
+        val result = mesher.prepare(snapshot { x, y -> if (x in 3..4 && y == 5) insetAir else air })
+        assertTrue(result.fixtures.isEmpty())
     }
 
     @Test

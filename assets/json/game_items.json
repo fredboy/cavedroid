@@ -2517,6 +2517,564 @@
         "light_distance": 15
       },
       "replaceable": true
+    },
+    "fence_oak": {
+      "left": 6,
+      "right": 6,
+      "hp": 300,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "texture": "fence_oak",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "drop_info": [
+        {
+          "key": "fence_oak",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "update_action": "update_fence"
+    },
+    "fence_oak_left": {
+      "left": 6,
+      "right": 6,
+      "hp": 300,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "texture": "fence_oak_left",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "drop_info": [
+        {
+          "key": "fence_oak",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "update_action": "update_fence"
+    },
+    "fence_oak_right": {
+      "left": 6,
+      "right": 6,
+      "hp": 300,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "texture": "fence_oak_right",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "drop_info": [
+        {
+          "key": "fence_oak",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "update_action": "update_fence"
+    },
+    "fence_oak_both": {
+      "left": 6,
+      "right": 6,
+      "hp": 300,
+      "collision": false,
+      "background": false,
+      "transparent": true,
+      "texture": "fence_oak_both",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "drop_info": [
+        {
+          "key": "fence_oak",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "update_action": "update_fence"
+    },
+    "fence_gate_oak_left_closed": {
+      "hp": 270,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "fence_gate_oak_left_closed",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "action_sound_key": "door/open",
+      "drop_info": [
+        {
+          "key": "fence_gate_oak",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "right": 12,
+      "use_action": "use_fence_gate"
+    },
+    "fence_gate_oak_left_open": {
+      "hp": 270,
+      "collision": false,
+      "background": true,
+      "transparent": true,
+      "block_required": true,
+      "texture": "fence_gate_oak_left_open",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "action_sound_key": "door/close",
+      "drop_info": [
+        {
+          "key": "fence_gate_oak",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "use_action": "use_fence_gate"
+    },
+    "fence_gate_oak_right_closed": {
+      "hp": 270,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "fence_gate_oak_right_closed",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "action_sound_key": "door/open",
+      "drop_info": [
+        {
+          "key": "fence_gate_oak",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "left": 12,
+      "use_action": "use_fence_gate"
+    },
+    "fence_gate_oak_right_open": {
+      "hp": 270,
+      "collision": false,
+      "background": true,
+      "transparent": true,
+      "block_required": true,
+      "texture": "fence_gate_oak_right_open",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "action_sound_key": "door/close",
+      "drop_info": [
+        {
+          "key": "fence_gate_oak",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "use_action": "use_fence_gate"
+    },
+    "fence_spruce": {
+      "left": 6,
+      "right": 6,
+      "hp": 300,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "texture": "fence_spruce",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "drop_info": [
+        {
+          "key": "fence_spruce",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "update_action": "update_fence"
+    },
+    "fence_spruce_left": {
+      "left": 6,
+      "right": 6,
+      "hp": 300,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "texture": "fence_spruce_left",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "drop_info": [
+        {
+          "key": "fence_spruce",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "update_action": "update_fence"
+    },
+    "fence_spruce_right": {
+      "left": 6,
+      "right": 6,
+      "hp": 300,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "texture": "fence_spruce_right",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "drop_info": [
+        {
+          "key": "fence_spruce",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "update_action": "update_fence"
+    },
+    "fence_spruce_both": {
+      "left": 6,
+      "right": 6,
+      "hp": 300,
+      "collision": false,
+      "background": false,
+      "transparent": true,
+      "texture": "fence_spruce_both",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "drop_info": [
+        {
+          "key": "fence_spruce",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "update_action": "update_fence"
+    },
+    "fence_gate_spruce_left_closed": {
+      "hp": 270,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "fence_gate_spruce_left_closed",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "action_sound_key": "door/open",
+      "drop_info": [
+        {
+          "key": "fence_gate_spruce",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "right": 12,
+      "use_action": "use_fence_gate"
+    },
+    "fence_gate_spruce_left_open": {
+      "hp": 270,
+      "collision": false,
+      "background": true,
+      "transparent": true,
+      "block_required": true,
+      "texture": "fence_gate_spruce_left_open",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "action_sound_key": "door/close",
+      "drop_info": [
+        {
+          "key": "fence_gate_spruce",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "use_action": "use_fence_gate"
+    },
+    "fence_gate_spruce_right_closed": {
+      "hp": 270,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "fence_gate_spruce_right_closed",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "action_sound_key": "door/open",
+      "drop_info": [
+        {
+          "key": "fence_gate_spruce",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "left": 12,
+      "use_action": "use_fence_gate"
+    },
+    "fence_gate_spruce_right_open": {
+      "hp": 270,
+      "collision": false,
+      "background": true,
+      "transparent": true,
+      "block_required": true,
+      "texture": "fence_gate_spruce_right_open",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "action_sound_key": "door/close",
+      "drop_info": [
+        {
+          "key": "fence_gate_spruce",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "use_action": "use_fence_gate"
+    },
+    "fence_birch": {
+      "left": 6,
+      "right": 6,
+      "hp": 300,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "texture": "fence_birch",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "drop_info": [
+        {
+          "key": "fence_birch",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "update_action": "update_fence"
+    },
+    "fence_birch_left": {
+      "left": 6,
+      "right": 6,
+      "hp": 300,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "texture": "fence_birch_left",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "drop_info": [
+        {
+          "key": "fence_birch",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "update_action": "update_fence"
+    },
+    "fence_birch_right": {
+      "left": 6,
+      "right": 6,
+      "hp": 300,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "texture": "fence_birch_right",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "drop_info": [
+        {
+          "key": "fence_birch",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "update_action": "update_fence"
+    },
+    "fence_birch_both": {
+      "left": 6,
+      "right": 6,
+      "hp": 300,
+      "collision": false,
+      "background": false,
+      "transparent": true,
+      "texture": "fence_birch_both",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "drop_info": [
+        {
+          "key": "fence_birch",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "update_action": "update_fence"
+    },
+    "fence_gate_birch_left_closed": {
+      "hp": 270,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "fence_gate_birch_left_closed",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "action_sound_key": "door/open",
+      "drop_info": [
+        {
+          "key": "fence_gate_birch",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "right": 12,
+      "use_action": "use_fence_gate"
+    },
+    "fence_gate_birch_left_open": {
+      "hp": 270,
+      "collision": false,
+      "background": true,
+      "transparent": true,
+      "block_required": true,
+      "texture": "fence_gate_birch_left_open",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "action_sound_key": "door/close",
+      "drop_info": [
+        {
+          "key": "fence_gate_birch",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "use_action": "use_fence_gate"
+    },
+    "fence_gate_birch_right_closed": {
+      "hp": 270,
+      "collision": true,
+      "background": false,
+      "transparent": true,
+      "block_required": true,
+      "texture": "fence_gate_birch_right_closed",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "action_sound_key": "door/open",
+      "drop_info": [
+        {
+          "key": "fence_gate_birch",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "left": 12,
+      "use_action": "use_fence_gate"
+    },
+    "fence_gate_birch_right_open": {
+      "hp": 270,
+      "collision": false,
+      "background": true,
+      "transparent": true,
+      "block_required": true,
+      "texture": "fence_gate_birch_right_open",
+      "tool_type": "axe",
+      "casts_shadows": false,
+      "combustible": true,
+      "material": "wood",
+      "action_sound_key": "door/close",
+      "drop_info": [
+        {
+          "key": "fence_gate_birch",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "use_action": "use_fence_gate"
     }
   },
   "items": {
@@ -4376,6 +4934,54 @@
     "sugar": {
       "name": "Sugar",
       "texture": "sugar"
+    },
+    "fence_oak": {
+      "name": "Oak Fence",
+      "type": "usable",
+      "action_key": "use_fence_item",
+      "texture": "fence_oak",
+      "burning_time": 15000
+    },
+    "fence_gate_oak": {
+      "name": "Oak Fence Gate",
+      "type": "usable",
+      "texture": "fence_gate_oak",
+      "action_key": "use_fence_gate_item",
+      "burning_time": 15000,
+      "origin_x": 0.5,
+      "origin_y": 1
+    },
+    "fence_spruce": {
+      "name": "Spruce Fence",
+      "type": "usable",
+      "action_key": "use_fence_item",
+      "texture": "fence_spruce",
+      "burning_time": 15000
+    },
+    "fence_gate_spruce": {
+      "name": "Spruce Fence Gate",
+      "type": "usable",
+      "texture": "fence_gate_spruce",
+      "action_key": "use_fence_gate_item",
+      "burning_time": 15000,
+      "origin_x": 0.5,
+      "origin_y": 1
+    },
+    "fence_birch": {
+      "name": "Birch Fence",
+      "type": "usable",
+      "action_key": "use_fence_item",
+      "texture": "fence_birch",
+      "burning_time": 15000
+    },
+    "fence_gate_birch": {
+      "name": "Birch Fence Gate",
+      "type": "usable",
+      "texture": "fence_gate_birch",
+      "action_key": "use_fence_gate_item",
+      "burning_time": 15000,
+      "origin_x": 0.5,
+      "origin_y": 1
     }
   }
 }

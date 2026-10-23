@@ -58,7 +58,7 @@ internal class ChunkCollisionMesher(private val fallback: Block) {
     }
 
     private fun enqueue(cell: Int, label: Int, block: Block, tail: Int): Int {
-        if (labels[cell] != 0 || normalized[cell] != block) return tail
+        if (!block.params.isFullBlock || labels[cell] != 0 || normalized[cell] != block) return tail
         labels[cell] = label
         queue[tail] = cell
         return tail + 1
