@@ -14,7 +14,6 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindWorldRenderer
 import javax.inject.Inject
-import kotlin.math.min
 
 @GameScope
 @BindWorldRenderer
@@ -47,10 +46,7 @@ class ParallaxRenderer @Inject constructor(
         val viewportRight = viewport.x + viewport.width
 
         val seaLevel = gameWorld.generatorConfig.seaLevel.toFloat()
-        val parallaxY = min(
-            seaLevel,
-            viewport.y + viewport.height * (1f - viewport.y / seaLevel),
-        )
+        val parallaxY = viewport.y + parallaxScreenY(viewport.y, viewport.height, seaLevel)
 
         var accumulatedWeight = 0f
         for ((biome, sprite) in parallaxSprites) {
