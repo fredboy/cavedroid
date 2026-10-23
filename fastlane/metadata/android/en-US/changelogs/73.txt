@@ -1,0 +1,7 @@
+- New parallax backgrounds: plains, desert, winter, clouds and night sky stars
+- Wooden fences and fence gates
+- Spiders that climb walls and get more aggressive the deeper you go
+- Underground mineshafts and configurable mob spawners
+- Fixed shadows and lighting after loading chunks
+- Fixed device language selection
+- Various performance and stability improvements
