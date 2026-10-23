@@ -11,6 +11,7 @@ import ru.fredboy.cavedroid.domain.save.model.GrowBlockEntry
 import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
+import ru.fredboy.cavedroid.entity.container.abstraction.MobSpawnerAdapter
 import ru.fredboy.cavedroid.entity.container.model.Container
 import ru.fredboy.cavedroid.entity.container.model.ContainerCoordinates
 import ru.fredboy.cavedroid.entity.drop.DropQueue
@@ -137,6 +138,7 @@ interface SaveDataRepository {
         containerWorldAdapter: ContainerWorldAdapter,
         containerFactory: ContainerFactory,
         dropAdapter: DropAdapter,
+        mobSpawnerAdapter: MobSpawnerAdapter,
     ): ContainerController
 
     fun loadDropController(

@@ -22,6 +22,7 @@ import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
+import ru.fredboy.cavedroid.entity.container.abstraction.MobSpawnerAdapter
 import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropAdapter
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
@@ -101,6 +102,7 @@ object GameModule {
         containerWorldAdapter: ContainerWorldAdapter,
         containerFactory: ContainerFactory,
         dropAdapter: DropAdapter,
+        mobSpawnerAdapter: MobSpawnerAdapter,
     ): ContainerController = if (gameContextRepository.isLoadGame()) {
         saveDataRepository.loadContainerController(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
@@ -108,6 +110,7 @@ object GameModule {
             containerWorldAdapter = containerWorldAdapter,
             containerFactory = containerFactory,
             dropAdapter = dropAdapter,
+            mobSpawnerAdapter = mobSpawnerAdapter,
         )
     } else {
         ContainerController(
@@ -115,6 +118,7 @@ object GameModule {
             containerWorldAdapter = containerWorldAdapter,
             containerFactory = containerFactory,
             dropAdapter = dropAdapter,
+            mobSpawnerAdapter = mobSpawnerAdapter,
         )
     }
 

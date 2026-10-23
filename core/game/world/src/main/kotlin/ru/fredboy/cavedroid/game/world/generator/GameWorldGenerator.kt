@@ -511,6 +511,7 @@ class GameWorldGenerator(
         fillLava()
 
         postGenCleanUp()
+        MineshaftGenerator(config, itemsRepository).generate(0, foreMap, backMap, loopingWidth = config.width)
 
         return GeneratedWorld(foreMap, backMap, biomes)
     }

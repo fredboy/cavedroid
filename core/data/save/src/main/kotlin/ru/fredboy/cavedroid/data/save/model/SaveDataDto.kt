@@ -93,6 +93,15 @@ sealed class SaveDataDto {
     ) : ContainerSaveDataDto()
 
     @Serializable
+    data class SpawnerSaveDataDto(
+        override val version: Int,
+        override val size: Int = 0,
+        override val items: List<InventoryItemSaveDataDto> = emptyList(),
+        val mobKey: String,
+        val remainingSeconds: Float,
+    ) : ContainerSaveDataDto()
+
+    @Serializable
     data class ContainerControllerSaveDataDto(
         override val version: Int,
         val containerMap: Map<String, @Contextual ContainerSaveDataDto>,

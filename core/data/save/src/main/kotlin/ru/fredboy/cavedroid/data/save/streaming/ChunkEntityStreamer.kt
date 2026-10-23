@@ -4,7 +4,10 @@ import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
+import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
+import ru.fredboy.cavedroid.domain.world.model.Layer
+import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
@@ -20,7 +23,7 @@ import javax.inject.Inject
  * Streams mobs, drops and containers in and out of the live controllers in lockstep with the
  * infinite world's chunks: when a chunk loads its saved entities are reconstructed and registered;
  * when it unloads they are persisted to that chunk and removed from memory (so they no longer pile
- * up in the global controllers). No-op for finite, looping worlds.
+ * up in the global controllers). Also initializes generated block entities in both world types.
  */
 @GameScope
 class ChunkEntityStreamer @Inject constructor(
@@ -33,6 +36,7 @@ class ChunkEntityStreamer @Inject constructor(
     private val gameContextRepository: GameContextRepository,
     private val mobPhysicsFactory: MobPhysicsFactory,
     private val dropWorldAdapter: DropWorldAdapter,
+    private val containerFactory: ContainerFactory,
 ) : ChunkListener,
     ChunkBodiesReadyListener {
 
@@ -41,14 +45,18 @@ class ChunkEntityStreamer @Inject constructor(
     private val restoredChunks = mutableSetOf<Int>()
 
     /**
-     * Registers for chunk events and loads the entities of the chunks already resident (the spawn
+     * Initializes finite-world containers, or registers for chunk events and loads entities already resident (the spawn
      * region pre-streamed by the store before listeners existed). Must be called once at session start.
      */
     fun initialize() {
-        if (!gameWorld.isInfinite || initialized) {
+        if (initialized) {
             return
         }
         initialized = true
+        if (!gameWorld.isInfinite) {
+            initializeContainers(0, gameWorld.width)
+            return
+        }
         gameWorld.addChunkListener(this)
         gameWorld.addChunkBodiesReadyListener(this)
         gameWorld.forEachLoadedChunk {
@@ -83,7 +91,24 @@ class ChunkEntityStreamer @Inject constructor(
                 containerController.addContainer(coordinates.x, coordinates.y, coordinates.z, container)
             }
         }
+        initializeContainers(chunkX * ChunkGenerator.CHUNK_W, ChunkGenerator.CHUNK_W)
         restoredChunks.add(chunkX)
+    }
+
+    private fun initializeContainers(startX: Int, width: Int) {
+        for (x in startX until startX + width) {
+            for (y in 0 until gameWorld.height) {
+                for (layer in Layer.entries) {
+                    val block = when (layer) {
+                        Layer.FOREGROUND -> gameWorld.getForeMap(x, y)
+                        Layer.BACKGROUND -> gameWorld.getBackMap(x, y)
+                    } as? Block.Container ?: continue
+                    if (containerController.getContainer(x, y, layer.z) != null) continue
+                    val seed = gameWorld.generatorConfig.seed xor (x.toLong() * 341873128712L) xor (y.toLong() * 132897987541L)
+                    containerController.addContainer(x, y, layer.z, containerFactory.createContainer(block, seed))
+                }
+            }
+        }
     }
 
     override fun onChunkUnloaded(chunkX: Int) {

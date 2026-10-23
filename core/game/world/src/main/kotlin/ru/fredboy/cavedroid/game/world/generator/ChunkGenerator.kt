@@ -169,6 +169,8 @@ class ChunkGenerator(
             cleanupColumn(surfaceHeights[j], foreBand[j])
         }
 
+        MineshaftGenerator(config, itemsRepository).generate(bandStart, foreBand, backBand)
+
         return GeneratedBand(foreBand, backBand, bandStart)
     }
 

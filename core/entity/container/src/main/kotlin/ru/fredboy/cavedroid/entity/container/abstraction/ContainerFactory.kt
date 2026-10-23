@@ -4,5 +4,5 @@ import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.entity.container.model.Container
 
 interface ContainerFactory {
-    fun createContainer(type: Block.Container): Container
+    fun createContainer(type: Block.Container, seed: Long = 0L): Container
 }
