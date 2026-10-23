@@ -1,6 +1,8 @@
 package ru.fredboy.cavedroid.gdx.menu.v2
 
 import com.badlogic.gdx.Gdx
+import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.gdx.base.BaseScreen
 import ru.fredboy.cavedroid.gdx.menu.di.DaggerMenuComponent
@@ -11,6 +13,7 @@ import javax.inject.Singleton
 
 @Singleton
 class MenuScreen @Inject constructor(
+    private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     private val applicationContextRepository: ApplicationContextRepository,
 ) : BaseScreen(applicationContextRepository) {
 
@@ -39,6 +42,7 @@ class MenuScreen @Inject constructor(
         currentStage.let { stage ->
             stage.act(delta)
             stage.draw()
+            performanceMonitor.menuReady()
         }
     }
 

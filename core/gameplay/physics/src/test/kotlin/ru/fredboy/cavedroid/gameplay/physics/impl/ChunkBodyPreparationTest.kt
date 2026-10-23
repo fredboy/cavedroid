@@ -8,6 +8,12 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import ru.fredboy.cavedroid.common.performance.PerformanceClock
+import ru.fredboy.cavedroid.common.performance.PerformanceMode
+import ru.fredboy.cavedroid.common.performance.PerformanceOperationReport
+import ru.fredboy.cavedroid.common.performance.PerformanceOutput
+import ru.fredboy.cavedroid.common.performance.PerformanceResult
+import ru.fredboy.cavedroid.common.performance.RecordingPerformanceMonitor
 import kotlin.coroutines.CoroutineContext
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -115,13 +121,51 @@ class ChunkBodyPreparationTest {
         assertEquals(2, fixture.installCount)
     }
 
+    @Test
+    fun `unload report waits for cancelled preparation to actually complete`() = runTest {
+        val fixture = Fixture(this)
+        fixture.preparation.load(1)
+        runCurrent()
+        fixture.monitor.beginReleaseSession()
+        fixture.preparation.clear()
+        fixture.monitor.releaseSession(PerformanceResult.SUCCESS)
+        assertTrue(fixture.reports.isEmpty())
+        fixture.drain()
+        assertEquals(1, fixture.reports.size)
+    }
+
+    @Test
+    fun `cancellation before coroutine starts still completes tracked request`() = runTest {
+        val fixture = Fixture(this)
+        fixture.preparation.load(1)
+        fixture.monitor.beginReleaseSession()
+        fixture.preparation.clear()
+        fixture.monitor.releaseSession(PerformanceResult.SUCCESS)
+        fixture.drain()
+        assertEquals(1, fixture.reports.size)
+        assertTrue(fixture.installed.isEmpty())
+    }
+
     private class Fixture(private val scope: TestScope) {
+        val reports = mutableListOf<PerformanceOperationReport>()
+        val monitor = RecordingPerformanceMonitor(
+            PerformanceClock(System::nanoTime),
+            object : PerformanceOutput {
+                override fun operationFinished(report: PerformanceOperationReport) {
+                    reports += report
+                }
+            },
+        ).apply {
+            setMode(PerformanceMode.LOCAL)
+            beginSession()
+        }
         val worker = QueuedDispatcher()
         var terrain = 1
         val installed = linkedMapOf<Pair<Int, Int>, Int>()
         val ready = mutableListOf<Int>()
         var installCount = 0
         val preparation = ChunkBodyPreparation(
+            performanceMonitor = monitor,
             scope = scope,
             background = worker,
             sectionCount = 2,

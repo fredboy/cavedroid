@@ -3,6 +3,9 @@ package ru.fredboy.cavedroid.gameplay.physics.task
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceMetric
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
@@ -21,7 +24,8 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobParamsRepository: MobParamsRepository,
     private val mobFactory: MobFactory,
-) : BaseGameWorldControllerTask(),
+    performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
+) : BaseGameWorldControllerTask(performanceMonitor, PerformanceMetric.TASK_SPAWN),
     ChunkBodiesReadyListener {
 
     private var listenerAdded = false

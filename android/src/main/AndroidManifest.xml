@@ -11,7 +11,7 @@
                 android:exported="true"
                 android:name="ru.fredboy.cavedroid.AndroidLauncher"
                 android:screenOrientation="sensorLandscape"
-                android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize"
+                android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|uiMode"
                 tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

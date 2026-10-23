@@ -8,6 +8,7 @@ import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.model.WorldType
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.domain.assets.repository.DropSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
@@ -195,6 +196,7 @@ object GameModule {
     @Provides
     @GameScope
     fun provideGameWorldGrowBlocksControllerTask(
+        performanceMonitor: PerformanceMonitor,
         applicationContextRepository: ApplicationContextRepository,
         gameContextRepository: GameContextRepository,
         saveDataRepository: SaveDataRepository,
@@ -213,6 +215,7 @@ object GameModule {
         }
 
         return GameWorldGrowBlocksControllerTask(
+            performanceMonitor = performanceMonitor,
             gameWorld = gameWorld,
             growBlockActions = growBlockActions,
             saveDataRepository = saveDataRepository,
@@ -267,6 +270,7 @@ object GameModule {
         environmentTextureRegionsRepository: EnvironmentTextureRegionsRepositoryTexture,
         lightingSystem: LightingSystem,
         appDispatchers: AppDispatchers,
+        performanceMonitor: PerformanceMonitor,
     ): GameWorld {
         val mapData = if (gameContextRepository.isLoadGame()) {
             saveDataRepository.loadMap(
@@ -284,6 +288,7 @@ object GameModule {
         } else {
             gameContextRepository.getWorldType()
         }
+        performanceMonitor.setWorldType(worldType)
         val seed = if (gameContextRepository.isLoadGame()) {
             mapData?.seed ?: gameContextRepository.getRequestedSeed()
         } else {
@@ -305,6 +310,7 @@ object GameModule {
                 initialForeMap = mapData?.foreMap,
                 initialBackMap = mapData?.backMap,
                 initialBiomes = mapData?.biomes,
+                performanceMonitor = performanceMonitor,
             )
 
             WorldType.INFINITE -> InfiniteBlockStore(
@@ -312,6 +318,7 @@ object GameModule {
                 generatorConfig = generatorConfig,
                 gameContextRepository = gameContextRepository,
                 appDispatchers = appDispatchers,
+                performanceMonitor = performanceMonitor,
                 chunkLoader = { chunkX ->
                     saveDataRepository.loadInfiniteChunk(
                         gameDataFolder = gameDataFolder,
@@ -333,6 +340,7 @@ object GameModule {
         }
 
         return GameWorld(
+            performanceMonitor = performanceMonitor,
             itemsRepository = itemsRepository,
             physicsController = physicsController,
             gameWorldSolidBlockBodiesManager = gameWorldSolidBlockBodiesManager,

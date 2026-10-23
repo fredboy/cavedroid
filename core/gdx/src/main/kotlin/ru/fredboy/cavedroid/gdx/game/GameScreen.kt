@@ -6,6 +6,12 @@ import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.model.Joystick
 import ru.fredboy.cavedroid.common.model.StartGameConfig
 import ru.fredboy.cavedroid.common.model.WorldType
+import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceOperation
+import ru.fredboy.cavedroid.common.performance.PerformanceResult
+import ru.fredboy.cavedroid.common.performance.PerformanceSpan
+import ru.fredboy.cavedroid.common.performance.PerformanceTrigger
 import ru.fredboy.cavedroid.data.configuration.model.GameContext
 import ru.fredboy.cavedroid.domain.configuration.model.CameraContext
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -19,9 +25,15 @@ import javax.inject.Singleton
 
 @Singleton
 class GameScreen @Inject constructor(
+    private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     private val applicationContextRepository: ApplicationContextRepository,
     private val mobParamsRepository: MobParamsRepository,
 ) : BaseScreen(applicationContextRepository) {
+
+    var awaitingFirstFrame = false
+        private set
+    private var shown = false
+    private var opening: PerformanceSpan? = null
 
     override val scaleFactor: Float
         get() = 0.5f
@@ -65,14 +77,30 @@ class GameScreen @Inject constructor(
     }
 
     private fun resetGameComponent() {
+        if (gameComponent == null) return
+        performanceMonitor.setGameplay(false)
+        opening?.finish(PerformanceResult.CANCELLED)
+        opening = null
+        performanceMonitor.beginReleaseSession()
+        val release = performanceMonitor.beginOperation(PerformanceOperation.WORLD_RELEASE)
         try {
             gameComponent?.deathScreen?.dispose()
             gameComponent?.gameProc?.dispose()
         } catch (e: Exception) {
+            release?.fail(e)
             logger.w(e) { "Recover faulty gameComponent" }
         } finally {
+            release?.finish()
+            performanceMonitor.releaseSession(release?.result ?: PerformanceResult.SUCCESS)
             gameComponent = null
         }
+    }
+
+    fun failOpening(error: Throwable) {
+        opening?.fail(error)
+        opening?.finish()
+        opening = null
+        awaitingFirstFrame = false
     }
 
     fun respawnPlayer() {
@@ -80,19 +108,49 @@ class GameScreen @Inject constructor(
     }
 
     fun newGame(gameConfig: StartGameConfig.New) {
+        val creation = performanceMonitor.beginOperation(PerformanceOperation.WORLD_CREATE)
         resetGameComponent()
-        gameComponent = getGameComponent(gameConfig).apply {
-            chunkEntityStreamer.initialize()
-            gameProc.setPlayerGameMode(gameConfig.gameMode)
-            gameRenderer.render(0f)
-            gameSaveHelper.saveGame(false)
+        awaitingFirstFrame = true
+        performanceMonitor.beginSession()
+        opening = creation
+        try {
+            gameComponent = getGameComponent(gameConfig).apply {
+                chunkEntityStreamer.initialize()
+                gameProc.setPlayerGameMode(gameConfig.gameMode)
+                val initialSave = performanceMonitor.beginOperation(PerformanceOperation.WORLD_SAVE, PerformanceTrigger.INITIAL)
+                try {
+                    gameRenderer.render(0f)
+                    gameSaveHelper.saveGame(false)
+                } catch (error: Throwable) {
+                    initialSave?.fail(error)
+                    throw error
+                } finally {
+                    initialSave?.finish()
+                }
+            }
+        } catch (error: Throwable) {
+            opening?.fail(error)
+            opening?.finish()
+            opening = null
+            throw error
         }
     }
 
     fun loadGame(gameConfig: StartGameConfig.Load) {
+        val loading = performanceMonitor.beginOperation(PerformanceOperation.WORLD_LOAD)
         resetGameComponent()
-        gameComponent = getGameComponent(gameConfig).apply {
-            chunkEntityStreamer.initialize()
+        awaitingFirstFrame = true
+        performanceMonitor.beginSession()
+        opening = loading
+        try {
+            gameComponent = getGameComponent(gameConfig).apply {
+                chunkEntityStreamer.initialize()
+            }
+        } catch (error: Throwable) {
+            opening?.fail(error)
+            opening?.finish()
+            opening = null
+            throw error
         }
     }
 
@@ -101,11 +159,23 @@ class GameScreen @Inject constructor(
             "GameScreen#saveGame: gameComponent was not set before saveGame()"
         }
 
-        gameComponent.gameRenderer.render(0f)
-        gameComponent.gameSaveHelper.saveGame(overwrite = true)
+        performanceMonitor.setGameplay(false)
+        val save = performanceMonitor.beginOperation(PerformanceOperation.WORLD_SAVE)
+        try {
+            gameComponent.gameRenderer.render(0f)
+            gameComponent.gameSaveHelper.saveGame(overwrite = true)
+        } catch (error: Throwable) {
+            save?.fail(error)
+            throw error
+        } finally {
+            save?.finish()
+            performanceMonitor.setGameplay(shown && !awaitingFirstFrame)
+        }
     }
 
     override fun show() {
+        shown = true
+        updatePerformanceContext()
         val gameComponent = requireNotNull(gameComponent) {
             "GameScreen#show: gameComponent was not set before show"
         }
@@ -117,10 +187,37 @@ class GameScreen @Inject constructor(
         val proc = requireNotNull(gameComponent?.gameProc) {
             "GameScreen#render: gameComponent was not set before render"
         }
-        proc.update(delta)
+        val firstFrame = awaitingFirstFrame
+        if (firstFrame) performanceMonitor.setGameplay(false)
+        performanceMonitor.beginFrame()
+        try {
+            proc.update(delta)
+        } catch (error: Throwable) {
+            opening?.fail(error)
+            throw error
+        } finally {
+            performanceMonitor.endFrame()
+            opening?.finish()
+            opening = null
+            awaitingFirstFrame = false
+            if (firstFrame) performanceMonitor.setGameplay(shown)
+        }
+    }
+
+    private fun updatePerformanceContext() {
+        if (!performanceMonitor.available) return
+        performanceMonitor.updateViewContext(
+            Gdx.graphics.width,
+            Gdx.graphics.height,
+            applicationContextRepository.getWidth().toInt(),
+            applicationContextRepository.getHeight().toInt(),
+            applicationContextRepository.getLightingBackend().name.lowercase(),
+            gameComponent?.gameContextRepository?.shouldShowInfo() ?: applicationContextRepository.preferShowDebug,
+        )
     }
 
     override fun onResize(width: Int, height: Int) {
+        updatePerformanceContext()
         gameComponent?.gameContextRepository?.getCameraContext()?.let { cameraContext ->
             cameraContext.viewport.apply {
                 setWidth(applicationContextRepository.getWidth())
@@ -145,6 +242,7 @@ class GameScreen @Inject constructor(
     }
 
     override fun hide() {
+        shown = false
     }
 
     override fun onDispose() {

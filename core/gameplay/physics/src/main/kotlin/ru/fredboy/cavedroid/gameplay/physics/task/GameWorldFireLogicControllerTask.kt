@@ -3,6 +3,9 @@ package ru.fredboy.cavedroid.gameplay.physics.task
 import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.coroutines.GdxMainThread
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceMetric
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.game.controller.fire.FireController
@@ -22,7 +25,8 @@ class GameWorldFireLogicControllerTask @Inject constructor(
     private val gameWorld: GameWorld,
     private val fireController: FireController,
     private val mobController: MobController,
-) : BaseGameWorldControllerTask() {
+    performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
+) : BaseGameWorldControllerTask(performanceMonitor, PerformanceMetric.TASK_FIRE) {
 
     override fun exec() {
         check(GdxMainThread.isMainThread()) { "Fire ticks must run on the main thread" }

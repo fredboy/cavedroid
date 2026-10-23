@@ -6,12 +6,17 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceMetric
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.measure
 
 /**
  * Main-thread owner of section revisions and load lifetimes. Only the snapshot builder runs on a
  * worker; installation and readiness callbacks run on the scope's main dispatcher.
  */
 internal class ChunkBodyPreparation<Snapshot, Prepared>(
+    performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     private val scope: CoroutineScope,
     private val background: CoroutineDispatcher,
     private val sectionCount: Int,
@@ -21,6 +26,7 @@ internal class ChunkBodyPreparation<Snapshot, Prepared>(
     private val onReady: (chunkX: Int) -> Unit,
 ) {
 
+    private val performanceSession = performanceMonitor.currentSession()
     private val columns = mutableMapOf<Int, Column>()
     private val synchronousBuilder = createBuilder()
 
@@ -35,6 +41,7 @@ internal class ChunkBodyPreparation<Snapshot, Prepared>(
             finish(chunkX)
             return
         }
+        val span = performanceSession?.begin(PerformanceMetric.COLLISION_REQUEST)
         column.job = scope.launch(start = CoroutineStart.LAZY) {
             val build = createBuilder()
             for (section in 0 until sectionCount) {
@@ -42,14 +49,20 @@ internal class ChunkBodyPreparation<Snapshot, Prepared>(
                 if (column.installed[section]) continue
                 val revision = column.revisions[section]
                 val input = snapshot(chunkX, section)
-                val prepared = withContext(background) { build(input) }
+                val prepared = withContext(background) { performanceSession.measure(PerformanceMetric.COLLISION_BUILD) { build(input) } }
                 if (columns[chunkX] !== column) return@launch
                 if (column.revisions[section] != revision) continue
-                install(chunkX, section, prepared)
+                performanceSession.measure(PerformanceMetric.COLLISION_APPLY) { install(chunkX, section, prepared) }
                 column.installed[section] = true
             }
             notifyIfReady(chunkX, column)
-        }.also { it.start() }
+        }.also { job ->
+            job.invokeOnCompletion { cause ->
+                if (cause != null) span?.fail(cause)
+                span?.finish()
+            }
+            job.start()
+        }
     }
 
     /** Complete a visible or teleported-to column before physics can step through missing bodies. */
@@ -80,8 +93,8 @@ internal class ChunkBodyPreparation<Snapshot, Prepared>(
 
     private fun rebuildSection(chunkX: Int, section: Int, column: Column) {
         column.revisions[section]++
-        val prepared = synchronousBuilder(snapshot(chunkX, section))
-        install(chunkX, section, prepared)
+        val prepared = performanceSession.measure(PerformanceMetric.COLLISION_BUILD) { synchronousBuilder(snapshot(chunkX, section)) }
+        performanceSession.measure(PerformanceMetric.COLLISION_APPLY) { install(chunkX, section, prepared) }
         column.installed[section] = true
     }
 
