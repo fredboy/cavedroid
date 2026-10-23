@@ -3626,6 +3626,119 @@
         "count": 1
       }
     ]
+  },
+  "fence_oak": {
+    "recipes": [
+      {
+        "input": [
+          "planks_oak",
+          "stick",
+          "planks_oak",
+          "planks_oak",
+          "stick",
+          "planks_oak",
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 3
+      }
+    ]
+  },
+  "fence_gate_oak": {
+    "recipes": [
+      {
+        "input": [
+          "stick",
+          "planks_oak",
+          "stick",
+          "stick",
+          "planks_oak",
+          "stick",
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "fence_spruce": {
+    "recipes": [
+      {
+        "input": [
+          "planks_spruce",
+          "stick",
+          "planks_spruce",
+          "planks_spruce",
+          "stick",
+          "planks_spruce",
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 3
+      }
+    ]
+  },
+  "fence_gate_spruce": {
+    "recipes": [
+      {
+        "input": [
+          "stick",
+          "planks_spruce",
+          "stick",
+          "stick",
+          "planks_spruce",
+          "stick",
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "fence_birch": {
+    "recipes": [
+      {
+        "input": [
+          "planks_birch",
+          "stick",
+          "planks_birch",
+          "planks_birch",
+          "stick",
+          "planks_birch",
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 3
+      }
+    ]
+  },
+  "fence_gate_birch": {
+    "recipes": [
+      {
+        "input": [
+          "stick",
+          "planks_birch",
+          "stick",
+          "stick",
+          "planks_birch",
+          "stick",
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   }
 }
-

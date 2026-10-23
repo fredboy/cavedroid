@@ -19,6 +19,7 @@ import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.gameplay.controls.action.getUseBlockAction
 import ru.fredboy.cavedroid.gameplay.controls.action.placeToBackgroundAction
 import ru.fredboy.cavedroid.gameplay.controls.action.placeToForegroundAction
 import ru.fredboy.cavedroid.gameplay.controls.action.placeblock.IPlaceBlockAction
@@ -79,15 +80,13 @@ class UseItemMouseInputHandler @Inject constructor(
         player.startHitting(false)
         player.stopHitting()
         blockActionSoundAssetsRepository
-        if (item is Item.Placeable) {
-            val placed = placeBlockActionMap.placeToBackgroundAction(
-                item = item,
-                x = player.selectedX,
-                y = player.selectedY,
-            )
-            if (placed) {
-                onboardingEvents.notifyPlace()
-            }
+        val placed = when (item) {
+            is Item.Placeable -> placeBlockActionMap.placeToBackgroundAction(item, player.selectedX, player.selectedY)
+            is Item.Usable -> useItemActionMap[item.useActionKey]?.performBackground(item, player.selectedX, player.selectedY) ?: false
+            else -> false
+        }
+        if (placed) {
+            onboardingEvents.notifyPlace()
         }
     }
 
@@ -113,7 +112,7 @@ class UseItemMouseInputHandler @Inject constructor(
                 .takeIf { !it.isNone() }
             ?: return false
 
-        val handled = useBlockActionMap[block.params.key]?.perform(
+        val handled = useBlockActionMap.getUseBlockAction(block)?.perform(
             block = block,
             x = mobController.player.selectedX,
             y = mobController.player.selectedY,
