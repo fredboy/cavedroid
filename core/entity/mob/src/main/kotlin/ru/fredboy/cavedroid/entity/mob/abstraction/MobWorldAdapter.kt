@@ -11,6 +11,8 @@ interface MobWorldAdapter {
 
     val height: Int
 
+    val seaLevel: Int
+
     @Deprecated("Use start/end")
     val width: Int
 

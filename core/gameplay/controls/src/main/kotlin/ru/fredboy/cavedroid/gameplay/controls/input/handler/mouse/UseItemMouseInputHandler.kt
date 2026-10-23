@@ -197,6 +197,7 @@ class UseItemMouseInputHandler @Inject constructor(
                         return@onTargetHit
                     }
 
+                    target.behavior.onAttackedByPlayer()
                     mobController.player.onMobAttacked?.invoke(target, projectile.damage)
                 },
             ),

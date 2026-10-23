@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gameplay.controls.action.useitem
 import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.item.Item
+import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.projectile.model.Projectile
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
@@ -24,6 +25,7 @@ class UseSnowBallAction @Inject constructor(
                 width = 0.5f,
                 height = 0.5f,
                 dropOnGround = false,
+                onTargetHit = { _, target -> (target as? Mob)?.behavior?.onAttackedByPlayer() },
             ),
             x = mobController.player.position.x + mobController.player.direction.basis,
             y = mobController.player.position.y - mobController.player.height / 4f,

@@ -159,6 +159,7 @@ sealed class SaveDataDto {
         override val breath: Int? = null,
         val woolColor: String? = null,
         override val fireTicksRemaining: Float = 0f,
+        val spiderAngerRemainingSec: Float = 0f,
     ) : MobSaveDataDto()
 
     @Serializable

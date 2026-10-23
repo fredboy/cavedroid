@@ -8,6 +8,7 @@ import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.model.ArcherMob
 import ru.fredboy.cavedroid.entity.mob.model.SheepMob
+import ru.fredboy.cavedroid.entity.mob.model.SpiderMob
 import ru.fredboy.cavedroid.entity.mob.model.WalkingMob
 import javax.inject.Inject
 
@@ -39,6 +40,7 @@ class WalkingMobMapper @Inject constructor(
         breath = mob.breath,
         woolColor = (mob as? SheepMob)?.woolToColor?.first,
         fireTicksRemaining = mob.fireTicksRemaining,
+        spiderAngerRemainingSec = (mob as? SpiderMob)?.angerRemainingSec ?: 0f,
     )
 
     fun mapPassiveMob(
@@ -57,6 +59,10 @@ class WalkingMobMapper @Inject constructor(
             }
 
             MobBehaviorType.ARCHER -> ArcherMob(getItemByKeyUseCase, params)
+            MobBehaviorType.SPIDER -> SpiderMob(params).apply {
+                angerRemainingSec = saveDataDto.spiderAngerRemainingSec
+            }
+
             else -> WalkingMob(params)
         }
 

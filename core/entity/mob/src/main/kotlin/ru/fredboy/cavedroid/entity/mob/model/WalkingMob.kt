@@ -10,6 +10,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobBehavior
 import ru.fredboy.cavedroid.entity.mob.impl.AggressiveMobBehavior
 import ru.fredboy.cavedroid.entity.mob.impl.ArcherMobBehavior
 import ru.fredboy.cavedroid.entity.mob.impl.PassiveMobBehavior
+import ru.fredboy.cavedroid.entity.mob.impl.SpiderMobBehavior
 
 open class WalkingMob(
     params: MobParams,
@@ -71,6 +72,7 @@ open class WalkingMob(
                 MobBehaviorType.PASSIVE, MobBehaviorType.SHEEP -> PassiveMobBehavior()
                 MobBehaviorType.AGGRESSIVE -> AggressiveMobBehavior()
                 MobBehaviorType.ARCHER -> ArcherMobBehavior()
+                MobBehaviorType.SPIDER -> SpiderMobBehavior()
                 else -> {
                     logger.w { "$behaviorType is not supported for Walking mob. Spawning as Passive" }
                     PassiveMobBehavior()

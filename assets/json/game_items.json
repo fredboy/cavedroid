@@ -4982,6 +4982,15 @@
       "burning_time": 15000,
       "origin_x": 0.5,
       "origin_y": 1
+    },
+    "spawn_egg_spider": {
+      "name": "Spider Spawn Egg",
+      "type": "usable",
+      "texture": "spawn_egg",
+      "tint": "#49362C",
+      "action_key": "use_spawn_egg",
+      "mob_key": "spider",
+      "origin_x": 0.5
     }
   }
 }

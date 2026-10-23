@@ -737,5 +737,71 @@
         "origin_y": 0.5
       }
     ]
+  },
+  "spider": {
+    "name": "Spider",
+    "width": 26,
+    "height": 16,
+    "speed": 3.2,
+    "behavior": "spider",
+    "hp": 16,
+    "breath": 20,
+    "animation_range": 12,
+    "damage_to_player": 2,
+    "takes_sun_damage": false,
+    "max_spawn_light": 0.5,
+    "drop_info": [
+      {
+        "key": "string",
+        "amount": {
+          "type": "random_range",
+          "min": 1,
+          "max": 2,
+          "chance": 0.66
+        }
+      }
+    ],
+    "sprites": [
+      {
+        "file": "leg_front",
+        "offset_x": -2,
+        "offset_y": 5,
+        "is_background": true,
+        "is_static": false,
+        "origin_x": 0.8571428571428571,
+        "origin_y": 0.18181818181818182
+      },
+      {
+        "file": "leg_back",
+        "offset_x": 10,
+        "offset_y": 5,
+        "is_background": true,
+        "is_static": false,
+        "origin_x": 0.06666666666666667,
+        "origin_y": 0.18181818181818182
+      },
+      {
+        "file": "body",
+        "is_background": false
+      },
+      {
+        "file": "leg_front",
+        "offset_x": -2,
+        "offset_y": 5,
+        "is_background": false,
+        "is_static": false,
+        "origin_x": 0.8571428571428571,
+        "origin_y": 0.18181818181818182
+      },
+      {
+        "file": "leg_back",
+        "offset_x": 10,
+        "offset_y": 5,
+        "is_background": false,
+        "is_static": false,
+        "origin_x": 0.06666666666666667,
+        "origin_y": 0.18181818181818182
+      }
+    ]
   }
 }

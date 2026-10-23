@@ -143,7 +143,8 @@ class MobController @Inject constructor(
 
     fun playerCanSleep(): Boolean {
         return mobs.none { mob ->
-            mob.params.behaviorType == MobBehaviorType.AGGRESSIVE &&
+            val isHostileSpider = mob.params.behaviorType == MobBehaviorType.SPIDER && mob.behavior.attacksWhenPossible
+            (mob.params.behaviorType == MobBehaviorType.AGGRESSIVE || isHostileSpider) &&
                 mob.position.cpy().sub(player.position).len() < 16f
         }
     }
