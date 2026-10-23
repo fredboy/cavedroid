@@ -1,0 +1,7 @@
+- Neue Parallax-Hintergründe: Ebenen, Wüste, Winter, Wolken und Nachtsterne
+- Holzzäune und Torflügel
+- Spinnen, die Wände erklimmen und je tiefer du gehst, aggressiver werden
+- Unterirdische Minen und konfigurierbare Mob-Spawner
+- Schatten und Beleuchtung nach dem Laden von Chunks behoben
+- Sprachauswahl des Geräts behoben
+- Verbesserte Leistung und Stabilität
