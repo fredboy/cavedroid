@@ -6,6 +6,7 @@ import android.hardware.display.DisplayManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.window.OnBackInvokedDispatcher
 import co.touchlab.kermit.Severity
 import com.badlogic.gdx.Files
 import com.badlogic.gdx.Gdx
@@ -67,7 +68,7 @@ class AndroidLauncher : AndroidApplication() {
         config.useImmersiveMode = true
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            onBackInvokedDispatcher.registerOnBackInvokedCallback(Int.MAX_VALUE) {
+            onBackInvokedDispatcher.registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_OVERLAY) {
             }
         }
 
