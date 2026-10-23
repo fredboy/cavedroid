@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.model.SpriteOrigin
+import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceGauge
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.common.utils.safeCast
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageFrameCountUseCase
@@ -25,6 +28,7 @@ import ru.fredboy.cavedroid.gameplay.rendering.utils.RenderingTool
 import kotlin.math.floor
 
 abstract class BlocksRenderer(
+    private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     protected val gameWorld: GameWorld,
     protected val mobsController: MobController,
     protected val containerController: ContainerController,
@@ -232,17 +236,24 @@ abstract class BlocksRenderer(
         val minChunkY = floor(viewport.y / ChunkFrameBuffer.CHUNK_SIZE).toInt()
         val maxChunkY = floor((viewport.y + viewport.height) / ChunkFrameBuffer.CHUNK_SIZE).toInt()
 
+        var visibleChunks = 0L
+        var cacheUpdates = 0L
         for (cx in minChunkX..maxChunkX) {
             for (cy in minChunkY..maxChunkY) {
                 val key = cx to cy
                 val chunk = chunks.getOrPut(key) { chunkFactory(cx, cy) }
 
+                visibleChunks++
+                if (chunk.dirty) cacheUpdates++
                 chunk.render(
                     spriteBatch = spriteBatch,
                     drawFunction = drawFunction,
                 )
             }
         }
+
+        performanceMonitor.incrementGauge(PerformanceGauge.RENDER_CHUNKS, visibleChunks)
+        performanceMonitor.incrementGauge(PerformanceGauge.CACHE_UPDATES, cacheUpdates)
 
         // Evict off-screen render chunks so an infinite world doesn't leak frame buffers as the
         // player roams. Finite worlds are bounded, so this just trims briefly off-screen chunks.

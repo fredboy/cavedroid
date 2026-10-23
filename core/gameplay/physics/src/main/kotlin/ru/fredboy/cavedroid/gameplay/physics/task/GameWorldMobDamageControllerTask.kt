@@ -1,6 +1,9 @@
 package ru.fredboy.cavedroid.gameplay.physics.task
 
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceMetric
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.domain.world.model.Layer
@@ -18,7 +21,8 @@ class GameWorldMobDamageControllerTask @Inject constructor(
     private val gameWorld: GameWorld,
     private val lightingSystem: LightingSystem,
     private val fireController: FireController,
-) : BaseGameWorldControllerTask() {
+    performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
+) : BaseGameWorldControllerTask(performanceMonitor, PerformanceMetric.TASK_DAMAGE) {
 
     override fun exec() {
         sequence {

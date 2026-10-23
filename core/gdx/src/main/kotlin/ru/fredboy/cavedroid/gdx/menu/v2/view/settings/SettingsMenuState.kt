@@ -1,6 +1,10 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.settings
 
+import ru.fredboy.cavedroid.common.performance.PerformanceMode
+
 data class SettingsMenuState(
+    val performanceAvailable: Boolean,
+    val performanceMode: PerformanceMode,
     val dynamicCamera: Boolean,
     val fullscreen: Boolean,
     val autoJump: Boolean,

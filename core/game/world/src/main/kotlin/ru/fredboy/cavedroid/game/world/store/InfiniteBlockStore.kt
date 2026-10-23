@@ -10,6 +10,12 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
+import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceGauge
+import ru.fredboy.cavedroid.common.performance.PerformanceMetric
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceResult
+import ru.fredboy.cavedroid.common.performance.measure
 import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -36,10 +42,12 @@ class InfiniteBlockStore(
     override val generatorConfig: WorldGeneratorConfig,
     private val gameContextRepository: GameContextRepository,
     private val appDispatchers: AppDispatchers,
+    private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     private val chunkLoader: (chunkX: Int) -> Chunk? = { null },
     private val chunkPersister: (Chunk) -> Unit = { },
 ) : WorldBlockStore {
 
+    private val performanceSession = performanceMonitor.currentSession()
     private val coroutineScope = CoroutineScope(SupervisorJob() + appDispatchers.main)
 
     private val generator = ChunkGenerator(generatorConfig, itemsRepository)
@@ -70,7 +78,10 @@ class InfiniteBlockStore(
 
     init {
         // Pre-load the spawn region so the first render and spawn search have terrain to work with.
-        for (cx in -LOAD_RADIUS..LOAD_RADIUS) chunks[cx] = loadOrGenerate(cx)
+        for (cx in -LOAD_RADIUS..LOAD_RADIUS) {
+            chunks[cx] = loadOrGenerate(cx)
+            performanceSession?.chunkPublished()
+        }
         lastCenterChunk = 0
     }
 
@@ -110,6 +121,7 @@ class InfiniteBlockStore(
         val visible = gameContextRepository.getCameraContext().visibleWorld
         val centerX = (visible.x + visible.width / 2f).floorToInt()
         val centerChunk = chunkIndex(centerX)
+        performanceMonitor.gauge(PerformanceGauge.TERRAIN_CHUNKS, chunks.size.toLong())
         if (centerChunk == lastCenterChunk) return
         lastCenterChunk = centerChunk
 
@@ -171,6 +183,8 @@ class InfiniteBlockStore(
     }
 
     private fun requestChunk(chunkX: Int) {
+        val span = performanceSession?.begin(PerformanceMetric.CHUNK_REQUEST)
+        var result = PerformanceResult.CANCELLED
         val request = LoadRequest()
         loads[chunkX] = request
         request.job = coroutineScope.launch(start = CoroutineStart.LAZY) {
@@ -184,27 +198,37 @@ class InfiniteBlockStore(
                 if (loads[chunkX] === request) {
                     loads.remove(chunkX)
                     publish(chunk)
+                    result = PerformanceResult.SUCCESS
                 }
             } catch (error: CancellationException) {
                 throw error
             } catch (error: Exception) {
+                result = PerformanceResult.ERROR
                 logger.e(error) { "Failed to load chunk $chunkX" }
                 lastCenterChunk = Int.MIN_VALUE
             } finally {
                 if (loads[chunkX] === request) loads.remove(chunkX)
             }
-        }.also { it.start() }
+        }.also { job ->
+            job.invokeOnCompletion { cause ->
+                span?.finish(if (cause != null && cause !is CancellationException) PerformanceResult.ERROR else result)
+            }
+            job.start()
+        }
     }
 
     private fun loadOrGenerate(chunkX: Int): Chunk {
-        val loaded = synchronized(storageLock) { chunkLoader(chunkX) }
-        return loaded ?: generator.generateChunk(chunkX).let { generated ->
+        val loaded = performanceSession.measure(PerformanceMetric.CHUNK_READ) {
+            synchronized(storageLock) { chunkLoader(chunkX) }
+        }
+        return loaded ?: performanceSession.measure(PerformanceMetric.CHUNK_GENERATE) { generator.generateChunk(chunkX) }.let { generated ->
             Chunk(chunkX, generated.foreMap, generated.backMap, generated.biomes)
         }
     }
 
     private fun publish(chunk: Chunk) {
         chunks[chunk.chunkX] = chunk
+        performanceSession?.chunkPublished()
         listeners.toList().forEach { it.onChunkLoaded(chunk.chunkX) }
     }
 
@@ -212,6 +236,7 @@ class InfiniteBlockStore(
         val chunk = chunks.remove(chunkX) ?: return
         if (chunk.dirty) {
             val save = snapshotSave(chunk)
+            val span = performanceSession?.begin(PerformanceMetric.CHUNK_PERSIST_TASK)
             coroutineScope.launch(appDispatchers.io) {
                 try {
                     persist(save)
@@ -222,8 +247,12 @@ class InfiniteBlockStore(
                     throw error
                 } catch (error: Exception) {
                     // Retain the snapshot for a later reload, explicit save or disposal retry.
+                    span?.fail(error)
                     logger.e(error) { "Failed to persist chunk $chunkX" }
                 }
+            }.invokeOnCompletion { cause ->
+                if (cause != null) span?.fail(cause)
+                span?.finish()
             }
         }
         listeners.toList().forEach { it.onChunkUnloaded(chunkX) }
@@ -237,11 +266,14 @@ class InfiniteBlockStore(
     }
 
     private fun persist(save: PendingSave) {
-        synchronized(storageLock) {
-            // A delayed eviction write must never overwrite a newer full-save/disposal snapshot.
-            if (save.version <= save.sequence.persistedVersion) return
-            chunkPersister(save.chunk)
-            save.sequence.persistedVersion = save.version
+        return performanceSession.measure(PerformanceMetric.CHUNK_WRITE) {
+            synchronized(storageLock) {
+                // A delayed eviction write must never overwrite a newer full-save/disposal snapshot.
+                if (save.version <= save.sequence.persistedVersion) return
+                chunkPersister(save.chunk)
+                performanceSession?.chunkWritten()
+                save.sequence.persistedVersion = save.version
+            }
         }
     }
 

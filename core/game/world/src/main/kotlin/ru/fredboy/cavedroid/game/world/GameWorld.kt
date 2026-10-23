@@ -6,6 +6,10 @@ import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.common.coroutines.GdxMainThread
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceMetric
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.measure
 import ru.fredboy.cavedroid.common.utils.removeFirst
 import ru.fredboy.cavedroid.domain.assets.repository.EnvironmentTextureRegionsRepositoryTexture
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -28,6 +32,7 @@ import kotlin.random.Random
 
 @GameScope
 class GameWorld @Inject constructor(
+    private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     private val itemsRepository: ItemsRepository,
     private val physicsController: GameWorldContactListener,
     private val gameWorldSolidBlockBodiesManager: GameWorldSolidBlockBodiesManager,
@@ -332,42 +337,49 @@ class GameWorld @Inject constructor(
     }
 
     fun update(delta: Float) {
-        // Stream chunks in/out around the view before physics steps and rendering consume them.
-        blockStore.update()
-        gameWorldSolidBlockBodiesManager.prepareForStep()
+        return performanceMonitor.measure(PerformanceMetric.WORLD_UPDATE) {
+            // Stream chunks in/out around the view before physics steps and rendering consume them.
+            performanceMonitor.measure(PerformanceMetric.STREAMING) { blockStore.update() }
+            performanceMonitor.measure(PerformanceMetric.COLLISION_PREPARE) { gameWorldSolidBlockBodiesManager.prepareForStep() }
 
-        currentGameTime += (delta * timeMultiplier)
-        totalGameTimeSec += (delta * timeMultiplier)
+            currentGameTime += (delta * timeMultiplier)
+            totalGameTimeSec += (delta * timeMultiplier)
 
-        if (currentGameTime >= DAY_DURATION_SEC) {
-            currentGameTime -= DAY_DURATION_SEC
-            moonPhase = (moonPhase + 1) % environmentTextureRegionsRepository.getMoonPhasesCount()
-        }
+            if (currentGameTime >= DAY_DURATION_SEC) {
+                currentGameTime -= DAY_DURATION_SEC
+                moonPhase = (moonPhase + 1) % environmentTextureRegionsRepository.getMoonPhasesCount()
+            }
 
-        if (isDayTime()) {
-            skipNight = false
-        }
+            if (isDayTime()) {
+                skipNight = false
+            }
 
-        weatherTimer -= delta * timeMultiplier
-        if (weatherTimer <= 0f) {
-            weather = if (weather == Weather.CLEAR) Weather.RAIN else Weather.CLEAR
-            weatherTimer = nextWeatherDuration(weather)
-        }
+            weatherTimer -= delta * timeMultiplier
+            if (weatherTimer <= 0f) {
+                weather = if (weather == Weather.CLEAR) Weather.RAIN else Weather.CLEAR
+                weatherTimer = nextWeatherDuration(weather)
+            }
 
-        val intensityTarget = if (weather == Weather.RAIN) 1f else 0f
-        val intensityStep = delta / WEATHER_FADE_SEC
-        weatherIntensity = if (weatherIntensity < intensityTarget) {
-            (weatherIntensity + intensityStep).coerceAtMost(intensityTarget)
-        } else {
-            (weatherIntensity - intensityStep).coerceAtLeast(intensityTarget)
-        }
+            val intensityTarget = if (weather == Weather.RAIN) 1f else 0f
+            val intensityStep = delta / WEATHER_FADE_SEC
+            weatherIntensity = if (weatherIntensity < intensityTarget) {
+                (weatherIntensity + intensityStep).coerceAtMost(intensityTarget)
+            } else {
+                (weatherIntensity - intensityStep).coerceAtLeast(intensityTarget)
+            }
 
-        lightingSystem.update(delta)
+            performanceMonitor.measure(PerformanceMetric.LIGHTING_UPDATE) { lightingSystem.update(delta) }
 
-        box2dAccumulator += delta
-        while (box2dAccumulator >= PHYSICS_STEP_DELTA) {
-            gameWorldSolidBlockBodiesManager.step(PHYSICS_STEP_DELTA, 6, 2)
-            box2dAccumulator -= PHYSICS_STEP_DELTA
+            var physicsSteps = 0L
+            box2dAccumulator += delta
+            while (box2dAccumulator >= PHYSICS_STEP_DELTA) {
+                performanceMonitor.measure(PerformanceMetric.PHYSICS) {
+                    gameWorldSolidBlockBodiesManager.step(PHYSICS_STEP_DELTA, 6, 2)
+                }
+                physicsSteps++
+                box2dAccumulator -= PHYSICS_STEP_DELTA
+            }
+            performanceMonitor.gauge(ru.fredboy.cavedroid.common.performance.PerformanceGauge.PHYSICS_STEPS, physicsSteps)
         }
     }
 

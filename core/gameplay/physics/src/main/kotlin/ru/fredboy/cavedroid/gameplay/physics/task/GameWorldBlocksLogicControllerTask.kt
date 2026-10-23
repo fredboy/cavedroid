@@ -1,6 +1,9 @@
 package ru.fredboy.cavedroid.gameplay.physics.task
 
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceMetric
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.common.utils.UniqueQueue
 import ru.fredboy.cavedroid.common.utils.floorDiv
 import ru.fredboy.cavedroid.common.utils.ifTrue
@@ -19,7 +22,8 @@ import javax.inject.Inject
 class GameWorldBlocksLogicControllerTask @Inject constructor(
     private val gameWorld: GameWorld,
     private val updateBlockActions: Map<String, @JvmSuppressWildcards IUpdateBlockAction>,
-) : BaseGameWorldControllerTask(),
+    performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
+) : BaseGameWorldControllerTask(performanceMonitor, PerformanceMetric.TASK_BLOCKS),
     ChunkListener {
 
     private val queueLock = Any()

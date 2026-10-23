@@ -3,9 +3,14 @@ package ru.fredboy.cavedroid.gameplay.physics.task
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Timer
+import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceMetric
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 
-abstract class BaseGameWorldControllerTask :
-    Timer.Task(),
+abstract class BaseGameWorldControllerTask(
+    private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
+    private val performanceMetric: PerformanceMetric = PerformanceMetric.TASK_BLOCKS,
+) : Timer.Task(),
     Disposable {
 
     @Volatile
@@ -43,9 +48,11 @@ abstract class BaseGameWorldControllerTask :
 
         synchronized(lock) {
             isRunning = true
+            val start = performanceMonitor.startStage()
             try {
                 exec()
             } finally {
+                performanceMonitor.endStage(performanceMetric, start)
                 isRunning = false
                 lock.notifyAll()
             }

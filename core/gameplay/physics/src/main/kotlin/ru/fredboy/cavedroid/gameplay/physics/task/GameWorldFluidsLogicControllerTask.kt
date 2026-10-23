@@ -1,6 +1,9 @@
 package ru.fredboy.cavedroid.gameplay.physics.task
 
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
+import ru.fredboy.cavedroid.common.performance.PerformanceMetric
+import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.common.utils.PriorityMap
 import ru.fredboy.cavedroid.common.utils.PriorityMapValue
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -16,7 +19,8 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobController: MobController,
     private val itemsRepository: ItemsRepository,
-) : BaseGameWorldControllerTask() {
+    performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
+) : BaseGameWorldControllerTask(performanceMonitor, PerformanceMetric.TASK_FLUIDS) {
 
     private var updateTick: Short = 0
 
