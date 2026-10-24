@@ -203,6 +203,38 @@ class ChunkEntityStreamerTest {
     }
 
     @Test
+    fun `saved passenger is resolved only after the distant player chunk is restored`() {
+        val state = ru.fredboy.cavedroid.entity.vehicle.VehicleState("far-boat", x = 504f, y = 20f)
+        every { mobController.player.position } returns Vector2(state.x, state.y)
+        every { saves.loadChunkEntities(any(), any(), 31, any(), any()) } returns
+            ChunkEntitiesSaveData(emptyList(), emptyList(), emptyMap(), listOf(state))
+
+        streamer.onChunkLoaded(0)
+        streamer.onChunkBodiesReady(0)
+        streamer.onChunkLoaded(31)
+        verify(exactly = 0) { boats.resolvePassenger() }
+
+        streamer.onChunkBodiesReady(31)
+        streamer.onChunkBodiesReady(31)
+        verifyOrder {
+            boats.restore(listOf(state))
+            boats.resolvePassenger()
+        }
+        verify(exactly = 1) { boats.resolvePassenger() }
+    }
+
+    @Test
+    fun `missing passenger is resolved once the player chunk is ready even without a snapshot`() {
+        every { mobController.player.position } returns Vector2(-0.5f, 20f)
+        every { saves.loadChunkEntities(any(), any(), -1, any(), any()) } returns null
+        streamer.onChunkLoaded(-1)
+        verify(exactly = 0) { boats.resolvePassenger() }
+        streamer.onChunkBodiesReady(-1)
+        streamer.onChunkBodiesReady(-1)
+        verify(exactly = 1) { boats.resolvePassenger() }
+    }
+
+    @Test
     fun `new finite worlds do not restore vehicles from a previous directory`() {
         every { world.isInfinite } returns false
         every { context.isLoadGame() } returns false

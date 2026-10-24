@@ -6372,6 +6372,20 @@
       "texture": "oak_boat",
       "action_key": "use_boat",
       "max_stack": 1
+    },
+    "birch_boat": {
+      "name": "Birch Boat",
+      "type": "usable",
+      "texture": "birch_boat",
+      "action_key": "use_boat",
+      "max_stack": 1
+    },
+    "spruce_boat": {
+      "name": "Spruce Boat",
+      "type": "usable",
+      "texture": "spruce_boat",
+      "action_key": "use_boat",
+      "max_stack": 1
     }
   }
 }

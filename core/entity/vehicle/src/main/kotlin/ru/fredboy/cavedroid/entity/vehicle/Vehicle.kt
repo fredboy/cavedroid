@@ -37,7 +37,7 @@ class Vehicle(val id: String, val type: String, val body: Body) {
 /** Save boundary has no native resources. */
 data class VehicleState(
     val id: String,
-    val type: String = "oak_boat",
+    val type: String = BoatType.OAK.itemKey,
     val x: Float,
     val y: Float,
     val velocityX: Float = 0f,

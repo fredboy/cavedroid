@@ -43,6 +43,7 @@ class ChunkEntityStreamer @Inject constructor(
     ChunkBodiesReadyListener {
 
     private var initialized = false
+    private var passengerResolved = false
     private val residentChunks = mutableSetOf<Int>()
     private val restoredChunks = mutableSetOf<Int>()
 
@@ -69,7 +70,6 @@ class ChunkEntityStreamer @Inject constructor(
             onChunkLoaded(it)
             onChunkBodiesReady(it)
         }
-        vehicles.resolvePassenger()
     }
 
     override fun onChunkLoaded(chunkX: Int) {
@@ -79,6 +79,11 @@ class ChunkEntityStreamer @Inject constructor(
     override fun onChunkBodiesReady(chunkX: Int) {
         if (chunkX !in residentChunks) return
         restoreChunk(chunkX)
+        // The initial resident region can be far from the saved player and their boat.
+        if (!passengerResolved && chunkOf(mobController.player.position.x) in restoredChunks) {
+            vehicles.resolvePassenger()
+            passengerResolved = true
+        }
     }
 
     private fun restoreChunk(chunkX: Int) {

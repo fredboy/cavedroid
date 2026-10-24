@@ -9,5 +9,5 @@ import javax.inject.Inject
 @GameScope
 @BindUseItemAction("use_boat")
 class UseBoatItemAction @Inject constructor(private val vehicles: VehicleController) : IUseItemAction {
-    override fun perform(item: Item.Usable, x: Int, y: Int): Boolean = vehicles.place(x + 0.5f, y + 0.75f)
+    override fun perform(item: Item.Usable, x: Int, y: Int): Boolean = vehicles.place(x + 0.5f, y + 0.75f, item.params.key)
 }

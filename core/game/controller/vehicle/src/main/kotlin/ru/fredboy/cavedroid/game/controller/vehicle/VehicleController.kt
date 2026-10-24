@@ -16,6 +16,7 @@ import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.entity.vehicle.BoatPhysics
 import ru.fredboy.cavedroid.entity.vehicle.BoatTuning
+import ru.fredboy.cavedroid.entity.vehicle.BoatType
 import ru.fredboy.cavedroid.entity.vehicle.Vehicle
 import ru.fredboy.cavedroid.entity.vehicle.VehicleState
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -50,7 +51,7 @@ class VehicleController @Inject constructor(
     fun restore(states: List<VehicleState>) {
         for (state in states) {
             if (state.id in live ||
-                state.type != "oak_boat" ||
+                BoatType.fromItemKey(state.type) == null ||
                 state.health <= 0 ||
                 !state.x.isFinite() ||
                 !state.y.isFinite() ||
@@ -75,10 +76,11 @@ class VehicleController @Inject constructor(
         world.world.destroyBody(boat.body)
     }
 
-    fun place(x: Float, y: Float): Boolean {
+    fun place(x: Float, y: Float, type: String = BoatType.OAK.itemKey): Boolean {
+        if (BoatType.fromItemKey(type) == null) return false
         val bounds = Rectangle(x - BoatTuning.WIDTH / 2f, y - BoatTuning.HEIGHT / 2f, BoatTuning.WIDTH, BoatTuning.HEIGHT)
         if (!reachable(x, y) || !VehicleSpace.canPlace(clear(bounds), supported(bounds), waterArea(bounds))) return false
-        restore(listOf(VehicleState(UUID.randomUUID().toString(), x = x, y = y)))
+        restore(listOf(VehicleState(UUID.randomUUID().toString(), type = type, x = x, y = y)))
         player.decreaseCurrentItemCount()
         return true
     }
@@ -98,14 +100,18 @@ class VehicleController @Inject constructor(
         return true
     }
 
+    private fun nearestX(x: Float): Float = if (world.isInfinite) x else x + kotlin.math.round((player.position.x - x) / world.width) * world.width
+
     private fun target(): Vehicle? = vehicles.lastOrNull {
-        it.health > 0 && it.hitbox.contains(player.cursorX, player.cursorY) && reachable(it.position.x, it.position.y)
+        val bounds = it.hitbox
+        bounds.x += nearestX(it.position.x) - it.position.x
+        it.health > 0 && bounds.contains(nearestX(player.cursorX), player.cursorY) && reachable(it.position.x, it.position.y)
     }
 
     private fun reachable(x: Float, y: Float): Boolean {
         if (player.isDead || player.isDisposed()) return false
         val start = Vector2(player.position.x, player.position.y - player.height / 3f)
-        val end = Vector2(x, y)
+        val end = Vector2(nearestX(x), y)
         val range = if (player.gameMode.isCreative()) 9f else 6f
         if (player.position.dst2(end) > range * range) return false
         if (start.epsilonEquals(end)) return true
@@ -202,6 +208,11 @@ class VehicleController @Inject constructor(
         player.updateSight()
     }
 
+    fun overlapsVehicle(bounds: Rectangle, ignored: Vehicle? = null): Boolean {
+        val width = if (world.isInfinite) null else world.width.toFloat()
+        return vehicles.any { it !== ignored && VehicleSpace.overlaps(bounds, it.hitbox, width) }
+    }
+
     fun clear(bounds: Rectangle, ignored: Vehicle? = null, ignorePlayer: Boolean = false): Boolean {
         if (bounds.y < 0 || bounds.y + bounds.height > world.height) return false
         var clear = true
@@ -212,7 +223,7 @@ class VehicleController @Inject constructor(
         }
         val width = if (world.isInfinite) null else world.width.toFloat()
         return clear &&
-            vehicles.none { it !== ignored && VehicleSpace.overlaps(bounds, it.hitbox, width) } &&
+            !overlapsVehicle(bounds, ignored) &&
             mobs.mobs.none { !it.isDead && VehicleSpace.overlaps(bounds, it.hitbox, width) } &&
             (ignorePlayer || !VehicleSpace.overlaps(bounds, player.hitbox, width))
     }

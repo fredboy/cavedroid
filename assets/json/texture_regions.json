@@ -292,5 +292,17 @@
     "oak_boat_rim": {"x": 2, "y": 36, "w": 28, "h": 2},
     "oak_boat_oar": {"x": 62, "y": 18, "w": 18, "h": 2},
     "oak_boat_blade": {"x": 62, "y": 28, "w": 7, "h": 6}
+  },
+  "textures/entity/boat/birch": {
+    "birch_boat_side": {"x": 2, "y": 38, "w": 28, "h": 6},
+    "birch_boat_rim": {"x": 2, "y": 36, "w": 28, "h": 2},
+    "birch_boat_oar": {"x": 62, "y": 18, "w": 18, "h": 2},
+    "birch_boat_blade": {"x": 62, "y": 28, "w": 7, "h": 6}
+  },
+  "textures/entity/boat/spruce": {
+    "spruce_boat_side": {"x": 2, "y": 38, "w": 28, "h": 6},
+    "spruce_boat_rim": {"x": 2, "y": 36, "w": 28, "h": 2},
+    "spruce_boat_oar": {"x": 62, "y": 18, "w": 18, "h": 2},
+    "spruce_boat_blade": {"x": 62, "y": 28, "w": 7, "h": 6}
   }
 }

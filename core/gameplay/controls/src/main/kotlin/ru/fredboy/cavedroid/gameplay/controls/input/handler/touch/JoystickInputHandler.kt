@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.touch
 
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.TimeUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.model.Joystick
@@ -31,7 +32,7 @@ class JoystickInputHandler @Inject constructor(
 
     private var resetting = false
     private var activateTimeMs = 0L
-    private var cursorTimeoutMs = 100L
+    private var tapCandidate = false
 
     private var active = false
         set(value) {
@@ -41,7 +42,7 @@ class JoystickInputHandler @Inject constructor(
             field = value
             if (!value) {
                 resetVelocity()
-                if (!resetting && TimeUtils.timeSinceMillis(activateTimeMs) < 200L) {
+                if (!resetting && tapCandidate && TimeUtils.timeSinceMillis(activateTimeMs) < TAP_TIMEOUT_MS) {
                     if (mobController.player.isMounted) {
                         vehicles.dismount()
                     } else if (mobController.player.canJump) {
@@ -52,6 +53,7 @@ class JoystickInputHandler @Inject constructor(
                 }
             } else {
                 activateTimeMs = TimeUtils.millis()
+                tapCandidate = true
             }
             field = value
         }
@@ -100,7 +102,8 @@ class JoystickInputHandler @Inject constructor(
         active = true
     }
 
-    private fun handleTouchUp() {
+    private fun handleTouchUp(action: MouseInputAction) {
+        updateTapCandidate(action)
         gameContextRepository.getJoystick().deactivate()
         mobController.player.controlMode = Player.ControlMode.CURSOR
         active = false
@@ -108,12 +111,21 @@ class JoystickInputHandler @Inject constructor(
         mobController.player.descend = false
     }
 
-    private fun handleDragged() {
+    private fun updateTapCandidate(action: MouseInputAction) {
+        val joystick = gameContextRepository.getJoystick()
+        if (Vector2.dst2(joystick.centerX, joystick.centerY, action.screenX, action.screenY) > TAP_SLOP * TAP_SLOP) {
+            tapCandidate = false
+        }
+    }
+
+    private fun handleDragged(action: MouseInputAction) {
         if (!active) {
             return
         }
 
         val joystick = gameContextRepository.getJoystick()
+        updateTapCandidate(action)
+        joystick.updateState(action.screenX, action.screenY)
         val joyVector = joystick.getVelocityVector()
 
         mobController.player.controlVector.x = joyVector.x
@@ -130,10 +142,10 @@ class JoystickInputHandler @Inject constructor(
 
     override fun handle(action: MouseInputAction) {
         when (action.actionKey) {
-            is MouseInputActionKey.Dragged -> handleDragged()
+            is MouseInputActionKey.Dragged -> handleDragged(action)
             else -> {
                 if (action.actionKey.touchUp) {
-                    handleTouchUp()
+                    handleTouchUp(action)
                 } else {
                     handleTouchDown(action)
                 }
@@ -149,5 +161,10 @@ class JoystickInputHandler @Inject constructor(
         } finally {
             resetting = false
         }
+    }
+
+    companion object {
+        private const val TAP_TIMEOUT_MS = 200L
+        private const val TAP_SLOP = 8f
     }
 }

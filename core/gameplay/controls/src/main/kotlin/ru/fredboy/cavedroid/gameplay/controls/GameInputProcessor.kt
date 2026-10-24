@@ -129,6 +129,12 @@ class GameInputProcessor @Inject constructor(
     override fun touchCancelled(p0: Int, p1: Int, p2: Int, p3: Int): Boolean = false
 
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
+        val joystick = gameContextRepository.getJoystick()
+        if (applicationContextRepository.isTouch() && joystick.active && joystick.pointer == pointer) {
+            // The joystick owns this gesture, including small drags and crossing touch buttons.
+            return handleMouseAction(mouseInputActionMapper.mapDragged(screenX.toFloat(), screenY.toFloat(), pointer))
+        }
+
         val (touchX, touchY) = gameContextRepository.getCameraContext().getViewportCoordinates(screenX, screenY)
 
         if (abs(touchX - touchDownX) < 16 && abs(touchY - touchDownY) < DRAG_THRESHOLD) {

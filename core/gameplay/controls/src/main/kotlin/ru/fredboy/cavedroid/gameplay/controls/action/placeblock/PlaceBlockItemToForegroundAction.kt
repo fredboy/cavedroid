@@ -10,6 +10,7 @@ import ru.fredboy.cavedroid.domain.items.model.item.isSlab
 import ru.fredboy.cavedroid.domain.items.usecase.GetBlockByKeyUseCase
 import ru.fredboy.cavedroid.domain.stats.repository.StatsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.vehicle.VehicleController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.controls.action.annotation.BindPlaceBlockAction
 import javax.inject.Inject
@@ -24,6 +25,7 @@ class PlaceBlockItemToForegroundAction @Inject constructor(
     private val soundPlayer: SoundPlayer,
     private val statsRepository: StatsRepository,
     private val getBlockByKey: GetBlockByKeyUseCase,
+    private val vehicles: VehicleController,
 ) : IPlaceBlockAction {
 
     override fun place(placeable: Item.Placeable, x: Int, y: Int): Boolean {
@@ -38,7 +40,8 @@ class PlaceBlockItemToForegroundAction @Inject constructor(
         if (block.params.hasCollision &&
             (
                 mobController.player.hitbox.overlaps(blockRect) ||
-                    mobController.mobs.any { mob -> mob.hitbox.overlaps(blockRect) }
+                    mobController.mobs.any { mob -> mob.hitbox.overlaps(blockRect) } ||
+                    vehicles.overlapsVehicle(blockRect)
                 )
         ) {
             return false
