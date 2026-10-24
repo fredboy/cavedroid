@@ -7,6 +7,7 @@ java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
+    useModule(":core:entity:vehicle")
     useAutomultibind()
     useLibgdx()
     useDagger()

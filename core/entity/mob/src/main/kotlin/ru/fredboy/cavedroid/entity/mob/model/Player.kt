@@ -38,6 +38,10 @@ class Player(
 
 ) : Mob(Direction.random(), params, PlayerMobBehavior(soundPlayer, stepsSoundAssetsRepository)) {
 
+    var mountedVehicleId: String? = null
+    val isMounted get() = mountedVehicleId != null
+    var onDetachVehicle: (() -> Unit)? = null
+
     var spawnPoint: Vector2? = null
 
     var inventory = Inventory(
@@ -75,7 +79,7 @@ class Player(
 
     var isSprinting: Boolean = false
         set(value) {
-            field = value && foodLevel > SPRINT_FOOD_FLOOR
+            field = value && !isMounted && foodLevel > SPRINT_FOOD_FLOOR
         }
 
     override val effectiveSpeedMultiplier: Float
@@ -246,7 +250,7 @@ class Player(
             return
         }
 
-        updateAnimation(delta)
+        if (isMounted) anim = 0f else updateAnimation(delta)
 
         var backHandAnim: Float
         var frontHandAnim: Float
@@ -308,6 +312,8 @@ class Player(
                 } else {
                     frontHandAnim
                 }
+            } else if (isMounted) {
+                -75f * direction.basis
             } else if (spriteData.isBackground) {
                 anim
             } else {
@@ -354,11 +360,13 @@ class Player(
     }
 
     override fun dispose() {
+        onDetachVehicle?.invoke()
         super.dispose()
         sight = null
     }
 
     fun respawn(spawnPoint: Vector2, mobPhysicsFactory: MobPhysicsFactory) {
+        onDetachVehicle?.invoke()
         this.spawnPoint = spawnPoint
         isPullingBow = false
         isDead = false

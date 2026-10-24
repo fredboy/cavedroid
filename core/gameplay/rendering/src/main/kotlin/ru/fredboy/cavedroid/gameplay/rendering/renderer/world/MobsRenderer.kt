@@ -24,6 +24,7 @@ class MobsRenderer @Inject constructor(
     private val mobController: MobController,
     private val gameWorld: GameWorld,
     private val itemsRepository: ItemsRepository,
+    private val boats: BoatRenderer,
 ) : IWorldRenderer {
 
     override val renderLayer get() = RENDER_LAYER
@@ -51,19 +52,23 @@ class MobsRenderer @Inject constructor(
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
         drawnMobs = 1
         val playerStart = performanceMonitor.startStage()
+        boats.draw(spriteBatch, viewport, front = false)
         val player = mobController.player
+        val playerDrawY = player.position.y - player.height / 2f + if (player.isMounted) SEATED_DRAW_OFFSET_Y else 0f
         player.draw(
             /* spriteBatch = */ spriteBatch,
             /* x = */ player.position.x - player.width,
-            /* y = */ player.position.y - player.height / 2,
+            /* y = */ playerDrawY,
             /* delta = */ delta,
         )
+
+        boats.draw(spriteBatch, viewport, front = true)
 
         if (player.isOnFire && !player.isDead) {
             drawFireOverlay(
                 spriteBatch = spriteBatch,
                 x = player.position.x - player.width / 2f,
-                y = player.position.y - player.height / 2f,
+                y = playerDrawY,
                 width = player.width,
                 height = player.height,
             )
@@ -82,5 +87,6 @@ class MobsRenderer @Inject constructor(
     companion object {
         private const val RENDER_LAYER = 100100
         private const val FIRE_BLOCK_KEY = "fire"
+        private const val SEATED_DRAW_OFFSET_Y = 0.375f
     }
 }

@@ -32,6 +32,6 @@ class OpenInventoryKeyboardInputHandler @Inject constructor(
     }
 
     override fun reset() {
-        gameWindowsManager.closeWindow()
+        // no-op
     }
 }

@@ -6365,6 +6365,27 @@
       "action_key": "use_spawn_egg",
       "mob_key": "creeper",
       "origin_x": 0.5
+    },
+    "oak_boat": {
+      "name": "Oak Boat",
+      "type": "usable",
+      "texture": "oak_boat",
+      "action_key": "use_boat",
+      "max_stack": 1
+    },
+    "birch_boat": {
+      "name": "Birch Boat",
+      "type": "usable",
+      "texture": "birch_boat",
+      "action_key": "use_boat",
+      "max_stack": 1
+    },
+    "spruce_boat": {
+      "name": "Spruce Boat",
+      "type": "usable",
+      "texture": "spruce_boat",
+      "action_key": "use_boat",
+      "max_stack": 1
     }
   }
 }

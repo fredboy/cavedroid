@@ -3952,5 +3952,26 @@
         "count": 1
       }
     ]
+  },
+  "oak_boat": {
+    "recipes": [{
+      "input": ["planks_oak", null, "planks_oak", "planks_oak", "planks_oak", "planks_oak", null, null, null],
+      "shapeless": false,
+      "count": 1
+    }]
+  },
+  "birch_boat": {
+    "recipes": [{
+      "input": ["planks_birch", null, "planks_birch", "planks_birch", "planks_birch", "planks_birch", null, null, null],
+      "shapeless": false,
+      "count": 1
+    }]
+  },
+  "spruce_boat": {
+    "recipes": [{
+      "input": ["planks_spruce", null, "planks_spruce", "planks_spruce", "planks_spruce", "planks_spruce", null, null, null],
+      "shapeless": false,
+      "count": 1
+    }]
   }
 }

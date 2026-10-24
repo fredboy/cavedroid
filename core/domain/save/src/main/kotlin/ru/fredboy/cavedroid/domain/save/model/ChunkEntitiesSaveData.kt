@@ -4,6 +4,7 @@ import ru.fredboy.cavedroid.entity.container.model.Container
 import ru.fredboy.cavedroid.entity.container.model.ContainerCoordinates
 import ru.fredboy.cavedroid.entity.drop.model.Drop
 import ru.fredboy.cavedroid.entity.mob.model.Mob
+import ru.fredboy.cavedroid.entity.vehicle.VehicleState
 
 /**
  * Reconstructed entities that belong to a single infinite-world chunk. Mobs and drops are already
@@ -13,4 +14,5 @@ class ChunkEntitiesSaveData(
     val mobs: List<Mob>,
     val drops: List<Drop>,
     val containers: Map<ContainerCoordinates, Container>,
+    val vehicles: List<VehicleState> = emptyList(),
 )

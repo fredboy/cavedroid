@@ -43,6 +43,8 @@ include("core:entity:container")
 include("core:entity:drop")
 include("core:entity:mob")
 include("core:entity:projectile")
+include("core:entity:vehicle")
+include("core:game:controller:vehicle")
 
 /**
  * Game scope modules

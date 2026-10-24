@@ -21,6 +21,7 @@ import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.entity.projectile.model.Projectile
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
+import ru.fredboy.cavedroid.game.controller.vehicle.VehicleController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.world.GameWorld
@@ -45,6 +46,7 @@ class TouchCursorInputHandler @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
     private val mobController: MobController,
+    private val vehicles: VehicleController,
     private val gameWorld: GameWorld,
     private val gameWindowsManager: GameWindowsManager,
     private val placeBlockActionMap: Map<String, @JvmSuppressWildcards IPlaceBlockAction>,
@@ -80,6 +82,7 @@ class TouchCursorInputHandler @Inject constructor(
 
     private fun handleHold() {
         cancelHold()
+        if (vehicles.boardTarget()) return
 
         if (mobController.player.canShootBow()) {
             mobController.player.isPullingBow = true
@@ -186,7 +189,7 @@ class TouchCursorInputHandler @Inject constructor(
             return
         }
 
-        if (tryHitMob()) {
+        if (vehicles.attackTarget() || tryHitMob()) {
             return
         }
 

@@ -48,7 +48,7 @@ class UseFenceItemActionTest {
     private val planks = block("planks_birch", true)
     private val action = UseFenceItemAction(
         getBlock,
-        PlaceBlockItemToForegroundAction(world, mockk(), mobs, sounds, soundPlayer, stats, getBlock),
+        PlaceBlockItemToForegroundAction(world, mockk(), mobs, sounds, soundPlayer, stats, getBlock, mockk(relaxed = true)),
         PlaceBlockItemToBackgroundAction(world, mobs, sounds, soundPlayer, stats),
         onboarding,
     )

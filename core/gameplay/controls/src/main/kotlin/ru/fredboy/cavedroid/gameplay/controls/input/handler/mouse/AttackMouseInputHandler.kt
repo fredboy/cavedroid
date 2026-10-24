@@ -6,6 +6,7 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.vehicle.VehicleController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @BindMouseInputHandler
 class AttackMouseInputHandler @Inject constructor(
     private val mobController: MobController,
+    private val vehicles: VehicleController,
     private val gameWindowsManager: GameWindowsManager,
     private val textureRegions: GetTextureRegionByNameUseCase,
     private val gameContextRepository: GameContextRepository,
@@ -38,6 +40,8 @@ class AttackMouseInputHandler @Inject constructor(
         } else {
             val worldX = action.screenX.meters + gameContextRepository.getCameraContext().visibleWorld.x
             val worldY = action.screenY.meters + gameContextRepository.getCameraContext().visibleWorld.y
+
+            if (vehicles.attackTarget()) return
 
             val mob = mobController.mobs.lastOrNull { mob ->
                 mob.hitbox.contains(worldX, worldY) &&

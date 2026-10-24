@@ -8,6 +8,8 @@ java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
+    useModule(":core:game:controller:vehicle")
+    useModule(":core:entity:vehicle")
     useCommonLibs()
     useLibgdx()
     useKotlinxSerializationProtobuf()

@@ -11,6 +11,7 @@ import ru.fredboy.cavedroid.domain.world.abstraction.AbstractContactHandler
 import ru.fredboy.cavedroid.domain.world.model.ChunkUserData
 import ru.fredboy.cavedroid.domain.world.model.ContactSensorType
 import ru.fredboy.cavedroid.entity.mob.model.Mob
+import ru.fredboy.cavedroid.entity.mob.model.Player
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.pow
@@ -92,7 +93,7 @@ class GameWorldContactListener @Inject constructor(
             }
 
             // fall damage
-            if (sensorType == null && mob != null && block != null) {
+            if (sensorType == null && mob != null && block != null && !(mob is Player && mob.isMounted)) {
                 mob.damage(max((mob.velocity.y.pow(2f) / (gameWorld.world.gravity.y * 2f)).roundToInt() - 3, 0))
             }
 

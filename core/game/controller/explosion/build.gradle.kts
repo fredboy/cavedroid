@@ -7,6 +7,8 @@ java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
+    useModule(":core:entity:vehicle")
+    useModule(":core:game:controller:vehicle")
     useLibgdx()
     useDagger()
     useCommonLibs()

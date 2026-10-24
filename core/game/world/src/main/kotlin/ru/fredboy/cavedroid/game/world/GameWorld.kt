@@ -87,6 +87,18 @@ class GameWorld @Inject constructor(
             field = value
         }
 
+    private val fixedStepListeners = mutableListOf<ru.fredboy.cavedroid.game.world.abstraction.FixedStepListener>()
+
+    fun retainColumns(columns: Set<Int>) = blockStore.retainColumns(columns)
+
+    fun addFixedStepListener(listener: ru.fredboy.cavedroid.game.world.abstraction.FixedStepListener) {
+        fixedStepListeners.add(listener)
+    }
+
+    fun removeFixedStepListener(listener: ru.fredboy.cavedroid.game.world.abstraction.FixedStepListener) {
+        fixedStepListeners.remove(listener)
+    }
+
     private var box2dAccumulator: Float = 0f
 
     private val snowAccumulation by lazy { SnowAccumulation(this, itemsRepository) }
@@ -344,6 +356,7 @@ class GameWorld @Inject constructor(
 
     fun update(delta: Float) {
         return performanceMonitor.measure(PerformanceMetric.WORLD_UPDATE) {
+            fixedStepListeners.forEach { it.beforeStreaming() }
             // Stream chunks in/out around the view before physics steps and rendering consume them.
             performanceMonitor.measure(PerformanceMetric.STREAMING) { blockStore.update() }
             performanceMonitor.measure(PerformanceMetric.COLLISION_PREPARE) { gameWorldSolidBlockBodiesManager.prepareForStep() }
@@ -382,7 +395,9 @@ class GameWorld @Inject constructor(
             box2dAccumulator += delta
             while (box2dAccumulator >= PHYSICS_STEP_DELTA) {
                 performanceMonitor.measure(PerformanceMetric.PHYSICS) {
+                    fixedStepListeners.forEach { it.beforeStep(PHYSICS_STEP_DELTA) }
                     gameWorldSolidBlockBodiesManager.step(PHYSICS_STEP_DELTA, 6, 2)
+                    fixedStepListeners.forEach { it.afterStep(PHYSICS_STEP_DELTA) }
                 }
                 physicsSteps++
                 box2dAccumulator -= PHYSICS_STEP_DELTA
@@ -392,6 +407,8 @@ class GameWorld @Inject constructor(
     }
 
     override fun dispose() {
+        fixedStepListeners.forEach { it.dispose() }
+        fixedStepListeners.clear()
         lightingSystem.dispose()
         physicsController.dispose()
         gameWorldSolidBlockBodiesManager.dispose()

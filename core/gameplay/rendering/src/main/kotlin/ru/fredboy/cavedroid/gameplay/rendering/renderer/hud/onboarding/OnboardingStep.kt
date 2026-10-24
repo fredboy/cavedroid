@@ -21,6 +21,10 @@ sealed class OnboardingStep(
 
     object OpenInventory : OnboardingStep(touchKey = null, kbmKey = "onboardingOpenInventory")
 
+    object MountBoat : OnboardingStep(touchKey = "onboardingMountBoatTouch", kbmKey = null)
+
+    object DismountBoat : OnboardingStep(touchKey = "onboardingDismountBoatTouch", kbmKey = null)
+
     companion object {
         val ALL: List<OnboardingStep> = listOf(Move, Jump, Aim, Break, Place, OpenInventory)
     }

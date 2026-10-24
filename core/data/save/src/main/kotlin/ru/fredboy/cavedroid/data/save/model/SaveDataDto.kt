@@ -7,6 +7,25 @@ import ru.fredboy.cavedroid.common.model.GameMode
 @Serializable
 sealed class SaveDataDto {
 
+    @Serializable
+    data class VehicleSaveDataDto(
+        override val version: Int = 1,
+        val id: String,
+        val type: String,
+        val x: Float,
+        val y: Float,
+        val velocityX: Float,
+        val velocityY: Float,
+        val facing: Int,
+        val health: Int,
+    ) : SaveDataDto()
+
+    @Serializable
+    data class VehiclesSaveDataDto(
+        override val version: Int = 1,
+        val vehicles: List<VehicleSaveDataDto> = emptyList(),
+    ) : SaveDataDto()
+
     abstract val version: Int
 
     fun verifyVersion(expectedVersion: Int) {
@@ -236,6 +255,7 @@ sealed class SaveDataDto {
         override val breath: Int? = null,
         val wearingArmor: InventorySaveDataDto? = null,
         override val fireTicksRemaining: Float = 0f,
+        val mountedVehicleId: String? = null,
     ) : MobSaveDataDto()
 
     @Serializable
@@ -299,6 +319,7 @@ sealed class SaveDataDto {
         val mobs: List<@Contextual MobSaveDataDto>,
         val drops: List<DropSaveDataDto>,
         val containers: Map<String, @Contextual ContainerSaveDataDto>,
+        val vehicles: List<VehicleSaveDataDto> = emptyList(),
     ) : SaveDataDto()
 
     @Serializable
