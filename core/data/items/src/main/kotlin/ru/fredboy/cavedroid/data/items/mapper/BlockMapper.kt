@@ -57,6 +57,7 @@ class BlockMapper @Inject constructor(
             bottom = dto.bottom,
         ).toMeters(),
         hitPoints = dto.hp,
+        blastResistance = dto.blastResistance,
         dropInfo = mapBlockDropInfo(dto),
         hasCollision = dto.collision,
         isBackground = dto.background,

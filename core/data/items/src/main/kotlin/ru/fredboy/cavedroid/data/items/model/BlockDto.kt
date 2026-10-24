@@ -14,6 +14,7 @@ data class BlockDto(
     @SerialName("sprite_right") val spriteRight: Int = 0,
     @SerialName("sprite_bottom") val spriteBottom: Int = 0,
     @SerialName("hp") val hp: Int = -1,
+    @SerialName("blast_resistance") val blastResistance: Float = 0f,
     @SerialName("collision") val collision: Boolean = true,
     @SerialName("background") val background: Boolean = false,
     @SerialName("transparent") val transparent: Boolean = false,

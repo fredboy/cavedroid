@@ -1,4 +1,11 @@
 {
+  "tnt": {
+    "recipes": [{
+      "input": ["gunpowder", "sand", "gunpowder", "sand", "gunpowder", "sand", "gunpowder", "sand", "gunpowder"],
+      "shapeless": false,
+      "count": 1
+    }]
+  },
   "planks_oak": {
     "recipes": [
       {

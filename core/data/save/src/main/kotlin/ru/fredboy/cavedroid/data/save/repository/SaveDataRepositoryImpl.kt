@@ -25,6 +25,7 @@ import ru.fredboy.cavedroid.data.save.mapper.GameSaveInfoMapper
 import ru.fredboy.cavedroid.data.save.mapper.GrowBlocksMapper
 import ru.fredboy.cavedroid.data.save.mapper.MobControllerMapper
 import ru.fredboy.cavedroid.data.save.mapper.ProjectileControllerMapper
+import ru.fredboy.cavedroid.data.save.mapper.TntMapper
 import ru.fredboy.cavedroid.data.save.model.SaveDataDto
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -37,6 +38,7 @@ import ru.fredboy.cavedroid.domain.save.model.GameMapSaveData
 import ru.fredboy.cavedroid.domain.save.model.GameSaveDetails
 import ru.fredboy.cavedroid.domain.save.model.GameSaveInfo
 import ru.fredboy.cavedroid.domain.save.model.GrowBlockEntry
+import ru.fredboy.cavedroid.domain.save.model.TntEntry
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.domain.world.model.Weather
@@ -80,6 +82,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     private val projectileControllerMapper: ProjectileControllerMapper,
     private val growBlocksMapper: GrowBlocksMapper,
     private val fireControllerMapper: FireControllerMapper,
+    private val tntMapper: TntMapper,
     private val getItemByKeyUseCase: GetItemByKeyUseCase,
     private val applicationContextRepository: ApplicationContextRepository,
     private val dateFormatter: DateFormatter,
@@ -626,6 +629,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         projectileController: ProjectileController,
         growBlockEntries: List<GrowBlockEntry>,
         fireEntries: List<FireEntry>,
+        tntEntries: List<TntEntry>,
     ) {
         return performanceMonitor.currentSession().measure(PerformanceMetric.SAVE_WRITE) {
             val savesPath = getSavePath(gameDataFolder, saveGameDirectory)
@@ -671,6 +675,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             mobsFile.writeBytes(mobsBytes, false)
             containersFile.writeBytes(containersBytes, false)
             projectilesFile.writeBytes(projectilesBytes, false)
+            file("$savesPath/$TNT_FILE").writeBytes(ProtoBuf.encodeToByteArray(tntMapper.mapSaveData(tntEntries)), false)
 
             // Grow-blocks and fire are also persisted per chunk for infinite worlds.
             if (!isInfinite) {
@@ -706,6 +711,12 @@ internal class SaveDataRepositoryImpl @Inject constructor(
 
         return ProtoBuf.decodeFromByteArray<SaveDataDto.GrowBlocksSaveDataDto>(growBlocksFile.readBytes())
             .let(growBlocksMapper::mapEntries)
+    }
+
+    override fun loadTntEntries(gameDataFolder: String, saveGameDirectory: String): List<TntEntry> {
+        val tntFile = file("${getSavePath(gameDataFolder, saveGameDirectory)}/$TNT_FILE")
+        if (!tntFile.exists()) return emptyList()
+        return tntMapper.mapEntries(ProtoBuf.decodeFromByteArray<SaveDataDto.TntSaveDataDto>(tntFile.readBytes()))
     }
 
     override fun loadFireEntries(
@@ -1075,6 +1086,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         private const val PROJECTILES_FILE = "projectiles.dat"
         private const val GROW_BLOCKS_FILE = "grow_blocks.dat"
         private const val FIRE_FILE = "fire.dat.gz"
+        private const val TNT_FILE = "tnt.dat"
         private const val MOBS_FILE = "mobs.dat"
         private const val CONTAINERS_FILE = "containers.dat"
         private const val DICT_FILE = "dict"

@@ -258,6 +258,22 @@ sealed class SaveDataDto {
     ) : SaveDataDto()
 
     @Serializable
+    data class TntEntryDto(
+        override val version: Int,
+        val x: Float,
+        val y: Float,
+        val velocityX: Float,
+        val velocityY: Float,
+        val fuse: Float,
+    ) : SaveDataDto()
+
+    @Serializable
+    data class TntSaveDataDto(
+        override val version: Int,
+        val entries: List<TntEntryDto>,
+    ) : SaveDataDto()
+
+    @Serializable
     data class FireEntryDto(
         override val version: Int,
         val x: Int,
