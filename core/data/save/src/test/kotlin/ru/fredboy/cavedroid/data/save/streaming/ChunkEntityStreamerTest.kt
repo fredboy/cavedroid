@@ -37,7 +37,8 @@ class ChunkEntityStreamerTest {
     private val snapshots = mutableListOf<List<Mob>>()
     private val factory = mockk<ContainerFactory>(relaxed = true)
     private val boats = mockk<ru.fredboy.cavedroid.game.controller.vehicle.VehicleController>(relaxed = true)
-    private val streamer = ChunkEntityStreamer(world, mobController, drops, containers, saves, app, context, mockk(), mockk(), factory, boats)
+    private val mobFactory = mockk<ru.fredboy.cavedroid.entity.mob.abstraction.MobFactory>(relaxed = true)
+    private val streamer = ChunkEntityStreamer(world, mobController, drops, containers, saves, app, context, mockk(), mockk(), factory, boats, mobFactory)
 
     init {
         every { world.isInfinite } returns true
@@ -57,7 +58,7 @@ class ChunkEntityStreamerTest {
         every { containers.containerMap } returns mutableMapOf()
         every { saves.loadChunkEntities(any(), any(), any(), any(), any()) } returns
             ChunkEntitiesSaveData(listOf(savedMob), emptyList(), emptyMap())
-        every { saves.saveChunkEntities(any(), any(), any(), any(), any(), any()) } answers {
+        every { saves.saveChunkEntities(any(), any(), any(), any(), any(), any(), any(), true) } answers {
             snapshots.add(arg<List<Mob>>(3).toList())
             Unit
         }
@@ -129,7 +130,7 @@ class ChunkEntityStreamerTest {
         verifyOrder {
             mobController.flushPendingSpawns(any())
             drops.flushPendingSpawns(any())
-            saves.saveChunkEntities(any(), any(), 2, any(), any(), any())
+            saves.saveChunkEntities(any(), any(), 2, any(), any(), any(), any(), true)
             spawned.dispose()
         }
     }
@@ -204,7 +205,7 @@ class ChunkEntityStreamerTest {
         streamer.onChunkUnloaded(2)
         verify(exactly = 1) { boats.restore(listOf(state)) }
         verifyOrder {
-            saves.saveChunkEntities(any(), any(), 2, any(), any(), any(), listOf(state))
+            saves.saveChunkEntities(any(), any(), 2, any(), any(), any(), listOf(state), true)
             boats.evict(boat)
         }
     }
@@ -245,8 +246,39 @@ class ChunkEntityStreamerTest {
     fun `new finite worlds do not restore vehicles from a previous directory`() {
         every { world.isInfinite } returns false
         every { context.isLoadGame() } returns false
-        ChunkEntityStreamer(world, mobController, drops, containers, saves, app, context, mockk(), mockk(), factory, boats).initialize()
+        ChunkEntityStreamer(world, mobController, drops, containers, saves, app, context, mockk(), mockk(), factory, boats, mobFactory).initialize()
         verify(exactly = 0) { saves.loadVehicles(any(), any()) }
+    }
+
+    @Test
+    fun `village beds get one resident and a saved population marker prevents replacement`() {
+        every { world.villageBeds(32, 16) } returns listOf(34 to 20)
+        every { world.getForeMap(34, 20).params.key } returns "bed_l"
+        every { world.getForeMap(35, 20).params.key } returns "bed_r"
+        val villager = mockk<ru.fredboy.cavedroid.entity.mob.model.VillagerMob>(relaxed = true)
+        every { mobFactory.create(35f, 19.99f, "villager") } returns villager
+        every { saves.loadChunkEntities(any(), any(), any(), any(), any()) } returns null
+        load()
+        streamer.onChunkBodiesReady(2)
+        streamer.onChunkBodiesReady(2)
+        verify(exactly = 1) { mobFactory.create(35f, 19.99f, "villager") }
+        verify { villager.home = ru.fredboy.cavedroid.entity.mob.model.VillagerMob.BlockPosition(34, 20) }
+        streamer.onChunkUnloaded(2)
+        verify { saves.saveChunkEntities(any(), any(), 2, any(), any(), any(), any(), true) }
+        every { saves.loadChunkEntities(any(), any(), any(), any(), any()) } returns
+            ChunkEntitiesSaveData(emptyList(), emptyList(), emptyMap(), villageResidentsInitialized = true)
+        load()
+        streamer.onChunkBodiesReady(2)
+        verify(exactly = 1) { mobFactory.create(any(), any(), "villager") }
+    }
+
+    @Test
+    fun `a destroyed original village bed does not get a resident`() {
+        every { world.villageBeds(32, 16) } returns listOf(34 to 20)
+        every { world.getForeMap(34, 20).params.key } returns "none"
+        load()
+        streamer.onChunkBodiesReady(2)
+        verify(exactly = 0) { mobFactory.create(any(), any(), "villager") }
     }
 
     private fun load() {

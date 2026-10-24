@@ -10,6 +10,7 @@ import ru.fredboy.cavedroid.entity.mob.model.ArcherMob
 import ru.fredboy.cavedroid.entity.mob.model.CreeperMob
 import ru.fredboy.cavedroid.entity.mob.model.SheepMob
 import ru.fredboy.cavedroid.entity.mob.model.SpiderMob
+import ru.fredboy.cavedroid.entity.mob.model.VillagerMob
 import ru.fredboy.cavedroid.entity.mob.model.WalkingMob
 import javax.inject.Inject
 
@@ -45,6 +46,9 @@ class WalkingMobMapper @Inject constructor(
         creeperFuseElapsedSec = (mob as? CreeperMob)?.fuse?.elapsedSec ?: 0f,
         creeperForcedIgnition = (mob as? CreeperMob)?.fuse?.forced ?: false,
         creeperDaylightSec = (mob as? CreeperMob)?.daylightSec ?: 0f,
+        villagerHome = (mob as? VillagerMob)?.home?.let { SaveDataDto.BlockPositionSaveDataDto(it.x, it.y) },
+        villagerSleeping = (mob as? VillagerMob)?.isSleeping ?: false,
+        villagerOpenedDoors = (mob as? VillagerMob)?.openedDoors.orEmpty().map { SaveDataDto.BlockPositionSaveDataDto(it.x, it.y) },
     )
 
     fun mapPassiveMob(
@@ -66,6 +70,12 @@ class WalkingMobMapper @Inject constructor(
                 fuse.elapsedSec = saveDataDto.creeperFuseElapsedSec
                 fuse.forced = saveDataDto.creeperForcedIgnition
                 daylightSec = saveDataDto.creeperDaylightSec
+            }
+
+            MobBehaviorType.VILLAGER -> VillagerMob(params).apply {
+                home = saveDataDto.villagerHome?.let { VillagerMob.BlockPosition(it.x, it.y) }
+                isSleeping = saveDataDto.villagerSleeping
+                openedDoors.addAll(saveDataDto.villagerOpenedDoors.map { VillagerMob.BlockPosition(it.x, it.y) })
             }
 
             MobBehaviorType.ARCHER -> ArcherMob(getItemByKeyUseCase, params)

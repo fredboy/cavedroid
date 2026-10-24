@@ -61,6 +61,16 @@ class GameWorldGenerator(
         return xSequence.associateWith { config.biomes.random(random) }
     }
 
+    fun villageBeds(): List<Pair<Int, Int>> {
+        // Initialize biomes before heights, matching generate()'s consumption of the seeded RNG.
+        var biome = Biome.PLAINS
+        val biomes = Array(config.width) { x ->
+            biome = biomesMap[x] ?: biome
+            biome
+        }
+        return VillageGenerator(config, itemsRepository).beds(0, config.width, { heights[it] }, { biomes[it] }, config.width)
+    }
+
     private fun winterBiome(x: Int) {
         assert(x in 0..<config.width) { "x not in range of world width" }
 

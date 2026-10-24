@@ -11,6 +11,7 @@ import ru.fredboy.cavedroid.entity.mob.model.CreeperMob
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.model.SheepMob
 import ru.fredboy.cavedroid.entity.mob.model.SpiderMob
+import ru.fredboy.cavedroid.entity.mob.model.VillagerMob
 import ru.fredboy.cavedroid.entity.mob.model.WalkingMob
 import javax.inject.Inject
 
@@ -33,6 +34,8 @@ class MobFactoryImpl @Inject constructor(
             )
 
             MobBehaviorType.SHEEP -> SheepMob(mobParams)
+
+            MobBehaviorType.VILLAGER -> VillagerMob(mobParams)
 
             MobBehaviorType.ARCHER -> ArcherMob(getItemByKeyUseCase, mobParams)
 

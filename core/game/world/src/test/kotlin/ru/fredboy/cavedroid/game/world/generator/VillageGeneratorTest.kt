@@ -20,6 +20,23 @@ class VillageGeneratorTest {
     }
 
     @Test
+    fun `resident homes exactly match generated beds in looping and negative streamed terrain`() {
+        val finiteConfig = WorldGeneratorConfig.getDefault(width = 2048, seed = 123456789L)
+        val finite = GameWorldGenerator(finiteConfig, items).generate()
+        val actual = finite.foreMap.flatMapIndexed { x, column -> column.indices.filter { column[it].params.key == "bed_l" }.map { x to it } }
+        assertTrue(actual.isNotEmpty())
+        assertEquals(actual, GameWorldGenerator(finiteConfig, items).villageBeds())
+        val infinite = ChunkGenerator(finiteConfig, items)
+        val planner = VillageGenerator(finiteConfig, items)
+        for (chunk in -252..-244) {
+            val start = chunk * ChunkGenerator.CHUNK_W
+            val blocks = infinite.generateChunk(chunk).foreMap
+            val expected = blocks.flatMapIndexed { x, column -> column.indices.filter { column[it].params.key == "bed_l" }.map { start + x to it } }
+            assertEquals(expected, planner.beds(start, ChunkGenerator.CHUNK_W, infinite::surfaceHeight, infinite::biomeAt))
+        }
+    }
+
+    @Test
     fun `villages contain paired supported doors beds loot and irrigated crops`() {
         val fore = terrain(1024)
         val back = terrain(1024)

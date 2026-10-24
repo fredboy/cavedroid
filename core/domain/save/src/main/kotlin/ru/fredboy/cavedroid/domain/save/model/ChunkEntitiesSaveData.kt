@@ -15,4 +15,5 @@ class ChunkEntitiesSaveData(
     val drops: List<Drop>,
     val containers: Map<ContainerCoordinates, Container>,
     val vehicles: List<VehicleState> = emptyList(),
+    val villageResidentsInitialized: Boolean = false,
 )

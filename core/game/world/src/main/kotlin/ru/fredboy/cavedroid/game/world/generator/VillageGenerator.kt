@@ -32,6 +32,25 @@ class VillageGenerator(
         }
     }
 
+    /** Original home positions, independent of edits to the world's blocks. */
+    fun beds(
+        startX: Int,
+        width: Int,
+        surfaceHeight: (Int) -> Int,
+        biomeAt: (Int) -> Biome,
+        loopingWidth: Int? = null,
+    ): List<Pair<Int, Int>> {
+        if (!config.villagesEnabled || width <= 0) return emptyList()
+        return (Math.floorDiv(startX, REGION_WIDTH)..Math.floorDiv(startX + width - 1, REGION_WIDTH)).flatMap { region ->
+            plan(region, surfaceHeight, biomeAt, loopingWidth)?.plots.orEmpty()
+                .filter { it.kind == Kind.HOUSE || it.kind == Kind.LARGE_HOUSE }
+                .map { bedX(it.left) to it.ground - 1 }
+                .filter { it.first in startX until startX + width }
+        }
+    }
+
+    private fun bedX(left: Int): Int = left + if (Math.floorMod(left + 2, ChunkGenerator.CHUNK_W) == ChunkGenerator.CHUNK_W - 1) 3 else 2
+
     private enum class Kind(val width: Int) {
         HOUSE(9),
         LARGE_HOUSE(11),
@@ -149,7 +168,7 @@ class VillageGenerator(
                     }
                     for (x in listOf(left + 2, right - 2)) put(x, ground - 3, "glass", background = true)
                     // Bed update actions require both halves to be resident in the same chunk.
-                    val bedX = left + if (Math.floorMod(left + 2, ChunkGenerator.CHUNK_W) == ChunkGenerator.CHUNK_W - 1) 3 else 2
+                    val bedX = bedX(left)
                     put(bedX, ground - 1, "bed_l")
                     put(bedX + 1, ground - 1, "bed_r")
                     put(middle, ground - 3, "torch")

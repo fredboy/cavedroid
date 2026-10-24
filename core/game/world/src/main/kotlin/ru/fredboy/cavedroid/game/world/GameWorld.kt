@@ -22,6 +22,9 @@ import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.domain.world.model.Weather
 import ru.fredboy.cavedroid.game.world.abstraction.ChunkBodiesReadyListener
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
+import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
+import ru.fredboy.cavedroid.game.world.generator.GameWorldGenerator
+import ru.fredboy.cavedroid.game.world.generator.VillageGenerator
 import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 import ru.fredboy.cavedroid.game.world.store.ChunkListener
@@ -140,6 +143,19 @@ class GameWorld @Inject constructor(
     fun forEachLoadedChunk(action: (chunkX: Int) -> Unit) = blockStore.forEachLoadedChunk(action)
 
     fun isChunkLoadedAt(x: Int): Boolean = blockStore.isChunkLoaded(blockStore.transformX(x))
+
+    private val villagePlanner by lazy { VillageGenerator(generatorConfig, itemsRepository) }
+    private val villageTerrain by lazy { ChunkGenerator(generatorConfig, itemsRepository) }
+    private val finiteVillageBeds by lazy { GameWorldGenerator(generatorConfig, itemsRepository).villageBeds() }
+
+    fun villageBeds(startX: Int, width: Int): List<Pair<Int, Int>> {
+        if (!generatorConfig.villagesEnabled) return emptyList()
+        return if (isInfinite) {
+            villagePlanner.beds(startX, width, villageTerrain::surfaceHeight, villageTerrain::biomeAt)
+        } else {
+            finiteVillageBeds.filter { it.first in startX until startX + width }
+        }
+    }
 
     /** Persists resident chunks with unsaved edits (infinite worlds only). */
     fun flushDirtyChunks() = blockStore.flushDirtyChunks()

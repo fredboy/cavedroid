@@ -3,9 +3,12 @@ package ru.fredboy.cavedroid.game.world.impl
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Body
+import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.World
+import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.floor
+import ru.fredboy.cavedroid.domain.assets.repository.BlockActionSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
@@ -17,6 +20,7 @@ import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
 import ru.fredboy.cavedroid.entity.container.model.ContainerCoordinates
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.entity.projectile.abstraction.ProjectileWorldAdapter
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
@@ -29,6 +33,8 @@ internal class WorldAdapterImpl @Inject constructor(
     private val itemsRepository: ItemsRepository,
     private val mobParamsRepository: MobParamsRepository,
     private val lightingSystem: LightingSystem,
+    private val blockActionSounds: BlockActionSoundAssetsRepository,
+    private val soundPlayer: SoundPlayer,
 ) : DropWorldAdapter,
     ContainerWorldAdapter,
     MobWorldAdapter,
@@ -174,8 +180,46 @@ internal class WorldAdapterImpl @Inject constructor(
         return lightingSystem.createFurnaceLight(x, y)
     }
 
+    override fun isChunkLoadedAt(x: Int): Boolean = gameWorld.isChunkLoadedAt(x)
+
+    override fun setWoodenDoorOpen(x: Int, bottomY: Int, open: Boolean): Boolean {
+        if (!isChunkLoadedAt(x)) return false
+        val key = getForegroundBlock(x, bottomY).params.key
+        val side = when {
+            key.startsWith("door_wood_bottom_left_") -> "left"
+            key.startsWith("door_wood_bottom_right_") -> "right"
+            else -> return false
+        }
+        val oldState = if (open) "closed" else "open"
+        val newState = if (open) "open" else "closed"
+        if (key != "door_wood_bottom_${side}_$oldState" ||
+            getForegroundBlock(x, bottomY - 1).params.key != "door_wood_top_${side}_$oldState"
+        ) {
+            return false
+        }
+        if (!open) {
+            var occupied = false
+            gameWorld.world.QueryAABB({ fixture ->
+                if (!fixture.isSensor && fixture.body.type != BodyDef.BodyType.StaticBody) {
+                    occupied = true
+                }
+                !occupied
+            }, x.toFloat(), bottomY - 1f, x + 1f, bottomY + 1f)
+            if (occupied) return false
+        }
+        setForegroundBlock(x, bottomY - 1, itemsRepository.getBlockByKey("door_wood_top_${side}_$newState"))
+        setForegroundBlock(x, bottomY, itemsRepository.getBlockByKey("door_wood_bottom_${side}_$newState"))
+        return true
+    }
+
     override fun isDayTime(): Boolean {
         return gameWorld.isDayTime()
+    }
+
+    override fun playBlockActionSound(block: Block, x: Int, y: Int, player: PlayerAdapter) {
+        val key = block.params.actionSoundKey ?: return
+        val sound = blockActionSounds.getBlockActionSound(key) ?: return
+        soundPlayer.playSoundAtPosition(sound, x + 0.5f, y + 0.5f, player.x, player.y)
     }
 
     override fun canPlaceToForeground(x: Int, y: Int, value: Block): Boolean {

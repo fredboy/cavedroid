@@ -26,6 +26,9 @@ sealed class SaveDataDto {
         val vehicles: List<VehicleSaveDataDto> = emptyList(),
     ) : SaveDataDto()
 
+    @Serializable
+    data class BlockPositionSaveDataDto(val x: Int, val y: Int)
+
     abstract val version: Int
 
     fun verifyVersion(expectedVersion: Int) {
@@ -191,6 +194,9 @@ sealed class SaveDataDto {
         val creeperFuseElapsedSec: Float = 0f,
         val creeperForcedIgnition: Boolean = false,
         val creeperDaylightSec: Float = 0f,
+        val villagerHome: BlockPositionSaveDataDto? = null,
+        val villagerSleeping: Boolean = false,
+        val villagerOpenedDoors: List<BlockPositionSaveDataDto> = emptyList(),
     ) : MobSaveDataDto()
 
     @Serializable
@@ -263,6 +269,7 @@ sealed class SaveDataDto {
         override val version: Int,
         val mobs: List<@Contextual MobSaveDataDto>,
         val player: PlayerSaveDataDto,
+        val villageResidentsInitialized: Boolean = false,
     ) : SaveDataDto()
 
     @Serializable
@@ -320,6 +327,7 @@ sealed class SaveDataDto {
         val drops: List<DropSaveDataDto>,
         val containers: Map<String, @Contextual ContainerSaveDataDto>,
         val vehicles: List<VehicleSaveDataDto> = emptyList(),
+        val villageResidentsInitialized: Boolean = false,
     ) : SaveDataDto()
 
     @Serializable

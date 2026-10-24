@@ -897,5 +897,53 @@
         "is_static": false
       }
     ]
+  },
+  "villager": {
+    "name": "Villager",
+    "width": 8,
+    "height": 30,
+    "speed": 1.5,
+    "behavior": "villager",
+    "hp": 20,
+    "breath": 20,
+    "animation_range": 20,
+    "spawn_weight": 0,
+    "drop_info": [],
+    "sprites": [
+      {
+        "file": "leg",
+        "offset_x": 2,
+        "offset_y": 20,
+        "is_background": true,
+        "is_static": false
+      },
+      {
+        "file": "leg",
+        "offset_x": 2,
+        "offset_y": 20,
+        "is_background": false,
+        "is_static": false
+      },
+      {
+        "file": "body",
+        "offset_x": 1,
+        "offset_y": 10,
+        "is_background": false
+      },
+      {
+        "file": "arms",
+        "offset_x": -1,
+        "offset_y": 12,
+        "is_background": false,
+        "is_hand": true
+      },
+      {
+        "file": "head",
+        "offset_x": -2,
+        "is_background": false,
+        "is_head": true,
+        "origin_y": 1
+      }
+    ]
   }
 }

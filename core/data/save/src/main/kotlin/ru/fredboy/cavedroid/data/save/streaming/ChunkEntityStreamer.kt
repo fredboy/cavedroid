@@ -9,7 +9,9 @@ import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.drop.abstraction.DropWorldAdapter
+import ru.fredboy.cavedroid.entity.mob.abstraction.MobFactory
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
+import ru.fredboy.cavedroid.entity.mob.model.VillagerMob
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -39,6 +41,7 @@ class ChunkEntityStreamer @Inject constructor(
     private val dropWorldAdapter: DropWorldAdapter,
     private val containerFactory: ContainerFactory,
     private val vehicles: VehicleController,
+    private val mobFactory: MobFactory,
 ) : ChunkListener,
     ChunkBodiesReadyListener {
 
@@ -58,6 +61,11 @@ class ChunkEntityStreamer @Inject constructor(
         initialized = true
         if (!gameWorld.isInfinite) {
             initializeContainers(0, gameWorld.width)
+            if (!mobController.villageResidentsInitialized) {
+                initializeVillageResidents(0, gameWorld.width)
+                mobController.flushPendingSpawns()
+                mobController.villageResidentsInitialized = true
+            }
             if (gameContextRepository.isLoadGame()) {
                 vehicles.restore(saveDataRepository.loadVehicles(applicationContextRepository.getGameDirectory(), gameContextRepository.getSaveGameDirectory()))
             }
@@ -105,7 +113,20 @@ class ChunkEntityStreamer @Inject constructor(
             }
         }
         initializeContainers(chunkX * ChunkGenerator.CHUNK_W, ChunkGenerator.CHUNK_W)
+        if (data?.villageResidentsInitialized != true) {
+            initializeVillageResidents(chunkX * ChunkGenerator.CHUNK_W, ChunkGenerator.CHUNK_W)
+        }
         restoredChunks.add(chunkX)
+    }
+
+    private fun initializeVillageResidents(startX: Int, width: Int) {
+        for ((x, y) in gameWorld.villageBeds(startX, width)) {
+            if (gameWorld.getForeMap(x, y).params.key != "bed_l" || gameWorld.getForeMap(x + 1, y).params.key != "bed_r") continue
+            val home = VillagerMob.BlockPosition(x, y)
+            if (mobController.mobs.filterIsInstance<VillagerMob>().any { it.home == home }) continue
+            val mob = mobFactory.create(x + 1f, y - 0.01f, "villager") as? VillagerMob ?: continue
+            mob.home = home
+        }
     }
 
     private fun initializeContainers(startX: Int, width: Int) {
@@ -159,6 +180,7 @@ class ChunkEntityStreamer @Inject constructor(
             drops = drops,
             containers = containers,
             vehicles = boats.map { it.snapshot() },
+            villageResidentsInitialized = true,
         )
 
         if (!evict) {

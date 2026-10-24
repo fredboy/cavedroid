@@ -93,7 +93,7 @@ interface SaveDataRepository {
         chunkX: Int,
     ): ChunkSaveData?
 
-    /** Persists the mobs/drops/containers belonging to one infinite-world chunk (deletes the file when empty). */
+    /** Persists chunk entities and the one-time village population marker. */
     fun saveChunkEntities(
         gameDataFolder: String,
         saveGameDirectory: String,
@@ -102,6 +102,7 @@ interface SaveDataRepository {
         drops: List<Drop>,
         containers: Map<ContainerCoordinates, Container>,
         vehicles: List<VehicleState> = emptyList(),
+        villageResidentsInitialized: Boolean = false,
     )
 
     /** Loads and reconstructs the entities of one infinite-world chunk, or null if none were saved. */

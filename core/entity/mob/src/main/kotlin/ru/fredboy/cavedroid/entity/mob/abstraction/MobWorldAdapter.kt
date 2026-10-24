@@ -40,5 +40,12 @@ interface MobWorldAdapter {
 
     fun isDayTime(): Boolean
 
+    fun isChunkLoadedAt(x: Int): Boolean
+
+    /** Changes both halves; closing waits until the doorway is clear of bodies. */
+    fun setWoodenDoorOpen(x: Int, bottomY: Int, open: Boolean): Boolean
+
+    fun playBlockActionSound(block: Block, x: Int, y: Int, player: PlayerAdapter)
+
     fun canPlaceToForeground(x: Int, y: Int, value: Block): Boolean
 }

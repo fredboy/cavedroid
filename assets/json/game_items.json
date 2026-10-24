@@ -6383,6 +6383,15 @@
       "type": "block",
       "texture": "tnt"
     },
+    "spawn_egg_villager": {
+      "name": "Villager Spawn Egg",
+      "type": "usable",
+      "texture": "spawn_egg",
+      "tint": "#B7A18B",
+      "action_key": "use_spawn_egg",
+      "mob_key": "villager",
+      "origin_x": 0.5
+    },
     "spawn_egg_creeper": {
       "name": "Creeper Spawn Egg",
       "type": "usable",

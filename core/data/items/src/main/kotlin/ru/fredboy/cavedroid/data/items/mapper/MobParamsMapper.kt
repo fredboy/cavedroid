@@ -49,6 +49,7 @@ class MobParamsMapper @Inject constructor(
             "archer" -> MobBehaviorType.ARCHER
             "spider" -> MobBehaviorType.SPIDER
             "creeper" -> MobBehaviorType.CREEPER
+            "villager" -> MobBehaviorType.VILLAGER
 
             else -> MobBehaviorType.PASSIVE
         }

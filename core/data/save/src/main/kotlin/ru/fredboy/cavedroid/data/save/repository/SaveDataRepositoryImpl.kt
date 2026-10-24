@@ -458,17 +458,19 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         drops: List<Drop>,
         containers: Map<ContainerCoordinates, Container>,
         vehicles: List<VehicleState>,
+        villageResidentsInitialized: Boolean,
     ) {
         val path = chunkPath(getSavePath(gameDataFolder, saveGameDirectory), chunkX)
         val entitiesFile = file("$path/$ENTITIES_FILE")
 
-        if (mobs.isEmpty() && drops.isEmpty() && containers.isEmpty() && vehicles.isEmpty()) {
+        if (mobs.isEmpty() && drops.isEmpty() && containers.isEmpty() && vehicles.isEmpty() && !villageResidentsInitialized) {
             if (entitiesFile.exists()) entitiesFile.delete()
             return
         }
 
         val dto = SaveDataDto.ChunkEntitiesSaveDataDto(
             version = CHUNK_ENTITIES_VERSION,
+            villageResidentsInitialized = villageResidentsInitialized,
             vehicles = vehicles.map { it.toSaveData() },
             mobs = mobs.mapNotNull(mobControllerMapper::mapMobSaveData),
             drops = drops.map(dropControllerMapper::mapDropSaveData),
@@ -496,6 +498,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         val dto = ProtoBuf.decodeFromByteArray<SaveDataDto.ChunkEntitiesSaveDataDto>(entitiesFile.readBytes())
 
         return ChunkEntitiesSaveData(
+            villageResidentsInitialized = dto.villageResidentsInitialized,
             vehicles = dto.vehicles.map { it.toVehicleState() },
             mobs = dto.mobs.mapNotNull { mobControllerMapper.mapMob(it, mobPhysicsFactory) },
             drops = dto.drops.map { dropControllerMapper.mapDrop(it, dropWorldAdapter) },
