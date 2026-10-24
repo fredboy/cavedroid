@@ -14,6 +14,8 @@ import ru.fredboy.cavedroid.domain.save.model.TntEntry
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.entity.drop.DropQueue
+import ru.fredboy.cavedroid.entity.mob.impl.CreeperFuse
+import ru.fredboy.cavedroid.entity.mob.model.CreeperMob
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.fire.FireController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -66,6 +68,7 @@ class ExplosionController @Inject constructor(
     fun update(delta: Float) {
         activeEffects.forEach { it.age += delta }
         activeEffects.removeAll { it.age >= ExplosionRules.EFFECT_SECONDS }
+        updateCreepers(delta)
         fireController.snapshot().filter { blockAt(it.x, it.y, it.layer).params.key == "tnt" }
             .forEach { prime(it.x, it.y, it.layer) }
 
@@ -93,13 +96,13 @@ class ExplosionController @Inject constructor(
         }
     }
 
-    fun explode(x: Float, y: Float) {
-        damageEntities(x, y)
+    fun explode(x: Float, y: Float, power: Float = ExplosionRules.TNT_POWER) {
+        damageEntities(x, y, power)
         val origin = gameWorld.getForeMap(floor(x).toInt(), floor(y).toInt())
         // Submerged TNT still hurts entities, but the liquid absorbs its terrain damage.
         if (!origin.isFluid()) {
             val affected = Layer.entries.associateWith { layer ->
-                ExplosionRules.affectedBlocks(x, y) { bx, by -> blockAt(bx, by, layer) }
+                ExplosionRules.affectedBlocks(x, y, power) { bx, by -> blockAt(bx, by, layer) }
                     .map { (bx, by) ->
                         (if (gameWorld.isInfinite) bx else Math.floorMod(bx, gameWorld.width)) to by
                     }.toSet()
@@ -127,17 +130,44 @@ class ExplosionController @Inject constructor(
         }
     }
 
-    private fun damageEntities(x: Float, y: Float) {
+    private fun updateCreepers(delta: Float) {
+        mobController.mobs.filterIsInstance<CreeperMob>().forEach { creeper ->
+            if (creeper.isDead) return@forEach
+            val exposed = CreeperDaylightRules.exposed(
+                gameWorld.isDayTime(),
+                creeper.upperMapY,
+                gameWorld.generatorConfig.maxSurfaceHeight,
+            ) { gameWorld.getForeMap(creeper.mapX, it) }
+            creeper.daylightSec = CreeperDaylightRules.elapsed(creeper.daylightSec, exposed, delta)
+            val despawn = creeper.daylightSec >= CreeperDaylightRules.DESPAWN_SECONDS
+            if (despawn || creeper.fuse.isReady) {
+                val x = creeper.position.x
+                val y = creeper.position.y
+                // Remove directly: detonation and daylight despawning must not award death loot.
+                mobController.removeMob(creeper)
+                creeper.dispose()
+                if (!despawn) explode(x, y, CreeperFuse.EXPLOSION_POWER)
+            } else if (creeper.fuse.started) {
+                val player = mobController.player
+                sounds.getBlockActionSound("creeper_fuse")?.let { sound ->
+                    val dx = ExplosionRules.horizontalDistance(player.position.x, creeper.position.x, gameWorld.width, gameWorld.isInfinite)
+                    soundPlayer.playSoundAtPosition(sound, player.position.x + dx, creeper.position.y, player.position.x, player.position.y)
+                }
+            }
+        }
+    }
+
+    private fun damageEntities(x: Float, y: Float, power: Float) {
         (mobController.mobs + mobController.player).forEach { mob ->
             if (mob.isDead || mob is Player && mob.gameMode.isCreative()) return@forEach
             val dx = ExplosionRules.horizontalDistance(x, mob.position.x, gameWorld.width, gameWorld.isInfinite)
             val dy = mob.position.y - y
             val distance = sqrt(dx * dx + dy * dy)
-            if (distance > ExplosionRules.TNT_POWER * 2f) return@forEach
+            if (distance > power * 2f) return@forEach
             val bounds = Rectangle(x + dx - mob.width / 2f, mob.position.y - mob.height / 2f, mob.width, mob.height)
             val exposure = ExplosionRules.exposure(x, y, bounds, gameWorld::getForeMap)
-            val impact = ExplosionRules.impact(distance, exposure)
-            mob.damage(ExplosionRules.damage(impact))
+            val impact = ExplosionRules.impact(distance, exposure, power)
+            mob.damage(ExplosionRules.damage(impact, power))
             if (distance > 0f) {
                 mob.velocity.x += dx / distance * impact * 20f
                 mob.velocity.y += dy / distance * impact * 20f

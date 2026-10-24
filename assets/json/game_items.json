@@ -9,14 +9,6 @@
       "casts_shadows": false,
       "replaceable": true
     },
-    "tnt": {
-      "hp": 0,
-      "blast_resistance": 0,
-      "texture": "tnt",
-      "combustible": true,
-      "material": "grass",
-      "drop_info": [{ "key": "tnt" }]
-    },
     "stone": {
       "blast_resistance": 6,
       "hp": 450,
@@ -4313,6 +4305,14 @@
       "material": "grass",
       "grow_action": "grow_stem",
       "update_action": "update_stem"
+    },
+    "tnt": {
+      "hp": 0,
+      "blast_resistance": 0,
+      "texture": "tnt",
+      "combustible": true,
+      "material": "grass",
+      "drop_info": [{ "key": "tnt" }]
     }
   },
   "items": {
@@ -4320,11 +4320,6 @@
       "name": "",
       "type": "none",
       "texture": "none"
-    },
-    "tnt": {
-      "name": "TNT",
-      "type": "block",
-      "texture": "tnt"
     },
     "stone": {
       "name": "Stone",
@@ -6356,6 +6351,20 @@
     "glistering_melon_slice": {
       "name": "Glistering Melon Slice",
       "texture": "glistering_melon_slice"
+    },
+    "tnt": {
+      "name": "TNT",
+      "type": "block",
+      "texture": "tnt"
+    },
+    "spawn_egg_creeper": {
+      "name": "Creeper Spawn Egg",
+      "type": "usable",
+      "texture": "spawn_egg",
+      "tint": "#0DA70B",
+      "action_key": "use_spawn_egg",
+      "mob_key": "creeper",
+      "origin_x": 0.5
     }
   }
 }

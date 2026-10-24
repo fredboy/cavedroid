@@ -24,10 +24,13 @@ import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.entity.drop.DropQueue
+import ru.fredboy.cavedroid.entity.mob.impl.CreeperFuse
+import ru.fredboy.cavedroid.entity.mob.model.CreeperMob
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.fire.FireController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
 
 class ExplosionControllerTest {
     private val world = mockk<GameWorld>(relaxed = true)
@@ -205,6 +208,66 @@ class ExplosionControllerTest {
         controller().explode(255.5f, 8.5f)
         verify(exactly = 1) { player.damage(46) }
         assertTrue(velocity.x > 0f)
+    }
+
+    private fun creeper(): CreeperMob {
+        val fuse = CreeperFuse()
+        val creeper = mockk<CreeperMob>(relaxed = true)
+        every { creeper.fuse } returns fuse
+        every { creeper.position } returns Vector2(0.5f, 8.5f)
+        every { creeper.mapX } returns 0
+        every { creeper.upperMapY } returns 7
+        var daylight = 0f
+        every { creeper.daylightSec } answers { daylight }
+        every { creeper.daylightSec = any() } answers { daylight = firstArg() }
+        val list = mutableListOf<ru.fredboy.cavedroid.entity.mob.model.Mob>(creeper)
+        every { mobs.mobs } returns list
+        every { mobs.removeMob(creeper) } answers {
+            list.remove(creeper)
+            Unit
+        }
+        every { world.generatorConfig } returns WorldGeneratorConfig.getDefault(seed = 42)
+        return creeper
+    }
+
+    @Test
+    fun `surface creepers disappear after ten daylight seconds without loot or explosions`() {
+        val creeper = creeper()
+        every { world.isDayTime() } returns true
+        val controller = controller()
+        controller.update(9f)
+        verify(exactly = 0) { mobs.removeMob(creeper) }
+        controller.update(1f)
+        verify(exactly = 1) {
+            mobs.removeMob(creeper)
+            creeper.dispose()
+        }
+        assertTrue(controller.effects.isEmpty())
+        assertTrue(drops.queue.isEmpty())
+    }
+
+    @Test
+    fun `ready creeper is removed before a smaller explosion and does not drop death loot`() {
+        val creeper = creeper()
+        creeper.fuse.elapsedSec = CreeperFuse.DURATION_SEC
+        val controller = controller()
+        controller.update(0f)
+        controller.update(0f)
+        verify(exactly = 1) {
+            mobs.removeMob(creeper)
+            creeper.dispose()
+        }
+        verify(exactly = 1) { sounds.getBlockActionSound("explosion") }
+        assertEquals(1, controller.effects.size)
+        assertTrue(drops.queue.isEmpty())
+    }
+
+    @Test
+    fun `creeper power limits damage radius to six blocks`() {
+        every { player.gameMode } returns GameMode.SURVIVAL
+        every { player.position } returns Vector2(7.5f, 8.5f)
+        controller().explode(0.5f, 8.5f, CreeperFuse.EXPLOSION_POWER)
+        verify(exactly = 0) { player.damage(any()) }
     }
 
     @Test

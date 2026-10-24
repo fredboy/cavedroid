@@ -6,4 +6,5 @@ zombie
 chicken
 skeleton
 spider
+creeper
 
