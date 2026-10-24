@@ -5233,6 +5233,21 @@
       "type": "block",
       "texture": "bookshelf",
       "burning_time": 15000
+    },
+    "mutton_raw": {
+      "name": "Raw Mutton",
+      "type": "food",
+      "texture": "mutton_raw",
+      "heal": 2,
+      "saturation": 1.2,
+      "smelt_product": "mutton_cooked"
+    },
+    "mutton_cooked": {
+      "name": "Cooked Mutton",
+      "type": "food",
+      "texture": "mutton_cooked",
+      "heal": 6,
+      "saturation": 9.6
     }
   }
 }

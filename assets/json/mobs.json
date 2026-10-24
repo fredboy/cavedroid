@@ -479,6 +479,15 @@
     "behavior": "sheep",
     "drop_info": [
       {
+        "key": "mutton_raw",
+        "amount": {
+          "type": "random_range",
+          "min": 1,
+          "max": 2,
+          "chance": 1
+        }
+      },
+      {
         "key": "wool_colored_white",
         "amount": {
           "type": "exact_amount",

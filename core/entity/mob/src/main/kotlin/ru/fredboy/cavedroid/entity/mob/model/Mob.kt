@@ -16,6 +16,7 @@ import ru.fredboy.cavedroid.common.utils.floor
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.drop.DropAmount
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
+import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
@@ -140,6 +141,8 @@ abstract class Mob(
     val isOnFire: Boolean
         get() = fireTicksRemaining > 0f
 
+    private var wasOnFireAtDeath: Boolean = false
+
     fun ignite(durationSec: Float) {
         if (isDead || durationSec <= 0f || this is Player && gameMode == GameMode.CREATIVE) return
         if (durationSec > fireTicksRemaining) {
@@ -245,6 +248,9 @@ abstract class Mob(
     fun looksRight() = direction == Direction.RIGHT
 
     fun kill() {
+        if (!isDead) {
+            wasOnFireAtDeath = isOnFire
+        }
         controlVector.setZero()
         isDead = true
         makingSound = SoundType.Death
@@ -427,27 +433,28 @@ abstract class Mob(
         return buildList {
             for (info in params.dropInfo) {
                 when (info.amount) {
-                    is DropAmount.ExactAmount -> {
-                        add(info.toInventoryItem(itemByKey))
-                    }
+                    is DropAmount.ExactAmount -> Unit
 
                     is DropAmount.RandomChance -> {
                         val randomChanceAmount = info.amount as DropAmount.RandomChance
-                        if (MathUtils.randomBoolean(randomChanceAmount.chance)) {
-                            add(info.toInventoryItem(itemByKey))
-                        } else {
+                        if (!MathUtils.randomBoolean(randomChanceAmount.chance)) {
                             continue
                         }
                     }
 
                     is DropAmount.RandomRange -> {
                         val randomRangeAmount = info.amount as DropAmount.RandomRange
-                        if (MathUtils.randomBoolean(randomRangeAmount.chance)) {
-                            add(info.toInventoryItem(itemByKey))
-                        } else {
+                        if (!MathUtils.randomBoolean(randomRangeAmount.chance)) {
                             continue
                         }
                     }
+                }
+                val drop = info.toInventoryItem(itemByKey)
+                val smeltProductKey = drop.item.params.smeltProductKey
+                if (wasOnFireAtDeath && drop.item is Item.Food && smeltProductKey != null) {
+                    add(itemByKey[smeltProductKey].toInventoryItem(drop.amount))
+                } else {
+                    add(drop)
                 }
             }
         }
