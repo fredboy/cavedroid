@@ -8,6 +8,7 @@ import ru.fredboy.cavedroid.domain.save.model.FireEntry
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
+import ru.fredboy.cavedroid.game.controller.explosion.ExplosionController
 import ru.fredboy.cavedroid.game.controller.fire.FireController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
@@ -29,6 +30,7 @@ class GameSaveHelper @Inject constructor(
     private val statsController: StatsController,
     private val growBlocksControllerTask: GameWorldGrowBlocksControllerTask,
     private val fireController: FireController,
+    private val explosionController: ExplosionController,
     private val chunkEntityStreamer: ChunkEntityStreamer,
 ) {
 
@@ -60,6 +62,7 @@ class GameSaveHelper @Inject constructor(
             containerController = containerController,
             gameWorld = gameWorld,
             projectileController = projectileController,
+            tntEntries = explosionController.snapshot(),
             growBlockEntries = if (isInfinite) emptyList() else growBlocksControllerTask.snapshot(),
             fireEntries = if (isInfinite) {
                 emptyList()

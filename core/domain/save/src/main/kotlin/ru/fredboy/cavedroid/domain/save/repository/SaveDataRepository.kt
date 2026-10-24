@@ -8,6 +8,7 @@ import ru.fredboy.cavedroid.domain.save.model.GameMapSaveData
 import ru.fredboy.cavedroid.domain.save.model.GameSaveDetails
 import ru.fredboy.cavedroid.domain.save.model.GameSaveInfo
 import ru.fredboy.cavedroid.domain.save.model.GrowBlockEntry
+import ru.fredboy.cavedroid.domain.save.model.TntEntry
 import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
@@ -51,12 +52,15 @@ interface SaveDataRepository {
         projectileController: ProjectileController,
         growBlockEntries: List<GrowBlockEntry>,
         fireEntries: List<FireEntry>,
+        tntEntries: List<TntEntry> = emptyList(),
     )
 
     fun loadGrowBlockEntries(
         gameDataFolder: String,
         saveGameDirectory: String,
     ): List<GrowBlockEntry>
+
+    fun loadTntEntries(gameDataFolder: String, saveGameDirectory: String): List<TntEntry>
 
     fun loadFireEntries(
         gameDataFolder: String,

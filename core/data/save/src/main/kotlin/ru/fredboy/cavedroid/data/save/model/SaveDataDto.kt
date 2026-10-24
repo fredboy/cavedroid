@@ -169,6 +169,9 @@ sealed class SaveDataDto {
         val woolColor: String? = null,
         override val fireTicksRemaining: Float = 0f,
         val spiderAngerRemainingSec: Float = 0f,
+        val creeperFuseElapsedSec: Float = 0f,
+        val creeperForcedIgnition: Boolean = false,
+        val creeperDaylightSec: Float = 0f,
     ) : MobSaveDataDto()
 
     @Serializable
@@ -255,6 +258,22 @@ sealed class SaveDataDto {
     data class GrowBlocksSaveDataDto(
         override val version: Int,
         val entries: List<GrowBlockEntryDto>,
+    ) : SaveDataDto()
+
+    @Serializable
+    data class TntEntryDto(
+        override val version: Int,
+        val x: Float,
+        val y: Float,
+        val velocityX: Float,
+        val velocityY: Float,
+        val fuse: Float,
+    ) : SaveDataDto()
+
+    @Serializable
+    data class TntSaveDataDto(
+        override val version: Int,
+        val entries: List<TntEntryDto>,
     ) : SaveDataDto()
 
     @Serializable

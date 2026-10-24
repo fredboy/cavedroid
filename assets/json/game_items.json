@@ -1,6 +1,7 @@
 {
   "blocks": {
     "none": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "texture": "none",
@@ -9,6 +10,7 @@
       "replaceable": true
     },
     "stone": {
+      "blast_resistance": 6,
       "hp": 450,
       "texture": "stone",
       "tool_level": 1,
@@ -25,6 +27,7 @@
       "material": "stone"
     },
     "grass": {
+      "blast_resistance": 0.6,
       "hp": 54,
       "texture": "grass",
       "tool_level": 0,
@@ -41,6 +44,7 @@
       "material": "grass"
     },
     "grass_snowed": {
+      "blast_resistance": 0.6,
       "hp": 54,
       "texture": "grass_snowed",
       "tool_level": 0,
@@ -57,6 +61,7 @@
       "material": "grass"
     },
     "dirt": {
+      "blast_resistance": 0.5,
       "hp": 45,
       "texture": "dirt",
       "tool_level": 0,
@@ -73,6 +78,7 @@
       "material": "dirt"
     },
     "cobblestone": {
+      "blast_resistance": 6,
       "hp": 600,
       "texture": "cobblestone",
       "tool_level": 1,
@@ -89,6 +95,7 @@
       "material": "stone"
     },
     "mossy_cobblestone": {
+      "blast_resistance": 6,
       "hp": 600,
       "texture": "mossy_cobblestone",
       "tool_level": 1,
@@ -105,6 +112,7 @@
       "material": "stone"
     },
     "planks_oak": {
+      "blast_resistance": 3,
       "combustible": true,
       "hp": 180,
       "texture": "planks_oak",
@@ -122,6 +130,7 @@
       "material": "wood"
     },
     "planks_spruce": {
+      "blast_resistance": 3,
       "combustible": true,
       "hp": 180,
       "texture": "planks_spruce",
@@ -139,6 +148,7 @@
       "material": "wood"
     },
     "planks_birch": {
+      "blast_resistance": 3,
       "combustible": true,
       "hp": 180,
       "texture": "planks_birch",
@@ -156,6 +166,7 @@
       "material": "wood"
     },
     "crafting_table": {
+      "blast_resistance": 2.5,
       "combustible": true,
       "hp": 180,
       "collision": false,
@@ -176,6 +187,7 @@
       "material": "wood"
     },
     "sapling_oak": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -194,6 +206,7 @@
       "material": "grass"
     },
     "sapling_spruce": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -213,6 +226,7 @@
       "material": "grass"
     },
     "sapling_birch": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -231,10 +245,12 @@
       "material": "grass"
     },
     "bedrock": {
+      "blast_resistance": 3600000,
       "texture": "bedrock",
       "material": "stone"
     },
     "ice": {
+      "blast_resistance": 0.5,
       "hp": 150,
       "transparent": true,
       "texture": "ice",
@@ -243,6 +259,7 @@
       "material": "stone"
     },
     "water": {
+      "blast_resistance": 100,
       "collision": false,
       "transparent": true,
       "meta": "water",
@@ -256,6 +273,7 @@
       "material": "water"
     },
     "lava": {
+      "blast_resistance": 100,
       "collision": false,
       "meta": "lava",
       "texture": "lava_still",
@@ -272,6 +290,7 @@
       "material": "lava"
     },
     "sand": {
+      "blast_resistance": 0.5,
       "hp": 45,
       "texture": "sand",
       "tool_level": 0,
@@ -289,6 +308,7 @@
       "material": "dirt"
     },
     "gravel": {
+      "blast_resistance": 0.6,
       "hp": 54,
       "texture": "gravel",
       "tool_level": 0,
@@ -314,6 +334,7 @@
       "material": "dirt"
     },
     "gold_ore": {
+      "blast_resistance": 6,
       "hp": 900,
       "texture": "gold_ore",
       "tool_level": 3,
@@ -330,6 +351,7 @@
       "material": "stone"
     },
     "iron_ore": {
+      "blast_resistance": 6,
       "hp": 900,
       "drop": "iron_ore",
       "texture": "iron_ore",
@@ -347,6 +369,7 @@
       "material": "stone"
     },
     "coal_ore": {
+      "blast_resistance": 6,
       "hp": 900,
       "texture": "coal_ore",
       "tool_level": 1,
@@ -363,6 +386,7 @@
       "material": "stone"
     },
     "diamond_ore": {
+      "blast_resistance": 6,
       "hp": 900,
       "texture": "diamond_ore",
       "tool_level": 3,
@@ -379,6 +403,7 @@
       "material": "stone"
     },
     "diamond_block": {
+      "blast_resistance": 6,
       "hp": 1500,
       "texture": "diamond_block",
       "tool_level": 3,
@@ -395,6 +420,7 @@
       "material": "stone"
     },
     "log_oak": {
+      "blast_resistance": 2,
       "combustible": true,
       "hp": 180,
       "texture": "log_oak",
@@ -412,6 +438,7 @@
       "material": "wood"
     },
     "leaves_oak": {
+      "blast_resistance": 0.2,
       "combustible": true,
       "hp": 21,
       "texture": "leaves_oak",
@@ -459,6 +486,7 @@
       "material": "grass"
     },
     "log_spruce": {
+      "blast_resistance": 2,
       "combustible": true,
       "hp": 180,
       "texture": "log_spruce",
@@ -476,6 +504,7 @@
       "material": "wood"
     },
     "leaves_spruce": {
+      "blast_resistance": 0.2,
       "combustible": true,
       "hp": 21,
       "texture": "leaves_spruce",
@@ -514,6 +543,7 @@
       "material": "grass"
     },
     "log_birch": {
+      "blast_resistance": 2,
       "combustible": true,
       "hp": 180,
       "texture": "log_birch",
@@ -531,6 +561,7 @@
       "material": "wood"
     },
     "leaves_birch": {
+      "blast_resistance": 0.2,
       "combustible": true,
       "hp": 21,
       "texture": "leaves_birch",
@@ -577,6 +608,7 @@
       "material": "grass"
     },
     "sponge": {
+      "blast_resistance": 0.6,
       "hp": 54,
       "texture": "sponge",
       "tool_level": 0,
@@ -593,6 +625,7 @@
       "material": "grass"
     },
     "glass": {
+      "blast_resistance": 0.3,
       "hp": 27,
       "transparent": true,
       "texture": "glass",
@@ -600,6 +633,7 @@
       "material": "stone"
     },
     "lapis_ore": {
+      "blast_resistance": 6,
       "hp": 900,
       "texture": "lapis_ore",
       "tool_level": 2,
@@ -618,6 +652,7 @@
       "material": "stone"
     },
     "lapis_block": {
+      "blast_resistance": 6,
       "hp": 900,
       "texture": "lapis_block",
       "tool_level": 2,
@@ -634,6 +669,7 @@
       "material": "stone"
     },
     "sandstone": {
+      "blast_resistance": 0.8,
       "hp": 240,
       "texture": "sandstone",
       "tool_level": 1,
@@ -650,6 +686,7 @@
       "material": "stone"
     },
     "noteblock": {
+      "blast_resistance": 0.8,
       "hp": 75,
       "drop": "noteblock",
       "texture": "noteblock",
@@ -667,6 +704,7 @@
       "material": "wood"
     },
     "bed_l": {
+      "blast_resistance": 0.2,
       "hp": 21,
       "combustible": true,
       "collision": false,
@@ -689,6 +727,7 @@
       "sprite_top": 8
     },
     "bed_r": {
+      "blast_resistance": 0.2,
       "hp": 21,
       "combustible": true,
       "collision": false,
@@ -711,6 +750,7 @@
       "sprite_top": 8
     },
     "web": {
+      "blast_resistance": 4,
       "meta": "web",
       "density": 80,
       "hp": 120,
@@ -741,6 +781,7 @@
       "material": "grass"
     },
     "tallgrass": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -771,6 +812,7 @@
       "material": "grass"
     },
     "deadbush": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -791,6 +833,7 @@
       "material": "grass"
     },
     "bricks": {
+      "blast_resistance": 6,
       "hp": 600,
       "texture": "bricks",
       "tool_level": 1,
@@ -807,6 +850,7 @@
       "material": "stone"
     },
     "clay": {
+      "blast_resistance": 0.6,
       "hp": 54,
       "texture": "clay",
       "tool_level": 0,
@@ -823,6 +867,7 @@
       "material": "dirt"
     },
     "dandelion": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -841,6 +886,7 @@
       "material": "grass"
     },
     "rose": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -860,6 +906,7 @@
       "material": "grass"
     },
     "mushroom_brown": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -879,6 +926,7 @@
       "material": "grass"
     },
     "mushroom_red": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -898,6 +946,7 @@
       "material": "grass"
     },
     "wool_colored_white": {
+      "blast_resistance": 0.8,
       "combustible": true,
       "hp": 75,
       "drop": "wool_colored_white",
@@ -916,6 +965,7 @@
       "material": "grass"
     },
     "wool_colored_orange": {
+      "blast_resistance": 0.8,
       "combustible": true,
       "hp": 75,
       "drop": "wool_colored_orange",
@@ -934,6 +984,7 @@
       "material": "grass"
     },
     "wool_colored_magenta": {
+      "blast_resistance": 0.8,
       "combustible": true,
       "hp": 75,
       "drop": "wool_colored_magenta",
@@ -952,6 +1003,7 @@
       "material": "grass"
     },
     "wool_colored_light_blue": {
+      "blast_resistance": 0.8,
       "combustible": true,
       "hp": 75,
       "drop": "wool_colored_light_blue",
@@ -970,6 +1022,7 @@
       "material": "grass"
     },
     "wool_colored_yellow": {
+      "blast_resistance": 0.8,
       "combustible": true,
       "hp": 75,
       "drop": "wool_colored_yellow",
@@ -988,6 +1041,7 @@
       "material": "grass"
     },
     "wool_colored_lime": {
+      "blast_resistance": 0.8,
       "combustible": true,
       "hp": 75,
       "drop": "wool_colored_lime",
@@ -1006,6 +1060,7 @@
       "material": "grass"
     },
     "wool_colored_pink": {
+      "blast_resistance": 0.8,
       "combustible": true,
       "hp": 75,
       "drop": "wool_colored_pink",
@@ -1024,6 +1079,7 @@
       "material": "grass"
     },
     "wool_colored_gray": {
+      "blast_resistance": 0.8,
       "combustible": true,
       "hp": 75,
       "drop": "wool_colored_gray",
@@ -1042,6 +1098,7 @@
       "material": "grass"
     },
     "wool_colored_light_gray": {
+      "blast_resistance": 0.8,
       "combustible": true,
       "hp": 75,
       "drop": "wool_colored_light_gray",
@@ -1060,6 +1117,7 @@
       "material": "grass"
     },
     "wool_colored_cyan": {
+      "blast_resistance": 0.8,
       "combustible": true,
       "hp": 75,
       "drop": "wool_colored_cyan",
@@ -1078,6 +1136,7 @@
       "material": "grass"
     },
     "wool_colored_purple": {
+      "blast_resistance": 0.8,
       "combustible": true,
       "hp": 75,
       "drop": "wool_colored_purple",
@@ -1096,6 +1155,7 @@
       "material": "grass"
     },
     "wool_colored_blue": {
+      "blast_resistance": 0.8,
       "combustible": true,
       "hp": 75,
       "drop": "wool_colored_blue",
@@ -1114,6 +1174,7 @@
       "material": "grass"
     },
     "wool_colored_brown": {
+      "blast_resistance": 0.8,
       "combustible": true,
       "hp": 75,
       "drop": "wool_colored_brown",
@@ -1132,6 +1193,7 @@
       "material": "grass"
     },
     "wool_colored_green": {
+      "blast_resistance": 0.8,
       "combustible": true,
       "hp": 75,
       "drop": "wool_colored_green",
@@ -1150,6 +1212,7 @@
       "material": "grass"
     },
     "wool_colored_red": {
+      "blast_resistance": 0.8,
       "combustible": true,
       "hp": 75,
       "drop": "wool_colored_red",
@@ -1168,6 +1231,7 @@
       "material": "grass"
     },
     "wool_colored_black": {
+      "blast_resistance": 0.8,
       "combustible": true,
       "hp": 75,
       "drop": "wool_colored_black",
@@ -1186,6 +1250,7 @@
       "material": "grass"
     },
     "gold_block": {
+      "blast_resistance": 3,
       "hp": 900,
       "drop": "gold_block",
       "texture": "gold_block",
@@ -1203,6 +1268,7 @@
       "material": "metal"
     },
     "iron_block": {
+      "blast_resistance": 6,
       "hp": 1500,
       "drop": "iron_block",
       "texture": "iron_block",
@@ -1220,6 +1286,7 @@
       "material": "metal"
     },
     "raw_gold_block": {
+      "blast_resistance": 6,
       "hp": 1500,
       "drop": "raw_gold_block",
       "texture": "raw_gold_block",
@@ -1237,6 +1304,7 @@
       "material": "metal"
     },
     "raw_iron_block": {
+      "blast_resistance": 6,
       "hp": 1500,
       "drop": "raw_iron_block",
       "texture": "raw_iron_block",
@@ -1254,6 +1322,7 @@
       "material": "metal"
     },
     "coal_block": {
+      "blast_resistance": 6,
       "hp": 1500,
       "drop": "coal_block",
       "texture": "coal_block",
@@ -1271,6 +1340,7 @@
       "material": "stone"
     },
     "stone_slab_bottom": {
+      "blast_resistance": 6,
       "top": 8,
       "sprite_top": 8,
       "hp": 600,
@@ -1294,6 +1364,7 @@
       "material": "stone"
     },
     "stone_slab_top": {
+      "blast_resistance": 6,
       "hp": 600,
       "bottom": 8,
       "sprite_bottom": 8,
@@ -1317,6 +1388,7 @@
       "material": "stone"
     },
     "double_stone_slab": {
+      "blast_resistance": 6,
       "hp": 600,
       "drop": "stone_slab",
       "drop_count": 2,
@@ -1335,6 +1407,7 @@
       "material": "stone"
     },
     "sandstone_slab_bottom": {
+      "blast_resistance": 0.8,
       "top": 8,
       "sprite_top": 8,
       "hp": 600,
@@ -1358,6 +1431,7 @@
       "material": "stone"
     },
     "sandstone_slab_top": {
+      "blast_resistance": 0.8,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 600,
@@ -1381,6 +1455,7 @@
       "material": "stone"
     },
     "oak_slab_bottom": {
+      "blast_resistance": 3,
       "top": 8,
       "sprite_top": 8,
       "hp": 180,
@@ -1405,6 +1480,7 @@
       "material": "wood"
     },
     "oak_slab_top": {
+      "blast_resistance": 3,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 180,
@@ -1429,6 +1505,7 @@
       "material": "wood"
     },
     "spruce_slab_bottom": {
+      "blast_resistance": 3,
       "top": 8,
       "sprite_top": 8,
       "hp": 180,
@@ -1453,6 +1530,7 @@
       "material": "wood"
     },
     "spruce_slab_top": {
+      "blast_resistance": 3,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 180,
@@ -1477,6 +1555,7 @@
       "material": "wood"
     },
     "birch_slab_bottom": {
+      "blast_resistance": 3,
       "top": 8,
       "sprite_top": 8,
       "hp": 180,
@@ -1501,6 +1580,7 @@
       "material": "wood"
     },
     "birch_slab_top": {
+      "blast_resistance": 3,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 180,
@@ -1525,6 +1605,7 @@
       "material": "wood"
     },
     "cobblestone_slab_bottom": {
+      "blast_resistance": 6,
       "top": 8,
       "sprite_top": 8,
       "hp": 600,
@@ -1548,6 +1629,7 @@
       "material": "stone"
     },
     "cobblestone_slab_top": {
+      "blast_resistance": 6,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 600,
@@ -1571,6 +1653,7 @@
       "material": "stone"
     },
     "brick_slab_bottom": {
+      "blast_resistance": 6,
       "top": 8,
       "sprite_top": 8,
       "hp": 600,
@@ -1594,6 +1677,7 @@
       "material": "stone"
     },
     "brick_slab_top": {
+      "blast_resistance": 6,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 600,
@@ -1617,6 +1701,7 @@
       "material": "stone"
     },
     "stonebrick": {
+      "blast_resistance": 6,
       "hp": 450,
       "drop": "stonebrick",
       "texture": "stonebrick",
@@ -1634,6 +1719,7 @@
       "material": "stone"
     },
     "stonebrick_slab_bottom": {
+      "blast_resistance": 6,
       "top": 8,
       "sprite_top": 8,
       "hp": 450,
@@ -1657,6 +1743,7 @@
       "material": "stone"
     },
     "stonebrick_slab_top": {
+      "blast_resistance": 6,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 450,
@@ -1680,6 +1767,7 @@
       "material": "stone"
     },
     "cactus": {
+      "blast_resistance": 0.4,
       "left": 1,
       "right": 1,
       "hp": 39,
@@ -1702,6 +1790,7 @@
       "material": "grass"
     },
     "water_16": {
+      "blast_resistance": 100,
       "collision": false,
       "transparent": true,
       "drop": "water_16",
@@ -1716,6 +1805,7 @@
       "material": "water"
     },
     "water_12": {
+      "blast_resistance": 100,
       "top": 4,
       "sprite_top": 4,
       "collision": false,
@@ -1732,6 +1822,7 @@
       "material": "water"
     },
     "water_8": {
+      "blast_resistance": 100,
       "top": 8,
       "sprite_top": 8,
       "collision": false,
@@ -1748,6 +1839,7 @@
       "material": "water"
     },
     "water_4": {
+      "blast_resistance": 100,
       "top": 12,
       "sprite_top": 12,
       "collision": false,
@@ -1764,6 +1856,7 @@
       "material": "water"
     },
     "lava_16": {
+      "blast_resistance": 100,
       "collision": false,
       "drop": "lava_16",
       "meta": "lava",
@@ -1781,6 +1874,7 @@
       "material": "lava"
     },
     "lava_12": {
+      "blast_resistance": 100,
       "top": 4,
       "sprite_top": 4,
       "collision": false,
@@ -1801,6 +1895,7 @@
       "material": "lava"
     },
     "lava_8": {
+      "blast_resistance": 100,
       "top": 8,
       "sprite_top": 8,
       "collision": false,
@@ -1821,6 +1916,7 @@
       "material": "lava"
     },
     "lava_4": {
+      "blast_resistance": 100,
       "top": 12,
       "sprite_top": 12,
       "collision": false,
@@ -1841,6 +1937,7 @@
       "material": "lava"
     },
     "obsidian": {
+      "blast_resistance": 1200,
       "hp": 15000,
       "drop": "obsidian",
       "texture": "obsidian",
@@ -1858,6 +1955,7 @@
       "material": "stone"
     },
     "snow": {
+      "blast_resistance": 0.1,
       "top": 14,
       "sprite_top": 14,
       "collision": false,
@@ -1881,6 +1979,7 @@
       "material": "grass"
     },
     "snow_block": {
+      "blast_resistance": 0.2,
       "collision": true,
       "transparent": true,
       "drop": "snowball",
@@ -1901,6 +2000,7 @@
       "material": "grass"
     },
     "furnace": {
+      "blast_resistance": 3.5,
       "hp": 1050,
       "collision": false,
       "background": true,
@@ -1925,6 +2025,7 @@
       "material": "stone"
     },
     "chest": {
+      "blast_resistance": 2.5,
       "hp": 180,
       "collision": false,
       "background": true,
@@ -1948,6 +2049,7 @@
       "action_sound_key": "door/open"
     },
     "torch": {
+      "blast_resistance": 0,
       "hp": 1,
       "collision": false,
       "background": true,
@@ -1973,6 +2075,7 @@
       "material": "wood"
     },
     "door_wood_top_left_open": {
+      "blast_resistance": 3,
       "hp": 270,
       "combustible": true,
       "collision": false,
@@ -1996,6 +2099,7 @@
       "action_sound_key": "door/close"
     },
     "door_wood_bottom_left_open": {
+      "blast_resistance": 3,
       "hp": 270,
       "combustible": true,
       "collision": false,
@@ -2019,6 +2123,7 @@
       "action_sound_key": "door/close"
     },
     "door_wood_top_left_closed": {
+      "blast_resistance": 3,
       "right": 13,
       "sprite_right": 13,
       "hp": 270,
@@ -2044,6 +2149,7 @@
       "action_sound_key": "door/open"
     },
     "door_wood_bottom_left_closed": {
+      "blast_resistance": 3,
       "right": 13,
       "sprite_right": 13,
       "hp": 270,
@@ -2069,6 +2175,7 @@
       "action_sound_key": "door/open"
     },
     "door_wood_top_right_open": {
+      "blast_resistance": 3,
       "hp": 270,
       "combustible": true,
       "collision": false,
@@ -2092,6 +2199,7 @@
       "action_sound_key": "door/close"
     },
     "door_wood_bottom_right_open": {
+      "blast_resistance": 3,
       "hp": 270,
       "combustible": true,
       "collision": false,
@@ -2115,6 +2223,7 @@
       "action_sound_key": "door/close"
     },
     "door_wood_top_right_closed": {
+      "blast_resistance": 3,
       "left": 13,
       "sprite_left": 13,
       "hp": 270,
@@ -2140,6 +2249,7 @@
       "action_sound_key": "door/open"
     },
     "door_wood_bottom_right_closed": {
+      "blast_resistance": 3,
       "left": 13,
       "sprite_left": 13,
       "hp": 270,
@@ -2165,6 +2275,7 @@
       "action_sound_key": "door/open"
     },
     "trapdoor_wood_open": {
+      "blast_resistance": 3,
       "hp": 270,
       "combustible": true,
       "collision": false,
@@ -2190,6 +2301,7 @@
       "action_sound_key": "door/close"
     },
     "trapdoor_wood_closed": {
+      "blast_resistance": 3,
       "bottom": 12,
       "combustible": true,
       "sprite_bottom": 12,
@@ -2217,6 +2329,7 @@
       "action_sound_key": "door/open"
     },
     "ladder": {
+      "blast_resistance": 0.4,
       "hp": 36,
       "combustible": true,
       "requires_background": true,
@@ -2242,6 +2355,7 @@
       "material": "wood"
     },
     "farmland": {
+      "blast_resistance": 0.6,
       "hp": 18,
       "texture": "farmland",
       "tool_level": 0,
@@ -2258,6 +2372,7 @@
       "material": "dirt"
     },
     "farmland_moist": {
+      "blast_resistance": 0.6,
       "hp": 18,
       "texture": "farmland_moist",
       "tool_level": 0,
@@ -2274,6 +2389,7 @@
       "material": "dirt"
     },
     "wheat_stage0": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -2292,6 +2408,7 @@
       "material": "grass"
     },
     "wheat_stage1": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -2310,6 +2427,7 @@
       "material": "grass"
     },
     "wheat_stage2": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -2328,6 +2446,7 @@
       "material": "grass"
     },
     "wheat_stage3": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -2346,6 +2465,7 @@
       "material": "grass"
     },
     "wheat_stage4": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -2364,6 +2484,7 @@
       "material": "grass"
     },
     "wheat_stage5": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -2382,6 +2503,7 @@
       "material": "grass"
     },
     "wheat_stage6": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -2411,6 +2533,7 @@
       "drop_single": false
     },
     "carrots_stage0": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -2429,6 +2552,7 @@
       "material": "grass"
     },
     "carrots_stage1": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -2447,6 +2571,7 @@
       "material": "grass"
     },
     "carrots_stage2": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -2465,6 +2590,7 @@
       "material": "grass"
     },
     "carrots_stage3": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -2485,6 +2611,7 @@
       "material": "grass"
     },
     "potatoes_stage0": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -2503,6 +2630,7 @@
       "material": "grass"
     },
     "potatoes_stage1": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -2521,6 +2649,7 @@
       "material": "grass"
     },
     "potatoes_stage2": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -2539,6 +2668,7 @@
       "material": "grass"
     },
     "potatoes_stage3": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -2559,6 +2689,7 @@
       "material": "grass"
     },
     "hay_block": {
+      "blast_resistance": 0.5,
       "hp": 9,
       "texture": "hay_block",
       "tool_level": 0,
@@ -2575,6 +2706,7 @@
       "material": "grass"
     },
     "cake_0": {
+      "blast_resistance": 0.5,
       "collision": false,
       "background": true,
       "transparent": true,
@@ -2587,6 +2719,7 @@
       "sprite_right": 1
     },
     "cake_1": {
+      "blast_resistance": 0.5,
       "collision": false,
       "background": true,
       "transparent": true,
@@ -2599,6 +2732,7 @@
       "sprite_right": 3
     },
     "cake_2": {
+      "blast_resistance": 0.5,
       "collision": false,
       "background": true,
       "transparent": true,
@@ -2611,6 +2745,7 @@
       "sprite_right": 5
     },
     "cake_3": {
+      "blast_resistance": 0.5,
       "collision": false,
       "background": true,
       "transparent": true,
@@ -2623,6 +2758,7 @@
       "sprite_right": 7
     },
     "cake_4": {
+      "blast_resistance": 0.5,
       "collision": false,
       "background": true,
       "transparent": true,
@@ -2635,6 +2771,7 @@
       "sprite_right": 9
     },
     "cake_5": {
+      "blast_resistance": 0.5,
       "collision": false,
       "background": true,
       "transparent": true,
@@ -2647,6 +2784,7 @@
       "sprite_right": 11
     },
     "cake_6": {
+      "blast_resistance": 0.5,
       "collision": false,
       "background": true,
       "transparent": true,
@@ -2659,6 +2797,7 @@
       "sprite_right": 13
     },
     "sugar_cane": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -2677,6 +2816,7 @@
       "material": "grass"
     },
     "fire": {
+      "blast_resistance": 0,
       "collision": false,
       "meta": "fire",
       "texture": "fire",
@@ -2691,6 +2831,7 @@
       "replaceable": true
     },
     "fence_oak": {
+      "blast_resistance": 3,
       "left": 6,
       "right": 6,
       "hp": 300,
@@ -2716,6 +2857,7 @@
       "update_action": "update_fence"
     },
     "fence_oak_left": {
+      "blast_resistance": 3,
       "left": 6,
       "right": 6,
       "hp": 300,
@@ -2740,6 +2882,7 @@
       "update_action": "update_fence"
     },
     "fence_oak_right": {
+      "blast_resistance": 3,
       "left": 6,
       "right": 6,
       "hp": 300,
@@ -2764,6 +2907,7 @@
       "update_action": "update_fence"
     },
     "fence_oak_both": {
+      "blast_resistance": 3,
       "left": 6,
       "right": 6,
       "hp": 300,
@@ -2787,6 +2931,7 @@
       "update_action": "update_fence"
     },
     "fence_gate_oak_left_closed": {
+      "blast_resistance": 3,
       "hp": 270,
       "sprite_right": 12,
       "collision": true,
@@ -2812,6 +2957,7 @@
       "use_action": "use_fence_gate"
     },
     "fence_gate_oak_left_open": {
+      "blast_resistance": 3,
       "hp": 270,
       "collision": false,
       "background": false,
@@ -2835,6 +2981,7 @@
       "use_action": "use_fence_gate"
     },
     "fence_gate_oak_right_closed": {
+      "blast_resistance": 3,
       "hp": 270,
       "sprite_left": 12,
       "collision": true,
@@ -2860,6 +3007,7 @@
       "use_action": "use_fence_gate"
     },
     "fence_gate_oak_right_open": {
+      "blast_resistance": 3,
       "hp": 270,
       "collision": false,
       "background": false,
@@ -2883,6 +3031,7 @@
       "use_action": "use_fence_gate"
     },
     "fence_spruce": {
+      "blast_resistance": 3,
       "left": 6,
       "right": 6,
       "hp": 300,
@@ -2908,6 +3057,7 @@
       "update_action": "update_fence"
     },
     "fence_spruce_left": {
+      "blast_resistance": 3,
       "left": 6,
       "right": 6,
       "hp": 300,
@@ -2932,6 +3082,7 @@
       "update_action": "update_fence"
     },
     "fence_spruce_right": {
+      "blast_resistance": 3,
       "left": 6,
       "right": 6,
       "hp": 300,
@@ -2956,6 +3107,7 @@
       "update_action": "update_fence"
     },
     "fence_spruce_both": {
+      "blast_resistance": 3,
       "left": 6,
       "right": 6,
       "hp": 300,
@@ -2979,6 +3131,7 @@
       "update_action": "update_fence"
     },
     "fence_gate_spruce_left_closed": {
+      "blast_resistance": 3,
       "hp": 270,
       "sprite_right": 12,
       "collision": true,
@@ -3004,6 +3157,7 @@
       "use_action": "use_fence_gate"
     },
     "fence_gate_spruce_left_open": {
+      "blast_resistance": 3,
       "hp": 270,
       "collision": false,
       "background": false,
@@ -3027,6 +3181,7 @@
       "use_action": "use_fence_gate"
     },
     "fence_gate_spruce_right_closed": {
+      "blast_resistance": 3,
       "hp": 270,
       "sprite_left": 12,
       "collision": true,
@@ -3052,6 +3207,7 @@
       "use_action": "use_fence_gate"
     },
     "fence_gate_spruce_right_open": {
+      "blast_resistance": 3,
       "hp": 270,
       "collision": false,
       "background": false,
@@ -3075,6 +3231,7 @@
       "use_action": "use_fence_gate"
     },
     "fence_birch": {
+      "blast_resistance": 3,
       "left": 6,
       "right": 6,
       "hp": 300,
@@ -3100,6 +3257,7 @@
       "update_action": "update_fence"
     },
     "fence_birch_left": {
+      "blast_resistance": 3,
       "left": 6,
       "right": 6,
       "hp": 300,
@@ -3124,6 +3282,7 @@
       "update_action": "update_fence"
     },
     "fence_birch_right": {
+      "blast_resistance": 3,
       "left": 6,
       "right": 6,
       "hp": 300,
@@ -3148,6 +3307,7 @@
       "update_action": "update_fence"
     },
     "fence_birch_both": {
+      "blast_resistance": 3,
       "left": 6,
       "right": 6,
       "hp": 300,
@@ -3171,6 +3331,7 @@
       "update_action": "update_fence"
     },
     "fence_gate_birch_left_closed": {
+      "blast_resistance": 3,
       "hp": 270,
       "sprite_right": 12,
       "collision": true,
@@ -3196,6 +3357,7 @@
       "use_action": "use_fence_gate"
     },
     "fence_gate_birch_left_open": {
+      "blast_resistance": 3,
       "hp": 270,
       "collision": false,
       "background": false,
@@ -3219,6 +3381,7 @@
       "use_action": "use_fence_gate"
     },
     "fence_gate_birch_right_closed": {
+      "blast_resistance": 3,
       "hp": 270,
       "sprite_left": 12,
       "collision": true,
@@ -3244,6 +3407,7 @@
       "use_action": "use_fence_gate"
     },
     "fence_gate_birch_right_open": {
+      "blast_resistance": 3,
       "hp": 270,
       "collision": false,
       "background": false,
@@ -3267,6 +3431,7 @@
       "use_action": "use_fence_gate"
     },
     "chest_mineshaft": {
+      "blast_resistance": 2.5,
       "hp": 180,
       "collision": false,
       "background": true,
@@ -3292,6 +3457,7 @@
       "use_action": "chest"
     },
     "chest_monster_room": {
+      "blast_resistance": 2.5,
       "hp": 180,
       "collision": false,
       "background": true,
@@ -3317,6 +3483,7 @@
       "use_action": "chest"
     },
     "spawner": {
+      "blast_resistance": 5,
       "meta": "spawner",
       "mob_key": "spider",
       "texture": "spawner",
@@ -3328,6 +3495,7 @@
       "drop_info": []
     },
     "spawner_zombie": {
+      "blast_resistance": 5,
       "meta": "spawner",
       "mob_key": "zombie",
       "texture": "spawner",
@@ -3339,6 +3507,7 @@
       "drop_info": []
     },
     "spawner_skeleton": {
+      "blast_resistance": 5,
       "meta": "spawner",
       "mob_key": "skeleton",
       "texture": "spawner",
@@ -3350,6 +3519,7 @@
       "drop_info": []
     },
     "bookshelf": {
+      "blast_resistance": 1.5,
       "combustible": true,
       "hp": 135,
       "collision": false,
@@ -3370,6 +3540,7 @@
       "material": "wood"
     },
     "pumpkin": {
+      "blast_resistance": 1,
       "hp": 90,
       "texture": "pumpkin_side",
       "tool_level": 0,
@@ -3388,6 +3559,7 @@
       "use_action": "carve_pumpkin"
     },
     "carved_pumpkin": {
+      "blast_resistance": 1,
       "hp": 90,
       "texture": "carved_pumpkin",
       "tool_level": 0,
@@ -3405,6 +3577,7 @@
       "material": "wood"
     },
     "jack_o_lantern": {
+      "blast_resistance": 1,
       "hp": 90,
       "texture": "jack_o_lantern",
       "tool_level": 0,
@@ -3426,6 +3599,7 @@
       }
     },
     "melon": {
+      "blast_resistance": 1,
       "hp": 90,
       "texture": "melon_side",
       "tool_level": 0,
@@ -3445,6 +3619,7 @@
       "material": "wood"
     },
     "pumpkin_stem_stage0": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -3487,6 +3662,7 @@
       "update_action": "update_stem"
     },
     "pumpkin_stem_stage1": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -3529,6 +3705,7 @@
       "update_action": "update_stem"
     },
     "pumpkin_stem_stage2": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -3571,6 +3748,7 @@
       "update_action": "update_stem"
     },
     "pumpkin_stem_stage3": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -3613,6 +3791,7 @@
       "update_action": "update_stem"
     },
     "pumpkin_stem_stage4": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -3655,6 +3834,7 @@
       "update_action": "update_stem"
     },
     "pumpkin_stem_stage5": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -3697,6 +3877,7 @@
       "update_action": "update_stem"
     },
     "pumpkin_stem_stage6": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -3739,6 +3920,7 @@
       "update_action": "update_stem"
     },
     "pumpkin_stem_stage7": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -3781,6 +3963,7 @@
       "update_action": "update_stem"
     },
     "melon_stem_stage0": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -3823,6 +4006,7 @@
       "update_action": "update_stem"
     },
     "melon_stem_stage1": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -3865,6 +4049,7 @@
       "update_action": "update_stem"
     },
     "melon_stem_stage2": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -3907,6 +4092,7 @@
       "update_action": "update_stem"
     },
     "melon_stem_stage3": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -3949,6 +4135,7 @@
       "update_action": "update_stem"
     },
     "melon_stem_stage4": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -3991,6 +4178,7 @@
       "update_action": "update_stem"
     },
     "melon_stem_stage5": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -4033,6 +4221,7 @@
       "update_action": "update_stem"
     },
     "melon_stem_stage6": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -4075,6 +4264,7 @@
       "update_action": "update_stem"
     },
     "melon_stem_stage7": {
+      "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
@@ -4115,6 +4305,14 @@
       "material": "grass",
       "grow_action": "grow_stem",
       "update_action": "update_stem"
+    },
+    "tnt": {
+      "hp": 0,
+      "blast_resistance": 0,
+      "texture": "tnt",
+      "combustible": true,
+      "material": "grass",
+      "drop_info": [{ "key": "tnt" }]
     }
   },
   "items": {
@@ -6153,6 +6351,20 @@
     "glistering_melon_slice": {
       "name": "Glistering Melon Slice",
       "texture": "glistering_melon_slice"
+    },
+    "tnt": {
+      "name": "TNT",
+      "type": "block",
+      "texture": "tnt"
+    },
+    "spawn_egg_creeper": {
+      "name": "Creeper Spawn Egg",
+      "type": "usable",
+      "texture": "spawn_egg",
+      "tint": "#0DA70B",
+      "action_key": "use_spawn_egg",
+      "mob_key": "creeper",
+      "origin_x": 0.5
     }
   }
 }

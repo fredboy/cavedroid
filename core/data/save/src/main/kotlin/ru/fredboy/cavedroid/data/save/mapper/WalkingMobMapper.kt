@@ -7,6 +7,7 @@ import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.model.ArcherMob
+import ru.fredboy.cavedroid.entity.mob.model.CreeperMob
 import ru.fredboy.cavedroid.entity.mob.model.SheepMob
 import ru.fredboy.cavedroid.entity.mob.model.SpiderMob
 import ru.fredboy.cavedroid.entity.mob.model.WalkingMob
@@ -41,6 +42,9 @@ class WalkingMobMapper @Inject constructor(
         woolColor = (mob as? SheepMob)?.woolToColor?.first,
         fireTicksRemaining = mob.fireTicksRemaining,
         spiderAngerRemainingSec = (mob as? SpiderMob)?.angerRemainingSec ?: 0f,
+        creeperFuseElapsedSec = (mob as? CreeperMob)?.fuse?.elapsedSec ?: 0f,
+        creeperForcedIgnition = (mob as? CreeperMob)?.fuse?.forced ?: false,
+        creeperDaylightSec = (mob as? CreeperMob)?.daylightSec ?: 0f,
     )
 
     fun mapPassiveMob(
@@ -56,6 +60,12 @@ class WalkingMobMapper @Inject constructor(
                 hasFur = saveDataDto.hasFur
                 woolToColor = SheepMob.FUR_COLORS_MAP.values.firstOrNull { (wool, _) -> wool == saveDataDto.woolColor }
                     ?: SheepMob.FUR_COLORS_MAP.values.first()
+            }
+
+            MobBehaviorType.CREEPER -> CreeperMob(params).apply {
+                fuse.elapsedSec = saveDataDto.creeperFuseElapsedSec
+                fuse.forced = saveDataDto.creeperForcedIgnition
+                daylightSec = saveDataDto.creeperDaylightSec
             }
 
             MobBehaviorType.ARCHER -> ArcherMob(getItemByKeyUseCase, params)

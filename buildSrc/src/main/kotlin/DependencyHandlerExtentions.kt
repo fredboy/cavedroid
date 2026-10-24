@@ -64,6 +64,7 @@ fun DependencyHandler.useGameModules() {
     useModule(":core:game:controller:container")
     useModule(":core:game:controller:drop")
     useModule(":core:game:controller:fire")
+    useModule(":core:game:controller:explosion")
     useModule(":core:game:controller:mob")
     useModule(":core:game:controller:projectile")
     useModule(":core:game:controller:stats")

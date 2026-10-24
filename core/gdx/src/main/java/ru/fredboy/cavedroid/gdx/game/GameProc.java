@@ -10,6 +10,7 @@ import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepositor
 import ru.fredboy.cavedroid.game.controller.container.ContainerController;
 import ru.fredboy.cavedroid.game.controller.drop.DropController;
 import ru.fredboy.cavedroid.game.controller.fire.FireController;
+import ru.fredboy.cavedroid.game.controller.explosion.ExplosionController;
 import ru.fredboy.cavedroid.game.controller.mob.MobController;
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController;
 import ru.fredboy.cavedroid.game.controller.stats.StatsController;
@@ -46,6 +47,7 @@ public class GameProc implements Disposable {
     private final GameWorldMobSpawnControllerTask mGameWorldMobSpawnControllerTask;
     private final GameWorldFireLogicControllerTask mGameWorldFireLogicControllerTask;
     private final FireController mFireController;
+    private final ExplosionController mExplosionController;
     private final GameInputProcessor mGameInputProcessor;
     private final GameWorld mGameWorld;
     private final ProjectileController mProjectileController;
@@ -73,7 +75,8 @@ public class GameProc implements Disposable {
                     StatsController statsController,
                     OnboardingController onboardingController,
                     GameWorldFireLogicControllerTask gameWorldFireLogicControllerTask,
-                    FireController fireController
+                    FireController fireController,
+                    ExplosionController explosionController
     ) {
         mPerformanceMonitor = performanceMonitor;
         mGameRenderer = gameRenderer;
@@ -93,6 +96,7 @@ public class GameProc implements Disposable {
         mOnboardingController = onboardingController;
         mGameWorldFireLogicControllerTask = gameWorldFireLogicControllerTask;
         mFireController = fireController;
+        mExplosionController = explosionController;
 
         mWorldLogicTimer.scheduleTask(gameWorldFluidsLogicControllerTask, 0,
                 GameWorldFluidsLogicControllerTask.FLUID_UPDATE_INTERVAL_SEC);
@@ -141,6 +145,7 @@ public class GameProc implements Disposable {
         mMobsController.update(delta);
         mDropController.update(delta);
         mProjectileController.update(delta);
+        mExplosionController.update(delta);
         mPerformanceMonitor.endStage(PerformanceMetric.ENTITIES_UPDATE, entitiesStart);
         mPerformanceMonitor.endStage(PerformanceMetric.UPDATE_TOTAL, updateStart);
         mGameRenderer.render(delta);
@@ -195,6 +200,7 @@ public class GameProc implements Disposable {
         mDropController.dispose();
         mMobsController.dispose();
         mContainerController.dispose();
+        mExplosionController.dispose();
         mFireController.dispose();
         mStatsController.dispose();
         mGameWorld.dispose();

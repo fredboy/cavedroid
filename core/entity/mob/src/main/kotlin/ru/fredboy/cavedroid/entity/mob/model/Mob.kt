@@ -27,6 +27,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
 import kotlin.math.abs
 import kotlin.math.min
+import kotlin.math.sign
 
 abstract class Mob(
     var direction: Direction,
@@ -37,6 +38,8 @@ abstract class Mob(
     private var resetTakeDamageTask: ResetTakeDamageTask? = null
 
     private var _body: Body? = null
+
+    private var knockbackRemainingSec = 0f
 
     val width get() = params.width
 
@@ -72,7 +75,7 @@ abstract class Mob(
     var isDead = false
 
     val canJump: Boolean
-        get() = footContactCounter > 0 && TimeUtils.timeSinceMillis(lastJumpMs) >= JUMP_COOLDOWN_MS
+        get() = knockbackRemainingSec <= 0f && footContactCounter > 0 && TimeUtils.timeSinceMillis(lastJumpMs) >= JUMP_COOLDOWN_MS
 
     var isFlyMode = false
         set(value) {
@@ -291,6 +294,17 @@ abstract class Mob(
         checkHealth()
     }
 
+    /** A combat hit pushes away from its source; environmental damage has no directional impulse. */
+    fun takeHit(damage: Int, horizontalDirection: Float) {
+        if (isDead || damage <= 0) return
+        val previousHealth = health
+        damage(damage)
+        if (isDead || health >= previousHealth) return
+
+        knockbackRemainingSec = KNOCKBACK_DURATION_SEC
+        velocity.set(sign(horizontalDirection) * KNOCKBACK_SPEED, min(velocity.y, KNOCKBACK_LIFT))
+    }
+
     fun heal(heal: Int) {
         if (heal < 0) {
             damage(-heal)
@@ -384,7 +398,10 @@ abstract class Mob(
         behavior.update(this, mobWorldAdapter, playerAdapter, projectileAdapter, delta)
 
         applyMediumResistanceToBody(mobWorldAdapter)
-        if (!controlVector.isZero) {
+        if (knockbackRemainingSec > 0f) {
+            // Keep the physics velocity while recoiling, even if AI or player input keeps moving.
+            knockbackRemainingSec = (knockbackRemainingSec - delta).coerceAtLeast(0f)
+        } else if (!controlVector.isZero) {
             velocity.x = controlVector.x * effectiveSpeedMultiplier
             if (isFlyMode) {
                 velocity.y = controlVector.y * effectiveSpeedMultiplier
@@ -522,6 +539,9 @@ abstract class Mob(
     }
 
     companion object {
+        private const val KNOCKBACK_DURATION_SEC = 0.2f
+        private const val KNOCKBACK_SPEED = 4.5f
+        private const val KNOCKBACK_LIFT = -4f
         private const val TAG = "Mob"
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
