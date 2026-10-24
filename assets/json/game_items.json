@@ -3259,6 +3259,26 @@
       "tool_type": "pickaxe",
       "material": "metal",
       "drop_info": []
+    },
+    "bookshelf": {
+      "combustible": true,
+      "hp": 135,
+      "collision": false,
+      "background": true,
+      "casts_shadows": false,
+      "texture": "bookshelf",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "book",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 3
+          }
+        }
+      ],
+      "material": "wood"
     }
   },
   "items": {
@@ -5199,6 +5219,20 @@
       "action_key": "use_spawn_egg",
       "mob_key": "spider",
       "origin_x": 0.5
+    },
+    "paper": {
+      "name": "Paper",
+      "texture": "paper"
+    },
+    "book": {
+      "name": "Book",
+      "texture": "book"
+    },
+    "bookshelf": {
+      "name": "Bookshelf",
+      "type": "block",
+      "texture": "bookshelf",
+      "burning_time": 15000
     }
   }
 }

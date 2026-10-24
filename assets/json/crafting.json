@@ -3740,5 +3740,62 @@
         "count": 1
       }
     ]
+  },
+  "paper": {
+    "recipes": [
+      {
+        "input": [
+          "sugar_cane",
+          "sugar_cane",
+          "sugar_cane",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 3
+      }
+    ]
+  },
+  "book": {
+    "recipes": [
+      {
+        "input": [
+          "paper",
+          "paper",
+          null,
+          "paper",
+          "leather",
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "bookshelf": {
+    "recipes": [
+      {
+        "input": [
+          "planks.*",
+          "planks.*",
+          "planks.*",
+          "book",
+          "book",
+          "book",
+          "planks.*",
+          "planks.*",
+          "planks.*"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   }
 }
