@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gameplay.controls.action.useitem
 
 import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.items.model.block.StemBlocks
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.model.item.isNone
 import ru.fredboy.cavedroid.domain.items.usecase.GetBlockByKeyUseCase
@@ -23,6 +24,15 @@ class UseBoneMealAction @Inject constructor(
 
     override fun perform(item: Item.Usable, x: Int, y: Int): Boolean {
         val key = gameWorld.getForeMap(x, y).params.key
+        val stem = StemBlocks.fromKey(key)
+
+        if (stem != null) {
+            if (stem.age == StemBlocks.MAX_AGE || gameWorld.getForeMap(x, y + 1).params.key !in StemBlocks.FARMLAND_KEYS) return false
+            val grown = stem.advance(MathUtils.random(2, 5))
+            gameWorld.setForeMap(x, y, getBlockByKeyUseCase[grown.key])
+            mobController.player.decreaseCurrentItemCount()
+            return true
+        }
 
         when (key) {
             in SAPLING_KEYS -> {

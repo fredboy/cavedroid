@@ -3279,6 +3279,753 @@
         }
       ],
       "material": "wood"
+    },
+    "pumpkin": {
+      "hp": 90,
+      "texture": "pumpkin_side",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "pumpkin",
+          "requires_tool": false,
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "wood",
+      "use_action": "carve_pumpkin"
+    },
+    "carved_pumpkin": {
+      "hp": 90,
+      "texture": "carved_pumpkin",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "carved_pumpkin",
+          "requires_tool": false,
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "wood"
+    },
+    "jack_o_lantern": {
+      "hp": 90,
+      "texture": "jack_o_lantern",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "jack_o_lantern",
+          "requires_tool": false,
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "wood",
+      "light_info": {
+        "light_distance": 15,
+        "light_brightness": 1.0
+      }
+    },
+    "melon": {
+      "hp": 90,
+      "texture": "melon_side",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "drop_info": [
+        {
+          "key": "melon_slice",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_range",
+            "min": 3,
+            "max": 7,
+            "chance": 1
+          }
+        }
+      ],
+      "material": "wood"
+    },
+    "pumpkin_stem_stage0": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "casts_shadows": false,
+      "texture": "pumpkin_stem",
+      "hp": 0,
+      "sprite_top": 14,
+      "drop_single": false,
+      "drop_info": [
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.06666666666666667,
+            "amount": 1
+          }
+        },
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.06666666666666667,
+            "amount": 1
+          }
+        },
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.06666666666666667,
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass",
+      "grow_action": "grow_stem",
+      "update_action": "update_stem"
+    },
+    "pumpkin_stem_stage1": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "casts_shadows": false,
+      "texture": "pumpkin_stem",
+      "hp": 0,
+      "sprite_top": 12,
+      "drop_single": false,
+      "drop_info": [
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.13333333333333333,
+            "amount": 1
+          }
+        },
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.13333333333333333,
+            "amount": 1
+          }
+        },
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.13333333333333333,
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass",
+      "grow_action": "grow_stem",
+      "update_action": "update_stem"
+    },
+    "pumpkin_stem_stage2": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "casts_shadows": false,
+      "texture": "pumpkin_stem",
+      "hp": 0,
+      "sprite_top": 10,
+      "drop_single": false,
+      "drop_info": [
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.2,
+            "amount": 1
+          }
+        },
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.2,
+            "amount": 1
+          }
+        },
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.2,
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass",
+      "grow_action": "grow_stem",
+      "update_action": "update_stem"
+    },
+    "pumpkin_stem_stage3": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "casts_shadows": false,
+      "texture": "pumpkin_stem",
+      "hp": 0,
+      "sprite_top": 8,
+      "drop_single": false,
+      "drop_info": [
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.26666666666666666,
+            "amount": 1
+          }
+        },
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.26666666666666666,
+            "amount": 1
+          }
+        },
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.26666666666666666,
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass",
+      "grow_action": "grow_stem",
+      "update_action": "update_stem"
+    },
+    "pumpkin_stem_stage4": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "casts_shadows": false,
+      "texture": "pumpkin_stem",
+      "hp": 0,
+      "sprite_top": 6,
+      "drop_single": false,
+      "drop_info": [
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.3333333333333333,
+            "amount": 1
+          }
+        },
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.3333333333333333,
+            "amount": 1
+          }
+        },
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.3333333333333333,
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass",
+      "grow_action": "grow_stem",
+      "update_action": "update_stem"
+    },
+    "pumpkin_stem_stage5": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "casts_shadows": false,
+      "texture": "pumpkin_stem",
+      "hp": 0,
+      "sprite_top": 4,
+      "drop_single": false,
+      "drop_info": [
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.4,
+            "amount": 1
+          }
+        },
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.4,
+            "amount": 1
+          }
+        },
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.4,
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass",
+      "grow_action": "grow_stem",
+      "update_action": "update_stem"
+    },
+    "pumpkin_stem_stage6": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "casts_shadows": false,
+      "texture": "pumpkin_stem",
+      "hp": 0,
+      "sprite_top": 2,
+      "drop_single": false,
+      "drop_info": [
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.4666666666666667,
+            "amount": 1
+          }
+        },
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.4666666666666667,
+            "amount": 1
+          }
+        },
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.4666666666666667,
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass",
+      "grow_action": "grow_stem",
+      "update_action": "update_stem"
+    },
+    "pumpkin_stem_stage7": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "casts_shadows": false,
+      "texture": "pumpkin_stem",
+      "hp": 0,
+      "sprite_top": 0,
+      "drop_single": false,
+      "drop_info": [
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.5333333333333333,
+            "amount": 1
+          }
+        },
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.5333333333333333,
+            "amount": 1
+          }
+        },
+        {
+          "key": "pumpkin_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.5333333333333333,
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass",
+      "grow_action": "grow_stem",
+      "update_action": "update_stem"
+    },
+    "melon_stem_stage0": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "casts_shadows": false,
+      "texture": "melon_stem",
+      "hp": 0,
+      "sprite_top": 14,
+      "drop_single": false,
+      "drop_info": [
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.06666666666666667,
+            "amount": 1
+          }
+        },
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.06666666666666667,
+            "amount": 1
+          }
+        },
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.06666666666666667,
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass",
+      "grow_action": "grow_stem",
+      "update_action": "update_stem"
+    },
+    "melon_stem_stage1": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "casts_shadows": false,
+      "texture": "melon_stem",
+      "hp": 0,
+      "sprite_top": 12,
+      "drop_single": false,
+      "drop_info": [
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.13333333333333333,
+            "amount": 1
+          }
+        },
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.13333333333333333,
+            "amount": 1
+          }
+        },
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.13333333333333333,
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass",
+      "grow_action": "grow_stem",
+      "update_action": "update_stem"
+    },
+    "melon_stem_stage2": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "casts_shadows": false,
+      "texture": "melon_stem",
+      "hp": 0,
+      "sprite_top": 10,
+      "drop_single": false,
+      "drop_info": [
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.2,
+            "amount": 1
+          }
+        },
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.2,
+            "amount": 1
+          }
+        },
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.2,
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass",
+      "grow_action": "grow_stem",
+      "update_action": "update_stem"
+    },
+    "melon_stem_stage3": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "casts_shadows": false,
+      "texture": "melon_stem",
+      "hp": 0,
+      "sprite_top": 8,
+      "drop_single": false,
+      "drop_info": [
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.26666666666666666,
+            "amount": 1
+          }
+        },
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.26666666666666666,
+            "amount": 1
+          }
+        },
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.26666666666666666,
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass",
+      "grow_action": "grow_stem",
+      "update_action": "update_stem"
+    },
+    "melon_stem_stage4": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "casts_shadows": false,
+      "texture": "melon_stem",
+      "hp": 0,
+      "sprite_top": 6,
+      "drop_single": false,
+      "drop_info": [
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.3333333333333333,
+            "amount": 1
+          }
+        },
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.3333333333333333,
+            "amount": 1
+          }
+        },
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.3333333333333333,
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass",
+      "grow_action": "grow_stem",
+      "update_action": "update_stem"
+    },
+    "melon_stem_stage5": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "casts_shadows": false,
+      "texture": "melon_stem",
+      "hp": 0,
+      "sprite_top": 4,
+      "drop_single": false,
+      "drop_info": [
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.4,
+            "amount": 1
+          }
+        },
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.4,
+            "amount": 1
+          }
+        },
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.4,
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass",
+      "grow_action": "grow_stem",
+      "update_action": "update_stem"
+    },
+    "melon_stem_stage6": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "casts_shadows": false,
+      "texture": "melon_stem",
+      "hp": 0,
+      "sprite_top": 2,
+      "drop_single": false,
+      "drop_info": [
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.4666666666666667,
+            "amount": 1
+          }
+        },
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.4666666666666667,
+            "amount": 1
+          }
+        },
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.4666666666666667,
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass",
+      "grow_action": "grow_stem",
+      "update_action": "update_stem"
+    },
+    "melon_stem_stage7": {
+      "collision": false,
+      "transparent": true,
+      "block_required": true,
+      "casts_shadows": false,
+      "texture": "melon_stem",
+      "hp": 0,
+      "sprite_top": 0,
+      "drop_single": false,
+      "drop_info": [
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.5333333333333333,
+            "amount": 1
+          }
+        },
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.5333333333333333,
+            "amount": 1
+          }
+        },
+        {
+          "key": "melon_seeds",
+          "requires_tool": false,
+          "amount": {
+            "type": "random_chance",
+            "chance": 0.5333333333333333,
+            "amount": 1
+          }
+        }
+      ],
+      "material": "grass",
+      "grow_action": "grow_stem",
+      "update_action": "update_stem"
     }
   },
   "items": {
@@ -5248,6 +5995,60 @@
       "texture": "mutton_cooked",
       "heal": 6,
       "saturation": 9.6
+    },
+    "pumpkin": {
+      "name": "Pumpkin",
+      "type": "block",
+      "texture": "pumpkin_side"
+    },
+    "carved_pumpkin": {
+      "name": "Carved Pumpkin",
+      "type": "block",
+      "texture": "carved_pumpkin"
+    },
+    "jack_o_lantern": {
+      "name": "Jack o'Lantern",
+      "type": "block",
+      "texture": "jack_o_lantern"
+    },
+    "melon": {
+      "name": "Melon",
+      "type": "block",
+      "texture": "melon_side"
+    },
+    "pumpkin_seeds": {
+      "name": "Pumpkin Seeds",
+      "type": "usable",
+      "texture": "pumpkin_seeds",
+      "action_key": "use_stem_seeds"
+    },
+    "melon_seeds": {
+      "name": "Melon Seeds",
+      "type": "usable",
+      "texture": "melon_seeds",
+      "action_key": "use_stem_seeds"
+    },
+    "melon_slice": {
+      "name": "Melon Slice",
+      "type": "food",
+      "texture": "melon_slice",
+      "heal": 2,
+      "saturation": 1.2
+    },
+    "pumpkin_pie": {
+      "name": "Pumpkin Pie",
+      "type": "food",
+      "texture": "pumpkin_pie",
+      "heal": 8,
+      "saturation": 4.8
+    },
+    "gold_nugget": {
+      "name": "Gold Nugget",
+      "texture": "gold_nugget"
+    },
+    "glistering_melon_slice": {
+      "name": "Glistering Melon Slice",
+      "texture": "glistering_melon_slice"
     }
   }
 }

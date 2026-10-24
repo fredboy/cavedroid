@@ -889,6 +889,21 @@
         ],
         "shapeless": true,
         "count": 9
+      },
+      {
+        "input": [
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget"
+        ],
+        "shapeless": false,
+        "count": 1
       }
     ]
   },
@@ -3792,6 +3807,139 @@
           "planks.*",
           "planks.*",
           "planks.*"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "pumpkin_seeds": {
+    "recipes": [
+      {
+        "input": [
+          "pumpkin",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 4
+      }
+    ]
+  },
+  "melon_seeds": {
+    "recipes": [
+      {
+        "input": [
+          "melon_slice",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "melon": {
+    "recipes": [
+      {
+        "input": [
+          "melon_slice",
+          "melon_slice",
+          "melon_slice",
+          "melon_slice",
+          "melon_slice",
+          "melon_slice",
+          "melon_slice",
+          "melon_slice",
+          "melon_slice"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "jack_o_lantern": {
+    "recipes": [
+      {
+        "input": [
+          "carved_pumpkin",
+          null,
+          null,
+          "torch",
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "pumpkin_pie": {
+    "recipes": [
+      {
+        "input": [
+          "pumpkin",
+          "sugar",
+          null,
+          "egg",
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "gold_nugget": {
+    "recipes": [
+      {
+        "input": [
+          "gold_ingot",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 9
+      }
+    ]
+  },
+  "glistering_melon_slice": {
+    "recipes": [
+      {
+        "input": [
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "melon_slice",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget"
         ],
         "shapeless": false,
         "count": 1

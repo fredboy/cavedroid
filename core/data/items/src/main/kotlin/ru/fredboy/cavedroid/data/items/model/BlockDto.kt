@@ -45,4 +45,5 @@ data class BlockDto(
     @SerialName("mob_key") val mobKey: String? = null,
     @SerialName("loot_table") val lootTable: String? = null,
     @SerialName("use_action") val useAction: String? = null,
+    @SerialName("grow_action") val growAction: String? = null,
 )

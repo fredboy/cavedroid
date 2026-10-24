@@ -21,6 +21,12 @@ object MineshaftLoot {
                     },
                 )
             }
+            // Java Edition mineshaft chest chance per seed type, with 2–4 seeds.
+            for (seeds in listOf("pumpkin_seeds", "melon_seeds")) {
+                if (random.nextDouble() < 0.27314935357988357) {
+                    add(seeds to random.nextInt(2, 5))
+                }
+            }
         }
     }
 }

@@ -86,6 +86,7 @@ class BlockMapper @Inject constructor(
         requiresBackground = dto.requiresBackground,
         updateActionKey = dto.updateAction,
         useActionKey = dto.useAction,
+        growActionKey = dto.growAction,
     )
 
     private fun mapLightInfo(info: BlockLightDto?): BlockLightInfo? {
