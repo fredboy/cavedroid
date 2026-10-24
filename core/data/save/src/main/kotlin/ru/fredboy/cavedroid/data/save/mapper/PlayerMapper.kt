@@ -62,6 +62,7 @@ class PlayerMapper @Inject constructor(
         breath = player.breath,
         wearingArmor = inventoryMapper.mapSaveData(player.wearingArmor),
         fireTicksRemaining = player.fireTicksRemaining,
+        mountedVehicleId = player.mountedVehicleId,
     )
 
     fun mapPlayer(
@@ -107,6 +108,7 @@ class PlayerMapper @Inject constructor(
             breath = saveDataDto.breath ?: params.maxBreath
             wearingArmor = saveDataDto.wearingArmor?.let(inventoryMapper::mapWearingArmor) ?: wearingArmor
             fireTicksRemaining = saveDataDto.fireTicksRemaining
+            mountedVehicleId = saveDataDto.mountedVehicleId
             isDead = health <= 0
         }
     }

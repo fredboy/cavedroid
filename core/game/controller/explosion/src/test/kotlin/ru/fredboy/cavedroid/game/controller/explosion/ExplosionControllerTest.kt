@@ -74,7 +74,7 @@ class ExplosionControllerTest {
         every { sounds.getBlockActionSound(any()) } returns null
     }
 
-    private fun controller() = ExplosionController(world, mobs, fire, drops, items, sounds, soundPlayer, saves, application, context)
+    private fun controller() = ExplosionController(world, mobs, mockk(relaxed = true), fire, drops, items, sounds, soundPlayer, saves, application, context)
 
     @Test
     fun `ignition removes TNT without a drop and cannot prime it twice`() {

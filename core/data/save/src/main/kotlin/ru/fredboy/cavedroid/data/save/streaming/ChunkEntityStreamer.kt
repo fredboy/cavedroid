@@ -13,6 +13,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.vehicle.VehicleController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.abstraction.ChunkBodiesReadyListener
 import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
@@ -37,6 +38,7 @@ class ChunkEntityStreamer @Inject constructor(
     private val mobPhysicsFactory: MobPhysicsFactory,
     private val dropWorldAdapter: DropWorldAdapter,
     private val containerFactory: ContainerFactory,
+    private val vehicles: VehicleController,
 ) : ChunkListener,
     ChunkBodiesReadyListener {
 
@@ -55,6 +57,10 @@ class ChunkEntityStreamer @Inject constructor(
         initialized = true
         if (!gameWorld.isInfinite) {
             initializeContainers(0, gameWorld.width)
+            if (gameContextRepository.isLoadGame()) {
+                vehicles.restore(saveDataRepository.loadVehicles(applicationContextRepository.getGameDirectory(), gameContextRepository.getSaveGameDirectory()))
+            }
+            vehicles.resolvePassenger()
             return
         }
         gameWorld.addChunkListener(this)
@@ -63,6 +69,7 @@ class ChunkEntityStreamer @Inject constructor(
             onChunkLoaded(it)
             onChunkBodiesReady(it)
         }
+        vehicles.resolvePassenger()
     }
 
     override fun onChunkLoaded(chunkX: Int) {
@@ -84,6 +91,7 @@ class ChunkEntityStreamer @Inject constructor(
             dropWorldAdapter = dropWorldAdapter,
         )
 
+        data?.vehicles?.let(vehicles::restore)
         data?.mobs?.forEach(mobController::addMob)
         data?.drops?.forEach(dropController::addLoadedDrop)
         data?.containers?.forEach { (coordinates, container) ->
@@ -133,6 +141,7 @@ class ChunkEntityStreamer @Inject constructor(
         restoreChunk(chunkX)
         mobController.flushPendingSpawns { chunkOf(it) == chunkX }
         dropController.flushPendingSpawns { chunkOf(it) == chunkX }
+        val boats = vehicles.vehicles.filter { chunkOf(it.position.x) == chunkX }
         val mobs = mobController.mobs.filter { chunkOf(it.position.x) == chunkX }
         val drops = dropController.getAllDrop().filter { chunkOf(it.position.x) == chunkX }
         val containers = containerController.containerMap.filterKeys { chunkOfInt(it.x) == chunkX }
@@ -144,12 +153,14 @@ class ChunkEntityStreamer @Inject constructor(
             mobs = mobs,
             drops = drops,
             containers = containers,
+            vehicles = boats.map { it.snapshot() },
         )
 
         if (!evict) {
             return
         }
 
+        boats.forEach { vehicles.evict(it) }
         mobs.forEach { mob ->
             mob.dispose()
             mobController.removeMob(mob)

@@ -8,6 +8,7 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.vehicle.VehicleController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
@@ -23,10 +24,12 @@ class JoystickInputHandler @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
     private val mobController: MobController,
+    private val vehicles: VehicleController,
     private val gameWindowsManager: GameWindowsManager,
     private val textureRegions: GetTextureRegionByNameUseCase,
 ) : IMouseInputHandler {
 
+    private var resetting = false
     private var activateTimeMs = 0L
     private var cursorTimeoutMs = 100L
 
@@ -35,10 +38,13 @@ class JoystickInputHandler @Inject constructor(
             if (field == value) {
                 return
             }
+            field = value
             if (!value) {
                 resetVelocity()
-                if (TimeUtils.timeSinceMillis(activateTimeMs) < 200L) {
-                    if (mobController.player.canJump) {
+                if (!resetting && TimeUtils.timeSinceMillis(activateTimeMs) < 200L) {
+                    if (mobController.player.isMounted) {
+                        vehicles.dismount()
+                    } else if (mobController.player.canJump) {
                         mobController.player.jump()
                     } else if (mobController.player.gameMode.isCreative()) {
                         mobController.player.isFlyMode = true
@@ -136,8 +142,12 @@ class JoystickInputHandler @Inject constructor(
     }
 
     override fun reset() {
-        activateTimeMs = TimeUtils.millis()
-        gameContextRepository.getJoystick().deactivate()
-        active = false
+        resetting = true
+        try {
+            gameContextRepository.getJoystick().deactivate()
+            active = false
+        } finally {
+            resetting = false
+        }
     }
 }

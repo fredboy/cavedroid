@@ -26,6 +26,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.projectile.abstraction.ProjectileWorldAdapter
+import ru.fredboy.cavedroid.entity.vehicle.VehicleState
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -53,12 +54,15 @@ interface SaveDataRepository {
         growBlockEntries: List<GrowBlockEntry>,
         fireEntries: List<FireEntry>,
         tntEntries: List<TntEntry> = emptyList(),
+        vehicles: List<VehicleState> = emptyList(),
     )
 
     fun loadGrowBlockEntries(
         gameDataFolder: String,
         saveGameDirectory: String,
     ): List<GrowBlockEntry>
+
+    fun loadVehicles(gameDataFolder: String, saveGameDirectory: String): List<VehicleState>
 
     fun loadTntEntries(gameDataFolder: String, saveGameDirectory: String): List<TntEntry>
 
@@ -97,6 +101,7 @@ interface SaveDataRepository {
         mobs: List<Mob>,
         drops: List<Drop>,
         containers: Map<ContainerCoordinates, Container>,
+        vehicles: List<VehicleState> = emptyList(),
     )
 
     /** Loads and reconstructs the entities of one infinite-world chunk, or null if none were saved. */

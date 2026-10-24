@@ -127,7 +127,7 @@ class PlayerMobBehavior(
     ) {
         sight?.update()
 
-        if (tryClimb) {
+        if (tryClimb && !isMounted) {
             climbUp()
         } else {
             climb = false
@@ -155,7 +155,7 @@ class PlayerMobBehavior(
 
         hitBlock(worldAdapter)
         updateSight()
-        if (checkForAutojump(worldAdapter)) {
+        if (!isMounted && checkForAutojump(worldAdapter)) {
             jump()
         }
 

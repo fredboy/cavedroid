@@ -3952,5 +3952,12 @@
         "count": 1
       }
     ]
+  },
+  "oak_boat": {
+    "recipes": [{
+      "input": ["planks_oak", null, "planks_oak", "planks_oak", "planks_oak", "planks_oak", null, null, null],
+      "shapeless": false,
+      "count": 1
+    }]
   }
 }

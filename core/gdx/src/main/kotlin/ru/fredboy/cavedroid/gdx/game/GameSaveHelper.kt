@@ -13,6 +13,7 @@ import ru.fredboy.cavedroid.game.controller.fire.FireController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.controller.stats.StatsController
+import ru.fredboy.cavedroid.game.controller.vehicle.VehicleController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldGrowBlocksControllerTask
 import javax.inject.Inject
@@ -32,6 +33,7 @@ class GameSaveHelper @Inject constructor(
     private val fireController: FireController,
     private val explosionController: ExplosionController,
     private val chunkEntityStreamer: ChunkEntityStreamer,
+    private val vehicles: VehicleController,
 ) {
 
     fun saveGame(overwrite: Boolean) {
@@ -63,6 +65,7 @@ class GameSaveHelper @Inject constructor(
             gameWorld = gameWorld,
             projectileController = projectileController,
             tntEntries = explosionController.snapshot(),
+            vehicles = if (isInfinite) emptyList() else vehicles.vehicles.map { it.snapshot() },
             growBlockEntries = if (isInfinite) emptyList() else growBlocksControllerTask.snapshot(),
             fireEntries = if (isInfinite) {
                 emptyList()

@@ -19,6 +19,7 @@ import ru.fredboy.cavedroid.entity.mob.model.CreeperMob
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.fire.FireController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.vehicle.VehicleController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 import kotlin.math.floor
@@ -29,6 +30,7 @@ import kotlin.random.Random
 class ExplosionController @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobController: MobController,
+    private val vehicles: VehicleController,
     private val fireController: FireController,
     private val dropQueue: DropQueue,
     private val getItemByKey: GetItemByKeyUseCase,
@@ -158,6 +160,14 @@ class ExplosionController @Inject constructor(
     }
 
     private fun damageEntities(x: Float, y: Float, power: Float) {
+        vehicles.vehicles.forEach { boat ->
+            val dx = ExplosionRules.horizontalDistance(x, boat.position.x, gameWorld.width, gameWorld.isInfinite)
+            val dy = boat.position.y - y
+            val distance = kotlin.math.sqrt(dx * dx + dy * dy)
+            val bounds = boat.hitbox.apply { this.x = x + dx - width / 2f }
+            val exposure = ExplosionRules.exposure(x, y, bounds, gameWorld::getForeMap)
+            boat.damage(ExplosionRules.damage(ExplosionRules.impact(distance, exposure, power), power))
+        }
         (mobController.mobs + mobController.player).forEach { mob ->
             if (mob.isDead || mob is Player && mob.gameMode.isCreative()) return@forEach
             val dx = ExplosionRules.horizontalDistance(x, mob.position.x, gameWorld.width, gameWorld.isInfinite)

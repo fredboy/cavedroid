@@ -70,7 +70,7 @@ class Projectile(
             friction = 1f
             restitution = 0f
             filter.categoryBits = PhysicsConstants.CATEGORY_PROJECTILE
-            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK or PhysicsConstants.CATEGORY_MOB
+            filter.maskBits = PhysicsConstants.CATEGORY_BLOCK or PhysicsConstants.CATEGORY_MOB or PhysicsConstants.CATEGORY_VEHICLE
         }
 
         body.createFixture(fixtureDef)

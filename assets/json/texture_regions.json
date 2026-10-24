@@ -286,5 +286,11 @@
   "textures/effects/big_smoke_8": {},
   "textures/effects/big_smoke_9": {},
   "textures/effects/big_smoke_10": {},
-  "textures/effects/big_smoke_11": {}
+  "textures/effects/big_smoke_11": {},
+  "textures/entity/boat/oak": {
+    "oak_boat_side": {"x": 2, "y": 38, "w": 28, "h": 6},
+    "oak_boat_rim": {"x": 2, "y": 36, "w": 28, "h": 2},
+    "oak_boat_oar": {"x": 62, "y": 18, "w": 18, "h": 2},
+    "oak_boat_blade": {"x": 62, "y": 28, "w": 7, "h": 6}
+  }
 }

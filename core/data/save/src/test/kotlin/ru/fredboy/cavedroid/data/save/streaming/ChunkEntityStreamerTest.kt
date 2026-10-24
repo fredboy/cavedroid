@@ -34,7 +34,8 @@ class ChunkEntityStreamerTest {
     private val savedMob = mob()
     private val snapshots = mutableListOf<List<Mob>>()
     private val factory = mockk<ContainerFactory>(relaxed = true)
-    private val streamer = ChunkEntityStreamer(world, mobController, drops, containers, saves, app, context, mockk(), mockk(), factory)
+    private val boats = mockk<ru.fredboy.cavedroid.game.controller.vehicle.VehicleController>(relaxed = true)
+    private val streamer = ChunkEntityStreamer(world, mobController, drops, containers, saves, app, context, mockk(), mockk(), factory, boats)
 
     init {
         every { world.isInfinite } returns true
@@ -179,6 +180,34 @@ class ChunkEntityStreamerTest {
         streamer.onChunkBodiesReady(2)
         assertEquals(chest, live[coordinate])
         verify(exactly = 1) { factory.createContainer(chestBlock, any()) }
+    }
+
+    @Test
+    fun `boats restore once and are saved with their owning chunk before eviction`() {
+        val state = ru.fredboy.cavedroid.entity.vehicle.VehicleState("boat", x = 33f, y = 10f)
+        val boat = mockk<ru.fredboy.cavedroid.entity.vehicle.Vehicle>()
+        every { boat.position } returns Vector2(state.x, state.y)
+        every { boat.snapshot() } returns state
+        every { boats.vehicles } returns listOf(boat)
+        every { saves.loadChunkEntities(any(), any(), any(), any(), any()) } returns
+            ChunkEntitiesSaveData(emptyList(), emptyList(), emptyMap(), listOf(state))
+        load()
+        streamer.onChunkBodiesReady(2)
+        streamer.onChunkBodiesReady(2)
+        streamer.onChunkUnloaded(2)
+        verify(exactly = 1) { boats.restore(listOf(state)) }
+        verifyOrder {
+            saves.saveChunkEntities(any(), any(), 2, any(), any(), any(), listOf(state))
+            boats.evict(boat)
+        }
+    }
+
+    @Test
+    fun `new finite worlds do not restore vehicles from a previous directory`() {
+        every { world.isInfinite } returns false
+        every { context.isLoadGame() } returns false
+        ChunkEntityStreamer(world, mobController, drops, containers, saves, app, context, mockk(), mockk(), factory, boats).initialize()
+        verify(exactly = 0) { saves.loadVehicles(any(), any()) }
     }
 
     private fun load() {

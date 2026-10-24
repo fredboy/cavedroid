@@ -254,6 +254,7 @@ abstract class Mob(
         if (!isDead) {
             wasOnFireAtDeath = isOnFire
         }
+        if (this is Player) onDetachVehicle?.invoke()
         controlVector.setZero()
         isDead = true
         makingSound = SoundType.Death
@@ -396,6 +397,8 @@ abstract class Mob(
         }
 
         behavior.update(this, mobWorldAdapter, playerAdapter, projectileAdapter, delta)
+
+        if (this is Player && isMounted) return
 
         applyMediumResistanceToBody(mobWorldAdapter)
         if (knockbackRemainingSec > 0f) {

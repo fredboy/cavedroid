@@ -27,6 +27,20 @@ import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
 class InfiniteBlockStoreTest {
 
     @Test
+    fun `occupied columns survive camera movement and evict after release`() = runTest {
+        val fixture = Fixture(this)
+        fixture.store.retainColumns(setOf(-6))
+        fixture.move(3)
+        assertTrue(fixture.store.isChunkLoaded(-96))
+        assertFalse(-6 in fixture.unloaded)
+        fixture.store.retainColumns(emptySet())
+        fixture.store.update()
+        assertFalse(fixture.store.isChunkLoaded(-96))
+        assertTrue(-6 in fixture.unloaded)
+        fixture.close()
+    }
+
+    @Test
     fun `workers publish terrain and callbacks only after returning to main`() = runTest {
         val fixture = Fixture(this)
         fixture.move(1)
