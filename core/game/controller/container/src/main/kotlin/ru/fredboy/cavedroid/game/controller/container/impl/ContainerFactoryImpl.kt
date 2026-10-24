@@ -9,6 +9,7 @@ import ru.fredboy.cavedroid.entity.container.model.Chest
 import ru.fredboy.cavedroid.entity.container.model.Container
 import ru.fredboy.cavedroid.entity.container.model.Furnace
 import ru.fredboy.cavedroid.entity.container.model.MineshaftLoot
+import ru.fredboy.cavedroid.entity.container.model.MonsterRoomLoot
 import ru.fredboy.cavedroid.entity.container.model.Spawner
 import javax.inject.Inject
 
@@ -22,10 +23,13 @@ internal class ContainerFactoryImpl @Inject constructor(
         return when (type) {
             is Block.Furnace -> createFurnace()
             is Block.Chest -> createChest().apply {
-                if (type.lootTable == "mineshaft") {
-                    MineshaftLoot.roll(seed).forEach { (key, amount) ->
-                        inventory.pickUpItem(getItemByKeyUseCase[key].toInventoryItem(amount, durability = 0))
-                    }
+                val loot = when (type.lootTable) {
+                    "mineshaft" -> MineshaftLoot.roll(seed)
+                    "monster_room" -> MonsterRoomLoot.roll(seed)
+                    else -> emptyList()
+                }
+                loot.forEach { (key, amount) ->
+                    inventory.pickUpItem(getItemByKeyUseCase[key].toInventoryItem(amount, durability = 0))
                 }
             }
             is Block.Spawner -> Spawner(getFallbackItemUseCase(), type.mobKey)

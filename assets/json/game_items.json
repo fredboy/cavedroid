@@ -88,6 +88,22 @@
       ],
       "material": "stone"
     },
+    "mossy_cobblestone": {
+      "hp": 600,
+      "texture": "mossy_cobblestone",
+      "tool_level": 1,
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "mossy_cobblestone",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "stone"
+    },
     "planks_oak": {
       "combustible": true,
       "hp": 180,
@@ -3267,9 +3283,56 @@
       "loot_table": "mineshaft",
       "use_action": "chest"
     },
+    "chest_monster_room": {
+      "hp": 180,
+      "collision": false,
+      "background": true,
+      "transparent": false,
+      "casts_shadows": false,
+      "drop": "chest",
+      "texture": "chest",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "meta": "chest",
+      "drop_info": [
+        {
+          "key": "chest",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "wood",
+      "action_sound_key": "door/open",
+      "loot_table": "monster_room",
+      "use_action": "chest"
+    },
     "spawner": {
       "meta": "spawner",
       "mob_key": "spider",
+      "texture": "spawner",
+      "hp": 300,
+      "transparent": true,
+      "casts_shadows": false,
+      "tool_type": "pickaxe",
+      "material": "metal",
+      "drop_info": []
+    },
+    "spawner_zombie": {
+      "meta": "spawner",
+      "mob_key": "zombie",
+      "texture": "spawner",
+      "hp": 300,
+      "transparent": true,
+      "casts_shadows": false,
+      "tool_type": "pickaxe",
+      "material": "metal",
+      "drop_info": []
+    },
+    "spawner_skeleton": {
+      "meta": "spawner",
+      "mob_key": "skeleton",
       "texture": "spawner",
       "hp": 300,
       "transparent": true,
@@ -4072,6 +4135,11 @@
       "type": "block",
       "texture": "cobblestone",
       "smelt_product": "stone"
+    },
+    "mossy_cobblestone": {
+      "name": "Mossy Cobblestone",
+      "type": "block",
+      "texture": "mossy_cobblestone"
     },
     "planks_oak": {
       "name": "Oak Planks",
@@ -4969,6 +5037,11 @@
     "bone": {
       "name": "Bone",
       "texture": "bone"
+    },
+    "gunpowder": {
+      "name": "Gunpowder",
+      "type": "normal",
+      "texture": "gunpowder"
     },
     "spawn_egg_skeleton": {
       "name": "Skeleton Spawn Egg",

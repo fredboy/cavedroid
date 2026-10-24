@@ -27,6 +27,7 @@ import kotlin.random.nextInt
  *  3. caves + lava (per local column; carving is column-local)
  *  4. surface features (per origin column; trees/plants spill ±1)
  *  5. support cleanup (per local column)
+ *  6. mineshafts and monster rooms (independently seeded regions)
  *
  * Only cells landing inside the requested chunk are returned; the overscan exists purely so a
  * feature originating just outside the chunk still writes the part that reaches into it.
@@ -134,8 +135,14 @@ class ChunkGenerator(
     /** Generates the full overscan [GeneratedBand] for [chunkX]; [generateChunk] slices the keep. */
     fun generateBand(chunkX: Int): GeneratedBand {
         val startX = chunkX * CHUNK_W
-        val bandStart = startX - OVERSCAN
-        val bandW = CHUNK_W + 2 * OVERSCAN
+        val requestedStart = startX - OVERSCAN
+        val requestedWidth = CHUNK_W + 2 * OVERSCAN
+        val regionWidth = MonsterRoomGenerator.REGION_WIDTH
+        // Monster rooms inspect their complete floor and ceiling before changing any blocks.
+        // Generate entire intersecting regions, plus the usual terrain feature overscan.
+        val bandStart = Math.floorDiv(requestedStart, regionWidth) * regionWidth - OVERSCAN
+        val bandEnd = (Math.floorDiv(requestedStart + requestedWidth - 1, regionWidth) + 1) * regionWidth + OVERSCAN
+        val bandW = bandEnd - bandStart
 
         val foreBand = Array(bandW) { Array(height) { fallback as Block } }
         val backBand = Array(bandW) { Array(height) { fallback as Block } }
@@ -153,8 +160,7 @@ class ChunkGenerator(
         }
 
         // 3. caves + lava on the local columns (column-local, no horizontal spill)
-        for (i in 0 until CHUNK_W) {
-            val j = OVERSCAN + i
+        for (j in 0 until bandW) {
             carveCavesAndFillLava(bandStart + j, surfaceHeights[j], foreBand[j])
         }
 
@@ -164,14 +170,19 @@ class ChunkGenerator(
         }
 
         // 5. support cleanup on local columns
-        for (i in 0 until CHUNK_W) {
-            val j = OVERSCAN + i
+        for (j in 0 until bandW) {
             cleanupColumn(surfaceHeights[j], foreBand[j])
         }
 
         MineshaftGenerator(config, itemsRepository).generate(bandStart, foreBand, backBand)
+        MonsterRoomGenerator(config, itemsRepository).generate(bandStart, foreBand, backBand)
 
-        return GeneratedBand(foreBand, backBand, bandStart)
+        val offset = requestedStart - bandStart
+        return GeneratedBand(
+            Array(requestedWidth) { foreBand[offset + it] },
+            Array(requestedWidth) { backBand[offset + it] },
+            requestedStart,
+        )
     }
 
     // region pure position helpers
