@@ -16,6 +16,7 @@ class VillagerMobBehavior : BaseMobBehavior<VillagerMob>(VillagerMob::class) {
     private var stuckSeconds = 0f
     private var previousX = Float.NaN
     private var spawnX: Float? = null
+    private var missingBedSeconds = 0f
 
     override fun VillagerMob.updateMob(
         worldAdapter: MobWorldAdapter,
@@ -25,6 +26,7 @@ class VillagerMobBehavior : BaseMobBehavior<VillagerMob>(VillagerMob::class) {
     ) {
         closeDoors(worldAdapter, playerAdapter)
         val bed = home
+        var hasBed = false
         if (bed != null) {
             // A home can be just beyond the streamed region while its owner is still resident.
             if (!worldAdapter.isChunkLoadedAt(bed.x) || !worldAdapter.isChunkLoadedAt(bed.x + 1)) {
@@ -32,17 +34,22 @@ class VillagerMobBehavior : BaseMobBehavior<VillagerMob>(VillagerMob::class) {
                 isSleeping = false
                 return
             }
-            if (worldAdapter.getForegroundBlock(bed.x, bed.y).params.key != "bed_l" ||
-                worldAdapter.getForegroundBlock(bed.x + 1, bed.y).params.key != "bed_r"
-            ) {
-                isDead = true
-                controlVector.setZero()
-                return
+            hasBed = worldAdapter.getForegroundBlock(bed.x, bed.y).params.key == "bed_l" &&
+                worldAdapter.getForegroundBlock(bed.x + 1, bed.y).params.key == "bed_r"
+            if (!hasBed) {
+                isSleeping = false
+                missingBedSeconds += delta
+                if (missingBedSeconds >= MISSING_BED_DESPAWN_SECONDS) {
+                    isDead = true
+                    controlVector.setZero()
+                    return
+                }
             }
         }
+        if (bed == null || hasBed) missingBedSeconds = 0f
 
         val center = bed?.let { nearestX(it.x + 1f, worldAdapter) } ?: (spawnX ?: position.x.also { spawnX = it })
-        val goingHome = bed != null && !worldAdapter.isDayTime()
+        val goingHome = hasBed && !worldAdapter.isDayTime()
         if (bed != null &&
             goingHome &&
             abs(position.x - center) < 0.35f &&
@@ -142,5 +149,6 @@ class VillagerMobBehavior : BaseMobBehavior<VillagerMob>(VillagerMob::class) {
 
     companion object {
         const val WANDER_RADIUS = 10f
+        const val MISSING_BED_DESPAWN_SECONDS = 60f
     }
 }

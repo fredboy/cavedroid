@@ -68,10 +68,53 @@ class VillagerMobBehaviorTest {
     }
 
     @Test
-    fun `destroying either half of a loaded bed despawns its resident`() {
+    fun `destroying a bed gives its resident a minute before despawning`() {
+        every { world.getForegroundBlock(-14, 20) } returns block("none")
+        update(59f)
+        assertFalse(mob.isDead)
+        update(1f)
+        assertTrue(mob.isDead)
+    }
+
+    @Test
+    fun `replacing a bed resets the despawn delay`() {
+        every { world.getForegroundBlock(-15, 20) } returns block("none")
+        update(59f)
+        every { world.getForegroundBlock(-15, 20) } returns block("bed_l")
+        update()
+        every { world.getForegroundBlock(-15, 20) } returns block("none")
+        update(59f)
+        assertFalse(mob.isDead)
+        update(1f)
+        assertTrue(mob.isDead)
+    }
+
+    @Test
+    fun `unloaded home chunks pause the despawn delay`() {
+        every { world.getForegroundBlock(-14, 20) } returns block("none")
+        update(30f)
+        every { world.isChunkLoadedAt(-14) } returns false
+        update(60f)
+        assertFalse(mob.isDead)
+        every { world.isChunkLoadedAt(-14) } returns true
+        update(29f)
+        assertFalse(mob.isDead)
+        update(1f)
+        assertTrue(mob.isDead)
+    }
+
+    @Test
+    fun `losing a bed wakes a sleeping resident and lets it wander at night`() {
+        every { world.isDayTime() } returns false
+        update()
+        assertTrue(mob.isSleeping)
         every { world.getForegroundBlock(-14, 20) } returns block("none")
         update()
-        assertTrue(mob.isDead)
+        assertFalse(mob.isSleeping)
+        position.x = -3f
+        update()
+        assertFalse(mob.isDead)
+        assertEquals(-params.speed, mob.controlVector.x)
     }
 
     @Test
@@ -153,7 +196,7 @@ class VillagerMobBehaviorTest {
         verify(exactly = 1) { world.setWoodenDoorOpen(-10, 20, true) }
     }
 
-    private fun update() = mob.behavior.update(mob, world, mockk(), mockk(), 0.1f)
+    private fun update(delta: Float = 0.1f) = mob.behavior.update(mob, world, mockk(), mockk(), delta)
 
     private fun block(key: String, solid: Boolean = false): Block = mockk(relaxed = true) {
         every { params.key } returns key
