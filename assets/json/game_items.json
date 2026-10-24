@@ -2637,7 +2637,7 @@
     "fence_gate_oak_left_open": {
       "hp": 270,
       "collision": false,
-      "background": true,
+      "background": false,
       "transparent": true,
       "block_required": true,
       "texture": "fence_gate_oak_left_open",
@@ -2684,7 +2684,7 @@
     "fence_gate_oak_right_open": {
       "hp": 270,
       "collision": false,
-      "background": true,
+      "background": false,
       "transparent": true,
       "block_required": true,
       "texture": "fence_gate_oak_right_open",
@@ -2823,7 +2823,7 @@
     "fence_gate_spruce_left_open": {
       "hp": 270,
       "collision": false,
-      "background": true,
+      "background": false,
       "transparent": true,
       "block_required": true,
       "texture": "fence_gate_spruce_left_open",
@@ -2870,7 +2870,7 @@
     "fence_gate_spruce_right_open": {
       "hp": 270,
       "collision": false,
-      "background": true,
+      "background": false,
       "transparent": true,
       "block_required": true,
       "texture": "fence_gate_spruce_right_open",
@@ -3009,7 +3009,7 @@
     "fence_gate_birch_left_open": {
       "hp": 270,
       "collision": false,
-      "background": true,
+      "background": false,
       "transparent": true,
       "block_required": true,
       "texture": "fence_gate_birch_left_open",
@@ -3056,7 +3056,7 @@
     "fence_gate_birch_right_open": {
       "hp": 270,
       "collision": false,
-      "background": true,
+      "background": false,
       "transparent": true,
       "block_required": true,
       "texture": "fence_gate_birch_right_open",
