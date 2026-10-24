@@ -5,3 +5,5 @@ sheep
 zombie
 chicken
 skeleton
+spider
+
