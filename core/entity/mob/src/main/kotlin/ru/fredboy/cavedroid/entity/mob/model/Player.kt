@@ -407,7 +407,7 @@ class Player(
         }
         val damage = 1 * (activeTool?.mobDamageMultiplier ?: 1f)
         val damageInt = damage.toInt()
-        mob.damage(damageInt)
+        mob.takeHit(damageInt, mob.position.x - position.x)
         mob.behavior.onAttackedByPlayer()
         onMobAttacked?.invoke(mob, damageInt)
         addExhaustion(EXHAUSTION_PER_ATTACK)

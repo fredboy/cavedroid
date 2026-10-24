@@ -66,7 +66,8 @@ class GameWorldMobDamageControllerTask @Inject constructor(
             }
 
             if (mob.behavior.attacksWhenPossible && mob.hitbox.overlaps(mobController.player.hitbox)) {
-                mobController.player.damage(mob.params.damageToPlayer)
+                val player = mobController.player
+                player.takeHit(mob.params.damageToPlayer, player.position.x - mob.position.x)
             }
 
             val exposedToSun = mob.params.takesSunDamage &&

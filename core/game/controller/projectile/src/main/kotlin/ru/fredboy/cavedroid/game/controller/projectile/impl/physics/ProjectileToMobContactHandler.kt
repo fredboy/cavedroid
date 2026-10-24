@@ -22,7 +22,8 @@ class ProjectileToMobContactHandler @Inject constructor() : AbstractContactHandl
         get() = Mob::class
 
     override fun Projectile.handleBeginContact(contact: Contact, entityB: Mob) {
-        entityB.damage(damage)
+        if (isDead) return
+        entityB.takeHit(damage, velocity.x)
         hasHitMob = true
         onTargetHit?.invoke(this, entityB)
     }
