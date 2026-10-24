@@ -89,6 +89,8 @@ class GameWorld @Inject constructor(
 
     private var box2dAccumulator: Float = 0f
 
+    private val snowAccumulation by lazy { SnowAccumulation(this, itemsRepository) }
+
     private val onBlockPlacedListeners = LinkedList<WeakReference<OnBlockPlacedListener>>()
     private val onBlockDestroyedListeners = LinkedList<WeakReference<OnBlockDestroyedListener>>()
 
@@ -371,6 +373,8 @@ class GameWorld @Inject constructor(
             } else {
                 (weatherIntensity - intensityStep).coerceAtLeast(intensityTarget)
             }
+
+            snowAccumulation.update(delta)
 
             performanceMonitor.measure(PerformanceMetric.LIGHTING_UPDATE) { lightingSystem.update(delta) }
 

@@ -234,6 +234,14 @@
       "texture": "bedrock",
       "material": "stone"
     },
+    "ice": {
+      "hp": 150,
+      "transparent": true,
+      "texture": "ice",
+      "tool_type": "pickaxe",
+      "casts_shadows": false,
+      "material": "stone"
+    },
     "water": {
       "collision": false,
       "transparent": true,
@@ -4551,6 +4559,11 @@
       "name": "Obsidian",
       "type": "block",
       "texture": "obsidian"
+    },
+    "ice": {
+      "name": "Ice",
+      "type": "block",
+      "texture": "ice"
     },
     "snow_block": {
       "name": "Snow Block",

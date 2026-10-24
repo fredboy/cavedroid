@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.game.world.generator
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.model.Biome
+import ru.fredboy.cavedroid.game.world.WaterFreezing
 import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator.Companion.CHUNK_W
 import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator.Companion.OVERSCAN
 import kotlin.math.abs
@@ -28,6 +29,7 @@ import kotlin.random.nextInt
  *  4. surface features (per origin column; trees/plants spill ±1)
  *  5. support cleanup (per local column)
  *  6. mineshafts and monster rooms (independently seeded regions)
+ *  7. freeze exposed winter water surfaces
  *
  * Only cells landing inside the requested chunk are returned; the overscan exists purely so a
  * feature originating just outside the chunk still writes the part that reaches into it.
@@ -176,6 +178,11 @@ class ChunkGenerator(
 
         MineshaftGenerator(config, itemsRepository).generate(bandStart, foreBand, backBand)
         MonsterRoomGenerator(config, itemsRepository).generate(bandStart, foreBand, backBand)
+
+        val ice = block("ice")
+        for (j in 0 until bandW) {
+            WaterFreezing.freezeSurface(foreBand[j], bandBiomes[j], config.maxSurfaceHeight, ice)
+        }
 
         val offset = requestedStart - bandStart
         return GeneratedBand(
