@@ -212,6 +212,8 @@ class CaveDroidApplication(
     }
 
     override fun resume() {
+        // Another Android Activity may have registered its render thread while this one was paused.
+        GdxMainThread.init()
         performanceMonitor.setForeground(true)
         super.resume()
     }
