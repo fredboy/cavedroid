@@ -237,5 +237,6 @@ sealed interface Item {
         override val sprite: Sprite,
         val heal: Int,
         val saturation: Float,
+        val plantBlockKey: String? = null,
     ) : Item
 }

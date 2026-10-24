@@ -262,6 +262,22 @@
           "max": 2,
           "chance": 0.66
         }
+      },
+      {
+        "key": "carrot",
+        "amount": {
+          "type": "random_chance",
+          "chance": 0.01,
+          "amount": 1
+        }
+      },
+      {
+        "key": "potato",
+        "amount": {
+          "type": "random_chance",
+          "chance": 0.01,
+          "amount": 1
+        }
       }
     ],
     "sprites": [

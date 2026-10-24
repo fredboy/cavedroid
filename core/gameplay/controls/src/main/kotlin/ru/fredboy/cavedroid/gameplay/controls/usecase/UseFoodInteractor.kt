@@ -9,17 +9,25 @@ import javax.inject.Inject
 class UseFoodInteractor @Inject constructor(
     private val soundPlayer: SoundPlayer,
     private val foodSoundAssetsRepository: FoodSoundAssetsRepository,
+    private val plantCropInteractor: PlantCropInteractor,
 ) {
 
     /**
-     * @return true if the food was eaten
+     * @return true if the food was planted or eaten
      */
     fun execute(player: Player): Boolean {
+        val food = player.activeItem.item as? Item.Food ?: return false
+        val plantBlockKey = food.plantBlockKey
+        if (plantBlockKey != null &&
+            plantCropInteractor.execute(player, plantBlockKey, player.selectedX, player.selectedY)
+        ) {
+            return true
+        }
+
         if (player.foodLevel >= Player.MAX_FOOD_LEVEL) {
             return false
         }
 
-        val food = player.activeItem.item as? Item.Food ?: return false
         playFoodSound(player)
         player.eat(food.heal, food.saturation)
         player.decreaseCurrentItemCount()

@@ -22,6 +22,7 @@ data class ItemDto(
     @SerialName("smelt_product") val smeltProduct: String? = null,
     @SerialName("heal") val heal: Int? = null,
     @SerialName("saturation") val saturation: Float = 0f,
+    @SerialName("plant_block") val plantBlock: String? = null,
     @SerialName("mob_key") val mobKey: String? = null,
     @SerialName("state_sprites") val stateSprites: List<String>? = null,
     @SerialName("protection") val protection: Int? = null,
