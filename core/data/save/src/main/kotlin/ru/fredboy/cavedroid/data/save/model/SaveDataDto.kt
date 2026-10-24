@@ -340,5 +340,7 @@ sealed class SaveDataDto {
         val seed: Long? = null,
         // WorldType ordinal; null (absent) means a legacy finite/looping world.
         val worldType: Int? = null,
+        // Absent in older saves: keep their streamed terrain generation unchanged.
+        val villagesEnabled: Boolean = false,
     ) : SaveDataDto()
 }

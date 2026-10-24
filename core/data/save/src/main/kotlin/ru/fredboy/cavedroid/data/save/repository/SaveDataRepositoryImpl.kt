@@ -306,6 +306,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
                 currentStreakStartDayIndex = meta.currentStreakStartDayIndex ?: 0,
                 worldType = WorldType.INFINITE,
                 seed = meta.seed,
+                villagesEnabled = meta.villagesEnabled,
             )
         }
 
@@ -344,6 +345,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             currentStreakStartDayIndex = meta.currentStreakStartDayIndex ?: 0,
             worldType = WorldType.LOOPING,
             seed = meta.seed,
+            villagesEnabled = meta.villagesEnabled,
         )
     }
 
@@ -399,6 +401,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             createdTimestamp = createdTimestamp,
             seed = seed,
             worldType = if (gameWorld.isInfinite) WorldType.INFINITE.ordinal else WorldType.LOOPING.ordinal,
+            villagesEnabled = gameWorld.generatorConfig.villagesEnabled,
         )
 
         val bytes = ProtoBuf.encodeToByteArray(worldSaveDataDto)

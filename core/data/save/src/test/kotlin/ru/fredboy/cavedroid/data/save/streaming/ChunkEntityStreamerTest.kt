@@ -7,6 +7,8 @@ import io.mockk.verify
 import io.mockk.verifyOrder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -146,11 +148,12 @@ class ChunkEntityStreamerTest {
         verify(exactly = 1) { drops.flushPendingSpawns(any()) }
     }
 
-    @Test
-    fun `generated container initializes once and saved empty chest is not refilled`() {
-        val chestBlock = Block.Chest(mockk(relaxed = true), "mineshaft")
+    @ParameterizedTest
+    @CsvSource("mineshaft,1", "village,0")
+    fun `generated container initializes once and saved empty chest is not refilled`(lootTable: String, layer: Int) {
+        val chestBlock = Block.Chest(mockk(relaxed = true), lootTable)
         val chest = mockk<Container>()
-        val coordinate = ContainerCoordinates(33, 1, 1)
+        val coordinate = ContainerCoordinates(33, 1, layer)
         val live = mutableMapOf<ContainerCoordinates, Container>()
         every { containers.containerMap } returns live
         every { containers.getContainer(any(), any(), any()) } answers {
@@ -163,7 +166,11 @@ class ChunkEntityStreamerTest {
         val air = Block.None(mockk(relaxed = true))
         every { world.getForeMap(any(), any()) } returns air
         every { world.getBackMap(any(), any()) } returns air
-        every { world.getBackMap(33, 1) } returns chestBlock
+        if (layer == 0) {
+            every { world.getForeMap(33, 1) } returns chestBlock
+        } else {
+            every { world.getBackMap(33, 1) } returns chestBlock
+        }
         every { factory.createContainer(chestBlock, any()) } returns chest
         every { saves.loadChunkEntities(any(), any(), any(), any(), any()) } returns null
         load()

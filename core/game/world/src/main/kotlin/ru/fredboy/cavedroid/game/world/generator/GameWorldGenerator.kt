@@ -514,6 +514,14 @@ class GameWorldGenerator(
         postGenCleanUp()
         MineshaftGenerator(config, itemsRepository).generate(0, foreMap, backMap, loopingWidth = config.width)
         MonsterRoomGenerator(config, itemsRepository).generate(0, foreMap, backMap, loopingWidth = config.width)
+        VillageGenerator(config, itemsRepository).generate(
+            0,
+            foreMap,
+            backMap,
+            surfaceHeight = { heights[it] },
+            biomeAt = { biomes[it] },
+            loopingWidth = config.width,
+        )
 
         val ice = itemsRepository.getBlockByKey("ice")
         for (x in 0 until config.width) {

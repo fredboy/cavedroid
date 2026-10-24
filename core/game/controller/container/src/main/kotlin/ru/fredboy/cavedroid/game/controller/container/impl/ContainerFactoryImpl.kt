@@ -11,6 +11,7 @@ import ru.fredboy.cavedroid.entity.container.model.Furnace
 import ru.fredboy.cavedroid.entity.container.model.MineshaftLoot
 import ru.fredboy.cavedroid.entity.container.model.MonsterRoomLoot
 import ru.fredboy.cavedroid.entity.container.model.Spawner
+import ru.fredboy.cavedroid.entity.container.model.VillageLoot
 import javax.inject.Inject
 
 @GameScope
@@ -26,6 +27,7 @@ internal class ContainerFactoryImpl @Inject constructor(
                 val loot = when (type.lootTable) {
                     "mineshaft" -> MineshaftLoot.roll(seed)
                     "monster_room" -> MonsterRoomLoot.roll(seed)
+                    "village" -> VillageLoot.roll(seed)
                     else -> emptyList()
                 }
                 loot.forEach { (key, amount) ->

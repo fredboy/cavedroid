@@ -4306,6 +4306,32 @@
       "grow_action": "grow_stem",
       "update_action": "update_stem"
     },
+    "chest_village": {
+      "blast_resistance": 2.5,
+      "hp": 180,
+      "collision": false,
+      "background": true,
+      "transparent": false,
+      "casts_shadows": false,
+      "drop": "chest",
+      "texture": "chest",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "meta": "chest",
+      "drop_info": [
+        {
+          "key": "chest",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "wood",
+      "action_sound_key": "door/open",
+      "loot_table": "village",
+      "use_action": "chest"
+    },
     "tnt": {
       "hp": 0,
       "blast_resistance": 0,
