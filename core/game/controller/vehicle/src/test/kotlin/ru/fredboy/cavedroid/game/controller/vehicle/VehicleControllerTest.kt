@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
+import ru.fredboy.cavedroid.common.api.BoatHintEvents
 import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
@@ -30,7 +31,8 @@ class VehicleControllerTest {
     private val player = mockk<Player>(relaxed = true)
     private val mobs = mockk<MobController> { every { player } returns this@VehicleControllerTest.player }
     private val factory = mockk<BoatPhysicsFactory>()
-    private val controller = VehicleController(world, mobs, factory, mockk(), mockk(), mockk(), mockk())
+    private val boatHints = mockk<BoatHintEvents>(relaxed = true)
+    private val controller = VehicleController(world, mobs, factory, mockk(), mockk(), mockk(), mockk(), boatHints)
     private val state = VehicleState("stable-id", x = 5f, y = 10f)
     private val boat = Vehicle(state.id, state.type, mockk(relaxed = true))
 
@@ -79,11 +81,25 @@ class VehicleControllerTest {
         assertTrue(controller.place(8f, 10.75f, type.itemKey))
         assertEquals(type.itemKey, controller.vehicles.last().type)
         verify(exactly = 1) { player.decreaseCurrentItemCount(1) }
+        verify(exactly = 0) { boatHints.notifyPlacedAfloat(any()) }
+    }
+
+    @Test
+    fun `successful water placement starts boat hints`() {
+        prepareTarget(playerX = 5f, boatX = 0f, cursorX = 8f)
+        val water = mockk<Block.Water>(relaxed = true)
+        every { water.isWater() } returns true
+        every { water.getRectangle(any(), any()) } answers { Rectangle(firstArg<Int>().toFloat(), secondArg<Int>().toFloat(), 1f, 1f) }
+        every { world.getForeMap(any(), any()) } returns water
+        every { player.hitbox } returns Rectangle(4.7f, 9f, 0.6f, 1.8f)
+        assertTrue(controller.place(8f, 10.75f))
+        verify(exactly = 1) { boatHints.notifyPlacedAfloat(any()) }
     }
 
     @Test
     fun `unsupported boat placement does not consume an item`() {
         assertFalse(controller.place(5f, 10f, "unknown"))
+        verify(exactly = 0) { boatHints.notifyPlacedAfloat(any()) }
         verify(exactly = 0) { factory.create(any()) }
         verify(exactly = 0) { player.decreaseCurrentItemCount(any()) }
     }
@@ -108,6 +124,7 @@ class VehicleControllerTest {
         prepareTarget(playerX = 1f, boatX = 1022f, cursorX = -2f)
         assertTrue(controller.boardTarget())
         verify { player.mountedVehicleId = boat.id }
+        verify { boatHints.notifyMounted(boat.id) }
         verify { world.world.rayCast(any(), any<Vector2>(), eq(Vector2(-2f, 10f))) }
     }
 
@@ -144,6 +161,15 @@ class VehicleControllerTest {
         every { world.isInfinite } returns true
         assertFalse(controller.boardTarget())
         assertFalse(controller.attackTarget())
+    }
+
+    @Test
+    fun `failed dismount does not complete the boat lesson`() {
+        prepareTarget(playerX = 5f, boatX = 5f, cursorX = 5f)
+        every { player.mountedVehicleId } returns boat.id
+        boat.occupied = true
+        assertFalse(controller.dismount())
+        verify(exactly = 0) { boatHints.notifyDetached(any()) }
     }
 
     @Test

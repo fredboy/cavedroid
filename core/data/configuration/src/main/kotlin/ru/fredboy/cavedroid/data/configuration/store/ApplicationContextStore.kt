@@ -91,6 +91,13 @@ class ApplicationContextStore @Inject constructor(
             preferencesStore.setPreference(PreferenceKeys.INVENTORY_HINT_SHOWN, value.toString())
         }
 
+    var isBoatHintShown: Boolean
+        get() = synchronized(lock) { applicationContext.isBoatHintShown }
+        set(value) = synchronized(lock) {
+            applicationContext.isBoatHintShown = value
+            preferencesStore.setPreference(PreferenceKeys.BOAT_HINT_SHOWN, value.toString())
+        }
+
     var personalizedAdsConsent: Boolean?
         get() = synchronized(lock) { applicationContext.personalizedAdsConsent }
         set(value) = synchronized(lock) {

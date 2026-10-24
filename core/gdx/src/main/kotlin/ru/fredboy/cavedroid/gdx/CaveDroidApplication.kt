@@ -135,6 +135,8 @@ class CaveDroidApplication(
                             ?.toBooleanStrictOrNull() ?: false,
                         isInventoryHintShown = preferencesStore.getPreference(PreferenceKeys.INVENTORY_HINT_SHOWN)
                             ?.toBooleanStrictOrNull() ?: false,
+                        isBoatHintShown = preferencesStore.getPreference(PreferenceKeys.BOAT_HINT_SHOWN)
+                            ?.toBooleanStrictOrNull() ?: false,
                         personalizedAdsConsent = personalizedAdsConsent,
                         lightingBackend = LightingBackend.fromName(
                             preferencesStore.getPreference(PreferenceKeys.LIGHTING_BACKEND),

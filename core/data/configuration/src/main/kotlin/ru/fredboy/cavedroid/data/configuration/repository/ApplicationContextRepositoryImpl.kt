@@ -113,6 +113,12 @@ class ApplicationContextRepositoryImpl @Inject constructor(
         applicationContextStore.isOnboardingShown = shown
     }
 
+    override fun isBoatHintShown(): Boolean = applicationContextStore.isBoatHintShown
+
+    override fun setBoatHintShown(shown: Boolean) {
+        applicationContextStore.isBoatHintShown = shown
+    }
+
     override fun isInventoryHintShown(): Boolean = applicationContextStore.isInventoryHintShown
 
     override fun setInventoryHintShown(shown: Boolean) {

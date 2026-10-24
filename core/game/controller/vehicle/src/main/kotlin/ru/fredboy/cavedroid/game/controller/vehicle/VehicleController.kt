@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.Filter
 import com.badlogic.gdx.physics.box2d.Fixture
+import ru.fredboy.cavedroid.common.api.BoatHintEvents
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
@@ -35,6 +36,7 @@ class VehicleController @Inject constructor(
     private val items: GetItemByKeyUseCase,
     private val sounds: StepsSoundAssetsRepository,
     private val soundPlayer: SoundPlayer,
+    private val boatHints: BoatHintEvents,
 ) : FixedStepListener {
     private val live = linkedMapOf<String, Vehicle>()
     val vehicles: Collection<Vehicle> get() = live.values
@@ -73,15 +75,20 @@ class VehicleController @Inject constructor(
     fun evict(boat: Vehicle) {
         if (boat.occupied) return
         live.remove(boat.id)
+        boatHints.notifyRemoved(boat.id)
         world.world.destroyBody(boat.body)
     }
 
     fun place(x: Float, y: Float, type: String = BoatType.OAK.itemKey): Boolean {
         if (BoatType.fromItemKey(type) == null) return false
         val bounds = Rectangle(x - BoatTuning.WIDTH / 2f, y - BoatTuning.HEIGHT / 2f, BoatTuning.WIDTH, BoatTuning.HEIGHT)
-        if (!reachable(x, y) || !VehicleSpace.canPlace(clear(bounds), supported(bounds), waterArea(bounds))) return false
-        restore(listOf(VehicleState(UUID.randomUUID().toString(), type = type, x = x, y = y)))
+        if (!reachable(x, y)) return false
+        val water = waterArea(bounds)
+        if (!VehicleSpace.canPlace(clear(bounds), supported(bounds), water)) return false
+        val id = UUID.randomUUID().toString()
+        restore(listOf(VehicleState(id, type = type, x = x, y = y)))
         player.decreaseCurrentItemCount()
+        if (water > 0f) boatHints.notifyPlacedAfloat(id)
         return true
     }
 
@@ -153,6 +160,7 @@ class VehicleController @Inject constructor(
         }
         player.body.type = BodyDef.BodyType.KinematicBody
         syncPassenger(boat)
+        boatHints.notifyMounted(boat.id)
         onRidingChanged?.invoke()
         return true
     }
@@ -170,7 +178,7 @@ class VehicleController @Inject constructor(
             water = { waterArea(it) > 0f },
             allowAbove = supported(boat.hitbox) || boat.submerged > 0f,
         ) ?: return false
-        detach()
+        detach(dismounted = true)
         player.body.setTransform(exit, 0f)
         return true
     }
@@ -183,7 +191,7 @@ class VehicleController @Inject constructor(
         mounted?.rowing = 0f
     }
 
-    private fun detach() {
+    private fun detach(dismounted: Boolean = false) {
         if (world.world.isLocked) return
         val boat = mounted
         player.mountedVehicleId = null
@@ -196,6 +204,7 @@ class VehicleController @Inject constructor(
         }
         riderFilters.clear()
         if (boat != null) factory.setOccupied(boat, player.width, player.height, false)
+        boatHints.notifyDetached(dismounted)
         resetMovement()
         onRidingChanged?.invoke()
     }

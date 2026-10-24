@@ -18,6 +18,7 @@ class ApplicationContext(
     internal var soundEnabled: Boolean,
     internal var isOnboardingShown: Boolean,
     internal var isInventoryHintShown: Boolean,
+    internal var isBoatHintShown: Boolean,
     internal var personalizedAdsConsent: Boolean?,
     internal var lightingBackend: LightingBackend,
     internal val isYandexGamesBuild: Boolean,

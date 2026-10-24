@@ -16,6 +16,7 @@ class OnboardingController @Inject constructor(
     private val mobController: MobController,
     private val gameWindowsManager: GameWindowsManager,
     private val fontTextureAssetsRepository: FontTextureAssetsRepository,
+    private val boatHints: BoatHintController,
 ) : OnboardingEvents {
 
     private val isTouch: Boolean = applicationContextRepository.isTouch()
@@ -40,7 +41,11 @@ class OnboardingController @Inject constructor(
     }
         private set
 
+    val visibleState: OnboardingState? get() = boatHints.state ?: state
+
     fun update(delta: Float) {
+        boatHints.update(delta)
+        if (boatHints.state != null) return
         val current = state ?: return
         if (current.awaitingInput) {
             handleAwaitingInput(current)
@@ -110,6 +115,7 @@ class OnboardingController @Inject constructor(
         is OnboardingStep.Break -> mobController.player.isHittingWithDamage
         is OnboardingStep.Place -> placeTriggered
         is OnboardingStep.OpenInventory -> gameWindowsManager.currentWindowType in inventoryWindowTypes
+        OnboardingStep.MountBoat, OnboardingStep.DismountBoat -> false
     }
 
     companion object {
