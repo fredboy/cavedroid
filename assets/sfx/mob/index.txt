@@ -5,3 +5,6 @@ sheep
 zombie
 chicken
 skeleton
+spider
+creeper
+villager

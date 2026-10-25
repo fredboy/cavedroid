@@ -18,17 +18,12 @@ class SheepMob(
     var woolToColor = "wool_colored_white" to Color.WHITE
 
     override fun getDropItems(itemByKey: GetItemByKeyUseCase): List<InventoryItem> {
-        return if (hasFur) {
-            super.getDropItems(itemByKey)
-                .map { item ->
-                    if (item.item.params.key.contains("wool")) {
-                        itemByKey[woolToColor.first].toInventoryItem(item.amount)
-                    } else {
-                        item
-                    }
-                }
-        } else {
-            emptyList()
+        return super.getDropItems(itemByKey).mapNotNull { item ->
+            if (item.item.params.key.contains("wool")) {
+                if (hasFur) itemByKey[woolToColor.first].toInventoryItem(item.amount) else null
+            } else {
+                item
+            }
         }
     }
 

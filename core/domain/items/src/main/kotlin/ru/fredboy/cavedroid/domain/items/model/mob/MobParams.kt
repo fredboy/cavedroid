@@ -17,4 +17,5 @@ data class MobParams(
     val takesSunDamage: Boolean,
     val maxBreath: Int,
     val maxSpawnLight: Float,
+    val spawnWeight: Float = 1f,
 )

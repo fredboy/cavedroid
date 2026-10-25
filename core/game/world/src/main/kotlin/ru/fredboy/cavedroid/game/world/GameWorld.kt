@@ -22,6 +22,9 @@ import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.domain.world.model.Weather
 import ru.fredboy.cavedroid.game.world.abstraction.ChunkBodiesReadyListener
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
+import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
+import ru.fredboy.cavedroid.game.world.generator.GameWorldGenerator
+import ru.fredboy.cavedroid.game.world.generator.VillageGenerator
 import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 import ru.fredboy.cavedroid.game.world.store.ChunkListener
@@ -87,7 +90,21 @@ class GameWorld @Inject constructor(
             field = value
         }
 
+    private val fixedStepListeners = mutableListOf<ru.fredboy.cavedroid.game.world.abstraction.FixedStepListener>()
+
+    fun retainColumns(columns: Set<Int>) = blockStore.retainColumns(columns)
+
+    fun addFixedStepListener(listener: ru.fredboy.cavedroid.game.world.abstraction.FixedStepListener) {
+        fixedStepListeners.add(listener)
+    }
+
+    fun removeFixedStepListener(listener: ru.fredboy.cavedroid.game.world.abstraction.FixedStepListener) {
+        fixedStepListeners.remove(listener)
+    }
+
     private var box2dAccumulator: Float = 0f
+
+    private val snowAccumulation by lazy { SnowAccumulation(this, itemsRepository) }
 
     private val onBlockPlacedListeners = LinkedList<WeakReference<OnBlockPlacedListener>>()
     private val onBlockDestroyedListeners = LinkedList<WeakReference<OnBlockDestroyedListener>>()
@@ -126,6 +143,19 @@ class GameWorld @Inject constructor(
     fun forEachLoadedChunk(action: (chunkX: Int) -> Unit) = blockStore.forEachLoadedChunk(action)
 
     fun isChunkLoadedAt(x: Int): Boolean = blockStore.isChunkLoaded(blockStore.transformX(x))
+
+    private val villagePlanner by lazy { VillageGenerator(generatorConfig, itemsRepository) }
+    private val villageTerrain by lazy { ChunkGenerator(generatorConfig, itemsRepository) }
+    private val finiteVillageBeds by lazy { GameWorldGenerator(generatorConfig, itemsRepository).villageBeds() }
+
+    fun villageBeds(startX: Int, width: Int): List<Pair<Int, Int>> {
+        if (!generatorConfig.villagesEnabled) return emptyList()
+        return if (isInfinite) {
+            villagePlanner.beds(startX, width, villageTerrain::surfaceHeight, villageTerrain::biomeAt)
+        } else {
+            finiteVillageBeds.filter { it.first in startX until startX + width }
+        }
+    }
 
     /** Persists resident chunks with unsaved edits (infinite worlds only). */
     fun flushDirtyChunks() = blockStore.flushDirtyChunks()
@@ -342,6 +372,7 @@ class GameWorld @Inject constructor(
 
     fun update(delta: Float) {
         return performanceMonitor.measure(PerformanceMetric.WORLD_UPDATE) {
+            fixedStepListeners.forEach { it.beforeStreaming() }
             // Stream chunks in/out around the view before physics steps and rendering consume them.
             performanceMonitor.measure(PerformanceMetric.STREAMING) { blockStore.update() }
             performanceMonitor.measure(PerformanceMetric.COLLISION_PREPARE) { gameWorldSolidBlockBodiesManager.prepareForStep() }
@@ -372,13 +403,17 @@ class GameWorld @Inject constructor(
                 (weatherIntensity - intensityStep).coerceAtLeast(intensityTarget)
             }
 
+            snowAccumulation.update(delta)
+
             performanceMonitor.measure(PerformanceMetric.LIGHTING_UPDATE) { lightingSystem.update(delta) }
 
             var physicsSteps = 0L
             box2dAccumulator += delta
             while (box2dAccumulator >= PHYSICS_STEP_DELTA) {
                 performanceMonitor.measure(PerformanceMetric.PHYSICS) {
+                    fixedStepListeners.forEach { it.beforeStep(PHYSICS_STEP_DELTA) }
                     gameWorldSolidBlockBodiesManager.step(PHYSICS_STEP_DELTA, 6, 2)
+                    fixedStepListeners.forEach { it.afterStep(PHYSICS_STEP_DELTA) }
                 }
                 physicsSteps++
                 box2dAccumulator -= PHYSICS_STEP_DELTA
@@ -388,6 +423,8 @@ class GameWorld @Inject constructor(
     }
 
     override fun dispose() {
+        fixedStepListeners.forEach { it.dispose() }
+        fixedStepListeners.clear()
         lightingSystem.dispose()
         physicsController.dispose()
         gameWorldSolidBlockBodiesManager.dispose()

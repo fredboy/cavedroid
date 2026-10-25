@@ -11,6 +11,7 @@ import ru.fredboy.cavedroid.domain.items.model.mob.MobBehaviorType
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
 import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.world.model.Biome
+import ru.fredboy.cavedroid.entity.mob.MobQueue
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobFactory
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
@@ -24,6 +25,7 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobParamsRepository: MobParamsRepository,
     private val mobFactory: MobFactory,
+    private val mobQueue: MobQueue,
     performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
 ) : BaseGameWorldControllerTask(performanceMonitor, PerformanceMetric.TASK_SPAWN),
     ChunkBodiesReadyListener {
@@ -68,17 +70,13 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
             .filter {
                 when (it.behaviorType) {
                     MobBehaviorType.PASSIVE, MobBehaviorType.SHEEP -> gameWorld.isDayTime()
-                    MobBehaviorType.AGGRESSIVE, MobBehaviorType.ARCHER, MobBehaviorType.SPIDER -> !gameWorld.isDayTime()
+                    MobBehaviorType.AGGRESSIVE, MobBehaviorType.ARCHER, MobBehaviorType.SPIDER, MobBehaviorType.CREEPER -> !gameWorld.isDayTime()
                     else -> false
                 }
             }
 
         val caveCandidates = mobParamsRepository.getAllParams()
-            .filter {
-                it.behaviorType == MobBehaviorType.AGGRESSIVE ||
-                    it.behaviorType == MobBehaviorType.ARCHER ||
-                    it.behaviorType == MobBehaviorType.SPIDER
-            }
+            .filter { MobSpawnRules.isHostile(it.behaviorType) }
 
         val spanMobs = mobController.mobs.count { it.mapX in originX..(originX + span) }
         val canSpawnSurface = (!gameWorld.isDayTime() || spanMobs < mobsPerSpan) && surfaceCandidates.isNotEmpty()
@@ -163,14 +161,35 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
     }
 
     private fun trySpawnAbove(spawnX: Int, floorY: Int, candidates: List<MobParams>): Boolean {
-        val params = candidates.random()
+        val params = MobSpawnRules.choose(candidates, MathUtils.random()) ?: return false
         val spawnPosX = spawnX.toFloat()
         val spawnPosY = floorY.toFloat() - params.height / 2f
+        if (params.behaviorType == MobBehaviorType.CREEPER && !canSpawnCreeper(spawnPosX, spawnPosY)) return false
         if (!canFitAt(spawnPosX, spawnPosY, params)) return false
         if (gameWorld.getLightAt(spawnX, floorY) > params.maxSpawnLight) return false
 
         mobFactory.create(spawnPosX, spawnPosY, params.key)
         return true
+    }
+
+    private fun canSpawnCreeper(x: Float, y: Float): Boolean {
+        fun distanceSquared(otherX: Float, otherY: Float) = MobSpawnRules.distanceSquared(
+            x,
+            y,
+            otherX,
+            otherY,
+            gameWorld.width,
+            gameWorld.isInfinite,
+        )
+        val radiusSquared = MobSpawnRules.CREEPER_LOCAL_RADIUS * MobSpawnRules.CREEPER_LOCAL_RADIUS
+        val resident = mobController.mobs.count {
+            !it.isDead && it.params.behaviorType == MobBehaviorType.CREEPER && distanceSquared(it.position.x, it.position.y) <= radiusSquared
+        }
+        val pending = mobQueue.queue.count {
+            it.mob.params.behaviorType == MobBehaviorType.CREEPER && distanceSquared(it.x, it.y) <= radiusSquared
+        }
+        val player = mobController.player
+        return MobSpawnRules.allowsCreeper(distanceSquared(player.position.x, player.position.y), resident + pending)
     }
 
     private fun canFitAt(x: Float, y: Float, params: MobParams): Boolean {

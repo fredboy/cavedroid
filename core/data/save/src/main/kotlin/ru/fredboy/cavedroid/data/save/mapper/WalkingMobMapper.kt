@@ -7,8 +7,10 @@ import ru.fredboy.cavedroid.domain.items.repository.MobParamsRepository
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.entity.mob.abstraction.MobPhysicsFactory
 import ru.fredboy.cavedroid.entity.mob.model.ArcherMob
+import ru.fredboy.cavedroid.entity.mob.model.CreeperMob
 import ru.fredboy.cavedroid.entity.mob.model.SheepMob
 import ru.fredboy.cavedroid.entity.mob.model.SpiderMob
+import ru.fredboy.cavedroid.entity.mob.model.VillagerMob
 import ru.fredboy.cavedroid.entity.mob.model.WalkingMob
 import javax.inject.Inject
 
@@ -41,6 +43,12 @@ class WalkingMobMapper @Inject constructor(
         woolColor = (mob as? SheepMob)?.woolToColor?.first,
         fireTicksRemaining = mob.fireTicksRemaining,
         spiderAngerRemainingSec = (mob as? SpiderMob)?.angerRemainingSec ?: 0f,
+        creeperFuseElapsedSec = (mob as? CreeperMob)?.fuse?.elapsedSec ?: 0f,
+        creeperForcedIgnition = (mob as? CreeperMob)?.fuse?.forced ?: false,
+        creeperDaylightSec = (mob as? CreeperMob)?.daylightSec ?: 0f,
+        villagerHome = (mob as? VillagerMob)?.home?.let { SaveDataDto.BlockPositionSaveDataDto(it.x, it.y) },
+        villagerSleeping = (mob as? VillagerMob)?.isSleeping ?: false,
+        villagerOpenedDoors = (mob as? VillagerMob)?.openedDoors.orEmpty().map { SaveDataDto.BlockPositionSaveDataDto(it.x, it.y) },
     )
 
     fun mapPassiveMob(
@@ -56,6 +64,18 @@ class WalkingMobMapper @Inject constructor(
                 hasFur = saveDataDto.hasFur
                 woolToColor = SheepMob.FUR_COLORS_MAP.values.firstOrNull { (wool, _) -> wool == saveDataDto.woolColor }
                     ?: SheepMob.FUR_COLORS_MAP.values.first()
+            }
+
+            MobBehaviorType.CREEPER -> CreeperMob(params).apply {
+                fuse.elapsedSec = saveDataDto.creeperFuseElapsedSec
+                fuse.forced = saveDataDto.creeperForcedIgnition
+                daylightSec = saveDataDto.creeperDaylightSec
+            }
+
+            MobBehaviorType.VILLAGER -> VillagerMob(params).apply {
+                home = saveDataDto.villagerHome?.let { VillagerMob.BlockPosition(it.x, it.y) }
+                isSleeping = saveDataDto.villagerSleeping
+                openedDoors.addAll(saveDataDto.villagerOpenedDoors.map { VillagerMob.BlockPosition(it.x, it.y) })
             }
 
             MobBehaviorType.ARCHER -> ArcherMob(getItemByKeyUseCase, params)

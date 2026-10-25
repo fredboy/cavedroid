@@ -32,6 +32,8 @@ data class CommonBlockParams(
     val requiresBackground: Boolean,
     val updateActionKey: String? = null,
     val useActionKey: String? = null,
+    val growActionKey: String? = null,
+    val blastResistance: Float = 0f,
 ) {
     val spriteMarginsMeters by lazy { spriteMargins.toMeters() }
 

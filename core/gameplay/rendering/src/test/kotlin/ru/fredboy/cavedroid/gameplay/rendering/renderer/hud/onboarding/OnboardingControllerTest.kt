@@ -24,6 +24,9 @@ class OnboardingControllerTest {
     private val gameWindowsManager = mockk<GameWindowsManager>(relaxed = true)
     private val fontAssets = mockk<FontTextureAssetsRepository>(relaxed = true)
     private val player = mockk<Player>(relaxed = true)
+    private val boatHints = mockk<BoatHintController>(relaxed = true) {
+        every { state } returns null
+    }
 
     private val controlVector = Vector2(0f, 0f)
     private val velocityVector = Vector2(0f, 0f)
@@ -55,6 +58,7 @@ class OnboardingControllerTest {
         mobController = mobController,
         gameWindowsManager = gameWindowsManager,
         fontTextureAssetsRepository = fontAssets,
+        boatHints = boatHints,
     )
 
     private fun OnboardingController.advancePast(step: OnboardingStep) {
@@ -99,7 +103,38 @@ class OnboardingControllerTest {
                 update(2f)
                 every { gameWindowsManager.currentWindowType } returns GameWindowType.NONE
             }
+
+            OnboardingStep.MountBoat, OnboardingStep.DismountBoat -> error("Boat hints use their own events")
         }
+    }
+
+    @Test
+    fun `boat hints appear after basic onboarding has been completed`() {
+        setupContext(isTouch = true, isOnboardingShown = true)
+        val hint = OnboardingState(OnboardingStep.MountBoat, true, 0f, false)
+        every { boatHints.state } returns hint
+        val controller = newController()
+        assertNull(controller.state)
+        assertSame(hint, controller.visibleState)
+        controller.update(1f)
+        verify { boatHints.update(1f) }
+    }
+
+    @Test
+    fun `boat hints pause and then resume the basic onboarding step`() {
+        setupContext(isTouch = true)
+        setupPlayerState()
+        val controller = newController()
+        every { boatHints.state } returns OnboardingState(OnboardingStep.MountBoat, true, 0f, false)
+        controlVector.x = 1f
+        controller.update(2f)
+        assertSame(OnboardingStep.MountBoat, controller.visibleState?.step)
+        assertEquals(true, controller.state?.awaitingInput)
+
+        every { boatHints.state } returns null
+        controller.update(0.016f)
+        assertSame(OnboardingStep.Move, controller.visibleState?.step)
+        assertEquals(false, controller.state?.awaitingInput)
     }
 
     @Test

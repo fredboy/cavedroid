@@ -16,6 +16,7 @@ import ru.fredboy.cavedroid.common.utils.floor
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.drop.DropAmount
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
+import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.model.mob.MobParams
 import ru.fredboy.cavedroid.domain.items.usecase.GetItemByKeyUseCase
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
@@ -26,6 +27,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
 import kotlin.math.abs
 import kotlin.math.min
+import kotlin.math.sign
 
 abstract class Mob(
     var direction: Direction,
@@ -36,6 +38,8 @@ abstract class Mob(
     private var resetTakeDamageTask: ResetTakeDamageTask? = null
 
     private var _body: Body? = null
+
+    private var knockbackRemainingSec = 0f
 
     val width get() = params.width
 
@@ -71,7 +75,7 @@ abstract class Mob(
     var isDead = false
 
     val canJump: Boolean
-        get() = footContactCounter > 0 && TimeUtils.timeSinceMillis(lastJumpMs) >= JUMP_COOLDOWN_MS
+        get() = knockbackRemainingSec <= 0f && footContactCounter > 0 && TimeUtils.timeSinceMillis(lastJumpMs) >= JUMP_COOLDOWN_MS
 
     var isFlyMode = false
         set(value) {
@@ -139,6 +143,8 @@ abstract class Mob(
 
     val isOnFire: Boolean
         get() = fireTicksRemaining > 0f
+
+    private var wasOnFireAtDeath: Boolean = false
 
     fun ignite(durationSec: Float) {
         if (isDead || durationSec <= 0f || this is Player && gameMode == GameMode.CREATIVE) return
@@ -245,6 +251,10 @@ abstract class Mob(
     fun looksRight() = direction == Direction.RIGHT
 
     fun kill() {
+        if (!isDead) {
+            wasOnFireAtDeath = isOnFire
+        }
+        if (this is Player) onDetachVehicle?.invoke()
         controlVector.setZero()
         isDead = true
         makingSound = SoundType.Death
@@ -283,6 +293,17 @@ abstract class Mob(
         takingDamage = true
 
         checkHealth()
+    }
+
+    /** A combat hit pushes away from its source; environmental damage has no directional impulse. */
+    fun takeHit(damage: Int, horizontalDirection: Float) {
+        if (isDead || damage <= 0) return
+        val previousHealth = health
+        damage(damage)
+        if (isDead || health >= previousHealth) return
+
+        knockbackRemainingSec = KNOCKBACK_DURATION_SEC
+        velocity.set(sign(horizontalDirection) * KNOCKBACK_SPEED, min(velocity.y, KNOCKBACK_LIFT))
     }
 
     fun heal(heal: Int) {
@@ -377,8 +398,13 @@ abstract class Mob(
 
         behavior.update(this, mobWorldAdapter, playerAdapter, projectileAdapter, delta)
 
+        if (this is Player && isMounted) return
+
         applyMediumResistanceToBody(mobWorldAdapter)
-        if (!controlVector.isZero) {
+        if (knockbackRemainingSec > 0f) {
+            // Keep the physics velocity while recoiling, even if AI or player input keeps moving.
+            knockbackRemainingSec = (knockbackRemainingSec - delta).coerceAtLeast(0f)
+        } else if (!controlVector.isZero) {
             velocity.x = controlVector.x * effectiveSpeedMultiplier
             if (isFlyMode) {
                 velocity.y = controlVector.y * effectiveSpeedMultiplier
@@ -427,27 +453,28 @@ abstract class Mob(
         return buildList {
             for (info in params.dropInfo) {
                 when (info.amount) {
-                    is DropAmount.ExactAmount -> {
-                        add(info.toInventoryItem(itemByKey))
-                    }
+                    is DropAmount.ExactAmount -> Unit
 
                     is DropAmount.RandomChance -> {
                         val randomChanceAmount = info.amount as DropAmount.RandomChance
-                        if (MathUtils.randomBoolean(randomChanceAmount.chance)) {
-                            add(info.toInventoryItem(itemByKey))
-                        } else {
+                        if (!MathUtils.randomBoolean(randomChanceAmount.chance)) {
                             continue
                         }
                     }
 
                     is DropAmount.RandomRange -> {
                         val randomRangeAmount = info.amount as DropAmount.RandomRange
-                        if (MathUtils.randomBoolean(randomRangeAmount.chance)) {
-                            add(info.toInventoryItem(itemByKey))
-                        } else {
+                        if (!MathUtils.randomBoolean(randomRangeAmount.chance)) {
                             continue
                         }
                     }
+                }
+                val drop = info.toInventoryItem(itemByKey)
+                val smeltProductKey = drop.item.params.smeltProductKey
+                if (wasOnFireAtDeath && drop.item is Item.Food && smeltProductKey != null) {
+                    add(itemByKey[smeltProductKey].toInventoryItem(drop.amount))
+                } else {
+                    add(drop)
                 }
             }
         }
@@ -515,6 +542,9 @@ abstract class Mob(
     }
 
     companion object {
+        private const val KNOCKBACK_DURATION_SEC = 0.2f
+        private const val KNOCKBACK_SPEED = 4.5f
+        private const val KNOCKBACK_LIFT = -4f
         private const val TAG = "Mob"
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 

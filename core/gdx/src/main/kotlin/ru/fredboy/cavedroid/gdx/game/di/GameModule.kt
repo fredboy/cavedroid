@@ -303,7 +303,7 @@ object GameModule {
             width = mapData?.foreMap?.size ?: gameContextRepository.getRequestedWorldWidth()
                 ?: WorldGeneratorConfig.DEFAULT_WIDTH,
             seed = seed ?: TimeUtils.millis(),
-        )
+        ).copy(villagesEnabled = if (gameContextRepository.isLoadGame()) mapData?.villagesEnabled ?: false else true)
 
         val gameDataFolder = applicationContextRepository.getGameDirectory()
 

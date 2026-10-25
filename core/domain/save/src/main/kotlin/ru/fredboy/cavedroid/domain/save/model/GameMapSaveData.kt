@@ -19,6 +19,7 @@ data class GameMapSaveData(
     val currentStreakStartDayIndex: Int = 0,
     val worldType: WorldType = WorldType.LOOPING,
     val seed: Long? = null,
+    val villagesEnabled: Boolean = false,
 ) {
 
     override fun equals(other: Any?): Boolean {

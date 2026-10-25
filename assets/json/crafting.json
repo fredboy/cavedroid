@@ -1,4 +1,11 @@
 {
+  "tnt": {
+    "recipes": [{
+      "input": ["gunpowder", "sand", "gunpowder", "sand", "gunpowder", "sand", "gunpowder", "sand", "gunpowder"],
+      "shapeless": false,
+      "count": 1
+    }]
+  },
   "planks_oak": {
     "recipes": [
       {
@@ -889,6 +896,21 @@
         ],
         "shapeless": true,
         "count": 9
+      },
+      {
+        "input": [
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget"
+        ],
+        "shapeless": false,
+        "count": 1
       }
     ]
   },
@@ -3740,5 +3762,216 @@
         "count": 1
       }
     ]
+  },
+  "paper": {
+    "recipes": [
+      {
+        "input": [
+          "sugar_cane",
+          "sugar_cane",
+          "sugar_cane",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 3
+      }
+    ]
+  },
+  "book": {
+    "recipes": [
+      {
+        "input": [
+          "paper",
+          "paper",
+          null,
+          "paper",
+          "leather",
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "bookshelf": {
+    "recipes": [
+      {
+        "input": [
+          "planks.*",
+          "planks.*",
+          "planks.*",
+          "book",
+          "book",
+          "book",
+          "planks.*",
+          "planks.*",
+          "planks.*"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "pumpkin_seeds": {
+    "recipes": [
+      {
+        "input": [
+          "pumpkin",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 4
+      }
+    ]
+  },
+  "melon_seeds": {
+    "recipes": [
+      {
+        "input": [
+          "melon_slice",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "melon": {
+    "recipes": [
+      {
+        "input": [
+          "melon_slice",
+          "melon_slice",
+          "melon_slice",
+          "melon_slice",
+          "melon_slice",
+          "melon_slice",
+          "melon_slice",
+          "melon_slice",
+          "melon_slice"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "jack_o_lantern": {
+    "recipes": [
+      {
+        "input": [
+          "carved_pumpkin",
+          null,
+          null,
+          "torch",
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "pumpkin_pie": {
+    "recipes": [
+      {
+        "input": [
+          "pumpkin",
+          "sugar",
+          null,
+          "egg",
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 1
+      }
+    ]
+  },
+  "gold_nugget": {
+    "recipes": [
+      {
+        "input": [
+          "gold_ingot",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 9
+      }
+    ]
+  },
+  "glistering_melon_slice": {
+    "recipes": [
+      {
+        "input": [
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "melon_slice",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget",
+          "gold_nugget"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "oak_boat": {
+    "recipes": [{
+      "input": ["planks_oak", null, "planks_oak", "planks_oak", "planks_oak", "planks_oak", null, null, null],
+      "shapeless": false,
+      "count": 1
+    }]
+  },
+  "birch_boat": {
+    "recipes": [{
+      "input": ["planks_birch", null, "planks_birch", "planks_birch", "planks_birch", "planks_birch", null, null, null],
+      "shapeless": false,
+      "count": 1
+    }]
+  },
+  "spruce_boat": {
+    "recipes": [{
+      "input": ["planks_spruce", null, "planks_spruce", "planks_spruce", "planks_spruce", "planks_spruce", null, null, null],
+      "shapeless": false,
+      "count": 1
+    }]
   }
 }

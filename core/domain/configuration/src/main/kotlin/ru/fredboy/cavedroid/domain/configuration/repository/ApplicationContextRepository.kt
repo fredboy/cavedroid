@@ -57,6 +57,10 @@ interface ApplicationContextRepository {
 
     fun setInventoryHintShown(shown: Boolean)
 
+    fun isBoatHintShown(): Boolean
+
+    fun setBoatHintShown(shown: Boolean)
+
     fun getPersonalizedAdsConsent(): Boolean?
 
     fun setPersonalizedAdsConsent(consent: Boolean?)

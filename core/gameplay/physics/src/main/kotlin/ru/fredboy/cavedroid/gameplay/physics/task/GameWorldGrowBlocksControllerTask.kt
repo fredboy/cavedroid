@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.gameplay.physics.task
 
-import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
 import ru.fredboy.cavedroid.common.performance.PerformanceMetric
@@ -41,8 +40,8 @@ class GameWorldGrowBlocksControllerTask(
     private val onBlockPlacedListener = OnBlockPlacedListener { block, x, y, layer ->
         if (layer != Layer.FOREGROUND) return@OnBlockPlacedListener
         val key = block.params.key
-        if (key !in growBlockActions) return@OnBlockPlacedListener
-        schedule(x, y, key, randomDelayTicks())
+        val action = growBlockActions[block.params.growActionKey ?: key] ?: return@OnBlockPlacedListener
+        schedule(x, y, key, action.nextDelayTicks())
     }
 
     private val onBlockDestroyedListener = OnBlockDestroyedListener { _, x, y, layer, _, _ ->
@@ -90,7 +89,7 @@ class GameWorldGrowBlocksControllerTask(
         }
         synchronized(queueLock) {
             entries.forEach { restored ->
-                if (restored.key !in growBlockActions) return@forEach
+                if (actionFor(restored.x, restored.y, restored.key) == null) return@forEach
                 val packed = pack(restored.x, restored.y)
                 pending.remove(packed)?.let(queue::remove)
                 val due = currentTick + restored.remainingTicks.coerceAtLeast(1L)
@@ -152,6 +151,12 @@ class GameWorldGrowBlocksControllerTask(
         }
     }
 
+    private fun actionFor(x: Int, y: Int, key: String): IGrowBlockAction? {
+        val block = gameWorld.getForeMap(x, y)
+        if (block.params.key != key) return null
+        return growBlockActions[block.params.growActionKey ?: key]
+    }
+
     override fun exec() {
         synchronized(queueLock) { currentTick++ }
 
@@ -164,7 +169,7 @@ class GameWorldGrowBlocksControllerTask(
                 head
             } ?: break
 
-            val action = growBlockActions[due.key] ?: continue
+            val action = actionFor(due.x, due.y, due.key) ?: continue
             val grown = try {
                 action.grow(due.x, due.y)
             } catch (t: Throwable) {
@@ -173,7 +178,7 @@ class GameWorldGrowBlocksControllerTask(
             }
 
             if (!grown && gameWorld.getForeMap(due.x, due.y).params.key == due.key) {
-                schedule(due.x, due.y, due.key, randomDelayTicks())
+                schedule(due.x, due.y, due.key, action.nextDelayTicks())
             }
         }
     }
@@ -207,11 +212,6 @@ class GameWorldGrowBlocksControllerTask(
         private val logger = co.touchlab.kermit.Logger.withTag(TAG)
 
         const val GROW_BLOCKS_UPDATE_INTERVAL_SEC = 1.0f
-
-        private const val MIN_DELAY_TICKS = 30L
-        private const val MAX_DELAY_TICKS = 180L
-
-        private fun randomDelayTicks(): Long = MathUtils.random(MIN_DELAY_TICKS, MAX_DELAY_TICKS)
 
         private fun pack(x: Int, y: Int): Long = (x.toLong() shl 32) or (y.toLong() and 0xFFFFFFFFL)
     }

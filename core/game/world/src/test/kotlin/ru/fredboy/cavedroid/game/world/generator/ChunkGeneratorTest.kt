@@ -1,62 +1,18 @@
 package ru.fredboy.cavedroid.game.world.generator
 
 import io.mockk.clearAllMocks
-import io.mockk.every
-import io.mockk.mockk
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import ru.fredboy.cavedroid.domain.items.model.block.Block
-import ru.fredboy.cavedroid.domain.items.model.block.CommonBlockParams
-import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 
 class ChunkGeneratorTest {
 
-    private val nonSolidKeys = setOf(
-        "none", "water", "lava", "web", "snow", "sugar_cane",
-        "dandelion", "rose", "tallgrass", "deadbush",
-    )
-
     private fun config(seed: Long) = WorldGeneratorConfig.getDefault(seed = seed)
 
-    private fun fakeBlock(key: String): Block {
-        val params = mockk<CommonBlockParams>()
-        every { params.key } returns key
-        every { params.hasCollision } returns (key !in nonSolidKeys)
-        every { params.requiresBlock } returns false
-
-        val block = mockk<Block>()
-        every { block.params } returns params
-        every { block.isNone() } returns false
-        every { block.isFluid() } returns (key == "water" || key == "lava")
-        every { block.isWater() } returns (key == "water")
-        return block
-    }
-
-    private fun fakeRepository(): ItemsRepository {
-        val cache = HashMap<String, Block>()
-
-        val fallbackParams = mockk<CommonBlockParams>()
-        every { fallbackParams.key } returns "none"
-        every { fallbackParams.hasCollision } returns false
-        every { fallbackParams.requiresBlock } returns false
-
-        val fallback = mockk<Block.None>()
-        every { fallback.params } returns fallbackParams
-        every { fallback.isNone() } returns true
-        every { fallback.isFluid() } returns false
-        every { fallback.isWater() } returns false
-
-        val repo = mockk<ItemsRepository>()
-        every { repo.fallbackBlock } returns fallback
-        every { repo.getBlockByKey(any()) } answers {
-            val key = firstArg<String>()
-            cache.getOrPut(key) { fakeBlock(key) }
-        }
-        return repo
-    }
+    private fun fakeRepository() = GeneratorTestItems()
 
     @AfterEach
     fun clearRecordedCalls() {
@@ -115,6 +71,30 @@ class ChunkGeneratorTest {
         for (cx in listOf(-7, -1, 0, 3, 42)) {
             assertEquals(a.generateChunk(cx), b.generateChunk(cx), "chunk $cx not reproducible")
         }
+    }
+
+    @Test
+    fun `monster rooms cross chunk seams consistently in either generation order`() {
+        val repo = fakeRepository()
+        val gen = ChunkGenerator(config(SEED), repo)
+        val chunks = (-16..16).reversed().associateWith { gen.generateChunk(it) }
+        var rooms = 0
+        var roomSeams = 0
+        for (chunkX in -16 until 16) {
+            val band = gen.generateBand(chunkX)
+            val next = chunks.getValue(chunkX + 1)
+            for (x in 0 until ChunkGenerator.OVERSCAN) {
+                val bandX = ChunkGenerator.OVERSCAN + ChunkGenerator.CHUNK_W + x
+                assertTrue(band.foreBand[bandX].contentEquals(next.foreMap[x]), "foreground seam at $chunkX")
+                assertTrue(band.backBand[bandX].contentEquals(next.backMap[x]), "background seam at $chunkX")
+            }
+            if (next.foreMap[0].any { it.params.key == "mossy_cobblestone" }) roomSeams++
+            rooms += chunks.getValue(chunkX).backMap.sumOf { column ->
+                column.count { it is Block.Chest && it.lootTable == "monster_room" }
+            }
+        }
+        assertTrue(rooms > 0, "no monster-room loot generated")
+        assertTrue(roomSeams > 0, "no monster room crossed a chunk seam")
     }
 
     @Test

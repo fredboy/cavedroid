@@ -7,6 +7,28 @@ import ru.fredboy.cavedroid.common.model.GameMode
 @Serializable
 sealed class SaveDataDto {
 
+    @Serializable
+    data class VehicleSaveDataDto(
+        override val version: Int = 1,
+        val id: String,
+        val type: String,
+        val x: Float,
+        val y: Float,
+        val velocityX: Float,
+        val velocityY: Float,
+        val facing: Int,
+        val health: Int,
+    ) : SaveDataDto()
+
+    @Serializable
+    data class VehiclesSaveDataDto(
+        override val version: Int = 1,
+        val vehicles: List<VehicleSaveDataDto> = emptyList(),
+    ) : SaveDataDto()
+
+    @Serializable
+    data class BlockPositionSaveDataDto(val x: Int, val y: Int)
+
     abstract val version: Int
 
     fun verifyVersion(expectedVersion: Int) {
@@ -169,6 +191,12 @@ sealed class SaveDataDto {
         val woolColor: String? = null,
         override val fireTicksRemaining: Float = 0f,
         val spiderAngerRemainingSec: Float = 0f,
+        val creeperFuseElapsedSec: Float = 0f,
+        val creeperForcedIgnition: Boolean = false,
+        val creeperDaylightSec: Float = 0f,
+        val villagerHome: BlockPositionSaveDataDto? = null,
+        val villagerSleeping: Boolean = false,
+        val villagerOpenedDoors: List<BlockPositionSaveDataDto> = emptyList(),
     ) : MobSaveDataDto()
 
     @Serializable
@@ -233,6 +261,7 @@ sealed class SaveDataDto {
         override val breath: Int? = null,
         val wearingArmor: InventorySaveDataDto? = null,
         override val fireTicksRemaining: Float = 0f,
+        val mountedVehicleId: String? = null,
     ) : MobSaveDataDto()
 
     @Serializable
@@ -240,6 +269,7 @@ sealed class SaveDataDto {
         override val version: Int,
         val mobs: List<@Contextual MobSaveDataDto>,
         val player: PlayerSaveDataDto,
+        val villageResidentsInitialized: Boolean = false,
     ) : SaveDataDto()
 
     @Serializable
@@ -255,6 +285,22 @@ sealed class SaveDataDto {
     data class GrowBlocksSaveDataDto(
         override val version: Int,
         val entries: List<GrowBlockEntryDto>,
+    ) : SaveDataDto()
+
+    @Serializable
+    data class TntEntryDto(
+        override val version: Int,
+        val x: Float,
+        val y: Float,
+        val velocityX: Float,
+        val velocityY: Float,
+        val fuse: Float,
+    ) : SaveDataDto()
+
+    @Serializable
+    data class TntSaveDataDto(
+        override val version: Int,
+        val entries: List<TntEntryDto>,
     ) : SaveDataDto()
 
     @Serializable
@@ -280,6 +326,8 @@ sealed class SaveDataDto {
         val mobs: List<@Contextual MobSaveDataDto>,
         val drops: List<DropSaveDataDto>,
         val containers: Map<String, @Contextual ContainerSaveDataDto>,
+        val vehicles: List<VehicleSaveDataDto> = emptyList(),
+        val villageResidentsInitialized: Boolean = false,
     ) : SaveDataDto()
 
     @Serializable
@@ -300,5 +348,7 @@ sealed class SaveDataDto {
         val seed: Long? = null,
         // WorldType ordinal; null (absent) means a legacy finite/looping world.
         val worldType: Int? = null,
+        // Absent in older saves: keep their streamed terrain generation unchanged.
+        val villagesEnabled: Boolean = false,
     ) : SaveDataDto()
 }

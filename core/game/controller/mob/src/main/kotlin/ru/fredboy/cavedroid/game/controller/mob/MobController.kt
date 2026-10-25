@@ -50,6 +50,8 @@ class MobController @Inject constructor(
 
     private var deathHandled = false
 
+    var villageResidentsInitialized = false
+
     var player = Player(
         getFallbackItem = getFallbackItemUseCase,
         tooltipManager = tooltipManager,

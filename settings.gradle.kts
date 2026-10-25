@@ -43,6 +43,8 @@ include("core:entity:container")
 include("core:entity:drop")
 include("core:entity:mob")
 include("core:entity:projectile")
+include("core:entity:vehicle")
+include("core:game:controller:vehicle")
 
 /**
  * Game scope modules
@@ -56,6 +58,7 @@ include("core:game:controller:mob")
 include("core:game:controller:projectile")
 include("core:game:controller:stats")
 include("core:game:controller:fire")
+include("core:game:controller:explosion")
 
 // ui windows module
 include("core:game:window")

@@ -34,7 +34,7 @@ class OnboardingOverlayRenderer @Inject constructor(
             return
         }
 
-        val state = controller.state ?: return
+        val state = controller.visibleState ?: return
 
         val fadeOut = if (state.isLast && !state.awaitingInput) {
             (1f - state.cooldownProgress).coerceIn(0f, 1f)

@@ -8,10 +8,12 @@ import ru.fredboy.cavedroid.domain.save.model.FireEntry
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
+import ru.fredboy.cavedroid.game.controller.explosion.ExplosionController
 import ru.fredboy.cavedroid.game.controller.fire.FireController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.controller.stats.StatsController
+import ru.fredboy.cavedroid.game.controller.vehicle.VehicleController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.physics.task.GameWorldGrowBlocksControllerTask
 import javax.inject.Inject
@@ -29,7 +31,9 @@ class GameSaveHelper @Inject constructor(
     private val statsController: StatsController,
     private val growBlocksControllerTask: GameWorldGrowBlocksControllerTask,
     private val fireController: FireController,
+    private val explosionController: ExplosionController,
     private val chunkEntityStreamer: ChunkEntityStreamer,
+    private val vehicles: VehicleController,
 ) {
 
     fun saveGame(overwrite: Boolean) {
@@ -60,6 +64,8 @@ class GameSaveHelper @Inject constructor(
             containerController = containerController,
             gameWorld = gameWorld,
             projectileController = projectileController,
+            tntEntries = explosionController.snapshot(),
+            vehicles = if (isInfinite) emptyList() else vehicles.vehicles.map { it.snapshot() },
             growBlockEntries = if (isInfinite) emptyList() else growBlocksControllerTask.snapshot(),
             fireEntries = if (isInfinite) {
                 emptyList()

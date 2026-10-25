@@ -10,6 +10,7 @@ import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.game.controller.fire.FireController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.vehicle.VehicleController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 import javax.inject.Inject
@@ -18,6 +19,7 @@ import kotlin.math.max
 @GameScope
 class GameWorldMobDamageControllerTask @Inject constructor(
     private val mobController: MobController,
+    private val vehicles: VehicleController,
     private val gameWorld: GameWorld,
     private val lightingSystem: LightingSystem,
     private val fireController: FireController,
@@ -25,6 +27,7 @@ class GameWorldMobDamageControllerTask @Inject constructor(
 ) : BaseGameWorldControllerTask(performanceMonitor, PerformanceMetric.TASK_DAMAGE) {
 
     override fun exec() {
+        vehicles.environmentalDamage(fireController::hasAnyFireAt)
         sequence {
             yield(mobController.player)
             yieldAll(mobController.mobs)
@@ -66,7 +69,8 @@ class GameWorldMobDamageControllerTask @Inject constructor(
             }
 
             if (mob.behavior.attacksWhenPossible && mob.hitbox.overlaps(mobController.player.hitbox)) {
-                mobController.player.damage(mob.params.damageToPlayer)
+                val player = mobController.player
+                player.takeHit(mob.params.damageToPlayer, player.position.x - mob.position.x)
             }
 
             val exposedToSun = mob.params.takesSunDamage &&

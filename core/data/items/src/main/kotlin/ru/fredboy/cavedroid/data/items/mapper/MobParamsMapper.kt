@@ -34,6 +34,7 @@ class MobParamsMapper @Inject constructor(
             takesSunDamage = dto.takesSunDamage,
             maxBreath = dto.breath,
             maxSpawnLight = dto.maxSpawnLight,
+            spawnWeight = dto.spawnWeight.coerceAtLeast(0f),
         )
     }
 
@@ -47,6 +48,8 @@ class MobParamsMapper @Inject constructor(
             "sheep" -> MobBehaviorType.SHEEP
             "archer" -> MobBehaviorType.ARCHER
             "spider" -> MobBehaviorType.SPIDER
+            "creeper" -> MobBehaviorType.CREEPER
+            "villager" -> MobBehaviorType.VILLAGER
 
             else -> MobBehaviorType.PASSIVE
         }

@@ -4,6 +4,7 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.stats.repository.StatsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.vehicle.VehicleController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.controls.action.annotation.BindPlaceBlockAction
 import javax.inject.Inject
@@ -14,6 +15,7 @@ class PlaceSlabAction @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobController: MobController,
     private val statsRepository: StatsRepository,
+    private val vehicles: VehicleController,
 ) : IPlaceBlockAction {
 
     override fun place(placeable: Item.Placeable, x: Int, y: Int): Boolean {
@@ -38,7 +40,8 @@ class PlaceSlabAction @Inject constructor(
 
         val blockRect = slabPart.getRectangle(x, y)
         if (mobController.player.hitbox.overlaps(blockRect) ||
-            mobController.mobs.any { mob -> mob.hitbox.overlaps(blockRect) }
+            mobController.mobs.any { mob -> mob.hitbox.overlaps(blockRect) } ||
+            vehicles.overlapsVehicle(blockRect)
         ) {
             return false
         }

@@ -9,4 +9,6 @@ enum class MobBehaviorType {
     SHEEP,
     ARCHER,
     SPIDER,
+    CREEPER,
+    VILLAGER,
 }

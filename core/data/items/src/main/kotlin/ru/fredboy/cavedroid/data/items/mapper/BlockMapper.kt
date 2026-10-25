@@ -57,6 +57,7 @@ class BlockMapper @Inject constructor(
             bottom = dto.bottom,
         ).toMeters(),
         hitPoints = dto.hp,
+        blastResistance = dto.blastResistance,
         dropInfo = mapBlockDropInfo(dto),
         hasCollision = dto.collision,
         isBackground = dto.background,
@@ -86,6 +87,7 @@ class BlockMapper @Inject constructor(
         requiresBackground = dto.requiresBackground,
         updateActionKey = dto.updateAction,
         useActionKey = dto.useAction,
+        growActionKey = dto.growAction,
     )
 
     private fun mapLightInfo(info: BlockLightDto?): BlockLightInfo? {

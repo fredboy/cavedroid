@@ -10,6 +10,7 @@ import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.game.world.WaterFreezing
 import javax.inject.Inject
 import kotlin.math.min
 import kotlin.reflect.KClass
@@ -134,6 +135,18 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
     fun updateFluids(x: Int, y: Int) {
         val block = gameWorld.getForeMap(x, y)
         if (!block.isFluid() || (block.isLava() && updateTick % 2 == 0)) {
+            return
+        }
+
+        if (block is Block.Water &&
+            WaterFreezing.canFreeze(
+                y,
+                gameWorld.getBiomeAt(x),
+                gameWorld.generatorConfig.maxSurfaceHeight,
+            ) { gameWorld.getForeMap(x, it) }
+        ) {
+            // Keep queued flow updates from overwriting the ice in the same tick.
+            updateMap[x to y] = UpdateCommand(itemsRepository.getBlockByKey("ice"), x, y, 0)
             return
         }
 

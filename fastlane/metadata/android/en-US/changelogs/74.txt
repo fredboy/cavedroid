@@ -1,0 +1,8 @@
+- New mobs: creepers, spiders, and village residents
+- New blocks: TNT with chain explosions, pumpkins, melons, paper and bookshelves
+- New foods: carrots, potatoes, baked potatoes, and mutton
+- Farming, crafting recipes, and winter snow and surface freezing
+- Explore plains villages and monster rooms with loot and spawners
+- Craft and ride boats, now also in birch and spruce
+- Melee combat knockback and touch tips for boats
+- Fixed a rendering bug after resuming the app and raised minimum Android version

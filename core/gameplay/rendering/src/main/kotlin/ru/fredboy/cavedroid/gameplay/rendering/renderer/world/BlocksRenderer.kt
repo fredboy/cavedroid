@@ -98,12 +98,13 @@ abstract class BlocksRenderer(
         }
 
         if (!isFixedBackground) {
-            drawForegroundEdgeShadow(shapeRenderer, x, y, drawX, drawY)
+            drawForegroundEdgeShadow(shapeRenderer, backgroundBlock, x, y, drawX, drawY)
         }
     }
 
     private fun drawForegroundEdgeShadow(
         shapeRenderer: ShapeRenderer,
+        backgroundBlock: Block,
         x: Int,
         y: Int,
         drawX: Float,
@@ -128,10 +129,10 @@ abstract class BlocksRenderer(
         }
 
         shapeRenderer.rect(
-            /* x = */ drawX,
-            /* y = */ drawY,
-            /* width = */ 1f,
-            /* height = */ 1f,
+            /* x = */ drawX + backgroundBlock.params.spriteMarginsMeters.left,
+            /* y = */ drawY + backgroundBlock.params.spriteMarginsMeters.top,
+            /* width = */ backgroundBlock.spriteWidthMeters,
+            /* height = */ backgroundBlock.spriteHeightMeters,
             /* col1 = */ if (topLeft) SHADOW_DARK else SHADOW_FADE,
             /* col2 = */ if (topRight) SHADOW_DARK else SHADOW_FADE,
             /* col3 = */ if (bottomRight) SHADOW_DARK else SHADOW_FADE,

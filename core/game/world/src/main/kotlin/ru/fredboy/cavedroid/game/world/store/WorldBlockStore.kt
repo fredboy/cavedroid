@@ -80,6 +80,9 @@ interface WorldBlockStore : Disposable {
      */
     fun update() = Unit
 
+    /** Keep occupied actors resident even while the camera is moving. */
+    fun retainColumns(columns: Set<Int>) = Unit
+
     /** Registers a listener notified when chunks are loaded/unloaded. No-op for finite worlds. */
     fun addChunkListener(listener: ChunkListener) = Unit
 

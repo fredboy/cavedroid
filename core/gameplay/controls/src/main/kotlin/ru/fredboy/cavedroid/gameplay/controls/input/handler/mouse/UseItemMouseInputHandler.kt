@@ -16,6 +16,7 @@ import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.projectile.model.Projectile
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
+import ru.fredboy.cavedroid.game.controller.vehicle.VehicleController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.world.GameWorld
@@ -39,6 +40,7 @@ import javax.inject.Inject
 class UseItemMouseInputHandler @Inject constructor(
     private val gameContextRepository: GameContextRepository,
     private val mobController: MobController,
+    private val vehicles: VehicleController,
     private val useItemActionMap: Map<String, @JvmSuppressWildcards IUseItemAction>,
     private val placeBlockActionMap: Map<String, @JvmSuppressWildcards IPlaceBlockAction>,
     private val useBlockActionMap: Map<String, @JvmSuppressWildcards IUseBlockAction>,
@@ -163,7 +165,8 @@ class UseItemMouseInputHandler @Inject constructor(
         player.startHitting(false)
         player.stopHitting()
 
-        tryUseMob().takeIfTrue()
+        vehicles.boardTarget().takeIfTrue()
+            ?: tryUseMob().takeIfTrue()
             ?: tryUseBlock().takeIfTrue()
             ?: (item as? Item.Placeable)?.let {
                 placeBlockActionMap.placeToForegroundAction(

@@ -47,6 +47,7 @@ class MobControllerMapper @Inject constructor(
             }
         },
         player = playerMapper.mapSaveData(mobController.player),
+        villageResidentsInitialized = mobController.villageResidentsInitialized,
     )
 
     /** Player-only controller snapshot — for infinite worlds, where mobs are persisted per chunk. */
@@ -54,6 +55,7 @@ class MobControllerMapper @Inject constructor(
         version = SAVE_DATA_VERSION,
         mobs = emptyList(),
         player = playerMapper.mapSaveData(mobController.player),
+        villageResidentsInitialized = mobController.villageResidentsInitialized,
     )
 
     /** Maps a single (non-player) mob, or null for mob types that are not persisted. */
@@ -100,6 +102,7 @@ class MobControllerMapper @Inject constructor(
             applicationController = applicationController,
             applicationContextRepository = applicationContextRepository,
         ).apply {
+            villageResidentsInitialized = saveDataDto.villageResidentsInitialized
             (mobs as MutableList).addAll(
                 saveDataDto.mobs.mapNotNull { mob ->
                     when (mob) {

@@ -114,6 +114,7 @@ class ItemMapper @Inject constructor(
                 sprite = requireNotNull(loadSprite(dto)),
                 heal = requireNotNull(dto.heal),
                 saturation = dto.saturation,
+                plantBlockKey = dto.plantBlock,
             )
 
             "bow" -> Item.Bow(

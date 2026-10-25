@@ -10,11 +10,13 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.vehicle.VehicleController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.gameplay.controls.input.IKeyboardInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
+import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.KeyboardInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse.MouseCursorInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.mapper.KeyboardInputActionMapper
@@ -34,9 +36,17 @@ class GameInputProcessor @Inject constructor(
     private val keyboardInputHandlers: Set<@JvmSuppressWildcards IKeyboardInputHandler>,
     private val gameWindowsManager: GameWindowsManager,
     private val mobController: MobController,
+    private val vehicles: VehicleController,
 ) : InputProcessor {
 
+    init {
+        vehicles.onRidingChanged = { resetHeldInput() }
+    }
+
+    private var windowWasOpen = false
     private var dragging = false
+    private val dismountKeys = mutableSetOf<Int>()
+
     private var touchDownX = 0f
     private var touchDownY = 0f
 
@@ -119,6 +129,12 @@ class GameInputProcessor @Inject constructor(
     override fun touchCancelled(p0: Int, p1: Int, p2: Int, p3: Int): Boolean = false
 
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
+        val joystick = gameContextRepository.getJoystick()
+        if (applicationContextRepository.isTouch() && joystick.active && joystick.pointer == pointer) {
+            // The joystick owns this gesture, including small drags and crossing touch buttons.
+            return handleMouseAction(mouseInputActionMapper.mapDragged(screenX.toFloat(), screenY.toFloat(), pointer))
+        }
+
         val (touchX, touchY) = gameContextRepository.getCameraContext().getViewportCoordinates(screenX, screenY)
 
         if (abs(touchX - touchDownX) < 16 && abs(touchY - touchDownY) < DRAG_THRESHOLD) {
@@ -173,6 +189,9 @@ class GameInputProcessor @Inject constructor(
             return
         }
 
+        val windowOpen = gameWindowsManager.currentWindowType != GameWindowType.NONE
+        if (windowOpen && !windowWasOpen) resetHeldInput()
+        windowWasOpen = windowOpen
         handleMousePosition()
 
         gameContextRepository.getJoystick()
@@ -252,6 +271,18 @@ class GameInputProcessor @Inject constructor(
             return false
         }
 
+        if (action.actionKey is KeyboardInputActionKey.Up &&
+            (mobController.player.isMounted || keycode in dismountKeys)
+        ) {
+            if (isKeyDown) {
+                dismountKeys.add(keycode)
+                vehicles.dismount()
+            } else {
+                dismountKeys.remove(keycode)
+            }
+            return true
+        }
+
         var anyProcessed = false
 
         for (handler in keyboardInputHandlers) {
@@ -296,6 +327,13 @@ class GameInputProcessor @Inject constructor(
     }
 
     fun reset() {
+        resetHeldInput()
+        gameWindowsManager.closeWindow()
+        windowWasOpen = false
+    }
+
+    private fun resetHeldInput() {
+        vehicles.resetMovement()
         mouseInputHandlers.forEach { it.reset() }
         keyboardInputHandlers.forEach { it.reset() }
         dragging = false

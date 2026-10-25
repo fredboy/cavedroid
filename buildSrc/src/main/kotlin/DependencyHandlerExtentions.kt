@@ -58,14 +58,17 @@ fun DependencyHandler.useEntityModules() {
     useModule(":core:entity:drop")
     useModule(":core:entity:mob")
     useModule(":core:entity:projectile")
+    useModule(":core:entity:vehicle")
 }
 
 fun DependencyHandler.useGameModules() {
     useModule(":core:game:controller:container")
     useModule(":core:game:controller:drop")
     useModule(":core:game:controller:fire")
+    useModule(":core:game:controller:explosion")
     useModule(":core:game:controller:mob")
     useModule(":core:game:controller:projectile")
+    useModule(":core:game:controller:vehicle")
     useModule(":core:game:controller:stats")
     useModule(":core:game:window")
     useModule(":core:game:world")

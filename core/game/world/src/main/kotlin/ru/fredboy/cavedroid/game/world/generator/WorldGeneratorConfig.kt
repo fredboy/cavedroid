@@ -14,6 +14,7 @@ data class WorldGeneratorConfig(
     val seaLevel: Int,
     val lavaLevel: Int,
     val defaultBackgroundBlockKey: String,
+    val villagesEnabled: Boolean = true,
 ) {
 
     companion object {

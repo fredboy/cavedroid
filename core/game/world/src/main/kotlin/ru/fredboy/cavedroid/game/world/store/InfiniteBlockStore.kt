@@ -117,18 +117,29 @@ class InfiniteBlockStore(
         return chunks[chunkIndex(x)]?.biomes?.get(localX(x)) ?: generator.biomeAt(x)
     }
 
+    private var retainedColumns = emptySet<Int>()
+    private var retentionChanged = false
+
+    override fun retainColumns(columns: Set<Int>) {
+        if (retainedColumns != columns) {
+            retainedColumns = columns
+            retentionChanged = true
+        }
+    }
+
     override fun update() {
         val visible = gameContextRepository.getCameraContext().visibleWorld
         val centerX = (visible.x + visible.width / 2f).floorToInt()
         val centerChunk = chunkIndex(centerX)
         performanceMonitor.gauge(PerformanceGauge.TERRAIN_CHUNKS, chunks.size.toLong())
-        if (centerChunk == lastCenterChunk) return
+        if (centerChunk == lastCenterChunk && !retentionChanged) return
+        retentionChanged = false
         lastCenterChunk = centerChunk
 
-        val wanted = (centerChunk - LOAD_RADIUS)..(centerChunk + LOAD_RADIUS)
+        val wanted = ((centerChunk - LOAD_RADIUS)..(centerChunk + LOAD_RADIUS)).toSet() + retainedColumns
         val keep = (centerChunk - UNLOAD_RADIUS)..(centerChunk + UNLOAD_RADIUS)
         loads.keys.filterNot { it in wanted }.forEach { loads.remove(it)?.job?.cancel() }
-        chunks.keys.filterNot { it in keep }.forEach(::evictChunk)
+        chunks.keys.filterNot { it in keep || it in retainedColumns }.forEach(::evictChunk)
 
         if (centerChunk !in chunks) {
             // Initial spawn at a saved position and teleports need terrain before this frame's step.

@@ -107,7 +107,8 @@ class SettingsMenuViewModel(
 
     private fun computeCanResetHints(): Boolean {
         return applicationContextRepository.isOnboardingShown() ||
-            applicationContextRepository.isInventoryHintShown()
+            applicationContextRepository.isInventoryHintShown() ||
+            applicationContextRepository.isBoatHintShown()
     }
 
     private fun createState(): SettingsMenuState {
@@ -184,6 +185,7 @@ class SettingsMenuViewModel(
     fun onResetHintsClick() {
         applicationContextRepository.setOnboardingShown(false)
         applicationContextRepository.setInventoryHintShown(false)
+        applicationContextRepository.setBoatHintShown(false)
         viewModelScope.launch { _canResetHintsFlow.emit(false) }
     }
 }

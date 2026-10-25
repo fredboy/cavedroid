@@ -1,0 +1,8 @@
+- Neue Mobs: Creeper, Spinnen und Dorfbewohner
+- Neue Blöcke: TNT mit Kettenexplosionen, Kürbisse, Melonen, Papier und Bücherregale
+- Neue Lebensmittel: Karotten, Kartoffeln, Ofenkartoffeln und Hammelfleisch
+- Ackerbau, Rezepte sowie Schnee und Oberflächenfrost im Winter
+- Erkunde Dörfer und Monsterräume mit Beute und Spawnern
+- Baue und fahre Boote, jetzt auch aus Birke und Fichte
+- Rückstoß im Nahkampf und Touch-Tipps für Boote
+- Grafikfehler nach App-Fortsetzung behoben und minimales Android erhöht

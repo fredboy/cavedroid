@@ -8,6 +8,7 @@ import ru.fredboy.cavedroid.domain.save.model.GameMapSaveData
 import ru.fredboy.cavedroid.domain.save.model.GameSaveDetails
 import ru.fredboy.cavedroid.domain.save.model.GameSaveInfo
 import ru.fredboy.cavedroid.domain.save.model.GrowBlockEntry
+import ru.fredboy.cavedroid.domain.save.model.TntEntry
 import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
@@ -25,6 +26,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.projectile.abstraction.ProjectileWorldAdapter
+import ru.fredboy.cavedroid.entity.vehicle.VehicleState
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
@@ -51,12 +53,18 @@ interface SaveDataRepository {
         projectileController: ProjectileController,
         growBlockEntries: List<GrowBlockEntry>,
         fireEntries: List<FireEntry>,
+        tntEntries: List<TntEntry> = emptyList(),
+        vehicles: List<VehicleState> = emptyList(),
     )
 
     fun loadGrowBlockEntries(
         gameDataFolder: String,
         saveGameDirectory: String,
     ): List<GrowBlockEntry>
+
+    fun loadVehicles(gameDataFolder: String, saveGameDirectory: String): List<VehicleState>
+
+    fun loadTntEntries(gameDataFolder: String, saveGameDirectory: String): List<TntEntry>
 
     fun loadFireEntries(
         gameDataFolder: String,
@@ -85,7 +93,7 @@ interface SaveDataRepository {
         chunkX: Int,
     ): ChunkSaveData?
 
-    /** Persists the mobs/drops/containers belonging to one infinite-world chunk (deletes the file when empty). */
+    /** Persists chunk entities and the one-time village population marker. */
     fun saveChunkEntities(
         gameDataFolder: String,
         saveGameDirectory: String,
@@ -93,6 +101,8 @@ interface SaveDataRepository {
         mobs: List<Mob>,
         drops: List<Drop>,
         containers: Map<ContainerCoordinates, Container>,
+        vehicles: List<VehicleState> = emptyList(),
+        villageResidentsInitialized: Boolean = false,
     )
 
     /** Loads and reconstructs the entities of one infinite-world chunk, or null if none were saved. */

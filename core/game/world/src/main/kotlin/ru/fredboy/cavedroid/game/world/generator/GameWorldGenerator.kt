@@ -4,6 +4,7 @@ import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.model.Biome
+import ru.fredboy.cavedroid.game.world.WaterFreezing
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -58,6 +59,16 @@ class GameWorldGenerator(
         }
 
         return xSequence.associateWith { config.biomes.random(random) }
+    }
+
+    fun villageBeds(): List<Pair<Int, Int>> {
+        // Initialize biomes before heights, matching generate()'s consumption of the seeded RNG.
+        var biome = Biome.PLAINS
+        val biomes = Array(config.width) { x ->
+            biome = biomesMap[x] ?: biome
+            biome
+        }
+        return VillageGenerator(config, itemsRepository).beds(0, config.width, { heights[it] }, { biomes[it] }, config.width)
     }
 
     private fun winterBiome(x: Int) {
@@ -512,6 +523,20 @@ class GameWorldGenerator(
 
         postGenCleanUp()
         MineshaftGenerator(config, itemsRepository).generate(0, foreMap, backMap, loopingWidth = config.width)
+        MonsterRoomGenerator(config, itemsRepository).generate(0, foreMap, backMap, loopingWidth = config.width)
+        VillageGenerator(config, itemsRepository).generate(
+            0,
+            foreMap,
+            backMap,
+            surfaceHeight = { heights[it] },
+            biomeAt = { biomes[it] },
+            loopingWidth = config.width,
+        )
+
+        val ice = itemsRepository.getBlockByKey("ice")
+        for (x in 0 until config.width) {
+            WaterFreezing.freezeSurface(foreMap[x], biomes[x], config.maxSurfaceHeight, ice)
+        }
 
         return GeneratedWorld(foreMap, backMap, biomes)
     }
