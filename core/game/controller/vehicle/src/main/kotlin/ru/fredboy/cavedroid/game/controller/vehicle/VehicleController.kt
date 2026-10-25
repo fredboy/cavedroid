@@ -158,7 +158,7 @@ class VehicleController @Inject constructor(
                 maskBits = PhysicsConstants.CATEGORY_PROJECTILE
             }
         }
-        player.body.type = BodyDef.BodyType.KinematicBody
+        changePlayerBodyType(BodyDef.BodyType.KinematicBody)
         syncPassenger(boat)
         boatHints.notifyMounted(boat.id)
         onRidingChanged?.invoke()
@@ -196,7 +196,7 @@ class VehicleController @Inject constructor(
         val boat = mounted
         player.mountedVehicleId = null
         if (!player.isDisposed()) {
-            player.body.type = BodyDef.BodyType.DynamicBody
+            changePlayerBodyType(BodyDef.BodyType.DynamicBody)
             player.body.gravityScale = 1f
             player.body.linearDamping = 0f
             riderFilters.forEach { (fixture, filter) -> fixture.filterData = filter }
@@ -207,6 +207,17 @@ class VehicleController @Inject constructor(
         boatHints.notifyDetached(dismounted)
         resetMovement()
         onRidingChanged?.invoke()
+    }
+
+    private fun changePlayerBodyType(type: BodyDef.BodyType) {
+        val body = player.body
+        if (body.type == type) return
+        val wasActive = body.isActive
+        // Native setType destroys contacts without endContact callbacks. Deactivation
+        // delivers them first so ground, auto-jump and cliff counters stay balanced.
+        body.isActive = false
+        body.type = type
+        body.isActive = wasActive
     }
 
     private fun syncPassenger(boat: Vehicle) {

@@ -22,6 +22,7 @@ dependencies {
     testImplementation(Dependencies.Test.mockk)
     // Box2D World loads its native library even when mocked for interaction tests.
     testRuntimeOnly(Dependencies.LibGDX.Box2d.Natives.desktop)
+    testRuntimeOnly(Dependencies.LibGDX.Desktop.natives)
 }
 
 tasks.test { useJUnitPlatform() }
