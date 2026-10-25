@@ -1,0 +1,8 @@
+- Novos mobs: creepers, aranhas e aldeões
+- Novos blocos: TNT com explosões em cadeia, abóboras, melancias, papel e estantes
+- Novos alimentos: cenouras, batatas, batatas assadas e carneiro
+- Agricultura, receitas de criação e neve e congelamento no inverno
+- Explore aldeias e salas de monstros com tesouros e geradores
+- Crie e navegue em barcos, agora também de bétula e abeto
+- Empurrão no combate corpo a corpo e dicas de toque para os barcos
+- Corrigido um erro gráfico ao retomar a app e aumentada a versão mínima do Android
