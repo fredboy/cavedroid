@@ -1,0 +1,2 @@
+- Corregidos los contactos del jugador al subir y bajar de las barcas
+- Pequeñas mejoras y corrección de errores
