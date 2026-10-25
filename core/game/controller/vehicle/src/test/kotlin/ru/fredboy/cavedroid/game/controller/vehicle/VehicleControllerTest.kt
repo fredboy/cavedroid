@@ -2,9 +2,14 @@ package ru.fredboy.cavedroid.game.controller.vehicle
 
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.BodyDef
+import com.badlogic.gdx.physics.box2d.Box2D
 import com.badlogic.gdx.physics.box2d.Filter
+import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.RayCastCallback
+import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.GdxNativesLoader
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -16,15 +21,21 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import ru.fredboy.cavedroid.common.api.BoatHintEvents
 import ru.fredboy.cavedroid.common.model.GameMode
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
+import ru.fredboy.cavedroid.entity.mob.model.Direction
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.entity.vehicle.BoatTuning
 import ru.fredboy.cavedroid.entity.vehicle.BoatType
 import ru.fredboy.cavedroid.entity.vehicle.Vehicle
 import ru.fredboy.cavedroid.entity.vehicle.VehicleState
 import ru.fredboy.cavedroid.game.controller.mob.MobController
+import ru.fredboy.cavedroid.game.controller.mob.impl.MobPhysicsFactoryImpl
+import ru.fredboy.cavedroid.game.controller.mob.impl.physics.MobShouldJumpLeftSensorToBlockContactHandler
+import ru.fredboy.cavedroid.game.controller.mob.impl.physics.MobShouldJumpRightSensorToBlockContactHandler
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.game.world.GameWorldContactListener
 
 class VehicleControllerTest {
     private val world = mockk<GameWorld>(relaxed = true)
@@ -126,6 +137,64 @@ class VehicleControllerTest {
         verify { player.mountedVehicleId = boat.id }
         verify { boatHints.notifyMounted(boat.id) }
         verify { world.world.rayCast(any(), any<Vector2>(), eq(Vector2(-2f, 10f))) }
+    }
+
+    @ParameterizedTest
+    @EnumSource(Direction::class)
+    fun `boarding and dismounting keep native autojump contacts balanced`(direction: Direction) {
+        GdxNativesLoader.load()
+        Box2D.init()
+        val physicsWorld = World(Vector2.Zero, false)
+        try {
+            prepareTarget(playerX = 5f, boatX = 5f, cursorX = 5f)
+            every { world.world } returns physicsWorld
+            val body = MobPhysicsFactoryImpl(mockk { every { getBox2dWorld() } returns physicsWorld })
+                .createBody(player, 5f, 10f, PhysicsConstants.CATEGORY_MOB, false)
+            every { player.body } returns body
+            every { player.position } answers { body.position }
+            var mountedId: String? = null
+            every { player.mountedVehicleId } answers { mountedId }
+            every { player.mountedVehicleId = any() } answers { mountedId = firstArg() }
+            val counters = IntArray(2)
+            every { player.autojumpCounters } returns counters
+
+            val configuration = mockk<ApplicationContextRepository> { every { isAutoJumpEnabled() } returns true }
+            GameWorldContactListener(
+                setOf(
+                    MobShouldJumpLeftSensorToBlockContactHandler(configuration),
+                    MobShouldJumpRightSensorToBlockContactHandler(configuration),
+                ),
+            ).attachToGameWorld(world)
+            val obstacle = physicsWorld.createBody(
+                BodyDef().apply { position.set(5f + direction.basis * 0.7f, 10.1f) },
+            )
+            obstacle.userData = mockk<Block.Normal>(relaxed = true)
+            val shape = PolygonShape().apply { setAsBox(0.05f, 0.05f) }
+            obstacle.createFixture(shape, 0f)
+            shape.dispose()
+
+            val water = mockk<Block.Water>(relaxed = true)
+            every { water.isWater() } returns true
+            every { water.getRectangle(any(), any()) } answers { Rectangle(firstArg<Int>().toFloat(), secondArg<Int>().toFloat(), 1f, 1f) }
+            every { world.getForeMap(any(), any()) } returns water
+
+            repeat(3) {
+                body.setTransform(5f, 10f, 0f)
+                repeat(2) { physicsWorld.step(1f / 60f, 6, 2) }
+                assertEquals(1, counters[direction.index])
+
+                assertTrue(controller.boardTarget())
+                assertEquals(0, counters[direction.index], "Boarding must end the obstacle contact")
+                physicsWorld.step(1f / 60f, 6, 2)
+                assertTrue(controller.dismount())
+                repeat(2) { physicsWorld.step(1f / 60f, 6, 2) }
+                assertEquals(0, counters[direction.index], "Dismounting must not leave a phantom obstacle")
+                assertEquals(BodyDef.BodyType.DynamicBody, body.type)
+                assertTrue(body.isActive)
+            }
+        } finally {
+            physicsWorld.dispose()
+        }
     }
 
     @Test
