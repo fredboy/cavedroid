@@ -1,0 +1,2 @@
+- Spielerkontakte beim Ein- und Aussteigen in Boote behoben
+- Kleinere Verbesserungen und Fehlerbehebungen

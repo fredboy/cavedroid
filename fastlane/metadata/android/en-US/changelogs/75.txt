@@ -1,0 +1,2 @@
+- Fixed player contacts when entering and leaving boats
+- Minor improvements and bug fixes
