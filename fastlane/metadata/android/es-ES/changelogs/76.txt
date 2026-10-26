@@ -1,3 +1,3 @@
-- Los creepers aparecen con menos frecuencia
+- Aumentada la frecuencia de aparición de creepers
 - Corregido el spawn de criaturas en zonas iluminadas
 - Añadidas traducciones que faltaban de estadísticas de criaturas
