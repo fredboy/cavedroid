@@ -26,8 +26,21 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Mock keystore.properties
-        run: echo "releaseKeystorePath=mock" > keystore.properties
+      - name: Prepare temporary CI signing key
+        run: |
+          "$JAVA_HOME/bin/keytool" -genkeypair -noprompt \
+            -keystore "$RUNNER_TEMP/ci.keystore" -storetype JKS \
+            -storepass android -keypass android -alias androiddebugkey \
+            -keyalg RSA -keysize 2048 -validity 2 \
+            -dname "CN=Android Debug,O=Android,C=US"
+          mkdir -p "$HOME/.android"
+          cp "$RUNNER_TEMP/ci.keystore" "$HOME/.android/debug.keystore"
+          cat > keystore.properties <<EOF
+          releaseKeystorePath=$RUNNER_TEMP/ci.keystore
+          releaseKeystorePassword=android
+          releaseKeyAlias=androiddebugkey
+          releaseKeyPassword=android
+          EOF
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
