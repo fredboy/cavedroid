@@ -18,8 +18,8 @@ name: Finalize Release
 #     PR manually on GitHub once the workflow has created it. Auto-merge
 #     will then fire once required checks pass.
 #   - Status checks required on master/develop should be a subset of the
-#     ones we declare: Ktlint, Tests, Android CI. The release-branch.yml
-#     workflow has already validated the same code prior to finalize.
+#     ones we declare: Ktlint, Tests, Android CI. Separate platform workflows
+#     validate release stabilization PRs prior to finalize.
 #   - The workflow waits up to 30 minutes (default) for the master PR to
 #     merge. If you need more time, re-run with --no-wait and finish the
 #     post-merge steps manually (the workflow's log prints them).

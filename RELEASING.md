@@ -36,7 +36,7 @@ The script (and workflow) refuse if `release/A.B.C` or `vA.B.C` already exists o
 
 ### Step 2 — stabilize
 
-Test the release branch. For each fix, open a PR targeting `release/A.B.C` from a short-lived `fix/<slug>` or `issue/NN` branch. **No direct commits to the release branch** (other than the version-bump commit from Step 1). `release-branch.yml` runs a full multi-platform sanity build on every push/PR.
+Test the release branch. For each fix, open a PR targeting `release/A.B.C` from a short-lived `fix/<slug>` or `issue/NN` branch. **No direct commits to the release branch** (other than the version-bump commit from Step 1). Separate Android, Desktop, and Web workflows validate release PRs.
 
 ### Step 3 — finalize
 
@@ -223,7 +223,6 @@ All workflows live in `.github/workflows/`. The release-flow workflows are thin 
 | `android.yml` | same as ktlint | Builds `android:buildFossDebug` as a smoke test |
 | `branch-name.yml` | PR opened/edited/sync (same-repo only) | Validates head branch matches conventions for the chosen base |
 | `pr-title-lint.yml` | PR opened/edited/sync (same-repo only) | Every PR title must start with a capital letter. PRs from `issue/NN` branches must additionally start with a GitHub closing keyword + the matching issue number (`Closes #NN ...`, `Fixes #NN ...`, etc.) |
-| `release-branch.yml` | push or PR on `release/**` / `hotfix/**` | Full multi-platform build (Android foss debug + desktop Linux/Win + web) with mock keystore |
 | `start-release.yml` | `workflow_dispatch` | Calls `scripts/start-release.sh` |
 | `finalize-release.yml` | `workflow_dispatch` | Calls `scripts/finalize-release.sh` |
 | `release.yml` | push of tag `v*.*.*` or `workflow_dispatch` (dispatched by `finalize-release.yml`) | Decodes keystore, calls `scripts/build-release-artifacts.sh`, calls `scripts/gen-release-notes-ai.sh`, publishes the GitHub Release |
