@@ -166,7 +166,8 @@ class GameWorldMobSpawnControllerTask @Inject constructor(
         val spawnPosY = floorY.toFloat() - params.height / 2f
         if (params.behaviorType == MobBehaviorType.CREEPER && !canSpawnCreeper(spawnPosX, spawnPosY)) return false
         if (!canFitAt(spawnPosX, spawnPosY, params)) return false
-        if (gameWorld.getLightAt(spawnX, floorY) > params.maxSpawnLight) return false
+        // Sample the mob's position: opaque floor blocks do not receive propagated light.
+        if (gameWorld.getLightAt(spawnX, MathUtils.floor(spawnPosY)) > params.maxSpawnLight) return false
 
         mobFactory.create(spawnPosX, spawnPosY, params.key)
         return true
