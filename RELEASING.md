@@ -71,7 +71,7 @@ The script:
 
 GitHub forbids an actor from approving their own PR, so the bot cannot self-approve. With "Require pull request reviews" set on `master`/`develop`, **you approve the PRs manually** on GitHub once the workflow opens them. Auto-merge fires automatically as soon as your approval lands and required status checks are green.
 
-If you take longer than the script's wait timeout (default 30 min) to approve, the workflow times out. To recover: approve and merge the master PR by hand, then run the remaining steps (tag, develop PR, dispatch release) — the workflow log prints the exact commands. Or just bump the timeout via `--timeout SECONDS`.
+If you take longer than the script's wait timeout (default 30 min) to approve, the workflow times out. Re-run it while the master PR is still open: it reuses that PR and preserves the existing changelogs. If the master PR has already merged, run the remaining steps (tag, develop PR, dispatch release) manually. Or bump the timeout via `--timeout SECONDS` when running locally.
 
 For auto-merge to be available at all, Settings → General → Pull Requests → **Allow auto-merge** must be on.
 
