@@ -1,0 +1,3 @@
+- Creepers agora aparecem com menos frequência
+- Corrigido o spawn de criaturas em áreas iluminadas
+- Adicionadas traduções que faltavam das estatísticas de criaturas

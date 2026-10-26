@@ -1,0 +1,3 @@
+- Creepers now spawn a bit less often
+- Fixed mobs spawning in lit areas
+- Added missing translations for mob stats
