@@ -36,7 +36,7 @@ The script (and workflow) refuse if `release/A.B.C` or `vA.B.C` already exists o
 
 ### Step 2 — stabilize
 
-Test the release branch. For each fix, open a PR targeting `release/A.B.C` from a short-lived `fix/<slug>` or `issue/NN` branch. **No direct commits to the release branch** (other than the version-bump commit from Step 1). `release-branch.yml` runs a full multi-platform sanity build on every push/PR.
+Test the release branch. For each fix, open a PR targeting `release/A.B.C` from a short-lived `fix/<slug>` or `issue/NN` branch. **No direct commits to the release branch** (other than the version-bump commit from Step 1). Separate Android, Desktop, and Web workflows validate release PRs.
 
 ### Step 3 — finalize
 
@@ -71,7 +71,7 @@ The script:
 
 GitHub forbids an actor from approving their own PR, so the bot cannot self-approve. With "Require pull request reviews" set on `master`/`develop`, **you approve the PRs manually** on GitHub once the workflow opens them. Auto-merge fires automatically as soon as your approval lands and required status checks are green.
 
-If you take longer than the script's wait timeout (default 30 min) to approve, the workflow times out. To recover: approve and merge the master PR by hand, then run the remaining steps (tag, develop PR, dispatch release) — the workflow log prints the exact commands. Or just bump the timeout via `--timeout SECONDS`.
+If you take longer than the script's wait timeout (default 30 min) to approve, the workflow times out. Re-run it while the master PR is still open: it reuses that PR and preserves the existing changelogs. If the master PR has already merged, run the remaining steps (tag, develop PR, dispatch release) manually. Or bump the timeout via `--timeout SECONDS` when running locally.
 
 For auto-merge to be available at all, Settings → General → Pull Requests → **Allow auto-merge** must be on.
 
@@ -223,7 +223,6 @@ All workflows live in `.github/workflows/`. The release-flow workflows are thin 
 | `android.yml` | same as ktlint | Builds `android:buildFossDebug` as a smoke test |
 | `branch-name.yml` | PR opened/edited/sync (same-repo only) | Validates head branch matches conventions for the chosen base |
 | `pr-title-lint.yml` | PR opened/edited/sync (same-repo only) | Every PR title must start with a capital letter. PRs from `issue/NN` branches must additionally start with a GitHub closing keyword + the matching issue number (`Closes #NN ...`, `Fixes #NN ...`, etc.) |
-| `release-branch.yml` | push or PR on `release/**` / `hotfix/**` | Full multi-platform build (Android foss debug + desktop Linux/Win + web) with mock keystore |
 | `start-release.yml` | `workflow_dispatch` | Calls `scripts/start-release.sh` |
 | `finalize-release.yml` | `workflow_dispatch` | Calls `scripts/finalize-release.sh` |
 | `release.yml` | push of tag `v*.*.*` or `workflow_dispatch` (dispatched by `finalize-release.yml`) | Decodes keystore, calls `scripts/build-release-artifacts.sh`, calls `scripts/gen-release-notes-ai.sh`, publishes the GitHub Release |

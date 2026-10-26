@@ -87,33 +87,38 @@ if ! command -v gh >/dev/null 2>&1; then
   exit 1
 fi
 
-echo ">> Generating AI changelog (fastlane, one per supported locale)"
-./scripts/gen-changelog-ai.sh "$version"
+master_pr_url=$(gh pr list --base master --head "$branch" --state open --json url --jq '.[0].url // empty')
+if [[ -n "$master_pr_url" ]]; then
+  echo ">> Resuming existing master PR: $master_pr_url"
+else
+  echo ">> Generating AI changelog (fastlane, one per supported locale)"
+  ./scripts/gen-changelog-ai.sh "$version"
 
-version_code=$(grep 'const val versionCode' buildSrc/src/main/kotlin/ApplicationInfo.kt | sed -E 's/.*versionCode = ([0-9]+)/\1/')
+  version_code=$(grep 'const val versionCode' buildSrc/src/main/kotlin/ApplicationInfo.kt | sed -E 's/.*versionCode = ([0-9]+)/\1/')
 
-echo ">> Committing fastlane changelog"
-shopt -s nullglob
-changelog_files=(fastlane/metadata/android/*/changelogs/"${version_code}.txt")
-shopt -u nullglob
-if [[ ${#changelog_files[@]} -eq 0 ]]; then
-  echo >&2 "error: no changelog files were produced for versionCode ${version_code}"
-  exit 1
+  echo ">> Committing fastlane changelog"
+  shopt -s nullglob
+  changelog_files=(fastlane/metadata/android/*/changelogs/"${version_code}.txt")
+  shopt -u nullglob
+  if [[ ${#changelog_files[@]} -eq 0 ]]; then
+    echo >&2 "error: no changelog files were produced for versionCode ${version_code}"
+    exit 1
+  fi
+  git add "${changelog_files[@]}"
+  git commit -m "[skip ci] Add changelog for $tag"
+
+  echo ">> Pushing $branch"
+  git push origin "$branch"
+
+  echo ">> Creating PR: $branch -> master"
+  master_pr_url=$(gh pr create \
+    --base master \
+    --head "$branch" \
+    --title "Release $tag" \
+    --body "Automated release PR. Merges \`$branch\` into \`master\`.
+
+  When this PR merges, \`$tag\` will be tagged on the master merge commit and the Release workflow will publish signed artifacts.")
 fi
-git add "${changelog_files[@]}"
-git commit -m "[skip ci] Add changelog for $tag"
-
-echo ">> Pushing $branch"
-git push origin "$branch"
-
-echo ">> Creating PR: $branch -> master"
-master_pr_url=$(gh pr create \
-  --base master \
-  --head "$branch" \
-  --title "Release $tag" \
-  --body "Automated release PR. Merges \`$branch\` into \`master\`.
-
-When this PR merges, \`$tag\` will be tagged on the master merge commit and the Release workflow will publish signed artifacts.")
 master_pr_num="${master_pr_url##*/}"
 echo ">> Master PR: $master_pr_url (#$master_pr_num)"
 
@@ -153,7 +158,7 @@ while [[ $elapsed -lt $timeout_seconds ]]; do
 done
 if [[ "$state" != "MERGED" ]]; then
   echo >&2 "error: master PR #$master_pr_num did not merge within ${timeout_seconds}s"
-  echo >&2 "  approve and merge it manually, then re-run with --no-wait or finish the remaining steps by hand"
+  echo >&2 "  re-run this workflow while the PR is open to resume waiting, or finish the remaining steps by hand"
   exit 1
 fi
 

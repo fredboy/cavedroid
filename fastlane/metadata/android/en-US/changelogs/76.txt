@@ -1,0 +1,3 @@
+- Increased creeper spawn rate
+- Fixed mobs spawning in lit areas
+- Added missing translations for mob stats
