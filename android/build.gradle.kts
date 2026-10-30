@@ -10,11 +10,11 @@ import java.util.Properties
 private val natives by configurations.creating
 
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
 
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 private val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -274,26 +274,27 @@ androidComponents {
 }
 
 dependencies {
-    useCommonLibs()
-    useGdxModule()
-    useLightingBfs()
+    implementation(project(":core:common"))
+    implementation(libs.bundles.common)
+    implementation(project(":core:gdx"))
+    implementation(project(":core:gameplay:lighting-bfs"))
 
-    implementation(Dependencies.LibGDX.gdx)
-    implementation(Dependencies.LibGDX.Android.backend)
+    implementation(libs.gdx.core)
+    implementation(libs.gdx.backend.android)
 
-    "storeImplementation"(platform(Dependencies.Google.Firebase.bom))
-    "storeImplementation"(Dependencies.Google.Firebase.crashlytics)
-    "storeImplementation"(Dependencies.Google.Firebase.analytics)
-    "storeImplementation"(Dependencies.Google.Firebase.performance)
-//    "storeImplementation"(Dependencies.Yandex.mobileads)
+    "storeImplementation"(platform(libs.firebase.bom))
+    "storeImplementation"(libs.firebase.crashlytics)
+    "storeImplementation"(libs.firebase.analytics)
+    "storeImplementation"(libs.firebase.performance)
+//    "storeImplementation"(libs.yandex.mobileads)
 
-    natives(Dependencies.LibGDX.Android.Natives.armeabi)
-    natives(Dependencies.LibGDX.Android.Natives.arm64)
-    natives(Dependencies.LibGDX.Android.Natives.x86)
-    natives(Dependencies.LibGDX.Android.Natives.x86_64)
+    natives(variantOf(libs.gdx.platform.core) { classifier("natives-armeabi-v7a") })
+    natives(variantOf(libs.gdx.platform.core) { classifier("natives-arm64-v8a") })
+    natives(variantOf(libs.gdx.platform.core) { classifier("natives-x86") })
+    natives(variantOf(libs.gdx.platform.core) { classifier("natives-x86_64") })
 
-    natives(Dependencies.LibGDX.Box2d.Natives.Android.armeabi)
-    natives(Dependencies.LibGDX.Box2d.Natives.Android.arm64)
-    natives(Dependencies.LibGDX.Box2d.Natives.Android.x86)
-    natives(Dependencies.LibGDX.Box2d.Natives.Android.x86_64)
+    natives(variantOf(libs.gdx.platform.box2d) { classifier("natives-armeabi-v7a") })
+    natives(variantOf(libs.gdx.platform.box2d) { classifier("natives-arm64-v8a") })
+    natives(variantOf(libs.gdx.platform.box2d) { classifier("natives-x86") })
+    natives(variantOf(libs.gdx.platform.box2d) { classifier("natives-x86_64") })
 }

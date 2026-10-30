@@ -1,19 +1,20 @@
 plugins {
-    kotlin("jvm")
-    ksp
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.ksp)
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
-    useLibgdx()
-    useDagger()
-    useKotlinxCoroutines()
+    implementation(libs.bundles.gdx)
+    implementation(libs.dagger.runtime)
+    ksp(libs.dagger.compiler)
+    implementation(libs.kotlinx.coroutines.core)
 
-    testImplementation(Dependencies.Test.junitJupiter)
-    testRuntimeOnly(Dependencies.Test.junitJupiterEngine)
-    testRuntimeOnly(Dependencies.Test.junitPlatformLauncher)
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.engine)
+    testRuntimeOnly(libs.junit.launcher)
 }
 
 tasks.test {

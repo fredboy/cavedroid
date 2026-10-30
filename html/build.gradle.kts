@@ -2,8 +2,8 @@ import java.nio.file.Files
 import java.nio.file.StandardOpenOption
 
 plugins {
-    kotlin("jvm")
-    kotlinxSerialization
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility
@@ -59,13 +59,14 @@ private fun String.sanitizeForYandex(): String {
 }
 
 dependencies {
-    useCommonLibs()
-    useGdxModule()
-    useLightingBfs()
-    useTeaVMBackend()
-    useKotlinxSerializationJson()
+    implementation(project(":core:common"))
+    implementation(libs.bundles.common)
+    implementation(project(":core:gdx"))
+    implementation(project(":core:gameplay:lighting-bfs"))
+    implementation(libs.gdx.backend.web)
+    implementation(libs.kotlinx.serialization.json)
 
-    implementation(Dependencies.LibGDX.gdx)
+    implementation(libs.gdx.core)
 }
 
 tasks.register<Copy>("copyLicenseReport") {

@@ -14,7 +14,7 @@ User requests anything in the shape of "add tests", "write a test for X", "test 
 - **JUnit Jupiter 5** — `org.junit.jupiter.api.Test`, `Assertions.*`. `useJUnitPlatform()` is required in the module's `tasks.test {}` (the Kotlin JVM plugin does not enable it by default — forgetting this means tests silently don't run).
 - **mockk** for test doubles. Don't bring in Mockito or PowerMock.
 - **kotlinx-coroutines-test** (`runTest`, `TestScope`) when the SUT launches coroutines or uses `viewModelScope`.
-- Test deps come from `Dependencies.Test.*` (`buildSrc/src/main/kotlin/Dependencies.kt`) — never inline a Maven coordinate string.
+- Test deps come from `libs.junit.*` and `libs.mockk` (`gradle/libs.versions.toml`) — never inline a Maven coordinate string.
 
 ## Layout
 
@@ -68,11 +68,11 @@ Add to the module's `build.gradle.kts`:
 dependencies {
     // ...existing implementation deps...
 
-    testImplementation(Dependencies.Test.junitJupiter)
-    testRuntimeOnly(Dependencies.Test.junitJupiterEngine)
-    testRuntimeOnly(Dependencies.Test.junitPlatformLauncher)
-    testImplementation(Dependencies.Test.mockk)              // only if needed
-    testImplementation(Dependencies.Kotlin.coroutinesTest)   // only if needed
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.engine)
+    testRuntimeOnly(libs.junit.launcher)
+    testImplementation(libs.mockk)                     // only if needed
+    testImplementation(libs.kotlinx.coroutines.test)    // only if needed
 }
 
 tasks.test {

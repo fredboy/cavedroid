@@ -1,26 +1,28 @@
 plugins {
-    kotlin("jvm")
-    ksp
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.ksp)
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
-    useLibgdx()
-    useDagger()
+    implementation(libs.bundles.gdx)
+    implementation(libs.dagger.runtime)
+    ksp(libs.dagger.compiler)
 
-    useCommonLibs()
-    useModule(":core:domain:configuration")
-    useModule(":core:domain:items")
-    useModule(":core:domain:world")
-    useDomainSaveModule()
-    useModule(":core:game:world")
+    implementation(project(":core:common"))
+    implementation(libs.bundles.common)
+    implementation(project(":core:domain:configuration"))
+    implementation(project(":core:domain:items"))
+    implementation(project(":core:domain:world"))
+    implementation(project(":core:domain:save"))
+    implementation(project(":core:game:world"))
 
-    testImplementation(Dependencies.Test.junitJupiter)
-    testRuntimeOnly(Dependencies.Test.junitJupiterEngine)
-    testRuntimeOnly(Dependencies.Test.junitPlatformLauncher)
-    testImplementation(Dependencies.Test.mockk)
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.engine)
+    testRuntimeOnly(libs.junit.launcher)
+    testImplementation(libs.mockk)
 }
 
 tasks.test { useJUnitPlatform() }

@@ -1,0 +1,82 @@
+[versions]
+agp = "8.11.0"
+automultibind = "1.0.4"
+buildsrcKtlint = "12.3.0"
+construo = "1.7.1"
+dagger = "2.57"
+firebase = "34.13.0"
+firebaseCrashlyticsPlugin = "3.0.7"
+gdx = "1.13.1"
+# The TeaVM backend pulls libGDX 1.14.0 transitively on :html's classpath.
+# Its runtime ABI is forward-compatible with the project's libGDX usage.
+gdxTeaVM = "1.5.6"
+googleServices = "4.4.4"
+junit = "5.11.4"
+kermit = "2.0.8"
+kotlin = "2.2.10"
+kotlinxCoroutines = "1.10.2"
+kotlinxSerialization = "1.9.0"
+ksp = "2.2.10-2.0.2"
+ktlint = "1.6.0"
+ktlintPlugin = "13.0.0"
+libktx = "1.13.1-rc1"
+licenseReport = "2.9"
+mockk = "1.13.13"
+proguard = "7.7.0"
+robovm = "2.3.23"
+yandexMobileads = "8.0.0"
+
+[libraries]
+automultibind-annotations = { module = "ru.fredboy:automultibind-annotations", version.ref = "automultibind" }
+automultibind-ksp = { module = "ru.fredboy:automultibind-ksp", version.ref = "automultibind" }
+dagger-runtime = { module = "com.google.dagger:dagger", version.ref = "dagger" }
+dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+firebase-performance = { module = "com.google.firebase:firebase-perf" }
+gdx-core = { module = "com.badlogicgames.gdx:gdx", version.ref = "gdx" }
+gdx-box2d = { module = "com.badlogicgames.gdx:gdx-box2d", version.ref = "gdx" }
+gdx-backend-android = { module = "com.badlogicgames.gdx:gdx-backend-android", version.ref = "gdx" }
+gdx-backend-desktop = { module = "com.badlogicgames.gdx:gdx-backend-lwjgl3", version.ref = "gdx" }
+gdx-backend-ios = { module = "com.badlogicgames.gdx:gdx-backend-robovm", version.ref = "gdx" }
+gdx-backend-web = { module = "com.github.xpenatan.gdx-teavm:backend-web", version.ref = "gdxTeaVM" }
+# Select the required natives-* classifier with variantOf(...) in each consumer.
+gdx-platform-core = { module = "com.badlogicgames.gdx:gdx-platform", version.ref = "gdx" }
+gdx-platform-box2d = { module = "com.badlogicgames.gdx:gdx-box2d-platform", version.ref = "gdx" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+junit-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlinxSerialization" }
+ktx-actors = { module = "io.github.libktx:ktx-actors", version.ref = "libktx" }
+ktx-scene2d = { module = "io.github.libktx:ktx-scene2d", version.ref = "libktx" }
+license-report = { module = "com.github.jk1:gradle-license-report", version.ref = "licenseReport" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+proguard-gradle = { module = "com.guardsquare:proguard-gradle", version.ref = "proguard" }
+robovm-rt = { module = "com.mobidevelop.robovm:robovm-rt", version.ref = "robovm" }
+robovm-cocoatouch = { module = "com.mobidevelop.robovm:robovm-cocoatouch", version.ref = "robovm" }
+robovm-gradle = { module = "com.mobidevelop.robovm:robovm-gradle-plugin", version.ref = "robovm" }
+yandex-mobileads = { module = "com.yandex.android:mobileads", version.ref = "yandexMobileads" }
+
+[bundles]
+common = ["kermit", "kotlinx-coroutines-core"]
+gdx = ["gdx-core", "gdx-box2d"]
+ktx = ["ktx-scene2d", "ktx-actors"]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+buildsrc-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "buildsrcKtlint" }
+construo = { id = "io.github.fourlastor.construo", version.ref = "construo" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintPlugin" }

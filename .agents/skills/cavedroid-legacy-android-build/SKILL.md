@@ -47,11 +47,12 @@ The patch is the source of truth for the legacy migration. The sections below de
 
 ## The downgrade matrix
 
-Edit `buildSrc/src/main/kotlin/Versions.kt`:
+Edit `gradle/libs.versions.toml`:
 
-```kotlin
-const val gdx = "1.9.10"          // was 1.12.1 / 1.13.1
-const val libKtx = "1.9.10-b6"    // was 1.13.1-rc1 — must track libGDX major.minor
+```toml
+[versions]
+gdx = "1.9.10"          # was 1.12.1 / 1.13.1
+libktx = "1.9.10-b6"    # was 1.13.1-rc1 — must track libGDX major.minor
 ```
 
 Don't bump these one at a time. ktx is coupled to libGDX's ABI; mixing 1.9.10 gdx with 1.13.x ktx will fail at link time, not compile time.
@@ -182,7 +183,7 @@ tasks.whenTaskAdded {
 
 The `JniLibFolders` clause is the load-bearing part for this skill. Without it, `mergeJniLibFolders` and `copyAndroidNatives` are sibling prerequisites of `package*` with no relative order — Gradle is free to run merge first against whatever libs/ happens to contain. Two sequenced builds at different libGDX versions (the common case after running `scripts/build-release-artifacts.sh`, or just rebuilding after legacy then mainline) will then race: the second build can ship the *first* build's natives. The APK passes `assembleFossRelease`, the `__memcpy_chk` symbol either is or isn't present depending on which version "won," and you don't notice until the app actually crashes on a target device.
 
-If a future libGDX bump or a buildSrc refactor removes the `JniLibFolders` clause, the race comes back. If you're re-doing the migration from scratch and see a freshly built APK that doesn't match `Versions.kt`, re-check that `whenTaskAdded` block first.
+If a future libGDX bump or a build refactor removes the `JniLibFolders` clause, the race comes back. If you're re-doing the migration from scratch and see a freshly built APK that doesn't match `gradle/libs.versions.toml`, re-check that `whenTaskAdded` block first.
 
 ## Save the migration as a patch (do this before reverting)
 
@@ -194,7 +195,7 @@ git diff -- ':!legacy-migration.patch' > legacy-migration.patch
 
 The `':!legacy-migration.patch'` pathspec is required when the patch already exists in `HEAD` — the redirect truncates the destination *before* `git diff` runs, so a naive `git diff > legacy-migration.patch` captures the patch's own deletion + rewrite, producing a self-referential patch that no longer applies cleanly. Exclude the patch file from the diff to avoid this.
 
-Sanity-check the patch covers what you expect — at minimum it should touch `buildSrc/.../Versions.kt`, `android/build.gradle.kts` (the `minSdk` lowering), `android/src/main/AndroidManifest.xml` (the `<uses-sdk tools:overrideLibrary="co.touchlab.kermit,co.touchlab.kermit.core" />` line), `android/proguard-rules.pro` (the `-dontwarn com.badlogic.gdx.jnigen.**` line), and every source file listed under "API ports the downgrade forces" above. If any of those are missing, the working tree was not in the right state when you ran `git diff`.
+Sanity-check the patch covers what you expect — at minimum it should touch `gradle/libs.versions.toml`, `android/build.gradle.kts` (the `minSdk` lowering), `android/src/main/AndroidManifest.xml` (the `<uses-sdk tools:overrideLibrary="co.touchlab.kermit,co.touchlab.kermit.core" />` line), `android/proguard-rules.pro` (the `-dontwarn com.badlogic.gdx.jnigen.**` line), and every source file listed under "API ports the downgrade forces" above. If any of those are missing, the working tree was not in the right state when you ran `git diff`.
 
 Optional but recommended: after capturing the patch, revert the code/build edits with `git restore` (preserving only `legacy-migration.patch`, the skill, and the README sections). The next legacy release runs:
 
@@ -210,7 +211,7 @@ Keep `legacy-migration.patch` versioned next to release artifacts — it must be
 ## What this downgrade does NOT cover
 
 - **Runtime behavior.** Six years of libGDX changes between 1.9.10 and 1.12.1 mean Scene2D layout edge cases, Stage/SpriteBatch blending defaults, Box2D contact-filter ordering, etc., may behave subtly differently. The user must verify on the actual API 16/17 device.
-- **Desktop and iOS launchers.** They share `Versions.kt`, so they'll pick up the downgrade automatically and may need their own per-platform API patches.
+- **Desktop and iOS launchers.** They share `gradle/libs.versions.toml`, so they'll pick up the downgrade automatically and may need their own per-platform API patches.
 - **`store` flavor.** Yandex Mobile Ads 8.x targets newer Android. If `:android:assembleStoreDebug` fails after the libGDX downgrade, either downgrade Yandex SDK or constrain the store flavor to a higher minSdk via flavor-specific `defaultConfig { minSdk = 21 }`.
 - **`@Deprecated` warnings.** `Vector2.setAngle` and friends will emit deprecation warnings against newer libGDX docs; ignore them — they're correct for 1.9.10.
 

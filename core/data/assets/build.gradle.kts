@@ -1,17 +1,19 @@
 plugins {
-    kotlin("jvm")
-    ksp
-    kotlinxSerialization
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
-    useCommonLibs()
-    useModule(":core:domain:assets")
-    useModule(":core:domain:configuration")
-    useLibgdx()
-    useKotlinxSerializationJson()
-    useDagger()
+    implementation(project(":core:common"))
+    implementation(libs.bundles.common)
+    implementation(project(":core:domain:assets"))
+    implementation(project(":core:domain:configuration"))
+    implementation(libs.bundles.gdx)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.dagger.runtime)
+    ksp(libs.dagger.compiler)
 }

@@ -1,42 +1,44 @@
 plugins {
-    kotlin("jvm")
-    ksp
-    kotlinxSerialization
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
-    useModule(":core:game:controller:vehicle")
-    useModule(":core:entity:vehicle")
-    useCommonLibs()
-    useLibgdx()
-    useKotlinxSerializationProtobuf()
-    useDagger()
+    implementation(project(":core:game:controller:vehicle"))
+    implementation(project(":core:entity:vehicle"))
+    implementation(project(":core:common"))
+    implementation(libs.bundles.common)
+    implementation(libs.bundles.gdx)
+    implementation(libs.kotlinx.serialization.protobuf)
+    implementation(libs.dagger.runtime)
+    ksp(libs.dagger.compiler)
 
-    useModule(":core:domain:assets")
-    useModule(":core:domain:configuration")
-    useModule(":core:domain:items")
-    useModule(":core:domain:world")
-    useModule(":core:domain:save")
+    implementation(project(":core:domain:assets"))
+    implementation(project(":core:domain:configuration"))
+    implementation(project(":core:domain:items"))
+    implementation(project(":core:domain:world"))
+    implementation(project(":core:domain:save"))
 
-    useModule(":core:entity:container")
-    useModule(":core:entity:drop")
-    useModule(":core:entity:mob")
-    useModule(":core:entity:projectile")
+    implementation(project(":core:entity:container"))
+    implementation(project(":core:entity:drop"))
+    implementation(project(":core:entity:mob"))
+    implementation(project(":core:entity:projectile"))
 
-    useModule(":core:game:controller:container")
-    useModule(":core:game:controller:drop")
-    useModule(":core:game:controller:mob")
-    useModule(":core:game:controller:projectile")
+    implementation(project(":core:game:controller:container"))
+    implementation(project(":core:game:controller:drop"))
+    implementation(project(":core:game:controller:mob"))
+    implementation(project(":core:game:controller:projectile"))
 
-    useModule(":core:game:world")
+    implementation(project(":core:game:world"))
 
-    testImplementation(Dependencies.Test.junitJupiter)
-    testRuntimeOnly(Dependencies.Test.junitJupiterEngine)
-    testRuntimeOnly(Dependencies.Test.junitPlatformLauncher)
-    testImplementation(Dependencies.Test.mockk)
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.engine)
+    testRuntimeOnly(libs.junit.launcher)
+    testImplementation(libs.mockk)
 }
 
 tasks.test {

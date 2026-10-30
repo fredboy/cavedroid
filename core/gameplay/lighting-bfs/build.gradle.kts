@@ -1,24 +1,25 @@
 plugins {
     `java-library`
-    kotlin("jvm")
+    alias(libs.plugins.kotlin.jvm)
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
-    useLibgdx()
+    implementation(libs.bundles.gdx)
 
-    useCommonLibs()
-    useModule(":core:domain:items")
-    useModule(":core:domain:world")
-    useModule(":core:entity:mob")
-    useApiModule(":core:domain:configuration")
-    useApiModule(":core:game:world")
+    implementation(project(":core:common"))
+    implementation(libs.bundles.common)
+    implementation(project(":core:domain:items"))
+    implementation(project(":core:domain:world"))
+    implementation(project(":core:entity:mob"))
+    api(project(":core:domain:configuration"))
+    api(project(":core:game:world"))
 
-    testImplementation(Dependencies.Test.junitJupiter)
-    testRuntimeOnly(Dependencies.Test.junitJupiterEngine)
-    testRuntimeOnly(Dependencies.Test.junitPlatformLauncher)
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.engine)
+    testRuntimeOnly(libs.junit.launcher)
 }
 
 tasks.test {

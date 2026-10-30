@@ -80,6 +80,9 @@ Always target `develop`. Release branches and `master` are handled by the mainta
 ## Testing
 
 Tests use JUnit Jupiter (5.x), mockk, and `kotlinx-coroutines-test`.
+Declare library and plugin versions in `gradle/libs.versions.toml` and reference
+them with `libs` accessors in build scripts. For native libraries, select the
+platform classifier with `variantOf(...)`; catalogs do not store classifiers.
 
 ```bash
 ./gradlew test                  # all modules

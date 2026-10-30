@@ -187,28 +187,27 @@ index 1d86b8d1..782693a9 100644
              }
              if (now - lastPss >= 30_000_000_000L) {
                  lastPss = now
-diff --git a/buildSrc/src/main/kotlin/Versions.kt b/buildSrc/src/main/kotlin/Versions.kt
-index 76c5fdef..54454d0e 100644
---- a/buildSrc/src/main/kotlin/Versions.kt
-+++ b/buildSrc/src/main/kotlin/Versions.kt
-@@ -10,7 +10,7 @@ object Versions {
-      *
-      * [Source](https://github.com/libgdx/libgdx)
-      */
--    const val gdx = "1.13.1"
-+    const val gdx = "1.9.10"
- 
-     /**
-      * Dagger version
-@@ -66,7 +66,7 @@ object Versions {
-      *
-      * [Source](https://github.com/libktx/ktx)
-      */
--    const val libKtx = "1.13.1-rc1"
-+    const val libKtx = "1.9.10-b6"
- 
-     /**
-      * Kotlin coroutines
+diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+--- a/gradle/libs.versions.toml
++++ b/gradle/libs.versions.toml
+@@ -6,7 +6,7 @@
+ dagger = "2.57"
+ firebase = "34.13.0"
+ firebaseCrashlyticsPlugin = "3.0.7"
+-gdx = "1.13.1"
++gdx = "1.9.10"
+ # The TeaVM backend pulls libGDX 1.14.0 transitively on :html's classpath.
+ # Its runtime ABI is forward-compatible with the project's libGDX usage.
+ gdxTeaVM = "1.5.6"
+@@ -19,7 +19,7 @@
+ ksp = "2.2.10-2.0.2"
+ ktlint = "1.6.0"
+ ktlintPlugin = "13.0.0"
+-libktx = "1.13.1-rc1"
++libktx = "1.9.10-b6"
+ licenseReport = "2.9"
+ mockk = "1.13.13"
+ proguard = "7.7.0"
 diff --git a/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt b/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt
 index c0a11417..853f4534 100644
 --- a/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt

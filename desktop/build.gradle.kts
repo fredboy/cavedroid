@@ -8,8 +8,8 @@ import java.util.Properties
 import kotlin.apply
 
 plugins {
-    kotlin("jvm")
-    construo
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.construo)
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility
@@ -196,12 +196,13 @@ construo {
 }
 
 dependencies {
-    useCommonLibs()
-    useGdxModule()
-    useLightingBfs()
+    implementation(project(":core:common"))
+    implementation(libs.bundles.common)
+    implementation(project(":core:gdx"))
+    implementation(project(":core:gameplay:lighting-bfs"))
 
-    implementation(Dependencies.LibGDX.gdx)
-    implementation(Dependencies.LibGDX.Desktop.backend)
-    implementation(Dependencies.LibGDX.Desktop.natives)
-    implementation(Dependencies.LibGDX.Box2d.Natives.desktop)
+    implementation(libs.gdx.core)
+    implementation(libs.gdx.backend.desktop)
+    implementation(variantOf(libs.gdx.platform.core) { classifier("natives-desktop") })
+    implementation(variantOf(libs.gdx.platform.box2d) { classifier("natives-desktop") })
 }

@@ -23,7 +23,9 @@ owns them unless they are shared by multiple features.
 - The Y axis points down.
 - Write Kotlin and follow `.editorconfig`. Existing Java emulation sources in
   `html/src/main/java/emu/` and `html/src/main/java/emulate/` are the exception.
-- Use dependency definitions and helpers in `buildSrc/`; centralize versions there.
+- Declare dependencies and plugin versions in `gradle/libs.versions.toml` and use
+  the generated `libs` accessors. Use standard `project(...)` dependencies for
+  local modules. `buildSrc/` holds application metadata and custom build logic.
 - DI uses Dagger, KSP, and automultibind. Follow existing annotations when adding
   handlers, actions, or renderers; their binding modules are generated. For
   explicit bindings, check the owning component and module wiring in `core/gdx/`.
@@ -54,7 +56,7 @@ Choose checks appropriate to the affected modules and behavior:
 
 Tests use JUnit Jupiter, with mockk and kotlinx-coroutines-test where needed.
 Modules with tests must enable `tasks.test { useJUnitPlatform() }` and declare
-test dependencies through the definitions in `buildSrc/`. Use an existing
+test dependencies through the version catalog. Use an existing
 tested module such as `core/common` as a setup example.
 
 Avoid constructing objects that need GL or native physics in JVM tests.
