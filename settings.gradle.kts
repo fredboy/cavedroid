@@ -11,13 +11,13 @@ include("desktop")
 include("ios")
 include("html")
 
-/**
+/*
  * Global modules
  */
 include("core:common")
 include("core:common:mvvm")
 
-/**
+/*
  * Data modules
  */
 include("core:data:assets")
@@ -26,7 +26,7 @@ include("core:data:items")
 include("core:data:save")
 include("core:data:stats")
 
-/**
+/*
  * First level domain models
  */
 include("core:domain:assets")
@@ -36,7 +36,7 @@ include("core:domain:world")
 include("core:domain:save")
 include("core:domain:stats")
 
-/**
+/*
  * Second level domain models
  */
 include("core:entity:container")
@@ -46,7 +46,7 @@ include("core:entity:projectile")
 include("core:entity:vehicle")
 include("core:game:controller:vehicle")
 
-/**
+/*
  * Game scope modules
  */
 include("core:game")
@@ -66,7 +66,7 @@ include("core:game:window")
 // world module
 include("core:game:world")
 
-/**
+/*
  * Gameplay modules, physics, rendering, controls, etc.
  */
 include("core:gameplay:controls")
@@ -74,7 +74,7 @@ include("core:gameplay:physics")
 include("core:gameplay:rendering")
 include("core:gameplay:lighting-bfs")
 
-/**
+/*
  * Gdx module: initialization, menu, screens...
  */
 include("core:gdx")

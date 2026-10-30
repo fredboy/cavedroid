@@ -171,7 +171,6 @@ tasks.processResources.apply {
 construo {
     name.set("cavedroid")
     humanName.set(ApplicationInfo.name)
-    version.set(ApplicationInfo.versionName)
     mainClass.set(desktopLauncherClassName)
     outputDir.set(layout.buildDirectory.dir("dist"))
     jarTask.set("generateSignedJar")
