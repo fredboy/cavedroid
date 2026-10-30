@@ -1,5 +1,5 @@
 [versions]
-agp = "8.11.0"
+agp = "9.5.0"
 automultibind = "1.0.4"
 buildsrcKtlint = "12.3.0"
 construo = "1.7.1"
