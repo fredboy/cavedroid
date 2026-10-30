@@ -8,5 +8,8 @@ object ApplicationInfo {
 
     const val packageName = "ru.fredboy.cavedroid"
 
+    const val javaVersion = 25
+
+    // Shared bytecode must remain compatible with Android, TeaVM, and RoboVM.
     val sourceCompatibility = JavaVersion.VERSION_17
 }

@@ -8,7 +8,7 @@ For building and running the game, see [README.md](README.md). For a code map an
 
 You need:
 
-- **JDK 17** (Temurin, Zulu, Adoptium — must be exactly 17; the build pins JVM target 17 everywhere)
+- **JDK 25** (for example, Eclipse Temurin or Zulu). Set `JAVA_HOME` and your IDE Gradle JVM to JDK 25; build toolchains use 25 while JVM bytecode stays at 17 for Android, TeaVM, and RoboVM compatibility.
 - Git
 - (Optional) Android SDK if you want to build the Android target locally
 
@@ -66,7 +66,7 @@ Always target `develop`. Release branches and `master` are handled by the mainta
 
 ## Code style
 
-- **Kotlin only** — no new Java. JVM target 17 throughout.
+- **Kotlin only** — no new Java. Build with JDK 25; JVM target 17 throughout.
   - Exception: vendored emulated classes under `html/src/main/java/emu/**` and `html/src/main/java/emulate/**`.
 - **Ktlint** (1.6.0) gates CI:
 

@@ -22,7 +22,7 @@ ktlintPlugin = "13.0.0"
 libktx = "1.13.1-rc1"
 licenseReport = "2.9"
 mockk = "1.13.13"
-proguard = "7.7.0"
+proguard = "7.10.0"
 robovm = "2.3.23"
 yandexMobileads = "8.0.0"
 

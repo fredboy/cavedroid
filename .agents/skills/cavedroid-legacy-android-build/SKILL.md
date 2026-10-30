@@ -5,6 +5,10 @@ description: Use when the user wants to build CaveDroid for Android API 16/17 (J
 
 # CaveDroid: building for legacy Android (API 16/17)
 
+Run Gradle verification with **JDK 25** (`JAVA_HOME` and the IDE Gradle JVM).
+The build toolchain is 25; shared JVM bytecode stays at 17 for Android, TeaVM,
+and RoboVM compatibility.
+
 ## When this applies
 
 Activate on any of:

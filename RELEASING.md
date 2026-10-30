@@ -17,6 +17,8 @@ Tags use the form `vA.B.C`. Older tags (`1.0.0`, `1.0.1`, …) pre-date this con
 
 The release logic lives in `scripts/`; GitHub Actions workflows are thin wrappers that call those scripts. **Default path: trigger the workflows from GitHub.** Each step is also runnable locally as a fallback.
 
+Local artifact builds require **JDK 25** (`JAVA_HOME`); CI uses Temurin 25. Construo bundles pin Temurin 25.0.5+8 for Linux x64, macOS ARM64, and Windows x64. JVM bytecode stays at 17 for Android, TeaVM, and RoboVM compatibility.
+
 ### Step 1 — cut the release branch
 
 GitHub: Actions → **Start Release** → Run workflow → `version=A.B.C`. Or:

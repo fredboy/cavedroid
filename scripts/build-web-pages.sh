@@ -20,11 +20,11 @@ else
   java_bin="java"
 fi
 java_version=$("$java_bin" -version 2>&1 | sed -nE '1s/.*version "([0-9]+).*/\1/p')
-if [[ "$java_version" != "17" ]]; then
-  echo ">> Java 17 required; found '${java_version:-unknown}' via $java_bin (JAVA_HOME=${JAVA_HOME:-(unset)})"
+if [[ "$java_version" != "25" ]]; then
+  echo ">> Java 25 required; found '${java_version:-unknown}' via $java_bin (JAVA_HOME=${JAVA_HOME:-(unset)})"
   exit 1
 fi
-echo ">> Java 17 detected (via $java_bin)"
+echo ">> Java 25 detected (via $java_bin)"
 
 # The html build doesn't need signing, but a few other modules in the graph
 # read keystore.properties at configure time. Mock it if absent so the build

@@ -5,6 +5,10 @@ description: Use when the user asks to write, add, or fix unit tests for CaveDro
 
 # CaveDroid unit tests
 
+Run Gradle verification with **JDK 25** (`JAVA_HOME` and the IDE Gradle JVM).
+The build toolchain is 25; shared JVM bytecode stays at 17 for Android, TeaVM,
+and RoboVM compatibility.
+
 ## When this applies
 
 User requests anything in the shape of "add tests", "write a test for X", "test this", "unit test the Y manager", on Kotlin code in this repo. Skip for: integration/manual playtest requests, asset/build-system questions, anything that explicitly says "instrumentation test" (the project has none).

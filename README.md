@@ -69,6 +69,9 @@ Or play right from your browser [on GitHubPages](https://fredboy.github.io/caved
 
 ## Build Instructions
 
+Install **JDK 25** and set `JAVA_HOME` (and your IDE Gradle JVM) to it. Use the Gradle wrapper below.
+JVM bytecode targets Java 17 for Android, TeaVM, and RoboVM compatibility; Construo desktop bundles include a JDK 25 runtime.
+
 ### Android
 
 ```bash

@@ -3,6 +3,10 @@ plugins {
     alias(libs.plugins.buildsrc.ktlint)
 }
 
+kotlin {
+    jvmToolchain(25)
+}
+
 repositories {
     mavenCentral()
     gradlePluginPortal()

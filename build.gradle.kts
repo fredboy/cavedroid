@@ -49,13 +49,13 @@ allprojects {
         plugins.withId("org.jetbrains.kotlin.jvm") {
             extensions.configure<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension> {
                 jvmToolchain {
-                    languageVersion.set(JavaLanguageVersion.of(17))
+                    languageVersion.set(JavaLanguageVersion.of(ApplicationInfo.javaVersion))
                 }
             }
 
             extensions.configure<JavaPluginExtension> {
                 toolchain {
-                    languageVersion.set(JavaLanguageVersion.of(17))
+                    languageVersion.set(JavaLanguageVersion.of(ApplicationInfo.javaVersion))
                 }
             }
 

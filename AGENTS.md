@@ -1,7 +1,9 @@
 # CaveDroid agent guide
 
 CaveDroid is a Kotlin/libGDX 2D sandbox game for desktop, Android, iOS,
-and web (TeaVM). Use the Gradle wrapper from the repository root with JDK 17.
+and web (TeaVM). Use the Gradle wrapper from the repository root with JDK 25.
+Build toolchains use JDK 25; shared JVM bytecode stays at 17 for Android, TeaVM,
+and RoboVM compatibility. Construo desktop bundles include a JDK 25 runtime.
 
 ## Code map
 

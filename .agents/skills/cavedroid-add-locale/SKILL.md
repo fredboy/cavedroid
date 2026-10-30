@@ -5,6 +5,10 @@ description: Use when the user asks to add a new UI language / locale to CaveDro
 
 # CaveDroid — add a new locale
 
+Run Gradle verification with **JDK 25** (`JAVA_HOME` and the IDE Gradle JVM).
+The build toolchain is 25; shared JVM bytecode stays at 17 for Android, TeaVM,
+and RoboVM compatibility.
+
 ## When this applies
 
 User wants a new in-game UI language. Skip for: changing the default locale, fixing a single string in an existing locale, or adding Android `values-*/strings.xml` resources (the project does not localize the launcher name — only one `strings.xml` exists, and `app_name` is the same in every language).

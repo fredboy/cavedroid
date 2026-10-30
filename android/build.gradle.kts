@@ -139,6 +139,7 @@ android {
     }
 
     kotlin {
+        jvmToolchain(ApplicationInfo.javaVersion)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }
