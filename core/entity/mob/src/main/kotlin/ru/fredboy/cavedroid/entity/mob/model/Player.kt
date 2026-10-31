@@ -71,6 +71,12 @@ class Player(
     var holdAim = true
     var aimToPlayer = Vector2()
 
+    val cursorRangeSquared: Float
+        get() = when (gameMode) {
+            GameMode.SURVIVAL -> SURVIVAL_CURSOR_RANGE_2
+            GameMode.CREATIVE -> CREATIVE_CURSOR_RANGE_2
+        }
+
     val selectedX get() = cursorX.floorToInt()
     val selectedY get() = cursorY.floorToInt()
 
@@ -467,13 +473,9 @@ class Player(
     fun rayCastCursor(mobWorldAdapter: MobWorldAdapter, onCallback: () -> Unit = {}) {
         val cursor = Vector2(aimX, aimY)
 
-        val range = when (gameMode) {
-            GameMode.SURVIVAL -> SURVIVAL_CURSOR_RANGE_2
-            GameMode.CREATIVE -> CREATIVE_CURSOR_RANGE_2
-        }
         val plToCursor = cursor
             .sub(position)
-            .limit2(range)
+            .limit2(cursorRangeSquared)
 
         cursor.x = position.x + plToCursor.x
         cursor.y = position.y + plToCursor.y

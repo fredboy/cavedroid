@@ -116,7 +116,11 @@ class GameRenderer @Inject constructor(
 
     private fun updateDynamicCameraPosition(delta: Float) {
         poses.playerPosition(playerPosition)
-        poses.aimPosition(aimPosition)
+        poses.aimPosition(
+            out = aimPosition,
+            mouseWorldX = camera.position.x + camera.viewportWidth * (Gdx.input.x.toFloat() / Gdx.graphics.width - 0.5f),
+            mouseWorldY = camera.position.y + camera.viewportHeight * (Gdx.input.y.toFloat() / Gdx.graphics.height - 0.5f),
+        )
         val cameraTargetPosition = Vector3().apply {
             x = playerPosition.x / 2f + aimPosition.x / 2f
             y = playerPosition.y / 2f + aimPosition.y / 2f

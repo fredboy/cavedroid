@@ -7,6 +7,8 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.entity.vehicle.BoatTuning
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.vehicle.VehicleController
+import ru.fredboy.cavedroid.game.window.GameWindowType
+import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.world.GameWorld
 import javax.inject.Inject
 
@@ -15,6 +17,7 @@ class PresentationPoses @Inject constructor(
     private val world: GameWorld,
     private val mobs: MobController,
     private val vehicles: VehicleController,
+    private val gameWindowsManager: GameWindowsManager,
 ) {
     var snapshot = false
     private val scratch = Vector2()
@@ -29,9 +32,21 @@ class PresentationPoses @Inject constructor(
         return position(mobs.player.body, out)
     }
 
-    fun aimPosition(out: Vector2): Vector2 {
+    fun aimPosition(out: Vector2, mouseWorldX: Float, mouseWorldY: Float): Vector2 {
         val player = mobs.player
-        if (!player.holdAim) return out.set(player.aimX, player.aimY)
+        if (!player.holdAim) {
+            if (gameWindowsManager.currentWindowType != GameWindowType.NONE) {
+                return out.set(player.aimX, player.aimY)
+            }
+
+            playerPosition(out)
+            // Gameplay aim is range-limited against the physics pose. Rebuild camera aim
+            // from the mouse and the render pose so fixed physics steps cannot shake it.
+            scratch.set(mouseWorldX - out.x, mouseWorldY - out.y).limit2(player.cursorRangeSquared)
+            out.add(scratch)
+            out.y = out.y.coerceIn(0f, world.height.toFloat())
+            return out
+        }
         playerPosition(out)
         return out.add(player.aimX - player.position.x, player.aimY - player.position.y)
     }
