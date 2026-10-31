@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.game.world.lighting
 
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.utils.Disposable
 import ru.fredboy.cavedroid.domain.world.lighting.LightHandle
@@ -11,6 +12,7 @@ interface LightingSystem : Disposable {
     val chunkSize: Int
     fun attachToGameWorld(gameWorld: GameWorld)
     fun update(delta: Float)
+    fun prepareView(viewport: Rectangle, finish: Boolean = false): Boolean = true
     fun recalculate()
     fun render(camera: OrthographicCamera)
     fun isMobExposedToSun(mob: Mob): Boolean

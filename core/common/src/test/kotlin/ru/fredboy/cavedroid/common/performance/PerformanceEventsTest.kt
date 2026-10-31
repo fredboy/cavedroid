@@ -32,7 +32,7 @@ class PerformanceEventsTest {
         assertEquals(events.size.toLong(), events.last().parameters["event_n"])
         assertTrue(PerformanceMetric.entries.size <= 64)
         val bytes = events.sumOf { PerformanceEvents.jsonLine(it).toByteArray(Charsets.UTF_8).size }
-        assertEquals(95, events.size)
+        assertEquals(97, events.size)
         assertTrue(bytes < 100_000)
         println("Fully populated schema: ${events.size} events, $bytes UTF-8 bytes")
     }

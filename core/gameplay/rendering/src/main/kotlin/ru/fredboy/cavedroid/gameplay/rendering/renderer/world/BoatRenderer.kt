@@ -8,11 +8,13 @@ import ru.fredboy.cavedroid.common.utils.cycledInsideWorld
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.game.controller.vehicle.VehicleController
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.gameplay.rendering.utils.PresentationPoses
 import javax.inject.Inject
 import kotlin.math.sin
 
 @GameScope
 class BoatRenderer @Inject constructor(
+    private val poses: PresentationPoses,
     private val vehicles: VehicleController,
     private val world: GameWorld,
     private val textures: GetTextureRegionByNameUseCase,
@@ -30,7 +32,7 @@ class BoatRenderer @Inject constructor(
 
     fun draw(batch: SpriteBatch, viewport: Rectangle, front: Boolean) {
         vehicles.vehicles.forEach { boat ->
-            val bounds = if (world.isInfinite) boat.hitbox else boat.hitbox.cycledInsideWorld(viewport, world.width.toFloat())
+            val bounds = if (world.isInfinite) poses.bounds(boat.body, boat.hitbox) else poses.bounds(boat.body, boat.hitbox).cycledInsideWorld(viewport, world.width.toFloat())
             bounds ?: return@forEach
             if (!bounds.overlaps(viewport)) return@forEach
             val sprites = sprites(boat.type)

@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.gameplay.lighting.bfs
 
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.box2d.Body
 import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -68,6 +69,7 @@ class BfsLightingSystem(
     override fun onBlockPlaced(block: Block, x: Int, y: Int, layer: Layer) {
         val world = _gameWorld ?: return
         val grid = _grid ?: return
+        lightingWindow?.invalidateCell(x)
         if (lightingWindow?.contains(x) == false) {
             // Outside the lit window; it'll be rebuilt from the world when the window re-centres.
             return
@@ -82,10 +84,20 @@ class BfsLightingSystem(
 
     override fun update(delta: Float) {
         val window = lightingWindow ?: return
-        if (window.update(cameraCenterX())) {
+        if (window.update(cameraCenterX(), 1_000_000L)) {
             _grid = window.grid
             _overlay?.updateGrid(window.grid)
         }
+    }
+
+    override fun prepareView(viewport: Rectangle, finish: Boolean): Boolean {
+        val window = lightingWindow ?: return true
+        val center = (viewport.x + viewport.width / 2f).floorToInt()
+        if (finish && window.update(center)) {
+            _grid = window.grid
+            _overlay?.updateGrid(window.grid)
+        }
+        return window.covers(viewport.x.floorToInt() - LightGrid.MAX_LEVEL, (viewport.x + viewport.width).floorToInt() + LightGrid.MAX_LEVEL)
     }
 
     private fun cameraCenterX(): Int {
@@ -187,7 +199,10 @@ class BfsLightingSystem(
 
         private fun applyToGrid() {
             val currentGrid = _grid ?: return
-            if (active) {
+            val window = lightingWindow
+            if (window != null) {
+                window.setEmitter(id, posX.floorToInt(), posY.toInt(), if (active) FURNACE_LEVEL else 0)
+            } else if (active) {
                 currentGrid.setTransientEmitter(id, posX.floorToInt(), posY.toInt(), FURNACE_LEVEL)
             } else {
                 currentGrid.clearTransientEmitter(id)
@@ -234,7 +249,10 @@ class BfsLightingSystem(
 
         private fun applyToGrid() {
             val currentGrid = _grid ?: return
-            if (active) {
+            val window = lightingWindow
+            if (window != null) {
+                window.setEmitter(id, posX.toInt(), posY.toInt(), if (active) FIRE_LEVEL else 0)
+            } else if (active) {
                 currentGrid.setTransientEmitter(id, posX.toInt(), posY.toInt(), FIRE_LEVEL)
             } else {
                 currentGrid.clearTransientEmitter(id)

@@ -103,6 +103,15 @@ class GameWorld @Inject constructor(
     }
 
     private var box2dAccumulator: Float = 0f
+    private val presentation = ru.fredboy.cavedroid.game.world.presentation.WorldPoseHistory()
+
+    val physicsInterpolationAlpha: Float get() = (box2dAccumulator / PHYSICS_STEP_DELTA).coerceIn(0f, 1f)
+
+    fun sampleRenderPosition(body: com.badlogic.gdx.physics.box2d.Body, out: Vector2, snapshot: Boolean = false): Vector2 = presentation.sample(body, if (snapshot) 1f else physicsInterpolationAlpha, if (isInfinite) 0f else blockStore.width.toFloat(), out)
+
+    fun sampleRenderHeading(body: com.badlogic.gdx.physics.box2d.Body, snapshot: Boolean = false): Float = presentation.heading(body, if (snapshot) 1f else physicsInterpolationAlpha)
+
+    fun resetPresentation() = presentation.clear()
 
     private val snowAccumulation by lazy { SnowAccumulation(this, itemsRepository) }
 
@@ -412,8 +421,10 @@ class GameWorld @Inject constructor(
             while (box2dAccumulator >= PHYSICS_STEP_DELTA) {
                 performanceMonitor.measure(PerformanceMetric.PHYSICS) {
                     fixedStepListeners.forEach { it.beforeStep(PHYSICS_STEP_DELTA) }
+                    presentation.beforeStep(world)
                     gameWorldSolidBlockBodiesManager.step(PHYSICS_STEP_DELTA, 6, 2)
                     fixedStepListeners.forEach { it.afterStep(PHYSICS_STEP_DELTA) }
+                    presentation.afterStep(world, if (isInfinite) 0f else blockStore.width.toFloat())
                 }
                 physicsSteps++
                 box2dAccumulator -= PHYSICS_STEP_DELTA
@@ -423,6 +434,7 @@ class GameWorld @Inject constructor(
     }
 
     override fun dispose() {
+        presentation.clear()
         fixedStepListeners.forEach { it.dispose() }
         fixedStepListeners.clear()
         lightingSystem.dispose()

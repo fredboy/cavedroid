@@ -191,7 +191,8 @@ class GameScreen @Inject constructor(
         if (firstFrame) performanceMonitor.setGameplay(false)
         performanceMonitor.beginFrame()
         try {
-            proc.update(delta)
+            // Preparing the first view can span a long frame; it is not elapsed simulation time.
+            proc.update(if (firstFrame) 0f else delta)
         } catch (error: Throwable) {
             opening?.fail(error)
             throw error

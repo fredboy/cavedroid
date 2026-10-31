@@ -140,6 +140,39 @@ class LightingWindowTest {
         assertEquals(12, window.grid.blockAt(120, 7))
     }
 
+    @Test
+    fun `partial rebuild retains the published grid and superseded terrain is rejected`() {
+        val terrain = Terrain()
+        val window = terrain.window()
+        val published = window.grid
+        assertFalse(window.update(64, 0))
+        assertTrue(published === window.grid)
+        terrain.loaded.add(7)
+        window.onChunkLoaded(7)
+        var steps = 0
+        while (!window.update(64, 0)) {
+            assertTrue(published === window.grid)
+            assertTrue(++steps < 1000)
+        }
+        assertFalse(published === window.grid)
+        assertTrue(window.grid.isOpaqueAt(120, 32))
+    }
+
+    @Test
+    fun `emitter outside the old window survives recentering and disposal during a build`() {
+        val terrain = Terrain()
+        val window = terrain.window()
+        window.setEmitter(1L, 120, 7, 13)
+        assertEquals(0, window.grid.blockAt(120, 7))
+        window.update(64)
+        assertEquals(13, window.grid.blockAt(120, 7))
+        assertFalse(window.update(96, 0))
+        window.setEmitter(1L, 120, 7, 0)
+        var steps = 0
+        while (!window.update(96, 0)) assertTrue(++steps < 1000)
+        assertEquals(0, window.grid.blockAt(120, 7))
+    }
+
     private class Terrain {
         val loaded = (-6..6).toMutableSet()
         val emitters = mutableSetOf<Pair<Int, Int>>()

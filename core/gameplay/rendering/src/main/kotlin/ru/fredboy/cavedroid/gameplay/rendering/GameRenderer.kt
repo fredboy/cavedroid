@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.badlogic.gdx.utils.Disposable
@@ -27,7 +28,10 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.IHudRenderer
+import ru.fredboy.cavedroid.gameplay.rendering.renderer.world.BlocksRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.world.IWorldRenderer
+import ru.fredboy.cavedroid.gameplay.rendering.utils.PresentationPoses
+import ru.fredboy.cavedroid.gameplay.rendering.utils.TerrainRenderCache
 import javax.inject.Inject
 import kotlin.math.PI
 import kotlin.math.abs
@@ -36,6 +40,9 @@ import kotlin.math.min
 
 @GameScope
 class GameRenderer @Inject constructor(
+    private val terrainCache: TerrainRenderCache,
+    private val poses: PresentationPoses,
+    private val fontAssets: ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository,
     private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
@@ -50,6 +57,10 @@ class GameRenderer @Inject constructor(
 
     private val worldRenderers = _worldRenderers.sortedBy { it.renderLayer }
     private val hudRenderers = _hudRenderers.sortedBy { it.renderLayer }
+    private val terrainRenderers = worldRenderers.filterIsInstance<BlocksRenderer>()
+
+    var isReady = true
+        private set
 
     private val debugRenderer = ifTrue(applicationContextRepository.isDebug()) {
         Box2DDebugRenderer(
@@ -87,6 +98,8 @@ class GameRenderer @Inject constructor(
     private val baseSkyColor = Color()
     private val skyLeftColor = Color()
     private val skyRightColor = Color()
+    private val playerPosition = Vector2()
+    private val aimPosition = Vector2()
 
     init {
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f)
@@ -97,13 +110,16 @@ class GameRenderer @Inject constructor(
     }
 
     private fun updateStaticCameraPositionToPlayer() {
-        updateStaticCameraPosition(player.x, player.y)
+        poses.playerPosition(playerPosition)
+        updateStaticCameraPosition(playerPosition.x, playerPosition.y)
     }
 
     private fun updateDynamicCameraPosition(delta: Float) {
+        poses.playerPosition(playerPosition)
+        poses.aimPosition(aimPosition)
         val cameraTargetPosition = Vector3().apply {
-            x = player.x / 2f + player.aimX / 2f
-            y = player.y / 2f + player.aimY / 2f
+            x = playerPosition.x / 2f + aimPosition.x / 2f
+            y = playerPosition.y / 2f + aimPosition.y / 2f
         }
 
         val moveVector = cameraTargetPosition.sub(camera.position)
@@ -257,7 +273,26 @@ class GameRenderer @Inject constructor(
 
     fun render(delta: Float) {
         return performanceMonitor.measure(PerformanceMetric.RENDER_TOTAL) {
+            poses.snapshot = delta == 0f
             updateCameraPosition(delta)
+
+            val viewport = getVisibleWorldRect()
+            terrainRenderers.forEach { it.prepareCache(viewport) }
+            val cacheStart = performanceMonitor.startStage()
+            terrainCache.prepare(finish = delta == 0f)
+            performanceMonitor.endStage(PerformanceMetric.RENDER_CACHE_PREPARE, cacheStart)
+            performanceMonitor.incrementGauge(ru.fredboy.cavedroid.common.performance.PerformanceGauge.CACHE_UPDATES, terrainCache.updates)
+            terrainCache.trim(ru.fredboy.cavedroid.gameplay.rendering.utils.RenderChunkWindow(viewport).capacity * terrainRenderers.sumOf { it.cacheLayerCount } + 1)
+            isReady = terrainRenderers.all { it.cacheReady(viewport) } && lightingSystem.prepareView(viewport, finish = delta == 0f)
+            if (!isReady) {
+                Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
+                Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+                spriter.projectionMatrix = hudCamera.combined
+                spriter.begin()
+                spriter.drawString(getFont(), fontAssets.getMenuLocalizationBundle().get("loadingWorld"), 16f, 32f, Color.WHITE)
+                spriter.end()
+                return@measure
+            }
 
             spriter.projectionMatrix = camera.combined
             shaper.projectionMatrix = camera.combined
@@ -316,6 +351,7 @@ class GameRenderer @Inject constructor(
     }
 
     fun resetCameraToPlayer() {
+        gameWorld.resetPresentation()
         updateStaticCameraPositionToPlayer()
         updateCameraContext()
         camera.update()
@@ -326,6 +362,7 @@ class GameRenderer @Inject constructor(
         shaper.dispose()
         debugRenderer?.dispose()
         worldRenderers.forEach { renderer -> renderer.dispose() }
+        terrainCache.dispose()
         hudRenderers.forEach { renderer -> renderer.dispose() }
     }
 

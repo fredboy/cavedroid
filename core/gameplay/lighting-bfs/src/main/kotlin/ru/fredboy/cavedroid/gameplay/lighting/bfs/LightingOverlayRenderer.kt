@@ -51,7 +51,7 @@ class LightingOverlayRenderer(
         val h = clampedMaxY - minY + 1
         if (w <= 0 || h <= 0) return
 
-        val pix = ensurePixmap(w, h)
+        val pix = ensurePixmap(ceil(visible.width).toInt() + 4, ceil(visible.height).toInt() + 4)
         val raw = ensureRawBuffer(w * h)
 
         for (j in 0 until h) {
@@ -61,13 +61,15 @@ class LightingOverlayRenderer(
             }
         }
 
-        for (j in 0 until h) {
-            for (i in 0 until w) {
-                val center = raw[i + j * w]
-                val left = if (i > 0) raw[(i - 1) + j * w] else center
-                val right = if (i < w - 1) raw[(i + 1) + j * w] else center
-                val up = if (j > 0) raw[i + (j - 1) * w] else center
-                val down = if (j < h - 1) raw[i + (j + 1) * w] else center
+        for (j in 0 until pix.height) {
+            for (i in 0 until pix.width) {
+                val column = i.coerceAtMost(w - 1)
+                val row = j.coerceAtMost(h - 1)
+                val center = raw[column + row * w]
+                val left = if (column > 0) raw[(column - 1) + row * w] else center
+                val right = if (column < w - 1) raw[(column + 1) + row * w] else center
+                val up = if (row > 0) raw[column + (row - 1) * w] else center
+                val down = if (row < h - 1) raw[column + (row + 1) * w] else center
                 val avg = (center + left + right + up + down) * 0.2f
                 val brightness = max(center, avg)
                 val channel = (brightness * 255f).toInt().coerceIn(0, 255)
@@ -78,7 +80,7 @@ class LightingOverlayRenderer(
 
         val tex = ensureTexture(pix)
         tex.draw(pix, 0, 0)
-        val flippedRegion = ensureRegion(tex)
+        val flippedRegion = ensureRegion(tex, w, h)
 
         spriteBatch.projectionMatrix = camera.combined
         spriteBatch.setBlendFunction(GL20.GL_DST_COLOR, GL20.GL_ZERO)
@@ -151,11 +153,11 @@ class LightingOverlayRenderer(
         return tex
     }
 
-    private fun ensureRegion(tex: Texture): TextureRegion {
-        region?.let { return it }
-        val newRegion = TextureRegion(tex).apply { flip(false, true) }
-        region = newRegion
-        return newRegion
+    private fun ensureRegion(tex: Texture, width: Int, height: Int): TextureRegion {
+        val current = region ?: TextureRegion(tex).also { region = it }
+        current.setRegion(0, 0, width, height)
+        current.flip(false, true)
+        return current
     }
 
     private fun ensureRawBuffer(size: Int): FloatArray {

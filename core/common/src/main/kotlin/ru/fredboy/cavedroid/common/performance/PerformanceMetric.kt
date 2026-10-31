@@ -23,6 +23,7 @@ enum class PerformanceMetric(val perFrame: Boolean = true) {
     RENDER_HUD,
     RENDER_LIGHTING,
     RENDER_OTHER,
+    RENDER_CACHE_PREPARE,
     TASK_BLOCKS(false),
     TASK_FLUIDS(false),
     TASK_GROW(false),

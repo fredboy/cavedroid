@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.gameplay.rendering.renderer.world
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
@@ -24,8 +23,8 @@ import ru.fredboy.cavedroid.game.controller.fire.FireController
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.utils.ChunkFrameBuffer
+import ru.fredboy.cavedroid.gameplay.rendering.utils.RenderChunkWindow
 import ru.fredboy.cavedroid.gameplay.rendering.utils.RenderingTool
-import kotlin.math.floor
 
 abstract class BlocksRenderer(
     private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
@@ -37,6 +36,12 @@ abstract class BlocksRenderer(
     protected val itemsRepository: ItemsRepository,
     protected val fireController: FireController,
 ) : IWorldRenderer {
+
+    abstract fun prepareCache(viewport: Rectangle)
+
+    abstract val cacheLayerCount: Int
+
+    abstract fun cacheReady(viewport: Rectangle): Boolean
 
     protected abstract val background: Boolean
 
@@ -225,52 +230,62 @@ abstract class BlocksRenderer(
         )
     }
 
-    protected fun <Renderer : RenderingTool> drawChunks(
-        spriteBatch: SpriteBatch,
+    protected fun <Renderer : RenderingTool> prepareChunks(
         viewport: Rectangle,
         chunks: MutableMap<Pair<Int, Int>, ChunkFrameBuffer<Renderer>>,
         chunkFactory: (Int, Int) -> ChunkFrameBuffer<Renderer>,
         drawFunction: (Renderer, Int, Int, Float, Float) -> Unit,
     ) {
-        val minChunkX = floor(viewport.x / ChunkFrameBuffer.CHUNK_SIZE).toInt()
-        val maxChunkX = floor((viewport.x + viewport.width) / ChunkFrameBuffer.CHUNK_SIZE).toInt()
-        val minChunkY = floor(viewport.y / ChunkFrameBuffer.CHUNK_SIZE).toInt()
-        val maxChunkY = floor((viewport.y + viewport.height) / ChunkFrameBuffer.CHUNK_SIZE).toInt()
-
-        var visibleChunks = 0L
-        var cacheUpdates = 0L
-        for (cx in minChunkX..maxChunkX) {
-            for (cy in minChunkY..maxChunkY) {
-                val key = cx to cy
-                val chunk = chunks.getOrPut(key) { chunkFactory(cx, cy) }
-
-                visibleChunks++
-                if (chunk.dirty) cacheUpdates++
-                chunk.render(
-                    spriteBatch = spriteBatch,
-                    drawFunction = drawFunction,
-                )
-            }
-        }
-
-        performanceMonitor.incrementGauge(PerformanceGauge.RENDER_CHUNKS, visibleChunks)
-        performanceMonitor.incrementGauge(PerformanceGauge.CACHE_UPDATES, cacheUpdates)
-
-        // Evict off-screen render chunks so an infinite world doesn't leak frame buffers as the
-        // player roams. Finite worlds are bounded, so this just trims briefly off-screen chunks.
-        val keepX = (minChunkX - CHUNK_RETAIN_MARGIN)..(maxChunkX + CHUNK_RETAIN_MARGIN)
-        val keepY = (minChunkY - CHUNK_RETAIN_MARGIN)..(maxChunkY + CHUNK_RETAIN_MARGIN)
+        val window = RenderChunkWindow(viewport)
+        val minX = window.minX
+        val maxX = window.maxX
+        val minY = window.minY
+        val maxY = window.maxY
         val iterator = chunks.iterator()
         while (iterator.hasNext()) {
             val entry = iterator.next()
-            if (entry.key.first !in keepX || entry.key.second !in keepY) {
-                Gdx.app.postRunnable {
-                    entry.value.dispose()
-                }
+            if (!window.retains(entry.key.first, entry.key.second)) {
+                entry.value.dispose()
                 iterator.remove()
             }
         }
+        for (cx in (minX - 1)..(maxX + 1)) {
+            for (cy in (minY - 1)..(maxY + 1)) {
+                val visible = cx in minX..maxX && cy in minY..maxY
+                val distance = kotlin.math.abs(cx * 2 - minX - maxX) + kotlin.math.abs(cy * 2 - minY - maxY)
+                chunks.getOrPut(cx to cy) { chunkFactory(cx, cy) }.prepare(if (visible) distance else 100 + distance, drawFunction)
+            }
+        }
+    }
 
+    protected fun <Renderer : RenderingTool> chunksReady(viewport: Rectangle, chunks: Map<Pair<Int, Int>, ChunkFrameBuffer<Renderer>>): Boolean {
+        val window = RenderChunkWindow(viewport)
+        val minX = window.minX
+        val maxX = window.maxX
+        val minY = window.minY
+        val maxY = window.maxY
+        for (x in minX..maxX) for (y in minY..maxY) if (chunks[x to y]?.ready != true) return false
+        return true
+    }
+
+    protected fun <Renderer : RenderingTool> drawChunks(
+        spriteBatch: SpriteBatch,
+        viewport: Rectangle,
+        chunks: Map<Pair<Int, Int>, ChunkFrameBuffer<Renderer>>,
+    ) {
+        val window = RenderChunkWindow(viewport)
+        val minX = window.minX
+        val maxX = window.maxX
+        val minY = window.minY
+        val maxY = window.maxY
+        var visible = 0L
+        for (x in minX..maxX) {
+            for (y in minY..maxY) {
+                chunks[x to y]?.render(spriteBatch)
+                visible++
+            }
+        }
+        performanceMonitor.incrementGauge(PerformanceGauge.RENDER_CHUNKS, visible)
         drawBlockDamage(spriteBatch)
     }
 
@@ -278,8 +293,6 @@ abstract class BlocksRenderer(
         private const val FIRE_BLOCK_KEY = "fire"
         private const val MAX_BLOCK_DAMAGE_INDEX = 10
 
-        /** Render chunks kept beyond the viewport before being evicted (in render-chunk units). */
-        private const val CHUNK_RETAIN_MARGIN = 2
         private val SHADOW_DARK = Color(0f, 0f, 0f, 0.6f)
         private val SHADOW_FADE = Color(0f, 0f, 0f, 0f)
         private val BACKGROUND_TINT = Color(0f, 0f, 0f, 0.5f)

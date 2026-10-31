@@ -138,7 +138,21 @@ public class GameProc implements Disposable {
         mMobsController.getPlayer().setGameMode(gameMode);
     }
 
+    private boolean mPreparingView;
+
     public void update(float delta) {
+        if (!mGameRenderer.isReady()) {
+            mWorldLogicTimer.stop();
+            mPreparingView = true;
+            mGameWorld.update(0f);
+            mGameRenderer.render(delta);
+            return;
+        }
+        if (mPreparingView) {
+            mPreparingView = false;
+            mGameWorld.resetPresentation();
+            mWorldLogicTimer.start();
+        }
         long updateStart = mPerformanceMonitor.startStage();
         mGameWorld.update(delta);
         long entitiesStart = mPerformanceMonitor.startStage();
@@ -164,12 +178,14 @@ public class GameProc implements Disposable {
     }
 
     public void onGamePaused() {
+        mGameWorld.resetPresentation();
         mGameInputProcessor.reset();
         mWorldLogicTimer.stop();
     }
 
     public void onGameResumed() {
-        mWorldLogicTimer.start();
+        mGameWorld.resetPresentation();
+        if (!mPreparingView) mWorldLogicTimer.start();
     }
 
     public void show() {
