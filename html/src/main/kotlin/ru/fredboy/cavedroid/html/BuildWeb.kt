@@ -7,7 +7,7 @@ import org.teavm.tooling.sources.DirectorySourceFileProvider
 import org.teavm.vm.TeaVMOptimizationLevel
 import java.io.File
 
-object BuildWebJs {
+object BuildWeb {
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -17,6 +17,9 @@ object BuildWebJs {
         val launcherClass = System.getProperty("cavedroid.launcherClass")
             ?: error("cavedroid.launcherClass system property must be set by the gradle task.")
         val serve = System.getProperty("cavedroid.serve")?.toBooleanStrictOrNull() == true
+        val wasm = System.getProperty("cavedroid.wasm")?.toBooleanStrictOrNull() == true
+        val outputPath = System.getProperty("cavedroid.outputPath")
+            ?: error("cavedroid.outputPath system property must be set by the gradle task.")
         val sourceMaps = System.getProperty("cavedroid.sourceMaps")?.toBooleanStrictOrNull() == true
         val obfuscate = System.getProperty("cavedroid.obfuscate")?.toBooleanStrictOrNull() == true
         val optimization = System.getProperty("cavedroid.optimization")
@@ -29,7 +32,9 @@ object BuildWebJs {
             .map(::File)
             .filter(File::isDirectory)
 
-        val backend = WebBackend().setStartJettyAfterBuild(serve)
+        val backend = WebBackend()
+            .setWebAssembly(wasm)
+            .setStartJettyAfterBuild(serve)
 
         val builder = TeaBuilder(backend)
             .addAssets(AssetFileHandle(assetsPath))
@@ -49,6 +54,6 @@ object BuildWebJs {
             sourceRoots.forEach { builder.addSourceFileProvider(DirectorySourceFileProvider(it)) }
         }
 
-        builder.build(File("build/dist"))
+        builder.build(File(outputPath))
     }
 }

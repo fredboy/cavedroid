@@ -89,7 +89,7 @@ directory, so some tweaks are required.
 
 ### Web (browser)
 
-CaveDroid compiles to JavaScript through [gdx-teavm](https://github.com/xpenatan/gdx-teavm). Lighting on the web build
+CaveDroid compiles to JavaScript or WebAssembly GC through [gdx-teavm](https://github.com/xpenatan/gdx-teavm). Lighting on the web build
 uses a simplified day/night tint shader (no per-block light sources) — gameplay is otherwise at parity with the desktop
 build.
 
@@ -100,14 +100,32 @@ build.
 # Build a development bundle without serving
 ./gradlew html:buildJs
 
-# Build the obfuscated, fully-optimized release bundle
+# Build the obfuscated release bundle
 ./gradlew html:buildJsRelease
 
-# Zip the release bundle (build/dist/cavedroid-web-<version>.zip) for static hosting
+# Zip the release bundle (html/build/dist/cavedroid-web-<version>.zip) for static hosting
 ./gradlew html:packageWebDist
+
+# Run the WebAssembly GC target locally
+./gradlew html:runWasm
+
+# Build development or release Wasm bundles without serving
+./gradlew html:buildWasm
+./gradlew html:buildWasmRelease
+
+# Zip the Wasm release (html/build/dist/cavedroid-web-wasm-<version>.zip)
+./gradlew html:packageWebDistWasm
+
+# Package the JavaScript variant for Yandex Games
+./gradlew html:packageWebDistYandex
 ```
 
+JavaScript output is in `html/build/dist/webapp`; Wasm output is isolated in `html/build/dist/wasm/webapp`.
+Wasm requires a browser with WebAssembly GC support and includes a JavaScript runtime loader.
+Yandex Games remains a JavaScript-only target.
+
 The release zip can be unpacked under any static web host (GitHub Pages, S3, Netlify, …) — no server-side runtime required.
+Serve Wasm builds over HTTP(S), with `.wasm` files using the `application/wasm` content type.
 
 ### Legacy Android devices (API 16/17 — Jelly Bean)
 
