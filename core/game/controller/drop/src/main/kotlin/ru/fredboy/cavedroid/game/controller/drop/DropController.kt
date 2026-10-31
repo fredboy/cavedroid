@@ -165,6 +165,14 @@ class DropController @Inject constructor(
                 drop.update(dropWorldAdapter, delta)
             }
         }
+
+        val consumed = mergeNearbyDrops(drops, dropWorldAdapter.width.takeUnless { dropWorldAdapter.isInfinite })
+        consumed.forEach { drop ->
+            // Destroying a body ends attraction contacts; prevent those callbacks from picking it up again.
+            drop.isPickedUp = true
+            drop.dispose()
+        }
+        drops.removeAll(consumed)
     }
 
     fun dispose() {
