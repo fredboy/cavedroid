@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# Build the release web bundle and stage it for GitHub Pages deployment.
+# Build the release Wasm bundle and stage it for GitHub Pages deployment.
 # Produces pages-dist/ at the repo root, ready to be uploaded as a Pages
-# artifact (excludes WEB-INF/, which is only used by the embedded dev server).
+# artifact (excludes dev-server configuration, sources, and debug sidecars).
 #
 # Usage:
 #   ./scripts/build-web-pages.sh
@@ -37,20 +37,20 @@ fi
 out_dir="pages-dist"
 rm -rf "$out_dir"
 
-echo ">> Running html:buildJsRelease"
-./gradlew html:buildJsRelease
+echo ">> Running html:buildWasmRelease"
+./gradlew html:buildWasmRelease
 
-src_dir="html/build/dist/webapp"
+src_dir="html/build/dist/wasm/webapp"
 if [[ ! -d "$src_dir" ]]; then
   echo >&2 "error: expected web bundle at $src_dir but it does not exist"
   exit 1
 fi
 
-echo ">> Staging $src_dir -> $out_dir/ (excluding WEB-INF/)"
+echo ">> Staging $src_dir -> $out_dir/ (excluding dev-server configuration and debug files)"
 mkdir -p "$out_dir"
 # rsync is available on ubuntu-latest runners and most dev machines; cp -a
 # would be a fallback but doesn't support --exclude.
-rsync -a --exclude='WEB-INF' "$src_dir/" "$out_dir/"
+rsync -a --exclude='WEB-INF' --exclude='/src/' --exclude='*.map' --exclude='*.teadbg' "$src_dir/" "$out_dir/"
 
 echo ">> Done. Contents:"
 ls -la "$out_dir"

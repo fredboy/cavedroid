@@ -28,7 +28,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build web bundle
+      - name: Build Wasm web bundle
         run: ./scripts/build-web-pages.sh
 
       - name: Upload Pages artifact

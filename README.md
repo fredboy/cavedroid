@@ -124,6 +124,7 @@ JavaScript output is in `html/build/dist/webapp`; Wasm output is isolated in `ht
 Wasm requires a browser with WebAssembly GC support and includes a JavaScript runtime loader.
 Yandex Games remains a JavaScript-only target.
 New worlds are infinite in Wasm builds; JavaScript builds keep the default finite, looping worlds.
+GitHub Pages deployment uses the release Wasm bundle, staged by `scripts/build-web-pages.sh`.
 
 The release zip can be unpacked under any static web host (GitHub Pages, S3, Netlify, …) — no server-side runtime required.
 Serve Wasm builds over HTTP(S), with `.wasm` files using the `application/wasm` content type.
