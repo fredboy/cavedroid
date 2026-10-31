@@ -50,6 +50,13 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                             .height(60f)
                             .pad(10f)
 
+                        if (viewModel.showAssetPacks) {
+                            textButton(viewModel.getLocalizedString("assetPacks")) {
+                                onClickWithSound(viewModel) { viewModel.onAssetPacksClick() }
+                            }
+                            row()
+                        }
+
                         textButton(
                             viewModel.getFormattedString(
                                 "dynamicCamera",

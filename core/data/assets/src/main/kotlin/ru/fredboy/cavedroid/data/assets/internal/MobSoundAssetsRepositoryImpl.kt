@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.data.assets.internal
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import ru.fredboy.cavedroid.domain.assets.repository.MobSoundAssetsRepository
 import javax.inject.Inject
@@ -28,10 +27,10 @@ internal class MobSoundAssetsRepositoryImpl @Inject constructor() : MobSoundAsse
     }
 
     override fun initialize() {
-        val mobSfxDir = Gdx.files.internal(MOB_SFX_DIRECTORY)
-        val indexFile = Gdx.files.internal(INDEX_FILE)
+        val mobSfxDir = assetResolver.handle(MOB_SFX_DIRECTORY)
+        val indexFile = assetResolver.handle(INDEX_FILE)
 
-        indexFile.readString().split("\n").forEach { mobKey ->
+        indexFile.readString().lineSequence().map(String::trim).filter(String::isNotEmpty).forEach { mobKey ->
             val mobDir = mobSfxDir.child(mobKey).takeIf { it.exists() } ?: return@forEach
 
             mobIdleSoundsMap[mobKey] = mobDir.child(IDLE).loadAllSounds()

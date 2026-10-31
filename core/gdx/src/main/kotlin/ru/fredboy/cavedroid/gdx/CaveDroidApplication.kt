@@ -15,9 +15,11 @@ import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
 import ru.fredboy.cavedroid.common.CaveDroidConstants.SUPPORTED_LOCALES
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
+import ru.fredboy.cavedroid.common.api.AssetPackPlatform
 import ru.fredboy.cavedroid.common.api.CloudStatsSync
 import ru.fredboy.cavedroid.common.api.InlineTextInput
 import ru.fredboy.cavedroid.common.api.NoOpAdController
+import ru.fredboy.cavedroid.common.api.NoOpAssetPackPlatform
 import ru.fredboy.cavedroid.common.api.NoOpCloudStatsSync
 import ru.fredboy.cavedroid.common.api.NoOpInlineTextInput
 import ru.fredboy.cavedroid.common.api.NoOpSaveTransferController
@@ -59,6 +61,7 @@ class CaveDroidApplication(
     private val inlineTextInput: InlineTextInput = NoOpInlineTextInput,
     private val softKeyboardObserver: SoftKeyboardObserver = NoOpSoftKeyboardObserver,
     private val saveTransferController: SaveTransferController = NoOpSaveTransferController,
+    private val assetPackPlatform: AssetPackPlatform = NoOpAssetPackPlatform,
     private val defaultLocaleProvider: () -> Locale? = { safeDefaultLocale() },
     private val isYandexGamesBuild: Boolean = false,
     private val supportsInfiniteWorlds: Boolean = true,
@@ -109,7 +112,7 @@ class CaveDroidApplication(
             val personalizedAdsConsent = preferencesStore.getPreference(PreferenceKeys.PERSONALIZED_ADS_CONSENT)
                 ?.toBooleanStrictOrNull()
 
-            applicationComponent = DaggerApplicationComponent.builder()
+            fun buildComponent() = DaggerApplicationComponent.builder()
                 .performanceMonitor(performanceMonitor)
                 .cloudStatsSync(cloudStatsSync)
                 .applicationContext(
@@ -154,9 +157,12 @@ class CaveDroidApplication(
                 .inlineTextInput(inlineTextInput)
                 .softKeyboardObserver(softKeyboardObserver)
                 .saveTransferController(saveTransferController)
+                .assetPackPlatform(assetPackPlatform)
                 .lightingSystemFactory(lightingSystemFactory)
                 .appDispatchers(dispatchers)
                 .build()
+
+            applicationComponent = buildComponent()
 
             if (personalizedAdsConsent != null) {
                 adController.setPersonalizedAdsEnabled(personalizedAdsConsent)
@@ -179,7 +185,26 @@ class CaveDroidApplication(
                     ),
                 )
             }
-            applicationComponent.initializeAssets()
+            fun initializeResources() {
+                applicationComponent.packDefinitionValidator.validate()
+                applicationComponent.initializeAssets()
+                if (applicationComponent.assetResolver.hasOverrides) {
+                    applicationComponent.itemsRepository.initialize()
+                    applicationComponent.mobParamsRepository.getAllParams()
+                }
+                applicationComponent.menuSkin
+            }
+            try {
+                initializeResources()
+            } catch (exception: Exception) {
+                if (!applicationComponent.assetResolver.hasOverrides) throw exception
+                logger.e(exception) { "Asset packs failed; restoring bundled assets" }
+                applicationComponent.assetPackRepository.disableAfterFailure(exception.message ?: "Asset pack load failed")
+                runCatching { applicationComponent.disposeAssets() }
+                applicationComponent.assetTextureLoader.disposeAll()
+                applicationComponent = buildComponent()
+                initializeResources()
+            }
 
             applicationScope.launch {
                 applicationComponent.statsRepository.load()

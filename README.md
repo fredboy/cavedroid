@@ -158,6 +158,11 @@ releaseKeyPassword=yourKeyPassword
 
 ---
 
+## Asset packs
+
+See [Creating asset packs](ASSET_PACKS.md) for the ZIP format, metadata, stacking,
+JSON overrides, and higher-resolution textures.
+
 ## License
 
 ### Code

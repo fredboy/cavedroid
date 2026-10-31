@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.data.assets.internal
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.math.Rectangle
 import kotlinx.serialization.json.Json
@@ -27,7 +26,7 @@ internal class TouchButtonsRepositoryImplTexture @Inject constructor() : TouchBu
     }
 
     private fun loadTouchButtons() {
-        val file = Gdx.files.internal(JSON_TOUCH_BUTTONS)
+        val file = assetResolver.handle(JSON_TOUCH_BUTTONS)
         val buttons = JsonFormat.decodeFromString<TouchButtonsDto>(file.readString())
 
         buttons.forEach { (name, data) ->

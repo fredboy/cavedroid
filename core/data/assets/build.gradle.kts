@@ -16,4 +16,13 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.dagger.runtime)
     ksp(libs.dagger.compiler)
+
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.engine)
+    testRuntimeOnly(libs.junit.launcher)
+    testImplementation(libs.mockk)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

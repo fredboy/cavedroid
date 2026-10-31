@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.settings
 
 import ru.fredboy.cavedroid.common.api.AdController
+import ru.fredboy.cavedroid.common.api.AssetPackPlatform
 import ru.fredboy.cavedroid.common.di.MenuScope
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.common.mvvm.ViewModelProvider
@@ -17,6 +18,7 @@ class SettingsMenuViewModelProvider @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
     private val performanceMonitor: PerformanceMonitor,
     private val adController: AdController,
+    private val assetPackPlatform: AssetPackPlatform,
     private val baseViewModelDependencies: BaseViewModelDependencies,
 ) : ViewModelProvider<SettingsMenuNavKey, SettingsMenuViewModel> {
 
@@ -28,6 +30,7 @@ class SettingsMenuViewModelProvider @Inject constructor(
             navBackStack = navBackStack,
             applicationContextRepository = applicationContextRepository,
             adController = adController,
+            assetPackPlatform = assetPackPlatform,
             performanceMonitor = performanceMonitor,
             baseViewModelDependencies = baseViewModelDependencies,
         )

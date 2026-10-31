@@ -38,6 +38,8 @@ class DesktopSaveTransferController : SaveTransferController {
         runOnDialogThread {
             val bytes = runCatching {
                 val dialog = FileDialog(null as Frame?, "Import world", FileDialog.LOAD)
+                // GTK's filename-filter callback needs an absolute initial directory.
+                dialog.directory = File(System.getProperty("user.home")).absolutePath
                 dialog.setFilenameFilter { _, name -> name.endsWith(".cvdworld", ignoreCase = true) }
                 dialog.isVisible = true
 

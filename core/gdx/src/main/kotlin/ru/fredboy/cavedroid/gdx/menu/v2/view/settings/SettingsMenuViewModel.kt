@@ -12,10 +12,12 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.fredboy.cavedroid.common.api.AdController
+import ru.fredboy.cavedroid.common.api.AssetPackPlatform
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.domain.configuration.model.LightingBackend
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
+import ru.fredboy.cavedroid.gdx.menu.v2.view.assetpacks.AssetPacksNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
 
@@ -24,8 +26,15 @@ class SettingsMenuViewModel(
     private val applicationContextRepository: ApplicationContextRepository,
     private val performanceMonitor: PerformanceMonitor,
     private val adController: AdController,
+    private val assetPackPlatform: AssetPackPlatform,
     baseViewModelDependencies: BaseViewModelDependencies,
 ) : BaseViewModel(baseViewModelDependencies) {
+
+    val showAssetPacks get() = assetPackPlatform.isSupported
+
+    fun onAssetPacksClick() {
+        navBackStack.push(AssetPacksNavKey)
+    }
 
     private val showPersonalizedAdsToggle: Boolean
         get() = adController.supportsPersonalizedAdsConsent

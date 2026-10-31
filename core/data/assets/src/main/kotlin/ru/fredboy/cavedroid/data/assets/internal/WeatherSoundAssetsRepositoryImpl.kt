@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.data.assets.internal
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import ru.fredboy.cavedroid.domain.assets.repository.WeatherSoundAssetsRepository
 import javax.inject.Inject
@@ -12,14 +11,14 @@ internal class WeatherSoundAssetsRepositoryImpl @Inject constructor() : WeatherS
     private val soundsMap = mutableMapOf<String, List<Sound>>()
 
     override fun initialize() {
-        val weatherDir = Gdx.files.internal(WEATHER_DIRECTORY)
-        val indexFile = Gdx.files.internal(INDEX_FILE)
+        val weatherDir = assetResolver.handle(WEATHER_DIRECTORY)
+        val indexFile = assetResolver.handle(INDEX_FILE)
 
         if (!indexFile.exists()) {
             return
         }
 
-        indexFile.readString().split("\n").forEach { kind ->
+        indexFile.readString().lineSequence().map(String::trim).filter(String::isNotEmpty).forEach { kind ->
             if (kind.isBlank()) return@forEach
             val kindDir = weatherDir.child(kind).takeIf { it.exists() } ?: return@forEach
             soundsMap[kind] = kindDir.loadAllSounds()

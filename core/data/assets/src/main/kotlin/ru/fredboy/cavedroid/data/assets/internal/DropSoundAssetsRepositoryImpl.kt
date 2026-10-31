@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.data.assets.internal
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import ru.fredboy.cavedroid.domain.assets.repository.DropSoundAssetsRepository
 import javax.inject.Inject
@@ -12,7 +11,7 @@ internal class DropSoundAssetsRepositoryImpl @Inject constructor() : DropSoundAs
     private var dropSounds: List<Sound>? = null
 
     override fun initialize() {
-        dropSounds = Gdx.files.internal(DROP_POP_PATH).loadAllSounds()
+        dropSounds = assetResolver.handle(DROP_POP_PATH).loadAllSounds()
     }
 
     override fun getDropPopSound(): Sound? {

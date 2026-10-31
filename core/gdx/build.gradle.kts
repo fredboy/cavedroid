@@ -46,4 +46,13 @@ dependencies {
     implementation(project(":core:gameplay:controls"))
     implementation(project(":core:gameplay:physics"))
     implementation(project(":core:gameplay:rendering"))
+
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.engine)
+    testRuntimeOnly(libs.junit.launcher)
+    testImplementation(libs.mockk)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

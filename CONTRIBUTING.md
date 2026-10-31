@@ -4,6 +4,8 @@ Thanks for your interest in contributing! This document covers how to set up you
 
 For building and running the game, see [README.md](README.md). For a code map and implementation conventions, see [AGENTS.md](AGENTS.md).
 
+For custom textures and gameplay data, see [Creating asset packs](ASSET_PACKS.md).
+
 ## Setup
 
 You need:

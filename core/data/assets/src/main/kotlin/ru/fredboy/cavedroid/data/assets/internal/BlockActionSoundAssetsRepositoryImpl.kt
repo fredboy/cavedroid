@@ -19,7 +19,7 @@ internal class BlockActionSoundAssetsRepositoryImpl @Inject constructor() : Bloc
     override fun getBlockActionSound(key: String): Sound? {
         return (
             soundCache[key] ?: try {
-                Gdx.files.internal("$BLOCK_ACTION_SOUND_PATH/$key").loadAllSounds()
+                assetResolver.handle("$BLOCK_ACTION_SOUND_PATH/$key").loadAllSounds()
             } catch (e: GdxRuntimeException) {
                 Gdx.app.error(TAG, "Couldn't load sounds for key $key", e)
                 emptyList()

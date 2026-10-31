@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.data.assets.internal
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import kotlinx.serialization.json.Json
 import ru.fredboy.cavedroid.data.assets.model.region.TextureRegionsDto
@@ -16,7 +15,7 @@ internal class TextureRegionsTextureAssetsRepositoryImpl @Inject constructor() :
     private var textureRegions: HashMap<String, TextureRegion>? = null
 
     private fun loadTextureRegions() {
-        val file = Gdx.files.internal(JSON_TEXTURE_REGIONS)
+        val file = assetResolver.handle(JSON_TEXTURE_REGIONS)
         val dto = JsonFormat.decodeFromString<TextureRegionsDto>(file.readString())
 
         val regions = HashMap<String, TextureRegion>()

@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.data.assets.internal
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import ru.fredboy.cavedroid.domain.assets.repository.FoodSoundAssetsRepository
 import javax.inject.Inject
@@ -12,7 +11,7 @@ internal class FoodSoundAssetsRepositoryImpl @Inject constructor() : FoodSoundAs
     private var foodSounds: List<Sound>? = null
 
     override fun initialize() {
-        foodSounds = Gdx.files.internal(DROP_POP_PATH).loadAllSounds()
+        foodSounds = assetResolver.handle(DROP_POP_PATH).loadAllSounds()
     }
 
     override fun getFoodSound(): Sound? {

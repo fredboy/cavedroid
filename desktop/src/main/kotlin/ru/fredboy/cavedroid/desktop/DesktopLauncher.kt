@@ -71,6 +71,7 @@ internal object DesktopLauncher {
                 main = GdxMainDispatcher,
             ),
             saveTransferController = DesktopSaveTransferController(),
+            assetPackPlatform = DesktopAssetPackPlatform(),
             loggingSeverity = when {
                 verbose -> Severity.Verbose
                 debug -> Severity.Debug

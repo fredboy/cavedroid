@@ -264,6 +264,7 @@ androidComponents {
 
 dependencies {
     implementation(project(":core:common"))
+    implementation(project(":core:data:assets"))
     implementation(libs.bundles.common)
     implementation(project(":core:gdx"))
     implementation(project(":core:gameplay:lighting-bfs"))

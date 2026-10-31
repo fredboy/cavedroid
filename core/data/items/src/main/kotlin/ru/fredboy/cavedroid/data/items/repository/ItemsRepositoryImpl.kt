@@ -13,6 +13,7 @@ import ru.fredboy.cavedroid.data.items.model.CraftingDto
 import ru.fredboy.cavedroid.data.items.model.DropAmountDto
 import ru.fredboy.cavedroid.data.items.model.GameItemsDto
 import ru.fredboy.cavedroid.data.items.model.ItemDto
+import ru.fredboy.cavedroid.domain.assets.pack.AssetResolver
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.craft.CraftingEntry
 import ru.fredboy.cavedroid.domain.items.model.craft.CraftingRecipe
@@ -26,6 +27,7 @@ import javax.inject.Singleton
 
 @Singleton
 internal class ItemsRepositoryImpl @Inject constructor(
+    private val assetResolver: AssetResolver,
     private val itemMapper: ItemMapper,
     private val blockMapper: BlockMapper,
 ) : ItemsRepository {
@@ -71,6 +73,7 @@ internal class ItemsRepositoryImpl @Inject constructor(
                     slabBottomBlock = blocksMap[dto.bottomSlabBlock] as? Block.Slab,
                 )
             } catch (e: Exception) {
+                if (assetResolver.hasOverrides) throw e
                 logger.e { "Failed to map item $key. Reason: ${e.message}" }
                 e.printStackTrace()
             }
@@ -81,7 +84,7 @@ internal class ItemsRepositoryImpl @Inject constructor(
     }
 
     private fun loadCraftingRecipes() {
-        val jsonString = Gdx.files.internal("json/crafting.json").readString()
+        val jsonString = assetResolver.handle("json/crafting.json").readString()
         val jsonMap = JsonFormat.decodeFromString<Map<String, CraftingDto>>(jsonString)
 
         if (jsonMap.isNotEmpty() && itemsMap.isEmpty()) {
@@ -121,7 +124,7 @@ internal class ItemsRepositoryImpl @Inject constructor(
             return
         }
 
-        val jsonString = Gdx.files.internal("json/game_items.json").readString()
+        val jsonString = assetResolver.handle("json/game_items.json").readString()
         val gameItemsDto = JsonFormat.decodeFromString<GameItemsDto>(jsonString)
 
         loadBlocks(gameItemsDto.blocks)
