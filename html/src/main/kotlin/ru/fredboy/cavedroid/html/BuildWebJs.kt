@@ -1,7 +1,7 @@
 package ru.fredboy.cavedroid.html
 
 import com.github.xpenatan.gdx.teavm.backends.shared.config.AssetFileHandle
-import com.github.xpenatan.gdx.teavm.backends.shared.config.compiler.TeaCompiler
+import com.github.xpenatan.gdx.teavm.backends.shared.config.builder.TeaBuilder
 import com.github.xpenatan.gdx.teavm.backends.web.config.backend.WebBackend
 import org.teavm.tooling.sources.DirectorySourceFileProvider
 import org.teavm.vm.TeaVMOptimizationLevel
@@ -31,14 +31,14 @@ object BuildWebJs {
 
         val backend = WebBackend().setStartJettyAfterBuild(serve)
 
-        val compiler = TeaCompiler(backend)
+        val builder = TeaBuilder(backend)
             .addAssets(AssetFileHandle(assetsPath))
 
         if (!extraAssetsPath.isNullOrEmpty()) {
-            compiler.addAssets(AssetFileHandle(extraAssetsPath))
+            builder.addAssets(AssetFileHandle(extraAssetsPath))
         }
 
-        compiler
+        builder
             .setOptimizationLevel(optimization)
             .setMainClass(launcherClass)
             .setObfuscated(obfuscate)
@@ -46,9 +46,9 @@ object BuildWebJs {
             .setDebugInformationGenerated(sourceMaps)
 
         if (sourceMaps) {
-            sourceRoots.forEach { compiler.addSourceFileProvider(DirectorySourceFileProvider(it)) }
+            sourceRoots.forEach { builder.addSourceFileProvider(DirectorySourceFileProvider(it)) }
         }
 
-        compiler.build(File("build/dist"))
+        builder.build(File("build/dist"))
     }
 }

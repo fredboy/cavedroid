@@ -9,11 +9,9 @@ plugins {
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
-// TeaVM ships browser-friendly stubs for a handful of java.util.concurrent.*
-// classes via its standard "emu" package convention. Classes live under
-// emu.java.* and src/main/resources/META-INF/teavm.properties maps the
-// emu.java prefix back to java.* at TeaVM compile time. The stubs are NOT on
-// the runtime classpath of any other module.
+// Browser-friendly java.util.concurrent.* stubs live under emu.java.*.
+// WebSubstitutionPolicy registers them through TeaVM's SubstitutionPolicy SPI.
+// They are not on the runtime classpath of any other module.
 
 private val webLauncherClassName = "ru.fredboy.cavedroid.html.WebLauncher"
 private val webBuildClassName = "ru.fredboy.cavedroid.html.BuildWebJs"

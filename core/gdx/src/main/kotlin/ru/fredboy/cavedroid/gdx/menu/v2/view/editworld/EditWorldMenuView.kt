@@ -186,7 +186,11 @@ private fun Stage.renaming(viewModel: EditWorldMenuViewModel, state: EditWorldMe
 
 private fun attachRenameListeners(field: TextField, viewModel: EditWorldMenuViewModel) {
     // Drive the IME from gestures + the observer, matching NewGameMenuView.
-    field.setOnscreenKeyboard { }
+    field.onscreenKeyboard = object : TextField.OnscreenKeyboard {
+        override fun show(textField: TextField) = Unit
+
+        override fun close() = Unit
+    }
 
     field.addListener(
         object : ChangeListener() {

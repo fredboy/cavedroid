@@ -6,10 +6,9 @@ construo = "2.2.3"
 dagger = "2.60.1"
 firebase = "35.1.0"
 firebaseCrashlyticsPlugin = "3.0.8"
-gdx = "1.13.1"
-# The TeaVM backend pulls libGDX 1.14.0 transitively on :html's classpath.
-# Its runtime ABI is forward-compatible with the project's libGDX usage.
-gdxTeaVM = "1.5.6"
+gdx = "1.14.2"
+gdxBox2d = "1.14.2"
+gdxTeaVM = "1.6.2"
 googleServices = "4.5.0"
 junit = "6.1.3"
 kermit = "2.2.0"
@@ -36,14 +35,14 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-performance = { module = "com.google.firebase:firebase-perf" }
 gdx-core = { module = "com.badlogicgames.gdx:gdx", version.ref = "gdx" }
-gdx-box2d = { module = "com.badlogicgames.gdx:gdx-box2d", version.ref = "gdx" }
+gdx-box2d = { module = "com.badlogicgames.gdx:gdx-box2d", version.ref = "gdxBox2d" }
 gdx-backend-android = { module = "com.badlogicgames.gdx:gdx-backend-android", version.ref = "gdx" }
 gdx-backend-desktop = { module = "com.badlogicgames.gdx:gdx-backend-lwjgl3", version.ref = "gdx" }
 gdx-backend-ios = { module = "com.badlogicgames.gdx:gdx-backend-robovm", version.ref = "gdx" }
 gdx-backend-web = { module = "com.github.xpenatan.gdx-teavm:backend-web", version.ref = "gdxTeaVM" }
 # Select the required natives-* classifier with variantOf(...) in each consumer.
 gdx-platform-core = { module = "com.badlogicgames.gdx:gdx-platform", version.ref = "gdx" }
-gdx-platform-box2d = { module = "com.badlogicgames.gdx:gdx-box2d-platform", version.ref = "gdx" }
+gdx-platform-box2d = { module = "com.badlogicgames.gdx:gdx-box2d-platform", version.ref = "gdxBox2d" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
 junit-launcher = { module = "org.junit.platform:junit-platform-launcher" }

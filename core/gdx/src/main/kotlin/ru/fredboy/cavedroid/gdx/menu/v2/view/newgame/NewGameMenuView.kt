@@ -46,7 +46,11 @@ private fun attachFieldListeners(field: TextField, viewModel: NewGameMenuViewMod
     // Drive the IME ourselves from user gestures + the observer; scene2d's
     // focus-driven show/hide would race with the rebuild and re-fire the
     // observer, causing layout flicker.
-    field.setOnscreenKeyboard { }
+    field.onscreenKeyboard = object : TextField.OnscreenKeyboard {
+        override fun show(textField: TextField) = Unit
+
+        override fun close() = Unit
+    }
 
     field.addListener(
         object : ChangeListener() {
