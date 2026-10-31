@@ -155,7 +155,7 @@ class VehicleController @Inject constructor(
             }
             fixture.filterData = Filter().apply {
                 categoryBits = original.categoryBits
-                maskBits = PhysicsConstants.CATEGORY_PROJECTILE
+                maskBits = (PhysicsConstants.CATEGORY_PROJECTILE.toInt() or PhysicsConstants.CATEGORY_DROP.toInt()).toShort()
             }
         }
         changePlayerBodyType(BodyDef.BodyType.KinematicBody)
