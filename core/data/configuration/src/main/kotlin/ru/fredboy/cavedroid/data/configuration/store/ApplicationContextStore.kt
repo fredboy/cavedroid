@@ -23,6 +23,9 @@ class ApplicationContextStore @Inject constructor(
     val isYandexGamesBuild: Boolean
         get() = synchronized(lock) { applicationContext.isYandexGamesBuild }
 
+    val supportsInfiniteWorlds: Boolean
+        get() = applicationContext.supportsInfiniteWorlds
+
     var isTouch: Boolean
         get() = synchronized(lock) { applicationContext.isTouch }
         set(value) = synchronized(lock) { applicationContext.isTouch = value }

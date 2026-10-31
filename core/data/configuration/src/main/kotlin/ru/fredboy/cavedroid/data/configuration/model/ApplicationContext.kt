@@ -23,4 +23,5 @@ class ApplicationContext(
     internal var lightingBackend: LightingBackend,
     internal val isYandexGamesBuild: Boolean,
     internal var preferShowDebug: Boolean,
+    internal val supportsInfiniteWorlds: Boolean = true,
 )

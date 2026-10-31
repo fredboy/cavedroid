@@ -61,6 +61,7 @@ class CaveDroidApplication(
     private val saveTransferController: SaveTransferController = NoOpSaveTransferController,
     private val defaultLocaleProvider: () -> Locale? = { safeDefaultLocale() },
     private val isYandexGamesBuild: Boolean = false,
+    private val supportsInfiniteWorlds: Boolean = true,
     loggingSeverity: Severity = Severity.Info,
 ) : Game(),
     CaveDroidApplicationDecorator {
@@ -142,6 +143,7 @@ class CaveDroidApplication(
                             preferencesStore.getPreference(PreferenceKeys.LIGHTING_BACKEND),
                         ),
                         isYandexGamesBuild = isYandexGamesBuild,
+                        supportsInfiniteWorlds = supportsInfiniteWorlds,
                         preferShowDebug = preferencesStore.getPreference(PreferenceKeys.PREFER_SHOW_DEBUG_KEY)
                             ?.toBooleanStrictOrNull() ?: false,
                     ),

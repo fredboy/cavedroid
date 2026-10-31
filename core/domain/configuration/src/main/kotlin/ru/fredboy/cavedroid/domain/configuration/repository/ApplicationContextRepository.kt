@@ -10,6 +10,8 @@ interface ApplicationContextRepository {
 
     fun isYandexGamesBuild(): Boolean
 
+    fun supportsInfiniteWorlds(): Boolean
+
     fun isTouch(): Boolean
 
     fun isFullscreen(): Boolean

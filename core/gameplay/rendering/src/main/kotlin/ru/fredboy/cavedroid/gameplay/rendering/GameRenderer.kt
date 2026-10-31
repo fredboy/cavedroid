@@ -288,15 +288,6 @@ class GameRenderer @Inject constructor(
             performanceMonitor.incrementGauge(ru.fredboy.cavedroid.common.performance.PerformanceGauge.CACHE_UPDATES, terrainCache.updates)
             terrainCache.trim(ru.fredboy.cavedroid.gameplay.rendering.utils.RenderChunkWindow(viewport).capacity * terrainRenderers.sumOf { it.cacheLayerCount } + 1)
             isReady = terrainRenderers.all { it.cacheReady(viewport) } && lightingSystem.prepareView(viewport, finish = delta == 0f)
-            if (!isReady) {
-                Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
-                Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-                spriter.projectionMatrix = hudCamera.combined
-                spriter.begin()
-                spriter.drawString(getFont(), fontAssets.getMenuLocalizationBundle().get("loadingWorld"), 16f, 32f, Color.WHITE)
-                spriter.end()
-                return@measure
-            }
 
             spriter.projectionMatrix = camera.combined
             shaper.projectionMatrix = camera.combined

@@ -20,6 +20,8 @@ class ApplicationContextRepositoryImpl @Inject constructor(
 
     override fun isYandexGamesBuild(): Boolean = applicationContextStore.isYandexGamesBuild
 
+    override fun supportsInfiniteWorlds(): Boolean = applicationContextStore.supportsInfiniteWorlds
+
     override fun isTouch(): Boolean = applicationContextStore.isTouch
 
     override fun isFullscreen(): Boolean = applicationContextStore.isFullscreen
