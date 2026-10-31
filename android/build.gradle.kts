@@ -42,7 +42,7 @@ android {
     sourceSets {
 
         named("main") {
-            jniLibs.srcDir("libs")
+            jniLibs.srcDir(layout.buildDirectory.dir("generated/jniLibs").get().asFile)
             assets {
                 srcDirs("src/main/assets", "build/generated/extraRes/shared")
             }
@@ -146,32 +146,20 @@ android {
     }
 }
 
-// called every time gradle gets executed, takes the native dependencies of
-// the natives configuration, and extracts them to the proper libs/ folders
-// so they get packed with the APK.
-task("copyAndroidNatives") {
-    doFirst {
-        val armeabiV7Dir = file("libs/armeabi-v7a/").apply { mkdirs() }
-        val arm64Dir = file("libs/arm64-v8a/").apply { mkdirs() }
-        val x86Dir = file("libs/x86/").apply { mkdirs() }
-        val amd64Dir = file("libs/x86_64/").apply { mkdirs() }
+// Sync removes obsolete libraries when native dependencies change.
+tasks.register<Sync>("copyAndroidNatives") {
+    into(layout.buildDirectory.dir("generated/jniLibs"))
 
-        natives.files.forEach { jar ->
-            val outputDir = when {
-                jar.name.endsWith("natives-armeabi-v7a.jar") -> armeabiV7Dir
-                jar.name.endsWith("natives-arm64-v8a.jar") -> arm64Dir
-                jar.name.endsWith("natives-x86.jar") -> x86Dir
-                jar.name.endsWith("natives-x86_64.jar") -> amd64Dir
-                else -> null
-            }
-
-            if (outputDir != null) {
-                copy {
-                    from(zipTree(jar))
-                    into(outputDir)
-                    include("*.so")
-                }
-            }
+    listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64").forEach { abi ->
+        from(
+            provider {
+                natives.files
+                    .filter { it.name.endsWith("natives-$abi.jar") }
+                    .map { zipTree(it) }
+            },
+        ) {
+            into(abi)
+            include("*.so")
         }
     }
 }
