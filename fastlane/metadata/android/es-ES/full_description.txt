@@ -1,32 +1,16 @@
-Una sandbox 2D pixelada de bolsillo donde cada mundo es tuyo para
-minar, construir y sobrevivir. Gratis. Funciona sin conexión.
-Código abierto.
+CaveDroid es un juego sandbox 2D con gráficos de píxeles. Extrae recursos, fabrica equipo y construye en mundos generados automáticamente. El modo Supervivencia incluye salud, hambre y combate. El modo Creativo ofrece bloques ilimitados y vuelo para construir.
 
-Recorre paisajes generados proceduralmente que se enroscan en el
-horizonte. Cruza praderas, sube colinas boscosas y desciende a cuevas
-iluminadas por antorchas. El día se hace noche, salen los monstruos, y
-cuanto más profundo cavas, más difícil es volver a casa.
+Explora mundos infinitos. Encuentra llanuras, desiertos, zonas nevadas, cuevas, minas subterráneas y aldeas con habitantes, cultivos y botín. Fabrica barcas para viajar por el agua.
 
-LO QUE PUEDES HACER
-Rompe y coloca cualquier bloque. Tala árboles, mina carbón, hierro, oro
-y diamante. Fabrica herramientas, armadura, antorchas, comida y armas
-— blande una espada de cerca o abate esqueletos a distancia con un
-arco. Funde minerales. Caza criaturas, esquiva la lava en lo profundo.
-Construye un refugio, una fortaleza, un puente en el cielo — lo que
-imagines sobre una cuadrícula.
+Características:
+- Fabricación y construcción: extrae y funde minerales, fabrica herramientas y bloques, amuebla casas y guarda provisiones en cofres.
+- Agricultura: cultiva plantas y cocina alimentos.
+- Combate: enfréntate a zombis, esqueletos, arañas y creepers con espadas, arcos y armaduras. Usa TNT con explosiones en cadena.
+- Simulación del mundo: agua y lava que fluyen, y fuego que se propaga entre bloques.
+- Iluminación y clima: ciclo de día y noche, luz de antorchas, lluvia, nevadas y agua que se congela en zonas nevadas.
+- Paquetes de recursos: importa texturas, sonidos y datos del juego, incluidas texturas de mayor resolución.
+- Partidas guardadas: conserva varios mundos y exporta o importa partidas.
+- Estadísticas: consulta el tiempo de juego, los bloques extraídos, los objetos fabricados y otras actividades.
 
-CARACTERÍSTICAS
-► Mundos generados proceduralmente con biomas, colinas, cuevas y menas ocultas
-► Ciclo día/noche con iluminación dinámica — las antorchas iluminan de verdad
-► Recetas de fabricación para herramientas, armadura, armas, comida y bloques decorativos
-► Combate cuerpo a cuerpo y a distancia — espadas, arco y flechas
-► Animales amigables y criaturas hostiles con comportamientos y botines propios
-► Fluidos basados en física — el agua fluye, la lava quema
-► Bucle de supervivencia completo: inventario, hambre, salud, armadura
-► Controles táctiles cómodos
-
-En desarrollo activo — nuevas funciones en cada versión. ¿Encontraste
-un bug o tienes una idea? Abre un issue en GitHub:
+CaveDroid es un juego para un jugador con controles táctiles. Se puede jugar sin conexión. Código fuente e informes de errores:
 https://github.com/fredboy/cavedroid
-
-¡Disfruta cavando!

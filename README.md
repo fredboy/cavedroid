@@ -28,11 +28,16 @@ Explore, mine, and build in procedurally generated worlds.
 
 ## Features
 
-- Infinite 2D worlds
-- Craft, mine, and explore
-- Procedurally generated world
-- Cross-platform: Android, Desktop (Windows/Linux/macOS), Web (browser, via TeaVM), iOS (untested)
-- Single-player mode (multiplayer not available yet)
+- **Game modes:** Survival with health and hunger; Creative with unlimited blocks and flight. Single-player, playable offline.
+- **Exploration:** procedurally generated infinite worlds with biomes, caves, mineshafts and villages. Craft boats to travel across water.
+- **Crafting and building:** mine and smelt ores, craft tools and blocks, furnish houses and store supplies in chests.
+- **Farming:** grow crops and cook food.
+- **Combat:** zombies, skeletons, spiders and creepers; swords, bows, armor and TNT with chain explosions.
+- **World simulation:** flowing water and lava, and spreading fire.
+- **Lighting and weather:** day and night, torch lighting, rain, snow and freezing water in snowy biomes.
+- **[Asset packs](ASSET_PACKS.md):** custom textures, sounds and game data on Android and desktop, including higher-resolution textures.
+- **Saves:** multiple worlds, save export and import.
+- **Statistics:** play time, blocks mined, items crafted and other gameplay activity.
 
 ---
 
