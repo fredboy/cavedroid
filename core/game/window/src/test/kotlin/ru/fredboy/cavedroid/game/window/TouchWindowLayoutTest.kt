@@ -89,7 +89,7 @@ class TouchWindowLayoutTest {
         val windows = listOf(
             SurvivalInventoryWindow(items).apply { recipeBookActive = true },
             CraftingInventoryWindow(items).apply { recipeBookActive = true },
-            CreativeInventoryTabsWindow(items).apply { selectedTab = CreativeInventoryTabsWindow.Tab.Normal },
+            CreativeInventoryTabsWindow(items).apply { selectedTab = CreativeInventoryTabsWindow.Tab.Materials },
             CreativeInventoryTabsWindow(items).apply { selectedTab = CreativeInventoryTabsWindow.Tab.Inventory },
         )
         windows.forEach { window ->

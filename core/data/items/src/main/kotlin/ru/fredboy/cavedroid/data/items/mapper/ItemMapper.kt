@@ -10,6 +10,7 @@ import ru.fredboy.cavedroid.domain.assets.repository.WearableTextureAssetsReposi
 import ru.fredboy.cavedroid.domain.assets.usecase.GetItemTextureUseCase
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.item.CommonItemParams
+import ru.fredboy.cavedroid.domain.items.model.item.CreativeCategory
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import java.util.*
 import javax.inject.Inject
@@ -183,6 +184,7 @@ class ItemMapper @Inject constructor(
             burningTimeMs = dto.burningTime,
             smeltProductKey = dto.smeltProduct,
             tint = dto.tint?.let { colorFromHexString(it) },
+            creativeCategory = CreativeCategory.entries.first { it.key == dto.creativeCategory },
         )
     }
 

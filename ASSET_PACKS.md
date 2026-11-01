@@ -82,6 +82,12 @@ For example, this partial `json/mobs.json` changes only the pig's health:
 {"pig": {"hp": 20}}
 ```
 
+Each item in `json/game_items.json` can set `creative_category` to `building`,
+`nature`, `utilities`, `equipment`, `food`, `materials`, or `creatures`. This
+controls creative inventory filtering independently of the item's `type`.
+New items without a category default to `materials`; overrides of existing items
+inherit the bundled category unless they replace it explicitly.
+
 ## Higher-resolution textures
 
 One block remains 16 logical pixels wide. Replacing a 16×16 image with a 32×32 or

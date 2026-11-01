@@ -62,7 +62,8 @@ class TouchWindowsRenderer @Inject constructor(
                 GameWindowType.CRAFTING_TABLE -> items.getItemByKey("crafting_table").params.name
                 GameWindowType.FURNACE -> items.getItemByKey("furnace").params.name
                 GameWindowType.CHEST -> items.getItemByKey("chest").params.name
-                GameWindowType.CREATIVE_INVENTORY, GameWindowType.CREATIVE_INVENTORY_TABS -> fonts.getMenuLocalizationBundle()["creative"]
+                GameWindowType.CREATIVE_INVENTORY_TABS -> fonts.getMenuLocalizationBundle()[(window as CreativeInventoryTabsWindow).selectedTab.localizationKey]
+                GameWindowType.CREATIVE_INVENTORY -> fonts.getMenuLocalizationBundle()["creative"]
                 else -> label("inventory")
             }
             withUiFont { text(batch, title, 302f, (layout.headerHeight - fonts.getStringHeight(title)) / 2) }
@@ -83,19 +84,17 @@ class TouchWindowsRenderer @Inject constructor(
             }
             val creative = window as? CreativeInventoryTabsWindow
             val catalog = if (window is AbstractInventoryWindowWithScroll) {
-                items.getAllItems().filter { creative == null || creative.selectedTab.isRelevantItem(it) }.toList()
+                creative?.getCatalogItems() ?: items.getAllItems().toList()
             } else {
                 emptyList()
             }
             layout.tabs.forEachIndexed { index, rect ->
                 val tab = CreativeInventoryTabsWindow.Tab.entries[index]
                 val selected = tab == creative?.selectedTab
-                if (selected) batch.draw(texture("touch_selected_tab"), rect.x, rect.y, rect.width, rect.height)
-                val item = if (tab.isInventory) items.getItemByKey("chest") else items.getAllItems().firstOrNull { tab.isRelevantItem(it) }
-                item?.let {
-                    val iconSize = min(rect.width, rect.height) - 8f
-                    batch.drawSprite(it.sprite, rect.x + (rect.width - iconSize) / 2, rect.y + (rect.height - iconSize) / 2, width = iconSize, height = iconSize)
-                }
+                batch.draw(texture(if (selected) "touch_selected_tab" else "touch_creative_tab"), rect.x, rect.y, rect.width, rect.height)
+                val item = items.getItemByKey(tab.iconKey)
+                val iconSize = min(rect.width, rect.height) - 8f
+                batch.drawSprite(item.sprite, rect.x + (rect.width - iconSize) / 2, rect.y + (rect.height - iconSize) / 2, width = iconSize, height = iconSize)
             }
             val phantom = (window as? AbstractInventoryWindowWithCraftGrid)?.getPhantomRecipe(items, TouchWindowLayout.RECIPES_PER_PAGE).orEmpty()
             val recipes = (window as? AbstractInventoryWindowWithCraftGrid)?.getVisibleCraftingRecipes(items, TouchWindowLayout.RECIPES_PER_PAGE).orEmpty()

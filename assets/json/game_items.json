@@ -4348,79 +4348,93 @@
       "texture": "none"
     },
     "stone": {
+      "creative_category": "nature",
       "name": "Stone",
       "type": "block",
       "texture": "stone"
     },
     "grass": {
+      "creative_category": "nature",
       "name": "Grass",
       "type": "block",
       "texture": "grass"
     },
     "dirt": {
+      "creative_category": "nature",
       "name": "Dirt",
       "type": "block",
       "texture": "dirt"
     },
     "cobblestone": {
+      "creative_category": "nature",
       "name": "Cobblestone",
       "type": "block",
       "texture": "cobblestone",
       "smelt_product": "stone"
     },
     "mossy_cobblestone": {
+      "creative_category": "nature",
       "name": "Mossy Cobblestone",
       "type": "block",
       "texture": "mossy_cobblestone"
     },
     "planks_oak": {
+      "creative_category": "building",
       "name": "Oak Planks",
       "type": "block",
       "texture": "planks_oak",
       "burning_time": 15000
     },
     "sapling_oak": {
+      "creative_category": "nature",
       "name": "Oak Sapling",
       "type": "block",
       "texture": "sapling_oak",
       "burning_time": 5000
     },
     "planks_spruce": {
+      "creative_category": "building",
       "name": "Spruce Planks",
       "type": "block",
       "texture": "planks_spruce",
       "burning_time": 15000
     },
     "planks_birch": {
+      "creative_category": "building",
       "name": "Birch Planks",
       "type": "block",
       "texture": "planks_birch",
       "burning_time": 15000
     },
     "sapling_birch": {
+      "creative_category": "nature",
       "name": "Birch Sapling",
       "type": "block",
       "texture": "sapling_birch",
       "burning_time": 5000
     },
     "crafting_table": {
+      "creative_category": "utilities",
       "name": "Crafting Table",
       "type": "block",
       "texture": "crafting_table",
       "burning_time": 15000
     },
     "furnace": {
+      "creative_category": "utilities",
       "name": "Furnace",
       "type": "block",
       "texture": "furnace_off"
     },
     "chest": {
+      "creative_category": "utilities",
       "name": "Chest",
       "type": "block",
       "texture": "chest",
       "burning_time": 15000
     },
     "torch": {
+      "creative_category": "utilities",
       "name": "Torch",
       "type": "block",
       "texture": "torch",
@@ -4428,52 +4442,61 @@
       "origin_y": 1
     },
     "sapling_spruce": {
+      "creative_category": "nature",
       "name": "Spruce Sapling",
       "type": "block",
       "texture": "sapling_spruce",
       "burning_time": 5000
     },
     "bedrock": {
+      "creative_category": "nature",
       "name": "Bedrock",
       "type": "block",
       "texture": "bedrock"
     },
     "sand": {
+      "creative_category": "nature",
       "name": "Sand",
       "type": "block",
       "texture": "sand",
       "smelt_product": "glass"
     },
     "gravel": {
+      "creative_category": "nature",
       "name": "Gravel",
       "type": "block",
       "texture": "gravel"
     },
     "gold_ore": {
+      "creative_category": "nature",
       "name": "Golden Ore",
       "type": "block",
       "texture": "gold_ore",
       "smelt_product": "gold_ingot"
     },
     "iron_ore": {
+      "creative_category": "nature",
       "name": "Iron Ore",
       "type": "block",
       "texture": "iron_ore",
       "smelt_product": "iron_ingot"
     },
     "coal_ore": {
+      "creative_category": "nature",
       "name": "Coal Ore",
       "type": "block",
       "texture": "coal_ore",
       "smelt_product": "coal"
     },
     "diamond_ore": {
+      "creative_category": "nature",
       "name": "Diamond Ore",
       "type": "block",
       "texture": "diamond_ore",
       "smelt_product": "diamond"
     },
     "log_oak": {
+      "creative_category": "nature",
       "name": "Wood",
       "type": "block",
       "texture": "log_oak",
@@ -4481,11 +4504,13 @@
       "smelt_product": "charcoal"
     },
     "leaves_oak": {
+      "creative_category": "nature",
       "name": "Leaves",
       "type": "block",
       "texture": "leaves_oak"
     },
     "log_spruce": {
+      "creative_category": "nature",
       "name": "Spruce",
       "type": "block",
       "texture": "log_spruce",
@@ -4493,11 +4518,13 @@
       "smelt_product": "charcoal"
     },
     "leaves_spruce": {
+      "creative_category": "nature",
       "name": "Spruce Leaves",
       "type": "block",
       "texture": "leaves_spruce"
     },
     "log_birch": {
+      "creative_category": "nature",
       "name": "Birch",
       "type": "block",
       "texture": "log_birch",
@@ -4505,43 +4532,51 @@
       "smelt_product": "charcoal"
     },
     "leaves_birch": {
+      "creative_category": "nature",
       "name": "Birch Leaves",
       "type": "block",
       "texture": "leaves_birch"
     },
     "glass": {
+      "creative_category": "building",
       "name": "Glass",
       "type": "block",
       "texture": "glass"
     },
     "lapis_ore": {
+      "creative_category": "nature",
       "name": "Lapis Ore",
       "type": "block",
       "texture": "lapis_ore",
       "smelt_product": "lapis_lazuli"
     },
     "lapis_block": {
+      "creative_category": "building",
       "name": "Lapis Block",
       "type": "block",
       "texture": "lapis_block"
     },
     "sandstone": {
+      "creative_category": "building",
       "name": "Sandstone",
       "type": "block",
       "texture": "sandstone"
     },
     "web": {
+      "creative_category": "nature",
       "name": "Cobweb",
       "type": "block",
       "texture": "web"
     },
     "tallgrass": {
+      "creative_category": "nature",
       "name": "Tall Grass",
       "type": "block",
       "texture": "tallgrass",
       "origin_x": 0.5
     },
     "deadbush": {
+      "creative_category": "nature",
       "name": "Dead Bush",
       "type": "block",
       "texture": "deadbush",
@@ -4549,167 +4584,196 @@
       "burning_time": 5000
     },
     "bricks": {
+      "creative_category": "building",
       "name": "Bricks",
       "type": "block",
       "texture": "bricks"
     },
     "clay": {
+      "creative_category": "nature",
       "name": "Clay",
       "type": "block",
       "texture": "clay"
     },
     "dandelion": {
+      "creative_category": "nature",
       "name": "Dandelion",
       "type": "block",
       "texture": "dandelion",
       "origin_x": 0.5
     },
     "rose": {
+      "creative_category": "nature",
       "name": "Rose",
       "type": "block",
       "texture": "rose",
       "origin_x": 0.5
     },
     "mushroom_brown": {
+      "creative_category": "nature",
       "name": "Mushroom",
       "type": "block",
       "texture": "mushroom_brown",
       "origin_x": 0.5
     },
     "mushroom_red": {
+      "creative_category": "nature",
       "name": "Mushroom",
       "type": "block",
       "texture": "mushroom_red",
       "origin_x": 0.5
     },
     "wool_colored_white": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_white",
       "burning_time": 5000
     },
     "wool_colored_orange": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_orange",
       "burning_time": 5000
     },
     "wool_colored_magenta": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_magenta",
       "burning_time": 5000
     },
     "wool_colored_light_blue": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_light_blue",
       "burning_time": 5000
     },
     "wool_colored_yellow": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_yellow",
       "burning_time": 5000
     },
     "wool_colored_lime": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_lime",
       "burning_time": 5000
     },
     "wool_colored_pink": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_pink",
       "burning_time": 5000
     },
     "wool_colored_gray": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_gray",
       "burning_time": 5000
     },
     "wool_colored_light_gray": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_light_gray",
       "burning_time": 5000
     },
     "wool_colored_cyan": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_cyan",
       "burning_time": 5000
     },
     "wool_colored_purple": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_purple",
       "burning_time": 5000
     },
     "wool_colored_blue": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_blue",
       "burning_time": 5000
     },
     "wool_colored_brown": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_brown",
       "burning_time": 5000
     },
     "wool_colored_green": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_green",
       "burning_time": 5000
     },
     "wool_colored_red": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_red",
       "burning_time": 5000
     },
     "wool_colored_black": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_black",
       "burning_time": 5000
     },
     "gold_block": {
+      "creative_category": "building",
       "name": "Gold Block",
       "type": "block",
       "texture": "gold_block"
     },
     "iron_block": {
+      "creative_category": "building",
       "name": "Iron Block",
       "type": "block",
       "texture": "iron_block"
     },
     "raw_gold_block": {
+      "creative_category": "building",
       "name": "Raw Gold Block",
       "type": "block",
       "texture": "raw_gold_block"
     },
     "raw_iron_block": {
+      "creative_category": "building",
       "name": "Raw Iron Block",
       "type": "block",
       "texture": "raw_iron_block"
     },
     "coal_block": {
+      "creative_category": "building",
       "name": "Coal Block",
       "type": "block",
       "texture": "coal_block",
       "burning_time": 800000
     },
     "diamond_block": {
+      "creative_category": "building",
       "name": "Diamond Block",
       "type": "block",
       "texture": "diamond_block"
     },
     "stone_slab": {
+      "creative_category": "building",
       "name": "Stone Slab",
       "type": "slab",
       "texture": "stone_slab",
@@ -4717,6 +4781,7 @@
       "bottom_slab_block": "stone_slab_bottom"
     },
     "sandstone_slab": {
+      "creative_category": "building",
       "name": "Sandstone Slab",
       "type": "slab",
       "texture": "sandstone_slab",
@@ -4724,6 +4789,7 @@
       "bottom_slab_block": "sandstone_slab_bottom"
     },
     "oak_slab": {
+      "creative_category": "building",
       "name": "Oak Slab",
       "type": "slab",
       "texture": "oak_slab",
@@ -4732,6 +4798,7 @@
       "burn_time": 7500
     },
     "spruce_slab": {
+      "creative_category": "building",
       "name": "Spruce Slab",
       "type": "slab",
       "texture": "spruce_slab",
@@ -4740,6 +4807,7 @@
       "burn_time": 7500
     },
     "birch_slab": {
+      "creative_category": "building",
       "name": "Birch Slab",
       "type": "slab",
       "texture": "birch_slab",
@@ -4748,6 +4816,7 @@
       "burn_time": 7500
     },
     "cobblestone_slab": {
+      "creative_category": "building",
       "name": "Cobblestone Slab",
       "type": "slab",
       "texture": "cobblestone_slab",
@@ -4755,6 +4824,7 @@
       "bottom_slab_block": "cobblestone_slab_bottom"
     },
     "brick_slab": {
+      "creative_category": "building",
       "name": "Brick Slab",
       "type": "slab",
       "texture": "brick_slab",
@@ -4762,11 +4832,13 @@
       "bottom_slab_block": "brick_slab_bottom"
     },
     "stonebrick": {
+      "creative_category": "building",
       "name": "Stone Brick",
       "type": "block",
       "texture": "stonebrick"
     },
     "stonebrick_slab": {
+      "creative_category": "building",
       "name": "Stone Brick Slab",
       "type": "slab",
       "texture": "stonebrick_slab",
@@ -4774,44 +4846,52 @@
       "bottom_slab_block": "stonebrick_slab_bottom"
     },
     "cactus": {
+      "creative_category": "nature",
       "name": "Cactus",
       "type": "block",
       "texture": "cactus",
       "smelt_product": "dye_green"
     },
     "obsidian": {
+      "creative_category": "nature",
       "name": "Obsidian",
       "type": "block",
       "texture": "obsidian"
     },
     "ice": {
+      "creative_category": "nature",
       "name": "Ice",
       "type": "block",
       "texture": "ice"
     },
     "snow_block": {
+      "creative_category": "nature",
       "name": "Snow Block",
       "type": "block",
       "texture": "snow"
     },
     "trapdoor_wood_open": {
+      "creative_category": "utilities",
       "name": "Wooden Trapdoor",
       "type": "block",
       "texture": "trapdoor",
       "burning_time": 15000
     },
     "ladder": {
+      "creative_category": "utilities",
       "name": "Ladder",
       "type": "block",
       "texture": "ladder",
       "burning_time": 15000
     },
     "stick": {
+      "creative_category": "materials",
       "name": "Stick",
       "texture": "stick",
       "burning_time": 5000
     },
     "wood_sword": {
+      "creative_category": "equipment",
       "name": "Wooden Sword",
       "type": "sword",
       "texture": "wood_sword",
@@ -4823,6 +4903,7 @@
       "mob_damage_multiplier": 4
     },
     "stone_sword": {
+      "creative_category": "equipment",
       "name": "Stone Sword",
       "type": "sword",
       "texture": "stone_sword",
@@ -4833,6 +4914,7 @@
       "mob_damage_multiplier": 5
     },
     "iron_sword": {
+      "creative_category": "equipment",
       "name": "Iron Sword",
       "type": "sword",
       "texture": "iron_sword",
@@ -4843,6 +4925,7 @@
       "mob_damage_multiplier": 6
     },
     "diamond_sword": {
+      "creative_category": "equipment",
       "name": "Diamond Sword",
       "type": "sword",
       "texture": "diamond_sword",
@@ -4853,6 +4936,7 @@
       "mob_damage_multiplier": 7
     },
     "gold_sword": {
+      "creative_category": "equipment",
       "name": "Golden Sword",
       "type": "sword",
       "texture": "gold_sword",
@@ -4863,6 +4947,7 @@
       "mob_damage_multiplier": 4
     },
     "wood_shovel": {
+      "creative_category": "equipment",
       "name": "Wooden Shovel",
       "type": "shovel",
       "texture": "wood_shovel",
@@ -4873,6 +4958,7 @@
       "burning_time": 10000
     },
     "stone_shovel": {
+      "creative_category": "equipment",
       "name": "Stone Shovel",
       "type": "shovel",
       "texture": "stone_shovel",
@@ -4882,6 +4968,7 @@
       "durability": 131
     },
     "iron_shovel": {
+      "creative_category": "equipment",
       "name": "Iron Shovel",
       "type": "shovel",
       "texture": "iron_shovel",
@@ -4891,6 +4978,7 @@
       "durability": 250
     },
     "diamond_shovel": {
+      "creative_category": "equipment",
       "name": "Diamond Shovel",
       "type": "shovel",
       "texture": "diamond_shovel",
@@ -4900,6 +4988,7 @@
       "durability": 1561
     },
     "gold_shovel": {
+      "creative_category": "equipment",
       "name": "Golden Shovel",
       "type": "shovel",
       "texture": "gold_shovel",
@@ -4910,6 +4999,7 @@
       "durability": 32
     },
     "wood_pickaxe": {
+      "creative_category": "equipment",
       "name": "Wooden Pickaxe",
       "type": "pickaxe",
       "texture": "wood_pickaxe",
@@ -4920,6 +5010,7 @@
       "burning_time": 10000
     },
     "stone_pickaxe": {
+      "creative_category": "equipment",
       "name": "Stone Pickaxe",
       "type": "pickaxe",
       "texture": "stone_pickaxe",
@@ -4929,6 +5020,7 @@
       "durability": 131
     },
     "iron_pickaxe": {
+      "creative_category": "equipment",
       "name": "Iron Pickaxe",
       "type": "pickaxe",
       "texture": "iron_pickaxe",
@@ -4938,6 +5030,7 @@
       "durability": 251
     },
     "diamond_pickaxe": {
+      "creative_category": "equipment",
       "name": "Diamond Pickaxe",
       "type": "pickaxe",
       "texture": "diamond_pickaxe",
@@ -4947,6 +5040,7 @@
       "durability": 1562
     },
     "gold_pickaxe": {
+      "creative_category": "equipment",
       "name": "Golden Pickaxe",
       "type": "pickaxe",
       "texture": "gold_pickaxe",
@@ -4957,6 +5051,7 @@
       "durability": 33
     },
     "wood_axe": {
+      "creative_category": "equipment",
       "name": "Wooden Axe",
       "type": "axe",
       "texture": "wood_axe",
@@ -4967,6 +5062,7 @@
       "burning_time": 10000
     },
     "stone_axe": {
+      "creative_category": "equipment",
       "name": "Stone Axe",
       "type": "axe",
       "texture": "stone_axe",
@@ -4976,6 +5072,7 @@
       "durability": 131
     },
     "iron_axe": {
+      "creative_category": "equipment",
       "name": "Iron Axe",
       "type": "axe",
       "texture": "iron_axe",
@@ -4985,6 +5082,7 @@
       "durability": 250
     },
     "diamond_axe": {
+      "creative_category": "equipment",
       "name": "Diamond Axe",
       "type": "axe",
       "texture": "diamond_axe",
@@ -4994,6 +5092,7 @@
       "durability": 1561
     },
     "gold_axe": {
+      "creative_category": "equipment",
       "name": "Golden Axe",
       "type": "axe",
       "texture": "gold_axe",
@@ -5004,6 +5103,7 @@
       "durability": 32
     },
     "shears": {
+      "creative_category": "equipment",
       "name": "Shears",
       "type": "shears",
       "texture": "shears",
@@ -5013,6 +5113,7 @@
       "durability": 238
     },
     "bucket_empty": {
+      "creative_category": "equipment",
       "name": "Empty Bucket",
       "type": "usable",
       "texture": "bucket_empty",
@@ -5020,6 +5121,7 @@
       "action_key": "use_empty_bucket"
     },
     "bucket_water": {
+      "creative_category": "equipment",
       "name": "Water Bucket",
       "type": "usable",
       "texture": "bucket_water",
@@ -5028,6 +5130,7 @@
       "max_stack": 1
     },
     "bucket_lava": {
+      "creative_category": "equipment",
       "name": "Lava Bucket",
       "type": "usable",
       "texture": "bucket_lava",
@@ -5037,6 +5140,7 @@
       "burning_time": 1000000
     },
     "snowball": {
+      "creative_category": "equipment",
       "name": "Snowball",
       "type": "usable",
       "texture": "snowball",
@@ -5044,44 +5148,52 @@
       "max_stack": 16
     },
     "coal": {
+      "creative_category": "materials",
       "name": "Coal",
       "texture": "coal",
       "burning_time": 80000,
       "origin_x": 0.25
     },
     "charcoal": {
+      "creative_category": "materials",
       "name": "Charcoal",
       "texture": "charcoal",
       "burning_time": 80000,
       "origin_x": 0.25
     },
     "iron_ingot": {
+      "creative_category": "materials",
       "name": "Iron Ingot",
       "texture": "iron_ingot",
       "origin_x": 0.5
     },
     "gold_ingot": {
+      "creative_category": "materials",
       "name": "Gold Ingot",
       "texture": "gold_ingot",
       "origin_x": 0.5
     },
     "diamond": {
+      "creative_category": "materials",
       "name": "Diamond",
       "texture": "diamond",
       "origin_x": 0.5
     },
     "lapis_lazuli": {
+      "creative_category": "materials",
       "name": "Lapis Lazuli",
       "texture": "lapis_lazuli",
       "origin_x": 0.5
     },
     "bed": {
+      "creative_category": "utilities",
       "name": "Bed",
       "type": "usable",
       "texture": "bed",
       "action_key": "use_bed_action"
     },
     "spawn_egg_pig": {
+      "creative_category": "creatures",
       "name": "Pig Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -5091,6 +5203,7 @@
       "origin_x": 0.5
     },
     "porkchop_raw": {
+      "creative_category": "food",
       "name": "Raw Porkchop",
       "type": "food",
       "texture": "porkchop_raw",
@@ -5099,6 +5212,7 @@
       "smelt_product": "porkchop_cooked"
     },
     "porkchop_cooked": {
+      "creative_category": "food",
       "name": "Cooked Porkchop",
       "type": "food",
       "texture": "porkchop_cooked",
@@ -5106,6 +5220,7 @@
       "saturation": 12.8
     },
     "spawn_egg_cow": {
+      "creative_category": "creatures",
       "name": "Cow Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -5115,6 +5230,7 @@
       "origin_x": 0.5
     },
     "beef_raw": {
+      "creative_category": "food",
       "name": "Raw Beef",
       "type": "food",
       "texture": "beef_raw",
@@ -5123,6 +5239,7 @@
       "smelt_product": "beef_cooked"
     },
     "beef_cooked": {
+      "creative_category": "food",
       "name": "Cooked Beef",
       "type": "food",
       "texture": "beef_cooked",
@@ -5130,6 +5247,7 @@
       "saturation": 12.8
     },
     "spawn_egg_zombie": {
+      "creative_category": "creatures",
       "name": "Zombie Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -5139,6 +5257,7 @@
       "origin_x": 0.5
     },
     "rotten_flesh": {
+      "creative_category": "food",
       "name": "Rotten Flesh",
       "type": "food",
       "texture": "rotten_flesh",
@@ -5148,10 +5267,12 @@
       "saturation": 0.8
     },
     "flint": {
+      "creative_category": "materials",
       "name": "Flint",
       "texture": "flint"
     },
     "flint_and_steel": {
+      "creative_category": "equipment",
       "name": "Flint and Steel",
       "type": "flint_and_steel",
       "texture": "flint_and_steel",
@@ -5160,15 +5281,18 @@
       "durability": 64
     },
     "clay_ball": {
+      "creative_category": "materials",
       "name": "Clay ball",
       "texture": "clay_ball",
       "smelt_product": "brick"
     },
     "brick": {
+      "creative_category": "materials",
       "name": "Brick",
       "texture": "brick"
     },
     "apple": {
+      "creative_category": "food",
       "name": "Apple",
       "type": "food",
       "texture": "apple",
@@ -5178,6 +5302,7 @@
       "saturation": 2.4
     },
     "door_wood": {
+      "creative_category": "utilities",
       "name": "Wooden Door",
       "type": "usable",
       "texture": "door_wood",
@@ -5185,11 +5310,13 @@
       "burning_time": 10000
     },
     "bowl": {
+      "creative_category": "materials",
       "name": "Bowl",
       "texture": "bowl",
       "burning_time": 5000
     },
     "mushroom_stew": {
+      "creative_category": "food",
       "name": "Mushroom Stew",
       "type": "food",
       "texture": "mushroom_stew",
@@ -5197,10 +5324,12 @@
       "saturation": 7.2
     },
     "leather": {
+      "creative_category": "materials",
       "name": "Leather",
       "texture": "leather"
     },
     "bucket_milk": {
+      "creative_category": "food",
       "name": "Milk Bucket",
       "type": "usable",
       "texture": "bucket_milk",
@@ -5208,6 +5337,7 @@
       "max_stack": 1
     },
     "spawn_egg_sheep": {
+      "creative_category": "creatures",
       "name": "Sheep Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -5217,6 +5347,7 @@
       "origin_x": 0.5
     },
     "chicken_raw": {
+      "creative_category": "food",
       "name": "Raw Chicken",
       "type": "food",
       "texture": "chicken_raw",
@@ -5225,6 +5356,7 @@
       "smelt_product": "chicken_cooked"
     },
     "chicken_cooked": {
+      "creative_category": "food",
       "name": "Cooked Chicken",
       "type": "food",
       "texture": "chicken_cooked",
@@ -5232,6 +5364,7 @@
       "saturation": 7.2
     },
     "spawn_egg_chicken": {
+      "creative_category": "creatures",
       "name": "Chicken Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -5241,24 +5374,29 @@
       "origin_x": 0.5
     },
     "egg": {
+      "creative_category": "materials",
       "name": "Egg",
       "type": "usable",
       "texture": "egg",
       "action_key": "use_egg_action"
     },
     "feather": {
+      "creative_category": "materials",
       "name": "Feather",
       "texture": "feather"
     },
     "arrow": {
+      "creative_category": "equipment",
       "name": "Arrow",
       "texture": "arrow"
     },
     "string": {
+      "creative_category": "materials",
       "name": "String",
       "texture": "string"
     },
     "bow": {
+      "creative_category": "equipment",
       "name": "Bow",
       "type": "bow",
       "texture": "bow",
@@ -5272,15 +5410,18 @@
       "origin_x": 0.5
     },
     "bone": {
+      "creative_category": "materials",
       "name": "Bone",
       "texture": "bone"
     },
     "gunpowder": {
+      "creative_category": "materials",
       "name": "Gunpowder",
       "type": "normal",
       "texture": "gunpowder"
     },
     "spawn_egg_skeleton": {
+      "creative_category": "creatures",
       "name": "Skeleton Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -5290,76 +5431,94 @@
       "origin_x": 0.5
     },
     "bone_meal": {
+      "creative_category": "food",
       "name": "Bone Meal",
       "type": "usable",
       "texture": "bone_meal",
       "action_key": "use_bone_meal_action"
     },
     "dye_white": {
+      "creative_category": "materials",
       "name": "White Dye",
       "texture": "dye_white"
     },
     "dye_orange": {
+      "creative_category": "materials",
       "name": "Orange Dye",
       "texture": "dye_orange"
     },
     "dye_magenta": {
+      "creative_category": "materials",
       "name": "Magenta Dye",
       "texture": "dye_magenta"
     },
     "dye_light_blue": {
+      "creative_category": "materials",
       "name": "Light Blue Dye",
       "texture": "dye_light_blue"
     },
     "dye_yellow": {
+      "creative_category": "materials",
       "name": "Yellow Dye",
       "texture": "dye_yellow"
     },
     "dye_lime": {
+      "creative_category": "materials",
       "name": "Lime Dye",
       "texture": "dye_lime"
     },
     "dye_pink": {
+      "creative_category": "materials",
       "name": "Pink Dye",
       "texture": "dye_pink"
     },
     "dye_gray": {
+      "creative_category": "materials",
       "name": "Gray Dye",
       "texture": "dye_gray"
     },
     "dye_light_gray": {
+      "creative_category": "materials",
       "name": "Light Gray Dye",
       "texture": "dye_light_gray"
     },
     "dye_cyan": {
+      "creative_category": "materials",
       "name": "Cyan Dye",
       "texture": "dye_cyan"
     },
     "dye_purple": {
+      "creative_category": "materials",
       "name": "Purple Dye",
       "texture": "dye_purple"
     },
     "dye_blue": {
+      "creative_category": "materials",
       "name": "Blue Dye",
       "texture": "dye_blue"
     },
     "dye_brown": {
+      "creative_category": "materials",
       "name": "Brown Dye",
       "texture": "dye_brown"
     },
     "dye_green": {
+      "creative_category": "materials",
       "name": "Green Dye",
       "texture": "dye_green"
     },
     "dye_red": {
+      "creative_category": "materials",
       "name": "Red Dye",
       "texture": "dye_red"
     },
     "dye_black": {
+      "creative_category": "materials",
       "name": "Black Dye",
       "texture": "dye_black"
     },
     "helmet_leather_white": {
+      "creative_category": "equipment",
       "name": "White Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5370,6 +5529,7 @@
       "armor_material": "leather"
     },
     "chestplate_leather_white": {
+      "creative_category": "equipment",
       "name": "White Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5380,6 +5540,7 @@
       "armor_material": "leather"
     },
     "leggings_leather_white": {
+      "creative_category": "equipment",
       "name": "White Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5390,6 +5551,7 @@
       "armor_material": "leather"
     },
     "boots_leather_white": {
+      "creative_category": "equipment",
       "name": "White Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5400,6 +5562,7 @@
       "armor_material": "leather"
     },
     "helmet_leather_orange": {
+      "creative_category": "equipment",
       "name": "Orange Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5410,6 +5573,7 @@
       "armor_material": "leather"
     },
     "chestplate_leather_orange": {
+      "creative_category": "equipment",
       "name": "Orange Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5420,6 +5584,7 @@
       "armor_material": "leather"
     },
     "leggings_leather_orange": {
+      "creative_category": "equipment",
       "name": "Orange Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5430,6 +5595,7 @@
       "armor_material": "leather"
     },
     "boots_leather_orange": {
+      "creative_category": "equipment",
       "name": "Orange Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5441,6 +5607,7 @@
     },
 
     "helmet_leather_magenta": {
+      "creative_category": "equipment",
       "name": "Magenta Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5451,6 +5618,7 @@
       "armor_material": "leather"
     },
     "chestplate_leather_magenta": {
+      "creative_category": "equipment",
       "name": "Magenta Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5461,6 +5629,7 @@
       "armor_material": "leather"
     },
     "leggings_leather_magenta": {
+      "creative_category": "equipment",
       "name": "Magenta Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5471,6 +5640,7 @@
       "armor_material": "leather"
     },
     "boots_leather_magenta": {
+      "creative_category": "equipment",
       "name": "Magenta Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5482,6 +5652,7 @@
     },
 
     "helmet_leather_light_blue": {
+      "creative_category": "equipment",
       "name": "Light Blue Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5492,6 +5663,7 @@
       "armor_material": "leather"
     },
     "chestplate_leather_light_blue": {
+      "creative_category": "equipment",
       "name": "Light Blue Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5502,6 +5674,7 @@
       "armor_material": "leather"
     },
     "leggings_leather_light_blue": {
+      "creative_category": "equipment",
       "name": "Light Blue Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5512,6 +5685,7 @@
       "armor_material": "leather"
     },
     "boots_leather_light_blue": {
+      "creative_category": "equipment",
       "name": "Light Blue Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5523,6 +5697,7 @@
     },
 
     "helmet_leather_yellow": {
+      "creative_category": "equipment",
       "name": "Yellow Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5533,6 +5708,7 @@
       "armor_material": "leather"
     },
     "chestplate_leather_yellow": {
+      "creative_category": "equipment",
       "name": "Yellow Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5543,6 +5719,7 @@
       "armor_material": "leather"
     },
     "leggings_leather_yellow": {
+      "creative_category": "equipment",
       "name": "Yellow Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5553,6 +5730,7 @@
       "armor_material": "leather"
     },
     "boots_leather_yellow": {
+      "creative_category": "equipment",
       "name": "Yellow Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5564,6 +5742,7 @@
     },
 
     "helmet_leather_lime": {
+      "creative_category": "equipment",
       "name": "Lime Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5574,6 +5753,7 @@
       "armor_material": "leather"
     },
     "chestplate_leather_lime": {
+      "creative_category": "equipment",
       "name": "Lime Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5584,6 +5764,7 @@
       "armor_material": "leather"
     },
     "leggings_leather_lime": {
+      "creative_category": "equipment",
       "name": "Lime Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5594,6 +5775,7 @@
       "armor_material": "leather"
     },
     "boots_leather_lime": {
+      "creative_category": "equipment",
       "name": "Lime Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5605,6 +5787,7 @@
     },
 
     "helmet_leather_pink": {
+      "creative_category": "equipment",
       "name": "Pink Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5615,6 +5798,7 @@
       "armor_material": "leather"
     },
     "chestplate_leather_pink": {
+      "creative_category": "equipment",
       "name": "Pink Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5625,6 +5809,7 @@
       "armor_material": "leather"
     },
     "leggings_leather_pink": {
+      "creative_category": "equipment",
       "name": "Pink Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5635,6 +5820,7 @@
       "armor_material": "leather"
     },
     "boots_leather_pink": {
+      "creative_category": "equipment",
       "name": "Pink Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5646,6 +5832,7 @@
     },
 
     "helmet_leather_gray": {
+      "creative_category": "equipment",
       "name": "Gray Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5656,6 +5843,7 @@
       "armor_material": "leather"
     },
     "chestplate_leather_gray": {
+      "creative_category": "equipment",
       "name": "Gray Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5666,6 +5854,7 @@
       "armor_material": "leather"
     },
     "leggings_leather_gray": {
+      "creative_category": "equipment",
       "name": "Gray Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5676,6 +5865,7 @@
       "armor_material": "leather"
     },
     "boots_leather_gray": {
+      "creative_category": "equipment",
       "name": "Gray Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5687,6 +5877,7 @@
     },
 
     "helmet_leather_light_gray": {
+      "creative_category": "equipment",
       "name": "Light Gray Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5697,6 +5888,7 @@
       "armor_material": "leather"
     },
     "chestplate_leather_light_gray": {
+      "creative_category": "equipment",
       "name": "Light Gray Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5707,6 +5899,7 @@
       "armor_material": "leather"
     },
     "leggings_leather_light_gray": {
+      "creative_category": "equipment",
       "name": "Light Gray Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5717,6 +5910,7 @@
       "armor_material": "leather"
     },
     "boots_leather_light_gray": {
+      "creative_category": "equipment",
       "name": "Light Gray Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5728,6 +5922,7 @@
     },
 
     "helmet_leather_cyan": {
+      "creative_category": "equipment",
       "name": "Cyan Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5738,6 +5933,7 @@
       "armor_material": "leather"
     },
     "chestplate_leather_cyan": {
+      "creative_category": "equipment",
       "name": "Cyan Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5748,6 +5944,7 @@
       "armor_material": "leather"
     },
     "leggings_leather_cyan": {
+      "creative_category": "equipment",
       "name": "Cyan Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5758,6 +5955,7 @@
       "armor_material": "leather"
     },
     "boots_leather_cyan": {
+      "creative_category": "equipment",
       "name": "Cyan Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5769,6 +5967,7 @@
     },
 
     "helmet_leather_purple": {
+      "creative_category": "equipment",
       "name": "Purple Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5779,6 +5978,7 @@
       "armor_material": "leather"
     },
     "chestplate_leather_purple": {
+      "creative_category": "equipment",
       "name": "Purple Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5789,6 +5989,7 @@
       "armor_material": "leather"
     },
     "leggings_leather_purple": {
+      "creative_category": "equipment",
       "name": "Purple Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5799,6 +6000,7 @@
       "armor_material": "leather"
     },
     "boots_leather_purple": {
+      "creative_category": "equipment",
       "name": "Purple Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5810,6 +6012,7 @@
     },
 
     "helmet_leather_blue": {
+      "creative_category": "equipment",
       "name": "Blue Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5820,6 +6023,7 @@
       "armor_material": "leather"
     },
     "chestplate_leather_blue": {
+      "creative_category": "equipment",
       "name": "Blue Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5830,6 +6034,7 @@
       "armor_material": "leather"
     },
     "leggings_leather_blue": {
+      "creative_category": "equipment",
       "name": "Blue Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5840,6 +6045,7 @@
       "armor_material": "leather"
     },
     "boots_leather_blue": {
+      "creative_category": "equipment",
       "name": "Blue Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5850,6 +6056,7 @@
       "armor_material": "leather"
     },
     "helmet_leather_brown": {
+      "creative_category": "equipment",
       "name": "Brown Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5860,6 +6067,7 @@
       "armor_material": "leather"
     },
     "chestplate_leather_brown": {
+      "creative_category": "equipment",
       "name": "Brown Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5870,6 +6078,7 @@
       "armor_material": "leather"
     },
     "leggings_leather_brown": {
+      "creative_category": "equipment",
       "name": "Brown Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5880,6 +6089,7 @@
       "armor_material": "leather"
     },
     "boots_leather_brown": {
+      "creative_category": "equipment",
       "name": "Brown Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5891,6 +6101,7 @@
     },
 
     "helmet_leather_green": {
+      "creative_category": "equipment",
       "name": "Green Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5901,6 +6112,7 @@
       "armor_material": "leather"
     },
     "chestplate_leather_green": {
+      "creative_category": "equipment",
       "name": "Green Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5911,6 +6123,7 @@
       "armor_material": "leather"
     },
     "leggings_leather_green": {
+      "creative_category": "equipment",
       "name": "Green Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5921,6 +6134,7 @@
       "armor_material": "leather"
     },
     "boots_leather_green": {
+      "creative_category": "equipment",
       "name": "Green Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5932,6 +6146,7 @@
     },
 
     "helmet_leather_red": {
+      "creative_category": "equipment",
       "name": "Red Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5942,6 +6157,7 @@
       "armor_material": "leather"
     },
     "chestplate_leather_red": {
+      "creative_category": "equipment",
       "name": "Red Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5952,6 +6168,7 @@
       "armor_material": "leather"
     },
     "leggings_leather_red": {
+      "creative_category": "equipment",
       "name": "Red Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5962,6 +6179,7 @@
       "armor_material": "leather"
     },
     "boots_leather_red": {
+      "creative_category": "equipment",
       "name": "Red Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5973,6 +6191,7 @@
     },
 
     "helmet_leather_black": {
+      "creative_category": "equipment",
       "name": "Black Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5983,6 +6202,7 @@
       "armor_material": "leather"
     },
     "chestplate_leather_black": {
+      "creative_category": "equipment",
       "name": "Black Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5993,6 +6213,7 @@
       "armor_material": "leather"
     },
     "leggings_leather_black": {
+      "creative_category": "equipment",
       "name": "Black Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -6003,6 +6224,7 @@
       "armor_material": "leather"
     },
     "boots_leather_black": {
+      "creative_category": "equipment",
       "name": "Black Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -6013,6 +6235,7 @@
       "armor_material": "leather"
     },
     "helmet_iron": {
+      "creative_category": "equipment",
       "name": "Iron Helmet",
       "type": "helmet",
       "texture": "armor_helmet_iron",
@@ -6022,6 +6245,7 @@
       "armor_material": "iron"
     },
     "chestplate_iron": {
+      "creative_category": "equipment",
       "name": "Iron Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_iron",
@@ -6031,6 +6255,7 @@
       "armor_material": "iron"
     },
     "leggings_iron": {
+      "creative_category": "equipment",
       "name": "Iron Leggings",
       "type": "leggings",
       "texture": "armor_leggings_iron",
@@ -6040,6 +6265,7 @@
       "armor_material": "iron"
     },
     "boots_iron": {
+      "creative_category": "equipment",
       "name": "Iron Boots",
       "type": "boots",
       "texture": "armor_boots_iron",
@@ -6049,6 +6275,7 @@
       "armor_material": "iron"
     },
     "helmet_gold": {
+      "creative_category": "equipment",
       "name": "Gold Helmet",
       "type": "helmet",
       "texture": "armor_helmet_gold",
@@ -6058,6 +6285,7 @@
       "armor_material": "gold"
     },
     "chestplate_gold": {
+      "creative_category": "equipment",
       "name": "Gold Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_gold",
@@ -6067,6 +6295,7 @@
       "armor_material": "gold"
     },
     "leggings_gold": {
+      "creative_category": "equipment",
       "name": "Gold Leggings",
       "type": "leggings",
       "texture": "armor_leggings_gold",
@@ -6076,6 +6305,7 @@
       "armor_material": "gold"
     },
     "boots_gold": {
+      "creative_category": "equipment",
       "name": "Gold Boots",
       "type": "boots",
       "texture": "armor_boots_gold",
@@ -6085,6 +6315,7 @@
       "armor_material": "gold"
     },
     "helmet_diamond": {
+      "creative_category": "equipment",
       "name": "Diamond Helmet",
       "type": "helmet",
       "texture": "armor_helmet_diamond",
@@ -6094,6 +6325,7 @@
       "armor_material": "diamond"
     },
     "chestplate_diamond": {
+      "creative_category": "equipment",
       "name": "Diamond Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_diamond",
@@ -6103,6 +6335,7 @@
       "armor_material": "diamond"
     },
     "leggings_diamond": {
+      "creative_category": "equipment",
       "name": "Diamond Leggings",
       "type": "leggings",
       "texture": "armor_leggings_diamond",
@@ -6112,6 +6345,7 @@
       "armor_material": "diamond"
     },
     "boots_diamond": {
+      "creative_category": "equipment",
       "name": "Diamond Boots",
       "type": "boots",
       "texture": "armor_boots_diamond",
@@ -6121,26 +6355,31 @@
       "armor_material": "diamond"
     },
     "iron_raw": {
+      "creative_category": "materials",
       "name": "Raw Iron",
       "texture": "iron_raw",
       "smelt_product": "iron_ingot"
     },
     "gold_raw": {
+      "creative_category": "materials",
       "name": "Raw Gold",
       "texture": "gold_raw",
       "smelt_product": "gold_ingot"
     },
     "wheat_seeds": {
+      "creative_category": "food",
       "name": "Wheat Seeds",
       "type": "usable",
       "texture": "wheat_seeds",
       "action_key": "use_wheat_seeds_action"
     },
     "wheat": {
+      "creative_category": "food",
       "name": "Wheat",
       "texture": "wheat"
     },
     "carrot": {
+      "creative_category": "food",
       "name": "Carrot",
       "type": "food",
       "texture": "carrot",
@@ -6149,6 +6388,7 @@
       "plant_block": "carrots_stage0"
     },
     "potato": {
+      "creative_category": "food",
       "name": "Potato",
       "type": "food",
       "texture": "potato",
@@ -6158,6 +6398,7 @@
       "smelt_product": "baked_potato"
     },
     "baked_potato": {
+      "creative_category": "food",
       "name": "Baked Potato",
       "type": "food",
       "texture": "baked_potato",
@@ -6165,6 +6406,7 @@
       "saturation": 6.0
     },
     "bread": {
+      "creative_category": "food",
       "name": "Bread",
       "type": "food",
       "texture": "bread",
@@ -6172,17 +6414,20 @@
       "saturation": 6.0
     },
     "hay_block": {
+      "creative_category": "food",
       "name": "Hay Block",
       "type": "block",
       "texture": "hay_block"
     },
     "cake": {
+      "creative_category": "food",
       "name": "Cake",
       "type": "usable",
       "texture": "cake",
       "action_key": "use_cake_action"
     },
     "wood_hoe": {
+      "creative_category": "equipment",
       "name": "Wooden Hoe",
       "type": "hoe",
       "texture": "wood_hoe",
@@ -6193,6 +6438,7 @@
       "burning_time": 10000
     },
     "stone_hoe": {
+      "creative_category": "equipment",
       "name": "Stone Hoe",
       "type": "hoe",
       "texture": "stone_hoe",
@@ -6202,6 +6448,7 @@
       "durability": 131
     },
     "iron_hoe": {
+      "creative_category": "equipment",
       "name": "Iron Hoe",
       "type": "hoe",
       "texture": "iron_hoe",
@@ -6211,6 +6458,7 @@
       "durability": 250
     },
     "diamond_hoe": {
+      "creative_category": "equipment",
       "name": "Diamond Hoe",
       "type": "hoe",
       "texture": "diamond_hoe",
@@ -6220,6 +6468,7 @@
       "durability": 1561
     },
     "gold_hoe": {
+      "creative_category": "equipment",
       "name": "Golden Hoe",
       "type": "hoe",
       "texture": "gold_hoe",
@@ -6229,16 +6478,19 @@
       "durability": 32
     },
     "sugar_cane": {
+      "creative_category": "food",
       "name": "Sugar Cane",
       "type": "usable",
       "texture": "sugar_cane",
       "action_key": "use_sugar_cane_action"
     },
     "sugar": {
+      "creative_category": "materials",
       "name": "Sugar",
       "texture": "sugar"
     },
     "fence_oak": {
+      "creative_category": "utilities",
       "name": "Oak Fence",
       "type": "usable",
       "action_key": "use_fence_item",
@@ -6246,6 +6498,7 @@
       "burning_time": 15000
     },
     "fence_gate_oak": {
+      "creative_category": "utilities",
       "name": "Oak Fence Gate",
       "type": "usable",
       "texture": "fence_gate_oak",
@@ -6255,6 +6508,7 @@
       "origin_y": 1
     },
     "fence_spruce": {
+      "creative_category": "utilities",
       "name": "Spruce Fence",
       "type": "usable",
       "action_key": "use_fence_item",
@@ -6262,6 +6516,7 @@
       "burning_time": 15000
     },
     "fence_gate_spruce": {
+      "creative_category": "utilities",
       "name": "Spruce Fence Gate",
       "type": "usable",
       "texture": "fence_gate_spruce",
@@ -6271,6 +6526,7 @@
       "origin_y": 1
     },
     "fence_birch": {
+      "creative_category": "utilities",
       "name": "Birch Fence",
       "type": "usable",
       "action_key": "use_fence_item",
@@ -6278,6 +6534,7 @@
       "burning_time": 15000
     },
     "fence_gate_birch": {
+      "creative_category": "utilities",
       "name": "Birch Fence Gate",
       "type": "usable",
       "texture": "fence_gate_birch",
@@ -6287,6 +6544,7 @@
       "origin_y": 1
     },
     "spawn_egg_spider": {
+      "creative_category": "creatures",
       "name": "Spider Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -6296,20 +6554,24 @@
       "origin_x": 0.5
     },
     "paper": {
+      "creative_category": "materials",
       "name": "Paper",
       "texture": "paper"
     },
     "book": {
+      "creative_category": "materials",
       "name": "Book",
       "texture": "book"
     },
     "bookshelf": {
+      "creative_category": "utilities",
       "name": "Bookshelf",
       "type": "block",
       "texture": "bookshelf",
       "burning_time": 15000
     },
     "mutton_raw": {
+      "creative_category": "food",
       "name": "Raw Mutton",
       "type": "food",
       "texture": "mutton_raw",
@@ -6318,6 +6580,7 @@
       "smelt_product": "mutton_cooked"
     },
     "mutton_cooked": {
+      "creative_category": "food",
       "name": "Cooked Mutton",
       "type": "food",
       "texture": "mutton_cooked",
@@ -6325,38 +6588,45 @@
       "saturation": 9.6
     },
     "pumpkin": {
+      "creative_category": "food",
       "name": "Pumpkin",
       "type": "block",
       "texture": "pumpkin_side"
     },
     "carved_pumpkin": {
+      "creative_category": "utilities",
       "name": "Carved Pumpkin",
       "type": "block",
       "texture": "carved_pumpkin"
     },
     "jack_o_lantern": {
+      "creative_category": "utilities",
       "name": "Jack o'Lantern",
       "type": "block",
       "texture": "jack_o_lantern"
     },
     "melon": {
+      "creative_category": "food",
       "name": "Melon",
       "type": "block",
       "texture": "melon_side"
     },
     "pumpkin_seeds": {
+      "creative_category": "food",
       "name": "Pumpkin Seeds",
       "type": "usable",
       "texture": "pumpkin_seeds",
       "action_key": "use_stem_seeds"
     },
     "melon_seeds": {
+      "creative_category": "food",
       "name": "Melon Seeds",
       "type": "usable",
       "texture": "melon_seeds",
       "action_key": "use_stem_seeds"
     },
     "melon_slice": {
+      "creative_category": "food",
       "name": "Melon Slice",
       "type": "food",
       "texture": "melon_slice",
@@ -6364,6 +6634,7 @@
       "saturation": 1.2
     },
     "pumpkin_pie": {
+      "creative_category": "food",
       "name": "Pumpkin Pie",
       "type": "food",
       "texture": "pumpkin_pie",
@@ -6371,19 +6642,23 @@
       "saturation": 4.8
     },
     "gold_nugget": {
+      "creative_category": "materials",
       "name": "Gold Nugget",
       "texture": "gold_nugget"
     },
     "glistering_melon_slice": {
+      "creative_category": "food",
       "name": "Glistering Melon Slice",
       "texture": "glistering_melon_slice"
     },
     "tnt": {
+      "creative_category": "utilities",
       "name": "TNT",
       "type": "block",
       "texture": "tnt"
     },
     "spawn_egg_villager": {
+      "creative_category": "creatures",
       "name": "Villager Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -6393,6 +6668,7 @@
       "origin_x": 0.5
     },
     "spawn_egg_creeper": {
+      "creative_category": "creatures",
       "name": "Creeper Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -6402,6 +6678,7 @@
       "origin_x": 0.5
     },
     "oak_boat": {
+      "creative_category": "utilities",
       "name": "Oak Boat",
       "type": "usable",
       "texture": "oak_boat",
@@ -6409,6 +6686,7 @@
       "max_stack": 1
     },
     "birch_boat": {
+      "creative_category": "utilities",
       "name": "Birch Boat",
       "type": "usable",
       "texture": "birch_boat",
@@ -6416,6 +6694,7 @@
       "max_stack": 1
     },
     "spruce_boat": {
+      "creative_category": "utilities",
       "name": "Spruce Boat",
       "type": "usable",
       "texture": "spruce_boat",

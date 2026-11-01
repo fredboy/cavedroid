@@ -2,6 +2,9 @@
 
 package ru.fredboy.cavedroid.game.window
 
+import com.badlogic.gdx.math.Rectangle
+import ru.fredboy.cavedroid.game.window.inventory.CreativeInventoryTabsWindow
+
 object GameWindowsConfigs {
     data object Creative {
         const val scrollIndicatorMarginLeft = 156f
@@ -167,6 +170,11 @@ object GameWindowsConfigs {
     }
 
     data object CreativeTabs {
+        fun tabBounds(index: Int, windowWidth: Float, windowHeight: Float, tabHeight: Float): Rectangle {
+            val width = windowWidth / CreativeInventoryTabsWindow.Tab.entries.size
+            return Rectangle(index * width, windowHeight, width, tabHeight)
+        }
+
         const val portraitMarginLeft = 78f
         const val portraitMarginTop = 8f
         const val portraitWidth = 20f

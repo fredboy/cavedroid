@@ -260,7 +260,7 @@ class TouchWindowInputHandler @Inject constructor(
 
     private fun catalog(window: AbstractInventoryWindow): List<Item> {
         val creative = window as? CreativeInventoryTabsWindow
-        return items.getAllItems().filter { creative == null || creative.selectedTab.isRelevantItem(it) }
+        return creative?.getCatalogItems() ?: items.getAllItems().toList()
     }
 
     companion object {

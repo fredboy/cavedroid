@@ -58,13 +58,9 @@ class CreativeTabsWindowRenderer @Inject constructor(
     )
 
     private val tabs = CreativeInventoryTabsWindow.Tab.entries.associateWith { tab ->
-        if (tab.isInventory) {
-            return@associateWith TabInfo(inventoryTabWindowTexture, itemsRepository.getItemByKey("chest").sprite)
-        }
-
         TabInfo(
-            windowTexture = itemsTabWindowTexture,
-            tabIconSprite = itemsRepository.getAllItems().first { tab.isRelevantItem(it) }.sprite,
+            windowTexture = if (tab.isInventory) inventoryTabWindowTexture else itemsTabWindowTexture,
+            tabIconSprite = itemsRepository.getItemByKey(tab.iconKey).sprite,
         )
     }
 
@@ -118,7 +114,7 @@ class CreativeTabsWindowRenderer @Inject constructor(
         val windowX = viewport.width / 2 - windowTexture.regionWidth / 2
         val windowY = viewport.height / 2 - (windowTexture.regionHeight + selectedTabTexture.regionHeight) / 2
 
-        val oneScrollAmount = GameWindowsConfigs.CreativeTabs.scrollIndicatorFullHeight / window.getMaxScroll()
+        val oneScrollAmount = GameWindowsConfigs.CreativeTabs.scrollIndicatorFullHeight / window.getMaxScroll().coerceAtLeast(1)
 
         spriteBatch.draw(windowTexture, windowX, windowY)
         spriteBatch.draw(
@@ -129,7 +125,7 @@ class CreativeTabsWindowRenderer @Inject constructor(
                 (gameWindowsManager.creativeScrollAmount * oneScrollAmount),
         )
 
-        val allItems = itemsRepository.getAllItems().filter { window.selectedTab.isRelevantItem(it) }
+        val allItems = window.getCatalogItems()
         val startIndex = gameWindowsManager.creativeScrollAmount * GameWindowsConfigs.CreativeTabs.itemsInRow
         val endIndex = min(startIndex + GameWindowsConfigs.CreativeTabs.itemsOnPage, allItems.size)
         val items = sequence {
@@ -279,17 +275,8 @@ class CreativeTabsWindowRenderer @Inject constructor(
         val windowX = viewport.width / 2 - windowTexture.regionWidth / 2
         val windowY = viewport.height / 2 - (windowTexture.regionHeight + selectedTabTexture.regionHeight) / 2
 
-        CreativeInventoryTabsWindow.Tab.entries.forEachIndexed { index, tab ->
-            val info = tabs[tab] ?: return@forEachIndexed
-
-            spriteBatch.draw(unselectedTabTexture, windowX + 28f * index, windowY + windowTexture.regionHeight - 6f)
-            spriteBatch.drawSprite(
-                sprite = info.tabIconSprite,
-                x = windowX + 28f * index + 6f,
-                y = windowY + windowTexture.regionHeight,
-                width = info.tabIconSprite.regionWidth.toFloat(),
-                height = info.tabIconSprite.regionHeight.toFloat(),
-            )
+        CreativeInventoryTabsWindow.Tab.entries.filter { it != window.selectedTab }.forEach { tab ->
+            drawTab(spriteBatch, tab, windowX, windowY, selected = false)
         }
 
         if (window.selectedTab.isInventory) {
@@ -298,21 +285,7 @@ class CreativeTabsWindowRenderer @Inject constructor(
             drawItemTabContent(spriteBatch, shapeRenderer, viewport)
         }
 
-        CreativeInventoryTabsWindow.Tab.entries.forEachIndexed { index, tab ->
-            if (tab != window.selectedTab) {
-                return@forEachIndexed
-            }
-            val info = tabs[tab] ?: return@forEachIndexed
-
-            spriteBatch.draw(selectedTabTexture, windowX + 28f * index, windowY + windowTexture.regionHeight - 3f)
-            spriteBatch.drawSprite(
-                sprite = info.tabIconSprite,
-                x = windowX + 28f * index + 6f,
-                y = windowY + windowTexture.regionHeight + 2f,
-                width = info.tabIconSprite.regionWidth.toFloat(),
-                height = info.tabIconSprite.regionHeight.toFloat(),
-            )
-        }
+        drawTab(spriteBatch, window.selectedTab, windowX, windowY, selected = true)
 
         window.selectedItem?.let { selectedItem ->
             selectedItem.draw(
@@ -337,6 +310,30 @@ class CreativeTabsWindowRenderer @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun drawTab(spriteBatch: SpriteBatch, tab: CreativeInventoryTabsWindow.Tab, windowX: Float, windowY: Float, selected: Boolean) {
+        val info = tabs.getValue(tab)
+        val rect = GameWindowsConfigs.CreativeTabs.tabBounds(
+            tab.ordinal,
+            info.windowTexture.regionWidth.toFloat(),
+            info.windowTexture.regionHeight.toFloat(),
+            selectedTabTexture.regionHeight.toFloat(),
+        )
+        spriteBatch.draw(
+            if (selected) selectedTabTexture else unselectedTabTexture,
+            windowX + rect.x,
+            windowY + rect.y - if (selected) 3f else 6f,
+            rect.width,
+            rect.height,
+        )
+        spriteBatch.drawSprite(
+            sprite = info.tabIconSprite,
+            x = windowX + rect.x + (rect.width - 16f) / 2,
+            y = windowY + rect.y + if (selected) 2f else 0f,
+            width = 16f,
+            height = 16f,
+        )
     }
 
     companion object {

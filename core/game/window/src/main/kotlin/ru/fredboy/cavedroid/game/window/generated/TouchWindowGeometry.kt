@@ -181,6 +181,7 @@ internal object TouchWindowGeometry {
                 Rectangle(12f, 54f, 64f, 44f),
                 Rectangle(76f, 54f, 64f, 44f),
                 Rectangle(140f, 54f, 64f, 44f),
+                Rectangle(204f, 54f, 64f, 44f),
             ),
         ),
         "creative_inventory" to Definition(
@@ -206,6 +207,7 @@ internal object TouchWindowGeometry {
                 Rectangle(12f, 54f, 64f, 44f),
                 Rectangle(76f, 54f, 64f, 44f),
                 Rectangle(140f, 54f, 64f, 44f),
+                Rectangle(204f, 54f, 64f, 44f),
             ),
         ),
     )

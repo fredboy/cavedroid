@@ -20,6 +20,7 @@ import ru.fredboy.cavedroid.domain.items.model.inventory.Inventory
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem.Companion.isNoneOrNull
 import ru.fredboy.cavedroid.domain.items.model.item.CommonItemParams
+import ru.fredboy.cavedroid.domain.items.model.item.CreativeCategory
 import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.entity.drop.DropQueue
@@ -38,7 +39,14 @@ import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputAction
 class TouchWindowItemsTest {
     private val originalApp = Gdx.app
     private val none = Item.None(mockk { every { maxStack } returns 64 })
-    private val resource = Item.Normal(mockk<CommonItemParams> { every { maxStack } returns 64 }, mockk())
+    private val resource = Item.Normal(
+        mockk<CommonItemParams> {
+            every { maxStack } returns 64
+            every { creativeCategory } returns CreativeCategory.Materials
+            every { key } returns "resource"
+        },
+        mockk(),
+    )
     private val items = mockk<ItemsRepository> {
         every { fallbackItem } returns none
         every { getCraftingResult(any()) } returns InventoryItem(none)
@@ -152,7 +160,7 @@ class TouchWindowItemsTest {
 
     private fun creative(tabbed: Boolean = true): Pair<AbstractInventoryWindow, TouchWindowLayout> {
         val creative = if (tabbed) {
-            CreativeInventoryTabsWindow(items).apply { selectedTab = CreativeInventoryTabsWindow.Tab.Normal }
+            CreativeInventoryTabsWindow(items).apply { selectedTab = CreativeInventoryTabsWindow.Tab.Materials }
         } else {
             CreativeInventoryWindow(items)
         }
@@ -162,6 +170,18 @@ class TouchWindowItemsTest {
 
     private fun at(rect: Rectangle, key: MouseInputActionKey) {
         handler.handle(MouseInputAction(rect.x + rect.width / 2, rect.y + rect.height / 2, key))
+    }
+
+    @Test
+    fun `all eight creative tabs can be selected and reset catalog scrolling`() {
+        val (creative, geometry) = creative()
+        geometry.tabs.forEachIndexed { index, rect ->
+            scrollAmount = 5
+            at(rect, MouseInputActionKey.Screen(false, 0))
+            at(rect, MouseInputActionKey.Screen(true, 0))
+            assertEquals(CreativeInventoryTabsWindow.Tab.entries[index], (creative as CreativeInventoryTabsWindow).selectedTab)
+            assertEquals(0, scrollAmount)
+        }
     }
 
     @Test

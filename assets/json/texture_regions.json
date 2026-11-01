@@ -348,7 +348,13 @@
     "touch_creative": {}
   },
   "textures/windows/touch/creative_items": {
-    "touch_creative_items": {}
+    "touch_creative_items": {},
+    "touch_creative_tab": {
+      "x": 12,
+      "y": 8,
+      "w": 64,
+      "h": 44
+    }
   },
   "textures/windows/touch/creative_inventory": {
     "touch_creative_inventory": {}
