@@ -1,4 +1,3 @@
-import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.github.jk1.license.LicenseReportExtension
 import com.github.jk1.license.task.ReportTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -11,7 +10,6 @@ private val natives by configurations.creating
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
 
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
@@ -100,11 +98,6 @@ android {
         }
     }
 
-    applicationVariants.asSequence()
-        .flatMap { variant -> variant.outputs.asSequence() }
-        .mapNotNull { output -> output as? com.android.build.gradle.internal.api.BaseVariantOutputImpl }
-        .forEach { output -> output.outputFileName = "android-${ApplicationInfo.versionName}.apk" }
-
     val releaseConfig = signingConfigs.create("release_config")
     with(releaseConfig) {
         storeFile = keystoreProperties?.get("releaseKeystorePath")?.let(::file)
@@ -137,12 +130,12 @@ android {
     buildFeatures {
         buildConfig = true
     }
+}
 
-    kotlin {
-        jvmToolchain(ApplicationInfo.javaVersion)
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
-        }
+kotlin {
+    jvmToolchain(ApplicationInfo.javaVersion)
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 
@@ -232,11 +225,17 @@ tasks.register("generateAttributionIndex") {
     }
 }
 
-tasks.preBuild.apply {
+tasks.named("preBuild") {
     dependsOn("generateAttributionIndex")
 }
 
 androidComponents {
+    onVariants { variant ->
+        variant.outputs.forEach { output ->
+            output.outputFileName.set("android-${ApplicationInfo.versionName}.apk")
+        }
+    }
+
     licenseFlavors.forEach { flavor ->
         val capFlavor = flavor.replaceFirstChar { it.uppercase() }
         onVariants(selector().withFlavor("distribution" to flavor)) { variant ->
