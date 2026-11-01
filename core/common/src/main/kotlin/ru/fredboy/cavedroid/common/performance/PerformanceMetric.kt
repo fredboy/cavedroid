@@ -87,7 +87,7 @@ enum class PerformanceMode {
         }
     }
 }
-enum class PerformanceTrigger { USER, INITIAL }
+enum class PerformanceTrigger { USER, INITIAL, AUTOMATIC }
 enum class PerformanceStartKind { COLD_PROCESS, ACTIVITY_RECREATION, FOREGROUND_RESUME }
 enum class PerformanceGauge {
     HEAP_USED,

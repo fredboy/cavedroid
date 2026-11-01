@@ -193,6 +193,9 @@ class GameScreen @Inject constructor(
         try {
             // Preparing the first view can span a long frame; it is not elapsed simulation time.
             proc.update(if (firstFrame) 0f else delta)
+            if (!firstFrame && shown && gameComponent?.gameRenderer?.isReady == true) {
+                gameComponent?.gameSaveHelper?.updateAutoSave(delta)
+            }
         } catch (error: Throwable) {
             opening?.fail(error)
             throw error
