@@ -15,6 +15,7 @@ button_disabled
   rotate: false
   xy: 515, 1274
   size: 200, 20
+  split: 4, 4, 4, 4
   orig: 200, 20
   offset: 0, 0
   index: -1
@@ -22,6 +23,7 @@ button_disabled_square
   rotate: false
   xy: 225, 246
   size: 20, 20
+  split: 4, 4, 4, 4
   orig: 20, 20
   offset: 0, 0
   index: -1
@@ -29,6 +31,7 @@ button_disabled_v
   rotate: false
   xy: 1, 19
   size: 20, 200
+  split: 4, 4, 4, 4
   orig: 20, 200
   offset: 0, 0
   index: -1
@@ -36,6 +39,7 @@ button_down
   rotate: false
   xy: 1, 246
   size: 200, 20
+  split: 4, 4, 4, 4
   orig: 200, 20
   offset: 0, 0
   index: -1
@@ -43,6 +47,7 @@ button_down_square
   rotate: false
   xy: 515, 1208
   size: 20, 20
+  split: 4, 4, 4, 4
   orig: 20, 20
   offset: 0, 0
   index: -1
@@ -50,6 +55,7 @@ button_hover
   rotate: false
   xy: 515, 1252
   size: 200, 20
+  split: 4, 4, 4, 4
   orig: 200, 20
   offset: 0, 0
   index: -1
@@ -57,6 +63,7 @@ button_hover_square
   rotate: false
   xy: 537, 1230
   size: 20, 20
+  split: 4, 4, 4, 4
   orig: 20, 20
   offset: 0, 0
   index: -1
@@ -64,6 +71,7 @@ button_up
   rotate: false
   xy: 717, 1274
   size: 200, 20
+  split: 4, 4, 4, 4
   orig: 200, 20
   offset: 0, 0
   index: -1
@@ -71,6 +79,7 @@ button_up_square
   rotate: false
   xy: 739, 1252
   size: 20, 20
+  split: 4, 4, 4, 4
   orig: 20, 20
   offset: 0, 0
   index: -1
