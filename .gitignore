@@ -121,7 +121,7 @@ Thumbs.db
 /ios-moe/xcode/native/
 
 release-*/
-keystore.properties
+keystore.propertiesgit
 
 **/build/
 **/_build/
@@ -129,3 +129,5 @@ keystore.properties
 **/google-services.json
 yandex.properties
 html/build/
+
+.codex
