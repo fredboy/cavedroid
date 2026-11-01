@@ -51,6 +51,16 @@ class PresentationPoses @Inject constructor(
         return out.add(player.aimX - player.position.x, player.aimY - player.position.y)
     }
 
+    fun cursorPosition(out: Vector2): Vector2 {
+        val player = mobs.player
+        if (!player.holdAim) return out.set(player.cursorX, player.cursorY)
+
+        // Held cursors move with the player. Apply the same presentation offset as
+        // the camera without changing the ray-cast cursor used for gameplay.
+        playerPosition(out)
+        return out.add(player.cursorX - player.position.x, player.cursorY - player.position.y)
+    }
+
     fun bounds(body: Body, bounds: Rectangle): Rectangle {
         position(body, scratch)
         val physical = body.position
