@@ -68,7 +68,7 @@ class AndroidPerformanceMonitor private constructor(
     }
 
     private class Worker(context: Context) : PerformanceOutput {
-        val backend = createPerformanceBackend(context)
+        val backend = createPerformanceBackend()
         lateinit var monitor: AndroidPerformanceMonitor
         private val executor = ScheduledThreadPoolExecutor(1) { runnable ->
             Thread(runnable, "CaveDroid-performance").apply {
@@ -112,8 +112,11 @@ class AndroidPerformanceMonitor private constructor(
         override fun operationFinished(report: PerformanceOperationReport) {
             enqueue {
                 if (monitor.epoch == report.epoch && monitor.mode != PerformanceMode.OFF) {
-                    if (monitor.mode == PerformanceMode.FIREBASE) backend.finish(report)
-                    send(PerformanceEvents.operation(report), report.epoch)
+                    when (monitor.mode) {
+                        PerformanceMode.FIREBASE -> backend.finish(report)
+                        PerformanceMode.LOCAL -> writeLocal(PerformanceEvents.operation(report), report.epoch)
+                        PerformanceMode.OFF -> Unit
+                    }
                 }
             }
         }
@@ -146,34 +149,28 @@ class AndroidPerformanceMonitor private constructor(
                 while (true) {
                     val snapshot = monitor.poll() ?: break
                     try {
-                        if (snapshot.epoch == monitor.epoch && monitor.mode != PerformanceMode.OFF) {
+                        if (snapshot.epoch == monitor.epoch && monitor.mode == PerformanceMode.LOCAL) {
                             val reportId = UUID.randomUUID().toString()
-                            PerformanceEvents.window(snapshot, reportId).forEach { send(it, snapshot.epoch) }
+                            PerformanceEvents.window(snapshot, reportId).forEach { writeLocal(it, snapshot.epoch) }
                         }
                     } finally {
                         monitor.recycle(snapshot)
                     }
                 }
-                if (monitor.active) sampleMemory()
+                if (monitor.active && monitor.mode == PerformanceMode.LOCAL) sampleMemory()
             } catch (error: Exception) {
                 logger.w(error) { "Performance worker failed" }
             }
         }
 
-        private fun send(event: ru.fredboy.cavedroid.common.performance.PerformanceEvent, epoch: Long) {
-            if (epoch != monitor.epoch) return
-            when (monitor.mode) {
-                PerformanceMode.OFF -> Unit
-                PerformanceMode.FIREBASE -> backend.send(event)
-                PerformanceMode.LOCAL -> {
-                    if (localFile.length() >= MAX_FILE_BYTES) {
-                        val previous = File(localFile.parentFile, "performance.previous.jsonl")
-                        previous.delete()
-                        localFile.renameTo(previous)
-                    }
-                    localFile.appendText(PerformanceEvents.jsonLine(event))
-                }
+        private fun writeLocal(event: ru.fredboy.cavedroid.common.performance.PerformanceEvent, epoch: Long) {
+            if (epoch != monitor.epoch || monitor.mode != PerformanceMode.LOCAL) return
+            if (localFile.length() >= MAX_FILE_BYTES) {
+                val previous = File(localFile.parentFile, "performance.previous.jsonl")
+                previous.delete()
+                localFile.renameTo(previous)
             }
+            localFile.appendText(PerformanceEvents.jsonLine(event))
         }
 
         private fun sampleMemory() {
