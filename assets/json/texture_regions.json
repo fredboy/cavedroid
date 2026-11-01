@@ -15,7 +15,7 @@
       "h": 26
     }
   },
-  "textures/allitems": {
+  "textures/windows/desktop/allitems": {
     "creative": {
       "w": 176,
       "h": 136
@@ -27,19 +27,19 @@
       "h": 15
     }
   },
-  "textures/inventory": {
+  "textures/windows/desktop/inventory": {
     "survival": {
       "w": 176,
       "h": 166
     }
   },
-  "textures/crafting_table": {
+  "textures/windows/desktop/crafting_table": {
     "crafting_table": {
       "w": 176,
       "h": 166
     }
   },
-  "textures/furnace": {
+  "textures/windows/desktop/furnace": {
     "furnace": {
       "w": 176,
       "h": 166
@@ -48,15 +48,9 @@
       "x": 176,
       "w": 14,
       "h": 14
-    },
-    "furnace_progress": {
-      "x": 176,
-      "y": 14,
-      "w": 24,
-      "h": 14
     }
   },
-  "textures/chest": {
+  "textures/windows/desktop/chest": {
     "chest": {
       "w": 176,
       "h": 168
@@ -97,7 +91,7 @@
   "shade": {},
   "gamelogo": {},
   "textures/background": {},
-  "textures/health":{
+  "textures/health": {
     "heart_whole": {
       "w": 9
     },
@@ -110,7 +104,7 @@
       "w": 9
     }
   },
-  "textures/breath":{
+  "textures/breath": {
     "bubble_whole": {
       "w": 9
     },
@@ -119,7 +113,7 @@
       "w": 9
     }
   },
-  "textures/hunger":{
+  "textures/hunger": {
     "food_whole": {
       "w": 9
     },
@@ -132,7 +126,7 @@
       "w": 9
     }
   },
-  "textures/armor":{
+  "textures/armor": {
     "shield_whole": {
       "w": 9
     },
@@ -147,11 +141,11 @@
   },
   "joy/joy_stick": {},
   "joy/joy_background": {},
-  "textures/inventory_char": {
+  "textures/windows/desktop/inventory_char": {
     "inventory_char": {}
   },
   "crosshair": {},
-  "textures/recipe_button": {
+  "textures/windows/desktop/recipe_button": {
     "recipe_button_off": {
       "w": 22,
       "h": 19
@@ -162,7 +156,7 @@
       "h": 19
     }
   },
-  "textures/recipe_book": {
+  "textures/windows/desktop/recipe_book": {
     "recipe_book": {
       "w": 148,
       "h": 167
@@ -191,25 +185,25 @@
       "h": 11
     }
   },
-  "textures/creative_inventory/tab_inventory": {
+  "textures/windows/desktop/creative_inventory/tab_inventory": {
     "creative_inventory_tab": {
       "w": 194,
       "h": 138
     }
   },
-  "textures/creative_inventory/tab_items": {
+  "textures/windows/desktop/creative_inventory/tab_items": {
     "creative_items_tab": {
       "w": 194,
       "h": 138
     }
   },
-  "textures/creative_inventory/tab_item_search": {
+  "textures/windows/desktop/creative_inventory/tab_item_search": {
     "creative_search_tab": {
       "w": 194,
       "h": 138
     }
   },
-  "textures/creative_inventory/tabs": {
+  "textures/windows/desktop/creative_inventory/tabs": {
     "creative_tab_unselected": {
       "x": 0,
       "y": 64,
@@ -255,21 +249,146 @@
   "textures/effects/big_smoke_10": {},
   "textures/effects/big_smoke_11": {},
   "textures/entity/boat/oak": {
-    "oak_boat_side": {"x": 2, "y": 38, "w": 28, "h": 6},
-    "oak_boat_rim": {"x": 2, "y": 36, "w": 28, "h": 2},
-    "oak_boat_oar": {"x": 62, "y": 18, "w": 18, "h": 2},
-    "oak_boat_blade": {"x": 62, "y": 28, "w": 7, "h": 6}
+    "oak_boat_side": {
+      "x": 2,
+      "y": 38,
+      "w": 28,
+      "h": 6
+    },
+    "oak_boat_rim": {
+      "x": 2,
+      "y": 36,
+      "w": 28,
+      "h": 2
+    },
+    "oak_boat_oar": {
+      "x": 62,
+      "y": 18,
+      "w": 18,
+      "h": 2
+    },
+    "oak_boat_blade": {
+      "x": 62,
+      "y": 28,
+      "w": 7,
+      "h": 6
+    }
   },
   "textures/entity/boat/birch": {
-    "birch_boat_side": {"x": 2, "y": 38, "w": 28, "h": 6},
-    "birch_boat_rim": {"x": 2, "y": 36, "w": 28, "h": 2},
-    "birch_boat_oar": {"x": 62, "y": 18, "w": 18, "h": 2},
-    "birch_boat_blade": {"x": 62, "y": 28, "w": 7, "h": 6}
+    "birch_boat_side": {
+      "x": 2,
+      "y": 38,
+      "w": 28,
+      "h": 6
+    },
+    "birch_boat_rim": {
+      "x": 2,
+      "y": 36,
+      "w": 28,
+      "h": 2
+    },
+    "birch_boat_oar": {
+      "x": 62,
+      "y": 18,
+      "w": 18,
+      "h": 2
+    },
+    "birch_boat_blade": {
+      "x": 62,
+      "y": 28,
+      "w": 7,
+      "h": 6
+    }
   },
   "textures/entity/boat/spruce": {
-    "spruce_boat_side": {"x": 2, "y": 38, "w": 28, "h": 6},
-    "spruce_boat_rim": {"x": 2, "y": 36, "w": 28, "h": 2},
-    "spruce_boat_oar": {"x": 62, "y": 18, "w": 18, "h": 2},
-    "spruce_boat_blade": {"x": 62, "y": 28, "w": 7, "h": 6}
+    "spruce_boat_side": {
+      "x": 2,
+      "y": 38,
+      "w": 28,
+      "h": 6
+    },
+    "spruce_boat_rim": {
+      "x": 2,
+      "y": 36,
+      "w": 28,
+      "h": 2
+    },
+    "spruce_boat_oar": {
+      "x": 62,
+      "y": 18,
+      "w": 18,
+      "h": 2
+    },
+    "spruce_boat_blade": {
+      "x": 62,
+      "y": 28,
+      "w": 7,
+      "h": 6
+    }
+  },
+  "textures/windows/touch/crafting_table": {
+    "touch_crafting_table": {}
+  },
+  "textures/windows/touch/crafting_table_recipes": {
+    "touch_crafting_table_recipes": {}
+  },
+  "textures/windows/touch/survival": {
+    "touch_survival": {}
+  },
+  "textures/windows/touch/survival_recipes": {
+    "touch_survival_recipes": {}
+  },
+  "textures/windows/touch/chest": {
+    "touch_chest": {}
+  },
+  "textures/windows/touch/furnace": {
+    "touch_furnace": {}
+  },
+  "textures/windows/touch/creative": {
+    "touch_creative": {}
+  },
+  "textures/windows/touch/creative_items": {
+    "touch_creative_items": {}
+  },
+  "textures/windows/touch/creative_inventory": {
+    "touch_creative_inventory": {}
+  },
+  "textures/windows/touch/overlays": {
+    "touch_selected_slot": {
+      "w": 36,
+      "h": 36
+    },
+    "touch_selected_tab": {
+      "x": 40,
+      "w": 64,
+      "h": 44
+    },
+    "touch_recipe_toggle_active": {
+      "x": 112,
+      "w": 104,
+      "h": 44
+    },
+    "touch_furnace_burn": {
+      "y": 48,
+      "w": 14,
+      "h": 14
+    },
+    "touch_handle": {
+      "x": 64,
+      "y": 48,
+      "w": 20,
+      "h": 40
+    }
+  },
+  "textures/windows/smelting_arrow": {
+    "smelting_arrow": {
+      "w": 24,
+      "h": 14
+    },
+    "smelting_progress": {
+      "y": 14,
+      "w": 24,
+      "h": 14
+    }
   }
 }

@@ -12,6 +12,11 @@ dependencies {
     ksp(libs.dagger.compiler)
 
     implementation(project(":core:common"))
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.engine)
+    testRuntimeOnly(libs.junit.launcher)
+    testImplementation(libs.mockk)
+
     implementation(libs.bundles.common)
     implementation(project(":core:entity:container"))
     implementation(project(":core:entity:drop"))
@@ -22,4 +27,8 @@ dependencies {
     implementation(project(":core:domain:configuration"))
     implementation(project(":core:domain:items"))
     implementation(project(":core:domain:world"))
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

@@ -40,16 +40,16 @@ abstract class AbstractInventoryItemsMouseInputHandler(
     protected abstract val windowTexture: TextureRegion
 
     override fun reset() {
-        cancelHold()
+        cancelHold(completeClick = false)
     }
 
     protected abstract fun getWindowRect(viewport: Rectangle): Rectangle
 
-    private fun cancelHold() {
+    protected fun cancelHold(completeClick: Boolean = true) {
         selectableCellHoldTask?.cancel()
         selectableCellHoldTask = null
         holdingPointer = -1
-        onCancelHold?.invoke()
+        if (completeClick) onCancelHold?.invoke()
         onCancelHold = null
     }
 

@@ -63,6 +63,11 @@ class GameWindowsManager @Inject constructor(
     }
 
     fun closeWindow() {
+        currentWindow?.selectedItem?.let { item ->
+            dropAdapter.dropItems(playerAdapter.x, playerAdapter.y, listOf(item))
+            currentWindow?.selectedItem = null
+        }
+        isDragging = false
         (currentWindow as? AbstractInventoryWindowWithCraftGrid)?.let { window ->
             dropAdapter.dropItems(playerAdapter.x, playerAdapter.y, window.craftingItems)
         }

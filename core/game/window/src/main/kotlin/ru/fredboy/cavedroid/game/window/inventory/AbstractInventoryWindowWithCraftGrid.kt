@@ -7,7 +7,7 @@ import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.entity.drop.DropQueue
 import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
-import ru.fredboy.cavedroid.game.window.GameWindowsConfigs.RecipeBook.pageSize
+import ru.fredboy.cavedroid.game.window.GameWindowsConfigs.RecipeBook
 
 abstract class AbstractInventoryWindowWithCraftGrid(
     itemsRepository: ItemsRepository,
@@ -45,7 +45,7 @@ abstract class AbstractInventoryWindowWithCraftGrid(
             }
     }
 
-    fun getVisibleCraftingRecipes(itemsRepository: ItemsRepository): List<Pair<CraftingRecipe, Item>> {
+    fun getVisibleCraftingRecipes(itemsRepository: ItemsRepository, pageSize: Int = RecipeBook.pageSize): List<Pair<CraftingRecipe, Item>> {
         return getAvailableCraftingRecipes(itemsRepository)
             .drop(pageSize * recipeBookPage)
             .take(pageSize)
@@ -54,8 +54,9 @@ abstract class AbstractInventoryWindowWithCraftGrid(
 
     fun getPhantomRecipe(
         itemsRepository: ItemsRepository,
+        pageSize: Int = RecipeBook.pageSize,
     ): List<InventoryItem> {
-        val (recipe, _) = getVisibleCraftingRecipes(itemsRepository).getOrNull(selectedRecipe) ?: return emptyList()
+        val (recipe, _) = getVisibleCraftingRecipes(itemsRepository, pageSize).getOrNull(selectedRecipe) ?: return emptyList()
         val allItems = itemsRepository.getAllItems()
 
         return recipe.input.map { regex ->
@@ -83,8 +84,9 @@ abstract class AbstractInventoryWindowWithCraftGrid(
         dropQueue: DropQueue,
         inventory: Inventory,
         itemsRepository: ItemsRepository,
+        pageSize: Int = RecipeBook.pageSize,
     ) {
-        val (recipe, result) = getVisibleCraftingRecipes(itemsRepository).getOrNull(selectedRecipe) ?: return
+        val (recipe, result) = getVisibleCraftingRecipes(itemsRepository, pageSize).getOrNull(selectedRecipe) ?: return
 
         if (craftResult.item != result) {
             clearCrafting(playerAdapter, dropQueue, itemsRepository)

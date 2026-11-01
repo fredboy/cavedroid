@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.messages
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.drawMultilineCentered
@@ -12,8 +13,10 @@ import ru.fredboy.cavedroid.domain.assets.usecase.GetFontUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringHeightUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetStringWidthUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
+import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem.Companion.isNoneOrNull
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
+import ru.fredboy.cavedroid.game.window.TouchWindowLayout
 import ru.fredboy.cavedroid.game.window.inventory.CreativeInventoryTabsWindow
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindHudRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.IHudRenderer
@@ -47,25 +50,46 @@ class TouchInventoryHintRenderer @Inject constructor(
             return
         }
 
+        if (!gameWindowsManager.currentWindow?.selectedItem.isNoneOrNull()) return
         inventoryHintController.tick(delta)
         val alpha = inventoryHintController.alpha
         if (alpha <= 0f) return
 
-        val hintText = hintTexts[inventoryHintController.hintIndex]
-        val lines = hintText.split('\n')
+        val bounds = TouchWindowLayout.fitBounds(viewport.width, viewport.height)
+        val scale = bounds.width / TouchWindowLayout.WIDTH
+        val width = TouchWindowLayout.WIDTH
+        val height = TouchWindowLayout.HEIGHT
+        val maxWidth = width - TouchWindowLayout.DROP_WIDTH - 16f
+        val lines = mutableListOf<String>()
+        var line = ""
+        hintTexts[inventoryHintController.hintIndex].split(Regex("\\s+")).forEach { word ->
+            val candidate = if (line.isEmpty()) word else "$line $word"
+            if (line.isNotEmpty() && getStringWidth(candidate) > maxWidth) {
+                lines += line
+                line = word
+            } else {
+                line = candidate
+            }
+        }
+        if (line.isNotEmpty()) lines += line
         val lineHeight = getStringHeight(lines.first())
-        val blockHeight = lines.size * lineHeight + (lines.size - 1).coerceAtLeast(0) * LINE_SPACING
-
-        spriteBatch.drawMultilineCentered(
-            font = getFont(),
-            str = hintText,
-            centerX = viewport.width / 2f,
-            topY = viewport.height - blockHeight - BOTTOM_MARGIN,
-            getStringWidth = getStringWidth::invoke,
-            getStringHeight = getStringHeight::invoke,
-            color = Color(1f, 1f, 1f, alpha),
-            lineSpacing = LINE_SPACING,
-        )
+        val blockHeight = lines.size * lineHeight + (lines.size - 1).coerceAtLeast(0) * 2f
+        val oldTransform = Matrix4(spriteBatch.transformMatrix)
+        spriteBatch.transformMatrix = Matrix4(oldTransform).translate(bounds.x, bounds.y, 0f).scale(scale, scale, 1f)
+        try {
+            spriteBatch.drawMultilineCentered(
+                font = getFont(),
+                str = lines.joinToString("\n"),
+                centerX = (width - TouchWindowLayout.DROP_WIDTH) / 2,
+                topY = height - TouchWindowLayout.FOOTER_HEIGHT + (TouchWindowLayout.FOOTER_HEIGHT - blockHeight) / 2,
+                getStringWidth = getStringWidth::invoke,
+                getStringHeight = getStringHeight::invoke,
+                color = Color(1f, 1f, 1f, alpha),
+                lineSpacing = 2f,
+            )
+        } finally {
+            spriteBatch.transformMatrix = oldTransform
+        }
     }
 
     companion object {
@@ -75,7 +99,5 @@ class TouchInventoryHintRenderer @Inject constructor(
             "touchInventoryPlaceOneHint",
             "touchInventoryStackSplitHint",
         )
-        private const val BOTTOM_MARGIN = 8f
-        private const val LINE_SPACING = 4f
     }
 }

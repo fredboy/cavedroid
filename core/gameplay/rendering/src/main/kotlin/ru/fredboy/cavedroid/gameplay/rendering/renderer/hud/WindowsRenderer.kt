@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindHudRenderer
@@ -15,6 +16,7 @@ import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.windows.CreativeTabs
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.windows.CreativeWindowRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.windows.FurnaceWindowRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.windows.SurvivalWindowRenderer
+import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.windows.TouchWindowsRenderer
 import javax.inject.Inject
 
 @GameScope
@@ -27,6 +29,8 @@ class WindowsRenderer @Inject constructor(
     private val furnaceWindowRenderer: FurnaceWindowRenderer,
     private val chestWindowRenderer: ChestWindowRenderer,
     private val creativeTabsWindowRenderer: CreativeTabsWindowRenderer,
+    private val application: ApplicationContextRepository,
+    private val touchWindowsRenderer: TouchWindowsRenderer,
 ) : IHudRenderer {
 
     override val renderLayer get() = RENDER_LAYER
@@ -43,6 +47,11 @@ class WindowsRenderer @Inject constructor(
             shapeRenderer.end()
             Gdx.gl.glDisable(GL20.GL_BLEND)
             spriteBatch.begin()
+        }
+
+        if (application.isTouch()) {
+            touchWindowsRenderer.draw(spriteBatch, shapeRenderer, viewport)
+            return
         }
 
         when (val windowType = gameWindowsManager.currentWindowType) {

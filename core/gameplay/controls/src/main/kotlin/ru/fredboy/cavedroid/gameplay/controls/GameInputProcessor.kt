@@ -19,6 +19,7 @@ import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.KeyboardInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse.MouseCursorInputHandler
+import ru.fredboy.cavedroid.gameplay.controls.input.handler.touch.TouchWindowInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.mapper.KeyboardInputActionMapper
 import ru.fredboy.cavedroid.gameplay.controls.input.mapper.MouseInputActionMapper
 import javax.inject.Inject
@@ -126,7 +127,12 @@ class GameInputProcessor @Inject constructor(
         )
     }
 
-    override fun touchCancelled(p0: Int, p1: Int, p2: Int, p3: Int): Boolean = false
+    override fun touchCancelled(p0: Int, p1: Int, p2: Int, p3: Int): Boolean {
+        mouseInputHandlers.forEach { it.reset() }
+        pointerToTouchedKey.remove(p2)
+        dragging = false
+        return true
+    }
 
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
         val joystick = gameContextRepository.getJoystick()
@@ -137,7 +143,10 @@ class GameInputProcessor @Inject constructor(
 
         val (touchX, touchY) = gameContextRepository.getCameraContext().getViewportCoordinates(screenX, screenY)
 
-        if (abs(touchX - touchDownX) < 16 && abs(touchY - touchDownY) < DRAG_THRESHOLD) {
+        val windowDrag = applicationContextRepository.isTouch() && gameWindowsManager.currentWindowType != GameWindowType.NONE
+        val horizontalThreshold = if (windowDrag) 2f else 16f
+        val verticalThreshold = if (windowDrag) 2f else DRAG_THRESHOLD
+        if (abs(touchX - touchDownX) < horizontalThreshold && abs(touchY - touchDownY) < verticalThreshold) {
             return false
         }
 
@@ -190,7 +199,7 @@ class GameInputProcessor @Inject constructor(
         }
 
         val windowOpen = gameWindowsManager.currentWindowType != GameWindowType.NONE
-        if (windowOpen && !windowWasOpen) resetHeldInput()
+        if (windowOpen != windowWasOpen) resetHeldInput()
         windowWasOpen = windowOpen
         handleMousePosition()
 
@@ -248,6 +257,11 @@ class GameInputProcessor @Inject constructor(
     private fun handleMouseAction(action: MouseInputAction?): Boolean {
         if (action == null) {
             return false
+        }
+
+        if (applicationContextRepository.isTouch() && gameWindowsManager.currentWindowType != GameWindowType.NONE) {
+            mouseInputHandlers.filterIsInstance<TouchWindowInputHandler>().firstOrNull()?.handle(action)
+            return true
         }
 
         var anyProcessed = false
