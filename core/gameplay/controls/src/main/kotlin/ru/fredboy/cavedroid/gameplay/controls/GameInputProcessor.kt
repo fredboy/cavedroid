@@ -19,6 +19,7 @@ import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.KeyboardInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse.MouseCursorInputHandler
+import ru.fredboy.cavedroid.gameplay.controls.input.handler.touch.TouchCursorInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.handler.touch.TouchWindowInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.mapper.KeyboardInputActionMapper
 import ru.fredboy.cavedroid.gameplay.controls.input.mapper.MouseInputActionMapper
@@ -146,7 +147,19 @@ class GameInputProcessor @Inject constructor(
         val windowDrag = applicationContextRepository.isTouch() && gameWindowsManager.currentWindowType != GameWindowType.NONE
         val horizontalThreshold = if (windowDrag) 2f else 16f
         val verticalThreshold = if (windowDrag) 2f else DRAG_THRESHOLD
-        if (abs(touchX - touchDownX) < horizontalThreshold && abs(touchY - touchDownY) < verticalThreshold) {
+        val belowDragThreshold = abs(touchX - touchDownX) < horizontalThreshold && abs(touchY - touchDownY) < verticalThreshold
+
+        if (applicationContextRepository.isTouch() && gameWindowsManager.currentWindowType == GameWindowType.NONE) {
+            val action = mouseInputActionMapper.mapDragged(screenX.toFloat(), screenY.toFloat(), pointer)
+            val cursorHandler = mouseInputHandlers.filterIsInstance<TouchCursorInputHandler>().firstOrNull()
+            if (cursorHandler?.checkConditions(action) == true) {
+                // Move immediately while retaining the existing slop for all world hold actions.
+                cursorHandler.handleDrag(action, restartHold = !belowDragThreshold)
+                return true
+            }
+        }
+
+        if (belowDragThreshold) {
             return false
         }
 

@@ -285,7 +285,14 @@ class TouchCursorInputHandler @Inject constructor(
                 )
             }
         } else if (action.actionKey is MouseInputActionKey.Dragged && pointer != -1) {
-            handleTouchDown(action)
+            handleDrag(action, restartHold = true)
+        }
+    }
+
+    fun handleDrag(action: MouseInputAction, restartHold: Boolean) {
+        moveCursor(action)
+        if (restartHold) {
+            handleDown()
         }
     }
 
