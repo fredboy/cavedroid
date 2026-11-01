@@ -9,7 +9,7 @@
 [![GitHub Release](https://img.shields.io/github/v/release/fredboy/cavedroid)](https://github.com/fredboy/cavedroid/releases)
 
 CaveDroid is a **2D Minecraft-inspired game** for Android, Desktop (Windows, Linux, macOS), Web (browser), and potentially iOS.
-Explore, mine, and build in a looped world.
+Explore, mine, and build in procedurally generated worlds.
 
 <details>
   <summary>Screenshots</summary>
@@ -28,7 +28,7 @@ Explore, mine, and build in a looped world.
 
 ## Features
 
-- 2D world, looped horizontally
+- Infinite 2D worlds
 - Craft, mine, and explore
 - Procedurally generated world
 - Cross-platform: Android, Desktop (Windows/Linux/macOS), Web (browser, via TeaVM), iOS (untested)
@@ -62,106 +62,44 @@ Explore, mine, and build in a looped world.
 </p>
 
 
-You can also download APK and JAR builds from [the releases page](https://github.com/fredboy/cavedroid/releases).
+You can also download Android and desktop builds from [the releases page](https://github.com/fredboy/cavedroid/releases).
 Or play right from your browser [on GitHubPages](https://fredboy.github.io/cavedroid).
 
 ---
 
-## Build Instructions
+## Build
 
-Install **JDK 25** and set `JAVA_HOME` (and your IDE Gradle JVM) to it. Use the Gradle wrapper below.
-JVM bytecode targets Java 17 for Android, TeaVM, and RoboVM compatibility; Construo desktop bundles include a JDK 25 runtime.
+Install **JDK 25** and set `JAVA_HOME` and your IDE Gradle JVM to it.
+Android builds also need the Android SDK. Run the Gradle wrapper from the repository root:
 
-### Android
+| Task | Command |
+| --- | --- |
+| Run desktop | `./gradlew desktop:run` |
+| Desktop JAR | `./gradlew desktop:dist` |
+| FOSS debug APK | `./gradlew android:assembleFossDebug` |
+| Run web (JavaScript / Wasm GC) | `./gradlew html:runWeb` / `./gradlew html:runWasm` |
+| Web ZIP for static hosting (JavaScript / Wasm GC) | `./gradlew html:packageWebDist` / `./gradlew html:packageWebDistWasm` |
 
-```bash
-./gradlew android:assembleFossDebug
-```
+The web target uses [gdx-teavm](https://github.com/xpenatan/gdx-teavm).
+Wasm requires a browser with WebAssembly GC support; JavaScript builds support finite worlds only.
+See each module's `build.gradle.kts` for additional build tasks.
 
-### Desktop
+On Windows, use `gradlew.bat` and ensure the asset symlinks resolve correctly.
 
-```bash
-./gradlew desktop:dist
-```
-
-On Windows, use `gradlew.bat` instead of `./gradlew`, though it will fail because of symlinks used to reference assets
-directory, so some tweaks are required.
-
-### Web (browser)
-
-CaveDroid compiles to JavaScript or WebAssembly GC through [gdx-teavm](https://github.com/xpenatan/gdx-teavm). Lighting on the web build
-uses a simplified day/night tint shader (no per-block light sources) — gameplay is otherwise at parity with the desktop
-build.
-
-```bash
-# Run locally with the embedded Jetty dev server (source maps, no obfuscation)
-./gradlew html:runWeb
-
-# Build a development bundle without serving
-./gradlew html:buildJs
-
-# Build the obfuscated release bundle
-./gradlew html:buildJsRelease
-
-# Zip the release bundle (html/build/dist/cavedroid-web-<version>.zip) for static hosting
-./gradlew html:packageWebDist
-
-# Run the WebAssembly GC target locally
-./gradlew html:runWasm
-
-# Build development or release Wasm bundles without serving
-./gradlew html:buildWasm
-./gradlew html:buildWasmRelease
-
-# Zip the Wasm release (html/build/dist/cavedroid-web-wasm-<version>.zip)
-./gradlew html:packageWebDistWasm
-
-# Package the JavaScript variant for Yandex Games
-./gradlew html:packageWebDistYandex
-```
-
-JavaScript output is in `html/build/dist/webapp`; Wasm output is isolated in `html/build/dist/wasm/webapp`.
-Wasm requires a browser with WebAssembly GC support and includes a JavaScript runtime loader.
-Yandex Games remains a JavaScript-only target.
-New worlds are infinite in Wasm builds; JavaScript builds keep the default finite, looping worlds.
-GitHub Pages deployment uses the release Wasm bundle, staged by `scripts/build-web-pages.sh`.
-
-The release zip can be unpacked under any static web host (GitHub Pages, S3, Netlify, …) — no server-side runtime required.
-Serve Wasm builds over HTTP(S), with `.wasm` files using the `application/wasm` content type.
-
-### Legacy Android devices (API 16/17 — Jelly Bean)
-
-Unstable, experimental APKs for Android 4.1/4.2 are published on the
-[releases page](https://github.com/fredboy/cavedroid/releases) — look for builds tagged
-`legacy` (or similar). Provided as-is, outside the regular QA pass.
-
-## Setting up the keystore for signing
-
-To build an android release and enable the `desktop:generateSignedJar` task for release builds,
-you need a `keystore.properties` file in the root of the project.
-
-Create a file named `keystore.properties` with the following properties:
+For signed builds, create `keystore.properties` at the repository root:
 
 ```properties
-# Path to your Java keystore file
-releaseKeystorePath=/path/to/your/keystore.jks
-
-# Keystore password
-releaseKeystorePassword=yourKeystorePassword
-
-# Alias of the key to use
-releaseKeyAlias=yourKeyAlias
-
-# Password for the key
-releaseKeyPassword=yourKeyPassword
+releaseKeystorePath=/path/to/keystore.jks
+releaseKeystorePassword=...
+releaseKeyAlias=...
+releaseKeyPassword=...
 ```
 
----
+Keep keys and passwords out of Git. See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution and verification guidance.
 
 ## Asset packs
 
-See [Creating asset packs](ASSET_PACKS.md) for the ZIP format, metadata, stacking,
-JSON overrides, and higher-resolution textures.
+See [Creating asset packs](ASSET_PACKS.md) for the ZIP format and override rules.
 
 ## License
 

@@ -101,4 +101,4 @@ echo
 echo ">> Done."
 echo
 echo "Note: branch protection on master/develop is not configured by this script."
-echo "      See RELEASING.md for the recommended ruleset (require PRs + status checks)."
+echo "      Configure required reviews and status checks in the repository settings."

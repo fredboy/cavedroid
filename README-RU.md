@@ -9,7 +9,7 @@
 [![GitHub Release](https://img.shields.io/github/v/release/fredboy/cavedroid)](https://github.com/fredboy/cavedroid/releases)
 
 CaveDroid — это **2D-игра в стиле Minecraft** для Android, Desktop (Windows, Linux, macOS), Web (браузер) и потенциально iOS.
-Исследуйте, добывайте и стройте в зацикленном мире.
+Исследуйте, добывайте ресурсы и стройте в процедурно генерируемых мирах.
 
 <details>
   <summary>Скриншоты</summary>
@@ -28,7 +28,7 @@ CaveDroid — это **2D-игра в стиле Minecraft** для Android, Des
 
 ## Возможности
 
-- 2D-мир, зацикленный по горизонтали
+- Бесконечные 2D-миры
 - Крафт, добыча ресурсов и исследование
 - Процедурно-генерируемый мир
 - Кроссплатформенность: Android, Desktop (Windows/Linux/macOS), Web (браузер, через TeaVM), iOS (не тестировалось)
@@ -66,79 +66,44 @@ CaveDroid — это **2D-игра в стиле Minecraft** для Android, Des
 </p>
 
 
-APK и JAR сборки также можно скачать на [странице релизов](https://github.com/fredboy/cavedroid/releases).
+Сборки для Android и компьютеров также можно скачать на [странице релизов](https://github.com/fredboy/cavedroid/releases).
 Или поиграть прямо в браузере [на GitHub Pages](https://fredboy.github.io/cavedroid).
 
 ---
 
-## Инструкции по сборке
+## Сборка
 
-Установите **JDK 25** и укажите его в `JAVA_HOME` и настройке Gradle JVM вашей IDE. Используйте Gradle wrapper из репозитория.
-Байткод JVM остаётся совместимым с Java 17 для Android, TeaVM и RoboVM; десктопные пакеты Construo включают среду выполнения JDK 25.
+Установите **JDK 25** и укажите его в `JAVA_HOME` и настройке Gradle JVM в IDE.
+Для сборки Android также нужен Android SDK. Используйте Gradle wrapper из корня проекта:
 
-### Android
+| Задача | Команда |
+| --- | --- |
+| Запуск на компьютере | `./gradlew desktop:run` |
+| Десктопный JAR | `./gradlew desktop:dist` |
+| Отладочный APK FOSS | `./gradlew android:assembleFossDebug` |
+| Запуск веб-версии (JavaScript / Wasm GC) | `./gradlew html:runWeb` / `./gradlew html:runWasm` |
+| Веб-архив для статического хостинга (JavaScript / Wasm GC) | `./gradlew html:packageWebDist` / `./gradlew html:packageWebDistWasm` |
 
-```bash
-./gradlew android:assembleFossDebug
-```
+Веб-версия использует [gdx-teavm](https://github.com/xpenatan/gdx-teavm).
+Для Wasm нужен браузер с поддержкой WebAssembly GC; JavaScript-версия поддерживает только конечные миры.
+Дополнительные задачи сборки описаны в файлах `build.gradle.kts` соответствующих модулей.
 
-### Desktop
+В Windows используйте `gradlew.bat` и убедитесь, что симлинки на `assets/` корректны.
 
-```bash
-./gradlew desktop:dist
-```
-
-В Windows используйте `gradlew.bat` вместо `./gradlew`, но сборка может упасть из-за симлинков для ассетов, потребуется небольшая доработка.
-
-### Web (браузер)
-
-CaveDroid компилируется в JavaScript через [gdx-teavm](https://github.com/xpenatan/gdx-teavm). Освещение в веб-сборке
-использует упрощённый день/ночь tint-шейдер (без точечных источников света от блоков) — в остальном геймплей соответствует
-desktop-сборке.
-
-```bash
-# Запуск локально со встроенным dev-сервером Jetty (с source maps, без обфускации)
-./gradlew html:runWeb
-
-# Сборка dev-бандла без запуска сервера
-./gradlew html:buildJs
-
-# Сборка релизного бандла (обфускация, полная оптимизация)
-./gradlew html:buildJsRelease
-
-# Упаковать релизный бандл (build/dist/cavedroid-web-<version>.zip) для статического хостинга
-./gradlew html:packageWebDist
-```
-
-Релизный zip можно распаковать на любом статическом веб-хостинге (GitHub Pages, S3, Netlify, …) — серверная часть не требуется.
-
-### Старые Android-устройства (API 16/17 — Jelly Bean)
-
-Нестабильные экспериментальные APK для Android 4.1/4.2 публикуются на
-[странице релизов](https://github.com/fredboy/cavedroid/releases) — ищите сборки с меткой
-`legacy` (или похожей). Выкладываются «как есть», вне обычного QA.
-
-## Настройка keystore для подписывания
-
-Чтобы собрать релиз Android и включить задачу `desktop:generateSignedJar`, необходим файл `keystore.properties` в корне проекта.
-
-Создайте файл `keystore.properties` со следующим содержимым:
+Для подписанных сборок создайте `keystore.properties` в корне проекта:
 
 ```properties
-# Путь к вашему Java keystore
-releaseKeystorePath=/path/to/your/keystore.jks
-
-# Пароль от keystore
-releaseKeystorePassword=yourKeystorePassword
-
-# Алиас ключа
-releaseKeyAlias=yourKeyAlias
-
-# Пароль для ключа
-releaseKeyPassword=yourKeyPassword
+releaseKeystorePath=/path/to/keystore.jks
+releaseKeystorePassword=...
+releaseKeyAlias=...
+releaseKeyPassword=...
 ```
 
----
+Не добавляйте ключи и пароли в Git. Правила участия и проверки: [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Пакеты ресурсов
+
+Формат ZIP и правила переопределения ресурсов: [ASSET_PACKS.md](ASSET_PACKS.md) (на английском).
 
 ## Лицензия
 

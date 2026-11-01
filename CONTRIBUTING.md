@@ -1,105 +1,38 @@
 # Contributing to CaveDroid
 
-Thanks for your interest in contributing! This document covers how to set up your environment, where to send changes, and the project's coding conventions.
-
-For building and running the game, see [README.md](README.md). For a code map and implementation conventions, see [AGENTS.md](AGENTS.md).
-
-For custom textures and gameplay data, see [Creating asset packs](ASSET_PACKS.md).
-
-## Setup
-
-You need:
-
-- **JDK 25** (for example, Eclipse Temurin or Zulu). Set `JAVA_HOME` and your IDE Gradle JVM to JDK 25; build toolchains use 25 while JVM bytecode stays at 17 for Android, TeaVM, and RoboVM compatibility.
-- Git
-- (Optional) Android SDK if you want to build the Android target locally
-
-Verify your environment works:
-
-```bash
-./gradlew desktop:run
-```
+See [README.md](README.md) for setup and build commands, and [AGENTS.md](AGENTS.md)
+for the code map and implementation constraints.
 
 ## Workflow
 
-1. **Fork** the repository to your GitHub account.
+- Branch from `develop` and target it with your PR. Use `issue/<number>`,
+  `fix/<short-slug>`, or `feature/<short-slug>` for branch names.
+- Start PR titles with a capital letter. For `issue/NN`, include the matching
+  closing reference, for example `Closes #42: Fix inventory dragging`.
+- Keep changes focused. Feature PRs are squash-merged; commit subjects have no
+  required format.
+- Check the workflows in [.github/workflows/](.github/workflows/) for current CI
+  checks and branch/title validation. Release branches are maintained separately.
 
-2. **Branch off `develop`** (not `master`). Pick a name that matches one of these patterns:
+## Code and tests
 
-   | Pattern | Use when |
-   |---|---|
-   | `issue/<number>` | The change addresses an existing GitHub issue (e.g. `issue/42`). |
-   | `fix/<short-slug>` | Bug fix without a dedicated issue (e.g. `fix/lighting-flicker`). |
-   | `feature/<short-slug>` | New feature without a dedicated issue (e.g. `feature/wolf-mob`). |
+Write Kotlin and follow `.editorconfig`. Existing Java emulation sources in
+`html/` are the exception. Keep dependency versions in
+[gradle/libs.versions.toml](gradle/libs.versions.toml).
 
-   ```bash
-   git checkout develop
-   git pull
-   git checkout -b issue/42
-   ```
+Tests use JUnit Jupiter, with mockk and `kotlinx-coroutines-test` as needed.
+Follow an existing tested module's setup. Avoid GL and native physics in JVM
+unit tests; mock those boundaries or extract pure logic into the owning module.
 
-3. **Commit.** Commit subjects have no required format — feature PRs are **squash-merged**, so the PR title becomes the single commit landing on `develop`.
-
-4. **Open a PR targeting `develop`.** Title rules:
-   - **All PRs:** the title must start with a capital letter.
-   - **`issue/NN` branches** additionally: the title must start with a GitHub issue-closing keyword and the matching issue number, e.g.
-     - `Closes #42: Add inventory drag-and-drop`
-     - `Fixes #99 - Crash on world deletion`
-     - `Resolves #100 Add new feature`
-
-     Allowed keywords: `Close` / `Closes` / `Closed`, `Fix` / `Fixes` / `Fixed`, `Resolve` / `Resolves` / `Resolved` (the first letter must be uppercase; the rest of the keyword is case-insensitive). CI enforces this and that the issue number matches the branch.
-   - **`fix/<slug>` / `feature/<slug>`:** any title is fine as long as it starts with a capital letter. If the change happens to close an issue, include a closing keyword in the title or description so GitHub auto-closes the issue on merge.
-
-CI runs ktlint, JUnit tests, an Android debug build, and lints your branch name + PR title. All must pass before merge.
-
-## Branching context
-
-```
-master ────●─────●─────●────▶   (latest stable — never target this)
-            \   / \   /
-release/*    ◯◯   ◯◯           (release branches — maintainer-only)
-            /     \
-develop ●──●───●───●───●────▶   (target your PRs here)
-            \
-             issue/42           (your branch)
-```
-
-Always target `develop`. Release branches and `master` are handled by the maintainer.
-
-## Code style
-
-- **Kotlin only** — no new Java. Build with JDK 25; JVM target 17 throughout.
-  - Exception: vendored emulated classes under `html/src/main/java/emu/**` and `html/src/main/java/emulate/**`.
-- **Ktlint** (1.6.0) gates CI:
-
-  ```bash
-  ./gradlew ktlintCheck buildSrc:ktlintCheck   # check
-  ./gradlew ktlintFormat                       # auto-format
-  ```
-
-- `.editorconfig` disables a few rules (multiline expression wrapping, string template indent, comment wrapping, empty first line in class body, property/backing-property naming, function expression body) — don't reintroduce them.
-
-## Testing
-
-Tests use JUnit Jupiter (5.x), mockk, and `kotlinx-coroutines-test`.
-Declare library and plugin versions in `gradle/libs.versions.toml` and reference
-them with `libs` accessors in build scripts. For native libraries, select the
-platform classifier with `variantOf(...)`; catalogs do not store classifiers.
+Run checks appropriate to your change with JDK 25:
 
 ```bash
-./gradlew test                  # all modules
-./gradlew :core:common:test     # a single module
+./gradlew testCore
+./gradlew ktlintCheck buildSrc:ktlintCheck
 ```
 
-Don't instantiate libGDX classes that need a GL context (`Stage`, `RayHandler`, `PointLight`, etc.) in unit tests — mock them or extract pure logic into the module that owns it. See the "Verification" section in [AGENTS.md](AGENTS.md) and `core/common/build.gradle.kts` for test setup.
+For a single module, use its test task, such as `./gradlew :core:common:test`.
+For gameplay, rendering, or input changes, also check the affected behavior in-game
+when possible. Report what you verified and any limitations.
 
-## Pull requests
-
-- Target `develop`.
-- One issue per PR where possible; the title carries the issue reference (see Workflow step 4).
-- CI must pass before merge.
-- Feature PRs are **squash-merged** — the PR title becomes the single commit on `develop`. (Release-flow PRs use merge commits, but those are maintainer-only.)
-
-## Questions
-
-Open an issue or comment on an existing one.
+For custom textures and gameplay data, see [ASSET_PACKS.md](ASSET_PACKS.md).

@@ -69,7 +69,6 @@ available. Report what was actually checked and any verification limitations.
 ## Task-specific guidance
 
 - Setup and contribution workflow: [CONTRIBUTING.md](CONTRIBUTING.md).
-- Release procedure: [RELEASING.md](RELEASING.md).
 - Locale additions, legacy Android builds, and unit-test recipes:
   relevant `SKILL.md` files under `.agents/skills/`.
 
