@@ -35,6 +35,10 @@ sourceSets {
     }
 }
 
+tasks.withType<JavaExec>().configureEach {
+    jvmArgs("--enable-native-access=ALL-UNNAMED")
+}
+
 tasks.register<JavaExec>("run") {
     dependsOn("assemble")
     mainClass = desktopLauncherClassName
@@ -58,7 +62,12 @@ tasks.register<Jar>("dist") {
     dependsOn(configurations.runtimeClasspath)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
-        attributes["Main-Class"] = desktopLauncherClassName
+        attributes(
+            "Main-Class" to desktopLauncherClassName,
+            "Enable-Native-Access" to "ALL-UNNAMED",
+            // Preserve LWJGL's JDK-specific implementations in the fat JAR.
+            "Multi-Release" to "true",
+        )
     }
     from(
         files(
@@ -93,6 +102,7 @@ tasks.register<Jar>("generateSignedJar") {
 
     archiveBaseName.set("release-signed")
     destinationDirectory.set(layout.buildDirectory.dir("libs"))
+    manifest.from(tasks.named<Jar>("dist").get().manifest)
 
     doLast {
         requireNotNull(keystoreProperties) { "keystore.properties missing" }
@@ -174,6 +184,9 @@ construo {
     mainClass.set(desktopLauncherClassName)
     outputDir.set(layout.buildDirectory.dir("dist"))
     jarTask.set("generateSignedJar")
+    roast {
+        vmArgs.add("--enable-native-access=ALL-UNNAMED")
+    }
 
     targets {
         create<Target.Linux>("linuxX64") {
@@ -202,6 +215,8 @@ dependencies {
     implementation(project(":core:gameplay:lighting-bfs"))
 
     implementation(libs.gdx.core)
+    // Align LWJGL modules and their native classifiers independently of libGDX.
+    implementation(platform(libs.lwjgl.bom))
     implementation(libs.gdx.backend.desktop)
     implementation(variantOf(libs.gdx.platform.core) { classifier("natives-desktop") })
     implementation(variantOf(libs.gdx.platform.box2d) { classifier("natives-desktop") })

@@ -20,6 +20,7 @@ ktlint = "1.8.0"
 ktlintPlugin = "14.2.0"
 libktx = "1.13.1-rc1"
 licenseReport = "3.1.4"
+lwjgl = "3.4.3"
 mockk = "1.14.11"
 proguard = "7.10.0"
 robovm = "3.0.0"
@@ -56,6 +57,7 @@ kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-seria
 ktx-actors = { module = "io.github.libktx:ktx-actors", version.ref = "libktx" }
 ktx-scene2d = { module = "io.github.libktx:ktx-scene2d", version.ref = "libktx" }
 license-report = { module = "com.github.jk1:gradle-license-report", version.ref = "licenseReport" }
+lwjgl-bom = { module = "org.lwjgl:lwjgl-bom", version.ref = "lwjgl" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 proguard-gradle = { module = "com.guardsquare:proguard-gradle", version.ref = "proguard" }
 robovm-rt = { module = "com.mobidevelop.robovm:robovm-rt", version.ref = "robovm" }

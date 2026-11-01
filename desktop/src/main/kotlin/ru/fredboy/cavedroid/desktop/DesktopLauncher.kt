@@ -6,6 +6,7 @@ import com.badlogic.gdx.Files
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 import kotlinx.coroutines.Dispatchers
+import org.lwjgl.system.Configuration
 import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
@@ -21,6 +22,11 @@ internal object DesktopLauncher {
 
     @JvmStatic
     fun main(arg: Array<String>) {
+        // LWJGL still defaults to legacy Unsafe memory access unless configured.
+        if (Runtime.version().feature() >= 25) {
+            Configuration.MEMORY_BACKEND.set(Configuration.MEMORY_BACKEND.get() ?: "ffm")
+        }
+
         val config = Lwjgl3ApplicationConfiguration()
 
         val preferencesStore = DesktopPreferencesStore()
