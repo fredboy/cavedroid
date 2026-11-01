@@ -84,7 +84,8 @@ class BfsLightingSystem(
 
     override fun update(delta: Float) {
         val window = lightingWindow ?: return
-        if (window.update(cameraCenterX(), 1_000_000L)) {
+        val visible = gameContextRepository.getCameraContext().visibleWorld
+        if (window.update(cameraCenterX(), 1_000_000L, visible.x.floorToInt(), (visible.x + visible.width).floorToInt())) {
             _grid = window.grid
             _overlay?.updateGrid(window.grid)
         }

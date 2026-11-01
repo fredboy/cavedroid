@@ -6,11 +6,13 @@ import kotlin.math.max
  * @param originX absolute world x of local column 0. Public methods accept absolute coordinates and
  * translate by this origin, so a windowed grid (infinite worlds) and a full-width grid (finite,
  * looping worlds, [originX] = 0) share the same call sites. Internal BFS works in local space.
+ * [looping] is disabled for infinite-world windows and their individual rebuild strips.
  */
 class LightGrid(
     val width: Int,
     val height: Int,
     private val originX: Int = 0,
+    private val looping: Boolean = true,
 ) {
     private val opaque: BooleanArray = BooleanArray(width * height)
     private val emission: ByteArray = ByteArray(width * height)
@@ -33,23 +35,25 @@ class LightGrid(
     /** Translates an absolute world x into an in-range local column. */
     private fun localX(x: Int): Int = wrapX(x - originX)
 
+    private fun containsX(x: Int): Boolean = looping || x.toLong() in originX.toLong() until originX.toLong() + width
+
     fun isOpaqueAt(x: Int, y: Int): Boolean {
-        if (y < 0 || y >= height) return false
+        if (y < 0 || y >= height || !containsX(x)) return false
         return opaque[index(localX(x), y)]
     }
 
     fun skyAt(x: Int, y: Int): Int {
-        if (y < 0 || y >= height) return 0
+        if (y < 0 || y >= height || !containsX(x)) return 0
         return sky[index(localX(x), y)].toInt() and 0xFF
     }
 
     fun blockAt(x: Int, y: Int): Int {
-        if (y < 0 || y >= height) return 0
+        if (y < 0 || y >= height || !containsX(x)) return 0
         return block[index(localX(x), y)].toInt() and 0xFF
     }
 
     fun isSkyExposed(x: Int, y: Int): Boolean {
-        if (y < 0 || y >= height) return false
+        if (y < 0 || y >= height || !containsX(x)) return false
         return y < heightmap[localX(x)]
     }
 
@@ -146,6 +150,24 @@ class LightGrid(
     internal var transientRevision = 0L
         private set
 
+    /** Copy only fully propagated columns; each source strip includes a full light-radius halo. */
+    internal fun copyColumnsFrom(source: LightGrid, firstX: Int, lastX: Int) {
+        require(height == source.height)
+        for (x in firstX..lastX) {
+            val targetX = localX(x)
+            val sourceX = source.localX(x)
+            heightmap[targetX] = source.heightmap[sourceX]
+            for (y in 0 until height) {
+                val target = index(targetX, y)
+                val from = source.index(sourceX, y)
+                opaque[target] = source.opaque[from]
+                emission[target] = source.emission[from]
+                sky[target] = source.sky[from]
+                block[target] = source.block[from]
+            }
+        }
+    }
+
     internal fun copyTransientEmittersFrom(source: LightGrid) {
         for ((id, emitter) in source.transientEmitters) {
             val absoluteX = emitter.x + source.originX
@@ -162,7 +184,7 @@ class LightGrid(
     }
 
     fun onCellChanged(x: Int, y: Int, newOpaque: Boolean, newEmission: Int) {
-        if (y < 0 || y >= height) return
+        if (y < 0 || y >= height || !containsX(x)) return
         val cx = localX(x)
         val idx = index(cx, y)
         val cappedEmission = newEmission.coerceIn(0, MAX_LEVEL)
@@ -201,7 +223,9 @@ class LightGrid(
 
         if (!newOpaque) {
             for ((dx, dy) in NEIGHBOURS) {
-                val nx = wrapX(cx + dx)
+                val neighbourX = cx + dx
+                if (!looping && neighbourX !in 0 until width) continue
+                val nx = wrapX(neighbourX)
                 val ny = y + dy
                 if (ny < 0 || ny >= height) continue
                 val neighbourLevel = block[index(nx, ny)].toInt() and 0xFF
@@ -216,7 +240,9 @@ class LightGrid(
 
         if (!newOpaque) {
             for ((dx, dy) in NEIGHBOURS) {
-                val nx = wrapX(cx + dx)
+                val neighbourX = cx + dx
+                if (!looping && neighbourX !in 0 until width) continue
+                val nx = wrapX(neighbourX)
                 val ny = y + dy
                 if (ny < 0 || ny >= height) continue
                 val neighbourLevel = sky[index(nx, ny)].toInt() and 0xFF
@@ -229,7 +255,7 @@ class LightGrid(
     }
 
     fun setTransientEmitter(id: Long, x: Int, y: Int, level: Int) {
-        if (level <= 0 || y < 0 || y >= height) {
+        if (level <= 0 || y < 0 || y >= height || !containsX(x)) {
             clearTransientEmitter(id)
             return
         }
@@ -322,7 +348,9 @@ class LightGrid(
         if (propagated <= 0) return
 
         for ((dx, dy) in NEIGHBOURS) {
-            val nx = wrapX(x + dx)
+            val neighbourX = x + dx
+            if (!looping && neighbourX !in 0 until width) continue
+            val nx = wrapX(neighbourX)
             val ny = y + dy
             if (ny < 0 || ny >= height) continue
             if (opaque[index(nx, ny)]) continue
@@ -341,7 +369,9 @@ class LightGrid(
             val oldLevel = unpackLevel(packed)
 
             for ((dx, dy) in NEIGHBOURS) {
-                val nx = wrapX(x + dx)
+                val neighbourX = x + dx
+                if (!looping && neighbourX !in 0 until width) continue
+                val nx = wrapX(neighbourX)
                 val ny = y + dy
                 if (ny < 0 || ny >= height) continue
                 val current = channel[index(nx, ny)].toInt() and 0xFF
