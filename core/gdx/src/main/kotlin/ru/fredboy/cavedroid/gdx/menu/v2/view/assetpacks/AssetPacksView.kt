@@ -106,6 +106,9 @@ suspend fun Stage.assetPacksView(viewModel: AssetPacksViewModel) = viewModel.als
                         }
                     }
                 }
+                row()
+                label(viewModel.getFormattedString("packsGameFormatVersion", viewModel.formatVersion.toString()))
+                    .cell(expandX = true, expandY = state.confirmRemove != null, align = Align.bottomRight, padTop = 8f)
             }
         }
     }

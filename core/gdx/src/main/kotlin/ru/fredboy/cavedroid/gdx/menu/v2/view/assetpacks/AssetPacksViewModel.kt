@@ -9,6 +9,7 @@ import kotlinx.coroutines.withContext
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.AssetPackPlatform
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
+import ru.fredboy.cavedroid.domain.assets.pack.AssetPackFormat
 import ru.fredboy.cavedroid.domain.assets.pack.AssetPackRepository
 import ru.fredboy.cavedroid.domain.assets.pack.InstalledAssetPack
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
@@ -30,6 +31,7 @@ class AssetPacksViewModel(
     dependencies: BaseViewModelDependencies,
 ) : BaseViewModel(dependencies) {
     val state = MutableStateFlow(AssetPacksState(repository.installed(), repository.pendingIds, message = repository.startupError))
+    val formatVersion = AssetPackFormat.VERSION
     val runningIds get() = repository.runningIds
     private val icons = mutableMapOf<String, Texture?>()
     private var disposed = false
