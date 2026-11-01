@@ -36,10 +36,6 @@ suspend fun Stage.assetPacksView(viewModel: AssetPacksViewModel) = viewModel.als
                         onClickWithSound(viewModel) { viewModel.confirm(false) }
                     }.cell(width = 500f, height = 60f, pad = 8f)
                 } else {
-                    if (state.selected != viewModel.runningIds) {
-                        label(viewModel.getLocalizedString("packsApply")) { setWrap(true) }.cell(width = 700f, pad = 8f)
-                        row()
-                    }
                     state.message?.let { message ->
                         label(message) { setWrap(true) }.cell(width = 700f, pad = 8f)
                         row()
