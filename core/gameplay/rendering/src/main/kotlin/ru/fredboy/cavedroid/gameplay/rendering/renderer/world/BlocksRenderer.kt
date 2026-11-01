@@ -94,6 +94,8 @@ abstract class BlocksRenderer(
         drawX: Float,
         drawY: Float,
     ) {
+        if (y >= gameWorld.height) return
+
         val foregroundBlock = gameWorld.getForeMap(x, y)
         val backgroundBlock = gameWorld.getBackMap(x, y)
         val isFixedBackground = backgroundBlock.isNone() && y >= gameWorld.generatorConfig.seaLevel
@@ -146,6 +148,8 @@ abstract class BlocksRenderer(
     }
 
     protected fun drawBackMap(spriteBatch: SpriteBatch, x: Int, y: Int, drawX: Float, drawY: Float) {
+        if (y >= gameWorld.height) return
+
         val belowSeaLevel = y >= gameWorld.generatorConfig.seaLevel
         val foregroundBlock = gameWorld.getForeMap(x, y)
         val backgroundBlock = gameWorld.getBackMap(x, y)
