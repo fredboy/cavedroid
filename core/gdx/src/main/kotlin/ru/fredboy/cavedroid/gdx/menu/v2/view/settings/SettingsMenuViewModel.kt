@@ -33,6 +33,7 @@ class SettingsMenuViewModel(
     val showAssetPacks get() = assetPackPlatform.isSupported
 
     fun onAssetPacksClick() {
+        saveSettings()
         navBackStack.push(AssetPacksNavKey)
     }
 
@@ -173,7 +174,7 @@ class SettingsMenuViewModel(
         viewModelScope.launch { _showDebugInfoFlow.emit(enabled) }
     }
 
-    fun onDoneClick() {
+    private fun saveSettings() {
         stateFlow.value.run {
             applicationContextRepository.setFullscreen(fullscreen)
             applicationContextRepository.setUseDynamicCamera(dynamicCamera)
@@ -188,6 +189,10 @@ class SettingsMenuViewModel(
             }
             applicationContextRepository.preferShowDebug = preferShowDebug
         }
+    }
+
+    fun onDoneClick() {
+        saveSettings()
         navBackStack.pop()
     }
 

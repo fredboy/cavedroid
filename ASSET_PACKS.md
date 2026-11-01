@@ -1,7 +1,8 @@
 # Creating asset packs
 
 CaveDroid supports ZIP asset packs on desktop and Android. Import one in
-**Settings → Asset packs → Import ZIP**, enable it, press **Done**, and restart.
+**Settings → Asset packs → Import ZIP**, enable it, and press **Done** to apply it immediately.
+A paused world is saved and reloaded with the selected packs, then stays paused.
 The top enabled pack has priority; missing files fall back to lower packs, then
 bundled assets. Packs apply to every world and are not included in saves.
 
@@ -109,15 +110,16 @@ Device texture-size limits still apply.
 
 ## Troubleshooting
 
-Check paths, stack order, and a full restart first. For distorted sprites, check
+Check paths and stack order, and press **Done** to apply changes first. For distorted sprites, check
 uniform scaling and logical coordinates. For missing sounds or labels, check the
 complete index or properties file. Test changed content with the pack alone and
 with another pack above and below it.
 
-If loading fails, the game disables the enabled stack and restores bundled assets;
-open Asset packs to read the error, fix the ZIP, and reimport. Back discards pending
-selection changes, but imports and removals persist. Removing a running pack defers
-file deletion until restart.
+If applying changes fails, the current assets and world remain active; the menu
+shows the error so you can fix the ZIP and reimport. At startup, a failing saved
+stack is disabled and bundled assets are restored. Imports and removals persist
+immediately; selection and priority changes apply with **Done**. Removing a running
+pack defers file deletion until the current asset generation is released.
 
 Use ordinary unencrypted ZIPs with relative paths. Import rejects unsafe paths,
 duplicates, conflicting file/directory entries, and the reserved root `.removed`

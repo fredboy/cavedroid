@@ -6,6 +6,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.AssetPackPlatform
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.domain.assets.pack.AssetPackRepository
@@ -25,11 +26,11 @@ class AssetPacksViewModel(
     private val repository: AssetPackRepository,
     private val platform: AssetPackPlatform,
     private val backStack: NavBackStack,
+    private val applicationController: ApplicationController,
     dependencies: BaseViewModelDependencies,
 ) : BaseViewModel(dependencies) {
     val state = MutableStateFlow(AssetPacksState(repository.installed(), repository.pendingIds, message = repository.startupError))
     val runningIds get() = repository.runningIds
-    val restartRequired get() = state.value.selected != runningIds
     private val icons = mutableMapOf<String, Texture?>()
     private var disposed = false
 
@@ -110,9 +111,20 @@ class AssetPacksViewModel(
 
     fun done() {
         if (state.value.busy) return
-        runCatching { repository.saveSelection(state.value.selected) }
-            .onSuccess { backStack.pop() }
-            .onFailure { state.value = state.value.copy(message = it.message) }
+        val selected = state.value.selected
+        if (selected == runningIds) {
+            runCatching { repository.saveSelection(selected) }
+                .onSuccess { backStack.pop() }
+                .onFailure { state.value = state.value.copy(message = it.message) }
+            return
+        }
+        state.value = state.value.copy(busy = true, message = null)
+        // Rebuild screens after the click event and current frame have finished using the old skin.
+        Gdx.app.postRunnable {
+            if (disposed) return@postRunnable
+            runCatching { applicationController.applyAssetPacks(selected) }
+                .onFailure { state.value = state.value.copy(busy = false, message = it.message ?: getLocalizedString("packsFailed")) }
+        }
     }
 
     override fun onDispose() {

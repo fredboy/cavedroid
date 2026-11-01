@@ -28,5 +28,8 @@ interface AssetPackRepository {
     fun importArchive(archive: FileHandle): InstalledAssetPack
     fun saveSelection(ids: List<String>)
     fun remove(id: String)
+
+    /** Delete retired pack files only after no active asset generation uses them. */
+    fun cleanupRemoved()
     fun disableAfterFailure(message: String)
 }

@@ -82,7 +82,9 @@ class NavRootStage(
 
     override fun dispose() {
         hideLastTopKey()
-        super.dispose()
         job.cancel()
+        viewModels.values.forEach(ViewModel::dispose)
+        viewModels.clear()
+        super.dispose()
     }
 }

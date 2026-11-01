@@ -5,6 +5,8 @@ import ru.fredboy.cavedroid.common.model.StartGameConfig
 
 interface ApplicationController : ApplicationListener {
 
+    fun applyAssetPacks(ids: List<String>)
+
     fun quitGame()
 
     fun startGame(startGameConfig: StartGameConfig)

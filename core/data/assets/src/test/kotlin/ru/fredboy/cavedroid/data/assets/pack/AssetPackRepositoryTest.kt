@@ -72,7 +72,7 @@ class AssetPackRepositoryTest {
     }
 
     @Test
-    fun `pending selection becomes running only at next startup`() {
+    fun `pending selection becomes running in a new asset generation`() {
         val repository = repository()
         val pack = repository.importArchive(example())
         repository.saveSelection(listOf(pack.id))
@@ -82,7 +82,7 @@ class AssetPackRepositoryTest {
     }
 
     @Test
-    fun `running pack removal preserves files until next startup`() {
+    fun `running pack removal preserves files until its asset generation is released`() {
         val first = repository()
         val pack = first.importArchive(example())
         first.saveSelection(listOf(pack.id))
@@ -91,7 +91,9 @@ class AssetPackRepositoryTest {
         assertTrue(pack.directory.child("textures/textures/blocks/stone.png").exists())
         assertTrue(running.installed().isEmpty())
         assertTrue(running.pendingIds.isEmpty())
-        repository()
+        val next = repository()
+        assertTrue(pack.directory.exists())
+        next.cleanupRemoved()
         assertFalse(pack.directory.exists())
     }
 

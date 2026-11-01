@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.assetpacks
 
+import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.AssetPackPlatform
 import ru.fredboy.cavedroid.common.di.MenuScope
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
@@ -14,8 +15,9 @@ import javax.inject.Inject
 class AssetPacksViewModelProvider @Inject constructor(
     private val repository: AssetPackRepository,
     private val platform: AssetPackPlatform,
+    private val applicationController: ApplicationController,
     private val dependencies: BaseViewModelDependencies,
 ) : ViewModelProvider<AssetPacksNavKey, AssetPacksViewModel> {
     override val viewModelClass = AssetPacksViewModel::class
-    override fun get(navKey: AssetPacksNavKey, navBackStack: NavBackStack) = AssetPacksViewModel(repository, platform, navBackStack, dependencies)
+    override fun get(navKey: AssetPacksNavKey, navBackStack: NavBackStack) = AssetPacksViewModel(repository, platform, navBackStack, applicationController, dependencies)
 }

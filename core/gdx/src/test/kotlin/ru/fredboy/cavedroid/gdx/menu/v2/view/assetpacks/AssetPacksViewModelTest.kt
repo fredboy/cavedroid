@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.api.AssetPackPlatform
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
@@ -34,8 +35,10 @@ class AssetPacksViewModelTest {
     private val repository = mockk<AssetPackRepository> {
         every { installed() } returns emptyList()
         every { pendingIds } returns listOf("selected")
+        every { runningIds } returns emptyList()
         every { startupError } returns null
     }
+    private val applicationController = mockk<ApplicationController>(relaxed = true)
     private lateinit var viewModel: AssetPacksViewModel
 
     @BeforeEach
@@ -46,7 +49,7 @@ class AssetPacksViewModelTest {
         val dependencies = mockk<BaseViewModelDependencies> {
             every { dispatchers } returns AppDispatchers(Dispatchers.Unconfined, Dispatchers.Unconfined, Dispatchers.Unconfined)
         }
-        viewModel = AssetPacksViewModel(repository, platform, NavBackStack(AssetPacksNavKey), dependencies)
+        viewModel = AssetPacksViewModel(repository, platform, NavBackStack(AssetPacksNavKey), applicationController, dependencies)
     }
 
     @AfterEach
@@ -86,5 +89,52 @@ class AssetPacksViewModelTest {
         callback!!(Result.success(null))
         posted.removeFirst().run()
         verify(exactly = 0) { repository.importArchive(any()) }
+    }
+
+    @Test
+    fun `done applies changed selection after the current frame and ignores repeated clicks`() {
+        viewModel.done()
+        viewModel.done()
+        assertTrue(viewModel.state.value.busy)
+        verify(exactly = 0) { applicationController.applyAssetPacks(any()) }
+
+        posted.removeFirst().run()
+
+        verify(exactly = 1) { applicationController.applyAssetPacks(listOf("selected")) }
+        assertTrue(posted.isEmpty())
+    }
+
+    @Test
+    fun `apply failure leaves menu editable and displays the error`() {
+        every { applicationController.applyAssetPacks(any()) } throws IllegalArgumentException("Invalid skin")
+        viewModel.done()
+
+        posted.removeFirst().run()
+
+        assertFalse(viewModel.state.value.busy)
+        assertEquals("Invalid skin", viewModel.state.value.message)
+        assertEquals(listOf("selected"), viewModel.state.value.selected)
+    }
+
+    @Test
+    fun `done with unchanged selection avoids rebuilding assets`() {
+        every { repository.runningIds } returns listOf("selected")
+        every { repository.saveSelection(any()) } returns Unit
+
+        viewModel.done()
+
+        assertTrue(posted.isEmpty())
+        verify { repository.saveSelection(listOf("selected")) }
+        verify(exactly = 0) { applicationController.applyAssetPacks(any()) }
+    }
+
+    @Test
+    fun `disposed menu cannot apply a queued selection`() {
+        viewModel.done()
+        viewModel.dispose()
+
+        posted.removeFirst().run()
+
+        verify(exactly = 0) { applicationController.applyAssetPacks(any()) }
     }
 }

@@ -27,7 +27,7 @@ class AssetPackRepositoryImpl @Inject constructor(
     init {
         if (isSupported) {
             root.mkdirs()
-            root.list().filter { it.name().startsWith(".import-") || it.child(".removed").exists() }
+            root.list().filter { it.name().startsWith(".import-") }
                 .forEach { it.deleteDirectory() }
         }
     }
@@ -100,6 +100,12 @@ class AssetPackRepositoryImpl @Inject constructor(
             pack.directory.child(".removed").writeString("", false)
         } else {
             pack.directory.deleteDirectory()
+        }
+    }
+
+    override fun cleanupRemoved() {
+        if (isSupported) {
+            root.list().filter { it.child(".removed").exists() }.forEach { it.deleteDirectory() }
         }
     }
 

@@ -188,6 +188,8 @@ interface ApplicationComponent {
         @BindsInstance
         fun assetPackPlatform(platform: AssetPackPlatform): Builder
 
+        fun dataStatsModule(module: DataStatsModule): Builder
+
         fun build(): ApplicationComponent
     }
 }
