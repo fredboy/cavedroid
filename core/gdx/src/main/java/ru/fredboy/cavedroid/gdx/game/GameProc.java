@@ -138,21 +138,9 @@ public class GameProc implements Disposable {
         mMobsController.getPlayer().setGameMode(gameMode);
     }
 
-    private boolean mPreparingView;
-
     public void update(float delta) {
-        if (!mGameRenderer.isReady()) {
-            mWorldLogicTimer.stop();
-            mPreparingView = true;
-            mGameWorld.update(0f);
-            mGameRenderer.render(delta);
-            return;
-        }
-        if (mPreparingView) {
-            mPreparingView = false;
-            mGameWorld.resetPresentation();
-            mWorldLogicTimer.start();
-        }
+        // Terrain images and lighting rebuild across frames while simulation keeps running.
+        // Missing collision terrain is guarded independently by the physics streaming step.
         long updateStart = mPerformanceMonitor.startStage();
         mGameWorld.update(delta);
         long entitiesStart = mPerformanceMonitor.startStage();
@@ -185,7 +173,7 @@ public class GameProc implements Disposable {
 
     public void onGameResumed() {
         mGameWorld.resetPresentation();
-        if (!mPreparingView) mWorldLogicTimer.start();
+        mWorldLogicTimer.start();
     }
 
     public void show() {
