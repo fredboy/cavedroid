@@ -121,7 +121,7 @@ Thumbs.db
 /ios-moe/xcode/native/
 
 release-*/
-keystore.propertiesgit
+keystore.properties
 
 **/build/
 **/_build/
