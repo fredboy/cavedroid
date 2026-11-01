@@ -10,11 +10,12 @@ import ktx.scene2d.label
 import ktx.scene2d.scrollPane
 import ktx.scene2d.table
 import ktx.scene2d.textButton
+import ru.fredboy.cavedroid.common.mvvm.collectViewState
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 
 @Scene2dDsl
 suspend fun Stage.noticeMenuView(viewModel: NoticeMenuViewModel) = viewModel.also {
-    viewModel.stateFlow.collect { state ->
+    collectViewState(viewModel.stateFlow) { state ->
         actors {
             table {
                 setFillParent(true)
@@ -28,6 +29,7 @@ suspend fun Stage.noticeMenuView(viewModel: NoticeMenuViewModel) = viewModel.als
                 pad(8f)
 
                 scrollPane {
+                    name = "notice-content"
                     label(state.notices) { wrap = true }
                 }.cell(
                     expand = true,

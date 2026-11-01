@@ -22,12 +22,12 @@ import ktx.scene2d.label
 import ktx.scene2d.table
 import ktx.scene2d.textButton
 import ktx.scene2d.textField
+import ru.fredboy.cavedroid.common.mvvm.collectViewState
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 
 @Scene2dDsl
 suspend fun Stage.editWorldMenuView(viewModel: EditWorldMenuViewModel) = viewModel.also {
-    viewModel.stateFlow.collect { state ->
-        clear()
+    collectViewState(viewModel.stateFlow) { state ->
         when (state) {
             is EditWorldMenuState.Loading -> messageScreen(viewModel.getLocalizedString("loading"))
             is EditWorldMenuState.Working -> messageScreen(state.message)

@@ -10,11 +10,12 @@ import ktx.scene2d.label
 import ktx.scene2d.scrollPane
 import ktx.scene2d.table
 import ktx.scene2d.textButton
+import ru.fredboy.cavedroid.common.mvvm.collectViewState
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 
 @Scene2dDsl
 suspend fun Stage.attributionMenuView(viewModel: AttributionMenuViewModel) = viewModel.also {
-    viewModel.stateFlow.collect { attributions ->
+    collectViewState(viewModel.stateFlow) { attributions ->
         actors {
             table {
                 setFillParent(true)
@@ -28,6 +29,7 @@ suspend fun Stage.attributionMenuView(viewModel: AttributionMenuViewModel) = vie
                 pad(8f)
 
                 scrollPane {
+                    name = "attribution-content"
                     label(attributions) {
                         wrap = true
                     }

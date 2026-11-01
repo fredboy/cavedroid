@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import ktx.scene2d.Scene2dDsl
@@ -23,6 +24,8 @@ class NavRootStage(
 
     private val stageScope = CoroutineScope(dispatcher + job)
 
+    private var renderJob: Job? = null
+
     val viewModels = mutableMapOf<NavKey, ViewModel>()
 
     private var lastTopKey: NavKey? = null
@@ -36,6 +39,7 @@ class NavRootStage(
     }
 
     override fun onStackChanged(topKey: NavKey, poppedKey: NavKey?) {
+        renderJob?.cancel()
         hideLastTopKey()
 
         if (poppedKey != null && !navBackStack.hasKey(poppedKey)) {
@@ -61,7 +65,8 @@ class NavRootStage(
     }
 
     private fun renderFun(viewModel: ViewModel, renderFun: @Scene2dDsl suspend (ViewModel) -> Unit): ViewModel {
-        stageScope.launch { renderFun(viewModel) }
+        renderJob?.cancel()
+        renderJob = stageScope.launch { renderFun(viewModel) }
         return viewModel
     }
 

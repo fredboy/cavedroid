@@ -18,12 +18,13 @@ import ktx.scene2d.label
 import ktx.scene2d.table
 import ktx.scene2d.textButton
 import ktx.scene2d.textField
+import ru.fredboy.cavedroid.common.mvvm.collectViewState
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.menuButtonsTable
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 
 @Scene2dDsl
 suspend fun Stage.newGameMenuView(viewModel: NewGameMenuViewModel) = viewModel.also {
-    viewModel.stateFlow.collect { state ->
+    collectViewState(viewModel.stateFlow) { state ->
         when (state) {
             is NewGameMenuState.Show -> rebuild(viewModel, state.isKeyboardUp)
         }
@@ -31,7 +32,6 @@ suspend fun Stage.newGameMenuView(viewModel: NewGameMenuViewModel) = viewModel.a
 }
 
 private fun Stage.rebuild(viewModel: NewGameMenuViewModel, isKeyboardUp: Boolean) {
-    clear()
     val field = if (isKeyboardUp) {
         buildKeyboardUpLayout(viewModel)
     } else {

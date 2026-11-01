@@ -16,13 +16,13 @@ import ktx.scene2d.scrollPane
 import ktx.scene2d.table
 import ktx.scene2d.textButton
 import ru.fredboy.cavedroid.common.CaveDroidConstants.MAX_SAVES_COUNT
+import ru.fredboy.cavedroid.common.mvvm.collectViewState
 import ru.fredboy.cavedroid.common.utils.ifTrue
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 
 @Scene2dDsl
 suspend fun Stage.singlePlayerMenuView(viewModel: SinglePlayerMenuViewModel) = viewModel.also {
-    viewModel.stateFlow.collect { state ->
-        clear()
+    collectViewState(viewModel.stateFlow) { state ->
         when (state) {
             is SinglePlayerMenuState.LoadingWorld -> loading(viewModel)
             is SinglePlayerMenuState.LoadingFailed -> loadingFailed(viewModel)
@@ -102,6 +102,7 @@ private fun Stage.savesList(viewModel: SinglePlayerMenuViewModel, state: SingleP
             pad(8f)
 
             scrollPane {
+                name = "singleplayer-content"
                 table {
                     state.saves.takeIf { it.isNotEmpty() }?.onEach { save ->
                         saveItem(
