@@ -78,11 +78,11 @@ class MineshaftGeneratorTest {
                 }
                 if (back[x][y] == block("chest_mineshaft")) {
                     assertEquals(air, fore[x][y])
-                    assertEquals(block("planks_oak"), fore[x][y + 1])
+                    assertEquals(block("wood_planks_oak"), fore[x][y + 1])
                 }
             }
         }
-        for (key in listOf("chest_mineshaft", "spawner", "fence_oak", "web", "ladder")) {
+        for (key in listOf("chest_mineshaft", "spawner", "wood_fence_oak", "web", "ladder")) {
             assertTrue((counts[key] ?: 0) > 0, "missing $key")
         }
         assertEquals(counts.getValue("spawner") * 2, counts.getValue("chest_mineshaft"))
@@ -99,7 +99,7 @@ class MineshaftGeneratorTest {
             for (y in fore[x].indices) {
                 if (fore[x][y] != block("torch")) continue
                 torches++
-                assertEquals(block("fence_oak"), back[x][y])
+                assertEquals(block("wood_fence_oak"), back[x][y])
                 assertTrue(spawners.all { kotlin.math.abs(it - x) > 13 })
             }
         }

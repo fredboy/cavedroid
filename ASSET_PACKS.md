@@ -88,6 +88,14 @@ controls creative inventory filtering independently of the item's `type`.
 New items without a category default to `materials`; overrides of existing items
 inherit the bundled category unless they replace it explicitly.
 
+Bundled item and block keys use family prefixes such as `armor_`, `tool_`,
+`slab_`, and `wood_`. Historical save keys are accepted during repository lookup;
+new saves use the canonical keys. Packs should use the canonical definitions
+listed in `assets/json/game_items.json`. Related texture filenames and references
+use the same family prefixes; shared textures, such as tinted leather armor,
+remain explicitly referenced by their definitions. Behavior/action IDs retain
+their existing names. The key rename inventory is recorded in `item-key-renames.csv`.
+
 ## Higher-resolution textures
 
 One block remains 16 logical pixels wide. Replacing a 16×16 image with a 32×32 or

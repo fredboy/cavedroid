@@ -24,7 +24,7 @@ class GameWorldGenerator(
     private val biomesMap by lazy { generateBiomes() }
     private val heights by lazy { generateHeights() }
 
-    private val plainsPlants = listOf("dandelion", "rose", "tallgrass")
+    private val plainsPlants = listOf("flower_dandelion", "flower_rose", "tallgrass")
     private val mushrooms = listOf("mushroom_brown", "mushroom_red")
 
     private fun generateHeights(): IntArray {
@@ -236,7 +236,7 @@ class GameWorldGenerator(
     }
 
     private fun generateOak(x: Int) {
-        val log = itemsRepository.getBlockByKey("log_oak")
+        val log = itemsRepository.getBlockByKey("wood_log_oak")
         val leaves = itemsRepository.getBlockByKey("leaves_oak")
         val h = heights[x] - 1
         val treeH = random.nextInt(5, 7)
@@ -264,7 +264,7 @@ class GameWorldGenerator(
     }
 
     private fun generateBirch(x: Int) {
-        val log = itemsRepository.getBlockByKey("log_birch")
+        val log = itemsRepository.getBlockByKey("wood_log_birch")
         val leaves = itemsRepository.getBlockByKey("leaves_birch")
         val h = heights[x] - 1
         val treeH = random.nextInt(5, 7)
@@ -292,7 +292,7 @@ class GameWorldGenerator(
     }
 
     private fun generateSpruce(x: Int) {
-        val log = itemsRepository.getBlockByKey("log_spruce")
+        val log = itemsRepository.getBlockByKey("wood_log_spruce")
         val leaves = itemsRepository.getBlockByKey("leaves_spruce")
         val h = heights[x] - 1
         val treeH = random.nextInt(7, 9)
@@ -381,13 +381,13 @@ class GameWorldGenerator(
 
     private fun generateOres() {
         val stone = itemsRepository.getBlockByKey("stone")
-        val coal = itemsRepository.getBlockByKey("coal_ore")
-        val iron = itemsRepository.getBlockByKey("iron_ore")
-        val gold = itemsRepository.getBlockByKey("gold_ore")
-        val diamond = itemsRepository.getBlockByKey("diamond_ore")
+        val coal = itemsRepository.getBlockByKey("ore_coal")
+        val iron = itemsRepository.getBlockByKey("ore_iron")
+        val gold = itemsRepository.getBlockByKey("ore_gold")
+        val diamond = itemsRepository.getBlockByKey("ore_diamond")
         val dirt = itemsRepository.getBlockByKey("dirt")
         val gravel = itemsRepository.getBlockByKey("gravel")
-        val lapis = itemsRepository.getBlockByKey("lapis_ore")
+        val lapis = itemsRepository.getBlockByKey("ore_lapis")
 
         for (x in 0..<config.width) {
             for (y in heights[x]..<config.height) {

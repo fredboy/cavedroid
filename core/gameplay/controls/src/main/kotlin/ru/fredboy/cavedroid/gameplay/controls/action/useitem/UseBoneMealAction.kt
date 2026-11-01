@@ -38,8 +38,8 @@ class UseBoneMealAction @Inject constructor(
             in SAPLING_KEYS -> {
                 if (MathUtils.randomBoolean(GROW_CHANCE)) {
                     when (key) {
-                        "sapling_oak" -> tryGrowSmallTree(x, y, "log_oak", "leaves_oak")
-                        "sapling_birch" -> tryGrowSmallTree(x, y, "log_birch", "leaves_birch")
+                        "sapling_oak" -> tryGrowSmallTree(x, y, "wood_log_oak", "leaves_oak")
+                        "sapling_birch" -> tryGrowSmallTree(x, y, "wood_log_birch", "leaves_birch")
                         "sapling_spruce" -> tryGrowSpruce(x, y)
                     }
                 }
@@ -132,7 +132,7 @@ class UseBoneMealAction @Inject constructor(
         gameWorld.resetForeMap(x, y)
 
         val leaves = getBlockByKeyUseCase["leaves_spruce"]
-        val log = getBlockByKeyUseCase["log_spruce"]
+        val log = getBlockByKeyUseCase["wood_log_spruce"]
 
         for (iy in y downTo y - 6) {
             gameWorld.setBackMap(x, iy, log)
@@ -169,7 +169,7 @@ class UseBoneMealAction @Inject constructor(
         private const val FLOWER_RADIUS = 3
         private val SAPLING_KEYS = setOf("sapling_oak", "sapling_birch", "sapling_spruce")
         private val SOIL_KEYS = setOf("dirt", "grass", "grass_snowed")
-        private val FLOWER_KEYS = listOf("dandelion", "rose", "tallgrass", "tallgrass", "tallgrass")
+        private val FLOWER_KEYS = listOf("flower_dandelion", "flower_rose", "tallgrass", "tallgrass", "tallgrass")
         private val CROP_NEXT = mapOf(
             "wheat_stage0" to "wheat_stage1",
             "wheat_stage1" to "wheat_stage2",

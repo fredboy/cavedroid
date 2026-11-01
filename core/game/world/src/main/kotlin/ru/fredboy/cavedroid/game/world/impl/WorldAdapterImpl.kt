@@ -186,14 +186,14 @@ internal class WorldAdapterImpl @Inject constructor(
         if (!isChunkLoadedAt(x)) return false
         val key = getForegroundBlock(x, bottomY).params.key
         val side = when {
-            key.startsWith("door_wood_bottom_left_") -> "left"
-            key.startsWith("door_wood_bottom_right_") -> "right"
+            key.startsWith("wood_door_bottom_left_") -> "left"
+            key.startsWith("wood_door_bottom_right_") -> "right"
             else -> return false
         }
         val oldState = if (open) "closed" else "open"
         val newState = if (open) "open" else "closed"
-        if (key != "door_wood_bottom_${side}_$oldState" ||
-            getForegroundBlock(x, bottomY - 1).params.key != "door_wood_top_${side}_$oldState"
+        if (key != "wood_door_bottom_${side}_$oldState" ||
+            getForegroundBlock(x, bottomY - 1).params.key != "wood_door_top_${side}_$oldState"
         ) {
             return false
         }
@@ -207,8 +207,8 @@ internal class WorldAdapterImpl @Inject constructor(
             }, x.toFloat(), bottomY - 1f, x + 1f, bottomY + 1f)
             if (occupied) return false
         }
-        setForegroundBlock(x, bottomY - 1, itemsRepository.getBlockByKey("door_wood_top_${side}_$newState"))
-        setForegroundBlock(x, bottomY, itemsRepository.getBlockByKey("door_wood_bottom_${side}_$newState"))
+        setForegroundBlock(x, bottomY - 1, itemsRepository.getBlockByKey("wood_door_top_${side}_$newState"))
+        setForegroundBlock(x, bottomY, itemsRepository.getBlockByKey("wood_door_bottom_${side}_$newState"))
         return true
     }
 

@@ -6,11 +6,11 @@
       "count": 1
     }]
   },
-  "planks_oak": {
+  "wood_planks_oak": {
     "recipes": [
       {
         "input": [
-          "log_oak",
+          "wood_log_oak",
           null,
           null,
           null,
@@ -25,11 +25,11 @@
       }
     ]
   },
-  "planks_spruce": {
+  "wood_planks_spruce": {
     "recipes": [
       {
         "input": [
-          "log_spruce",
+          "wood_log_spruce",
           null,
           null,
           null,
@@ -44,11 +44,11 @@
       }
     ]
   },
-  "planks_birch": {
+  "wood_planks_birch": {
     "recipes": [
       {
         "input": [
-          "log_birch",
+          "wood_log_birch",
           null,
           null,
           null,
@@ -67,10 +67,10 @@
     "recipes": [
       {
         "input": [
-          "planks.*",
+          "wood_planks.*",
           null,
           null,
-          "planks.*",
+          "wood_planks.*",
           null,
           null,
           null,
@@ -82,13 +82,13 @@
       }
     ]
   },
-  "wood_pickaxe": {
+  "tool_pickaxe_wood": {
     "recipes": [
       {
         "input": [
-          "planks.*",
-          "planks.*",
-          "planks.*",
+          "wood_planks.*",
+          "wood_planks.*",
+          "wood_planks.*",
           null,
           "stick",
           null,
@@ -101,14 +101,14 @@
       }
     ]
   },
-  "wood_axe": {
+  "tool_axe_wood": {
     "recipes": [
       {
         "input": [
-          "planks.*",
-          "planks.*",
+          "wood_planks.*",
+          "wood_planks.*",
           null,
-          "planks.*",
+          "wood_planks.*",
           "stick",
           null,
           null,
@@ -120,14 +120,14 @@
       }
     ]
   },
-  "wood_sword": {
+  "weapon_sword_wood": {
     "recipes": [
       {
         "input": [
-          "planks.*",
+          "wood_planks.*",
           null,
           null,
-          "planks.*",
+          "wood_planks.*",
           null,
           null,
           "stick",
@@ -139,11 +139,11 @@
       }
     ]
   },
-  "wood_shovel": {
+  "tool_shovel_wood": {
     "recipes": [
       {
         "input": [
-          "planks.*",
+          "wood_planks.*",
           null,
           null,
           "stick",
@@ -158,7 +158,7 @@
       }
     ]
   },
-  "stone_pickaxe": {
+  "tool_pickaxe_stone": {
     "recipes": [
       {
         "input": [
@@ -177,7 +177,7 @@
       }
     ]
   },
-  "stone_axe": {
+  "tool_axe_stone": {
     "recipes": [
       {
         "input": [
@@ -196,33 +196,14 @@
       }
     ]
   },
-  "stone_sword": {
-    "recipes": [
-      {
-        "input": [
-          "cobblestone",
-          null,
-          null,
-          "cobblestone",
-          null,
-          null,
-          "stick",
-          null,
-          null
-        ],
-        "shapeless": false,
-        "count": 1
-      }
-    ]
-  },
-  "stone_shovel": {
+  "weapon_sword_stone": {
     "recipes": [
       {
         "input": [
           "cobblestone",
           null,
           null,
-          "stick",
+          "cobblestone",
           null,
           null,
           "stick",
@@ -234,18 +215,18 @@
       }
     ]
   },
-  "iron_pickaxe": {
+  "tool_shovel_stone": {
     "recipes": [
       {
         "input": [
-          "iron_ingot",
-          "iron_ingot",
-          "iron_ingot",
-          null,
-          "stick",
+          "cobblestone",
           null,
           null,
           "stick",
+          null,
+          null,
+          "stick",
+          null,
           null
         ],
         "shapeless": false,
@@ -253,14 +234,14 @@
       }
     ]
   },
-  "iron_axe": {
+  "tool_pickaxe_iron": {
     "recipes": [
       {
         "input": [
-          "iron_ingot",
-          "iron_ingot",
+          "ingot_iron",
+          "ingot_iron",
+          "ingot_iron",
           null,
-          "iron_ingot",
           "stick",
           null,
           null,
@@ -272,18 +253,18 @@
       }
     ]
   },
-  "iron_sword": {
+  "tool_axe_iron": {
     "recipes": [
       {
         "input": [
-          "iron_ingot",
+          "ingot_iron",
+          "ingot_iron",
           null,
-          null,
-          "iron_ingot",
+          "ingot_iron",
+          "stick",
           null,
           null,
           "stick",
-          null,
           null
         ],
         "shapeless": false,
@@ -291,14 +272,14 @@
       }
     ]
   },
-  "iron_shovel": {
+  "weapon_sword_iron": {
     "recipes": [
       {
         "input": [
-          "iron_ingot",
+          "ingot_iron",
           null,
           null,
-          "stick",
+          "ingot_iron",
           null,
           null,
           "stick",
@@ -310,18 +291,18 @@
       }
     ]
   },
-  "gold_pickaxe": {
+  "tool_shovel_iron": {
     "recipes": [
       {
         "input": [
-          "gold_ingot",
-          "gold_ingot",
-          "gold_ingot",
-          null,
-          "stick",
+          "ingot_iron",
           null,
           null,
           "stick",
+          null,
+          null,
+          "stick",
+          null,
           null
         ],
         "shapeless": false,
@@ -329,14 +310,14 @@
       }
     ]
   },
-  "gold_axe": {
+  "tool_pickaxe_gold": {
     "recipes": [
       {
         "input": [
-          "gold_ingot",
-          "gold_ingot",
+          "ingot_gold",
+          "ingot_gold",
+          "ingot_gold",
           null,
-          "gold_ingot",
           "stick",
           null,
           null,
@@ -348,18 +329,18 @@
       }
     ]
   },
-  "gold_sword": {
+  "tool_axe_gold": {
     "recipes": [
       {
         "input": [
-          "gold_ingot",
+          "ingot_gold",
+          "ingot_gold",
           null,
-          null,
-          "gold_ingot",
+          "ingot_gold",
+          "stick",
           null,
           null,
           "stick",
-          null,
           null
         ],
         "shapeless": false,
@@ -367,11 +348,30 @@
       }
     ]
   },
-  "gold_shovel": {
+  "weapon_sword_gold": {
     "recipes": [
       {
         "input": [
-          "gold_ingot",
+          "ingot_gold",
+          null,
+          null,
+          "ingot_gold",
+          null,
+          null,
+          "stick",
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "tool_shovel_gold": {
+    "recipes": [
+      {
+        "input": [
+          "ingot_gold",
           null,
           null,
           "stick",
@@ -386,7 +386,7 @@
       }
     ]
   },
-  "diamond_pickaxe": {
+  "tool_pickaxe_diamond": {
     "recipes": [
       {
         "input": [
@@ -405,7 +405,7 @@
       }
     ]
   },
-  "diamond_axe": {
+  "tool_axe_diamond": {
     "recipes": [
       {
         "input": [
@@ -424,7 +424,7 @@
       }
     ]
   },
-  "diamond_sword": {
+  "weapon_sword_diamond": {
     "recipes": [
       {
         "input": [
@@ -443,7 +443,7 @@
       }
     ]
   },
-  "diamond_shovel": {
+  "tool_shovel_diamond": {
     "recipes": [
       {
         "input": [
@@ -485,11 +485,11 @@
     "recipes": [
       {
         "input": [
-          "planks.*",
-          "planks.*",
+          "wood_planks.*",
+          "wood_planks.*",
           null,
-          "planks.*",
-          "planks.*",
+          "wood_planks.*",
+          "wood_planks.*",
           null,
           null,
           null,
@@ -523,15 +523,15 @@
     "recipes": [
       {
         "input": [
-          "planks_.*",
-          "planks_.*",
-          "planks_.*",
-          "planks_.*",
+          "wood_planks_.*",
+          "wood_planks_.*",
+          "wood_planks_.*",
+          "wood_planks_.*",
           null,
-          "planks_.*",
-          "planks_.*",
-          "planks_.*",
-          "planks_.*"
+          "wood_planks_.*",
+          "wood_planks_.*",
+          "wood_planks_.*",
+          "wood_planks_.*"
         ],
         "shapeless": false,
         "count": 1
@@ -545,9 +545,9 @@
           "wool_.*",
           "wool_.*",
           "wool_.*",
-          "planks_.*",
-          "planks_.*",
-          "planks_.*",
+          "wood_planks_.*",
+          "wood_planks_.*",
+          "wood_planks_.*",
           null,
           null,
           null
@@ -576,15 +576,15 @@
       }
     ]
   },
-  "shears": {
+  "tool_shears": {
     "recipes": [
       {
         "input": [
-          "iron_ingot",
+          "ingot_iron",
           null,
           null,
           null,
-          "iron_ingot",
+          "ingot_iron",
           null,
           null,
           null,
@@ -599,11 +599,11 @@
     "recipes": [
       {
         "input": [
-          "iron_ingot",
+          "ingot_iron",
           null,
-          "iron_ingot",
+          "ingot_iron",
           null,
-          "iron_ingot",
+          "ingot_iron",
           null,
           null,
           null,
@@ -614,7 +614,7 @@
       }
     ]
   },
-  "stone_slab": {
+  "slab_stone": {
     "recipes": [
       {
         "input": [
@@ -633,7 +633,7 @@
       }
     ]
   },
-  "sandstone_slab": {
+  "slab_sandstone": {
     "recipes": [
       {
         "input": [
@@ -652,13 +652,13 @@
       }
     ]
   },
-  "oak_slab": {
+  "slab_wood_oak": {
     "recipes": [
       {
         "input": [
-          "planks_oak",
-          "planks_oak",
-          "planks_oak",
+          "wood_planks_oak",
+          "wood_planks_oak",
+          "wood_planks_oak",
           null,
           null,
           null,
@@ -671,13 +671,13 @@
       }
     ]
   },
-  "spruce_slab": {
+  "slab_wood_spruce": {
     "recipes": [
       {
         "input": [
-          "planks_spruce",
-          "planks_spruce",
-          "planks_spruce",
+          "wood_planks_spruce",
+          "wood_planks_spruce",
+          "wood_planks_spruce",
           null,
           null,
           null,
@@ -690,13 +690,13 @@
       }
     ]
   },
-  "birch_slab": {
+  "slab_wood_birch": {
     "recipes": [
       {
         "input": [
-          "planks_birch",
-          "planks_birch",
-          "planks_birch",
+          "wood_planks_birch",
+          "wood_planks_birch",
+          "wood_planks_birch",
           null,
           null,
           null,
@@ -709,7 +709,7 @@
       }
     ]
   },
-  "cobblestone_slab": {
+  "slab_cobblestone": {
     "recipes": [
       {
         "input": [
@@ -728,7 +728,7 @@
       }
     ]
   },
-  "brick_slab": {
+  "slab_brick": {
     "recipes": [
       {
         "input": [
@@ -766,7 +766,7 @@
       }
     ]
   },
-  "stonebrick_slab": {
+  "slab_stonebrick": {
     "recipes": [
       {
         "input": [
@@ -804,18 +804,18 @@
       }
     ]
   },
-  "door_wood": {
+  "wood_door": {
     "recipes": [
       {
         "input": [
-          "planks.*",
-          "planks.*",
+          "wood_planks.*",
+          "wood_planks.*",
           null,
-          "planks.*",
-          "planks.*",
+          "wood_planks.*",
+          "wood_planks.*",
           null,
-          "planks.*",
-          "planks.*",
+          "wood_planks.*",
+          "wood_planks.*",
           null
         ],
         "shapeless": false,
@@ -823,7 +823,7 @@
       }
     ]
   },
-  "lapis_block": {
+  "storage_block_lapis": {
     "recipes": [
       {
         "input": [
@@ -846,7 +846,7 @@
     "recipes": [
       {
         "input": [
-          "lapis_block",
+          "storage_block_lapis",
           null,
           null,
           null,
@@ -861,30 +861,30 @@
       }
     ]
   },
-  "gold_block": {
+  "storage_block_gold": {
     "recipes": [
       {
         "input": [
-          "gold_ingot",
-          "gold_ingot",
-          "gold_ingot",
-          "gold_ingot",
-          "gold_ingot",
-          "gold_ingot",
-          "gold_ingot",
-          "gold_ingot",
-          "gold_ingot"
+          "ingot_gold",
+          "ingot_gold",
+          "ingot_gold",
+          "ingot_gold",
+          "ingot_gold",
+          "ingot_gold",
+          "ingot_gold",
+          "ingot_gold",
+          "ingot_gold"
         ],
         "shapeless": false,
         "count": 1
       }
     ]
   },
-  "gold_ingot": {
+  "ingot_gold": {
     "recipes": [
       {
         "input": [
-          "gold_block",
+          "storage_block_gold",
           null,
           null,
           null,
@@ -899,45 +899,45 @@
       },
       {
         "input": [
-          "gold_nugget",
-          "gold_nugget",
-          "gold_nugget",
-          "gold_nugget",
-          "gold_nugget",
-          "gold_nugget",
-          "gold_nugget",
-          "gold_nugget",
-          "gold_nugget"
+          "nugget_gold",
+          "nugget_gold",
+          "nugget_gold",
+          "nugget_gold",
+          "nugget_gold",
+          "nugget_gold",
+          "nugget_gold",
+          "nugget_gold",
+          "nugget_gold"
         ],
         "shapeless": false,
         "count": 1
       }
     ]
   },
-  "iron_block": {
+  "storage_block_iron": {
     "recipes": [
       {
         "input": [
-          "iron_ingot",
-          "iron_ingot",
-          "iron_ingot",
-          "iron_ingot",
-          "iron_ingot",
-          "iron_ingot",
-          "iron_ingot",
-          "iron_ingot",
-          "iron_ingot"
+          "ingot_iron",
+          "ingot_iron",
+          "ingot_iron",
+          "ingot_iron",
+          "ingot_iron",
+          "ingot_iron",
+          "ingot_iron",
+          "ingot_iron",
+          "ingot_iron"
         ],
         "shapeless": false,
         "count": 1
       }
     ]
   },
-  "iron_ingot": {
+  "ingot_iron": {
     "recipes": [
       {
         "input": [
-          "iron_block",
+          "storage_block_iron",
           null,
           null,
           null,
@@ -952,30 +952,30 @@
       }
     ]
   },
-  "raw_iron_block": {
+  "storage_block_raw_iron": {
     "recipes": [
       {
         "input": [
-          "iron_raw",
-          "iron_raw",
-          "iron_raw",
-          "iron_raw",
-          "iron_raw",
-          "iron_raw",
-          "iron_raw",
-          "iron_raw",
-          "iron_raw"
+          "raw_iron",
+          "raw_iron",
+          "raw_iron",
+          "raw_iron",
+          "raw_iron",
+          "raw_iron",
+          "raw_iron",
+          "raw_iron",
+          "raw_iron"
         ],
         "shapeless": false,
         "count": 1
       }
     ]
   },
-  "iron_raw": {
+  "raw_iron": {
     "recipes": [
       {
         "input": [
-          "raw_iron_block",
+          "storage_block_raw_iron",
           null,
           null,
           null,
@@ -990,30 +990,30 @@
       }
     ]
   },
-  "raw_gold_block": {
+  "storage_block_raw_gold": {
     "recipes": [
       {
         "input": [
-          "gold_raw",
-          "gold_raw",
-          "gold_raw",
-          "gold_raw",
-          "gold_raw",
-          "gold_raw",
-          "gold_raw",
-          "gold_raw",
-          "gold_raw"
+          "raw_gold",
+          "raw_gold",
+          "raw_gold",
+          "raw_gold",
+          "raw_gold",
+          "raw_gold",
+          "raw_gold",
+          "raw_gold",
+          "raw_gold"
         ],
         "shapeless": false,
         "count": 1
       }
     ]
   },
-  "gold_raw": {
+  "raw_gold": {
     "recipes": [
       {
         "input": [
-          "raw_gold_block",
+          "storage_block_raw_gold",
           null,
           null,
           null,
@@ -1028,7 +1028,7 @@
       }
     ]
   },
-  "coal_block": {
+  "storage_block_coal": {
     "recipes": [
       {
         "input": [
@@ -1051,7 +1051,7 @@
     "recipes": [
       {
         "input": [
-          "coal_block",
+          "storage_block_coal",
           null,
           null,
           null,
@@ -1066,7 +1066,7 @@
       }
     ]
   },
-  "diamond_block": {
+  "storage_block_diamond": {
     "recipes": [
       {
         "input": [
@@ -1089,7 +1089,7 @@
     "recipes": [
       {
         "input": [
-          "diamond_block",
+          "storage_block_diamond",
           null,
           null,
           null,
@@ -1104,16 +1104,16 @@
       }
     ]
   },
-  "trapdoor_wood_open": {
+  "wood_trapdoor_open": {
     "recipes": [
       {
         "input": [
-          "planks.*",
-          "planks.*",
-          "planks.*",
-          "planks.*",
-          "planks.*",
-          "planks.*",
+          "wood_planks.*",
+          "wood_planks.*",
+          "wood_planks.*",
+          "wood_planks.*",
+          "wood_planks.*",
+          "wood_planks.*",
           null,
           null,
           null
@@ -1146,11 +1146,11 @@
     "recipes": [
       {
         "input": [
-          "planks.*",
+          "wood_planks.*",
           null,
-          "planks.*",
+          "wood_planks.*",
           null,
-          "planks.*",
+          "wood_planks.*",
           null,
           null,
           null,
@@ -1199,7 +1199,7 @@
       }
     ]
   },
-  "bow": {
+  "weapon_bow": {
     "recipes": [
       {
         "input": [
@@ -1336,7 +1336,7 @@
     "recipes": [
       {
         "input": [
-          "rose",
+          "flower_rose",
           null,
           null,
           null,
@@ -1355,7 +1355,7 @@
     "recipes": [
       {
         "input": [
-          "dandelion",
+          "flower_dandelion",
           null,
           null,
           null,
@@ -1872,7 +1872,7 @@
       }
     ]
   },
-  "helmet_leather_brown": {
+  "armor_helmet_leather_brown": {
     "recipes": [
       {
         "input": [
@@ -1891,7 +1891,7 @@
       },
       {
         "input": [
-          "helmet_leather_.*",
+          "armor_helmet_leather_.*",
           "dye_brown",
           null,
           null,
@@ -1907,7 +1907,7 @@
       }
     ]
   },
-  "chestplate_leather_brown": {
+  "armor_chestplate_leather_brown": {
     "recipes": [
       {
         "input": [
@@ -1926,7 +1926,7 @@
       },
       {
         "input": [
-          "chestplate_leather_.*",
+          "armor_chestplate_leather_.*",
           "dye_brown",
           null,
           null,
@@ -1942,7 +1942,7 @@
       }
     ]
   },
-  "leggings_leather_brown": {
+  "armor_leggings_leather_brown": {
     "recipes": [
       {
         "input": [
@@ -1961,7 +1961,7 @@
       },
       {
         "input": [
-          "leggings_leather_.*",
+          "armor_leggings_leather_.*",
           "dye_brown",
           null,
           null,
@@ -1977,7 +1977,7 @@
       }
     ]
   },
-  "boots_leather_brown": {
+  "armor_boots_leather_brown": {
     "recipes": [
       {
         "input": [
@@ -1996,7 +1996,7 @@
       },
       {
         "input": [
-          "boots_leather_.*",
+          "armor_boots_leather_.*",
           "dye_brown",
           null,
           null,
@@ -2012,11 +2012,11 @@
       }
     ]
   },
-  "helmet_leather_white": {
+  "armor_helmet_leather_white": {
     "recipes": [
       {
         "input": [
-          "helmet_leather_.*",
+          "armor_helmet_leather_.*",
           "dye_white",
           null,
           null,
@@ -2032,11 +2032,11 @@
       }
     ]
   },
-  "helmet_leather_black": {
+  "armor_helmet_leather_black": {
     "recipes": [
       {
         "input": [
-          "helmet_leather_.*",
+          "armor_helmet_leather_.*",
           "dye_black",
           null,
           null,
@@ -2052,11 +2052,11 @@
       }
     ]
   },
-  "helmet_leather_gray": {
+  "armor_helmet_leather_gray": {
     "recipes": [
       {
         "input": [
-          "helmet_leather_.*",
+          "armor_helmet_leather_.*",
           "dye_gray",
           null,
           null,
@@ -2072,11 +2072,11 @@
       }
     ]
   },
-  "helmet_leather_light_gray": {
+  "armor_helmet_leather_light_gray": {
     "recipes": [
       {
         "input": [
-          "helmet_leather_.*",
+          "armor_helmet_leather_.*",
           "dye_light_gray",
           null,
           null,
@@ -2092,11 +2092,11 @@
       }
     ]
   },
-  "helmet_leather_red": {
+  "armor_helmet_leather_red": {
     "recipes": [
       {
         "input": [
-          "helmet_leather_.*",
+          "armor_helmet_leather_.*",
           "dye_red",
           null,
           null,
@@ -2112,11 +2112,11 @@
       }
     ]
   },
-  "helmet_leather_orange": {
+  "armor_helmet_leather_orange": {
     "recipes": [
       {
         "input": [
-          "helmet_leather_.*",
+          "armor_helmet_leather_.*",
           "dye_orange",
           null,
           null,
@@ -2132,11 +2132,11 @@
       }
     ]
   },
-  "helmet_leather_yellow": {
+  "armor_helmet_leather_yellow": {
     "recipes": [
       {
         "input": [
-          "helmet_leather_.*",
+          "armor_helmet_leather_.*",
           "dye_yellow",
           null,
           null,
@@ -2152,11 +2152,11 @@
       }
     ]
   },
-  "helmet_leather_lime": {
+  "armor_helmet_leather_lime": {
     "recipes": [
       {
         "input": [
-          "helmet_leather_.*",
+          "armor_helmet_leather_.*",
           "dye_lime",
           null,
           null,
@@ -2172,11 +2172,11 @@
       }
     ]
   },
-  "helmet_leather_green": {
+  "armor_helmet_leather_green": {
     "recipes": [
       {
         "input": [
-          "helmet_leather_.*",
+          "armor_helmet_leather_.*",
           "dye_green",
           null,
           null,
@@ -2192,11 +2192,11 @@
       }
     ]
   },
-  "helmet_leather_cyan": {
+  "armor_helmet_leather_cyan": {
     "recipes": [
       {
         "input": [
-          "helmet_leather_.*",
+          "armor_helmet_leather_.*",
           "dye_cyan",
           null,
           null,
@@ -2212,11 +2212,11 @@
       }
     ]
   },
-  "helmet_leather_light_blue": {
+  "armor_helmet_leather_light_blue": {
     "recipes": [
       {
         "input": [
-          "helmet_leather_.*",
+          "armor_helmet_leather_.*",
           "dye_light_blue",
           null,
           null,
@@ -2232,11 +2232,11 @@
       }
     ]
   },
-  "helmet_leather_blue": {
+  "armor_helmet_leather_blue": {
     "recipes": [
       {
         "input": [
-          "helmet_leather_.*",
+          "armor_helmet_leather_.*",
           "dye_blue",
           null,
           null,
@@ -2252,11 +2252,11 @@
       }
     ]
   },
-  "helmet_leather_purple": {
+  "armor_helmet_leather_purple": {
     "recipes": [
       {
         "input": [
-          "helmet_leather_.*",
+          "armor_helmet_leather_.*",
           "dye_purple",
           null,
           null,
@@ -2272,11 +2272,11 @@
       }
     ]
   },
-  "helmet_leather_magenta": {
+  "armor_helmet_leather_magenta": {
     "recipes": [
       {
         "input": [
-          "helmet_leather_.*",
+          "armor_helmet_leather_.*",
           "dye_magenta",
           null,
           null,
@@ -2292,11 +2292,11 @@
       }
     ]
   },
-  "helmet_leather_pink": {
+  "armor_helmet_leather_pink": {
     "recipes": [
       {
         "input": [
-          "helmet_leather_.*",
+          "armor_helmet_leather_.*",
           "dye_pink",
           null,
           null,
@@ -2312,11 +2312,11 @@
       }
     ]
   },
-  "chestplate_leather_white": {
+  "armor_chestplate_leather_white": {
     "recipes": [
       {
         "input": [
-          "chestplate_leather_.*",
+          "armor_chestplate_leather_.*",
           "dye_white",
           null,
           null,
@@ -2332,11 +2332,11 @@
       }
     ]
   },
-  "chestplate_leather_black": {
+  "armor_chestplate_leather_black": {
     "recipes": [
       {
         "input": [
-          "chestplate_leather_.*",
+          "armor_chestplate_leather_.*",
           "dye_black",
           null,
           null,
@@ -2352,11 +2352,11 @@
       }
     ]
   },
-  "chestplate_leather_gray": {
+  "armor_chestplate_leather_gray": {
     "recipes": [
       {
         "input": [
-          "chestplate_leather_.*",
+          "armor_chestplate_leather_.*",
           "dye_gray",
           null,
           null,
@@ -2372,11 +2372,11 @@
       }
     ]
   },
-  "chestplate_leather_light_gray": {
+  "armor_chestplate_leather_light_gray": {
     "recipes": [
       {
         "input": [
-          "chestplate_leather_.*",
+          "armor_chestplate_leather_.*",
           "dye_light_gray",
           null,
           null,
@@ -2392,11 +2392,11 @@
       }
     ]
   },
-  "chestplate_leather_red": {
+  "armor_chestplate_leather_red": {
     "recipes": [
       {
         "input": [
-          "chestplate_leather_.*",
+          "armor_chestplate_leather_.*",
           "dye_red",
           null,
           null,
@@ -2412,11 +2412,11 @@
       }
     ]
   },
-  "chestplate_leather_orange": {
+  "armor_chestplate_leather_orange": {
     "recipes": [
       {
         "input": [
-          "chestplate_leather_.*",
+          "armor_chestplate_leather_.*",
           "dye_orange",
           null,
           null,
@@ -2432,11 +2432,11 @@
       }
     ]
   },
-  "chestplate_leather_yellow": {
+  "armor_chestplate_leather_yellow": {
     "recipes": [
       {
         "input": [
-          "chestplate_leather_.*",
+          "armor_chestplate_leather_.*",
           "dye_yellow",
           null,
           null,
@@ -2452,11 +2452,11 @@
       }
     ]
   },
-  "chestplate_leather_lime": {
+  "armor_chestplate_leather_lime": {
     "recipes": [
       {
         "input": [
-          "chestplate_leather_.*",
+          "armor_chestplate_leather_.*",
           "dye_lime",
           null,
           null,
@@ -2472,11 +2472,11 @@
       }
     ]
   },
-  "chestplate_leather_green": {
+  "armor_chestplate_leather_green": {
     "recipes": [
       {
         "input": [
-          "chestplate_leather_.*",
+          "armor_chestplate_leather_.*",
           "dye_green",
           null,
           null,
@@ -2492,11 +2492,11 @@
       }
     ]
   },
-  "chestplate_leather_cyan": {
+  "armor_chestplate_leather_cyan": {
     "recipes": [
       {
         "input": [
-          "chestplate_leather_.*",
+          "armor_chestplate_leather_.*",
           "dye_cyan",
           null,
           null,
@@ -2512,11 +2512,11 @@
       }
     ]
   },
-  "chestplate_leather_light_blue": {
+  "armor_chestplate_leather_light_blue": {
     "recipes": [
       {
         "input": [
-          "chestplate_leather_.*",
+          "armor_chestplate_leather_.*",
           "dye_light_blue",
           null,
           null,
@@ -2532,11 +2532,11 @@
       }
     ]
   },
-  "chestplate_leather_blue": {
+  "armor_chestplate_leather_blue": {
     "recipes": [
       {
         "input": [
-          "chestplate_leather_.*",
+          "armor_chestplate_leather_.*",
           "dye_blue",
           null,
           null,
@@ -2552,11 +2552,11 @@
       }
     ]
   },
-  "chestplate_leather_purple": {
+  "armor_chestplate_leather_purple": {
     "recipes": [
       {
         "input": [
-          "chestplate_leather_.*",
+          "armor_chestplate_leather_.*",
           "dye_purple",
           null,
           null,
@@ -2572,11 +2572,11 @@
       }
     ]
   },
-  "chestplate_leather_magenta": {
+  "armor_chestplate_leather_magenta": {
     "recipes": [
       {
         "input": [
-          "chestplate_leather_.*",
+          "armor_chestplate_leather_.*",
           "dye_magenta",
           null,
           null,
@@ -2592,11 +2592,11 @@
       }
     ]
   },
-  "chestplate_leather_pink": {
+  "armor_chestplate_leather_pink": {
     "recipes": [
       {
         "input": [
-          "chestplate_leather_.*",
+          "armor_chestplate_leather_.*",
           "dye_pink",
           null,
           null,
@@ -2612,11 +2612,11 @@
       }
     ]
   },
-  "leggings_leather_white": {
+  "armor_leggings_leather_white": {
     "recipes": [
       {
         "input": [
-          "leggings_leather_.*",
+          "armor_leggings_leather_.*",
           "dye_white",
           null,
           null,
@@ -2632,11 +2632,11 @@
       }
     ]
   },
-  "leggings_leather_black": {
+  "armor_leggings_leather_black": {
     "recipes": [
       {
         "input": [
-          "leggings_leather_.*",
+          "armor_leggings_leather_.*",
           "dye_black",
           null,
           null,
@@ -2652,11 +2652,11 @@
       }
     ]
   },
-  "leggings_leather_gray": {
+  "armor_leggings_leather_gray": {
     "recipes": [
       {
         "input": [
-          "leggings_leather_.*",
+          "armor_leggings_leather_.*",
           "dye_gray",
           null,
           null,
@@ -2672,11 +2672,11 @@
       }
     ]
   },
-  "leggings_leather_light_gray": {
+  "armor_leggings_leather_light_gray": {
     "recipes": [
       {
         "input": [
-          "leggings_leather_.*",
+          "armor_leggings_leather_.*",
           "dye_light_gray",
           null,
           null,
@@ -2692,11 +2692,11 @@
       }
     ]
   },
-  "leggings_leather_red": {
+  "armor_leggings_leather_red": {
     "recipes": [
       {
         "input": [
-          "leggings_leather_.*",
+          "armor_leggings_leather_.*",
           "dye_red",
           null,
           null,
@@ -2712,11 +2712,11 @@
       }
     ]
   },
-  "leggings_leather_orange": {
+  "armor_leggings_leather_orange": {
     "recipes": [
       {
         "input": [
-          "leggings_leather_.*",
+          "armor_leggings_leather_.*",
           "dye_orange",
           null,
           null,
@@ -2732,11 +2732,11 @@
       }
     ]
   },
-  "leggings_leather_yellow": {
+  "armor_leggings_leather_yellow": {
     "recipes": [
       {
         "input": [
-          "leggings_leather_.*",
+          "armor_leggings_leather_.*",
           "dye_yellow",
           null,
           null,
@@ -2752,11 +2752,11 @@
       }
     ]
   },
-  "leggings_leather_lime": {
+  "armor_leggings_leather_lime": {
     "recipes": [
       {
         "input": [
-          "leggings_leather_.*",
+          "armor_leggings_leather_.*",
           "dye_lime",
           null,
           null,
@@ -2772,11 +2772,11 @@
       }
     ]
   },
-  "leggings_leather_green": {
+  "armor_leggings_leather_green": {
     "recipes": [
       {
         "input": [
-          "leggings_leather_.*",
+          "armor_leggings_leather_.*",
           "dye_green",
           null,
           null,
@@ -2792,11 +2792,11 @@
       }
     ]
   },
-  "leggings_leather_cyan": {
+  "armor_leggings_leather_cyan": {
     "recipes": [
       {
         "input": [
-          "leggings_leather_.*",
+          "armor_leggings_leather_.*",
           "dye_cyan",
           null,
           null,
@@ -2812,11 +2812,11 @@
       }
     ]
   },
-  "leggings_leather_light_blue": {
+  "armor_leggings_leather_light_blue": {
     "recipes": [
       {
         "input": [
-          "leggings_leather_.*",
+          "armor_leggings_leather_.*",
           "dye_light_blue",
           null,
           null,
@@ -2832,11 +2832,11 @@
       }
     ]
   },
-  "leggings_leather_blue": {
+  "armor_leggings_leather_blue": {
     "recipes": [
       {
         "input": [
-          "leggings_leather_.*",
+          "armor_leggings_leather_.*",
           "dye_blue",
           null,
           null,
@@ -2852,11 +2852,11 @@
       }
     ]
   },
-  "leggings_leather_purple": {
+  "armor_leggings_leather_purple": {
     "recipes": [
       {
         "input": [
-          "leggings_leather_.*",
+          "armor_leggings_leather_.*",
           "dye_purple",
           null,
           null,
@@ -2872,11 +2872,11 @@
       }
     ]
   },
-  "leggings_leather_magenta": {
+  "armor_leggings_leather_magenta": {
     "recipes": [
       {
         "input": [
-          "leggings_leather_.*",
+          "armor_leggings_leather_.*",
           "dye_magenta",
           null,
           null,
@@ -2892,11 +2892,11 @@
       }
     ]
   },
-  "leggings_leather_pink": {
+  "armor_leggings_leather_pink": {
     "recipes": [
       {
         "input": [
-          "leggings_leather_.*",
+          "armor_leggings_leather_.*",
           "dye_pink",
           null,
           null,
@@ -2912,11 +2912,11 @@
       }
     ]
   },
-  "boots_leather_white": {
+  "armor_boots_leather_white": {
     "recipes": [
       {
         "input": [
-          "boots_leather_.*",
+          "armor_boots_leather_.*",
           "dye_white",
           null,
           null,
@@ -2932,11 +2932,11 @@
       }
     ]
   },
-  "boots_leather_black": {
+  "armor_boots_leather_black": {
     "recipes": [
       {
         "input": [
-          "boots_leather_.*",
+          "armor_boots_leather_.*",
           "dye_black",
           null,
           null,
@@ -2952,11 +2952,11 @@
       }
     ]
   },
-  "boots_leather_gray": {
+  "armor_boots_leather_gray": {
     "recipes": [
       {
         "input": [
-          "boots_leather_.*",
+          "armor_boots_leather_.*",
           "dye_gray",
           null,
           null,
@@ -2972,11 +2972,11 @@
       }
     ]
   },
-  "boots_leather_light_gray": {
+  "armor_boots_leather_light_gray": {
     "recipes": [
       {
         "input": [
-          "boots_leather_.*",
+          "armor_boots_leather_.*",
           "dye_light_gray",
           null,
           null,
@@ -2992,11 +2992,11 @@
       }
     ]
   },
-  "boots_leather_red": {
+  "armor_boots_leather_red": {
     "recipes": [
       {
         "input": [
-          "boots_leather_.*",
+          "armor_boots_leather_.*",
           "dye_red",
           null,
           null,
@@ -3012,11 +3012,11 @@
       }
     ]
   },
-  "boots_leather_orange": {
+  "armor_boots_leather_orange": {
     "recipes": [
       {
         "input": [
-          "boots_leather_.*",
+          "armor_boots_leather_.*",
           "dye_orange",
           null,
           null,
@@ -3032,11 +3032,11 @@
       }
     ]
   },
-  "boots_leather_yellow": {
+  "armor_boots_leather_yellow": {
     "recipes": [
       {
         "input": [
-          "boots_leather_.*",
+          "armor_boots_leather_.*",
           "dye_yellow",
           null,
           null,
@@ -3052,11 +3052,11 @@
       }
     ]
   },
-  "boots_leather_lime": {
+  "armor_boots_leather_lime": {
     "recipes": [
       {
         "input": [
-          "boots_leather_.*",
+          "armor_boots_leather_.*",
           "dye_lime",
           null,
           null,
@@ -3072,11 +3072,11 @@
       }
     ]
   },
-  "boots_leather_green": {
+  "armor_boots_leather_green": {
     "recipes": [
       {
         "input": [
-          "boots_leather_.*",
+          "armor_boots_leather_.*",
           "dye_green",
           null,
           null,
@@ -3092,11 +3092,11 @@
       }
     ]
   },
-  "boots_leather_cyan": {
+  "armor_boots_leather_cyan": {
     "recipes": [
       {
         "input": [
-          "boots_leather_.*",
+          "armor_boots_leather_.*",
           "dye_cyan",
           null,
           null,
@@ -3112,11 +3112,11 @@
       }
     ]
   },
-  "boots_leather_light_blue": {
+  "armor_boots_leather_light_blue": {
     "recipes": [
       {
         "input": [
-          "boots_leather_.*",
+          "armor_boots_leather_.*",
           "dye_light_blue",
           null,
           null,
@@ -3132,11 +3132,11 @@
       }
     ]
   },
-  "boots_leather_blue": {
+  "armor_boots_leather_blue": {
     "recipes": [
       {
         "input": [
-          "boots_leather_.*",
+          "armor_boots_leather_.*",
           "dye_blue",
           null,
           null,
@@ -3152,11 +3152,11 @@
       }
     ]
   },
-  "boots_leather_purple": {
+  "armor_boots_leather_purple": {
     "recipes": [
       {
         "input": [
-          "boots_leather_.*",
+          "armor_boots_leather_.*",
           "dye_purple",
           null,
           null,
@@ -3172,11 +3172,11 @@
       }
     ]
   },
-  "boots_leather_magenta": {
+  "armor_boots_leather_magenta": {
     "recipes": [
       {
         "input": [
-          "boots_leather_.*",
+          "armor_boots_leather_.*",
           "dye_magenta",
           null,
           null,
@@ -3192,11 +3192,11 @@
       }
     ]
   },
-  "boots_leather_pink": {
+  "armor_boots_leather_pink": {
     "recipes": [
       {
         "input": [
-          "boots_leather_.*",
+          "armor_boots_leather_.*",
           "dye_pink",
           null,
           null,
@@ -3212,16 +3212,16 @@
       }
     ]
   },
-  "helmet_iron": {
+  "armor_helmet_iron": {
     "recipes": [
       {
         "input": [
-          "iron_ingot",
-          "iron_ingot",
-          "iron_ingot",
-          "iron_ingot",
+          "ingot_iron",
+          "ingot_iron",
+          "ingot_iron",
+          "ingot_iron",
           null,
-          "iron_ingot",
+          "ingot_iron",
           null,
           null,
           null
@@ -3231,54 +3231,54 @@
       }
     ]
   },
-  "chestplate_iron": {
+  "armor_chestplate_iron": {
     "recipes": [
       {
         "input": [
-          "iron_ingot",
+          "ingot_iron",
           null,
-          "iron_ingot",
-          "iron_ingot",
-          "iron_ingot",
-          "iron_ingot",
-          "iron_ingot",
-          "iron_ingot",
-          "iron_ingot"
+          "ingot_iron",
+          "ingot_iron",
+          "ingot_iron",
+          "ingot_iron",
+          "ingot_iron",
+          "ingot_iron",
+          "ingot_iron"
         ],
         "shapeless": false,
         "count": 1
       }
     ]
   },
-  "leggings_iron": {
+  "armor_leggings_iron": {
     "recipes": [
       {
         "input": [
-          "iron_ingot",
-          "iron_ingot",
-          "iron_ingot",
-          "iron_ingot",
+          "ingot_iron",
+          "ingot_iron",
+          "ingot_iron",
+          "ingot_iron",
           null,
-          "iron_ingot",
-          "iron_ingot",
+          "ingot_iron",
+          "ingot_iron",
           null,
-          "iron_ingot"
+          "ingot_iron"
         ],
         "shapeless": false,
         "count": 1
       }
     ]
   },
-  "boots_iron": {
+  "armor_boots_iron": {
     "recipes": [
       {
         "input": [
-          "iron_ingot",
+          "ingot_iron",
           null,
-          "iron_ingot",
-          "iron_ingot",
+          "ingot_iron",
+          "ingot_iron",
           null,
-          "iron_ingot",
+          "ingot_iron",
           null,
           null,
           null
@@ -3288,7 +3288,7 @@
       }
     ]
   },
-  "helmet_diamond": {
+  "armor_helmet_diamond": {
     "recipes": [
       {
         "input": [
@@ -3307,7 +3307,7 @@
       }
     ]
   },
-  "chestplate_diamond": {
+  "armor_chestplate_diamond": {
     "recipes": [
       {
         "input": [
@@ -3326,7 +3326,7 @@
       }
     ]
   },
-  "leggings_diamond": {
+  "armor_leggings_diamond": {
     "recipes": [
       {
         "input": [
@@ -3345,7 +3345,7 @@
       }
     ]
   },
-  "boots_diamond": {
+  "armor_boots_diamond": {
     "recipes": [
       {
         "input": [
@@ -3364,16 +3364,16 @@
       }
     ]
   },
-  "helmet_gold": {
+  "armor_helmet_gold": {
     "recipes": [
       {
         "input": [
-          "gold_ingot",
-          "gold_ingot",
-          "gold_ingot",
-          "gold_ingot",
+          "ingot_gold",
+          "ingot_gold",
+          "ingot_gold",
+          "ingot_gold",
           null,
-          "gold_ingot",
+          "ingot_gold",
           null,
           null,
           null
@@ -3383,54 +3383,54 @@
       }
     ]
   },
-  "chestplate_gold": {
+  "armor_chestplate_gold": {
     "recipes": [
       {
         "input": [
-          "gold_ingot",
+          "ingot_gold",
           null,
-          "gold_ingot",
-          "gold_ingot",
-          "gold_ingot",
-          "gold_ingot",
-          "gold_ingot",
-          "gold_ingot",
-          "gold_ingot"
+          "ingot_gold",
+          "ingot_gold",
+          "ingot_gold",
+          "ingot_gold",
+          "ingot_gold",
+          "ingot_gold",
+          "ingot_gold"
         ],
         "shapeless": false,
         "count": 1
       }
     ]
   },
-  "leggings_gold": {
+  "armor_leggings_gold": {
     "recipes": [
       {
         "input": [
-          "gold_ingot",
-          "gold_ingot",
-          "gold_ingot",
-          "gold_ingot",
+          "ingot_gold",
+          "ingot_gold",
+          "ingot_gold",
+          "ingot_gold",
           null,
-          "gold_ingot",
-          "gold_ingot",
+          "ingot_gold",
+          "ingot_gold",
           null,
-          "gold_ingot"
+          "ingot_gold"
         ],
         "shapeless": false,
         "count": 1
       }
     ]
   },
-  "boots_gold": {
+  "armor_boots_gold": {
     "recipes": [
       {
         "input": [
-          "gold_ingot",
+          "ingot_gold",
           null,
-          "gold_ingot",
-          "gold_ingot",
+          "ingot_gold",
+          "ingot_gold",
           null,
-          "gold_ingot",
+          "ingot_gold",
           null,
           null,
           null
@@ -3440,12 +3440,12 @@
       }
     ]
   },
-  "wood_hoe": {
+  "tool_hoe_wood": {
     "recipes": [
       {
         "input": [
-          "planks.*",
-          "planks.*",
+          "wood_planks.*",
+          "wood_planks.*",
           null,
           null,
           "stick",
@@ -3459,7 +3459,7 @@
       }
     ]
   },
-  "stone_hoe": {
+  "tool_hoe_stone": {
     "recipes": [
       {
         "input": [
@@ -3478,12 +3478,12 @@
       }
     ]
   },
-  "iron_hoe": {
+  "tool_hoe_iron": {
     "recipes": [
       {
         "input": [
-          "iron_ingot",
-          "iron_ingot",
+          "ingot_iron",
+          "ingot_iron",
           null,
           null,
           "stick",
@@ -3497,7 +3497,7 @@
       }
     ]
   },
-  "diamond_hoe": {
+  "tool_hoe_diamond": {
     "recipes": [
       {
         "input": [
@@ -3516,12 +3516,12 @@
       }
     ]
   },
-  "gold_hoe": {
+  "tool_hoe_gold": {
     "recipes": [
       {
         "input": [
-          "gold_ingot",
-          "gold_ingot",
+          "ingot_gold",
+          "ingot_gold",
           null,
           null,
           "stick",
@@ -3630,12 +3630,12 @@
       }
     ]
   },
-  "flint_and_steel": {
+  "tool_flint_and_steel": {
     "recipes": [
       {
         "input": [
           "flint",
-          "iron_ingot",
+          "ingot_iron",
           null,
           null,
           null,
@@ -3649,16 +3649,16 @@
       }
     ]
   },
-  "fence_oak": {
+  "wood_fence_oak": {
     "recipes": [
       {
         "input": [
-          "planks_oak",
+          "wood_planks_oak",
           "stick",
-          "planks_oak",
-          "planks_oak",
+          "wood_planks_oak",
+          "wood_planks_oak",
           "stick",
-          "planks_oak",
+          "wood_planks_oak",
           null,
           null,
           null
@@ -3668,15 +3668,15 @@
       }
     ]
   },
-  "fence_gate_oak": {
+  "wood_fence_gate_oak": {
     "recipes": [
       {
         "input": [
           "stick",
-          "planks_oak",
+          "wood_planks_oak",
           "stick",
           "stick",
-          "planks_oak",
+          "wood_planks_oak",
           "stick",
           null,
           null,
@@ -3687,16 +3687,16 @@
       }
     ]
   },
-  "fence_spruce": {
+  "wood_fence_spruce": {
     "recipes": [
       {
         "input": [
-          "planks_spruce",
+          "wood_planks_spruce",
           "stick",
-          "planks_spruce",
-          "planks_spruce",
+          "wood_planks_spruce",
+          "wood_planks_spruce",
           "stick",
-          "planks_spruce",
+          "wood_planks_spruce",
           null,
           null,
           null
@@ -3706,15 +3706,15 @@
       }
     ]
   },
-  "fence_gate_spruce": {
+  "wood_fence_gate_spruce": {
     "recipes": [
       {
         "input": [
           "stick",
-          "planks_spruce",
+          "wood_planks_spruce",
           "stick",
           "stick",
-          "planks_spruce",
+          "wood_planks_spruce",
           "stick",
           null,
           null,
@@ -3725,16 +3725,16 @@
       }
     ]
   },
-  "fence_birch": {
+  "wood_fence_birch": {
     "recipes": [
       {
         "input": [
-          "planks_birch",
+          "wood_planks_birch",
           "stick",
-          "planks_birch",
-          "planks_birch",
+          "wood_planks_birch",
+          "wood_planks_birch",
           "stick",
-          "planks_birch",
+          "wood_planks_birch",
           null,
           null,
           null
@@ -3744,15 +3744,15 @@
       }
     ]
   },
-  "fence_gate_birch": {
+  "wood_fence_gate_birch": {
     "recipes": [
       {
         "input": [
           "stick",
-          "planks_birch",
+          "wood_planks_birch",
           "stick",
           "stick",
-          "planks_birch",
+          "wood_planks_birch",
           "stick",
           null,
           null,
@@ -3805,22 +3805,22 @@
     "recipes": [
       {
         "input": [
-          "planks.*",
-          "planks.*",
-          "planks.*",
+          "wood_planks.*",
+          "wood_planks.*",
+          "wood_planks.*",
           "book",
           "book",
           "book",
-          "planks.*",
-          "planks.*",
-          "planks.*"
+          "wood_planks.*",
+          "wood_planks.*",
+          "wood_planks.*"
         ],
         "shapeless": false,
         "count": 1
       }
     ]
   },
-  "pumpkin_seeds": {
+  "seeds_pumpkin": {
     "recipes": [
       {
         "input": [
@@ -3839,7 +3839,7 @@
       }
     ]
   },
-  "melon_seeds": {
+  "seeds_melon": {
     "recipes": [
       {
         "input": [
@@ -3881,7 +3881,7 @@
     "recipes": [
       {
         "input": [
-          "carved_pumpkin",
+          "pumpkin_carved",
           null,
           null,
           "torch",
@@ -3915,11 +3915,11 @@
       }
     ]
   },
-  "gold_nugget": {
+  "nugget_gold": {
     "recipes": [
       {
         "input": [
-          "gold_ingot",
+          "ingot_gold",
           null,
           null,
           null,
@@ -3934,42 +3934,42 @@
       }
     ]
   },
-  "glistering_melon_slice": {
+  "melon_slice_glistering": {
     "recipes": [
       {
         "input": [
-          "gold_nugget",
-          "gold_nugget",
-          "gold_nugget",
-          "gold_nugget",
+          "nugget_gold",
+          "nugget_gold",
+          "nugget_gold",
+          "nugget_gold",
           "melon_slice",
-          "gold_nugget",
-          "gold_nugget",
-          "gold_nugget",
-          "gold_nugget"
+          "nugget_gold",
+          "nugget_gold",
+          "nugget_gold",
+          "nugget_gold"
         ],
         "shapeless": false,
         "count": 1
       }
     ]
   },
-  "oak_boat": {
+  "boat_oak": {
     "recipes": [{
-      "input": ["planks_oak", null, "planks_oak", "planks_oak", "planks_oak", "planks_oak", null, null, null],
+      "input": ["wood_planks_oak", null, "wood_planks_oak", "wood_planks_oak", "wood_planks_oak", "wood_planks_oak", null, null, null],
       "shapeless": false,
       "count": 1
     }]
   },
-  "birch_boat": {
+  "boat_birch": {
     "recipes": [{
-      "input": ["planks_birch", null, "planks_birch", "planks_birch", "planks_birch", "planks_birch", null, null, null],
+      "input": ["wood_planks_birch", null, "wood_planks_birch", "wood_planks_birch", "wood_planks_birch", "wood_planks_birch", null, null, null],
       "shapeless": false,
       "count": 1
     }]
   },
-  "spruce_boat": {
+  "boat_spruce": {
     "recipes": [{
-      "input": ["planks_spruce", null, "planks_spruce", "planks_spruce", "planks_spruce", "planks_spruce", null, null, null],
+      "input": ["wood_planks_spruce", null, "wood_planks_spruce", "wood_planks_spruce", "wood_planks_spruce", "wood_planks_spruce", null, null, null],
       "shapeless": false,
       "count": 1
     }]

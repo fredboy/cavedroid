@@ -71,7 +71,7 @@ class UseStemSeedsActionTest {
     }
 
     private fun seeds(fruit: String): Item.Usable = mockk {
-        every { params.key } returns "${fruit}_seeds"
+        every { params.key } returns "seeds_$fruit"
     }
 
     private fun block(key: String): Block.Normal = Block.Normal(

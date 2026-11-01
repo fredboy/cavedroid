@@ -19,9 +19,9 @@ class UseDoorWoodAction @Inject constructor(
 
     override fun perform(item: Item.Usable, x: Int, y: Int): Boolean {
         val (top, bottom) = if (mobController.player.direction == Direction.RIGHT) {
-            getBlockByKeyUseCase["door_wood_top_left_closed"] to getBlockByKeyUseCase["door_wood_bottom_left_closed"]
+            getBlockByKeyUseCase["wood_door_top_left_closed"] to getBlockByKeyUseCase["wood_door_bottom_left_closed"]
         } else {
-            getBlockByKeyUseCase["door_wood_top_right_closed"] to getBlockByKeyUseCase["door_wood_bottom_right_closed"]
+            getBlockByKeyUseCase["wood_door_top_right_closed"] to getBlockByKeyUseCase["wood_door_bottom_right_closed"]
         }
 
         if (gameWorld.canPlaceToForeground(x, y, bottom) && gameWorld.canPlaceToForeground(x, y - 1, top)) {

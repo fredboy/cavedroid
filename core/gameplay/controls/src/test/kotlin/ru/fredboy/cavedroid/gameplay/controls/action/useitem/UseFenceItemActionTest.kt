@@ -40,12 +40,12 @@ class UseFenceItemActionTest {
     private val sounds = mockk<StepsSoundAssetsRepository>(relaxed = true)
     private val repository = mockk<ItemsRepository>()
     private val getBlock = GetBlockByKeyUseCase(repository)
-    private val itemParams = CommonItemParams("fence_birch", "Birch Fence", SpriteOrigin(0f, 1f), 64, 15000L, null, null)
+    private val itemParams = CommonItemParams("wood_fence_birch", "Birch Fence", SpriteOrigin(0f, 1f), 64, 15000L, null, null)
     private val item = mockk<Item.Usable> { every { params } returns itemParams }
-    private val fence = block("fence_birch", true, fence = true)
-    private val both = block("fence_birch_both", false, fence = true)
+    private val fence = block("wood_fence_birch", true, fence = true)
+    private val both = block("wood_fence_birch_both", false, fence = true)
     private val air = block("none", false)
-    private val planks = block("planks_birch", true)
+    private val planks = block("wood_planks_birch", true)
     private val action = UseFenceItemAction(
         getBlock,
         PlaceBlockItemToForegroundAction(world, mockk(), mobs, sounds, soundPlayer, stats, getBlock, mockk(relaxed = true)),
@@ -54,8 +54,8 @@ class UseFenceItemActionTest {
     )
 
     init {
-        every { repository.getBlockByKey("fence_birch") } returns fence
-        every { repository.getBlockByKey("fence_birch_both") } returns both
+        every { repository.getBlockByKey("wood_fence_birch") } returns fence
+        every { repository.getBlockByKey("wood_fence_birch_both") } returns both
         every { world.getForeMap(any(), any()) } returns air
         every { player.hitbox } returns Rectangle(5f, 5f, 1f, 2f)
     }

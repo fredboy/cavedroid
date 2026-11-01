@@ -88,7 +88,7 @@ class ChunkGeneratorTest {
                 assertTrue(band.foreBand[bandX].contentEquals(next.foreMap[x]), "foreground seam at $chunkX")
                 assertTrue(band.backBand[bandX].contentEquals(next.backMap[x]), "background seam at $chunkX")
             }
-            if (next.foreMap[0].any { it.params.key == "mossy_cobblestone" }) roomSeams++
+            if (next.foreMap[0].any { it.params.key == "cobblestone_mossy" }) roomSeams++
             rooms += chunks.getValue(chunkX).backMap.sumOf { column ->
                 column.count { it is Block.Chest && it.lootTable == "monster_room" }
             }

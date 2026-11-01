@@ -65,7 +65,7 @@ class MonsterRoomGenerator(
     ) {
         val floor = top + ROOM_HEIGHT - 1
         val cobblestone = items.getBlockByKey("cobblestone")
-        val mossyCobblestone = items.getBlockByKey("mossy_cobblestone")
+        val mossyCobblestone = items.getBlockByKey("cobblestone_mossy")
         for (x in left..right) {
             for (y in top..floor) {
                 val block = when {

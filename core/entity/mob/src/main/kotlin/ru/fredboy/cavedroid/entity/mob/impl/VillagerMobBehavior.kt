@@ -112,7 +112,7 @@ class VillagerMobBehavior : BaseMobBehavior<VillagerMob>(VillagerMob::class) {
         for (y in groundY - 1..groundY + 1) {
             val block = world.getForegroundBlock(x, y)
             if (block.isLava()) return false
-            if (block.params.hasCollision && !block.params.key.startsWith("door_")) return true
+            if (block.params.hasCollision && !block.params.key.startsWith("wood_door_")) return true
         }
         return canSwim
     }
@@ -122,7 +122,7 @@ class VillagerMobBehavior : BaseMobBehavior<VillagerMob>(VillagerMob::class) {
             for (y in upperMapY..lowerMapY) {
                 val block = world.getForegroundBlock(x, y)
                 val key = block.params.key
-                if (key.startsWith("door_wood_bottom_") && key.endsWith("_closed") && world.setWoodenDoorOpen(x, y, true)) {
+                if (key.startsWith("wood_door_bottom_") && key.endsWith("_closed") && world.setWoodenDoorOpen(x, y, true)) {
                     openedDoors.add(BlockPosition(x, y))
                     world.playBlockActionSound(block, x, y, player)
                 }

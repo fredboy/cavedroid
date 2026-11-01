@@ -23,8 +23,8 @@ object StemBlocks {
     }
 
     fun fromSeeds(key: String): State? = when (key) {
-        "pumpkin_seeds" -> State("pumpkin", 0)
-        "melon_seeds" -> State("melon", 0)
+        "seeds_pumpkin" -> State("pumpkin", 0)
+        "seeds_melon" -> State("melon", 0)
         else -> null
     }
 

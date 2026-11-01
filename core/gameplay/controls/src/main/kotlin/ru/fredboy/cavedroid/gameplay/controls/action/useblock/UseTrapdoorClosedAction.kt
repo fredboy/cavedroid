@@ -15,11 +15,11 @@ class UseTrapdoorClosedAction @Inject constructor(
 ) : IUseBlockAction {
 
     override fun perform(block: Block, x: Int, y: Int): Boolean {
-        gameWorld.setForeMap(x, y, itemsRepository.getBlockByKey("trapdoor_wood_open"))
+        gameWorld.setForeMap(x, y, itemsRepository.getBlockByKey("wood_trapdoor_open"))
         return true
     }
 
     companion object {
-        const val KEY = "trapdoor_wood_closed"
+        const val KEY = "wood_trapdoor_closed"
     }
 }

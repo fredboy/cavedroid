@@ -704,7 +704,7 @@
         }
       },
       {
-        "key": "bow",
+        "key": "weapon_bow",
         "amount": {
           "type": "random_range",
           "min": 2,

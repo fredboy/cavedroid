@@ -61,9 +61,9 @@ class CreativeInventoryTabsWindow(
         Building(CreativeCategory.Building, "bricks", "creative_category_building"),
         Nature(CreativeCategory.Nature, "grass", "creative_category_nature"),
         Utilities(CreativeCategory.Utilities, "crafting_table", "creative_category_utilities"),
-        Equipment(CreativeCategory.Equipment, "iron_pickaxe", "creative_category_equipment"),
+        Equipment(CreativeCategory.Equipment, "tool_pickaxe_iron", "creative_category_equipment"),
         Food(CreativeCategory.Food, "wheat", "creative_category_food"),
-        Materials(CreativeCategory.Materials, "iron_ingot", "creative_category_materials"),
+        Materials(CreativeCategory.Materials, "ingot_iron", "creative_category_materials"),
         Creatures(CreativeCategory.Creatures, "spawn_egg_pig", "creative_category_creatures"),
         Inventory(null, "chest", "window_inventory"),
         ;

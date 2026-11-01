@@ -14,7 +14,7 @@ class ArcherMob(
 ) : WalkingMob(params, direction) {
 
     private fun drawBow(spriteBatch: SpriteBatch, x: Float, y: Float) {
-        val item = getItemByKeyUseCase["bow"] as? Item.Bow ?: return
+        val item = getItemByKeyUseCase["weapon_bow"] as? Item.Bow ?: return
         val itemSprite = item.stateSprites[bowState]
 
         val originalWidth = itemSprite.width

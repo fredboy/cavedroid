@@ -14,7 +14,7 @@ import ru.fredboy.cavedroid.game.window.inventory.CraftingInventoryWindow
 
 class TouchRecipePagingTest {
     @Test
-    fun `compact recipe pages retain every recipe and use the selected mobile page for preview and autofill`() {
+    fun `recipe pages sort by result key and preserve selection for preview and autofill`() {
         val none = Item.None(mockk { every { maxStack } returns 64 })
         fun item(itemKey: String) = Item.Normal(
             mockk {
@@ -38,15 +38,17 @@ class TouchRecipePagingTest {
             window.recipeBookPage = page
             window.getVisibleCraftingRecipes(items, TouchWindowLayout.RECIPES_PER_PAGE).map { it.second }
         }
-        assertEquals(results, pages)
+        val sortedResults = results.sortedBy { it.params.key }
+        assertEquals(sortedResults, pages)
         window.recipeBookPage = 0
         assertEquals(25, window.getVisibleCraftingRecipes(items).size)
         window.recipeBookPage = 1
         window.selectedRecipe = 3
-        assertSame(ingredients[27], window.getPhantomRecipe(items, TouchWindowLayout.RECIPES_PER_PAGE)[0].item)
-        val inventory = Inventory(36, none).apply { this.items[0] = ingredients[27].toInventoryItem(4) }
+        val selectedIngredient = ingredients[results.indexOf(sortedResults[27])]
+        assertSame(selectedIngredient, window.getPhantomRecipe(items, TouchWindowLayout.RECIPES_PER_PAGE)[0].item)
+        val inventory = Inventory(36, none).apply { this.items[0] = selectedIngredient.toInventoryItem(4) }
         window.tryFillPhantomRecipe(mockk(relaxed = true), mockk(relaxed = true), inventory, items, TouchWindowLayout.RECIPES_PER_PAGE)
-        assertSame(ingredients[27], window.craftingItems[0].item)
+        assertSame(selectedIngredient, window.craftingItems[0].item)
         assertEquals(1, window.craftingItems[0].amount)
         assertEquals(3, inventory.items[0].amount)
     }

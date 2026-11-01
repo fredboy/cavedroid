@@ -135,7 +135,7 @@ internal class ItemsRepositoryImpl @Inject constructor(
         loadCraftingRecipes()
     }
 
-    override fun getItemByKey(key: String): Item = itemsMap.getOrFallback(key, fallbackItem) {
+    override fun getItemByKey(key: String): Item = itemsMap.getOrFallback(LegacyItemKeys.items[key] ?: key, fallbackItem) {
         "No item with key '$key' found. Returning $FALLBACK_ITEM_KEY"
     }
 
@@ -145,7 +145,7 @@ internal class ItemsRepositoryImpl @Inject constructor(
         fallbackItem
     }
 
-    override fun getBlockByKey(key: String): Block = blocksMap.getOrFallback(key, fallbackBlock) {
+    override fun getBlockByKey(key: String): Block = blocksMap.getOrFallback(LegacyItemKeys.blocks[key] ?: key, fallbackBlock) {
         "No block with key '$key' found. Returning $FALLBACK_BLOCK_KEY"
     }
 

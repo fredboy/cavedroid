@@ -43,6 +43,7 @@ abstract class AbstractInventoryWindowWithCraftGrid(
                     .filter { !it.isHidden && it.getWidth() <= gridSize && it.getHeight() <= gridSize }
                     .map { it to result }
             }
+            .sortedBy { it.second.params.key }
     }
 
     fun getVisibleCraftingRecipes(itemsRepository: ItemsRepository, pageSize: Int = RecipeBook.pageSize): List<Pair<CraftingRecipe, Item>> {

@@ -64,7 +64,7 @@ class ChunkGenerator(
     private val deadbush by lazy { block("deadbush") }
     private val sugarCane by lazy { block("sugar_cane") }
 
-    private val plainsPlants = listOf("dandelion", "rose", "tallgrass")
+    private val plainsPlants = listOf("flower_dandelion", "flower_rose", "tallgrass")
     private val mushrooms = listOf("mushroom_brown", "mushroom_red")
 
     private val heightNoise = PerlinNoise(Random(config.seed))
@@ -298,12 +298,12 @@ class ChunkGenerator(
 
     private fun applyOres(x: Int, jBand: Int, surfaceHeight: Int, foreBand: Array<Array<Block>>, bandW: Int) {
         val rng = columnRandom(x, ORE_SALT)
-        val coal = block("coal_ore")
-        val iron = block("iron_ore")
-        val gold = block("gold_ore")
-        val diamond = block("diamond_ore")
+        val coal = block("ore_coal")
+        val iron = block("ore_iron")
+        val gold = block("ore_gold")
+        val diamond = block("ore_diamond")
         val gravel = block("gravel")
-        val lapis = block("lapis_ore")
+        val lapis = block("ore_lapis")
 
         for (y in surfaceHeight until height) {
             val res = rng.nextInt(10000)
@@ -399,7 +399,7 @@ class ChunkGenerator(
                     backBand,
                     bandW,
                     rng,
-                    "log_oak",
+                    "wood_log_oak",
                     "leaves_oak",
                     5,
                     7,
@@ -412,7 +412,7 @@ class ChunkGenerator(
                     backBand,
                     bandW,
                     rng,
-                    "log_birch",
+                    "wood_log_birch",
                     "leaves_birch",
                     5,
                     7,
@@ -505,7 +505,7 @@ class ChunkGenerator(
         bandW: Int,
         rng: Random,
     ) {
-        val log = block("log_spruce")
+        val log = block("wood_log_spruce")
         val leaves = block("leaves_spruce")
         val h = surfaceHeights[jBand] - 1
         val treeH = rng.nextInt(7, 9)

@@ -82,6 +82,17 @@ class VehicleControllerTest {
 
     @ParameterizedTest
     @EnumSource(BoatType::class)
+    fun `historical saved boat types restore with canonical item and texture keys`(type: BoatType) {
+        val saved = state.copy(type = type.legacyItemKey)
+        val canonical = saved.copy(type = type.itemKey)
+        every { factory.create(canonical) } returns Vehicle(canonical.id, canonical.type, mockk())
+        controller.restore(listOf(saved))
+        assertEquals(type.itemKey, controller.vehicles.single().type)
+        verify(exactly = 1) { factory.create(canonical) }
+    }
+
+    @ParameterizedTest
+    @EnumSource(BoatType::class)
     fun `placement creates the requested wood type`(type: BoatType) {
         prepareTarget(playerX = 5f, boatX = 0f, cursorX = 8f)
         val ground = mockk<Block.Normal>(relaxed = true)

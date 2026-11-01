@@ -33,14 +33,14 @@ class MineshaftGenerator(
 
             fun corridor(left: Int, right: Int, ceiling: Int) {
                 for (x in left..right) {
-                    put(x, ceiling, "planks_oak")
-                    put(x, ceiling + 4, "planks_oak")
+                    put(x, ceiling, "wood_planks_oak")
+                    put(x, ceiling + 4, "wood_planks_oak")
                     for (y in ceiling + 1..ceiling + 3) {
                         put(x, y, "none")
                         put(x, y, "none", background = true)
                     }
                     if ((x - left) % 6 == 0) {
-                        for (y in ceiling + 1..ceiling + 3) put(x, y, "fence_oak", background = true)
+                        for (y in ceiling + 1..ceiling + 3) put(x, y, "wood_fence_oak", background = true)
                         // Keep the spider nest beyond the torch's 13-block light radius.
                         if ((x - left) % 24 == 6 && x <= right - 24) {
                             put(x, ceiling + 2, "torch")

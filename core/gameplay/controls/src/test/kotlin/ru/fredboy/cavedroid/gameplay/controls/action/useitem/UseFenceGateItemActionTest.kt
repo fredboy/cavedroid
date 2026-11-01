@@ -24,15 +24,15 @@ class UseFenceGateItemActionTest {
     private val mobs = mockk<MobController>(relaxed = true)
     private val player = mockk<Player>(relaxed = true)
     private val stats = mockk<StatsRepository>(relaxed = true)
-    private val item = mockk<Item.Usable> { every { params.key } returns "fence_gate_birch" }
+    private val item = mockk<Item.Usable> { every { params.key } returns "wood_fence_gate_birch" }
     private val left = mockk<Block.Normal> { every { getRectangle(5, 5) } returns Rectangle(5f, 5f, 0.25f, 1f) }
     private val right = mockk<Block.Normal> { every { getRectangle(5, 5) } returns Rectangle(5.75f, 5f, 0.25f, 1f) }
     private val action = UseFenceGateItemAction(world, mobs, GetBlockByKeyUseCase(repository), stats)
 
     init {
         every { mobs.player } returns player
-        every { repository.getBlockByKey("fence_gate_birch_left_closed") } returns left
-        every { repository.getBlockByKey("fence_gate_birch_right_closed") } returns right
+        every { repository.getBlockByKey("wood_fence_gate_birch_left_closed") } returns left
+        every { repository.getBlockByKey("wood_fence_gate_birch_right_closed") } returns right
         every { player.hitbox } returns Rectangle(0f, 0f, 1f, 2f)
         every { mobs.mobs } returns emptyList()
     }
