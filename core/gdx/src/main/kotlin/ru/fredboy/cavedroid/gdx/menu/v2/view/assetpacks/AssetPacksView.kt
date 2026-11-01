@@ -108,10 +108,6 @@ suspend fun Stage.assetPacksView(viewModel: AssetPacksViewModel) = viewModel.als
                             isDisabled = state.busy
                             onClickWithSound(viewModel) { viewModel.done() }
                         }
-                        textButton(viewModel.getLocalizedString("back")) {
-                            isDisabled = state.busy
-                            onClickWithSound(viewModel) { viewModel.back() }
-                        }
                     }
                 }
             }

@@ -115,10 +115,6 @@ class AssetPacksViewModel(
             .onFailure { state.value = state.value.copy(message = it.message) }
     }
 
-    fun back() {
-        if (!state.value.busy) backStack.pop()
-    }
-
     override fun onDispose() {
         disposed = true
         icons.values.filterNotNull().forEach(Texture::dispose)
