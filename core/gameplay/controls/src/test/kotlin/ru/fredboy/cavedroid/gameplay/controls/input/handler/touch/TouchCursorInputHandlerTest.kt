@@ -18,6 +18,7 @@ import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.controller.vehicle.VehicleController
+import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
 
@@ -26,14 +27,16 @@ class TouchCursorInputHandlerTest {
     private val player = mockk<Player>(relaxed = true) {
         every { position } returns Vector2()
         every { aimToPlayer } returns Vector2()
+        every { controlVector } returns Vector2()
     }
     private val mobs = mockk<MobController>(relaxed = true) { every { player } returns this@TouchCursorInputHandlerTest.player }
     private val vehicles = mockk<VehicleController>(relaxed = true)
     private val projectiles = mockk<ProjectileController>(relaxed = true)
     private val items = mockk<GetItemByKeyUseCase>(relaxed = true)
+    private val world = mockk<GameWorld>(relaxed = true)
     private val scheduled = mutableListOf<Timer.Task>()
     private val handler = TouchCursorInputHandler(
-        mockk(), mockk(), mobs, vehicles, mockk(), mockk(), emptyMap(), emptyMap(), emptyMap(), emptyMap(),
+        mockk(), mockk(), mobs, vehicles, world, mockk(), emptyMap(), emptyMap(), emptyMap(), emptyMap(),
         mockk(), mockk(), projectiles, items, mockk(), mockk(), mockk(),
     )
 
@@ -51,6 +54,30 @@ class TouchCursorInputHandlerTest {
         handler.reset()
         unmockkStatic(Timer::class)
         Gdx.app = originalApp
+    }
+
+    @Test
+    fun `holding aim while running does not start mining before the cursor changes blocks`() {
+        player.controlVector.set(1f, 0f)
+        handler.handle(MouseInputAction(220f, 100f, MouseInputActionKey.Screen(false, 0)))
+        handler.handleDrag(MouseInputAction(221f, 100f, MouseInputActionKey.Dragged(0)), restartHold = false)
+
+        repeat(3) { scheduled.last().run() }
+
+        verify(exactly = 0) { player.startHitting(any()) }
+        verify(exactly = 4) { Timer.schedule(any<Timer.Task>(), any<Float>()) }
+    }
+
+    @Test
+    fun `held aim can start mining after running stops`() {
+        player.controlVector.set(1f, 0f)
+        handler.handle(MouseInputAction(220f, 100f, MouseInputActionKey.Screen(false, 0)))
+        scheduled.last().run()
+
+        player.controlVector.setZero()
+        scheduled.last().run()
+
+        verify(exactly = 1) { player.startHitting(true) }
     }
 
     @Test
@@ -103,6 +130,7 @@ class TouchCursorInputHandlerTest {
 
     @Test
     fun `bow charges despite tiny drags and fires once on release after aiming`() {
+        player.controlVector.set(1f, 0f)
         var pulling = false
         every { player.isPullingBow } answers { pulling }
         every { player.isPullingBow = any() } answers { pulling = firstArg() }

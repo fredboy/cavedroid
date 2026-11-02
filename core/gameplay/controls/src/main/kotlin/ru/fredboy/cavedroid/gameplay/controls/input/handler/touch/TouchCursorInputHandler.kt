@@ -89,6 +89,13 @@ class TouchCursorInputHandler @Inject constructor(
             return
         }
 
+        // A stationary aiming finger is also used while running. Wait until movement
+        // stops before treating that gesture as a world interaction hold.
+        if (!player.controlVector.isZero) {
+            handleDown()
+            return
+        }
+
         val selectedX = mobController.player.selectedX
         val selectedY = mobController.player.selectedY
 
