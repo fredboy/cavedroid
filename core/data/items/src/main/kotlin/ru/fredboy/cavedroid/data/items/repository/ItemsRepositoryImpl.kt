@@ -145,7 +145,7 @@ internal class ItemsRepositoryImpl @Inject constructor(
         fallbackItem
     }
 
-    override fun getBlockByKey(key: String): Block = blocksMap.getOrFallback(LegacyItemKeys.blocks[key] ?: key, fallbackBlock) {
+    override fun getBlockByKey(key: String): Block = blocksMap.getOrFallback(canonicalBlockKey(key), fallbackBlock) {
         "No block with key '$key' found. Returning $FALLBACK_BLOCK_KEY"
     }
 

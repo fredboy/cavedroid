@@ -5,7 +5,6 @@ import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.model.Biome
 import kotlin.math.abs
 import kotlin.math.roundToInt
-import kotlin.random.Random
 
 /**
  * Plains settlements adapted from Minecraft's houses, irrigated farms and meeting points.
@@ -15,6 +14,7 @@ import kotlin.random.Random
 class VillageGenerator(
     private val config: WorldGeneratorConfig,
     private val items: ItemsRepository,
+    private val randoms: GenerationRandom = GenerationRandom(config.seed, VillageMiddleware.salt),
 ) {
     fun generate(
         startX: Int,
@@ -70,7 +70,7 @@ class VillageGenerator(
         biomeAt: (Int) -> Biome,
         loopingWidth: Int?,
     ): Plan? {
-        val random = Random(config.seed xor (region.toLong() * 341873128712L) xor 0x56494C4C414745L)
+        val random = randoms.region(region)
         if (random.nextInt(4) == 0) return null
         val kinds = buildList {
             repeat(random.nextInt(3, 6)) { add(if (random.nextBoolean()) Kind.HOUSE else Kind.LARGE_HOUSE) }

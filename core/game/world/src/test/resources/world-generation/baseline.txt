@@ -1,0 +1,16 @@
+Source: v1.5.2
+Commit: 4f2469bcfedf2de581f8bf764c7530fa61dcf03d
+Format: 1
+Seed: 123456789
+Includes: basic terrain and surface freezing
+Excludes: mineshafts, monster rooms, villages
+
+Extracted from v1.5.2 GameWorldGenerator.kt and ChunkGenerator.kt, with only
+structure invocations removed. PerlinNoise, WaterFreezing and generator config
+are unchanged from that tag. Used v1.5.2 assets/json/game_items.json through the
+real BlockMapper, with texture loading disabled and known block aliases
+canonicalized. Both historical algorithms were compiled in an isolated test
+source directory; no historical generator copy is shipped.
+
+Compared all six fixtures against the refactored basic pipeline. Also compared
+full generation before and after the refactor for all six cases. Both passed.

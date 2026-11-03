@@ -12,6 +12,7 @@ import kotlin.random.Random
 class MonsterRoomGenerator(
     private val config: WorldGeneratorConfig,
     private val items: ItemsRepository,
+    private val randoms: GenerationRandom = GenerationRandom(config.seed, MonsterRoomMiddleware.salt),
 ) {
     fun generate(startX: Int, fore: Array<Array<Block>>, back: Array<Array<Block>>, loopingWidth: Int? = null) {
         val minTop = maxOf(1, config.maxSurfaceHeight + 8)
@@ -20,7 +21,7 @@ class MonsterRoomGenerator(
 
         val endX = startX + fore.size - 1
         for (region in Math.floorDiv(startX, REGION_WIDTH)..Math.floorDiv(endX, REGION_WIDTH)) {
-            val random = Random(config.seed xor (region.toLong() * 341873128712L) xor 0x44554E47454F4EL)
+            val random = randoms.region(region)
             // Minecraft's 3D attempt density would overcrowd a 2D world without the entrance rule.
             if (random.nextBoolean()) continue
             val regionStart = region * REGION_WIDTH

@@ -2,12 +2,12 @@ package ru.fredboy.cavedroid.game.world.generator
 
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
-import kotlin.random.Random
 
 /** Each region's complete plan is seeded independently, then clipped to the requested columns. */
 class MineshaftGenerator(
     private val config: WorldGeneratorConfig,
     private val items: ItemsRepository,
+    private val randoms: GenerationRandom = GenerationRandom(config.seed, MineshaftMiddleware.salt),
 ) {
     fun generate(startX: Int, fore: Array<Array<Block>>, back: Array<Array<Block>>, loopingWidth: Int? = null) {
         val minY = maxOf(config.seaLevel + 12, config.maxSurfaceHeight + 8)
@@ -15,7 +15,7 @@ class MineshaftGenerator(
         if (minY > maxY || fore.isEmpty()) return
         val endX = startX + fore.size - 1
         for (region in Math.floorDiv(startX, REGION_WIDTH)..Math.floorDiv(endX, REGION_WIDTH)) {
-            val random = Random(config.seed xor (region.toLong() * 341873128712L) xor 0x4D494E45L)
+            val random = randoms.region(region)
             if (random.nextInt(4) == 0) continue
             val origin = region * REGION_WIDTH + random.nextInt(12, 33)
             val length = random.nextInt(64, 113)

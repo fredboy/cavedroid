@@ -23,6 +23,8 @@ dependencies {
     implementation(project(":core:entity:projectile"))
     implementation(project(":core:entity:vehicle"))
 
+    testImplementation(project(":core:data:items"))
+    testImplementation(libs.kotlinx.serialization.json)
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.engine)
     testRuntimeOnly(libs.junit.launcher)
@@ -32,4 +34,8 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.processTestResources {
+    from(rootProject.file("assets")) { include("json/game_items.json") }
 }
