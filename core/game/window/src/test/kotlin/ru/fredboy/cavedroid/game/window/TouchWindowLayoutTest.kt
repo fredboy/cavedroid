@@ -18,6 +18,62 @@ class TouchWindowLayoutTest {
     private val items = mockk<ru.fredboy.cavedroid.domain.items.repository.ItemsRepository>(relaxed = true)
 
     @Test
+    fun `survival arrow stays between crafting grid and result with recipes shown or hidden`() {
+        for (recipes in listOf(false, true)) {
+            val window = SurvivalInventoryWindow(items).apply { recipeBookActive = recipes }
+            val layout = TouchWindowLayout(640f, 320f, window)
+            val craft = layout.slots.filter { it.kind == Kind.CRAFT }
+            val result = layout.slots.single { it.kind == Kind.RESULT }
+            assertTrue(craft.maxOf { it.bounds.x + it.bounds.width } < layout.arrow.x)
+            assertTrue(layout.arrow.x + layout.arrow.width < result.bounds.x)
+            layout.slots.forEach { assertFalse(layout.arrow.overlaps(it.bounds)) }
+        }
+    }
+
+    @Test
+    fun `chest uses inventory sized cells and preserves all 27 item indices in four rows`() {
+        val window = mockk<AbstractInventoryWindow> { every { type } returns GameWindowType.CHEST }
+        for ((width, height) in listOf(640f to 320f, 960f to 540f, 360f to 640f)) {
+            val layout = TouchWindowLayout(width, height, window)
+            val inventoryCell = layout.slots.first { it.kind == Kind.INVENTORY }.bounds
+            val chest = layout.slots.filter { it.kind == Kind.CHEST }
+            assertEquals((0..26).toList(), chest.map { it.index })
+            assertEquals(listOf(7, 7, 7, 6), chest.groupBy { it.bounds.y }.values.map { it.size })
+            chest.forEach { slot ->
+                assertEquals(inventoryCell.width, slot.bounds.width)
+                assertEquals(inventoryCell.height, slot.bounds.height)
+                assertTrue(layout.left.contains(slot.bounds))
+                assertEquals(slot, layout.slotAt(slot.bounds.x + slot.bounds.width / 2, slot.bounds.y + slot.bounds.height / 2))
+                chest.filter { it != slot }.forEach { assertFalse(slot.bounds.overlaps(it.bounds)) }
+            }
+        }
+    }
+
+    @Test
+    fun `activities are vertically centered when recipes are hidden`() {
+        val windows = listOf(
+            SurvivalInventoryWindow(items),
+            CraftingInventoryWindow(items),
+            mockk<AbstractInventoryWindow> { every { type } returns GameWindowType.CHEST },
+            mockk<AbstractInventoryWindow> { every { type } returns GameWindowType.FURNACE },
+        )
+        for ((width, height) in listOf(640f to 320f, 960f to 540f, 360f to 640f)) {
+            windows.forEach { window ->
+                val layout = TouchWindowLayout(width, height, window)
+                val activity = layout.slots.filter { it.kind != Kind.INVENTORY }.map { it.bounds } +
+                    listOf(layout.portrait, layout.arrow, layout.flame).filter { it.width > 0 }
+                val top = activity.minOf { it.y }
+                val bottom = activity.maxOf { it.y + it.height }
+                assertEquals(layout.left.y + layout.left.height / 2, (top + bottom) / 2, .001f)
+                activity.forEach {
+                    assertTrue(layout.left.contains(it))
+                    assertFalse(layout.recipeToggle.overlaps(it))
+                }
+            }
+        }
+    }
+
+    @Test
     fun `all inventory slots remain on the right with activity on the left across screen shapes`() {
         val windows = listOf(
             SurvivalInventoryWindow(items),

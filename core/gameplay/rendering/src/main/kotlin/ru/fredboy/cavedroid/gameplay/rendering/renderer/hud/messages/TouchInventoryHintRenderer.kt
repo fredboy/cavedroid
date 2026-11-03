@@ -55,10 +55,11 @@ class TouchInventoryHintRenderer @Inject constructor(
         val alpha = inventoryHintController.alpha
         if (alpha <= 0f) return
 
-        val bounds = TouchWindowLayout.fitBounds(viewport.width, viewport.height)
+        val layout = TouchWindowLayout(viewport.width, viewport.height, requireNotNull(gameWindowsManager.currentWindow))
+        val bounds = layout.bounds
         val scale = bounds.width / TouchWindowLayout.WIDTH
         val width = TouchWindowLayout.WIDTH
-        val height = TouchWindowLayout.HEIGHT
+        val height = layout.designHeight
         val maxWidth = width - TouchWindowLayout.DROP_WIDTH - 16f
         val lines = mutableListOf<String>()
         var line = ""

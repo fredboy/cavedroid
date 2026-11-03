@@ -213,7 +213,7 @@ class TouchWindowInputHandler @Inject constructor(
         }
         when (slot.kind) {
             Kind.INVENTORY -> handleInsidePlaceableCell(action, mobs.player.inventory.items, window, slot.index)
-            Kind.CHEST -> handleInsidePlaceableCell(action, (window as ChestInventoryWindow).chest.items, window, slot.index)
+            Kind.CHEST -> handleInsidePlaceableCell(action, (window as ChestInventoryWindow).items, window, slot.index)
             Kind.ARMOR -> {
                 val held = window.selectedItem
                 if (held.isNoneOrNull() || mobs.player.wearingArmor.getCellType(slot.index).isInstance(held.item)) {

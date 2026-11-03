@@ -47,8 +47,8 @@ class TouchWindowsRenderer @Inject constructor(
     fun draw(batch: SpriteBatch, shapes: ShapeRenderer, viewport: Rectangle) {
         val window = windows.currentWindow ?: return
         val width = TouchWindowLayout.WIDTH
-        val height = TouchWindowLayout.HEIGHT
-        val bounds = TouchWindowLayout.fitBounds(viewport.width, viewport.height)
+        val height = TouchWindowLayout(width, TouchWindowLayout.HEIGHT, window).designHeight
+        val bounds = TouchWindowLayout.fitBounds(viewport.width, viewport.height, height)
         scaleX = bounds.width / width
         scaleY = scaleX
         val layout = TouchWindowLayout(width, height, window)
@@ -61,7 +61,7 @@ class TouchWindowsRenderer @Inject constructor(
             val title = when (window.type) {
                 GameWindowType.CRAFTING_TABLE -> items.getItemByKey("crafting_table").params.name
                 GameWindowType.FURNACE -> items.getItemByKey("furnace").params.name
-                GameWindowType.CHEST -> items.getItemByKey("chest").params.name
+                GameWindowType.CHEST -> if ((window as ChestInventoryWindow).isLarge) label("large_chest") else items.getItemByKey("chest").params.name
                 GameWindowType.CREATIVE_INVENTORY_TABS -> fonts.getMenuLocalizationBundle()[(window as CreativeInventoryTabsWindow).selectedTab.localizationKey]
                 GameWindowType.CREATIVE_INVENTORY -> fonts.getMenuLocalizationBundle()["creative"]
                 else -> label("inventory")
@@ -106,7 +106,7 @@ class TouchWindowsRenderer @Inject constructor(
                 val item = when (slot.kind) {
                     Kind.INVENTORY -> mobs.player.inventory.items[slot.index]
                     Kind.ARMOR -> mobs.player.wearingArmor.items[slot.index]
-                    Kind.CHEST -> (window as ChestInventoryWindow).chest.items[slot.index]
+                    Kind.CHEST -> (window as ChestInventoryWindow).items[slot.index]
                     Kind.CRAFT -> (window as AbstractInventoryWindowWithCraftGrid).craftingItems[slot.index].takeUnless { it.isNoneOrNull() } ?: phantom.getOrNull(slot.index)
                     Kind.RESULT -> if (window is FurnaceInventoryWindow) window.furnace.result else (window as AbstractInventoryWindowWithCraftGrid).craftResult
                     Kind.INPUT -> (window as FurnaceInventoryWindow).furnace.input

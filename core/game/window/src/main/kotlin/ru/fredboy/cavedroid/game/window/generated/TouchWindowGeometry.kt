@@ -11,7 +11,7 @@ internal object TouchWindowGeometry {
     const val MIN_BUTTON_SIZE = 44f
     const val RECIPES_PER_PAGE = 24
     data class Grid(val kind: String, val x: Int, val y: Int, val columns: Int, val rows: Int, val width: Int, val height: Int, val start: Int, val stride: Int)
-    data class Definition(val grids: List<Grid>, val controls: Map<String, Rectangle>, val labels: Map<String, Pair<Int, Int>>, val tabs: List<Rectangle>)
+    data class Definition(val grids: List<Grid>, val controls: Map<String, Rectangle>, val labels: Map<String, Pair<Int, Int>>, val tabs: List<Rectangle>, val height: Int = 320, val inventory: List<Grid> = TouchWindowGeometry.inventory)
     val inventory = listOf(
         Grid("INVENTORY", 302, 76, 9, 3, 36, 36, 9, 9),
         Grid("INVENTORY", 302, 224, 9, 1, 36, 36, 0, 9),
@@ -19,8 +19,8 @@ internal object TouchWindowGeometry {
     val layouts = mapOf(
         "crafting_table" to Definition(
             grids = listOf(
-                Grid("CRAFT", 12, 20, 3, 3, 52, 52, 0, 3),
-                Grid("RESULT", 210, 94, 1, 1, 56, 56, 0, 1),
+                Grid("CRAFT", 12, 58, 3, 3, 52, 52, 0, 3),
+                Grid("RESULT", 210, 132, 1, 1, 56, 56, 0, 1),
             ),
             controls = mapOf(
                 "close" to Rectangle(592f, 2f, 44f, 44f),
@@ -28,7 +28,7 @@ internal object TouchWindowGeometry {
                 "left" to Rectangle(6f, 2f, 276f, 268f),
                 "right" to Rectangle(292f, 50f, 342f, 220f),
                 "recipeToggle" to Rectangle(174f, 8f, 104f, 44f),
-                "arrow" to Rectangle(174f, 110f, 30f, 22f),
+                "arrow" to Rectangle(174f, 148f, 30f, 22f),
             ),
             labels = mapOf(
                 "inventory" to (302 to 58),
@@ -61,18 +61,18 @@ internal object TouchWindowGeometry {
         ),
         "survival" to Definition(
             grids = listOf(
-                Grid("ARMOR", 12, 18, 1, 4, 36, 36, 0, 1),
-                Grid("CRAFT", 144, 72, 2, 2, 36, 36, 0, 3),
-                Grid("RESULT", 236, 88, 1, 1, 36, 36, 0, 1),
+                Grid("ARMOR", 12, 64, 1, 4, 36, 36, 0, 1),
+                Grid("CRAFT", 136, 118, 2, 2, 36, 36, 0, 3),
+                Grid("RESULT", 236, 134, 1, 1, 36, 36, 0, 1),
             ),
             controls = mapOf(
                 "close" to Rectangle(592f, 2f, 44f, 44f),
                 "drop" to Rectangle(528f, 274f, 108f, 44f),
                 "left" to Rectangle(6f, 2f, 276f, 268f),
                 "right" to Rectangle(292f, 50f, 342f, 220f),
-                "portrait" to Rectangle(66f, 20f, 64f, 128f),
+                "portrait" to Rectangle(66f, 66f, 64f, 128f),
                 "recipeToggle" to Rectangle(174f, 8f, 104f, 44f),
-                "arrow" to Rectangle(210f, 96f, 20f, 20f),
+                "arrow" to Rectangle(214f, 145f, 18f, 14f),
             ),
             labels = mapOf(
                 "inventory" to (302 to 58),
@@ -107,7 +107,8 @@ internal object TouchWindowGeometry {
         ),
         "chest" to Definition(
             grids = listOf(
-                Grid("CHEST", 10, 12, 9, 3, 30, 30, 0, 9),
+                Grid("CHEST", 18, 64, 7, 3, 36, 36, 0, 7),
+                Grid("CHEST", 18, 172, 6, 1, 36, 36, 21, 7),
             ),
             controls = mapOf(
                 "close" to Rectangle(592f, 2f, 44f, 44f),
@@ -123,17 +124,17 @@ internal object TouchWindowGeometry {
         ),
         "furnace" to Definition(
             grids = listOf(
-                Grid("INPUT", 56, 40, 1, 1, 44, 44, 0, 1),
-                Grid("FUEL", 56, 156, 1, 1, 44, 44, 0, 1),
-                Grid("RESULT", 202, 92, 1, 1, 48, 48, 0, 1),
+                Grid("INPUT", 56, 56, 1, 1, 44, 44, 0, 1),
+                Grid("FUEL", 56, 172, 1, 1, 44, 44, 0, 1),
+                Grid("RESULT", 202, 108, 1, 1, 48, 48, 0, 1),
             ),
             controls = mapOf(
                 "close" to Rectangle(592f, 2f, 44f, 44f),
                 "drop" to Rectangle(528f, 274f, 108f, 44f),
                 "left" to Rectangle(6f, 2f, 276f, 268f),
                 "right" to Rectangle(292f, 50f, 342f, 220f),
-                "flame" to Rectangle(64f, 98f, 28f, 40f),
-                "arrow" to Rectangle(124f, 106f, 56f, 24f),
+                "flame" to Rectangle(64f, 114f, 28f, 40f),
+                "arrow" to Rectangle(124f, 122f, 56f, 24f),
             ),
             labels = mapOf(
                 "inventory" to (302 to 58),
@@ -209,6 +210,28 @@ internal object TouchWindowGeometry {
                 Rectangle(140f, 54f, 64f, 44f),
                 Rectangle(204f, 54f, 64f, 44f),
             ),
+        ),
+        "chest_large" to Definition(
+            grids = listOf(
+                Grid("CHEST", 18, 16, 7, 7, 36, 36, 0, 7),
+                Grid("CHEST", 18, 268, 5, 1, 36, 36, 49, 7),
+            ),
+            controls = mapOf(
+                "close" to Rectangle(592f, 2f, 44f, 44f),
+                "drop" to Rectangle(528f, 322f, 108f, 44f),
+                "left" to Rectangle(6f, 2f, 276f, 316f),
+                "right" to Rectangle(292f, 50f, 342f, 268f),
+            ),
+            labels = mapOf(
+                "inventory" to (302 to 82),
+                "hotbar" to (302 to 222),
+            ),
+            height = 368,
+            inventory = listOf(
+                Grid("INVENTORY", 302, 100, 9, 3, 36, 36, 9, 9),
+                Grid("INVENTORY", 302, 248, 9, 1, 36, 36, 0, 9),
+            ),
+            tabs = emptyList(),
         ),
     )
 }

@@ -11,6 +11,7 @@ import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindowWithCraftGrid
+import ru.fredboy.cavedroid.game.window.inventory.ChestInventoryWindow
 import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
@@ -32,7 +33,7 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
     private val survivalInventoryTexture get() = requireNotNull(textureRegions["survival"])
     private val craftingInventoryTexture get() = requireNotNull(textureRegions["crafting_table"])
     private val furnaceInventoryTexture get() = requireNotNull(textureRegions["furnace"])
-    private val chestInventoryTexture get() = requireNotNull(textureRegions["chest"])
+    private val chestInventoryTexture get() = requireNotNull(textureRegions[(gameWindowsManager.currentWindow as ChestInventoryWindow).textureKey])
 
     private val creativeTabsWindowTexture get() = requireNotNull(textureRegions["creative_items_tab"])
     private val creativeTabsTabTexture get() = requireNotNull(textureRegions["creative_tab_selected"])

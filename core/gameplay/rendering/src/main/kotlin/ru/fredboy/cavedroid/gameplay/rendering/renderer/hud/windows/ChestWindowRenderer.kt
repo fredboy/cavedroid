@@ -33,7 +33,7 @@ class ChestWindowRenderer @Inject constructor(
 
     override val renderLayer get() = WindowsRenderer.Companion.RENDER_LAYER
 
-    private val chestWindowTexture get() = requireNotNull(textureRegions[CHEST_WINDOW_KEY])
+    private val chestWindowTexture get() = requireNotNull(textureRegions[(gameWindowsManager.currentWindow as ChestInventoryWindow).textureKey])
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
         val windowTexture = chestWindowTexture
@@ -50,7 +50,7 @@ class ChestWindowRenderer @Inject constructor(
             font = getFont(),
             gridX = windowX + GameWindowsConfigs.Chest.contentsMarginLeft,
             gridY = windowY + GameWindowsConfigs.Chest.contentsMarginTop,
-            items = window.chest.items,
+            items = window.items,
             itemsInRow = GameWindowsConfigs.Chest.itemsInRow,
             cellWidth = GameWindowsConfigs.Chest.itemsGridColWidth,
             cellHeight = GameWindowsConfigs.Chest.itemsGridRowHeight,
@@ -63,7 +63,7 @@ class ChestWindowRenderer @Inject constructor(
             shapeRenderer = shapeRenderer,
             font = getFont(),
             gridX = windowX + GameWindowsConfigs.Chest.itemsGridMarginLeft,
-            gridY = windowY + GameWindowsConfigs.Chest.itemsGridMarginTop,
+            gridY = windowY + window.inventoryTop,
             items = mobController.player.inventory.items.asSequence()
                 .drop(GameWindowsConfigs.Chest.hotbarCells)
                 .take(GameWindowsConfigs.Chest.itemsInCol * GameWindowsConfigs.Chest.itemsInRow)
@@ -114,9 +114,5 @@ class ChestWindowRenderer @Inject constructor(
                 )
             }
         }
-    }
-
-    companion object {
-        private const val CHEST_WINDOW_KEY = "chest"
     }
 }

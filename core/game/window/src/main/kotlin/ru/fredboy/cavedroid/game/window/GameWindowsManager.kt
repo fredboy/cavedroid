@@ -35,9 +35,12 @@ class GameWindowsManager @Inject constructor(
         get() = currentWindow?.type ?: GameWindowType.NONE
 
     private var lastOpenCreativeTab: CreativeInventoryTabsWindow.Tab? = null
+    private var recipeBookActive = false
 
     fun openSurvivalInventory() {
-        currentWindow = SurvivalInventoryWindow(itemsRepository)
+        currentWindow = SurvivalInventoryWindow(itemsRepository).apply {
+            recipeBookActive = this@GameWindowsManager.recipeBookActive
+        }
     }
 
     fun openCreativeInventory() {
@@ -54,12 +57,14 @@ class GameWindowsManager @Inject constructor(
         currentWindow = FurnaceInventoryWindow(furnace)
     }
 
-    fun openChest(chest: Chest) {
-        currentWindow = ChestInventoryWindow(chest)
+    fun openChest(chest: Chest, otherChest: Chest? = null) {
+        currentWindow = ChestInventoryWindow(chest, otherChest)
     }
 
     fun openCrafting() {
-        currentWindow = CraftingInventoryWindow(itemsRepository)
+        currentWindow = CraftingInventoryWindow(itemsRepository).apply {
+            recipeBookActive = this@GameWindowsManager.recipeBookActive
+        }
     }
 
     fun closeWindow() {
@@ -69,6 +74,7 @@ class GameWindowsManager @Inject constructor(
         }
         isDragging = false
         (currentWindow as? AbstractInventoryWindowWithCraftGrid)?.let { window ->
+            recipeBookActive = window.recipeBookActive
             dropAdapter.dropItems(playerAdapter.x, playerAdapter.y, window.craftingItems)
         }
 

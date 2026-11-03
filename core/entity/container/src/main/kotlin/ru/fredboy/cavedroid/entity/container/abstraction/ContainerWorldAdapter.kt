@@ -9,6 +9,13 @@ import kotlin.reflect.KClass
 
 interface ContainerWorldAdapter {
 
+    fun containerX(x: Int): Int = x
+
+    fun chestBlockKey(x: Int, y: Int, z: Int): String?
+
+    /** Change chest appearance without destroying or recreating its container. */
+    fun setChestBlockKey(x: Int, y: Int, z: Int, key: String)
+
     fun checkContainerAtCoordinates(
         coordinates: ContainerCoordinates,
         requiredType: KClass<out Block.Container>,

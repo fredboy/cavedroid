@@ -112,6 +112,18 @@ internal class WorldAdapterImpl @Inject constructor(
         return Vector2(x + .5f - (charParams?.width ?: 1f) / 2, y - (charParams?.height ?: 1f))
     }
 
+    override fun containerX(x: Int) = gameWorld.containerX(x)
+
+    override fun chestBlockKey(x: Int, y: Int, z: Int): String? {
+        val block = if (z == Layer.FOREGROUND.z) gameWorld.getForeMap(x, y) else gameWorld.getBackMap(x, y)
+        return (block as? Block.Chest)?.params?.key
+    }
+
+    override fun setChestBlockKey(x: Int, y: Int, z: Int, key: String) {
+        val layer = if (z == Layer.FOREGROUND.z) Layer.FOREGROUND else Layer.BACKGROUND
+        gameWorld.setChestAppearance(x, y, layer, itemsRepository.getBlockByKey(key) as Block.Chest)
+    }
+
     override fun checkContainerAtCoordinates(
         coordinates: ContainerCoordinates,
         requiredType: KClass<out Block.Container>,

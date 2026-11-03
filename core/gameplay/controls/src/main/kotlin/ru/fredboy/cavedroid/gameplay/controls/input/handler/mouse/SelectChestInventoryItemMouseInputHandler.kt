@@ -45,7 +45,7 @@ class SelectChestInventoryItemMouseInputHandler @Inject constructor(
     dropQueue = dropQueue,
 ) {
 
-    override val windowTexture get() = requireNotNull(textureRegions["chest"])
+    override val windowTexture get() = requireNotNull(textureRegions[(gameWindowsManager.currentWindow as ChestInventoryWindow).textureKey])
 
     override fun getWindowRect(viewport: Rectangle): Rectangle {
         return Rectangle(
@@ -62,7 +62,7 @@ class SelectChestInventoryItemMouseInputHandler @Inject constructor(
         val window = gameWindowsManager.currentWindow as ChestInventoryWindow
         val itemIndex = xOnGrid + yOnGrid * GameWindowsConfigs.Chest.contentsInRow
 
-        handleInsidePlaceableCell(action, window.chest.items, window, itemIndex)
+        handleInsidePlaceableCell(action, window.items, window, itemIndex)
     }
 
     private fun handleInsideInventoryGrid(action: MouseInputAction, xOnGrid: Int, yOnGrid: Int) {
@@ -89,7 +89,10 @@ class SelectChestInventoryItemMouseInputHandler @Inject constructor(
 
         val xOnGrid = (xOnWindow - GameWindowsConfigs.Chest.itemsGridMarginLeft) /
             GameWindowsConfigs.Chest.itemsGridColWidth
-        val yOnGrid = (yOnWindow - GameWindowsConfigs.Chest.itemsGridMarginTop) /
+        val yOnGrid = (yOnWindow - window.inventoryTop) /
+            GameWindowsConfigs.Chest.itemsGridRowHeight
+
+        val yOnHotbar = (yOnWindow - (texture.regionHeight - GameWindowsConfigs.Chest.hotbarOffsetFromBottom)) /
             GameWindowsConfigs.Chest.itemsGridRowHeight
 
         val xOnContent = (xOnWindow - GameWindowsConfigs.Chest.contentsMarginLeft) /
@@ -100,14 +103,18 @@ class SelectChestInventoryItemMouseInputHandler @Inject constructor(
         val isInsideInventoryGrid = xOnGrid >= 0 &&
             xOnGrid < GameWindowsConfigs.Chest.itemsInRow &&
             yOnGrid >= 0 &&
-            yOnGrid < GameWindowsConfigs.Chest.itemsInCol
+            yOnGrid < 3
 
         val isInsideContentGrid = xOnContent >= 0 &&
             xOnContent < GameWindowsConfigs.Chest.contentsInRow &&
             yOnContent >= 0 &&
-            yOnContent < GameWindowsConfigs.Chest.contentsInCol
+            yOnContent < window.contentsRows
 
-        if (isInsideInventoryGrid) {
+        val isInsideHotbar = xOnGrid >= 0 && xOnGrid < GameWindowsConfigs.Chest.hotbarCells && yOnHotbar >= 0 && yOnHotbar < 1
+
+        if (isInsideHotbar) {
+            handleInsidePlaceableCell(action, mobController.player.inventory.items, window, xOnGrid.toInt())
+        } else if (isInsideInventoryGrid) {
             handleInsideInventoryGrid(action, xOnGrid.toInt(), yOnGrid.toInt())
         } else if (isInsideContentGrid) {
             handleInsideContentGrid(action, xOnContent.toInt(), yOnContent.toInt())

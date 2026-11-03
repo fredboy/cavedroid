@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.game.window.generated.TouchWindowGeometry
 import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindow
 import ru.fredboy.cavedroid.game.window.inventory.AbstractInventoryWindowWithCraftGrid
+import ru.fredboy.cavedroid.game.window.inventory.ChestInventoryWindow
 import ru.fredboy.cavedroid.game.window.inventory.CreativeInventoryTabsWindow
 import kotlin.math.min
 
@@ -16,7 +17,7 @@ class TouchWindowLayout(width: Float, height: Float, window: AbstractInventoryWi
     val background = when (window.type) {
         GameWindowType.CRAFTING_TABLE -> "crafting_table"
         GameWindowType.SURVIVAL_INVENTORY -> "survival"
-        GameWindowType.CHEST -> "chest"
+        GameWindowType.CHEST -> if ((window as? ChestInventoryWindow)?.isLarge == true) "chest_large" else "chest"
         GameWindowType.FURNACE -> "furnace"
         GameWindowType.CREATIVE_INVENTORY -> "creative"
         GameWindowType.CREATIVE_INVENTORY_TABS -> if ((window as CreativeInventoryTabsWindow).selectedTab.isInventory) "creative_inventory" else "creative_items"
@@ -24,7 +25,8 @@ class TouchWindowLayout(width: Float, height: Float, window: AbstractInventoryWi
     } + if ((window as? AbstractInventoryWindowWithCraftGrid)?.recipeBookActive == true) "_recipes" else ""
 
     private val geometry = TouchWindowGeometry.layouts.getValue(background)
-    val bounds = fitBounds(width, height)
+    val designHeight = geometry.height.toFloat()
+    val bounds = fitBounds(width, height, designHeight)
     val scale = bounds.width / WIDTH
     val headerHeight = TouchWindowGeometry.HEADER_HEIGHT * scale
     val footerHeight = FOOTER_HEIGHT * scale
@@ -47,7 +49,7 @@ class TouchWindowLayout(width: Float, height: Float, window: AbstractInventoryWi
     val tabs = geometry.tabs.map(::scaled)
     val labels = geometry.labels.mapValues { (_, point) -> (bounds.x + point.first * scale) to (bounds.y + point.second * scale) }
     val slots = buildList {
-        (TouchWindowGeometry.inventory + geometry.grids).forEach { grid ->
+        (geometry.inventory + geometry.grids).forEach { grid ->
             repeat(grid.rows) { row ->
                 repeat(grid.columns) { column ->
                     add(
@@ -85,10 +87,10 @@ class TouchWindowLayout(width: Float, height: Float, window: AbstractInventoryWi
 
         fun scaleFor(width: Float, height: Float) = min(width / WIDTH, height / HEIGHT)
 
-        fun fitBounds(width: Float, height: Float): Rectangle {
-            val scale = scaleFor(width, height)
+        fun fitBounds(width: Float, height: Float, designHeight: Float = HEIGHT): Rectangle {
+            val scale = min(width / WIDTH, height / designHeight)
             val fitWidth = WIDTH * scale
-            val fitHeight = HEIGHT * scale
+            val fitHeight = designHeight * scale
             return Rectangle((width - fitWidth) / 2, (height - fitHeight) / 2, fitWidth, fitHeight)
         }
     }

@@ -276,6 +276,13 @@ class GameWorld @Inject constructor(
             (slab1.params.key == slab2.otherPartBlockKey || slab1.otherPartBlockKey == slab2.params.key)
     }
 
+    fun containerX(x: Int): Int = blockStore.transformX(x)
+
+    fun setChestAppearance(x: Int, y: Int, layer: Layer, block: Block.Chest) {
+        // Both variants have identical physical/light properties. Preserve the container and contents.
+        blockStore.setBlock(x, y, layer, block)
+    }
+
     fun hasForeAt(x: Int, y: Int): Boolean = !getMap(x, y, Layer.FOREGROUND).isNone()
 
     fun hasBackAt(x: Int, y: Int): Boolean = !getMap(x, y, Layer.BACKGROUND).isNone()

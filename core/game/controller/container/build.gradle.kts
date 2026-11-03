@@ -17,4 +17,13 @@ dependencies {
     implementation(project(":core:domain:world"))
     implementation(project(":core:entity:container"))
     implementation(project(":core:entity:drop"))
+
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.engine)
+    testRuntimeOnly(libs.junit.launcher)
+    testImplementation(libs.mockk)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

@@ -396,5 +396,17 @@
       "w": 24,
       "h": 14
     }
+  },
+  "textures/windows/desktop/chest_large": {
+    "chest_large": {
+      "w": 176,
+      "h": 222
+    }
+  },
+  "textures/windows/touch/chest_large": {
+    "touch_chest_large": {
+      "w": 640,
+      "h": 368
+    }
   }
 }
