@@ -87,7 +87,6 @@ private fun Stage.showInfo(viewModel: EditWorldMenuViewModel, state: EditWorldMe
                     viewModel.getLocalizedString("gameMode"),
                     viewModel.getLocalizedString(details.gameMode.name.lowercase()),
                 )
-                infoRow(viewModel.getLocalizedString("mapSize"), details.mapSize)
                 infoRow(viewModel.getLocalizedString("diskSize"), details.diskSize)
                 infoRow(viewModel.getLocalizedString("seed"), details.seed ?: "—")
                 infoRow(viewModel.getLocalizedString("createdOn"), details.created ?: "—")

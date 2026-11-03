@@ -935,21 +935,14 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     override fun getSaveDetails(gameDataFolder: String, saveDir: String): GameSaveDetails {
         val savesPath = getSavePath(gameDataFolder, saveDir)
         val meta = loadMapData(savesPath)
-        val size = if (meta.worldType == WorldType.INFINITE.ordinal) {
-            GameSaveDetails.Size.Infinite
-        } else {
-            readMapDimensions(savesPath).let { (width, height) -> GameSaveDetails.Size.Finite(width, height) }
-        }
-
-        val sizeBytes = file(savesPath).list()
-            .filter { !it.isDirectory }
-            .sumOf { it.length() }
+        val files = mutableListOf<Pair<String, FileHandle>>()
+        collectArchiveEntries(file(savesPath), "", files)
+        val sizeBytes = files.sumOf { (_, entry) -> entry.length() }
 
         return GameSaveDetails(
             name = meta.name,
             directory = saveDir,
             gameMode = meta.gameMode,
-            size = size,
             sizeBytes = sizeBytes,
             version = meta.version,
             isSupported = meta.version == MAP_SAVE_VERSION.toInt(),
@@ -958,23 +951,6 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             createdString = meta.createdTimestamp?.let(dateFormatter::format),
             screenshotHandle = file("$savesPath/$SCREENSHOT_FILE").takeIf { it.exists() },
         )
-    }
-
-    private fun readMapDimensions(savesPath: String): Pair<Int, Int> {
-        // The foremap header (written by compressMap) is: version byte, then the
-        // width and height as 4-byte ints. Read just that prefix.
-        val header = ByteArray(1 + (Int.SIZE_BYTES shl 1))
-        GZIPInputStream(file("$savesPath/$FOREMAP_FILE").read()).use { stream ->
-            var read = 0
-            while (read < header.size) {
-                val count = stream.read(header, read, header.size - read)
-                if (count < 0) break
-                read += count
-            }
-        }
-        val width = ByteBuffer.wrap(header, 1, Int.SIZE_BYTES).getInt()
-        val height = ByteBuffer.wrap(header, 1 + Int.SIZE_BYTES, Int.SIZE_BYTES).getInt()
-        return width to height
     }
 
     override fun renameSave(gameDataFolder: String, saveDir: String, newName: String) {
