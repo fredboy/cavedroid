@@ -19,7 +19,9 @@ internal class ChunkCollisionMesher(private val fallback: Block) {
         val blocks = HashMap<Pair<Int, Int>, Block>(CELL_COUNT * 4 / 3 + 1)
         for (i in 0 until CELL_COUNT) {
             val block = snapshot.blocks[i].takeIf { it.params.hasCollision } ?: fallback
-            normalized[i] = block
+            // Partial blocks have their own rectangles. Air contours must pass through their
+            // tiles, otherwise enclosed air adds a full-tile wall beside the inset rectangle.
+            normalized[i] = block.takeIf { it.params.isFullBlock } ?: fallback
             blocks[snapshot.x + i / SIZE to snapshot.y + i % SIZE] = block
         }
 
@@ -48,11 +50,20 @@ internal class ChunkCollisionMesher(private val fallback: Block) {
 
             // Enclosed air contours provide cave boundaries; only boundary-connected air is omitted.
             if (!block.params.hasCollision && touchesBoundary) continue
-            orderedFixtures[last] = CollisionFixture(block, trace(snapshot, start, label, xOffset))
+            orderedFixtures[last] = CollisionFixture(block, trace(snapshot, start, label, xOffset, airContour = !block.params.hasCollision))
         }
 
         return CollisionSection(
-            fixtures = orderedFixtures.filterNotNull(),
+            fixtures = buildList {
+                for (i in 0 until CELL_COUNT) {
+                    orderedFixtures[i]?.let { add(it) }
+                    val block = snapshot.blocks[i]
+                    if (block.params.hasCollision && !block.params.isFullBlock) {
+                        // No flood-fill label matches -1, so this traces only this tile.
+                        add(CollisionFixture(block, trace(snapshot, i, -1, xOffset)))
+                    }
+                }
+            },
             userData = ChunkUserData(snapshot.x until snapshot.x + SIZE, snapshot.y until snapshot.y + SIZE, blocks),
         )
     }
@@ -64,14 +75,15 @@ internal class ChunkCollisionMesher(private val fallback: Block) {
         return tail + 1
     }
 
-    private fun trace(snapshot: CollisionSnapshot, start: Int, label: Int, xOffset: Int): FloatArray {
+    private fun trace(snapshot: CollisionSnapshot, start: Int, label: Int, xOffset: Int, airContour: Boolean = false): FloatArray {
         var cell = start
         var corner = 0
         var count = 0
         do {
             val x = cell / SIZE
             val y = cell % SIZE
-            val margins = snapshot.blocks[cell].params.collisionMargins
+            val block = snapshot.blocks[cell]
+            val margins = if (airContour && block.params.hasCollision) fallback.params.collisionMargins else block.params.collisionMargins
             val worldX = (snapshot.x + x).toFloat()
             val worldY = (snapshot.y + y).toFloat()
             val vx = if (corner == 0 || corner == 3) worldX + margins.left else worldX + 1f - margins.right
