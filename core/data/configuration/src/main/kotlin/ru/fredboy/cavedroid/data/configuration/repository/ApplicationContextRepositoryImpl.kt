@@ -109,6 +109,12 @@ class ApplicationContextRepositoryImpl @Inject constructor(
         applicationContextStore.isSoundEnabled = enabled
     }
 
+    override fun isMusicEnabled(): Boolean = applicationContextStore.isMusicEnabled
+
+    override fun setMusicEnabled(enabled: Boolean) {
+        applicationContextStore.isMusicEnabled = enabled
+    }
+
     override fun isOnboardingShown(): Boolean = applicationContextStore.isOnboardingShown
 
     override fun setOnboardingShown(shown: Boolean) {

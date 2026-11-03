@@ -31,6 +31,7 @@ sourceSets {
     main {
         resources {
             srcDirs("build/generated/extraRes")
+            srcDir(rootProject.tasks.named<GenerateBgmIndex>("generateBgmIndex"))
         }
     }
 }

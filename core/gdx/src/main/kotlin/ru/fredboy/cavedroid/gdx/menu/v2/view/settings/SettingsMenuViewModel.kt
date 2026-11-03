@@ -60,6 +60,11 @@ class SettingsMenuViewModel(
         .onStart { emit(applicationContextRepository.isSoundEnabled()) }
         .distinctUntilChanged()
 
+    private val _musicFlow = MutableSharedFlow<Boolean>(replay = 0)
+    private val musicFlow: Flow<Boolean> = _musicFlow
+        .onStart { emit(applicationContextRepository.isMusicEnabled()) }
+        .distinctUntilChanged()
+
     private val _smoothLightingFlow = MutableSharedFlow<Boolean>(replay = 0)
     private val smoothLightingFlow: Flow<Boolean> = _smoothLightingFlow
         .onStart { emit(applicationContextRepository.getLightingBackend() == LightingBackend.BFS) }
@@ -92,6 +97,7 @@ class SettingsMenuViewModel(
         canResetHintsFlow,
         showDebugInfoFlow,
         performanceChanged,
+        musicFlow,
     ) { values ->
         SettingsMenuState(
             performanceAvailable = performanceMonitor.available,
@@ -100,6 +106,7 @@ class SettingsMenuViewModel(
             fullscreen = values[1],
             autoJump = values[2],
             sound = values[3],
+            music = values[9],
             smoothLighting = values[4],
             showPersonalizedAdsToggle = showPersonalizedAdsToggle,
             personalizedAds = values[5],
@@ -129,6 +136,7 @@ class SettingsMenuViewModel(
             fullscreen = applicationContextRepository.isFullscreen(),
             autoJump = applicationContextRepository.isAutoJumpEnabled(),
             sound = applicationContextRepository.isSoundEnabled(),
+            music = applicationContextRepository.isMusicEnabled(),
             smoothLighting = applicationContextRepository.getLightingBackend() == LightingBackend.BFS,
             showPersonalizedAdsToggle = showPersonalizedAdsToggle,
             personalizedAds = applicationContextRepository.getPersonalizedAdsConsent() ?: false,
@@ -162,6 +170,10 @@ class SettingsMenuViewModel(
         viewModelScope.launch { _soundFlow.emit(enabled) }
     }
 
+    fun onMusicClick(enabled: Boolean) {
+        viewModelScope.launch { _musicFlow.emit(enabled) }
+    }
+
     fun onSmoothLightingClick(enabled: Boolean) {
         viewModelScope.launch { _smoothLightingFlow.emit(enabled) }
     }
@@ -180,6 +192,7 @@ class SettingsMenuViewModel(
             applicationContextRepository.setUseDynamicCamera(dynamicCamera)
             applicationContextRepository.setAutoJumpEnabled(autoJump)
             applicationContextRepository.setSoundEnabled(sound)
+            applicationContextRepository.setMusicEnabled(music)
             applicationContextRepository.setLightingBackend(
                 if (smoothLighting) LightingBackend.BFS else LightingBackend.LEGACY,
             )

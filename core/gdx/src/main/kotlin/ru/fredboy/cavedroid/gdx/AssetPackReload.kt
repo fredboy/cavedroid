@@ -5,6 +5,7 @@ import ru.fredboy.cavedroid.gdx.di.ApplicationComponent
 
 internal fun initializeAssetResources(component: ApplicationComponent): Skin {
     component.packDefinitionValidator.validate()
+    component.backgroundMusicAssets.validate()
     component.initializeAssets()
     component.itemsRepository.getAllItems()
     component.mobParamsRepository.getAllParams()

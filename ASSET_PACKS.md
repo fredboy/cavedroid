@@ -59,6 +59,7 @@ including different versions of the same pack.
 | HUD and controls | `textures/`, `touch_gui.png`, `crosshair.png`, `json/texture_regions.json` |
 | Environment | `textures/environment/`, `parallax/` |
 | Sounds | `sfx/`, including category `index.txt` files |
+| Background music | `bgm/`, with `bgm/index.json` defining the complete playlist |
 | Menu styles and fonts | `skin/` |
 | Translations | `i18n/` |
 | Gameplay data | `json/game_items.json`, `json/mobs.json`, `json/crafting.json`, `json/touch_buttons.json` |
@@ -67,6 +68,17 @@ Packs provide data for existing behavior; they cannot add executable code or
 selectable UI languages. Non-JSON files replace whole files, including properties
 bundles and sound indexes. Sound samples must be numbered contiguously from `0`;
 loading stops at the first missing number across the stack.
+
+For background music, the highest-priority pack containing `bgm/index.json`
+replaces the whole playlist, including the bundled one. Lower-priority music
+indexes are ignored; `{}` creates an empty playlist. Packs without a music index
+keep the selected playlist. Only listed tracks play, and their files resolve
+through the normal pack priority order.
+
+The index maps relative music paths to positive durations in seconds, for example
+`{"ambient.wav": 120.5}`. Include each referenced track under `bgm/`; PCM WAV is
+supported across all platforms. Invalid indexes, missing files, and empty files
+are rejected before the pack selection is applied.
 
 JSON merges from bundled data through enabled packs, lowest priority first:
 

@@ -153,6 +153,8 @@ class CaveDroidApplication(
                     ?.let { deviceLocale ->
                         SUPPORTED_LOCALES.firstOrNull { it.language == deviceLocale.language }
                     } ?: Locale.ENGLISH,
+                musicEnabled = preferencesStore.getPreference(PreferenceKeys.MUSIC_ENABLED)
+                    ?.toBooleanStrictOrNull() ?: true,
                 soundEnabled = preferencesStore.getPreference(PreferenceKeys.SOUND_ENABLED)
                     ?.toBooleanStrictOrNull() ?: true,
                 isOnboardingShown = preferencesStore.getPreference(PreferenceKeys.ONBOARDING_SHOWN)

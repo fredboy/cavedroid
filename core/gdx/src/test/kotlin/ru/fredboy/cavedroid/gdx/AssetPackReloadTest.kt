@@ -32,6 +32,7 @@ class AssetPackReloadTest {
         verifyOrder {
             current.assetPackRepository.saveSelection(listOf("new"))
             candidate.packDefinitionValidator.validate()
+            candidate.backgroundMusicAssets.validate()
             candidate.initializeAssets.invoke()
             candidate.itemsRepository.getAllItems()
             candidate.mobParamsRepository.getAllParams()
@@ -79,5 +80,22 @@ class AssetPackReloadTest {
 
         assertEquals(listOf("previous"), selection)
         verify(exactly = 0) { current.disposeAssets.invoke() }
+    }
+
+    @Test
+    fun `invalid BGM restores selection before candidate activation or current resource disposal`() {
+        val failure = IllegalArgumentException("bgm/index.json: missing music file")
+        every { candidate.backgroundMusicAssets.validate() } throws failure
+        var activated = false
+        val thrown = assertThrows(IllegalArgumentException::class.java) {
+            reloadAssetPacks(current, listOf("bad-music"), { candidate }) { activated = true }
+        }
+        assertSame(failure, thrown)
+        assertFalse(activated)
+        assertEquals(listOf("previous"), selection)
+        verify(exactly = 0) { candidate.initializeAssets.invoke() }
+        verify(exactly = 0) { current.disposeAssets.invoke() }
+        verify { candidate.disposeAssets.invoke() }
+        verify { candidate.assetTextureLoader.disposeAll() }
     }
 }

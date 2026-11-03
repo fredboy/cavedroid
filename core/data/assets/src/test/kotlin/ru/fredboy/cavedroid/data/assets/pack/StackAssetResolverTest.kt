@@ -96,4 +96,28 @@ class StackAssetResolverTest {
         }
         assertThrows(IllegalStateException::class.java) { StackAssetResolver(repository).resolve("file.txt") }
     }
+
+    @Test
+    fun `highest priority music index replaces lower playlists and built in tracks`() {
+        val high = pack("high")
+        val low = pack("low")
+        bundled.child("bgm/index.json").writeString("""{"0.wav":60,"1.wav":120}""", false)
+        low.directory.child("bgm/index.json").writeString("""{"low.wav":30}""", false)
+        val playlist = """{"high.wav":45}"""
+        high.directory.child("bgm/index.json").writeString(playlist, false)
+        val index = resolver(high, low).handle("bgm/index.json")
+        assertEquals(playlist, index.readString())
+        assertEquals(playlist.toByteArray().size.toLong(), index.length())
+    }
+
+    @Test
+    fun `pack without music index falls back while an empty index disables music`() {
+        val high = pack("high")
+        val low = pack("low")
+        val playlist = """{"0.wav":60}"""
+        bundled.child("bgm/index.json").writeString(playlist, false)
+        assertEquals(playlist, resolver(high, low).handle("bgm/index.json").readString())
+        low.directory.child("bgm/index.json").writeString("{}", false)
+        assertEquals("{}", resolver(high, low).handle("bgm/index.json").readString())
+    }
 }

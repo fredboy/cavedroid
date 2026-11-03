@@ -88,7 +88,7 @@ val generatePlist by tasks.registering {
 }
 
 tasks.matching { it.name.startsWith("createIpa") || it.name.startsWith("launchIPhone") }
-    .configureEach { dependsOn(generatePlist) }
+    .configureEach { dependsOn(generatePlist, ":generateBgmIndex") }
 
 tasks.register<Copy>("copyLicenseReport") {
     dependsOn("generateLicenseReport")
@@ -130,6 +130,7 @@ tasks.register("generateAttributionIndex") {
 }
 
 tasks.assemble.apply {
+    dependsOn(":generateBgmIndex")
     dependsOn("copyLicenseReport")
     dependsOn("generateAttributionIndex")
 }

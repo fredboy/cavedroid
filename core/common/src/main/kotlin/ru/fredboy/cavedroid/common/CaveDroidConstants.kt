@@ -21,6 +21,7 @@ object CaveDroidConstants {
         const val LOCALE = "locale"
 
         const val SOUND_ENABLED = "sound_enabled"
+        const val MUSIC_ENABLED = "music_enabled"
 
         const val WINDOW_WIDTH_KEY = "window_width"
 

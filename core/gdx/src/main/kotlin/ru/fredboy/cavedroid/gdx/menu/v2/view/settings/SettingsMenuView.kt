@@ -107,6 +107,16 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
 
                         row()
 
+                        textButton(
+                            viewModel.getFormattedString("enableMusic", state.music.toLocalizedToggle(viewModel)),
+                        ) {
+                            onClickWithSound(viewModel) {
+                                viewModel.onMusicClick(!state.music)
+                            }
+                        }
+
+                        row()
+
 //                        textButton(
 //                            viewModel.getFormattedString(
 //                                "smoothLighting",

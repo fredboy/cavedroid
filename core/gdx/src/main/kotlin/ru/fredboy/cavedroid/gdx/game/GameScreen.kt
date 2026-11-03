@@ -246,6 +246,7 @@ class GameScreen @Inject constructor(
     }
 
     override fun hide() {
+        gameComponent?.gameProc?.hide()
         shown = false
     }
 

@@ -95,3 +95,10 @@ subprojects {
         }
     }
 }
+
+val generateBgmIndex = tasks.register<GenerateBgmIndex>("generateBgmIndex") {
+    group = "assets"
+    description = "Generates bgm/index.json with durations from the WAV tracks in assets/bgm."
+    tracks.from(fileTree("assets/bgm") { include("*.wav") })
+    outputDirectory.set(layout.buildDirectory.dir("generated/bgmAssets"))
+}

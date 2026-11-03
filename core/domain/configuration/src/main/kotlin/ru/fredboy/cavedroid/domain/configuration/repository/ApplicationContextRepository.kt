@@ -51,6 +51,10 @@ interface ApplicationContextRepository {
 
     fun isSoundEnabled(): Boolean
 
+    fun isMusicEnabled(): Boolean
+
+    fun setMusicEnabled(enabled: Boolean)
+
     fun isOnboardingShown(): Boolean
 
     fun setOnboardingShown(shown: Boolean)

@@ -14,6 +14,8 @@ object BuildWeb {
         val assetsPath = System.getProperty("cavedroid.assetsPath")
             ?: error("cavedroid.assetsPath system property must be set by the gradle task.")
         val extraAssetsPath = System.getProperty("cavedroid.extraAssetsPath")
+        val bgmAssetsPath = System.getProperty("cavedroid.bgmAssetsPath")
+            ?: error("cavedroid.bgmAssetsPath system property must be set by the gradle task.")
         val launcherClass = System.getProperty("cavedroid.launcherClass")
             ?: error("cavedroid.launcherClass system property must be set by the gradle task.")
         val serve = System.getProperty("cavedroid.serve")?.toBooleanStrictOrNull() == true
@@ -38,6 +40,7 @@ object BuildWeb {
 
         val builder = TeaBuilder(backend)
             .addAssets(AssetFileHandle(assetsPath))
+            .addAssets(AssetFileHandle(bgmAssetsPath))
 
         if (!extraAssetsPath.isNullOrEmpty()) {
             builder.addAssets(AssetFileHandle(extraAssetsPath))

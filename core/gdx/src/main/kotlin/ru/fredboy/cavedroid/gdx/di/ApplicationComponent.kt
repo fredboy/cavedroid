@@ -16,6 +16,7 @@ import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.data.assets.di.DataAssetsModule
+import ru.fredboy.cavedroid.data.assets.music.BackgroundMusicAssets
 import ru.fredboy.cavedroid.data.configuration.di.ApplicationContextModule
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
 import ru.fredboy.cavedroid.data.items.di.DataItemsModule
@@ -70,6 +71,7 @@ interface ApplicationComponent {
 
     val assetPackPlatform: AssetPackPlatform
     val assetPackRepository: AssetPackRepository
+    val backgroundMusicAssets: BackgroundMusicAssets
     val assetResolver: AssetResolver
     val assetTextureLoader: AssetTextureLoader
 

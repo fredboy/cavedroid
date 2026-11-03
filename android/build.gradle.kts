@@ -231,6 +231,10 @@ tasks.named("preBuild") {
 
 androidComponents {
     onVariants { variant ->
+        variant.sources.assets?.addGeneratedSourceDirectory(
+            rootProject.tasks.named<GenerateBgmIndex>("generateBgmIndex"),
+            GenerateBgmIndex::outputDirectory,
+        )
         variant.outputs.forEach { output ->
             output.outputFileName.set("android-${ApplicationInfo.versionName}.apk")
         }

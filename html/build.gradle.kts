@@ -163,7 +163,7 @@ private fun JavaExec.configureWebBuild(
     optimization: String,
     wasm: Boolean = false,
 ) {
-    dependsOn("assemble", "copyLicenseReport", "generateAttributionIndex")
+    dependsOn("assemble", "copyLicenseReport", "generateAttributionIndex", ":generateBgmIndex")
     // Copy before compilation so static resources are available while run tasks serve.
     dependsOn(if (wasm) copyWasmStaticAssets else copyWebStaticAssets)
     mainClass.set(webBuildClassName)
@@ -174,6 +174,10 @@ private fun JavaExec.configureWebBuild(
     }
     workingDir = layout.projectDirectory.asFile
     systemProperty("cavedroid.assetsPath", rootProject.file("assets").absolutePath)
+    systemProperty(
+        "cavedroid.bgmAssetsPath",
+        rootProject.tasks.named<GenerateBgmIndex>("generateBgmIndex").get().outputDirectory.get().asFile.absolutePath,
+    )
     systemProperty("cavedroid.extraAssetsPath", extraAssetsDir.get().asFile.absolutePath)
     systemProperty("cavedroid.launcherClass", webLauncherClassName)
     systemProperty("cavedroid.sourceMaps", sourceMaps.toString())

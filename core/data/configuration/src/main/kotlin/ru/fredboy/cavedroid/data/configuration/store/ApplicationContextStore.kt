@@ -80,6 +80,13 @@ class ApplicationContextStore @Inject constructor(
             preferencesStore.setPreference(PreferenceKeys.SOUND_ENABLED, value.toString())
         }
 
+    var isMusicEnabled: Boolean
+        get() = synchronized(lock) { applicationContext.musicEnabled }
+        set(value) = synchronized(lock) {
+            applicationContext.musicEnabled = value
+            preferencesStore.setPreference(PreferenceKeys.MUSIC_ENABLED, value.toString())
+        }
+
     var isOnboardingShown: Boolean
         get() = synchronized(lock) { applicationContext.isOnboardingShown }
         set(value) = synchronized(lock) {

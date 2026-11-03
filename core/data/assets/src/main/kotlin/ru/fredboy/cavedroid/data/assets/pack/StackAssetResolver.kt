@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.data.assets.pack
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
 import kotlinx.serialization.json.Json
+import ru.fredboy.cavedroid.data.assets.music.BackgroundMusicAssets
 import ru.fredboy.cavedroid.domain.assets.pack.AssetPackRepository
 import ru.fredboy.cavedroid.domain.assets.pack.AssetResolver
 import java.io.ByteArrayInputStream
@@ -47,10 +48,12 @@ class StackAssetResolver @Inject constructor(private val packs: AssetPackReposit
     }
 
     private inner class LayeredHandle(private val assetPath: String) : FileHandle(assetPath) {
-        override fun read(): InputStream = if (extension() == "json") ByteArrayInputStream(json(assetPath)) else resolve(assetPath).read()
+        private val mergesJson = extension() == "json" && assetPath != BackgroundMusicAssets.INDEX_PATH
+
+        override fun read(): InputStream = if (mergesJson) ByteArrayInputStream(json(assetPath)) else resolve(assetPath).read()
         override fun exists(): Boolean = assetPath.isEmpty() || resolve(assetPath).exists()
         override fun isDirectory(): Boolean = assetPath.isEmpty() || resolve(assetPath).isDirectory
-        override fun length(): Long = if (extension() == "json") json(assetPath).size.toLong() else resolve(assetPath).length()
+        override fun length(): Long = if (mergesJson) json(assetPath).size.toLong() else resolve(assetPath).length()
         override fun child(name: String): FileHandle = handle(if (assetPath.isEmpty()) name else "$assetPath/$name")
         override fun parent(): FileHandle = handle(assetPath.substringBeforeLast('/', ""))
         override fun sibling(name: String): FileHandle = parent().child(name)

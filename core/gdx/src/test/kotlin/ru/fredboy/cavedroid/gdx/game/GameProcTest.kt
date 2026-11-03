@@ -47,6 +47,7 @@ class GameProcTest {
                 mockk(relaxed = true),
                 mockk(relaxed = true),
                 mockk(relaxed = true),
+                mockk(relaxed = true),
             )
             try {
                 clearMocks(world, mobs, renderer, input, answers = false)
