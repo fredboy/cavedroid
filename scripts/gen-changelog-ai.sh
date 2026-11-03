@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 # Generates plaintext fastlane changelogs for every supported locale via
-# DeepSeek. The list of locales (and their fastlane directory mapping)
+# OpenAI. The list of locales (and their fastlane directory mapping)
 # lives in scripts/locales.sh.
 #
 # Usage:
-#   DEEPSEEK_API_KEY=... ./scripts/gen-changelog-ai.sh A.B.C [--model MODEL]
+#   OPENAI_API_KEY=... ./scripts/gen-changelog-ai.sh A.B.C [--model MODEL]
 #
 # Writes:
 #   fastlane/metadata/android/<locale-dir>/changelogs/<versionCode>.txt
@@ -28,7 +28,7 @@ fi
 version=$1
 shift || true
 
-model="deepseek-flash"
+model="gpt-5.4-mini"
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --model) model=$2; shift 2 ;;
@@ -41,10 +41,10 @@ if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   exit 1
 fi
 
-if [[ -z "${DEEPSEEK_API_KEY:-}" ]]; then
-  echo >&2 "error: DEEPSEEK_API_KEY is required"
-  echo >&2 "  in CI:    add the DEEPSEEK_API_KEY repository Actions secret"
-  echo >&2 "  locally:  export DEEPSEEK_API_KEY=<your DeepSeek API key>"
+if [[ -z "${OPENAI_API_KEY:-}" ]]; then
+  echo >&2 "error: OPENAI_API_KEY is required"
+  echo >&2 "  in CI:    add the OPENAI_API_KEY repository Actions secret"
+  echo >&2 "  locally:  export OPENAI_API_KEY=<your OpenAI API key>"
   exit 1
 fi
 
@@ -97,18 +97,17 @@ ${commits}"
 request=$(jq -n --arg model "$model" --arg prompt "$prompt" '{
   model: $model,
   messages: [{role: "user", content: $prompt}],
-  thinking: {type: "disabled"},
   stream: false
 }')
 
 set +e
 response=$(curl -sS --fail-with-body \
-  --write-out '%{stderr}DeepSeek HTTP %{http_code}; content type: %{content_type}\n' \
-  -H "Authorization: Bearer $DEEPSEEK_API_KEY" \
+  --write-out '%{stderr}OpenAI HTTP %{http_code}; content type: %{content_type}\n' \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
   -d "$request" \
-  https://api.deepseek.com/chat/completions)
+  https://api.openai.com/v1/chat/completions)
 curl_status=$?
 set -e
 
