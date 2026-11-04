@@ -15,7 +15,7 @@ class SpaceRenderer @Inject constructor(
     private val gameWorld: GameWorld,
 ) : IWorldRenderer {
 
-    private val starField = StarField(gameWorld.generatorConfig.seed)
+    private val gradientTopColor = Color()
 
     // Cover the atmosphere (including weather), before drawing terrain and entities.
     override val renderLayer = 99900
@@ -27,22 +27,33 @@ class SpaceRenderer @Inject constructor(
 
         spriteBatch.end()
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
-        shapeRenderer.setColor(0f, 0f, 0.1f, 1f)
+        shapeRenderer.color = Color.BLACK
         shapeRenderer.rect(viewport.x, top, viewport.width, bottom - top)
 
-        for (star in starField.stars) {
-            val x = viewport.x + star.x * viewport.width
-            val y = viewport.y + star.y * viewport.height
-            val starTop = maxOf(y, top)
-            val starBottom = minOf(y + star.size, bottom)
-            if (starTop >= starBottom) continue
-
-            shapeRenderer.setColor(0.85f * star.brightness, 0.9f * star.brightness, star.brightness, 1f)
-            shapeRenderer.rect(x, starTop, minOf(star.size, viewport.x + viewport.width - x), starBottom - starTop)
+        // Anchor the fade to world depth so moving the camera doesn't change the void's color.
+        val fadeEnd = gameWorld.height + FADE_DEPTH
+        if (top < fadeEnd) {
+            val depth = (top - gameWorld.height) / FADE_DEPTH
+            gradientTopColor.set(BORDER_COLOR).lerp(Color.BLACK, depth)
+            shapeRenderer.rect(
+                viewport.x,
+                top,
+                viewport.width,
+                fadeEnd - top,
+                gradientTopColor,
+                gradientTopColor,
+                Color.BLACK,
+                Color.BLACK,
+            )
         }
 
         shapeRenderer.end()
         shapeRenderer.color = Color.WHITE
         spriteBatch.begin()
+    }
+
+    companion object {
+        private const val FADE_DEPTH = 32f
+        private val BORDER_COLOR = Color.valueOf("100d0c")
     }
 }
