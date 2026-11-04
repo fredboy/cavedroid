@@ -14,6 +14,8 @@ data class MobSprite(
     val isStatic: Boolean,
     val origin: SpriteOrigin,
     val armorDataByMaterial: Map<String, List<Armor>>?,
+    val isLeg: Boolean = false,
+    val isBody: Boolean = false,
 ) {
 
     data class Armor(

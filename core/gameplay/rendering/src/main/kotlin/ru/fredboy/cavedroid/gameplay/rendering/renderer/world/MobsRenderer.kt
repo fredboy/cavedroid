@@ -10,6 +10,7 @@ import ru.fredboy.cavedroid.common.performance.PerformanceGauge
 import ru.fredboy.cavedroid.common.performance.PerformanceMetric
 import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.common.utils.cycledInsideWorld
+import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.entity.mob.model.Mob
@@ -42,14 +43,24 @@ class MobsRenderer @Inject constructor(
             drawnMobs++
             mob.draw(spriteBatch, mobRect.x, mobRect.y, delta)
             if (mob.isOnFire) {
-                drawFireOverlay(spriteBatch, mobRect.x, mobRect.y, mob.width, mob.height)
+                drawFireOverlay(spriteBatch, mobRect.x, mobRect.y, mob)
             }
         }
     }
 
-    private fun drawFireOverlay(spriteBatch: SpriteBatch, x: Float, y: Float, width: Float, height: Float) {
+    private fun drawFireOverlay(spriteBatch: SpriteBatch, x: Float, y: Float, mob: Mob) {
         val sprite = fireBlock?.sprite ?: return
-        sprite.setBounds(x, y, width, height)
+        val legs = mob.params.sprites.filter { it.isLeg && !it.isOverlay }
+        val parts = when {
+            legs.size >= 4 -> legs
+            legs.isEmpty() -> mob.params.sprites.filter { it.isBody && !it.isOverlay }
+            else -> emptyList()
+        }
+        val left = parts.minOfOrNull { it.offsetX } ?: 0f
+        val right = parts.maxOfOrNull { it.offsetX + it.sprite.regionWidth.meters } ?: mob.width
+        val fireWidth = right - left
+        val offsetX = if (mob.looksRight()) mob.width - right else left
+        sprite.setBounds(x + offsetX, y, fireWidth, mob.height)
         sprite.draw(spriteBatch)
     }
 
@@ -74,8 +85,7 @@ class MobsRenderer @Inject constructor(
                 spriteBatch = spriteBatch,
                 x = playerPosition.x - player.width / 2f,
                 y = playerDrawY,
-                width = player.width,
-                height = player.height,
+                mob = player,
             )
         }
 
