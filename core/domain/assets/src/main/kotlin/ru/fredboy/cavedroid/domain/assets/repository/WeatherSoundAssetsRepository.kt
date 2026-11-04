@@ -1,8 +1,8 @@
 package ru.fredboy.cavedroid.domain.assets.repository
 
-import com.badlogic.gdx.audio.Sound
+import ru.fredboy.cavedroid.domain.assets.model.RainSound
 
 abstract class WeatherSoundAssetsRepository : SoundAssetsRepository() {
 
-    abstract fun getRainSound(): Sound?
+    abstract fun getRainSound(): RainSound?
 }
