@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Generates English-only markdown release notes via DeepSeek.
+# Generates English-only markdown release notes via OpenAI.
 #
 # Usage:
-#   DEEPSEEK_API_KEY=... ./scripts/gen-release-notes-ai.sh vA.B.C [--model MODEL] [--output PATH]
+#   OPENAI_API_KEY=... ./scripts/gen-release-notes-ai.sh vA.B.C [--model MODEL] [--output PATH]
 #
 # Writes to stdout by default, or to --output PATH if given.
 # Falls back to a raw `git log` markdown body if the AI call fails.
@@ -23,7 +23,7 @@ fi
 tag=$1
 shift || true
 
-model="deepseek-flash"
+model="gpt-5.4-mini"
 output=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -38,10 +38,10 @@ if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   exit 1
 fi
 
-if [[ -z "${DEEPSEEK_API_KEY:-}" ]]; then
-  echo >&2 "error: DEEPSEEK_API_KEY is required"
-  echo >&2 "  in CI:    add the DEEPSEEK_API_KEY repository Actions secret"
-  echo >&2 "  locally:  export DEEPSEEK_API_KEY=<your DeepSeek API key>"
+if [[ -z "${OPENAI_API_KEY:-}" ]]; then
+  echo >&2 "error: OPENAI_API_KEY is required"
+  echo >&2 "  in CI:    add the OPENAI_API_KEY repository Actions secret"
+  echo >&2 "  locally:  export OPENAI_API_KEY=<your OpenAI API key>"
   exit 1
 fi
 
@@ -88,6 +88,7 @@ fi
 prompt="You are writing GitHub Release notes for CaveDroid, a 2D Minecraft-inspired indie game (Android, desktop, web).
 
 Below is the raw git commit log for release ${tag} (previous tag: ${prev_tag:-(none)}). Drop refactors, internal cleanup, build/CI tweaks, and dependency bumps — keep only what a player would care about (new features, gameplay changes, bug fixes, UI improvements).
+Read the entire commit log before selecting entries. If a feature was introduced in this release, describe its addition once and omit follow-up commits that adjust, polish, tune, or fix that new feature; do not mention those adjustments separately or within the feature's entry. For example, if this release adds background music (BGM), include its addition but ignore a later \"Increase bgm volume\" commit. Keep relevant improvements and fixes to features that existed before this release.
 
 Output English-only markdown. Group items by category (New Features / Improvements / Fixes — omit empty groups) using #### subheaders, with markdown bullet lists under each. Do not include any top-level (##) language section heading.
 
@@ -99,18 +100,17 @@ ${commits}"
 request=$(jq -n --arg model "$model" --arg prompt "$prompt" '{
   model: $model,
   messages: [{role: "user", content: $prompt}],
-  thinking: {type: "disabled"},
   stream: false
 }')
 
 set +e
 response=$(curl -sS --fail-with-body \
-  --write-out '%{stderr}DeepSeek HTTP %{http_code}; content type: %{content_type}\n' \
-  -H "Authorization: Bearer $DEEPSEEK_API_KEY" \
+  --write-out '%{stderr}OpenAI HTTP %{http_code}; content type: %{content_type}\n' \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
   -d "$request" \
-  https://api.deepseek.com/chat/completions)
+  https://api.openai.com/v1/chat/completions)
 curl_status=$?
 set -e
 

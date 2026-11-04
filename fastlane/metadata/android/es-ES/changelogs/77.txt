@@ -1,0 +1,9 @@
+- Nuevos packs de recursos con texturas de mayor resolución
+- Guardado automático completo durante la partida
+- Rediseño de los controles táctiles y de las ventanas del inventario para jugar mejor en móvil
+- Ahora puedes aplicar packs sin reiniciar el juego
+- El inventario creativo se organiza por categorías y llegan los cofres grandes
+- Música de juego con reproducción aleatoria, fundidos y pistas personalizadas
+- Nuevas mecánicas de hielo, crecimiento de bloques y minerales bajo tierra
+- Mejoras de movimiento, apuntado táctil, nubes, parallax y atmósfera
+- Arreglos de fluidos, colisiones, guardado del mundo, objetos y varios fallos de controles

@@ -26,8 +26,8 @@ class UseFenceGateActionTest {
     private val closed = gate(open = false)
 
     init {
-        every { repository.getBlockByKey("fence_gate_oak_left_open") } returns open
-        every { repository.getBlockByKey("fence_gate_oak_left_closed") } returns closed
+        every { repository.getBlockByKey("wood_fence_gate_oak_left_open") } returns open
+        every { repository.getBlockByKey("wood_fence_gate_oak_left_closed") } returns closed
         every { mobs.player.hitbox } returns Rectangle(10f, 10f, 1f, 2f)
         every { mobs.mobs } returns emptyList()
     }
@@ -56,7 +56,7 @@ class UseFenceGateActionTest {
 
     private fun gate(open: Boolean): Block.Normal {
         val params = mockk<CommonBlockParams>(relaxed = true)
-        every { params.key } returns "fence_gate_oak_left_${if (open) "open" else "closed"}"
+        every { params.key } returns "wood_fence_gate_oak_left_${if (open) "open" else "closed"}"
         every { params.hasCollision } returns !open
         every { params.useActionKey } returns FenceBlocks.USE_GATE_ACTION_KEY
         every { params.collisionMargins } returns BlockInsets.Meters(0f, 0f, if (open) 0f else 0.75f, 0f)

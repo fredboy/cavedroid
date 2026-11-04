@@ -101,12 +101,14 @@ class Drop(
         val pickUpFixtureDef = FixtureDef().apply {
             shape = bodyShape
             isSensor = true
+            filter.categoryBits = PhysicsConstants.CATEGORY_DROP
             filter.maskBits = PhysicsConstants.CATEGORY_MOB
         }
 
         val attractorFixtureDef = FixtureDef().apply {
             shape = attractorShape
             isSensor = true
+            filter.categoryBits = PhysicsConstants.CATEGORY_DROP
             filter.maskBits = PhysicsConstants.CATEGORY_MOB
         }
 

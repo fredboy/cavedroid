@@ -1,5 +1,6 @@
 package ru.fredboy.cavedroid.entity.drop
 
+import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.inventory.Inventory
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
@@ -25,5 +26,9 @@ class DropQueue @Inject constructor() {
 
     fun offerItem(x: Float, y: Float, item: InventoryItem) {
         queue.offer(QueuedDrop(x, y, item))
+    }
+
+    fun offerItem(x: Float, y: Float, item: InventoryItem, initialForce: Vector2) {
+        queue.offer(QueuedDrop(x, y, item, initialForce.cpy()))
     }
 }

@@ -126,6 +126,34 @@ class ChunkCollisionMesherTest {
     }
 
     @Test
+    fun `enclosed air does not add full width walls beside doors between floor and ceiling`() {
+        for (margins in listOf(BlockInsets.Meters(0f, 0f, 13f / 16f, 0f), BlockInsets.Meters(13f / 16f, 0f, 0f, 0f))) {
+            val door = Block.Normal(baseParams.copy(key = "door", collisionMargins = margins))
+            val input = snapshot(x = 0, y = 0) { x, y ->
+                when {
+                    x == 7 && y in 6..7 -> door
+                    x in 2..13 && y in 6..7 -> air
+                    else -> stone
+                }
+            }
+            val result = mesher.prepare(input)
+            val airFixtures = result.fixtures.filter { it.block === air }
+            assertEquals(1, airFixtures.size, "Air must connect through the unoccupied part of the door tiles")
+            val contour = airFixtures.single().vertices.toList().chunked(2)
+            assertTrue(contour.all { (x, y) -> x == -6f || x == 6f || y == -2f || y == 0f })
+            val doors = result.fixtures.filter { it.block === door }
+            assertEquals(2, doors.size)
+            doors.forEach { fixture ->
+                val xs = fixture.vertices.toList().chunked(2).map { it[0] }
+                assertEquals(-1f + margins.left, xs.min())
+                assertEquals(0f - margins.right, xs.max())
+            }
+            assertEquals(door, result.userData[7, 6])
+            assertEquals(door, result.userData[7, 7])
+        }
+    }
+
+    @Test
     fun `non colliding inset blocks remain air without standalone fixtures`() {
         val result = mesher.prepare(snapshot { x, y -> if (x in 3..4 && y == 5) insetAir else air })
         assertTrue(result.fixtures.isEmpty())

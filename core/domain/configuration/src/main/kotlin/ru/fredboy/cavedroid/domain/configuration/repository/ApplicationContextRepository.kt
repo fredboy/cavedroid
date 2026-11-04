@@ -10,6 +10,8 @@ interface ApplicationContextRepository {
 
     fun isYandexGamesBuild(): Boolean
 
+    fun supportsInfiniteWorlds(): Boolean
+
     fun isTouch(): Boolean
 
     fun isFullscreen(): Boolean
@@ -48,6 +50,10 @@ interface ApplicationContextRepository {
     fun setSoundEnabled(enabled: Boolean)
 
     fun isSoundEnabled(): Boolean
+
+    fun isMusicEnabled(): Boolean
+
+    fun setMusicEnabled(enabled: Boolean)
 
     fun isOnboardingShown(): Boolean
 

@@ -112,6 +112,18 @@ internal class WorldAdapterImpl @Inject constructor(
         return Vector2(x + .5f - (charParams?.width ?: 1f) / 2, y - (charParams?.height ?: 1f))
     }
 
+    override fun containerX(x: Int) = gameWorld.containerX(x)
+
+    override fun chestBlockKey(x: Int, y: Int, z: Int): String? {
+        val block = if (z == Layer.FOREGROUND.z) gameWorld.getForeMap(x, y) else gameWorld.getBackMap(x, y)
+        return (block as? Block.Chest)?.params?.key
+    }
+
+    override fun setChestBlockKey(x: Int, y: Int, z: Int, key: String) {
+        val layer = if (z == Layer.FOREGROUND.z) Layer.FOREGROUND else Layer.BACKGROUND
+        gameWorld.setChestAppearance(x, y, layer, itemsRepository.getBlockByKey(key) as Block.Chest)
+    }
+
     override fun checkContainerAtCoordinates(
         coordinates: ContainerCoordinates,
         requiredType: KClass<out Block.Container>,
@@ -186,14 +198,14 @@ internal class WorldAdapterImpl @Inject constructor(
         if (!isChunkLoadedAt(x)) return false
         val key = getForegroundBlock(x, bottomY).params.key
         val side = when {
-            key.startsWith("door_wood_bottom_left_") -> "left"
-            key.startsWith("door_wood_bottom_right_") -> "right"
+            key.startsWith("wood_door_bottom_left_") -> "left"
+            key.startsWith("wood_door_bottom_right_") -> "right"
             else -> return false
         }
         val oldState = if (open) "closed" else "open"
         val newState = if (open) "open" else "closed"
-        if (key != "door_wood_bottom_${side}_$oldState" ||
-            getForegroundBlock(x, bottomY - 1).params.key != "door_wood_top_${side}_$oldState"
+        if (key != "wood_door_bottom_${side}_$oldState" ||
+            getForegroundBlock(x, bottomY - 1).params.key != "wood_door_top_${side}_$oldState"
         ) {
             return false
         }
@@ -207,8 +219,8 @@ internal class WorldAdapterImpl @Inject constructor(
             }, x.toFloat(), bottomY - 1f, x + 1f, bottomY + 1f)
             if (occupied) return false
         }
-        setForegroundBlock(x, bottomY - 1, itemsRepository.getBlockByKey("door_wood_top_${side}_$newState"))
-        setForegroundBlock(x, bottomY, itemsRepository.getBlockByKey("door_wood_bottom_${side}_$newState"))
+        setForegroundBlock(x, bottomY - 1, itemsRepository.getBlockByKey("wood_door_top_${side}_$newState"))
+        setForegroundBlock(x, bottomY, itemsRepository.getBlockByKey("wood_door_bottom_${side}_$newState"))
         return true
     }
 

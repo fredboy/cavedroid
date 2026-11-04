@@ -52,8 +52,8 @@ class VehicleController @Inject constructor(
 
     fun restore(states: List<VehicleState>) {
         for (state in states) {
+            val type = BoatType.fromItemKey(state.type) ?: continue
             if (state.id in live ||
-                BoatType.fromItemKey(state.type) == null ||
                 state.health <= 0 ||
                 !state.x.isFinite() ||
                 !state.y.isFinite() ||
@@ -62,7 +62,7 @@ class VehicleController @Inject constructor(
             ) {
                 continue
             }
-            live[state.id] = factory.create(state)
+            live[state.id] = factory.create(state.copy(type = type.itemKey))
         }
     }
 
@@ -155,7 +155,7 @@ class VehicleController @Inject constructor(
             }
             fixture.filterData = Filter().apply {
                 categoryBits = original.categoryBits
-                maskBits = PhysicsConstants.CATEGORY_PROJECTILE
+                maskBits = (PhysicsConstants.CATEGORY_PROJECTILE.toInt() or PhysicsConstants.CATEGORY_DROP.toInt()).toShort()
             }
         }
         changePlayerBodyType(BodyDef.BodyType.KinematicBody)

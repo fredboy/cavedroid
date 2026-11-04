@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 import co.touchlab.kermit.Logger
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.api.InventoryHintEvents
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -40,16 +41,16 @@ abstract class AbstractInventoryItemsMouseInputHandler(
     protected abstract val windowTexture: TextureRegion
 
     override fun reset() {
-        cancelHold()
+        cancelHold(completeClick = false)
     }
 
     protected abstract fun getWindowRect(viewport: Rectangle): Rectangle
 
-    private fun cancelHold() {
+    protected fun cancelHold(completeClick: Boolean = true) {
         selectableCellHoldTask?.cancel()
         selectableCellHoldTask = null
         holdingPointer = -1
-        onCancelHold?.invoke()
+        if (completeClick) onCancelHold?.invoke()
         onCancelHold = null
     }
 
@@ -157,8 +158,13 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         } else if (action.actionKey is MouseInputActionKey.Left) {
             window.onLeftCLick(items, itemsRepository, index)
         } else {
+            val wasHoldingItem = !window.selectedItem.isNoneOrNull()
             window.onRightClick(items, itemsRepository, index)
-            inventoryHintEvents.notifyItemPlacedByOne()
+            if (wasHoldingItem) {
+                inventoryHintEvents.notifyItemPlacedByOne()
+            } else if (!window.selectedItem.isNoneOrNull()) {
+                inventoryHintEvents.notifyItemHeld()
+            }
         }
         inventoryHintEvents.notifyItemMoved()
     }
@@ -215,7 +221,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
 
         val selectedItem = window.selectedItem?.takeIf { !it.isNoneOrNull() } ?: return
 
-        dropQueue.offerItem(playerAdapter.x, playerAdapter.y, selectedItem)
+        dropQueue.offerItem(playerAdapter.cursorX, playerAdapter.cursorY, selectedItem, Vector2.Zero)
         window.selectedItem = null
     }
 

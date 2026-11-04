@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class VehicleTest {
-    private val boat = Vehicle("boat", "oak_boat", mockk<Body>())
+    private val boat = Vehicle("boat", "boat_oak", mockk<Body>())
 
     @Test
     fun `ten damage destroys a boat and further hits cannot underflow`() {

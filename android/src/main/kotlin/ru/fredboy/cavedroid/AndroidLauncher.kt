@@ -41,6 +41,7 @@ class AndroidLauncher : AndroidApplication() {
     }
 
     private lateinit var adController: AdController
+    private lateinit var assetPackPlatform: AndroidAssetPackPlatform
     private lateinit var saveTransferController: AndroidSaveTransferController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,6 +64,7 @@ class AndroidLauncher : AndroidApplication() {
 
         adController = createAdController(this)
         saveTransferController = AndroidSaveTransferController(this)
+        assetPackPlatform = AndroidAssetPackPlatform(this)
 
         val config = AndroidApplicationConfiguration()
         config.useImmersiveMode = true
@@ -93,6 +95,7 @@ class AndroidLauncher : AndroidApplication() {
                 adController = adController,
                 softKeyboardObserver = softKeyboardObserver,
                 saveTransferController = saveTransferController,
+                assetPackPlatform = assetPackPlatform,
                 loggingSeverity = if (BuildConfig.DEBUG) Severity.Debug else Severity.Info,
             ),
             /* config = */ config,
@@ -116,6 +119,7 @@ class AndroidLauncher : AndroidApplication() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (assetPackPlatform.handleActivityResult(requestCode, resultCode, data)) return
         if (saveTransferController.handleActivityResult(requestCode, resultCode, data)) {
             return
         }

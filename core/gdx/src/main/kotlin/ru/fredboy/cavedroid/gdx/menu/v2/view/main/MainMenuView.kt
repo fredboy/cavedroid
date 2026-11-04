@@ -6,6 +6,7 @@ import ktx.scene2d.Scene2dDsl
 import ktx.scene2d.actors
 import ktx.scene2d.image
 import ktx.scene2d.imageButton
+import ktx.scene2d.label
 import ktx.scene2d.table
 import ktx.scene2d.textButton
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.menuButtonsTable
@@ -17,6 +18,10 @@ fun Stage.mainMenuView(viewModel: MainMenuViewModel) = viewModel.also {
         menuButtonsTable(
             withVersion = false,
         ) {
+            if (viewModel.showPackRecovery) {
+                label(viewModel.getLocalizedString("packsFailed")) { setWrap(true) }.cell(width = 600f)
+                row()
+            }
             textButton(viewModel.getLocalizedString("play")) {
                 onClickWithSound(viewModel) {
                     viewModel.onSinglePlayerClick()

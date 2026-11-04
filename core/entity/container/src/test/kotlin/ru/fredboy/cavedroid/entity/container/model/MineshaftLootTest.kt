@@ -12,11 +12,11 @@ class MineshaftLootTest {
         for (seed in 0L..100L) {
             val loot = MineshaftLoot.roll(seed)
             assertEquals(loot, MineshaftLoot.roll(seed))
-            for ((key, count) in loot.filter { it.first.endsWith("_seeds") }) {
+            for ((key, count) in loot.filter { it.first.startsWith("seeds_") }) {
                 found += key
                 assertTrue(count in 2..4)
             }
         }
-        assertEquals(setOf("pumpkin_seeds", "melon_seeds"), found)
+        assertEquals(setOf("seeds_pumpkin", "seeds_melon"), found)
     }
 }

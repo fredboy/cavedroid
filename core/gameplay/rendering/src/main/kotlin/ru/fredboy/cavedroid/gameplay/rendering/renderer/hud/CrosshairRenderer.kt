@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.common.utils.invertColor
@@ -15,6 +16,7 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindHudRenderer
+import ru.fredboy.cavedroid.gameplay.rendering.utils.PresentationPoses
 import javax.inject.Inject
 
 @GameScope
@@ -24,7 +26,10 @@ class CrosshairRenderer @Inject constructor(
     private val mobAssetsRepository: MobTextureAssetsRepository,
     private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
+    private val poses: PresentationPoses,
 ) : IHudRenderer {
+
+    private val cursorPosition = Vector2()
 
     override val renderLayer: Int
         get() = RENDER_LAYER
@@ -50,8 +55,9 @@ class CrosshairRenderer @Inject constructor(
     ) {
         if (applicationContextRepository.isTouch() || gameContextRepository.shouldShowInfo()) {
             mobAssetsRepository.getCrosshairSprite().let { crosshairSprite ->
-                val x = (mobController.player.cursorX - gameContextRepository.getCameraContext().visibleWorld.x).pixels
-                val y = (mobController.player.cursorY - gameContextRepository.getCameraContext().visibleWorld.y).pixels
+                poses.cursorPosition(cursorPosition)
+                val x = (cursorPosition.x - gameContextRepository.getCameraContext().visibleWorld.x).pixels
+                val y = (cursorPosition.y - gameContextRepository.getCameraContext().visibleWorld.y).pixels
 
                 val tintColor = null
 //                    ifTrue(Gdx.graphics.framesPerSecond > 100) {

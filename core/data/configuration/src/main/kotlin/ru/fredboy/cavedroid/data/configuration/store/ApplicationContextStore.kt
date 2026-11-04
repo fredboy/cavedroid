@@ -23,6 +23,9 @@ class ApplicationContextStore @Inject constructor(
     val isYandexGamesBuild: Boolean
         get() = synchronized(lock) { applicationContext.isYandexGamesBuild }
 
+    val supportsInfiniteWorlds: Boolean
+        get() = applicationContext.supportsInfiniteWorlds
+
     var isTouch: Boolean
         get() = synchronized(lock) { applicationContext.isTouch }
         set(value) = synchronized(lock) { applicationContext.isTouch = value }
@@ -75,6 +78,13 @@ class ApplicationContextStore @Inject constructor(
         set(value) = synchronized(lock) {
             applicationContext.soundEnabled = value
             preferencesStore.setPreference(PreferenceKeys.SOUND_ENABLED, value.toString())
+        }
+
+    var isMusicEnabled: Boolean
+        get() = synchronized(lock) { applicationContext.musicEnabled }
+        set(value) = synchronized(lock) {
+            applicationContext.musicEnabled = value
+            preferencesStore.setPreference(PreferenceKeys.MUSIC_ENABLED, value.toString())
         }
 
     var isOnboardingShown: Boolean

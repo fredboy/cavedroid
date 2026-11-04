@@ -1,28 +1,33 @@
 plugins {
-    kotlin("jvm")
-    ksp
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.ksp)
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
-    useLibgdx()
-    useDagger()
-    useCommonLibs()
-    useDomainModules()
-    useModule(":core:entity:vehicle")
-    useModule(":core:entity:mob")
-    useModule(":core:entity:drop")
-    useModule(":core:game:world")
-    useModule(":core:game:controller:mob")
-    testImplementation(Dependencies.Test.junitJupiter)
-    testRuntimeOnly(Dependencies.Test.junitJupiterEngine)
-    testRuntimeOnly(Dependencies.Test.junitPlatformLauncher)
-    testImplementation(Dependencies.Test.mockk)
+    implementation(libs.bundles.gdx)
+    implementation(libs.dagger.runtime)
+    ksp(libs.dagger.compiler)
+    implementation(project(":core:common"))
+    implementation(libs.bundles.common)
+    implementation(project(":core:domain:assets"))
+    implementation(project(":core:domain:configuration"))
+    implementation(project(":core:domain:items"))
+    implementation(project(":core:domain:world"))
+    implementation(project(":core:entity:vehicle"))
+    implementation(project(":core:entity:mob"))
+    implementation(project(":core:entity:drop"))
+    implementation(project(":core:game:world"))
+    implementation(project(":core:game:controller:mob"))
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.engine)
+    testRuntimeOnly(libs.junit.launcher)
+    testImplementation(libs.mockk)
     // Box2D World loads its native library even when mocked for interaction tests.
-    testRuntimeOnly(Dependencies.LibGDX.Box2d.Natives.desktop)
-    testRuntimeOnly(Dependencies.LibGDX.Desktop.natives)
+    testRuntimeOnly(variantOf(libs.gdx.platform.box2d) { classifier("natives-desktop") })
+    testRuntimeOnly(variantOf(libs.gdx.platform.core) { classifier("natives-desktop") })
 }
 
 tasks.test { useJUnitPlatform() }

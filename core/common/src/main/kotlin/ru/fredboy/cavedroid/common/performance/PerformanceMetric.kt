@@ -23,6 +23,7 @@ enum class PerformanceMetric(val perFrame: Boolean = true) {
     RENDER_HUD,
     RENDER_LIGHTING,
     RENDER_OTHER,
+    RENDER_CACHE_PREPARE,
     TASK_BLOCKS(false),
     TASK_FLUIDS(false),
     TASK_GROW(false),
@@ -86,7 +87,7 @@ enum class PerformanceMode {
         }
     }
 }
-enum class PerformanceTrigger { USER, INITIAL }
+enum class PerformanceTrigger { USER, INITIAL, AUTOMATIC }
 enum class PerformanceStartKind { COLD_PROCESS, ACTIVITY_RECREATION, FOREGROUND_RESUME }
 enum class PerformanceGauge {
     HEAP_USED,

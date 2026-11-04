@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.common.utils.meters
+import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -13,6 +14,7 @@ import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.window.GameWindowType
 import ru.fredboy.cavedroid.game.window.GameWindowsConfigs
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
+import ru.fredboy.cavedroid.game.window.inventory.CreativeInventoryTabsWindow
 import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
@@ -29,6 +31,7 @@ class MouseCursorInputHandler @Inject constructor(
     private val tooltipManager: TooltipManager,
     private val textureRegions: GetTextureRegionByNameUseCase,
     private val getItemByIndexUseCase: GetItemByIndexUseCase,
+    private val fonts: FontTextureAssetsRepository,
 ) : IMouseInputHandler {
 
     private val player get() = mobController.player
@@ -96,6 +99,19 @@ class MouseCursorInputHandler @Inject constructor(
         return item.params.name
     }
 
+    private fun getCreativeTabTooltip(action: MouseInputAction): String? {
+        val window = gameWindowsManager.currentWindow as? CreativeInventoryTabsWindow ?: return null
+        val texture = requireNotNull(textureRegions[if (window.selectedTab.isInventory) "creative_inventory_tab" else "creative_items_tab"])
+        val tabHeight = requireNotNull(textureRegions["creative_tab_selected"]).regionHeight.toFloat()
+        val viewport = gameContextRepository.getCameraContext().viewport
+        val x = action.screenX - (viewport.width / 2 - texture.regionWidth / 2)
+        val y = action.screenY - (viewport.height / 2 - (texture.regionHeight + tabHeight) / 2)
+        val tab = CreativeInventoryTabsWindow.Tab.entries.firstOrNull {
+            GameWindowsConfigs.CreativeTabs.tabBounds(it.ordinal, texture.regionWidth.toFloat(), texture.regionHeight.toFloat(), tabHeight).contains(x, y)
+        } ?: return null
+        return fonts.getMenuLocalizationBundle()[tab.localizationKey]
+    }
+
     override fun checkConditions(action: MouseInputAction): Boolean {
         return !applicationContextRepository.isTouch() && action.actionKey is MouseInputActionKey.None
     }
@@ -113,9 +129,12 @@ class MouseCursorInputHandler @Inject constructor(
             player.blockDamage = 0f
         }
 
-        if (gameWindowsManager.currentWindowType == GameWindowType.CREATIVE_INVENTORY) {
-            tooltipManager.showMouseTooltip(getCreativeTooltip(action).orEmpty())
+        val tooltip = when (gameWindowsManager.currentWindowType) {
+            GameWindowType.CREATIVE_INVENTORY -> getCreativeTooltip(action)
+            GameWindowType.CREATIVE_INVENTORY_TABS -> getCreativeTabTooltip(action)
+            else -> null
         }
+        tooltipManager.showMouseTooltip(tooltip.orEmpty())
     }
 
     override fun reset() {

@@ -38,7 +38,7 @@ class FurnaceWindowRenderer @Inject constructor(
 
     private val furnaceWindowTexture get() = requireNotNull(textureRegions[FURNACE_WINDOW_KEY])
 
-    private val furnaceProgress by lazy { Sprite(textureRegions["furnace_progress"]) }
+    private val smeltingProgress by lazy { Sprite(textureRegions["smelting_progress"]) }
     private val furnaceBurn by lazy { Sprite(textureRegions["furnace_burn"]) }
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
@@ -140,16 +140,16 @@ class FurnaceWindowRenderer @Inject constructor(
                     x = windowX + GameWindowsConfigs.Furnace.progressMarginLeft,
                     y = windowY + GameWindowsConfigs.Furnace.progressMarginTop,
                     width = progress,
-                    height = furnaceProgress.regionHeight.toFloat(),
+                    height = smeltingProgress.regionHeight.toFloat(),
                     viewportWidth = viewport.width,
                     viewportHeight = viewport.height,
                 ) {
                     spriteBatch.drawSprite(
-                        sprite = furnaceProgress,
+                        sprite = smeltingProgress,
                         x = windowX + GameWindowsConfigs.Furnace.progressMarginLeft,
                         y = windowY + GameWindowsConfigs.Furnace.progressMarginTop,
-                        width = furnaceProgress.regionWidth.toFloat(),
-                        height = furnaceProgress.regionHeight.toFloat(),
+                        width = smeltingProgress.regionWidth.toFloat(),
+                        height = smeltingProgress.regionHeight.toFloat(),
                     )
                 }
             }

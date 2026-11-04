@@ -14,12 +14,14 @@ import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.game.controller.projectile.ProjectileController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindWorldRenderer
+import ru.fredboy.cavedroid.gameplay.rendering.utils.PresentationPoses
 import javax.inject.Inject
 import kotlin.math.atan2
 
 @GameScope
 @BindWorldRenderer
 class ProjectilesRenderer @Inject constructor(
+    private val poses: PresentationPoses,
     private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     private val projectileController: ProjectileController,
     private val gameWorld: GameWorld,
@@ -35,7 +37,7 @@ class ProjectilesRenderer @Inject constructor(
         drawn = 0
         projectileController.projectiles.forEach { projectile ->
             resident++
-            projectile.hitbox.cycledInsideWorld(viewport, gameWorld.width.toFloat())?.let { projectileRect ->
+            poses.bounds(projectile.body, projectile.hitbox).cycledInsideWorld(viewport, gameWorld.width.toFloat())?.let { projectileRect ->
                 drawn++
                 val rotationOffset = atan2(
                     y = projectileRect.height,
@@ -48,7 +50,7 @@ class ProjectilesRenderer @Inject constructor(
                     y = projectileRect.y,
                     width = projectileRect.width,
                     height = projectileRect.height,
-                    rotation = projectile.velocity.get().angleDeg() + rotationOffset,
+                    rotation = poses.heading(projectile.body) + rotationOffset,
                     origin = SpriteOrigin.CENTER,
                 )
             }

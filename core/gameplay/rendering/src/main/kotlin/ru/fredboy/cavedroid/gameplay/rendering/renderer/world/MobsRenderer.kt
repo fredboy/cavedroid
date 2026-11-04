@@ -3,23 +3,27 @@ package ru.fredboy.cavedroid.gameplay.rendering.renderer.world
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
 import ru.fredboy.cavedroid.common.performance.PerformanceGauge
 import ru.fredboy.cavedroid.common.performance.PerformanceMetric
 import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.common.utils.cycledInsideWorld
+import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindWorldRenderer
+import ru.fredboy.cavedroid.gameplay.rendering.utils.PresentationPoses
 import javax.inject.Inject
 
 @GameScope
 @BindWorldRenderer
 class MobsRenderer @Inject constructor(
+    private val poses: PresentationPoses,
     private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     private val mobController: MobController,
     private val gameWorld: GameWorld,
@@ -30,22 +34,33 @@ class MobsRenderer @Inject constructor(
     override val renderLayer get() = RENDER_LAYER
 
     private var drawnMobs = 0L
+    private val playerPosition = Vector2()
 
     private val fireBlock: Block.Fire? by lazy { itemsRepository.getBlockByKey(FIRE_BLOCK_KEY) as? Block.Fire }
 
     private fun drawMob(spriteBatch: SpriteBatch, viewport: Rectangle, mob: Mob, delta: Float) {
-        mob.hitbox.cycledInsideWorld(viewport, gameWorld.width.toFloat())?.let { mobRect ->
+        poses.bounds(mob.body, mob.hitbox).cycledInsideWorld(viewport, gameWorld.width.toFloat())?.let { mobRect ->
             drawnMobs++
             mob.draw(spriteBatch, mobRect.x, mobRect.y, delta)
             if (mob.isOnFire) {
-                drawFireOverlay(spriteBatch, mobRect.x, mobRect.y, mob.width, mob.height)
+                drawFireOverlay(spriteBatch, mobRect.x, mobRect.y, mob)
             }
         }
     }
 
-    private fun drawFireOverlay(spriteBatch: SpriteBatch, x: Float, y: Float, width: Float, height: Float) {
+    private fun drawFireOverlay(spriteBatch: SpriteBatch, x: Float, y: Float, mob: Mob) {
         val sprite = fireBlock?.sprite ?: return
-        sprite.setBounds(x, y, width, height)
+        val legs = mob.params.sprites.filter { it.isLeg && !it.isOverlay }
+        val parts = when {
+            legs.size >= 4 -> legs
+            legs.isEmpty() -> mob.params.sprites.filter { it.isBody && !it.isOverlay }
+            else -> emptyList()
+        }
+        val left = parts.minOfOrNull { it.offsetX } ?: 0f
+        val right = parts.maxOfOrNull { it.offsetX + it.sprite.regionWidth.meters } ?: mob.width
+        val fireWidth = right - left
+        val offsetX = if (mob.looksRight()) mob.width - right else left
+        sprite.setBounds(x + offsetX, y, fireWidth, mob.height)
         sprite.draw(spriteBatch)
     }
 
@@ -54,10 +69,11 @@ class MobsRenderer @Inject constructor(
         val playerStart = performanceMonitor.startStage()
         boats.draw(spriteBatch, viewport, front = false)
         val player = mobController.player
-        val playerDrawY = player.position.y - player.height / 2f + if (player.isMounted) SEATED_DRAW_OFFSET_Y else 0f
+        poses.playerPosition(playerPosition)
+        val playerDrawY = playerPosition.y - player.height / 2f + if (player.isMounted) SEATED_DRAW_OFFSET_Y else 0f
         player.draw(
             /* spriteBatch = */ spriteBatch,
-            /* x = */ player.position.x - player.width,
+            /* x = */ playerPosition.x - player.width,
             /* y = */ playerDrawY,
             /* delta = */ delta,
         )
@@ -67,10 +83,9 @@ class MobsRenderer @Inject constructor(
         if (player.isOnFire && !player.isDead) {
             drawFireOverlay(
                 spriteBatch = spriteBatch,
-                x = player.position.x - player.width / 2f,
+                x = playerPosition.x - player.width / 2f,
                 y = playerDrawY,
-                width = player.width,
-                height = player.height,
+                mob = player,
             )
         }
 

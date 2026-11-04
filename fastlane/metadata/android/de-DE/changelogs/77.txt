@@ -1,0 +1,9 @@
+- Neue Asset-Packs mit höher aufgelösten Texturen
+- Regelmäßige komplette Autosaves während des Spiels
+- Überarbeitete Touch-Steuerung und Inventarfster für besseres Spielen auf dem Handy
+- Asset-Packs lassen sich jetzt ohne Neustart anwenden
+- Das Kreativinventar ist jetzt nach Kategorien sortiert, außerdem gibt es große Truhen
+- Spielmusik mit Zufall, Übergängen und eigenen Tracks
+- Neue Eis-Mechanik, Blockwachstum und Erze unter der Oberfläche
+- Verbesserungen bei Bewegung, Touch-Zielen, Wolken, Parallaxe und Atmosphäre
+- Fixes für Flüssigkeiten, Kollisionen, Speichern, Item-Drops und mehrere Touch-Bugs

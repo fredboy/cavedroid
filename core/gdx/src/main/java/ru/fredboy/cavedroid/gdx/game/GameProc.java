@@ -52,6 +52,7 @@ public class GameProc implements Disposable {
     private final GameWorld mGameWorld;
     private final ProjectileController mProjectileController;
     private final WeatherSoundController mWeatherSoundController;
+    private final BackgroundMusicController mBackgroundMusicController;
     private final StatsController mStatsController;
     private final OnboardingController mOnboardingController;
 
@@ -76,7 +77,8 @@ public class GameProc implements Disposable {
                     OnboardingController onboardingController,
                     GameWorldFireLogicControllerTask gameWorldFireLogicControllerTask,
                     FireController fireController,
-                    ExplosionController explosionController
+                    ExplosionController explosionController,
+                    BackgroundMusicController backgroundMusicController
     ) {
         mPerformanceMonitor = performanceMonitor;
         mGameRenderer = gameRenderer;
@@ -97,6 +99,7 @@ public class GameProc implements Disposable {
         mGameWorldFireLogicControllerTask = gameWorldFireLogicControllerTask;
         mFireController = fireController;
         mExplosionController = explosionController;
+        mBackgroundMusicController = backgroundMusicController;
 
         mWorldLogicTimer.scheduleTask(gameWorldFluidsLogicControllerTask, 0,
                 GameWorldFluidsLogicControllerTask.FLUID_UPDATE_INTERVAL_SEC);
@@ -139,6 +142,8 @@ public class GameProc implements Disposable {
     }
 
     public void update(float delta) {
+        // Terrain images and lighting rebuild across frames while simulation keeps running.
+        // Missing collision terrain is guarded independently by the physics streaming step.
         long updateStart = mPerformanceMonitor.startStage();
         mGameWorld.update(delta);
         long entitiesStart = mPerformanceMonitor.startStage();
@@ -148,11 +153,12 @@ public class GameProc implements Disposable {
         mExplosionController.update(delta);
         mPerformanceMonitor.endStage(PerformanceMetric.ENTITIES_UPDATE, entitiesStart);
         mPerformanceMonitor.endStage(PerformanceMetric.UPDATE_TOTAL, updateStart);
+        mWeatherSoundController.update(delta);
         mGameRenderer.render(delta);
         long otherStart = mPerformanceMonitor.startStage();
         mGameInputProcessor.update(delta);
         mContainerController.update(delta);
-        mWeatherSoundController.update();
+        mBackgroundMusicController.update();
         mStatsController.update(delta);
         mOnboardingController.update(delta);
         mPerformanceMonitor.endStage(PerformanceMetric.OTHER_UPDATE, otherStart);
@@ -164,16 +170,27 @@ public class GameProc implements Disposable {
     }
 
     public void onGamePaused() {
+        mBackgroundMusicController.pause();
+        mWeatherSoundController.pause();
+        mGameWorld.resetPresentation();
         mGameInputProcessor.reset();
         mWorldLogicTimer.stop();
     }
 
     public void onGameResumed() {
+        mBackgroundMusicController.resume();
+        mGameWorld.resetPresentation();
         mWorldLogicTimer.start();
     }
 
     public void show() {
+        mBackgroundMusicController.resume();
         Gdx.input.setInputProcessor(mGameInputProcessor);
+    }
+
+    public void hide() {
+        mBackgroundMusicController.pause();
+        mWeatherSoundController.pause();
     }
 
     public void respawnPlayer() {
@@ -194,6 +211,7 @@ public class GameProc implements Disposable {
         mGameWorldFireLogicControllerTask.shutdownBlocking();
         mWorldLogicTimer.stop();
 
+        mBackgroundMusicController.dispose();
         mWeatherSoundController.dispose();
         mGameRenderer.dispose();
         mProjectileController.dispose();

@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.data.assets.internal
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.utils.I18NBundle
@@ -70,7 +69,7 @@ internal class FontTextureAssetsRepositoryImpl @Inject constructor(
     override fun getFont(): BitmapFont = requireNotNull(font)
 
     override fun initialize() {
-        font = BitmapFont(Gdx.files.internal(FONT_FILE_PATH), true)
+        font = textureLoader.loadFont(FONT_FILE_PATH, true)
             .apply {
                 data.setScale(.375f)
                 setUseIntegerPositions(false)
@@ -88,9 +87,9 @@ internal class FontTextureAssetsRepositoryImpl @Inject constructor(
         logger.i { "Loading localization for locale $currentLocale" }
         I18NBundle.setSimpleFormatter(true)
         I18NBundle.setExceptionOnMissingKey(false)
-        menuBundle = I18NBundle.createBundle(Gdx.files.internal(BASE_MENU_LOCALIZATION), currentLocale)
-        itemsBundle = I18NBundle.createBundle(Gdx.files.internal(BASE_ITEMS_LOCALIZATION), currentLocale)
-        onboardingBundle = I18NBundle.createBundle(Gdx.files.internal(BASE_ONBOARDING_LOCALIZATION), currentLocale)
+        menuBundle = I18NBundle.createBundle(assetResolver.handle(BASE_MENU_LOCALIZATION), currentLocale)
+        itemsBundle = I18NBundle.createBundle(assetResolver.handle(BASE_ITEMS_LOCALIZATION), currentLocale)
+        onboardingBundle = I18NBundle.createBundle(assetResolver.handle(BASE_ONBOARDING_LOCALIZATION), currentLocale)
     }
 
     companion object {

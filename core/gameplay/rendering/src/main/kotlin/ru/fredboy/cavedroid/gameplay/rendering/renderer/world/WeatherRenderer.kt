@@ -43,8 +43,8 @@ class WeatherRenderer @Inject constructor(
         val snowTexture = environmentTextureRegionsRepository.getSnowTexture()
         val alpha = gameWorld.weatherIntensity.coerceIn(0f, 1f)
 
-        val firstTileY = floor((viewport.y - scrollOffsetMeters) / TEXTURE_PERIOD_METERS) *
-            TEXTURE_PERIOD_METERS + scrollOffsetMeters
+        // Anchor vertical motion to the view so following the player cannot change the fall speed.
+        val firstTileY = viewport.y + scrollOffsetMeters - TEXTURE_PERIOD_METERS
         val viewportBottom = viewport.y + viewport.height
 
         val xStart = floor(viewport.x).toInt()

@@ -13,12 +13,12 @@ class StemBlocksTest {
                 val key = "${fruit}_stem_stage$age"
                 assertEquals(key, StemBlocks.fromKey(key)?.key)
             }
-            assertEquals("${fruit}_stem_stage0", StemBlocks.fromSeeds("${fruit}_seeds")?.key)
+            assertEquals("${fruit}_stem_stage0", StemBlocks.fromSeeds("seeds_$fruit")?.key)
             assertNull(StemBlocks.fromKey("${fruit}_stem_stage8"))
         }
         assertNull(StemBlocks.fromKey("wheat_stage0"))
         assertNull(StemBlocks.fromKey("pumpkin"))
-        assertNull(StemBlocks.fromSeeds("wheat_seeds"))
+        assertNull(StemBlocks.fromSeeds("seeds_wheat"))
     }
 
     @Test

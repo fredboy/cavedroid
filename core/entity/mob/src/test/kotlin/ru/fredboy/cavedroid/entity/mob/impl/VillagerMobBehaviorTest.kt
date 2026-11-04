@@ -147,7 +147,7 @@ class VillagerMobBehaviorTest {
     fun `a blocked doorway remains pending until closing succeeds`() {
         val door = VillagerMob.BlockPosition(-19, 20)
         mob.openedDoors.add(door)
-        val openDoor = block("door_wood_bottom_left_open")
+        val openDoor = block("wood_door_bottom_left_open")
         every { world.getForegroundBlock(-19, 20) } returns openDoor
         every { world.setWoodenDoorOpen(-19, 20, false) } returns false
         update()
@@ -183,8 +183,8 @@ class VillagerMobBehaviorTest {
     fun `opening a paired door plays its action sound only once`() {
         position.x = -9f
         every { world.isDayTime() } returns false
-        val closedDoor = block("door_wood_bottom_left_closed")
-        val openDoor = block("door_wood_bottom_left_open")
+        val closedDoor = block("wood_door_bottom_left_closed")
+        val openDoor = block("wood_door_bottom_left_open")
         var opened = false
         every { world.getForegroundBlock(-10, 20) } answers { if (opened) openDoor else closedDoor }
         every { world.setWoodenDoorOpen(-10, 20, true) } answers {

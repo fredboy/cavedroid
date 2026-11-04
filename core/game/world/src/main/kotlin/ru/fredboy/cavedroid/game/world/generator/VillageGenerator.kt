@@ -5,7 +5,6 @@ import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.domain.world.model.Biome
 import kotlin.math.abs
 import kotlin.math.roundToInt
-import kotlin.random.Random
 
 /**
  * Plains settlements adapted from Minecraft's houses, irrigated farms and meeting points.
@@ -15,6 +14,7 @@ import kotlin.random.Random
 class VillageGenerator(
     private val config: WorldGeneratorConfig,
     private val items: ItemsRepository,
+    private val randoms: GenerationRandom = GenerationRandom(config.seed, VillageMiddleware.salt),
 ) {
     fun generate(
         startX: Int,
@@ -70,7 +70,7 @@ class VillageGenerator(
         biomeAt: (Int) -> Biome,
         loopingWidth: Int?,
     ): Plan? {
-        val random = Random(config.seed xor (region.toLong() * 341873128712L) xor 0x56494C4C414745L)
+        val random = randoms.region(region)
         if (random.nextInt(4) == 0) return null
         val kinds = buildList {
             repeat(random.nextInt(3, 6)) { add(if (random.nextBoolean()) Kind.HOUSE else Kind.LARGE_HOUSE) }
@@ -154,17 +154,17 @@ class VillageGenerator(
                     for (x in left..right) {
                         put(x, ground, "cobblestone")
                         for (y in ground - 4 until ground) {
-                            put(x, y, "planks_oak", background = true)
-                            if (x == left || x == right) put(x, y, "log_oak")
+                            put(x, y, "wood_planks_oak", background = true)
+                            if (x == left || x == right) put(x, y, "wood_log_oak")
                         }
-                        put(x, ground - 5, "planks_oak")
+                        put(x, ground - 5, "wood_planks_oak")
                         val roofRise = minOf(x - left, right - x, 2)
-                        for (rise in 0..roofRise) put(x, ground - 5 - rise, "planks_oak")
-                        put(x, ground - 6 - roofRise, "oak_slab_bottom")
+                        for (rise in 0..roofRise) put(x, ground - 5 - rise, "wood_planks_oak")
+                        put(x, ground - 6 - roofRise, "slab_wood_oak_bottom")
                     }
                     for ((x, side) in listOf(left to "left", right to "right")) {
-                        put(x, ground - 1, "door_wood_bottom_${side}_closed")
-                        put(x, ground - 2, "door_wood_top_${side}_closed")
+                        put(x, ground - 1, "wood_door_bottom_${side}_closed")
+                        put(x, ground - 2, "wood_door_top_${side}_closed")
                     }
                     for (x in listOf(left + 2, right - 2)) put(x, ground - 3, "glass", background = true)
                     // Bed update actions require both halves to be resident in the same chunk.
@@ -184,7 +184,7 @@ class VillageGenerator(
                             x,
                             ground,
                             when (x) {
-                                left, right -> "log_oak"
+                                left, right -> "wood_log_oak"
                                 middle -> "water"
                                 else -> "farmland_moist"
                             },
@@ -203,12 +203,12 @@ class VillageGenerator(
                     for (x in left..right) {
                         put(x, ground, "cobblestone")
                         put(x, ground + 1, "cobblestone")
-                        put(x, ground - 5, "oak_slab_bottom")
+                        put(x, ground - 5, "slab_wood_oak_bottom")
                     }
                     // A shallow trough keeps the meeting point traversable in a side-on world.
                     for (x in middle - 1..middle + 1) put(x, ground, "water")
                     for (x in listOf(left, right)) {
-                        for (y in ground - 4 until ground) put(x, y, "fence_oak", background = true)
+                        for (y in ground - 4 until ground) put(x, y, "wood_fence_oak", background = true)
                         put(x, ground - 4, "torch")
                     }
                 }
@@ -218,7 +218,7 @@ class VillageGenerator(
         for ((index, plot) in plan.plots.dropLast(1).withIndex()) {
             val x = plot.right + 2
             val ground = plan.ground[x - plan.left]
-            for (y in ground - 3 until ground) put(x, y, "fence_oak", background = true)
+            for (y in ground - 3 until ground) put(x, y, "wood_fence_oak", background = true)
             put(x, ground - 3, "torch")
             if (index % 2 == 0) put(x + 1, plan.ground[x + 1 - plan.left] - 1, "hay_block", background = true)
         }

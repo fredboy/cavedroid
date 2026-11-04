@@ -129,3 +129,5 @@ keystore.properties
 **/google-services.json
 yandex.properties
 html/build/
+
+.codex

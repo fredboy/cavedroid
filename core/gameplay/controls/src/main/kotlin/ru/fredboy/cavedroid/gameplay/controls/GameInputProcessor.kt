@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.TutorialTapTargets
 import ru.fredboy.cavedroid.common.utils.ifFalse
 import ru.fredboy.cavedroid.domain.assets.model.TouchButton
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
@@ -19,6 +20,8 @@ import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.KeyboardInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse.MouseCursorInputHandler
+import ru.fredboy.cavedroid.gameplay.controls.input.handler.touch.TouchCursorInputHandler
+import ru.fredboy.cavedroid.gameplay.controls.input.handler.touch.TouchWindowInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.mapper.KeyboardInputActionMapper
 import ru.fredboy.cavedroid.gameplay.controls.input.mapper.MouseInputActionMapper
 import javax.inject.Inject
@@ -37,11 +40,14 @@ class GameInputProcessor @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val mobController: MobController,
     private val vehicles: VehicleController,
+    private val tutorialTapTargets: TutorialTapTargets,
 ) : InputProcessor {
 
     init {
         vehicles.onRidingChanged = { resetHeldInput() }
     }
+
+    private val tutorialPointers = mutableSetOf<Int>()
 
     private var windowWasOpen = false
     private var dragging = false
@@ -60,6 +66,11 @@ class GameInputProcessor @Inject constructor(
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val (touchX, touchY) = gameContextRepository.getCameraContext().getViewportCoordinates(screenX, screenY)
+
+        if (pointer in tutorialPointers || tutorialTapTargets.dismissAt(touchX, touchY)) {
+            tutorialPointers.add(pointer)
+            return true
+        }
 
         touchDownX = touchX
         touchDownY = touchY
@@ -86,6 +97,7 @@ class GameInputProcessor @Inject constructor(
     }
 
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+        if (tutorialPointers.remove(pointer)) return true
         val (touchX, touchY) = gameContextRepository.getCameraContext().getViewportCoordinates(screenX, screenY)
 
         val joy = gameContextRepository.getJoystick()
@@ -126,9 +138,16 @@ class GameInputProcessor @Inject constructor(
         )
     }
 
-    override fun touchCancelled(p0: Int, p1: Int, p2: Int, p3: Int): Boolean = false
+    override fun touchCancelled(p0: Int, p1: Int, p2: Int, p3: Int): Boolean {
+        if (tutorialPointers.remove(p2)) return true
+        mouseInputHandlers.forEach { it.reset() }
+        pointerToTouchedKey.remove(p2)
+        dragging = false
+        return true
+    }
 
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
+        if (pointer in tutorialPointers) return true
         val joystick = gameContextRepository.getJoystick()
         if (applicationContextRepository.isTouch() && joystick.active && joystick.pointer == pointer) {
             // The joystick owns this gesture, including small drags and crossing touch buttons.
@@ -137,7 +156,22 @@ class GameInputProcessor @Inject constructor(
 
         val (touchX, touchY) = gameContextRepository.getCameraContext().getViewportCoordinates(screenX, screenY)
 
-        if (abs(touchX - touchDownX) < 16 && abs(touchY - touchDownY) < DRAG_THRESHOLD) {
+        val windowDrag = applicationContextRepository.isTouch() && gameWindowsManager.currentWindowType != GameWindowType.NONE
+        val horizontalThreshold = if (windowDrag) 2f else 16f
+        val verticalThreshold = if (windowDrag) 2f else DRAG_THRESHOLD
+        val belowDragThreshold = abs(touchX - touchDownX) < horizontalThreshold && abs(touchY - touchDownY) < verticalThreshold
+
+        if (applicationContextRepository.isTouch() && gameWindowsManager.currentWindowType == GameWindowType.NONE) {
+            val action = mouseInputActionMapper.mapDragged(screenX.toFloat(), screenY.toFloat(), pointer)
+            val cursorHandler = mouseInputHandlers.filterIsInstance<TouchCursorInputHandler>().firstOrNull()
+            if (cursorHandler?.checkConditions(action) == true) {
+                // Move immediately while retaining the existing slop for all world hold actions.
+                cursorHandler.handleDrag(action, restartHold = !belowDragThreshold)
+                return true
+            }
+        }
+
+        if (belowDragThreshold) {
             return false
         }
 
@@ -190,7 +224,7 @@ class GameInputProcessor @Inject constructor(
         }
 
         val windowOpen = gameWindowsManager.currentWindowType != GameWindowType.NONE
-        if (windowOpen && !windowWasOpen) resetHeldInput()
+        if (windowOpen != windowWasOpen) resetHeldInput()
         windowWasOpen = windowOpen
         handleMousePosition()
 
@@ -248,6 +282,11 @@ class GameInputProcessor @Inject constructor(
     private fun handleMouseAction(action: MouseInputAction?): Boolean {
         if (action == null) {
             return false
+        }
+
+        if (applicationContextRepository.isTouch() && gameWindowsManager.currentWindowType != GameWindowType.NONE) {
+            mouseInputHandlers.filterIsInstance<TouchWindowInputHandler>().firstOrNull()?.handle(action)
+            return true
         }
 
         var anyProcessed = false
@@ -327,6 +366,7 @@ class GameInputProcessor @Inject constructor(
     }
 
     fun reset() {
+        tutorialPointers.clear()
         resetHeldInput()
         gameWindowsManager.closeWindow()
         windowWasOpen = false

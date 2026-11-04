@@ -1,7 +1,5 @@
 package ru.fredboy.cavedroid.gdx.menu.v2.view.worldconfig
 
-import com.badlogic.gdx.Application
-import com.badlogic.gdx.Gdx
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -44,10 +42,10 @@ class WorldConfigMenuViewModel(
     val worldSizes: List<WorldSize> = WorldSize.entries.toList()
 
     override fun onShow() {
-        if (Gdx.app.type == Application.ApplicationType.WebGL) {
-            onSizeClick(WorldSize.DEFAULT)
-        } else {
+        if (applicationContextRepository.supportsInfiniteWorlds()) {
             onInfiniteClick()
+        } else {
+            onSizeClick(WorldSize.DEFAULT)
         }
     }
 

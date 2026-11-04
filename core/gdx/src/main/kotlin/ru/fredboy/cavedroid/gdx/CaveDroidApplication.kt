@@ -11,13 +11,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import ktx.scene2d.Scene2DSkin
 import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
 import ru.fredboy.cavedroid.common.CaveDroidConstants.SUPPORTED_LOCALES
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
+import ru.fredboy.cavedroid.common.api.AssetPackPlatform
 import ru.fredboy.cavedroid.common.api.CloudStatsSync
 import ru.fredboy.cavedroid.common.api.InlineTextInput
 import ru.fredboy.cavedroid.common.api.NoOpAdController
+import ru.fredboy.cavedroid.common.api.NoOpAssetPackPlatform
 import ru.fredboy.cavedroid.common.api.NoOpCloudStatsSync
 import ru.fredboy.cavedroid.common.api.NoOpInlineTextInput
 import ru.fredboy.cavedroid.common.api.NoOpSaveTransferController
@@ -36,12 +39,15 @@ import ru.fredboy.cavedroid.common.performance.operation
 import ru.fredboy.cavedroid.common.utils.DEFAULT_VIEWPORT_WIDTH
 import ru.fredboy.cavedroid.common.utils.ratio
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
+import ru.fredboy.cavedroid.data.stats.di.DataStatsModule
 import ru.fredboy.cavedroid.domain.configuration.model.LightingBackend
+import ru.fredboy.cavedroid.domain.stats.repository.StatsRepository
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystemFactory
 import ru.fredboy.cavedroid.gdx.di.ApplicationComponent
 import ru.fredboy.cavedroid.gdx.di.DaggerApplicationComponent
 import ru.fredboy.cavedroid.gdx.game.DeathScreen
 import ru.fredboy.cavedroid.gdx.game.GameScreen
+import ru.fredboy.cavedroid.gdx.menu.v2.MenuScreen
 import ru.fredboy.cavedroid.gdx.menu.v2.PauseMenuScreen
 import java.util.Locale
 
@@ -59,8 +65,10 @@ class CaveDroidApplication(
     private val inlineTextInput: InlineTextInput = NoOpInlineTextInput,
     private val softKeyboardObserver: SoftKeyboardObserver = NoOpSoftKeyboardObserver,
     private val saveTransferController: SaveTransferController = NoOpSaveTransferController,
+    private val assetPackPlatform: AssetPackPlatform = NoOpAssetPackPlatform,
     private val defaultLocaleProvider: () -> Locale? = { safeDefaultLocale() },
     private val isYandexGamesBuild: Boolean = false,
+    private val supportsInfiniteWorlds: Boolean = true,
     loggingSeverity: Severity = Severity.Info,
 ) : Game(),
     CaveDroidApplicationDecorator {
@@ -76,6 +84,10 @@ class CaveDroidApplication(
         get() = if (::applicationComponent.isInitialized) applicationComponent else null
 
     var applicationControllerOverride: ApplicationController? = null
+
+    private lateinit var context: ApplicationContext
+
+    private val openedScreens = mutableSetOf<Screen>()
 
     private val applicationScope = CoroutineScope(SupervisorJob() + dispatchers.io)
 
@@ -94,6 +106,22 @@ class CaveDroidApplication(
         }
     }
 
+    private fun buildComponent(stats: StatsRepository? = null): ApplicationComponent = DaggerApplicationComponent.builder()
+        .performanceMonitor(performanceMonitor)
+        .cloudStatsSync(cloudStatsSync)
+        .applicationContext(context)
+        .applicationController(applicationControllerOverride ?: this)
+        .preferencesStore(preferencesStore)
+        .adController(adController)
+        .inlineTextInput(inlineTextInput)
+        .softKeyboardObserver(softKeyboardObserver)
+        .saveTransferController(saveTransferController)
+        .assetPackPlatform(assetPackPlatform)
+        .lightingSystemFactory(lightingSystemFactory)
+        .appDispatchers(dispatchers)
+        .dataStatsModule(DataStatsModule(stats))
+        .build()
+
     override fun create() {
         return performanceMonitor.operation(PerformanceOperation.APP_INIT) {
             logger.v { "create()" }
@@ -108,53 +136,44 @@ class CaveDroidApplication(
             val personalizedAdsConsent = preferencesStore.getPreference(PreferenceKeys.PERSONALIZED_ADS_CONSENT)
                 ?.toBooleanStrictOrNull()
 
-            applicationComponent = DaggerApplicationComponent.builder()
-                .performanceMonitor(performanceMonitor)
-                .cloudStatsSync(cloudStatsSync)
-                .applicationContext(
-                    ApplicationContext(
-                        isDebug = isDebug,
-                        isTouch = isTouchScreen,
-                        gameDirectory = gameDataDirectoryPath,
-                        gameDirectoryFileType = gameDataFileType,
-                        width = width,
-                        height = height,
-                        isFullscreen = isFullscreen,
-                        useDynamicCamera = preferencesStore.getPreference(PreferenceKeys.DYNAMIC_CAMERA)
-                            ?.toBooleanStrictOrNull() ?: isTouchScreen,
-                        isAutoJumpEnabled = preferencesStore.getPreference(PreferenceKeys.AUTO_JUMP)
-                            ?.toBooleanStrictOrNull() ?: true,
-                        locale = preferencesStore.getPreference(PreferenceKeys.LOCALE)
-                            ?.let(::Locale) ?: defaultLocaleProvider()
-                            ?.let { deviceLocale ->
-                                SUPPORTED_LOCALES.firstOrNull { it.language == deviceLocale.language }
-                            } ?: Locale.ENGLISH,
-                        soundEnabled = preferencesStore.getPreference(PreferenceKeys.SOUND_ENABLED)
-                            ?.toBooleanStrictOrNull() ?: true,
-                        isOnboardingShown = preferencesStore.getPreference(PreferenceKeys.ONBOARDING_SHOWN)
-                            ?.toBooleanStrictOrNull() ?: false,
-                        isInventoryHintShown = preferencesStore.getPreference(PreferenceKeys.INVENTORY_HINT_SHOWN)
-                            ?.toBooleanStrictOrNull() ?: false,
-                        isBoatHintShown = preferencesStore.getPreference(PreferenceKeys.BOAT_HINT_SHOWN)
-                            ?.toBooleanStrictOrNull() ?: false,
-                        personalizedAdsConsent = personalizedAdsConsent,
-                        lightingBackend = LightingBackend.fromName(
-                            preferencesStore.getPreference(PreferenceKeys.LIGHTING_BACKEND),
-                        ),
-                        isYandexGamesBuild = isYandexGamesBuild,
-                        preferShowDebug = preferencesStore.getPreference(PreferenceKeys.PREFER_SHOW_DEBUG_KEY)
-                            ?.toBooleanStrictOrNull() ?: false,
-                    ),
-                )
-                .applicationController(applicationControllerOverride ?: this)
-                .preferencesStore(preferencesStore)
-                .adController(adController)
-                .inlineTextInput(inlineTextInput)
-                .softKeyboardObserver(softKeyboardObserver)
-                .saveTransferController(saveTransferController)
-                .lightingSystemFactory(lightingSystemFactory)
-                .appDispatchers(dispatchers)
-                .build()
+            context = ApplicationContext(
+                isDebug = isDebug,
+                isTouch = isTouchScreen,
+                gameDirectory = gameDataDirectoryPath,
+                gameDirectoryFileType = gameDataFileType,
+                width = width,
+                height = height,
+                isFullscreen = isFullscreen,
+                useDynamicCamera = preferencesStore.getPreference(PreferenceKeys.DYNAMIC_CAMERA)
+                    ?.toBooleanStrictOrNull() ?: isTouchScreen,
+                isAutoJumpEnabled = preferencesStore.getPreference(PreferenceKeys.AUTO_JUMP)
+                    ?.toBooleanStrictOrNull() ?: true,
+                locale = preferencesStore.getPreference(PreferenceKeys.LOCALE)
+                    ?.let(::Locale) ?: defaultLocaleProvider()
+                    ?.let { deviceLocale ->
+                        SUPPORTED_LOCALES.firstOrNull { it.language == deviceLocale.language }
+                    } ?: Locale.ENGLISH,
+                musicEnabled = preferencesStore.getPreference(PreferenceKeys.MUSIC_ENABLED)
+                    ?.toBooleanStrictOrNull() ?: true,
+                soundEnabled = preferencesStore.getPreference(PreferenceKeys.SOUND_ENABLED)
+                    ?.toBooleanStrictOrNull() ?: true,
+                isOnboardingShown = preferencesStore.getPreference(PreferenceKeys.ONBOARDING_SHOWN)
+                    ?.toBooleanStrictOrNull() ?: false,
+                isInventoryHintShown = preferencesStore.getPreference(PreferenceKeys.INVENTORY_HINT_SHOWN)
+                    ?.toBooleanStrictOrNull() ?: false,
+                isBoatHintShown = preferencesStore.getPreference(PreferenceKeys.BOAT_HINT_SHOWN)
+                    ?.toBooleanStrictOrNull() ?: false,
+                personalizedAdsConsent = personalizedAdsConsent,
+                lightingBackend = LightingBackend.fromName(
+                    preferencesStore.getPreference(PreferenceKeys.LIGHTING_BACKEND),
+                ),
+                isYandexGamesBuild = isYandexGamesBuild,
+                supportsInfiniteWorlds = supportsInfiniteWorlds,
+                preferShowDebug = preferencesStore.getPreference(PreferenceKeys.PREFER_SHOW_DEBUG_KEY)
+                    ?.toBooleanStrictOrNull() ?: false,
+            )
+
+            applicationComponent = buildComponent()
 
             if (personalizedAdsConsent != null) {
                 adController.setPersonalizedAdsEnabled(personalizedAdsConsent)
@@ -177,7 +196,19 @@ class CaveDroidApplication(
                     ),
                 )
             }
-            applicationComponent.initializeAssets()
+            try {
+                initializeAssetResources(applicationComponent)
+            } catch (exception: Exception) {
+                if (!applicationComponent.assetResolver.hasOverrides) throw exception
+                logger.e(exception) { "Asset packs failed; restoring bundled assets" }
+                applicationComponent.assetPackRepository.disableAfterFailure(exception.message ?: "Asset pack load failed")
+                runCatching { applicationComponent.disposeAssets() }
+                applicationComponent.assetTextureLoader.disposeAll()
+                applicationComponent = buildComponent()
+                initializeAssetResources(applicationComponent)
+            }
+
+            applicationComponent.assetPackRepository.cleanupRemoved()
 
             applicationScope.launch {
                 applicationComponent.statsRepository.load()
@@ -200,9 +231,8 @@ class CaveDroidApplication(
         runCatching {
             runBlocking { applicationComponent.statsRepository.save() }
         }.onFailure { logger.w(it) { "Stats save on dispose failed" } }
-        applicationComponent.menuScreen.dispose()
-        applicationComponent.pauseMenuScreen.dispose()
-        applicationComponent.gameScreen.dispose()
+        openedScreens.forEach(Screen::dispose)
+        openedScreens.clear()
         applicationComponent.menuSkin.dispose()
         applicationComponent.disposeAssets()
         performanceMonitor.close()
@@ -230,6 +260,65 @@ class CaveDroidApplication(
                 setScreen(applicationComponent.menuScreen)
             }
         }
+    }
+
+    override fun applyAssetPacks(ids: List<String>) {
+        val previous = applicationComponent
+        val previousScreen = screen
+        check(previousScreen is MenuScreen || previousScreen is PauseMenuScreen)
+        val previousScreens = openedScreens.toList()
+        val gameConfig = if (previousScreen is PauseMenuScreen) {
+            val gameContext = requireNotNull(previous.gameScreen.gameComponent).gameContextRepository
+            previous.gameScreen.saveGame()
+            StartGameConfig.Load(gameContext.getWorldName(), gameContext.getSaveGameDirectory())
+        } else {
+            null
+        }
+        val inputProcessor = Gdx.input.inputProcessor
+        val previousSkin = Scene2DSkin.defaultSkin
+        val width = previous.applicationContextRepository.getWidth()
+        val height = previous.applicationContextRepository.getHeight()
+        reloadAssetPacks(previous, ids, { buildComponent(previous.statsRepository) }) { candidate ->
+            var replacementScreen: Screen? = null
+            applicationComponent = candidate
+            try {
+                replacementScreen = if (gameConfig != null) {
+                    openedScreens.add(candidate.gameScreen)
+                    candidate.gameScreen.loadGame(gameConfig)
+                    candidate.gameScreen.resize(Gdx.graphics.width, Gdx.graphics.height)
+                    candidate.gameScreen.pause()
+                    candidate.pauseMenuScreen
+                } else {
+                    candidate.menuScreen
+                }
+                setScreen(replacementScreen)
+            } catch (exception: Exception) {
+                runCatching { replacementScreen?.dispose() }.onFailure(exception::addSuppressed)
+                if (gameConfig != null) {
+                    runCatching { candidate.gameScreen.dispose() }.onFailure(exception::addSuppressed)
+                }
+                applicationComponent = previous
+                screen = previousScreen
+                openedScreens.retainAll(previousScreens.toSet())
+                previous.applicationContextRepository.setWidth(width)
+                previous.applicationContextRepository.setHeight(height)
+                Gdx.input.inputProcessor = inputProcessor
+                Scene2DSkin.defaultSkin = previousSkin
+                throw exception
+            }
+        }
+        // The new screens no longer reference old textures or definitions.
+        val releases = previousScreens.map { oldScreen -> { oldScreen.dispose() } } + listOf<() -> Unit>(
+            { previous.menuSkin.dispose() },
+            { previous.disposeAssets() },
+            { previous.assetTextureLoader.disposeAll() },
+            { applicationComponent.assetPackRepository.cleanupRemoved() },
+        )
+        releases.forEach { release ->
+            runCatching(release).onFailure { logger.w(it) { "Releasing previous asset pack resources failed" } }
+        }
+        openedScreens.removeAll(previousScreens.toSet())
+        Scene2DSkin.defaultSkin = applicationComponent.menuSkin
     }
 
     override fun startGame(startGameConfig: StartGameConfig) {
@@ -334,6 +423,10 @@ class CaveDroidApplication(
 
     override fun setScreen(screen: Screen?) {
         logger.v { "setScreen(${screen?.javaClass?.simpleName})" }
+
+        if (screen is MenuScreen || screen is PauseMenuScreen || screen is GameScreen) {
+            openedScreens.add(screen)
+        }
 
         performanceMonitor.setGameplay(false)
         try {

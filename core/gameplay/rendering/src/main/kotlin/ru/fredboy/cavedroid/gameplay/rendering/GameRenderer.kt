@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.badlogic.gdx.utils.Disposable
@@ -27,15 +28,20 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.PlayerAdapter
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.IHudRenderer
+import ru.fredboy.cavedroid.gameplay.rendering.renderer.world.BlocksRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.world.IWorldRenderer
+import ru.fredboy.cavedroid.gameplay.rendering.utils.PresentationPoses
+import ru.fredboy.cavedroid.gameplay.rendering.utils.TerrainRenderCache
 import javax.inject.Inject
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
-import kotlin.math.min
+import kotlin.math.exp
 
 @GameScope
 class GameRenderer @Inject constructor(
+    private val terrainCache: TerrainRenderCache,
+    private val poses: PresentationPoses,
     private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
@@ -50,6 +56,10 @@ class GameRenderer @Inject constructor(
 
     private val worldRenderers = _worldRenderers.sortedBy { it.renderLayer }
     private val hudRenderers = _hudRenderers.sortedBy { it.renderLayer }
+    private val terrainRenderers = worldRenderers.filterIsInstance<BlocksRenderer>()
+
+    var isReady = true
+        private set
 
     private val debugRenderer = ifTrue(applicationContextRepository.isDebug()) {
         Box2DDebugRenderer(
@@ -87,6 +97,9 @@ class GameRenderer @Inject constructor(
     private val baseSkyColor = Color()
     private val skyLeftColor = Color()
     private val skyRightColor = Color()
+    private val playerPosition = Vector2()
+    private val aimPosition = Vector2()
+    private val cameraTargetPosition = Vector3()
 
     init {
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f)
@@ -97,23 +110,20 @@ class GameRenderer @Inject constructor(
     }
 
     private fun updateStaticCameraPositionToPlayer() {
-        updateStaticCameraPosition(player.x, player.y)
+        poses.playerPosition(playerPosition)
+        updateStaticCameraPosition(playerPosition.x, playerPosition.y)
     }
 
-    private fun updateDynamicCameraPosition(delta: Float) {
-        val cameraTargetPosition = Vector3().apply {
-            x = player.x / 2f + player.aimX / 2f
-            y = player.y / 2f + player.aimY / 2f
+    private fun updateDynamicCameraTarget() {
+        poses.aimPosition(
+            out = aimPosition,
+            mouseWorldX = camera.position.x + camera.viewportWidth * (Gdx.input.x.toFloat() / Gdx.graphics.width - 0.5f),
+            mouseWorldY = camera.position.y + camera.viewportHeight * (Gdx.input.y.toFloat() / Gdx.graphics.height - 0.5f),
+        )
+        cameraTargetPosition.apply {
+            x = playerPosition.x / 2f + aimPosition.x / 2f
+            y = playerPosition.y / 2f + aimPosition.y / 2f
         }
-
-        val moveVector = cameraTargetPosition.sub(camera.position)
-
-        if (!moveVector.isZero(0.05f)) {
-            val l = moveVector.len()
-            moveVector.nor().scl(min(l, 30f * delta))
-        }
-
-        camera.position.add(moveVector)
     }
 
     private fun wrapCameraToPlayerSeam() {
@@ -123,21 +133,24 @@ class GameRenderer @Inject constructor(
         }
 
         val worldWidth = gameWorld.width.toFloat()
-        val cameraToPlayer = player.x - camera.position.x
+        val cameraToPlayer = playerPosition.x - camera.position.x
         if (cameraToPlayer > worldWidth / 2f) {
-            camera.position.add(Vector3(worldWidth, 0f, 0f))
+            camera.position.x += worldWidth
         } else if (cameraToPlayer < -worldWidth / 2f) {
-            camera.position.sub(Vector3(worldWidth, 0f, 0f))
+            camera.position.x -= worldWidth
         }
     }
 
     private fun updateCameraPosition(delta: Float) {
+        poses.playerPosition(playerPosition)
         wrapCameraToPlayerSeam()
+        cameraTargetPosition.set(playerPosition.x, playerPosition.y, 0f)
         if (applicationContextRepository.useDynamicCamera()) {
-            updateDynamicCameraPosition(delta)
-        } else {
-            updateStaticCameraPositionToPlayer()
+            updateDynamicCameraTarget()
         }
+        // Exponential lerp keeps the follow response consistent across frame rates.
+        val alpha = 1f - exp(-CAMERA_FOLLOW_SPEED * delta.coerceAtLeast(0f))
+        camera.position.lerp(cameraTargetPosition, alpha)
         updateCameraContext()
         camera.update()
     }
@@ -257,7 +270,23 @@ class GameRenderer @Inject constructor(
 
     fun render(delta: Float) {
         return performanceMonitor.measure(PerformanceMetric.RENDER_TOTAL) {
+            poses.snapshot = delta == 0f
             updateCameraPosition(delta)
+
+            val viewport = getVisibleWorldRect()
+            terrainRenderers.forEach { it.prepareCache(viewport) }
+            val cacheStart = performanceMonitor.startStage()
+            terrainCache.prepare(finish = delta == 0f)
+            performanceMonitor.endStage(PerformanceMetric.RENDER_CACHE_PREPARE, cacheStart)
+            performanceMonitor.incrementGauge(
+                ru.fredboy.cavedroid.common.performance.PerformanceGauge.CACHE_UPDATES,
+                terrainCache.updates
+            )
+            terrainCache.trim(ru.fredboy.cavedroid.gameplay.rendering.utils.RenderChunkWindow(viewport).capacity * terrainRenderers.sumOf { it.cacheLayerCount } + 1)
+            isReady = terrainRenderers.all { it.cacheReady(viewport) } && lightingSystem.prepareView(
+                viewport,
+                finish = delta == 0f
+            )
 
             spriter.projectionMatrix = camera.combined
             shaper.projectionMatrix = camera.combined
@@ -278,7 +307,7 @@ class GameRenderer @Inject constructor(
             performanceMonitor.measure(PerformanceMetric.RENDER_WORLD) {
                 worldRenderers.forEach { renderer ->
                     val metric = when (renderer) {
-                        is ru.fredboy.cavedroid.gameplay.rendering.renderer.world.BlocksRenderer -> PerformanceMetric.RENDER_BLOCKS
+                        is BlocksRenderer -> PerformanceMetric.RENDER_BLOCKS
                         is ru.fredboy.cavedroid.gameplay.rendering.renderer.world.DropsRenderer -> PerformanceMetric.RENDER_DROPS
                         is ru.fredboy.cavedroid.gameplay.rendering.renderer.world.ProjectilesRenderer -> PerformanceMetric.RENDER_PROJECTILES
                         else -> null
@@ -316,6 +345,7 @@ class GameRenderer @Inject constructor(
     }
 
     fun resetCameraToPlayer() {
+        gameWorld.resetPresentation()
         updateStaticCameraPositionToPlayer()
         updateCameraContext()
         camera.update()
@@ -326,6 +356,7 @@ class GameRenderer @Inject constructor(
         shaper.dispose()
         debugRenderer?.dispose()
         worldRenderers.forEach { renderer -> renderer.dispose() }
+        terrainCache.dispose()
         hudRenderers.forEach { renderer -> renderer.dispose() }
     }
 
@@ -337,6 +368,7 @@ class GameRenderer @Inject constructor(
         private const val RAIN_SKY_DARKENING = 0.3f
         private const val WEATHER_SKY_FADE_BLOCKS = 16f
 
-        private const val CAMERA_DELTA = 1f / 60f
+        // About 95% of the way to a stationary target in 0.25 seconds.
+        private const val CAMERA_FOLLOW_SPEED = 12f
     }
 }

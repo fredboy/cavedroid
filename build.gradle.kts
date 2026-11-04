@@ -2,13 +2,17 @@ import com.github.jk1.license.render.TextReportRenderer
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    ktlintGradle
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.ksp) apply false
     // Version comes from buildSrc's `implementation` dependency on the plugin (needed there so
     // PerFlavorTextReportRenderer can reference its types). Adding a version here would clash
     // with the existing classpath entry.
     id("com.github.jk1.dependency-license-report")
-    id("com.google.gms.google-services") version "4.4.4" apply false
-    id("com.google.firebase.crashlytics") version "3.0.7" apply false
+    alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.firebase.crashlytics) apply false
 }
 
 buildscript {
@@ -22,12 +26,13 @@ buildscript {
     }
 
     dependencies {
-        classpath(Dependencies.androidGradlePlugin)
-        classpath(Dependencies.Kotlin.gradlePlugin)
-        classpath(Dependencies.RoboVM.gradlePlugin)
-        classpath(Dependencies.proGuardPlugin)
+        // RoboVM's legacy plugin and ProGuard's task types require the buildscript classpath.
+        classpath(libs.robovm.gradle)
+        classpath(libs.proguard.gradle)
     }
 }
+
+val ktlintVersion = libs.versions.ktlint.get()
 
 allprojects {
     version = ApplicationInfo.versionName
@@ -36,20 +41,20 @@ allprojects {
     apply(plugin = "com.github.jk1.dependency-license-report")
 
     ktlint {
-        version.set("1.6.0")
+        version.set(ktlintVersion)
     }
 
     plugins.withId("org.jetbrains.kotlin.jvm") {
         plugins.withId("org.jetbrains.kotlin.jvm") {
             extensions.configure<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension> {
                 jvmToolchain {
-                    languageVersion.set(JavaLanguageVersion.of(17))
+                    languageVersion.set(JavaLanguageVersion.of(ApplicationInfo.javaVersion))
                 }
             }
 
             extensions.configure<JavaPluginExtension> {
                 toolchain {
-                    languageVersion.set(JavaLanguageVersion.of(17))
+                    languageVersion.set(JavaLanguageVersion.of(ApplicationInfo.javaVersion))
                 }
             }
 
@@ -89,4 +94,11 @@ subprojects {
             testCore.configure { dependsOn(tasks.named("test")) }
         }
     }
+}
+
+val generateBgmIndex = tasks.register<GenerateBgmIndex>("generateBgmIndex") {
+    group = "assets"
+    description = "Generates bgm/index.json with durations from the WAV tracks in assets/bgm."
+    tracks.from(fileTree("assets/bgm") { include("*.wav") })
+    outputDirectory.set(layout.buildDirectory.dir("generated/bgmAssets"))
 }

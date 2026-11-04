@@ -15,13 +15,13 @@ class UpdateDoorWoodTopRightClosedAction @Inject constructor(
 ) : IUpdateBlockAction {
 
     override fun update(x: Int, y: Int) {
-        val bottom = getBlockByKeyUseCase["door_wood_bottom_right_closed"]
+        val bottom = getBlockByKeyUseCase["wood_door_bottom_right_closed"]
         if (gameWorld.getForeMap(x, y + 1) != bottom) {
             gameWorld.resetForeMap(x, y)
         }
     }
 
     companion object {
-        const val BLOCK_KEY = "door_wood_top_right_closed"
+        const val BLOCK_KEY = "wood_door_top_right_closed"
     }
 }

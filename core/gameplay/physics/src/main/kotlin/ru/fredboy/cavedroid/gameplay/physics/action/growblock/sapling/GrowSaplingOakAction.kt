@@ -34,7 +34,7 @@ class GrowSaplingOakAction @Inject constructor(
         gameWorld.resetForeMap(x, y)
 
         val leaves = getBlockByKeyUseCase["leaves_oak"]
-        val log = getBlockByKeyUseCase["log_oak"]
+        val log = getBlockByKeyUseCase["wood_log_oak"]
 
         for (iy in y downTo y - 4) {
             gameWorld.setBackMap(x, iy, log)

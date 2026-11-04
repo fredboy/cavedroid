@@ -10,6 +10,7 @@ import ktx.scene2d.label
 import ktx.scene2d.scrollPane
 import ktx.scene2d.table
 import ktx.scene2d.textButton
+import ru.fredboy.cavedroid.common.mvvm.collectViewState
 import ru.fredboy.cavedroid.common.utils.toToggleStateString
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 
@@ -20,7 +21,7 @@ private fun Boolean.toLocalizedToggle(viewModel: SettingsMenuViewModel): String 
 
 @Scene2dDsl
 suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel.also {
-    viewModel.stateFlow.collect { state ->
+    collectViewState(viewModel.stateFlow) { state ->
         actors {
             table {
                 setFillParent(true)
@@ -44,11 +45,19 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                 row()
 
                 scrollPane {
+                    name = "settings-content"
                     table {
                         defaults()
                             .width(600f)
                             .height(60f)
                             .pad(10f)
+
+                        if (viewModel.showAssetPacks) {
+                            textButton(viewModel.getLocalizedString("assetPacks")) {
+                                onClickWithSound(viewModel) { viewModel.onAssetPacksClick() }
+                            }
+                            row()
+                        }
 
                         textButton(
                             viewModel.getFormattedString(
@@ -93,6 +102,16 @@ suspend fun Stage.settingsMenuView(viewModel: SettingsMenuViewModel) = viewModel
                         ) {
                             onClickWithSound(viewModel) {
                                 viewModel.onSoundClick(!state.sound)
+                            }
+                        }
+
+                        row()
+
+                        textButton(
+                            viewModel.getFormattedString("enableMusic", state.music.toLocalizedToggle(viewModel)),
+                        ) {
+                            onClickWithSound(viewModel) {
+                                viewModel.onMusicClick(!state.music)
                             }
                         }
 

@@ -39,7 +39,7 @@ internal class GeneratorTestItems : ItemsRepository by mockk<ItemsRepository>() 
     companion object {
         private val NON_SOLID = setOf(
             "none", "water", "lava", "web", "snow", "sugar_cane", "torch", "ladder",
-            "dandelion", "rose", "tallgrass", "deadbush", "mushroom_brown", "mushroom_red",
+            "flower_dandelion", "flower_rose", "tallgrass", "deadbush", "mushroom_brown", "mushroom_red",
         )
     }
 }

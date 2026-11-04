@@ -58,6 +58,8 @@ class GameWorldGrowBlocksControllerTask(
         if (gameWorld.isInfinite) {
             gameWorld.addChunkListener(this)
             gameWorld.forEachLoadedChunk(::onChunkLoaded)
+        } else {
+            scheduleMissing(gameWorld.start..gameWorld.end)
         }
     }
 
@@ -69,6 +71,22 @@ class GameWorldGrowBlocksControllerTask(
                 chunkX = chunkX,
             ),
         )
+        val startX = chunkX * ChunkGenerator.CHUNK_W
+        scheduleMissing(startX until startX + ChunkGenerator.CHUNK_W)
+    }
+
+    /** Seed generated blocks and older saves without resetting restored timers. */
+    private fun scheduleMissing(columns: IntRange) {
+        for (x in columns) {
+            for (y in 0 until gameWorld.height) {
+                val block = gameWorld.getForeMap(x, y)
+                val key = block.params.key
+                val action = growBlockActions[block.params.growActionKey ?: key] ?: continue
+                synchronized(queueLock) {
+                    if (pack(x, y) !in pending) schedule(x, y, key, action.nextDelayTicks())
+                }
+            }
+        }
     }
 
     override fun onChunkUnloaded(chunkX: Int) {

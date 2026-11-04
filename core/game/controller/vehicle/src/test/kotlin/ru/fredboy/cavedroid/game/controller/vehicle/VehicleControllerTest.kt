@@ -19,11 +19,15 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
+import org.junit.jupiter.params.provider.ValueSource
 import ru.fredboy.cavedroid.common.api.BoatHintEvents
 import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
+import ru.fredboy.cavedroid.domain.items.model.item.Item
 import ru.fredboy.cavedroid.domain.world.model.PhysicsConstants
+import ru.fredboy.cavedroid.entity.drop.model.Drop
 import ru.fredboy.cavedroid.entity.mob.model.Direction
 import ru.fredboy.cavedroid.entity.mob.model.Player
 import ru.fredboy.cavedroid.entity.vehicle.BoatTuning
@@ -34,6 +38,7 @@ import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.controller.mob.impl.MobPhysicsFactoryImpl
 import ru.fredboy.cavedroid.game.controller.mob.impl.physics.MobShouldJumpLeftSensorToBlockContactHandler
 import ru.fredboy.cavedroid.game.controller.mob.impl.physics.MobShouldJumpRightSensorToBlockContactHandler
+import ru.fredboy.cavedroid.game.controller.mob.impl.physics.MobToDropContactHandler
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.game.world.GameWorldContactListener
 
@@ -73,6 +78,17 @@ class VehicleControllerTest {
         every { factory.create(saved) } returns Vehicle(saved.id, saved.type, mockk())
         controller.restore(listOf(saved))
         assertEquals(type.itemKey, controller.vehicles.single().type)
+    }
+
+    @ParameterizedTest
+    @EnumSource(BoatType::class)
+    fun `historical saved boat types restore with canonical item and texture keys`(type: BoatType) {
+        val saved = state.copy(type = type.legacyItemKey)
+        val canonical = saved.copy(type = type.itemKey)
+        every { factory.create(canonical) } returns Vehicle(canonical.id, canonical.type, mockk())
+        controller.restore(listOf(saved))
+        assertEquals(type.itemKey, controller.vehicles.single().type)
+        verify(exactly = 1) { factory.create(canonical) }
     }
 
     @ParameterizedTest
@@ -192,6 +208,55 @@ class VehicleControllerTest {
                 assertEquals(BodyDef.BodyType.DynamicBody, body.type)
                 assertTrue(body.isActive)
             }
+        } finally {
+            physicsWorld.dispose()
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(floats = [0.6f, 1.8f])
+    fun `drop pickup works before boarding while mounted and after dismounting`(height: Float) {
+        GdxNativesLoader.load()
+        Box2D.init()
+        val physicsWorld = World(Vector2.Zero, false)
+        try {
+            prepareTarget(playerX = 5f, boatX = 5f, cursorX = 5f)
+            every { world.world } returns physicsWorld
+            every { player.height } returns height
+            val body = MobPhysicsFactoryImpl(mockk { every { getBox2dWorld() } returns physicsWorld })
+                .createBody(player, 5f, 10f, PhysicsConstants.CATEGORY_MOB, false)
+            every { player.body } returns body
+            every { player.position } answers { body.position }
+            var mountedId: String? = null
+            every { player.mountedVehicleId } answers { mountedId }
+            every { player.mountedVehicleId = any() } answers { mountedId = firstArg() }
+            every { player.inventory.pickUpItem(any()) } returns true
+            GameWorldContactListener(setOf(MobToDropContactHandler())).attachToGameWorld(world)
+
+            val water = mockk<Block.Water>(relaxed = true)
+            every { water.isWater() } returns true
+            every { water.getRectangle(any(), any()) } answers { Rectangle(firstArg<Int>().toFloat(), secondArg<Int>().toFloat(), 1f, 1f) }
+            every { world.getForeMap(any(), any()) } returns water
+
+            fun checkPickup() {
+                for (offsetY in listOf(0f, height / 2f + 0.15f)) {
+                    val drop = Drop(InventoryItem(mockk<Item.Normal>()))
+                    drop.spawn(body.position.x, body.position.y + offsetY, physicsWorld)
+                    try {
+                        repeat(2) { physicsWorld.step(1f / 60f, 6, 2) }
+                        assertTrue(drop.isPickedUp, "Pickup failed with mounted=$mountedId, offsetY=$offsetY")
+                        verify { player.inventory.pickUpItem(drop.inventoryItem) }
+                    } finally {
+                        drop.dispose()
+                    }
+                }
+            }
+
+            checkPickup()
+            assertTrue(controller.boardTarget())
+            checkPickup()
+            assertTrue(controller.dismount())
+            checkPickup()
         } finally {
             physicsWorld.dispose()
         }

@@ -13,11 +13,13 @@ import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.game.controller.drop.DropController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindWorldRenderer
+import ru.fredboy.cavedroid.gameplay.rendering.utils.PresentationPoses
 import javax.inject.Inject
 
 @GameScope
 @BindWorldRenderer
 class DropsRenderer @Inject constructor(
+    private val poses: PresentationPoses,
     private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     private val dropController: DropController,
     private val gameWorld: GameWorld,
@@ -33,7 +35,7 @@ class DropsRenderer @Inject constructor(
         drawn = 0
         dropController.forEach { drop ->
             resident++
-            drop.hitbox.cycledInsideWorld(viewport, gameWorld.width.toFloat())?.let { dropRect ->
+            poses.bounds(drop.body, drop.hitbox).cycledInsideWorld(viewport, gameWorld.width.toFloat())?.let { dropRect ->
                 drawn++
                 spriteBatch.drawSprite(
                     sprite = drop.item.sprite,

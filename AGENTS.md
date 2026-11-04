@@ -1,7 +1,9 @@
 # CaveDroid agent guide
 
 CaveDroid is a Kotlin/libGDX 2D sandbox game for desktop, Android, iOS,
-and web (TeaVM). Use the Gradle wrapper from the repository root with JDK 17.
+and web (TeaVM). Use the Gradle wrapper from the repository root with JDK 25.
+Build toolchains use JDK 25; shared JVM bytecode stays at 17 for Android, TeaVM,
+and RoboVM compatibility. Construo desktop bundles include a JDK 25 runtime.
 
 ## Code map
 
@@ -23,7 +25,9 @@ owns them unless they are shared by multiple features.
 - The Y axis points down.
 - Write Kotlin and follow `.editorconfig`. Existing Java emulation sources in
   `html/src/main/java/emu/` and `html/src/main/java/emulate/` are the exception.
-- Use dependency definitions and helpers in `buildSrc/`; centralize versions there.
+- Declare dependencies and plugin versions in `gradle/libs.versions.toml` and use
+  the generated `libs` accessors. Use standard `project(...)` dependencies for
+  local modules. `buildSrc/` holds application metadata and custom build logic.
 - DI uses Dagger, KSP, and automultibind. Follow existing annotations when adding
   handlers, actions, or renderers; their binding modules are generated. For
   explicit bindings, check the owning component and module wiring in `core/gdx/`.
@@ -36,6 +40,12 @@ owns them unless they are shared by multiple features.
 - Do not commit generated DI code, `notices.txt`, or `attribution_index.txt`.
 - Bump versions with `scripts/up-version.sh <version>` so both version
   definitions stay synchronized.
+
+## Commit messages
+
+Keep commit messages concise and start with a capitalized imperative verb such as
+Fix, Add, Change, or Remove. Describe only the change; omit reasons, file lists,
+Markdown formatting, and punctuation.
 
 ## Verification
 
@@ -54,7 +64,7 @@ Choose checks appropriate to the affected modules and behavior:
 
 Tests use JUnit Jupiter, with mockk and kotlinx-coroutines-test where needed.
 Modules with tests must enable `tasks.test { useJUnitPlatform() }` and declare
-test dependencies through the definitions in `buildSrc/`. Use an existing
+test dependencies through the version catalog. Use an existing
 tested module such as `core/common` as a setup example.
 
 Avoid constructing objects that need GL or native physics in JVM tests.
@@ -65,7 +75,6 @@ available. Report what was actually checked and any verification limitations.
 ## Task-specific guidance
 
 - Setup and contribution workflow: [CONTRIBUTING.md](CONTRIBUTING.md).
-- Release procedure: [RELEASING.md](RELEASING.md).
 - Locale additions, legacy Android builds, and unit-test recipes:
   relevant `SKILL.md` files under `.agents/skills/`.
 

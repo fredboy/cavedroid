@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.data.assets.internal
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import ru.fredboy.cavedroid.domain.assets.repository.UiSoundAssetsRepository
 import javax.inject.Inject
@@ -16,7 +15,7 @@ internal class UiSoundAssetsRepositoryImpl @Inject constructor() : UiSoundAssets
     }
 
     override fun initialize() {
-        clickSound = loadSound(Gdx.files.internal(BUTTON_SOUND))
+        clickSound = loadSound(assetResolver.handle(BUTTON_SOUND))
     }
 
     override fun dispose() {

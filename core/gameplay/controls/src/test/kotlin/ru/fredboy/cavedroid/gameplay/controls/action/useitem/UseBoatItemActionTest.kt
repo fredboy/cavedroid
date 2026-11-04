@@ -27,7 +27,7 @@ class UseBoatItemActionTest {
 
     @Test
     fun `failed placement is reported to the caller`() {
-        val item = mockk<Item.Usable> { every { params.key } returns "birch_boat" }
+        val item = mockk<Item.Usable> { every { params.key } returns "boat_birch" }
         every { vehicles.place(any(), any(), any()) } returns false
         assertFalse(action.perform(item, 33, 20))
     }

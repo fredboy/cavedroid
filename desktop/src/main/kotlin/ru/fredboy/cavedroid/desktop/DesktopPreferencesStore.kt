@@ -10,6 +10,7 @@ class DesktopPreferencesStore : PreferencesStore {
     override fun getPreference(key: String): String? = prefs.get(key, null)
 
     override fun setPreference(key: String, value: String?) {
-        prefs.put(key, value)
+        if (value == null) prefs.remove(key) else prefs.put(key, value)
+        prefs.flush()
     }
 }

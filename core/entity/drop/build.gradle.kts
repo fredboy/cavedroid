@@ -1,16 +1,18 @@
 plugins {
-    kotlin("jvm")
-    ksp
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.ksp)
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
-    useLibgdx()
-    useDagger()
+    implementation(libs.bundles.gdx)
+    implementation(libs.dagger.runtime)
+    ksp(libs.dagger.compiler)
 
-    useCommonLibs()
-    useModule(":core:domain:items")
-    useModule(":core:domain:world")
+    implementation(project(":core:common"))
+    implementation(libs.bundles.common)
+    implementation(project(":core:domain:items"))
+    implementation(project(":core:domain:world"))
 }

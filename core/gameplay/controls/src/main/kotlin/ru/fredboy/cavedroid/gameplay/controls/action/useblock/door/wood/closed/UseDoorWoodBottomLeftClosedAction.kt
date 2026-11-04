@@ -16,16 +16,16 @@ class UseDoorWoodBottomLeftClosedAction @Inject constructor(
 ) : IUseBlockAction {
 
     override fun perform(block: Block, x: Int, y: Int): Boolean {
-        if (gameWorld.getForeMap(x, y - 1).params.key != "door_wood_top_left_closed") {
+        if (gameWorld.getForeMap(x, y - 1).params.key != "wood_door_top_left_closed") {
             return true
         }
 
-        gameWorld.setForeMap(x, y - 1, itemsRepository.getBlockByKey("door_wood_top_left_open"))
-        gameWorld.setForeMap(x, y, itemsRepository.getBlockByKey("door_wood_bottom_left_open"))
+        gameWorld.setForeMap(x, y - 1, itemsRepository.getBlockByKey("wood_door_top_left_open"))
+        gameWorld.setForeMap(x, y, itemsRepository.getBlockByKey("wood_door_bottom_left_open"))
         return true
     }
 
     companion object {
-        const val KEY = "door_wood_bottom_left_closed"
+        const val KEY = "wood_door_bottom_left_closed"
     }
 }

@@ -16,6 +16,9 @@ import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRe
 import ru.fredboy.cavedroid.gdx.menu.v2.view.about.AboutMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.about.AboutMenuViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.about.aboutMenuView
+import ru.fredboy.cavedroid.gdx.menu.v2.view.assetpacks.AssetPacksNavKey
+import ru.fredboy.cavedroid.gdx.menu.v2.view.assetpacks.AssetPacksViewModel
+import ru.fredboy.cavedroid.gdx.menu.v2.view.assetpacks.assetPacksView
 import ru.fredboy.cavedroid.gdx.menu.v2.view.attribution.AttributionMenuNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.attribution.AttributionMenuViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.attribution.attributionMenuView
@@ -95,6 +98,11 @@ class MenuNavigationController @Inject constructor(
             is WorldConfigMenuNavKey -> {
                 val viewModel = findViewModel<WorldConfigMenuNavKey, WorldConfigMenuViewModel>(navKey, cachedViewModel)
                 render(viewModel) { worldConfigMenuView(viewModel) }
+            }
+
+            is AssetPacksNavKey -> {
+                val viewModel = findViewModel<AssetPacksNavKey, AssetPacksViewModel>(navKey, cachedViewModel)
+                render(viewModel) { assetPacksView(viewModel) }
             }
 
             is SettingsMenuNavKey -> {

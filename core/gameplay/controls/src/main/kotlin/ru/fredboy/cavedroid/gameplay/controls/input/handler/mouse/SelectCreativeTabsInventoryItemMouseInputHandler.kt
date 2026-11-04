@@ -97,8 +97,7 @@ class SelectCreativeTabsInventoryItemMouseInputHandler @Inject constructor(
         val itemIndex = xOnGrid + yOnGrid * CreativeTabs.itemsInRow +
             gameWindowsManager.creativeScrollAmount * CreativeTabs.itemsInRow
 
-        val items = itemsRepository.getAllItems().asSequence()
-            .filter { window.selectedTab.isRelevantItem(it) }
+        val items = window.getCatalogItems().asSequence()
             .map { it.toInventoryItem(durability = it.durabilityOrNull() ?: 1) }
             .toMutableList()
             .asSafeInventoryList(itemsRepository)
@@ -208,11 +207,14 @@ class SelectCreativeTabsInventoryItemMouseInputHandler @Inject constructor(
             yOnItemsGrid >= 0 &&
             yOnItemsGrid < CreativeTabs.itemsInCol
 
-        val clickedTab =
-            (xOnWindow / (windowTexture.regionWidth / CreativeInventoryTabsWindow.Tab.entries.size)).toInt()
-                .takeIf { it in CreativeInventoryTabsWindow.Tab.entries.indices }
-                ?.takeIf { yOnWindow > windowTexture.regionHeight }
-                ?.let { CreativeInventoryTabsWindow.Tab.entries[it] }
+        val clickedTab = CreativeInventoryTabsWindow.Tab.entries.firstOrNull { tab ->
+            CreativeTabs.tabBounds(
+                tab.ordinal,
+                windowTexture.regionWidth.toFloat(),
+                windowTexture.regionHeight.toFloat(),
+                selectedTabTexture.regionHeight.toFloat(),
+            ).contains(xOnWindow, yOnWindow)
+        }
 
         if (isInsideInventoryGrid) {
             handleInsideInventoryGrid(action, xOnInvGrid.toInt(), yOnInvGrid.toInt())

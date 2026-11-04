@@ -114,7 +114,7 @@ class DropController @Inject constructor(
     private fun drainDropQueue() {
         if (dropQueue.queue.isNotEmpty()) {
             val queued = dropQueue.queue.poll()
-            addDrop(queued.x, queued.y, queued.item, getRandomInitialForce())
+            addDrop(queued.x, queued.y, queued.item, queued.initialForce ?: getRandomInitialForce())
         }
     }
 
@@ -130,7 +130,7 @@ class DropController @Inject constructor(
                 Drop(item.item, item.amount, item.durability),
                 queued.x,
                 queued.y,
-                getRandomInitialForce(),
+                queued.initialForce ?: getRandomInitialForce(),
                 checkDistance = false,
             )
         }
@@ -165,6 +165,14 @@ class DropController @Inject constructor(
                 drop.update(dropWorldAdapter, delta)
             }
         }
+
+        val consumed = mergeNearbyDrops(drops, dropWorldAdapter.width.takeUnless { dropWorldAdapter.isInfinite })
+        consumed.forEach { drop ->
+            // Destroying a body ends attraction contacts; prevent those callbacks from picking it up again.
+            drop.isPickedUp = true
+            drop.dispose()
+        }
+        drops.removeAll(consumed)
     }
 
     fun dispose() {

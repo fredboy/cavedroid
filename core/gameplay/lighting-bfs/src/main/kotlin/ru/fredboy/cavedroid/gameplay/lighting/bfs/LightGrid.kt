@@ -6,11 +6,13 @@ import kotlin.math.max
  * @param originX absolute world x of local column 0. Public methods accept absolute coordinates and
  * translate by this origin, so a windowed grid (infinite worlds) and a full-width grid (finite,
  * looping worlds, [originX] = 0) share the same call sites. Internal BFS works in local space.
+ * [looping] is disabled for infinite-world windows and their individual rebuild strips.
  */
 class LightGrid(
     val width: Int,
     val height: Int,
     private val originX: Int = 0,
+    private val looping: Boolean = true,
 ) {
     private val opaque: BooleanArray = BooleanArray(width * height)
     private val emission: ByteArray = ByteArray(width * height)
@@ -21,8 +23,8 @@ class LightGrid(
 
     private val transientEmitters = HashMap<Long, TransientEmitter>()
 
-    private val addQueue = ArrayDeque<Long>()
-    private val removeQueue = ArrayDeque<Long>()
+    private val addQueue = LongQueue()
+    private val removeQueue = LongQueue()
 
     fun wrapX(x: Int): Int {
         val w = width
@@ -33,23 +35,25 @@ class LightGrid(
     /** Translates an absolute world x into an in-range local column. */
     private fun localX(x: Int): Int = wrapX(x - originX)
 
+    private fun containsX(x: Int): Boolean = looping || x.toLong() in originX.toLong() until originX.toLong() + width
+
     fun isOpaqueAt(x: Int, y: Int): Boolean {
-        if (y < 0 || y >= height) return false
+        if (y < 0 || y >= height || !containsX(x)) return false
         return opaque[index(localX(x), y)]
     }
 
     fun skyAt(x: Int, y: Int): Int {
-        if (y < 0 || y >= height) return 0
+        if (y < 0 || y >= height || !containsX(x)) return 0
         return sky[index(localX(x), y)].toInt() and 0xFF
     }
 
     fun blockAt(x: Int, y: Int): Int {
-        if (y < 0 || y >= height) return 0
+        if (y < 0 || y >= height || !containsX(x)) return 0
         return block[index(localX(x), y)].toInt() and 0xFF
     }
 
     fun isSkyExposed(x: Int, y: Int): Boolean {
-        if (y < 0 || y >= height) return false
+        if (y < 0 || y >= height || !containsX(x)) return false
         return y < heightmap[localX(x)]
     }
 
@@ -63,56 +67,124 @@ class LightGrid(
         isOpaque: (Int, Int) -> Boolean,
         blockEmission: (Int, Int) -> Int,
     ) {
-        for (x in 0 until width) {
-            for (y in 0 until height) {
-                val idx = index(x, y)
-                opaque[idx] = isOpaque(x, y)
-                val em = blockEmission(x, y).coerceIn(0, MAX_LEVEL)
-                emission[idx] = em.toByte()
-            }
-        }
+        val rebuild = beginRebuild(isOpaque, blockEmission)
+        while (!rebuild.step(Long.MAX_VALUE)) Unit
+    }
 
-        sky.fill(0)
-        block.fill(0)
+    internal fun beginRebuild(
+        isOpaque: (Int, Int) -> Boolean,
+        blockEmission: (Int, Int) -> Int,
+    ) = Rebuild(isOpaque, blockEmission)
 
-        for (x in 0 until width) {
-            var firstOpaqueY = height
-            for (y in 0 until height) {
-                if (opaque[index(x, y)]) {
-                    firstOpaqueY = y
-                    break
+    /** A candidate grid is private until all phases finish; no partially propagated light is exposed. */
+    internal inner class Rebuild(
+        private val isOpaque: (Int, Int) -> Boolean,
+        private val blockEmission: (Int, Int) -> Int,
+    ) {
+        private var phase = 0
+        private var cell = 0
+
+        fun step(deadline: Long): Boolean {
+            var work = 0
+            while (phase < 5) {
+                when (phase) {
+                    0 -> {
+                        val x = cell / height
+                        val y = cell % height
+                        val idx = index(x, y)
+                        opaque[idx] = isOpaque(x, y)
+                        emission[idx] = blockEmission(x, y).coerceIn(0, MAX_LEVEL).toByte()
+                        sky[idx] = 0
+                        block[idx] = 0
+                        if (++cell == width * height) {
+                            cell = 0
+                            phase++
+                        }
+                    }
+                    1 -> {
+                        val x = cell / height
+                        val y = cell % height
+                        if (y == 0) heightmap[x] = height
+                        if (opaque[index(x, y)] && heightmap[x] == height) heightmap[x] = y
+                        if (y < heightmap[x]) {
+                            sky[index(x, y)] = MAX_LEVEL.toByte()
+                            enqueueAdd(addQueue, x, y, MAX_LEVEL)
+                        }
+                        if (++cell == width * height) {
+                            cell = 0
+                            phase++
+                        }
+                    }
+                    2 -> if (addQueue.isNotEmpty()) propagateOne(sky) else phase++
+                    3 -> {
+                        val x = cell / height
+                        val y = cell % height
+                        val em = emission[index(x, y)].toInt() and 0xFF
+                        if (em > 0) {
+                            block[index(x, y)] = em.toByte()
+                            enqueueAdd(addQueue, x, y, em)
+                        }
+                        if (++cell == width * height) {
+                            // Seed even emitters inside opaque blocks, matching the synchronous grid.
+                            for (emitter in transientEmitters.values) {
+                                val idx = index(emitter.x, emitter.y)
+                                if (emitter.level > (block[idx].toInt() and 0xFF)) {
+                                    block[idx] = emitter.level.toByte()
+                                    enqueueAdd(addQueue, emitter.x, emitter.y, emitter.level)
+                                }
+                            }
+                            phase++
+                        }
+                    }
+                    4 -> if (addQueue.isNotEmpty()) propagateOne(block) else phase++
+                }
+                if (++work == 256) {
+                    work = 0
+                    if (System.nanoTime() >= deadline) return phase == 5
                 }
             }
-            heightmap[x] = firstOpaqueY
-            for (y in 0 until firstOpaqueY) {
-                sky[index(x, y)] = MAX_LEVEL.toByte()
-                enqueueAdd(addQueue, x, y, MAX_LEVEL)
-            }
+            return true
         }
-        drainSkyAddQueue()
+    }
 
-        for (x in 0 until width) {
+    internal var transientRevision = 0L
+        private set
+
+    /** Copy only fully propagated columns; each source strip includes a full light-radius halo. */
+    internal fun copyColumnsFrom(source: LightGrid, firstX: Int, lastX: Int) {
+        require(height == source.height)
+        for (x in firstX..lastX) {
+            val targetX = localX(x)
+            val sourceX = source.localX(x)
+            heightmap[targetX] = source.heightmap[sourceX]
             for (y in 0 until height) {
-                val em = emission[index(x, y)].toInt() and 0xFF
-                if (em > 0) {
-                    block[index(x, y)] = em.toByte()
-                    enqueueAdd(addQueue, x, y, em)
-                }
+                val target = index(targetX, y)
+                val from = source.index(sourceX, y)
+                opaque[target] = source.opaque[from]
+                emission[target] = source.emission[from]
+                sky[target] = source.sky[from]
+                block[target] = source.block[from]
             }
         }
-        // Furnace and fire handles can remain active while streamed terrain is refreshed.
-        for (emitter in transientEmitters.values) {
-            val idx = index(emitter.x, emitter.y)
-            if (emitter.level > (block[idx].toInt() and 0xFF)) {
-                block[idx] = emitter.level.toByte()
-                enqueueAdd(addQueue, emitter.x, emitter.y, emitter.level)
+    }
+
+    internal fun copyTransientEmittersFrom(source: LightGrid) {
+        for ((id, emitter) in source.transientEmitters) {
+            val absoluteX = emitter.x + source.originX
+            if (absoluteX.toLong() in originX.toLong() until originX.toLong() + width) {
+                transientEmitters[id] = emitter.copy(x = absoluteX - originX)
             }
         }
-        drainBlockAddQueue()
+    }
+
+    internal fun seedTransientEmitter(id: Long, x: Int, y: Int, level: Int) {
+        if (x.toLong() in originX.toLong() until originX.toLong() + width && y in 0 until height && level > 0) {
+            transientEmitters[id] = TransientEmitter(x - originX, y, level.coerceAtMost(MAX_LEVEL))
+        }
     }
 
     fun onCellChanged(x: Int, y: Int, newOpaque: Boolean, newEmission: Int) {
-        if (y < 0 || y >= height) return
+        if (y < 0 || y >= height || !containsX(x)) return
         val cx = localX(x)
         val idx = index(cx, y)
         val cappedEmission = newEmission.coerceIn(0, MAX_LEVEL)
@@ -151,7 +223,9 @@ class LightGrid(
 
         if (!newOpaque) {
             for ((dx, dy) in NEIGHBOURS) {
-                val nx = wrapX(cx + dx)
+                val neighbourX = cx + dx
+                if (!looping && neighbourX !in 0 until width) continue
+                val nx = wrapX(neighbourX)
                 val ny = y + dy
                 if (ny < 0 || ny >= height) continue
                 val neighbourLevel = block[index(nx, ny)].toInt() and 0xFF
@@ -166,7 +240,9 @@ class LightGrid(
 
         if (!newOpaque) {
             for ((dx, dy) in NEIGHBOURS) {
-                val nx = wrapX(cx + dx)
+                val neighbourX = cx + dx
+                if (!looping && neighbourX !in 0 until width) continue
+                val nx = wrapX(neighbourX)
                 val ny = y + dy
                 if (ny < 0 || ny >= height) continue
                 val neighbourLevel = sky[index(nx, ny)].toInt() and 0xFF
@@ -179,11 +255,16 @@ class LightGrid(
     }
 
     fun setTransientEmitter(id: Long, x: Int, y: Int, level: Int) {
-        clearTransientEmitter(id)
-        if (level <= 0 || y < 0 || y >= height) return
+        if (level <= 0 || y < 0 || y >= height || !containsX(x)) {
+            clearTransientEmitter(id)
+            return
+        }
         val cx = localX(x)
-//        if (opaque[index(cx, y)]) return
         val capped = level.coerceAtMost(MAX_LEVEL)
+        val existing = transientEmitters[id]
+        if (existing != null && existing.x == cx && existing.y == y && existing.level == capped) return
+        clearTransientEmitter(id)
+        transientRevision++
         transientEmitters[id] = TransientEmitter(cx, y, capped)
         val current = block[index(cx, y)].toInt() and 0xFF
         if (capped > current) {
@@ -195,6 +276,7 @@ class LightGrid(
 
     fun clearTransientEmitter(id: Long) {
         val existing = transientEmitters.remove(id) ?: return
+        transientRevision++
         val cellValue = block[index(existing.x, existing.y)].toInt() and 0xFF
         if (cellValue == 0) return
         if ((emission[index(existing.x, existing.y)].toInt() and 0xFF) >= cellValue) return
@@ -252,26 +334,30 @@ class LightGrid(
     private fun drainSkyAddQueue() = drainAddQueue(sky)
 
     private fun drainAddQueue(channel: ByteArray) {
-        while (addQueue.isNotEmpty()) {
-            val packed = addQueue.removeFirst()
-            val x = unpackX(packed)
-            val y = unpackY(packed)
-            val level = unpackLevel(packed)
-            val sourceLevel = channel[index(x, y)].toInt() and 0xFF
-            if (sourceLevel < level) continue
-            val propagated = level - 1
-            if (propagated <= 0) continue
+        while (addQueue.isNotEmpty()) propagateOne(channel)
+    }
 
-            for ((dx, dy) in NEIGHBOURS) {
-                val nx = wrapX(x + dx)
-                val ny = y + dy
-                if (ny < 0 || ny >= height) continue
-                if (opaque[index(nx, ny)]) continue
-                val current = channel[index(nx, ny)].toInt() and 0xFF
-                if (current >= propagated) continue
-                channel[index(nx, ny)] = propagated.toByte()
-                enqueueAdd(addQueue, nx, ny, propagated)
-            }
+    private fun propagateOne(channel: ByteArray) {
+        val packed = addQueue.removeFirst()
+        val x = unpackX(packed)
+        val y = unpackY(packed)
+        val level = unpackLevel(packed)
+        val sourceLevel = channel[index(x, y)].toInt() and 0xFF
+        if (sourceLevel < level) return
+        val propagated = level - 1
+        if (propagated <= 0) return
+
+        for ((dx, dy) in NEIGHBOURS) {
+            val neighbourX = x + dx
+            if (!looping && neighbourX !in 0 until width) continue
+            val nx = wrapX(neighbourX)
+            val ny = y + dy
+            if (ny < 0 || ny >= height) continue
+            if (opaque[index(nx, ny)]) continue
+            val current = channel[index(nx, ny)].toInt() and 0xFF
+            if (current >= propagated) continue
+            channel[index(nx, ny)] = propagated.toByte()
+            enqueueAdd(addQueue, nx, ny, propagated)
         }
     }
 
@@ -283,7 +369,9 @@ class LightGrid(
             val oldLevel = unpackLevel(packed)
 
             for ((dx, dy) in NEIGHBOURS) {
-                val nx = wrapX(x + dx)
+                val neighbourX = x + dx
+                if (!looping && neighbourX !in 0 until width) continue
+                val nx = wrapX(neighbourX)
                 val ny = y + dy
                 if (ny < 0 || ny >= height) continue
                 val current = channel[index(nx, ny)].toInt() and 0xFF
@@ -300,11 +388,11 @@ class LightGrid(
 
     private fun index(x: Int, y: Int): Int = y * width + x
 
-    private fun enqueueAdd(queue: ArrayDeque<Long>, x: Int, y: Int, level: Int) {
+    private fun enqueueAdd(queue: LongQueue, x: Int, y: Int, level: Int) {
         queue.addLast(pack(x, y, level))
     }
 
-    private fun enqueueRemove(queue: ArrayDeque<Long>, x: Int, y: Int, oldLevel: Int) {
+    private fun enqueueRemove(queue: LongQueue, x: Int, y: Int, oldLevel: Int) {
         queue.addLast(pack(x, y, oldLevel))
     }
 

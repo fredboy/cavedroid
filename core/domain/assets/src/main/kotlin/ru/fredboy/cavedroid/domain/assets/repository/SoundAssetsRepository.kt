@@ -3,9 +3,13 @@ package ru.fredboy.cavedroid.domain.assets.repository
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.files.FileHandle
+import ru.fredboy.cavedroid.domain.assets.pack.AssetResolver
 import java.util.*
+import javax.inject.Inject
 
 abstract class SoundAssetsRepository : AssetsRepository {
+
+    @Inject lateinit var assetResolver: AssetResolver
 
     protected val loadedSounds = LinkedList<Sound>()
 
@@ -30,7 +34,7 @@ abstract class SoundAssetsRepository : AssetsRepository {
     }
 
     protected fun loadSound(handle: FileHandle): Sound {
-        return Gdx.audio.newSound(handle).also { sound ->
+        return Gdx.audio.newSound(assetResolver.resolve(handle.path())).also { sound ->
             loadedSounds.add(sound)
         }
     }

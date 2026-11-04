@@ -9,7 +9,7 @@
 [![GitHub Release](https://img.shields.io/github/v/release/fredboy/cavedroid)](https://github.com/fredboy/cavedroid/releases)
 
 CaveDroid is a **2D Minecraft-inspired game** for Android, Desktop (Windows, Linux, macOS), Web (browser), and potentially iOS.
-Explore, mine, and build in a looped world.
+Explore, mine, and build in procedurally generated worlds.
 
 <details>
   <summary>Screenshots</summary>
@@ -28,11 +28,16 @@ Explore, mine, and build in a looped world.
 
 ## Features
 
-- 2D world, looped horizontally
-- Craft, mine, and explore
-- Procedurally generated world
-- Cross-platform: Android, Desktop (Windows/Linux/macOS), Web (browser, via TeaVM), iOS (untested)
-- Single-player mode (multiplayer not available yet)
+- **Game modes:** Survival with health and hunger; Creative with unlimited blocks and flight. Single-player, playable offline.
+- **Exploration:** procedurally generated infinite worlds with biomes, caves, mineshafts and villages. Craft boats to travel across water.
+- **Crafting and building:** mine and smelt ores, craft tools and blocks, furnish houses and store supplies in chests.
+- **Farming:** grow crops and cook food.
+- **Combat:** zombies, skeletons, spiders and creepers; swords, bows, armor and TNT with chain explosions.
+- **World simulation:** flowing water and lava, and spreading fire.
+- **Lighting and weather:** day and night, torch lighting, rain, snow and freezing water in snowy biomes.
+- **[Asset packs](ASSET_PACKS.md):** custom textures, sounds and game data on Android and desktop, including higher-resolution textures.
+- **Saves:** multiple worlds, save export and import.
+- **Statistics:** play time, blocks mined, items crafted and other gameplay activity.
 
 ---
 
@@ -62,78 +67,44 @@ Explore, mine, and build in a looped world.
 </p>
 
 
-You can also download APK and JAR builds from [the releases page](https://github.com/fredboy/cavedroid/releases).
+You can also download Android and desktop builds from [the releases page](https://github.com/fredboy/cavedroid/releases).
 Or play right from your browser [on GitHubPages](https://fredboy.github.io/cavedroid).
 
 ---
 
-## Build Instructions
+## Build
 
-### Android
+Install **JDK 25** and set `JAVA_HOME` and your IDE Gradle JVM to it.
+Android builds also need the Android SDK. Run the Gradle wrapper from the repository root:
 
-```bash
-./gradlew android:assembleFossDebug
-```
+| Task | Command |
+| --- | --- |
+| Run desktop | `./gradlew desktop:run` |
+| Desktop JAR | `./gradlew desktop:dist` |
+| FOSS debug APK | `./gradlew android:assembleFossDebug` |
+| Run web (JavaScript / Wasm GC) | `./gradlew html:runWeb` / `./gradlew html:runWasm` |
+| Web ZIP for static hosting (JavaScript / Wasm GC) | `./gradlew html:packageWebDist` / `./gradlew html:packageWebDistWasm` |
 
-### Desktop
+The web target uses [gdx-teavm](https://github.com/xpenatan/gdx-teavm).
+Wasm requires a browser with WebAssembly GC support; JavaScript builds support finite worlds only.
+See each module's `build.gradle.kts` for additional build tasks.
 
-```bash
-./gradlew desktop:dist
-```
+On Windows, use `gradlew.bat` and ensure the asset symlinks resolve correctly.
 
-On Windows, use `gradlew.bat` instead of `./gradlew`, though it will fail because of symlinks used to reference assets
-directory, so some tweaks are required.
-
-### Web (browser)
-
-CaveDroid compiles to JavaScript through [gdx-teavm](https://github.com/xpenatan/gdx-teavm). Lighting on the web build
-uses a simplified day/night tint shader (no per-block light sources) — gameplay is otherwise at parity with the desktop
-build.
-
-```bash
-# Run locally with the embedded Jetty dev server (source maps, no obfuscation)
-./gradlew html:runWeb
-
-# Build a development bundle without serving
-./gradlew html:buildJs
-
-# Build the obfuscated, fully-optimized release bundle
-./gradlew html:buildJsRelease
-
-# Zip the release bundle (build/dist/cavedroid-web-<version>.zip) for static hosting
-./gradlew html:packageWebDist
-```
-
-The release zip can be unpacked under any static web host (GitHub Pages, S3, Netlify, …) — no server-side runtime required.
-
-### Legacy Android devices (API 16/17 — Jelly Bean)
-
-Unstable, experimental APKs for Android 4.1/4.2 are published on the
-[releases page](https://github.com/fredboy/cavedroid/releases) — look for builds tagged
-`legacy` (or similar). Provided as-is, outside the regular QA pass.
-
-## Setting up the keystore for signing
-
-To build an android release and enable the `desktop:generateSignedJar` task for release builds,
-you need a `keystore.properties` file in the root of the project.
-
-Create a file named `keystore.properties` with the following properties:
+For signed builds, create `keystore.properties` at the repository root:
 
 ```properties
-# Path to your Java keystore file
-releaseKeystorePath=/path/to/your/keystore.jks
-
-# Keystore password
-releaseKeystorePassword=yourKeystorePassword
-
-# Alias of the key to use
-releaseKeyAlias=yourKeyAlias
-
-# Password for the key
-releaseKeyPassword=yourKeyPassword
+releaseKeystorePath=/path/to/keystore.jks
+releaseKeystorePassword=...
+releaseKeyAlias=...
+releaseKeyPassword=...
 ```
 
----
+Keep keys and passwords out of Git. See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution and verification guidance.
+
+## Asset packs
+
+See [Creating asset packs](ASSET_PACKS.md) for the ZIP format and override rules.
 
 ## License
 

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
+import ru.fredboy.cavedroid.domain.assets.pack.AssetPackRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
@@ -20,7 +21,10 @@ class MainMenuViewModel(
     baseViewModelDependencies: BaseViewModelDependencies,
     private val adController: AdController,
     private val applicationContextRepository: ApplicationContextRepository,
+    private val assetPacks: AssetPackRepository,
 ) : BaseViewModel(baseViewModelDependencies) {
+
+    val showPackRecovery get() = assetPacks.isSupported && assetPacks.startupError != null
 
     val showExitButton: Boolean
         get() = Gdx.app.type != Application.ApplicationType.WebGL

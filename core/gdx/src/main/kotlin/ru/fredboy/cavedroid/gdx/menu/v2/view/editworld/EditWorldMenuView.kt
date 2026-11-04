@@ -22,12 +22,12 @@ import ktx.scene2d.label
 import ktx.scene2d.table
 import ktx.scene2d.textButton
 import ktx.scene2d.textField
+import ru.fredboy.cavedroid.common.mvvm.collectViewState
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 
 @Scene2dDsl
 suspend fun Stage.editWorldMenuView(viewModel: EditWorldMenuViewModel) = viewModel.also {
-    viewModel.stateFlow.collect { state ->
-        clear()
+    collectViewState(viewModel.stateFlow) { state ->
         when (state) {
             is EditWorldMenuState.Loading -> messageScreen(viewModel.getLocalizedString("loading"))
             is EditWorldMenuState.Working -> messageScreen(state.message)
@@ -87,7 +87,6 @@ private fun Stage.showInfo(viewModel: EditWorldMenuViewModel, state: EditWorldMe
                     viewModel.getLocalizedString("gameMode"),
                     viewModel.getLocalizedString(details.gameMode.name.lowercase()),
                 )
-                infoRow(viewModel.getLocalizedString("mapSize"), details.mapSize)
                 infoRow(viewModel.getLocalizedString("diskSize"), details.diskSize)
                 infoRow(viewModel.getLocalizedString("seed"), details.seed ?: "—")
                 infoRow(viewModel.getLocalizedString("createdOn"), details.created ?: "—")
@@ -186,7 +185,11 @@ private fun Stage.renaming(viewModel: EditWorldMenuViewModel, state: EditWorldMe
 
 private fun attachRenameListeners(field: TextField, viewModel: EditWorldMenuViewModel) {
     // Drive the IME from gestures + the observer, matching NewGameMenuView.
-    field.setOnscreenKeyboard { }
+    field.onscreenKeyboard = object : TextField.OnscreenKeyboard {
+        override fun show(textField: TextField) = Unit
+
+        override fun close() = Unit
+    }
 
     field.addListener(
         object : ChangeListener() {

@@ -25,13 +25,13 @@ class CarvePumpkinActionTest {
     private val drops = mockk<DropController>(relaxed = true)
     private val action = CarvePumpkinAction(world, mobs, repository, drops)
     private val pumpkin = block("pumpkin")
-    private val carved = block("carved_pumpkin")
+    private val carved = block("pumpkin_carved")
     private val seeds = Item.Normal(mockk(), mockk())
 
     init {
         every { world.getForeMap(5, 10) } returns pumpkin
-        every { repository.getBlockByKey("carved_pumpkin") } returns carved
-        every { repository.getItemByKey("pumpkin_seeds") } returns seeds
+        every { repository.getBlockByKey("pumpkin_carved") } returns carved
+        every { repository.getItemByKey("seeds_pumpkin") } returns seeds
         every { player.activeItem } returns InventoryItem(mockk<Item.Shears>(relaxed = true))
     }
 

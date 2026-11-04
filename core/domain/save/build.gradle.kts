@@ -1,29 +1,31 @@
 plugins {
-    kotlin("jvm")
-    ksp
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.ksp)
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
 
 dependencies {
-    useModule(":core:entity:vehicle")
-    useCommonLibs()
-    useLibgdx()
-    useDagger()
+    implementation(project(":core:entity:vehicle"))
+    implementation(project(":core:common"))
+    implementation(libs.bundles.common)
+    implementation(libs.bundles.gdx)
+    implementation(libs.dagger.runtime)
+    ksp(libs.dagger.compiler)
 
-    useModule(":core:domain:items")
-    useModule(":core:domain:assets")
-    useModule(":core:domain:world")
+    implementation(project(":core:domain:items"))
+    implementation(project(":core:domain:assets"))
+    implementation(project(":core:domain:world"))
 
-    useModule(":core:entity:container")
-    useModule(":core:entity:drop")
-    useModule(":core:entity:mob")
-    useModule(":core:entity:projectile")
+    implementation(project(":core:entity:container"))
+    implementation(project(":core:entity:drop"))
+    implementation(project(":core:entity:mob"))
+    implementation(project(":core:entity:projectile"))
 
-    useModule(":core:game:controller:container")
-    useModule(":core:game:controller:drop")
-    useModule(":core:game:controller:mob")
-    useModule(":core:game:controller:projectile")
-    useModule(":core:game:world")
+    implementation(project(":core:game:controller:container"))
+    implementation(project(":core:game:controller:drop"))
+    implementation(project(":core:game:controller:mob"))
+    implementation(project(":core:game:controller:projectile"))
+    implementation(project(":core:game:world"))
 }

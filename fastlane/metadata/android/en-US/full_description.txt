@@ -1,30 +1,16 @@
-A pocket-sized 2D pixel sandbox where every world is yours to mine, build,
-and survive in. Free to play. Plays fully offline. Open source.
+CaveDroid is a 2D sandbox game with pixel graphics. Mine resources, craft equipment and build in procedurally generated worlds. Survival mode includes health, hunger and combat. Creative mode provides unlimited blocks and flight for building.
 
-Wander procedurally generated landscapes that wrap around the horizon.
-Cross grassy meadows, climb forested hills, and descend into torchlit
-caves. Day turns to night, monsters come out, and the deeper you dig,
-the harder it gets to make it home.
+Explore infinite worlds. Find plains, deserts, snowy terrain, caves, underground mineshafts and villages with residents, farms and loot. Craft boats to travel across water.
 
-THINGS YOU CAN DO
-Break and place any block. Chop trees, mine coal, iron, gold, and
-diamond. Craft tools, armor, torches, food, and weapons — swing a sword
-up close or pick off skeletons at range with a bow. Smelt ores. Hunt
-mobs, dodge lava in the deep. Build a shelter, a fortress, a sky-bridge
-— whatever you can imagine on a grid.
+Features:
+- Crafting and building: mine ores, smelt materials, craft tools and building blocks, furnish houses and store supplies in chests.
+- Farming: grow crops and cook food.
+- Combat: fight zombies, skeletons, spiders and creepers with swords, bows and armor. Use TNT with chain explosions.
+- World simulation: flowing water and lava, and fire that spreads between blocks.
+- Lighting and weather: day and night, torch lighting, rain, snowfall and freezing water in snowy areas.
+- Asset packs: import custom textures, sounds and game data, including higher-resolution textures.
+- Saves: keep multiple worlds and export or import saves.
+- Statistics: track play time, blocks mined, items crafted and other gameplay activity.
 
-FEATURES
-► Procedurally generated worlds with biomes, hills, caves, and hidden ores
-► Day/night cycle with dynamic lighting — torches actually light up the dark
-► Crafting recipes for tools, armor, weapons, food, and decorative blocks
-► Melee and ranged combat — swords, bow and arrows
-► Friendly animals and hostile mobs with their own behaviors and drops
-► Physics-based fluids — water flows, lava burns
-► Full survival loop: inventory, hunger, health, armor
-► Touch-friendly controls
-
-In active development — new features land with every release. Found a
-bug or have an idea? Open an issue on GitHub:
+CaveDroid is a single-player game with touch controls and can be played offline. The source code and issue tracker are available at:
 https://github.com/fredboy/cavedroid
-
-Enjoy the dig!

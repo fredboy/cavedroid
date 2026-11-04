@@ -5,6 +5,7 @@ import ru.fredboy.cavedroid.common.api.ApplicationController
 import ru.fredboy.cavedroid.common.di.MenuScope
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.common.mvvm.ViewModelProvider
+import ru.fredboy.cavedroid.domain.assets.pack.AssetPackRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.di.BindViewModelProvider
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
@@ -18,6 +19,7 @@ class MainMenuViewModelProvider @Inject constructor(
     private val baseViewModelDependencies: BaseViewModelDependencies,
     private val adController: AdController,
     private val applicationContextRepository: ApplicationContextRepository,
+    private val assetPacks: AssetPackRepository,
 ) : ViewModelProvider<MainMenuNavKey, MainMenuViewModel> {
 
     override val viewModelClass: KClass<MainMenuViewModel>
@@ -30,6 +32,7 @@ class MainMenuViewModelProvider @Inject constructor(
             baseViewModelDependencies = baseViewModelDependencies,
             adController = adController,
             applicationContextRepository = applicationContextRepository,
+            assetPacks = assetPacks,
         )
     }
 }

@@ -1,6 +1,10 @@
 plugins {
     `kotlin-dsl`
-    id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
+    alias(libs.plugins.buildsrc.ktlint)
+}
+
+kotlin {
+    jvmToolchain(25)
 }
 
 repositories {
@@ -12,9 +16,11 @@ dependencies {
     // Bring the jk1 license-report plugin onto buildSrc's classpath so PerFlavorTextReportRenderer
     // can reference its types at compile and runtime. The root build no longer needs a `plugins
     // { id(...) version "x" }` declaration for it — `apply(plugin = "...")` finds it via this jar.
-    implementation("com.github.jk1:gradle-license-report:2.9")
+    implementation(libs.license.report)
+
+    implementation(libs.jaudiotagger)
 }
 
 ktlint {
-    version.set("1.6.0")
+    version.set(libs.versions.ktlint.get())
 }

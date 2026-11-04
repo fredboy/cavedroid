@@ -11,6 +11,7 @@ import kotlinx.coroutines.withContext
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
+import ru.fredboy.cavedroid.gdx.utils.applicationComponent
 
 class NoticeMenuViewModel(
     private val navBackStack: NavBackStack,
@@ -22,7 +23,7 @@ class NoticeMenuViewModel(
     private val noticesFlow = _noticesFlow
         .onStart {
             val notices = withContext(ioDispatcher) {
-                Gdx.files.internal("notices.txt").readString()
+                Gdx.app.applicationListener.applicationComponent.assetResolver.handle("notices.txt").readString()
             }
             emit("${getLocalizedString("noticesPreamble")}\n\n$notices")
         }

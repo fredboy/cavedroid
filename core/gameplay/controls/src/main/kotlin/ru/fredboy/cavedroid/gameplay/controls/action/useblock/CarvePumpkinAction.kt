@@ -23,13 +23,13 @@ class CarvePumpkinAction @Inject constructor(
         val player = mobController.player
         if (block.params.key != "pumpkin" || player.activeItem.amount <= 0 || !player.activeItem.item.isShears()) return false
         val foreground = gameWorld.getForeMap(x, y)
-        val carved = itemsRepository.getBlockByKey("carved_pumpkin")
+        val carved = itemsRepository.getBlockByKey("pumpkin_carved")
         when {
             foreground.params.key == "pumpkin" -> gameWorld.setForeMap(x, y, carved)
             foreground.isNone() && gameWorld.getBackMap(x, y).params.key == "pumpkin" -> gameWorld.setBackMap(x, y, carved)
             else -> return false
         }
-        dropController.addDrop(x + 0.5f, y + 0.5f, itemsRepository.getItemByKey("pumpkin_seeds").toInventoryItem(4))
+        dropController.addDrop(x + 0.5f, y + 0.5f, itemsRepository.getItemByKey("seeds_pumpkin").toInventoryItem(4))
         player.durateActiveDurable()
         return true
     }

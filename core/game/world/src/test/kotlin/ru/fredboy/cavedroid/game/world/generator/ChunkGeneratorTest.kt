@@ -4,7 +4,6 @@ import io.mockk.clearAllMocks
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 
@@ -88,23 +87,13 @@ class ChunkGeneratorTest {
                 assertTrue(band.foreBand[bandX].contentEquals(next.foreMap[x]), "foreground seam at $chunkX")
                 assertTrue(band.backBand[bandX].contentEquals(next.backMap[x]), "background seam at $chunkX")
             }
-            if (next.foreMap[0].any { it.params.key == "mossy_cobblestone" }) roomSeams++
+            if (next.foreMap[0].any { it.params.key == "cobblestone_mossy" }) roomSeams++
             rooms += chunks.getValue(chunkX).backMap.sumOf { column ->
                 column.count { it is Block.Chest && it.lootTable == "monster_room" }
             }
         }
         assertTrue(rooms > 0, "no monster-room loot generated")
         assertTrue(roomSeams > 0, "no monster room crossed a chunk seam")
-    }
-
-    @Test
-    @Disabled
-    fun `generateChunk produces full-height columns`() {
-        val cfg = config(SEED)
-        val chunk = ChunkGenerator(cfg, fakeRepository()).generateChunk(0)
-        assertEquals(ChunkGenerator.CHUNK_W, chunk.foreMap.size)
-        assertEquals(ChunkGenerator.CHUNK_W, chunk.biomes.size)
-        chunk.foreMap.forEach { column -> assertEquals(cfg.height, column.size) }
     }
 
     @Test

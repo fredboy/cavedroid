@@ -20,11 +20,13 @@ import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindWorldRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.utils.ChunkFrameBuffer
 import ru.fredboy.cavedroid.gameplay.rendering.utils.RenderingTool
+import ru.fredboy.cavedroid.gameplay.rendering.utils.TerrainRenderCache
 import javax.inject.Inject
 
 @GameScope
 @BindWorldRenderer
 class BackgroundBlocksRenderer @Inject constructor(
+    private val cache: TerrainRenderCache,
     performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     gameWorld: GameWorld,
     mobController: MobController,
@@ -52,9 +54,10 @@ class BackgroundBlocksRenderer @Inject constructor(
     private val bgShadeChunks = mutableMapOf<Pair<Int, Int>, ChunkFrameBuffer<RenderingTool.ShapeRenderer>>()
     private val fgChunks = mutableMapOf<Pair<Int, Int>, ChunkFrameBuffer<RenderingTool.SpriteBatch>>()
 
-    override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
-        drawChunks(
-            spriteBatch = spriteBatch,
+    override val cacheLayerCount = 3
+
+    override fun prepareCache(viewport: Rectangle) {
+        prepareChunks(
             viewport = viewport,
             chunks = bgChunks,
             chunkFactory = { x, y ->
@@ -63,19 +66,13 @@ class BackgroundBlocksRenderer @Inject constructor(
                     chunkY = y,
                     gameWorld = gameWorld,
                     containerController = containerController,
-                    renderingTool = RenderingTool.SpriteBatch(),
+                    renderingTool = cache.sprites,
+                    cache = cache,
                 )
             },
             drawFunction = { batch, x, y, drawX, drawY -> drawBackMap(batch.spriteBatch, x, y, drawX, drawY) },
         )
-
-        drawBlockDamage(spriteBatch)
-
-        Gdx.gl.glEnable(GL20.GL_BLEND)
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
-
-        drawChunks(
-            spriteBatch = spriteBatch,
+        prepareChunks(
             viewport = viewport,
             chunks = bgShadeChunks,
             chunkFactory = { x, y ->
@@ -84,7 +81,8 @@ class BackgroundBlocksRenderer @Inject constructor(
                     chunkY = y,
                     gameWorld = gameWorld,
                     containerController = containerController,
-                    renderingTool = RenderingTool.ShapeRenderer().apply {
+                    cache = cache,
+                    renderingTool = cache.shapes.apply {
                         this@apply.shapeRenderer.setColor(0f, 0f, 0f, .5f)
                     },
                 )
@@ -93,15 +91,7 @@ class BackgroundBlocksRenderer @Inject constructor(
                 shadeBackMap(shaper.shapeRenderer, x, y, drawX, drawY)
             },
         )
-
-        Gdx.gl.glDisable(GL20.GL_BLEND)
-
-        forEachBlockInArea(viewport) { x, y ->
-            drawFireIfNeed(spriteBatch, x, y, x.toFloat(), y.toFloat(), Layer.BACKGROUND)
-        }
-
-        drawChunks(
-            spriteBatch = spriteBatch,
+        prepareChunks(
             viewport = viewport,
             chunks = fgChunks,
             chunkFactory = { x, y ->
@@ -110,11 +100,33 @@ class BackgroundBlocksRenderer @Inject constructor(
                     chunkY = y,
                     gameWorld = gameWorld,
                     containerController = containerController,
-                    renderingTool = RenderingTool.SpriteBatch(),
+                    renderingTool = cache.sprites,
+                    cache = cache,
                 )
             },
             drawFunction = { batch, x, y, drawX, drawY -> drawForeMap(batch.spriteBatch, x, y, drawX, drawY) },
         )
+    }
+
+    override fun cacheReady(viewport: Rectangle): Boolean = chunksReady(viewport, bgChunks) && chunksReady(viewport, bgShadeChunks) && chunksReady(viewport, fgChunks)
+
+    override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
+        drawChunks(spriteBatch, viewport, bgChunks)
+
+        drawBlockDamage(spriteBatch)
+
+        Gdx.gl.glEnable(GL20.GL_BLEND)
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
+
+        drawChunks(spriteBatch, viewport, bgShadeChunks)
+
+        Gdx.gl.glDisable(GL20.GL_BLEND)
+
+        forEachBlockInArea(viewport) { x, y ->
+            drawFireIfNeed(spriteBatch, x, y, x.toFloat(), y.toFloat(), Layer.BACKGROUND)
+        }
+
+        drawChunks(spriteBatch, viewport, fgChunks)
     }
 
     override fun dispose() {

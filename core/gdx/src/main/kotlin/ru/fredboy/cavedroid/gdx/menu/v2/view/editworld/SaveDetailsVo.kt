@@ -6,7 +6,6 @@ import ru.fredboy.cavedroid.common.model.GameMode
 class SaveDetailsVo(
     val name: String,
     val gameMode: GameMode,
-    val mapSize: String,
     val diskSize: String,
     val version: Int,
     val isSupported: Boolean,

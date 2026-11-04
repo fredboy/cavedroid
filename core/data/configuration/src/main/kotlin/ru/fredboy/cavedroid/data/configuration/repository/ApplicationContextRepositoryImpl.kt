@@ -20,6 +20,8 @@ class ApplicationContextRepositoryImpl @Inject constructor(
 
     override fun isYandexGamesBuild(): Boolean = applicationContextStore.isYandexGamesBuild
 
+    override fun supportsInfiniteWorlds(): Boolean = applicationContextStore.supportsInfiniteWorlds
+
     override fun isTouch(): Boolean = applicationContextStore.isTouch
 
     override fun isFullscreen(): Boolean = applicationContextStore.isFullscreen
@@ -105,6 +107,12 @@ class ApplicationContextRepositoryImpl @Inject constructor(
 
     override fun setSoundEnabled(enabled: Boolean) {
         applicationContextStore.isSoundEnabled = enabled
+    }
+
+    override fun isMusicEnabled(): Boolean = applicationContextStore.isMusicEnabled
+
+    override fun setMusicEnabled(enabled: Boolean) {
+        applicationContextStore.isMusicEnabled = enabled
     }
 
     override fun isOnboardingShown(): Boolean = applicationContextStore.isOnboardingShown

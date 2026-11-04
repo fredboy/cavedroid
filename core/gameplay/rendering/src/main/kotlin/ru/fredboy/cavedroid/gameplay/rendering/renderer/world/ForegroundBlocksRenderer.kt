@@ -18,11 +18,13 @@ import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.rendering.annotation.BindWorldRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.utils.ChunkFrameBuffer
 import ru.fredboy.cavedroid.gameplay.rendering.utils.RenderingTool
+import ru.fredboy.cavedroid.gameplay.rendering.utils.TerrainRenderCache
 import javax.inject.Inject
 
 @GameScope
 @BindWorldRenderer
 class ForegroundBlocksRenderer @Inject constructor(
+    private val cache: TerrainRenderCache,
     performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     gameWorld: GameWorld,
     mobController: MobController,
@@ -48,9 +50,10 @@ class ForegroundBlocksRenderer @Inject constructor(
 
     private val chunks = mutableMapOf<Pair<Int, Int>, ChunkFrameBuffer<RenderingTool.SpriteBatch>>()
 
-    override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
-        drawChunks(
-            spriteBatch = spriteBatch,
+    override val cacheLayerCount = 1
+
+    override fun prepareCache(viewport: Rectangle) {
+        prepareChunks(
             viewport = viewport,
             chunks = chunks,
             chunkFactory = { x, y ->
@@ -59,11 +62,18 @@ class ForegroundBlocksRenderer @Inject constructor(
                     chunkY = y,
                     gameWorld = gameWorld,
                     containerController = containerController,
-                    renderingTool = RenderingTool.SpriteBatch(),
+                    renderingTool = cache.sprites,
+                    cache = cache,
                 )
             },
             drawFunction = { batch, x, y, drawX, drawY -> drawForeMap(batch.spriteBatch, x, y, drawX, drawY) },
         )
+    }
+
+    override fun cacheReady(viewport: Rectangle): Boolean = chunksReady(viewport, chunks)
+
+    override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
+        drawChunks(spriteBatch, viewport, chunks)
 
         forEachBlockInArea(viewport) { x, y ->
             if (gameWorld.getForeMap(x, y).params.animationInfo != null) {

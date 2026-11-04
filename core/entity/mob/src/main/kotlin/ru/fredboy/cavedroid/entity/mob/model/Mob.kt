@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.common.utils.Vector2Proxy
 import ru.fredboy.cavedroid.common.utils.floor
+import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.model.drop.DropAmount
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
@@ -204,8 +205,6 @@ abstract class Mob(
         _body = factory.createBody(this, x, y, physicsCategory)
     }
 
-    private fun isAnimationIncreasing(): Boolean = anim > 0 && animDelta > 0 || anim < 0 && animDelta < 0
-
     private fun checkHealth() {
         health = MathUtils.clamp(health, 0, maxHealth)
 
@@ -214,16 +213,18 @@ abstract class Mob(
         }
     }
 
-    protected fun updateAnimation(delta: Float) {
+    protected fun updateAnimation(delta: Float, isMoving: Boolean = controlVector.x != 0f && velocity.x != 0f) {
+        if (!isMoving) {
+            val step = animationSpeed * delta
+            anim = if (abs(anim) <= step) 0f else anim - sign(anim) * step
+            return
+        }
+
         val velocityMultiplier = abs(velocity.x) / speed
         val animMultiplier = (if (velocityMultiplier == 0f) 1f else velocityMultiplier) * delta
         val maxAnim = params.animationRange * (if (velocityMultiplier == 0f) 1f else velocityMultiplier)
 
-        if (velocity.x != 0f || abs(anim) > animDelta * animMultiplier) {
-            anim += animDelta * animMultiplier
-        } else {
-            anim = 0f
-        }
+        anim += animDelta * animMultiplier
 
         if (anim > maxAnim) {
             anim = maxAnim
@@ -231,10 +232,6 @@ abstract class Mob(
         } else if (anim < -maxAnim) {
             anim = -maxAnim
             animDelta = animationSpeed
-        }
-
-        if (velocity.x == 0f && isAnimationIncreasing()) {
-            animDelta = -animDelta
         }
     }
 
@@ -412,13 +409,27 @@ abstract class Mob(
                 controlVector.y = 0f
             }
         } else if (!isFlyMode) {
-            velocity.x = 0f
+            stopHorizontalMovement(mobWorldAdapter, delta)
         }
 
         wrapAroundLoopedWorld(mobWorldAdapter)
 
         if (position.y > mobWorldAdapter.height) {
             kill()
+        }
+    }
+
+    private fun stopHorizontalMovement(mobWorldAdapter: MobWorldAdapter, delta: Float) {
+        // Box2D leaves a small gap between the feet and the supporting block.
+        val groundY = (position.y + height / 2f + ICE_GROUND_PROBE_DISTANCE).floorToInt()
+        val onIce = footContactCounter > 0 && !canClimb && !canSwim &&
+                mobWorldAdapter.getForegroundBlock(mapX, groundY).params.key == "ice"
+
+        velocity.x = if (onIce) {
+            val remainingSpeed = abs(velocity.x) - ICE_DECELERATION * delta
+            if (remainingSpeed > 0f) sign(velocity.x) * remainingSpeed else 0f
+        } else {
+            0f
         }
     }
 
@@ -542,6 +553,9 @@ abstract class Mob(
     }
 
     companion object {
+        private const val ICE_DECELERATION = 8f
+        private const val ICE_GROUND_PROBE_DISTANCE = 0.05f
+
         private const val KNOCKBACK_DURATION_SEC = 0.2f
         private const val KNOCKBACK_SPEED = 4.5f
         private const val KNOCKBACK_LIFT = -4f

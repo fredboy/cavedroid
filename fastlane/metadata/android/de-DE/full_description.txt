@@ -1,33 +1,16 @@
-Eine Hosentaschen-Pixel-Sandbox in 2D, in der jede Welt dir gehört —
-zum Abbauen, Bauen und Überleben. Kostenlos. Komplett offline.
-Open Source.
+CaveDroid ist ein 2D-Sandbox-Spiel mit Pixelgrafik. Baue Rohstoffe ab, stelle Ausrüstung her und errichte Gebäude in prozedural generierten Welten. Im Überlebensmodus gehören Gesundheit, Hunger und Kämpfe zum Spiel. Im Kreativmodus stehen unbegrenzt Blöcke und eine Flugfunktion zum Bauen bereit.
 
-Streife durch prozedural generierte Landschaften, die am Horizont
-wieder von vorn beginnen. Wandere über grüne Wiesen, erklimme bewaldete
-Hügel und steige hinab in fackelbeleuchtete Höhlen. Der Tag wird zur
-Nacht, Monster kommen heraus, und je tiefer du gräbst, desto schwerer
-findest du zurück nach oben.
+Erkunde unendliche Welten. Es gibt Ebenen, Wüsten, Schneegebiete, Höhlen, unterirdische Minenschächte und Dörfer mit Bewohnern, Feldern und Beute. Baue Boote, um über Wasser zu fahren.
 
-WAS DU TUN KANNST
-Brich und platziere jeden Block. Fälle Bäume, baue Kohle, Eisen, Gold
-und Diamant ab. Stelle Werkzeuge, Rüstung, Fackeln, Essen und Waffen
-her — schwinge im Nahkampf ein Schwert oder erlege Skelette aus der
-Ferne mit dem Bogen. Schmelze Erze. Jage Kreaturen, weiche Lava in der
-Tiefe aus. Baue einen Unterschlupf, eine Festung, eine Himmelsbrücke —
-was immer du dir auf einem Raster vorstellen kannst.
+Funktionen:
+- Handwerk und Bauen: Erze abbauen und schmelzen, Werkzeuge und Baublöcke herstellen, Häuser einrichten und Vorräte in Truhen lagern.
+- Landwirtschaft: Pflanzen anbauen und Essen zubereiten.
+- Kampf: Zombies, Skelette, Spinnen und Creeper mit Schwertern, Bögen und Rüstungen bekämpfen. TNT mit Kettenexplosionen einsetzen.
+- Weltsimulation: fließendes Wasser und Lava sowie Feuer, das sich zwischen Blöcken ausbreitet.
+- Beleuchtung und Wetter: Tag und Nacht, Fackellicht, Regen, Schneefall und gefrierendes Wasser in Schneegebieten.
+- Ressourcenpakete: eigene Texturen, Geräusche und Spieldaten importieren, auch mit höher aufgelösten Texturen.
+- Spielstände: mehrere Welten speichern sowie Spielstände exportieren und importieren.
+- Statistiken: Spielzeit, abgebaute Blöcke, hergestellte Gegenstände und weitere Spielaktivitäten erfassen.
 
-FEATURES
-► Prozedural generierte Welten mit Biomen, Hügeln, Höhlen und versteckten Erzen
-► Tag-Nacht-Zyklus mit dynamischer Beleuchtung — Fackeln erhellen wirklich die Dunkelheit
-► Crafting-Rezepte für Werkzeuge, Rüstung, Waffen, Essen und Deko-Blöcke
-► Nah- und Fernkampf — Schwerter, Bogen und Pfeile
-► Friedliche Tiere und feindliche Kreaturen mit eigenem Verhalten und Drops
-► Physikbasierte Flüssigkeiten — Wasser fließt, Lava verbrennt
-► Vollständige Survival-Mechanik: Inventar, Hunger, Gesundheit, Rüstung
-► Touch-freundliche Steuerung
-
-In aktiver Entwicklung — neue Features kommen mit jeder Veröffentlichung.
-Bug gefunden oder eine Idee? Öffne ein Issue auf GitHub:
+CaveDroid ist ein Einzelspielerspiel mit Touch-Steuerung und kann offline gespielt werden. Quellcode und Fehlerberichte:
 https://github.com/fredboy/cavedroid
-
-Viel Spaß beim Buddeln!

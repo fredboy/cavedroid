@@ -1,4 +1,3 @@
-import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.github.jk1.license.LicenseReportExtension
 import com.github.jk1.license.task.ReportTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -10,11 +9,10 @@ import java.util.Properties
 private val natives by configurations.creating
 
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
+    alias(libs.plugins.android.application)
 
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 private val keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -42,7 +40,7 @@ android {
     sourceSets {
 
         named("main") {
-            jniLibs.srcDir("libs")
+            jniLibs.srcDir(layout.buildDirectory.dir("generated/jniLibs").get().asFile)
             assets {
                 srcDirs("src/main/assets", "build/generated/extraRes/shared")
             }
@@ -100,11 +98,6 @@ android {
         }
     }
 
-    applicationVariants.asSequence()
-        .flatMap { variant -> variant.outputs.asSequence() }
-        .mapNotNull { output -> output as? com.android.build.gradle.internal.api.BaseVariantOutputImpl }
-        .forEach { output -> output.outputFileName = "android-${ApplicationInfo.versionName}.apk" }
-
     val releaseConfig = signingConfigs.create("release_config")
     with(releaseConfig) {
         storeFile = keystoreProperties?.get("releaseKeystorePath")?.let(::file)
@@ -137,40 +130,29 @@ android {
     buildFeatures {
         buildConfig = true
     }
+}
 
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
-        }
+kotlin {
+    jvmToolchain(ApplicationInfo.javaVersion)
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 
-// called every time gradle gets executed, takes the native dependencies of
-// the natives configuration, and extracts them to the proper libs/ folders
-// so they get packed with the APK.
-task("copyAndroidNatives") {
-    doFirst {
-        val armeabiV7Dir = file("libs/armeabi-v7a/").apply { mkdirs() }
-        val arm64Dir = file("libs/arm64-v8a/").apply { mkdirs() }
-        val x86Dir = file("libs/x86/").apply { mkdirs() }
-        val amd64Dir = file("libs/x86_64/").apply { mkdirs() }
+// Sync removes obsolete libraries when native dependencies change.
+tasks.register<Sync>("copyAndroidNatives") {
+    into(layout.buildDirectory.dir("generated/jniLibs"))
 
-        natives.files.forEach { jar ->
-            val outputDir = when {
-                jar.name.endsWith("natives-armeabi-v7a.jar") -> armeabiV7Dir
-                jar.name.endsWith("natives-arm64-v8a.jar") -> arm64Dir
-                jar.name.endsWith("natives-x86.jar") -> x86Dir
-                jar.name.endsWith("natives-x86_64.jar") -> amd64Dir
-                else -> null
-            }
-
-            if (outputDir != null) {
-                copy {
-                    from(zipTree(jar))
-                    into(outputDir)
-                    include("*.so")
-                }
-            }
+    listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64").forEach { abi ->
+        from(
+            provider {
+                natives.files
+                    .filter { it.name.endsWith("natives-$abi.jar") }
+                    .map { zipTree(it) }
+            },
+        ) {
+            into(abi)
+            include("*.so")
         }
     }
 }
@@ -243,11 +225,21 @@ tasks.register("generateAttributionIndex") {
     }
 }
 
-tasks.preBuild.apply {
+tasks.named("preBuild") {
     dependsOn("generateAttributionIndex")
 }
 
 androidComponents {
+    onVariants { variant ->
+        variant.sources.assets?.addGeneratedSourceDirectory(
+            rootProject.tasks.named<GenerateBgmIndex>("generateBgmIndex"),
+            GenerateBgmIndex::outputDirectory,
+        )
+        variant.outputs.forEach { output ->
+            output.outputFileName.set("android-${ApplicationInfo.versionName}.apk")
+        }
+    }
+
     licenseFlavors.forEach { flavor ->
         val capFlavor = flavor.replaceFirstChar { it.uppercase() }
         onVariants(selector().withFlavor("distribution" to flavor)) { variant ->
@@ -274,26 +266,27 @@ androidComponents {
 }
 
 dependencies {
-    useCommonLibs()
-    useGdxModule()
-    useLightingBfs()
+    implementation(project(":core:common"))
+    implementation(project(":core:data:assets"))
+    implementation(libs.bundles.common)
+    implementation(project(":core:gdx"))
+    implementation(project(":core:gameplay:lighting-bfs"))
 
-    implementation(Dependencies.LibGDX.gdx)
-    implementation(Dependencies.LibGDX.Android.backend)
+    implementation(libs.gdx.core)
+    implementation(libs.gdx.backend.android)
 
-    "storeImplementation"(platform(Dependencies.Google.Firebase.bom))
-    "storeImplementation"(Dependencies.Google.Firebase.crashlytics)
-    "storeImplementation"(Dependencies.Google.Firebase.analytics)
-    "storeImplementation"(Dependencies.Google.Firebase.performance)
-//    "storeImplementation"(Dependencies.Yandex.mobileads)
+    "storeImplementation"(platform(libs.firebase.bom))
+    "storeImplementation"(libs.firebase.crashlytics)
+    "storeImplementation"(libs.firebase.performance)
+//    "storeImplementation"(libs.yandex.mobileads)
 
-    natives(Dependencies.LibGDX.Android.Natives.armeabi)
-    natives(Dependencies.LibGDX.Android.Natives.arm64)
-    natives(Dependencies.LibGDX.Android.Natives.x86)
-    natives(Dependencies.LibGDX.Android.Natives.x86_64)
+    natives(variantOf(libs.gdx.platform.core) { classifier("natives-armeabi-v7a") })
+    natives(variantOf(libs.gdx.platform.core) { classifier("natives-arm64-v8a") })
+    natives(variantOf(libs.gdx.platform.core) { classifier("natives-x86") })
+    natives(variantOf(libs.gdx.platform.core) { classifier("natives-x86_64") })
 
-    natives(Dependencies.LibGDX.Box2d.Natives.Android.armeabi)
-    natives(Dependencies.LibGDX.Box2d.Natives.Android.arm64)
-    natives(Dependencies.LibGDX.Box2d.Natives.Android.x86)
-    natives(Dependencies.LibGDX.Box2d.Natives.Android.x86_64)
+    natives(variantOf(libs.gdx.platform.box2d) { classifier("natives-armeabi-v7a") })
+    natives(variantOf(libs.gdx.platform.box2d) { classifier("natives-arm64-v8a") })
+    natives(variantOf(libs.gdx.platform.box2d) { classifier("natives-x86") })
+    natives(variantOf(libs.gdx.platform.box2d) { classifier("natives-x86_64") })
 }

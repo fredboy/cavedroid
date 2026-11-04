@@ -5,6 +5,7 @@ import dagger.BindsInstance
 import dagger.Component
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.ApplicationController
+import ru.fredboy.cavedroid.common.api.AssetPackPlatform
 import ru.fredboy.cavedroid.common.api.CloudStatsSync
 import ru.fredboy.cavedroid.common.api.InlineTextInput
 import ru.fredboy.cavedroid.common.api.PreferencesStore
@@ -15,11 +16,15 @@ import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.data.assets.di.DataAssetsModule
+import ru.fredboy.cavedroid.data.assets.music.BackgroundMusicAssets
 import ru.fredboy.cavedroid.data.configuration.di.ApplicationContextModule
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
 import ru.fredboy.cavedroid.data.items.di.DataItemsModule
 import ru.fredboy.cavedroid.data.save.di.DataSaveModule
 import ru.fredboy.cavedroid.data.stats.di.DataStatsModule
+import ru.fredboy.cavedroid.domain.assets.pack.AssetPackRepository
+import ru.fredboy.cavedroid.domain.assets.pack.AssetResolver
+import ru.fredboy.cavedroid.domain.assets.pack.AssetTextureLoader
 import ru.fredboy.cavedroid.domain.assets.repository.BlockActionSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockTextureAssetsRepository
@@ -61,6 +66,14 @@ import javax.inject.Singleton
     ],
 )
 interface ApplicationComponent {
+
+    val packDefinitionValidator: ru.fredboy.cavedroid.data.items.repository.PackDefinitionValidator
+
+    val assetPackPlatform: AssetPackPlatform
+    val assetPackRepository: AssetPackRepository
+    val backgroundMusicAssets: BackgroundMusicAssets
+    val assetResolver: AssetResolver
+    val assetTextureLoader: AssetTextureLoader
 
     val initializeAssets: InitializeAssetsUseCase
 
@@ -173,6 +186,11 @@ interface ApplicationComponent {
 
         @BindsInstance
         fun performanceMonitor(monitor: PerformanceMonitor): Builder
+
+        @BindsInstance
+        fun assetPackPlatform(platform: AssetPackPlatform): Builder
+
+        fun dataStatsModule(module: DataStatsModule): Builder
 
         fun build(): ApplicationComponent
     }

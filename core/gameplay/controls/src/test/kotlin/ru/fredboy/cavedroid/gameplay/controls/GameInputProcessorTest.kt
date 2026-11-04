@@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gameplay.controls
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import io.mockk.every
 import io.mockk.mockk
@@ -13,8 +14,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
+import org.junit.jupiter.params.provider.ValueSource
 import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.common.model.Joystick
+import ru.fredboy.cavedroid.common.utils.TutorialTapTargets
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.entity.mob.model.Player
@@ -49,6 +52,7 @@ class GameInputProcessorTest {
         every { openCreativeTabsInventory() } answers { windowType = GameWindowType.CREATIVE_INVENTORY_TABS }
         every { closeWindow() } answers { windowType = GameWindowType.NONE }
     }
+    private val tutorialTargets = TutorialTapTargets()
     private val input = GameInputProcessor(
         application, context, mockk(), mockk(relaxed = true), mockk(), KeyboardInputActionMapper(application),
         emptySet(),
@@ -57,7 +61,7 @@ class GameInputProcessorTest {
             CloseGameWindowKeyboardInputHandler(windows, mockk(), mockk()),
             GoRightKeyboardInputHandler(mobs),
         ),
-        windows, mobs, vehicles,
+        windows, mobs, vehicles, tutorialTargets,
     )
 
     @BeforeEach
@@ -91,6 +95,28 @@ class GameInputProcessorTest {
         input.keyUp(Input.Keys.E)
         input.update(1f / 60f)
         assertEquals(GameWindowType.NONE, windowType)
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun `toast consumes press drag and release while keeping inventory open`(touch: Boolean) {
+        every { application.isTouch() } returns touch
+        windowType = GameWindowType.SURVIVAL_INVENTORY
+        every { context.getCameraContext().getViewportCoordinates(any(), any()) } answers {
+            firstArg<Int>().toFloat() to secondArg<Int>().toFloat()
+        }
+        var dismissals = 0
+        tutorialTargets.register("test", Rectangle(10f, 10f, 100f, 40f)) {
+            dismissals++
+            true
+        }
+        assertTrue(input.touchDown(20, 20, 0, Input.Buttons.LEFT))
+        input.update(0.016f) // Window transitions must retain gesture ownership.
+        assertTrue(input.touchDragged(400, 400, 0))
+        assertTrue(input.touchUp(400, 400, 0, Input.Buttons.LEFT))
+        assertEquals(1, dismissals)
+        assertEquals(GameWindowType.SURVIVAL_INVENTORY, windowType)
+        verify(exactly = 0) { windows.closeWindow() }
     }
 
     @Test

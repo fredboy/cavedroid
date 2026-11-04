@@ -4,14 +4,13 @@ This module bundles source files from two third-party projects to provide a
 pure-Java Box2D implementation that the TeaVM backend can compile to
 JavaScript. CaveDroid itself is MIT (see top-level `LICENSE`); the files
 listed below retain their original licenses and per-file copyright headers.
-No header has been modified.
 
 ## libGDX — `gdx-box2d-gwt`
 
 - Origin: <https://github.com/libgdx/libgdx>, path
   `extensions/gdx-box2d/gdx-box2d-gwt/src/com/badlogic/gdx/physics/box2d/gwt/emu/`
 - License: Apache License 2.0
-- Files in this module: 49 files under
+- Sources in this module:
   `src/main/java/emu/com/badlogic/gdx/physics/box2d/**`
 - Role: pure-Java reimplementation of the `com.badlogic.gdx.physics.box2d.*`
   API, delegating to jbox2d.
@@ -23,7 +22,7 @@ Full Apache 2.0 license text: <http://www.apache.org/licenses/LICENSE-2.0>
 - Origin: vendored alongside libGDX's `gdx-box2d-gwt` (see above); upstream is
   <https://github.com/jbox2d/jbox2d>.
 - License: BSD 2-Clause (Simplified BSD)
-- Files in this module: 118 files under `src/main/java/emu/org/jbox2d/**` plus
+- Sources in this module: `src/main/java/emu/org/jbox2d/**` plus
   `src/main/java/emu/java/lang/StrictMath.java`
 - Role: pure-Java port of the Box2D 2.x physics engine; backs the libGDX
   wrappers above.

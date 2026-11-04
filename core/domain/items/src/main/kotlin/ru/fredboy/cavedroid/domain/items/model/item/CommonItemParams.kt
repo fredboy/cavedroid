@@ -11,4 +11,5 @@ data class CommonItemParams(
     val burningTimeMs: Long?,
     val smeltProductKey: String?,
     val tint: Color?,
+    val creativeCategory: CreativeCategory = CreativeCategory.Materials,
 )

@@ -54,6 +54,16 @@ class OnboardingController @Inject constructor(
         }
     }
 
+    fun dismissVisibleTip() {
+        if (boatHints.state != null) {
+            boatHints.dismiss()
+        } else {
+            state?.takeIf { it.awaitingInput }?.let {
+                state = it.copy(awaitingInput = false, cooldownProgress = 0f)
+            }
+        }
+    }
+
     fun getLocalizedTip(step: OnboardingStep): String = fontTextureAssetsRepository
         .getOnboardingLocalizationBundle()
         .get(step.localizationKey(isTouch))

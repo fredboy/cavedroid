@@ -94,15 +94,15 @@
       ],
       "material": "stone"
     },
-    "mossy_cobblestone": {
+    "cobblestone_mossy": {
       "blast_resistance": 6,
       "hp": 600,
-      "texture": "mossy_cobblestone",
+      "texture": "cobblestone_mossy",
       "tool_level": 1,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "mossy_cobblestone",
+          "key": "cobblestone_mossy",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -111,16 +111,16 @@
       ],
       "material": "stone"
     },
-    "planks_oak": {
+    "wood_planks_oak": {
       "blast_resistance": 3,
       "combustible": true,
       "hp": 180,
-      "texture": "planks_oak",
+      "texture": "wood_planks_oak",
       "tool_level": 0,
       "tool_type": "axe",
       "drop_info": [
         {
-          "key": "planks_oak",
+          "key": "wood_planks_oak",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -129,16 +129,16 @@
       ],
       "material": "wood"
     },
-    "planks_spruce": {
+    "wood_planks_spruce": {
       "blast_resistance": 3,
       "combustible": true,
       "hp": 180,
-      "texture": "planks_spruce",
+      "texture": "wood_planks_spruce",
       "tool_level": 0,
       "tool_type": "axe",
       "drop_info": [
         {
-          "key": "planks_spruce",
+          "key": "wood_planks_spruce",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -147,16 +147,16 @@
       ],
       "material": "wood"
     },
-    "planks_birch": {
+    "wood_planks_birch": {
       "blast_resistance": 3,
       "combustible": true,
       "hp": 180,
-      "texture": "planks_birch",
+      "texture": "wood_planks_birch",
       "tool_level": 0,
       "tool_type": "axe",
       "drop_info": [
         {
-          "key": "planks_birch",
+          "key": "wood_planks_birch",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -333,15 +333,15 @@
       ],
       "material": "dirt"
     },
-    "gold_ore": {
+    "ore_gold": {
       "blast_resistance": 6,
       "hp": 900,
-      "texture": "gold_ore",
+      "texture": "ore_gold",
       "tool_level": 3,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "gold_raw",
+          "key": "raw_gold",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -350,16 +350,16 @@
       ],
       "material": "stone"
     },
-    "iron_ore": {
+    "ore_iron": {
       "blast_resistance": 6,
       "hp": 900,
-      "drop": "iron_ore",
-      "texture": "iron_ore",
+      "drop": "ore_iron",
+      "texture": "ore_iron",
       "tool_level": 2,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "iron_raw",
+          "key": "raw_iron",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -368,10 +368,10 @@
       ],
       "material": "stone"
     },
-    "coal_ore": {
+    "ore_coal": {
       "blast_resistance": 6,
       "hp": 900,
-      "texture": "coal_ore",
+      "texture": "ore_coal",
       "tool_level": 1,
       "tool_type": "pickaxe",
       "drop_info": [
@@ -385,10 +385,10 @@
       ],
       "material": "stone"
     },
-    "diamond_ore": {
+    "ore_diamond": {
       "blast_resistance": 6,
       "hp": 900,
-      "texture": "diamond_ore",
+      "texture": "ore_diamond",
       "tool_level": 3,
       "tool_type": "pickaxe",
       "drop_info": [
@@ -402,15 +402,15 @@
       ],
       "material": "stone"
     },
-    "diamond_block": {
+    "storage_block_diamond": {
       "blast_resistance": 6,
       "hp": 1500,
-      "texture": "diamond_block",
+      "texture": "storage_block_diamond",
       "tool_level": 3,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "diamond_block",
+          "key": "storage_block_diamond",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -419,16 +419,16 @@
       ],
       "material": "stone"
     },
-    "log_oak": {
+    "wood_log_oak": {
       "blast_resistance": 2,
       "combustible": true,
       "hp": 180,
-      "texture": "log_oak",
+      "texture": "wood_log_oak",
       "tool_level": 0,
       "tool_type": "axe",
       "drop_info": [
         {
-          "key": "log_oak",
+          "key": "wood_log_oak",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -485,16 +485,16 @@
       ],
       "material": "grass"
     },
-    "log_spruce": {
+    "wood_log_spruce": {
       "blast_resistance": 2,
       "combustible": true,
       "hp": 180,
-      "texture": "log_spruce",
+      "texture": "wood_log_spruce",
       "tool_level": 0,
       "tool_type": "axe",
       "drop_info": [
         {
-          "key": "log_spruce",
+          "key": "wood_log_spruce",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -542,16 +542,16 @@
       ],
       "material": "grass"
     },
-    "log_birch": {
+    "wood_log_birch": {
       "blast_resistance": 2,
       "combustible": true,
       "hp": 180,
-      "texture": "log_birch",
+      "texture": "wood_log_birch",
       "tool_level": 0,
       "tool_type": "axe",
       "drop_info": [
         {
-          "key": "log_birch",
+          "key": "wood_log_birch",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -632,10 +632,10 @@
       "casts_shadows": false,
       "material": "stone"
     },
-    "lapis_ore": {
+    "ore_lapis": {
       "blast_resistance": 6,
       "hp": 900,
-      "texture": "lapis_ore",
+      "texture": "ore_lapis",
       "tool_level": 2,
       "tool_type": "pickaxe",
       "drop_info": [
@@ -651,15 +651,15 @@
       ],
       "material": "stone"
     },
-    "lapis_block": {
+    "storage_block_lapis": {
       "blast_resistance": 6,
       "hp": 900,
-      "texture": "lapis_block",
+      "texture": "storage_block_lapis",
       "tool_level": 2,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "lapis_block",
+          "key": "storage_block_lapis",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -799,7 +799,7 @@
           }
         },
         {
-          "key": "wheat_seeds",
+          "key": "seeds_wheat",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -866,16 +866,16 @@
       ],
       "material": "dirt"
     },
-    "dandelion": {
+    "flower_dandelion": {
       "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
-      "texture": "dandelion",
+      "texture": "flower_dandelion",
       "hp": 0,
       "drop_info": [
         {
-          "key": "dandelion",
+          "key": "flower_dandelion",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -885,17 +885,17 @@
       "replaceable": true,
       "material": "grass"
     },
-    "rose": {
+    "flower_rose": {
       "blast_resistance": 0,
       "collision": false,
       "transparent": true,
       "block_required": true,
-      "drop": "rose",
-      "texture": "rose",
+      "drop": "flower_rose",
+      "texture": "flower_rose",
       "hp": 0,
       "drop_info": [
         {
-          "key": "rose",
+          "key": "flower_rose",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1249,16 +1249,16 @@
       ],
       "material": "grass"
     },
-    "gold_block": {
+    "storage_block_gold": {
       "blast_resistance": 3,
       "hp": 900,
-      "drop": "gold_block",
-      "texture": "gold_block",
+      "drop": "storage_block_gold",
+      "texture": "storage_block_gold",
       "tool_level": 3,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "gold_block",
+          "key": "storage_block_gold",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1267,16 +1267,16 @@
       ],
       "material": "metal"
     },
-    "iron_block": {
+    "storage_block_iron": {
       "blast_resistance": 6,
       "hp": 1500,
-      "drop": "iron_block",
-      "texture": "iron_block",
+      "drop": "storage_block_iron",
+      "texture": "storage_block_iron",
       "tool_level": 2,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "iron_block",
+          "key": "storage_block_iron",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1285,16 +1285,16 @@
       ],
       "material": "metal"
     },
-    "raw_gold_block": {
+    "storage_block_raw_gold": {
       "blast_resistance": 6,
       "hp": 1500,
-      "drop": "raw_gold_block",
-      "texture": "raw_gold_block",
+      "drop": "storage_block_raw_gold",
+      "texture": "storage_block_raw_gold",
       "tool_level": 3,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "raw_gold_block",
+          "key": "storage_block_raw_gold",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1303,16 +1303,16 @@
       ],
       "material": "metal"
     },
-    "raw_iron_block": {
+    "storage_block_raw_iron": {
       "blast_resistance": 6,
       "hp": 1500,
-      "drop": "raw_iron_block",
-      "texture": "raw_iron_block",
+      "drop": "storage_block_raw_iron",
+      "texture": "storage_block_raw_iron",
       "tool_level": 2,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "raw_iron_block",
+          "key": "storage_block_raw_iron",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1321,16 +1321,16 @@
       ],
       "material": "metal"
     },
-    "coal_block": {
+    "storage_block_coal": {
       "blast_resistance": 6,
       "hp": 1500,
-      "drop": "coal_block",
-      "texture": "coal_block",
+      "drop": "storage_block_coal",
+      "texture": "storage_block_coal",
       "tool_level": 1,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "coal_block",
+          "key": "storage_block_coal",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1339,22 +1339,22 @@
       ],
       "material": "stone"
     },
-    "stone_slab_bottom": {
+    "slab_stone_bottom": {
       "blast_resistance": 6,
       "top": 8,
       "sprite_top": 8,
       "hp": 600,
       "transparent": true,
-      "drop": "stone_slab",
+      "drop": "slab_stone",
       "meta": "slab",
-      "texture": "stone_slab",
-      "full_block": "double_stone_slab",
-      "other_part": "stone_slab_top",
+      "texture": "slab_stone",
+      "full_block": "slab_stone_double",
+      "other_part": "slab_stone_top",
       "tool_level": 1,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "stone_slab",
+          "key": "slab_stone",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1363,22 +1363,22 @@
       ],
       "material": "stone"
     },
-    "stone_slab_top": {
+    "slab_stone_top": {
       "blast_resistance": 6,
       "hp": 600,
       "bottom": 8,
       "sprite_bottom": 8,
       "transparent": true,
-      "drop": "stone_slab",
+      "drop": "slab_stone",
       "meta": "slab",
-      "texture": "stone_slab",
-      "full_block": "double_stone_slab",
-      "other_part": "stone_slab_bottom",
+      "texture": "slab_stone",
+      "full_block": "slab_stone_double",
+      "other_part": "slab_stone_bottom",
       "tool_level": 1,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "stone_slab",
+          "key": "slab_stone",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1387,17 +1387,17 @@
       ],
       "material": "stone"
     },
-    "double_stone_slab": {
+    "slab_stone_double": {
       "blast_resistance": 6,
       "hp": 600,
-      "drop": "stone_slab",
+      "drop": "slab_stone",
       "drop_count": 2,
-      "texture": "stone_slab",
+      "texture": "slab_stone",
       "tool_level": 1,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "stone_slab",
+          "key": "slab_stone",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1406,22 +1406,22 @@
       ],
       "material": "stone"
     },
-    "sandstone_slab_bottom": {
+    "slab_sandstone_bottom": {
       "blast_resistance": 0.8,
       "top": 8,
       "sprite_top": 8,
       "hp": 600,
       "transparent": true,
-      "drop": "sandstone_slab",
+      "drop": "slab_sandstone",
       "meta": "slab",
       "texture": "sandstone",
       "full_block": "sandstone",
-      "other_part": "sandstone_slab_top",
+      "other_part": "slab_sandstone_top",
       "tool_level": 1,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "sandstone_slab",
+          "key": "slab_sandstone",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1430,22 +1430,22 @@
       ],
       "material": "stone"
     },
-    "sandstone_slab_top": {
+    "slab_sandstone_top": {
       "blast_resistance": 0.8,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 600,
       "transparent": true,
-      "drop": "sandstone_slab",
+      "drop": "slab_sandstone",
       "meta": "slab",
       "texture": "sandstone",
       "full_block": "sandstone",
-      "other_part": "sandstone_slab_bottom",
+      "other_part": "slab_sandstone_bottom",
       "tool_level": 1,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "sandstone_slab",
+          "key": "slab_sandstone",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1454,23 +1454,23 @@
       ],
       "material": "stone"
     },
-    "oak_slab_bottom": {
+    "slab_wood_oak_bottom": {
       "blast_resistance": 3,
       "top": 8,
       "sprite_top": 8,
       "hp": 180,
       "combustible": true,
       "transparent": true,
-      "drop": "oak_slab",
+      "drop": "slab_wood_oak",
       "meta": "slab",
-      "texture": "planks_oak",
-      "full_block": "planks_oak",
-      "other_part": "oak_slab_top",
+      "texture": "wood_planks_oak",
+      "full_block": "wood_planks_oak",
+      "other_part": "slab_wood_oak_top",
       "tool_level": 0,
       "tool_type": "axe",
       "drop_info": [
         {
-          "key": "oak_slab",
+          "key": "slab_wood_oak",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1479,23 +1479,23 @@
       ],
       "material": "wood"
     },
-    "oak_slab_top": {
+    "slab_wood_oak_top": {
       "blast_resistance": 3,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 180,
       "combustible": true,
       "transparent": true,
-      "drop": "oak_slab",
+      "drop": "slab_wood_oak",
       "meta": "slab",
-      "texture": "planks_oak",
-      "full_block": "planks_oak",
-      "other_part": "oak_slab_bottom",
+      "texture": "wood_planks_oak",
+      "full_block": "wood_planks_oak",
+      "other_part": "slab_wood_oak_bottom",
       "tool_level": 0,
       "tool_type": "axe",
       "drop_info": [
         {
-          "key": "oak_slab",
+          "key": "slab_wood_oak",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1504,23 +1504,23 @@
       ],
       "material": "wood"
     },
-    "spruce_slab_bottom": {
+    "slab_wood_spruce_bottom": {
       "blast_resistance": 3,
       "top": 8,
       "sprite_top": 8,
       "hp": 180,
       "combustible": true,
       "transparent": true,
-      "drop": "spruce_slab",
+      "drop": "slab_wood_spruce",
       "meta": "slab",
-      "texture": "planks_spruce",
-      "full_block": "planks_spruce",
-      "other_part": "spruce_slab_top",
+      "texture": "wood_planks_spruce",
+      "full_block": "wood_planks_spruce",
+      "other_part": "slab_wood_spruce_top",
       "tool_level": 0,
       "tool_type": "axe",
       "drop_info": [
         {
-          "key": "spruce_slab",
+          "key": "slab_wood_spruce",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1529,23 +1529,23 @@
       ],
       "material": "wood"
     },
-    "spruce_slab_top": {
+    "slab_wood_spruce_top": {
       "blast_resistance": 3,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 180,
       "combustible": true,
       "transparent": true,
-      "drop": "spruce_slab",
+      "drop": "slab_wood_spruce",
       "meta": "slab",
-      "texture": "planks_spruce",
-      "full_block": "planks_spruce",
-      "other_part": "spruce_slab_bottom",
+      "texture": "wood_planks_spruce",
+      "full_block": "wood_planks_spruce",
+      "other_part": "slab_wood_spruce_bottom",
       "tool_level": 0,
       "tool_type": "axe",
       "drop_info": [
         {
-          "key": "spruce_slab",
+          "key": "slab_wood_spruce",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1554,23 +1554,23 @@
       ],
       "material": "wood"
     },
-    "birch_slab_bottom": {
+    "slab_wood_birch_bottom": {
       "blast_resistance": 3,
       "top": 8,
       "sprite_top": 8,
       "hp": 180,
       "combustible": true,
       "transparent": true,
-      "drop": "birch_slab",
+      "drop": "slab_wood_birch",
       "meta": "slab",
-      "texture": "planks_birch",
-      "full_block": "planks_birch",
-      "other_part": "birch_slab_top",
+      "texture": "wood_planks_birch",
+      "full_block": "wood_planks_birch",
+      "other_part": "slab_wood_birch_top",
       "tool_level": 0,
       "tool_type": "axe",
       "drop_info": [
         {
-          "key": "birch_slab",
+          "key": "slab_wood_birch",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1579,23 +1579,23 @@
       ],
       "material": "wood"
     },
-    "birch_slab_top": {
+    "slab_wood_birch_top": {
       "blast_resistance": 3,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 180,
       "combustible": true,
       "transparent": true,
-      "drop": "birch_slab",
+      "drop": "slab_wood_birch",
       "meta": "slab",
-      "texture": "planks_birch",
-      "full_block": "planks_birch",
-      "other_part": "birch_slab_bottom",
+      "texture": "wood_planks_birch",
+      "full_block": "wood_planks_birch",
+      "other_part": "slab_wood_birch_bottom",
       "tool_level": 0,
       "tool_type": "axe",
       "drop_info": [
         {
-          "key": "birch_slab",
+          "key": "slab_wood_birch",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1604,22 +1604,22 @@
       ],
       "material": "wood"
     },
-    "cobblestone_slab_bottom": {
+    "slab_cobblestone_bottom": {
       "blast_resistance": 6,
       "top": 8,
       "sprite_top": 8,
       "hp": 600,
       "transparent": true,
       "meta": "slab",
-      "drop": "cobblestone_slab",
+      "drop": "slab_cobblestone",
       "texture": "cobblestone",
       "full_block": "cobblestone",
-      "other_part": "cobblestone_slab_top",
+      "other_part": "slab_cobblestone_top",
       "tool_level": 1,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "cobblestone_slab",
+          "key": "slab_cobblestone",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1628,22 +1628,22 @@
       ],
       "material": "stone"
     },
-    "cobblestone_slab_top": {
+    "slab_cobblestone_top": {
       "blast_resistance": 6,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 600,
       "transparent": true,
       "meta": "slab",
-      "drop": "cobblestone_slab",
+      "drop": "slab_cobblestone",
       "texture": "cobblestone",
       "full_block": "cobblestone",
-      "other_part": "cobblestone_slab_bottom",
+      "other_part": "slab_cobblestone_bottom",
       "tool_level": 1,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "cobblestone_slab",
+          "key": "slab_cobblestone",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1652,22 +1652,22 @@
       ],
       "material": "stone"
     },
-    "brick_slab_bottom": {
+    "slab_brick_bottom": {
       "blast_resistance": 6,
       "top": 8,
       "sprite_top": 8,
       "hp": 600,
       "transparent": true,
-      "drop": "brick_slab",
+      "drop": "slab_brick",
       "meta": "slab",
       "texture": "bricks",
       "full_block": "bricks",
-      "other_part": "brick_slab_top",
+      "other_part": "slab_brick_top",
       "tool_level": 1,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "brick_slab",
+          "key": "slab_brick",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1676,22 +1676,22 @@
       ],
       "material": "stone"
     },
-    "brick_slab_top": {
+    "slab_brick_top": {
       "blast_resistance": 6,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 600,
       "transparent": true,
-      "drop": "brick_slab",
+      "drop": "slab_brick",
       "meta": "slab",
       "texture": "bricks",
       "full_block": "bricks",
-      "other_part": "brick_slab_bottom",
+      "other_part": "slab_brick_bottom",
       "tool_level": 1,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "brick_slab",
+          "key": "slab_brick",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1718,22 +1718,22 @@
       ],
       "material": "stone"
     },
-    "stonebrick_slab_bottom": {
+    "slab_stonebrick_bottom": {
       "blast_resistance": 6,
       "top": 8,
       "sprite_top": 8,
       "hp": 450,
       "transparent": true,
-      "drop": "stonebrick_slab",
+      "drop": "slab_stonebrick",
       "meta": "slab",
       "texture": "stonebrick",
       "full_block": "stonebrick",
-      "other_part": "stonebrick_slab_top",
+      "other_part": "slab_stonebrick_top",
       "tool_level": 1,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "stonebrick_slab",
+          "key": "slab_stonebrick",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -1742,22 +1742,22 @@
       ],
       "material": "stone"
     },
-    "stonebrick_slab_top": {
+    "slab_stonebrick_top": {
       "blast_resistance": 6,
       "bottom": 8,
       "sprite_bottom": 8,
       "hp": 450,
       "transparent": true,
-      "drop": "stonebrick_slab",
+      "drop": "slab_stonebrick",
       "meta": "slab",
       "texture": "stonebrick",
       "full_block": "stonebrick",
-      "other_part": "brick_slab_bottom",
+      "other_part": "slab_brick_bottom",
       "tool_level": 1,
       "tool_type": "pickaxe",
       "drop_info": [
         {
-          "key": "stonebrick_slab",
+          "key": "slab_stonebrick",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2074,7 +2074,7 @@
       ],
       "material": "wood"
     },
-    "door_wood_top_left_open": {
+    "wood_door_top_left_open": {
       "blast_resistance": 3,
       "hp": 270,
       "combustible": true,
@@ -2082,13 +2082,13 @@
       "background": true,
       "transparent": true,
       "block_required": false,
-      "texture": "door_wood_upper",
+      "texture": "wood_door_upper",
       "tool_level": 0,
       "tool_type": "axe",
       "casts_shadows": false,
       "drop_info": [
         {
-          "key": "door_wood",
+          "key": "wood_door",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2098,7 +2098,7 @@
       "material": "wood",
       "action_sound_key": "door/close"
     },
-    "door_wood_bottom_left_open": {
+    "wood_door_bottom_left_open": {
       "blast_resistance": 3,
       "hp": 270,
       "combustible": true,
@@ -2106,13 +2106,13 @@
       "background": true,
       "transparent": true,
       "block_required": true,
-      "texture": "door_wood_upper",
+      "texture": "wood_door_upper",
       "tool_level": 0,
       "tool_type": "axe",
       "casts_shadows": false,
       "drop_info": [
         {
-          "key": "door_wood",
+          "key": "wood_door",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2122,7 +2122,7 @@
       "material": "wood",
       "action_sound_key": "door/close"
     },
-    "door_wood_top_left_closed": {
+    "wood_door_top_left_closed": {
       "blast_resistance": 3,
       "right": 13,
       "sprite_right": 13,
@@ -2132,13 +2132,13 @@
       "background": false,
       "transparent": true,
       "block_required": false,
-      "texture": "door_wood_upper",
+      "texture": "wood_door_upper",
       "tool_level": 0,
       "tool_type": "axe",
       "casts_shadows": false,
       "drop_info": [
         {
-          "key": "door_wood",
+          "key": "wood_door",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2148,7 +2148,7 @@
       "material": "wood",
       "action_sound_key": "door/open"
     },
-    "door_wood_bottom_left_closed": {
+    "wood_door_bottom_left_closed": {
       "blast_resistance": 3,
       "right": 13,
       "sprite_right": 13,
@@ -2158,13 +2158,13 @@
       "background": false,
       "transparent": true,
       "block_required": true,
-      "texture": "door_wood_upper",
+      "texture": "wood_door_upper",
       "tool_level": 0,
       "tool_type": "axe",
       "casts_shadows": false,
       "drop_info": [
         {
-          "key": "door_wood",
+          "key": "wood_door",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2174,7 +2174,7 @@
       "material": "wood",
       "action_sound_key": "door/open"
     },
-    "door_wood_top_right_open": {
+    "wood_door_top_right_open": {
       "blast_resistance": 3,
       "hp": 270,
       "combustible": true,
@@ -2182,13 +2182,13 @@
       "background": true,
       "transparent": true,
       "block_required": false,
-      "texture": "door_wood_upper",
+      "texture": "wood_door_upper",
       "tool_level": 0,
       "tool_type": "axe",
       "casts_shadows": false,
       "drop_info": [
         {
-          "key": "door_wood",
+          "key": "wood_door",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2198,7 +2198,7 @@
       "material": "wood",
       "action_sound_key": "door/close"
     },
-    "door_wood_bottom_right_open": {
+    "wood_door_bottom_right_open": {
       "blast_resistance": 3,
       "hp": 270,
       "combustible": true,
@@ -2206,13 +2206,13 @@
       "background": true,
       "transparent": true,
       "block_required": true,
-      "texture": "door_wood_upper",
+      "texture": "wood_door_upper",
       "tool_level": 0,
       "tool_type": "axe",
       "casts_shadows": false,
       "drop_info": [
         {
-          "key": "door_wood",
+          "key": "wood_door",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2222,7 +2222,7 @@
       "material": "wood",
       "action_sound_key": "door/close"
     },
-    "door_wood_top_right_closed": {
+    "wood_door_top_right_closed": {
       "blast_resistance": 3,
       "left": 13,
       "sprite_left": 13,
@@ -2232,13 +2232,13 @@
       "background": false,
       "transparent": true,
       "block_required": false,
-      "texture": "door_wood_upper",
+      "texture": "wood_door_upper",
       "tool_level": 0,
       "tool_type": "axe",
       "casts_shadows": false,
       "drop_info": [
         {
-          "key": "door_wood",
+          "key": "wood_door",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2248,7 +2248,7 @@
       "material": "wood",
       "action_sound_key": "door/open"
     },
-    "door_wood_bottom_right_closed": {
+    "wood_door_bottom_right_closed": {
       "blast_resistance": 3,
       "left": 13,
       "sprite_left": 13,
@@ -2258,13 +2258,13 @@
       "background": false,
       "transparent": true,
       "block_required": true,
-      "texture": "door_wood_upper",
+      "texture": "wood_door_upper",
       "tool_level": 0,
       "tool_type": "axe",
       "casts_shadows": false,
       "drop_info": [
         {
-          "key": "door_wood",
+          "key": "wood_door",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2274,7 +2274,7 @@
       "material": "wood",
       "action_sound_key": "door/open"
     },
-    "trapdoor_wood_open": {
+    "wood_trapdoor_open": {
       "blast_resistance": 3,
       "hp": 270,
       "combustible": true,
@@ -2282,7 +2282,7 @@
       "background": true,
       "transparent": true,
       "block_required": false,
-      "texture": "trapdoor",
+      "texture": "wood_trapdoor",
       "tool_level": 0,
       "tool_type": "axe",
       "casts_shadows": false,
@@ -2290,7 +2290,7 @@
       "density": 10,
       "drop_info": [
         {
-          "key": "trapdoor_wood_open",
+          "key": "wood_trapdoor_open",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2300,7 +2300,7 @@
       "material": "wood",
       "action_sound_key": "door/close"
     },
-    "trapdoor_wood_closed": {
+    "wood_trapdoor_closed": {
       "blast_resistance": 3,
       "bottom": 12,
       "combustible": true,
@@ -2310,7 +2310,7 @@
       "background": true,
       "transparent": true,
       "block_required": false,
-      "texture": "trapdoor",
+      "texture": "wood_trapdoor",
       "tool_level": 0,
       "tool_type": "axe",
       "casts_shadows": false,
@@ -2318,7 +2318,7 @@
       "density": 10,
       "drop_info": [
         {
-          "key": "trapdoor_wood_open",
+          "key": "wood_trapdoor_open",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2397,7 +2397,7 @@
       "hp": 0,
       "drop_info": [
         {
-          "key": "wheat_seeds",
+          "key": "seeds_wheat",
           "requires_tool": false,
           "amount": {
             "type": "exact_amount",
@@ -2416,7 +2416,7 @@
       "hp": 0,
       "drop_info": [
         {
-          "key": "wheat_seeds",
+          "key": "seeds_wheat",
           "requires_tool": false,
           "amount": {
             "type": "exact_amount",
@@ -2435,7 +2435,7 @@
       "hp": 0,
       "drop_info": [
         {
-          "key": "wheat_seeds",
+          "key": "seeds_wheat",
           "requires_tool": false,
           "amount": {
             "type": "exact_amount",
@@ -2454,7 +2454,7 @@
       "hp": 0,
       "drop_info": [
         {
-          "key": "wheat_seeds",
+          "key": "seeds_wheat",
           "requires_tool": false,
           "amount": {
             "type": "exact_amount",
@@ -2473,7 +2473,7 @@
       "hp": 0,
       "drop_info": [
         {
-          "key": "wheat_seeds",
+          "key": "seeds_wheat",
           "requires_tool": false,
           "amount": {
             "type": "exact_amount",
@@ -2492,7 +2492,7 @@
       "hp": 0,
       "drop_info": [
         {
-          "key": "wheat_seeds",
+          "key": "seeds_wheat",
           "requires_tool": false,
           "amount": {
             "type": "exact_amount",
@@ -2519,7 +2519,7 @@
           }
         },
         {
-          "key": "wheat_seeds",
+          "key": "seeds_wheat",
           "requires_tool": false,
           "amount": {
             "type": "random_range",
@@ -2830,7 +2830,7 @@
       },
       "replaceable": true
     },
-    "fence_oak": {
+    "wood_fence_oak": {
       "blast_resistance": 3,
       "left": 6,
       "right": 6,
@@ -2840,14 +2840,14 @@
       "collision": true,
       "background": false,
       "transparent": true,
-      "texture": "fence_oak",
+      "texture": "wood_fence_oak",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
       "material": "wood",
       "drop_info": [
         {
-          "key": "fence_oak",
+          "key": "wood_fence_oak",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2856,7 +2856,7 @@
       ],
       "update_action": "update_fence"
     },
-    "fence_oak_left": {
+    "wood_fence_oak_left": {
       "blast_resistance": 3,
       "left": 6,
       "right": 6,
@@ -2865,14 +2865,14 @@
       "collision": true,
       "background": false,
       "transparent": true,
-      "texture": "fence_oak_left",
+      "texture": "wood_fence_oak_left",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
       "material": "wood",
       "drop_info": [
         {
-          "key": "fence_oak",
+          "key": "wood_fence_oak",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2881,7 +2881,7 @@
       ],
       "update_action": "update_fence"
     },
-    "fence_oak_right": {
+    "wood_fence_oak_right": {
       "blast_resistance": 3,
       "left": 6,
       "right": 6,
@@ -2890,14 +2890,14 @@
       "collision": true,
       "background": false,
       "transparent": true,
-      "texture": "fence_oak_right",
+      "texture": "wood_fence_oak_right",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
       "material": "wood",
       "drop_info": [
         {
-          "key": "fence_oak",
+          "key": "wood_fence_oak",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2906,7 +2906,7 @@
       ],
       "update_action": "update_fence"
     },
-    "fence_oak_both": {
+    "wood_fence_oak_both": {
       "blast_resistance": 3,
       "left": 6,
       "right": 6,
@@ -2914,14 +2914,14 @@
       "collision": false,
       "background": false,
       "transparent": true,
-      "texture": "fence_oak_both",
+      "texture": "wood_fence_oak_both",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
       "material": "wood",
       "drop_info": [
         {
-          "key": "fence_oak",
+          "key": "wood_fence_oak",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2930,7 +2930,7 @@
       ],
       "update_action": "update_fence"
     },
-    "fence_gate_oak_left_closed": {
+    "wood_fence_gate_oak_left_closed": {
       "blast_resistance": 3,
       "hp": 270,
       "sprite_right": 12,
@@ -2938,7 +2938,7 @@
       "background": false,
       "transparent": true,
       "block_required": true,
-      "texture": "fence_gate_oak_left_closed",
+      "texture": "wood_fence_gate_oak_left_closed",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
@@ -2946,7 +2946,7 @@
       "action_sound_key": "door/open",
       "drop_info": [
         {
-          "key": "fence_gate_oak",
+          "key": "wood_fence_gate_oak",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2956,14 +2956,14 @@
       "right": 12,
       "use_action": "use_fence_gate"
     },
-    "fence_gate_oak_left_open": {
+    "wood_fence_gate_oak_left_open": {
       "blast_resistance": 3,
       "hp": 270,
       "collision": false,
       "background": false,
       "transparent": true,
       "block_required": true,
-      "texture": "fence_gate_oak_left_open",
+      "texture": "wood_fence_gate_oak_left_open",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
@@ -2971,7 +2971,7 @@
       "action_sound_key": "door/close",
       "drop_info": [
         {
-          "key": "fence_gate_oak",
+          "key": "wood_fence_gate_oak",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -2980,7 +2980,7 @@
       ],
       "use_action": "use_fence_gate"
     },
-    "fence_gate_oak_right_closed": {
+    "wood_fence_gate_oak_right_closed": {
       "blast_resistance": 3,
       "hp": 270,
       "sprite_left": 12,
@@ -2988,7 +2988,7 @@
       "background": false,
       "transparent": true,
       "block_required": true,
-      "texture": "fence_gate_oak_right_closed",
+      "texture": "wood_fence_gate_oak_right_closed",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
@@ -2996,7 +2996,7 @@
       "action_sound_key": "door/open",
       "drop_info": [
         {
-          "key": "fence_gate_oak",
+          "key": "wood_fence_gate_oak",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3006,14 +3006,14 @@
       "left": 12,
       "use_action": "use_fence_gate"
     },
-    "fence_gate_oak_right_open": {
+    "wood_fence_gate_oak_right_open": {
       "blast_resistance": 3,
       "hp": 270,
       "collision": false,
       "background": false,
       "transparent": true,
       "block_required": true,
-      "texture": "fence_gate_oak_right_open",
+      "texture": "wood_fence_gate_oak_right_open",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
@@ -3021,7 +3021,7 @@
       "action_sound_key": "door/close",
       "drop_info": [
         {
-          "key": "fence_gate_oak",
+          "key": "wood_fence_gate_oak",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3030,7 +3030,7 @@
       ],
       "use_action": "use_fence_gate"
     },
-    "fence_spruce": {
+    "wood_fence_spruce": {
       "blast_resistance": 3,
       "left": 6,
       "right": 6,
@@ -3040,14 +3040,14 @@
       "collision": true,
       "background": false,
       "transparent": true,
-      "texture": "fence_spruce",
+      "texture": "wood_fence_spruce",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
       "material": "wood",
       "drop_info": [
         {
-          "key": "fence_spruce",
+          "key": "wood_fence_spruce",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3056,7 +3056,7 @@
       ],
       "update_action": "update_fence"
     },
-    "fence_spruce_left": {
+    "wood_fence_spruce_left": {
       "blast_resistance": 3,
       "left": 6,
       "right": 6,
@@ -3065,14 +3065,14 @@
       "collision": true,
       "background": false,
       "transparent": true,
-      "texture": "fence_spruce_left",
+      "texture": "wood_fence_spruce_left",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
       "material": "wood",
       "drop_info": [
         {
-          "key": "fence_spruce",
+          "key": "wood_fence_spruce",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3081,7 +3081,7 @@
       ],
       "update_action": "update_fence"
     },
-    "fence_spruce_right": {
+    "wood_fence_spruce_right": {
       "blast_resistance": 3,
       "left": 6,
       "right": 6,
@@ -3090,14 +3090,14 @@
       "collision": true,
       "background": false,
       "transparent": true,
-      "texture": "fence_spruce_right",
+      "texture": "wood_fence_spruce_right",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
       "material": "wood",
       "drop_info": [
         {
-          "key": "fence_spruce",
+          "key": "wood_fence_spruce",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3106,7 +3106,7 @@
       ],
       "update_action": "update_fence"
     },
-    "fence_spruce_both": {
+    "wood_fence_spruce_both": {
       "blast_resistance": 3,
       "left": 6,
       "right": 6,
@@ -3114,14 +3114,14 @@
       "collision": false,
       "background": false,
       "transparent": true,
-      "texture": "fence_spruce_both",
+      "texture": "wood_fence_spruce_both",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
       "material": "wood",
       "drop_info": [
         {
-          "key": "fence_spruce",
+          "key": "wood_fence_spruce",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3130,7 +3130,7 @@
       ],
       "update_action": "update_fence"
     },
-    "fence_gate_spruce_left_closed": {
+    "wood_fence_gate_spruce_left_closed": {
       "blast_resistance": 3,
       "hp": 270,
       "sprite_right": 12,
@@ -3138,7 +3138,7 @@
       "background": false,
       "transparent": true,
       "block_required": true,
-      "texture": "fence_gate_spruce_left_closed",
+      "texture": "wood_fence_gate_spruce_left_closed",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
@@ -3146,7 +3146,7 @@
       "action_sound_key": "door/open",
       "drop_info": [
         {
-          "key": "fence_gate_spruce",
+          "key": "wood_fence_gate_spruce",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3156,14 +3156,14 @@
       "right": 12,
       "use_action": "use_fence_gate"
     },
-    "fence_gate_spruce_left_open": {
+    "wood_fence_gate_spruce_left_open": {
       "blast_resistance": 3,
       "hp": 270,
       "collision": false,
       "background": false,
       "transparent": true,
       "block_required": true,
-      "texture": "fence_gate_spruce_left_open",
+      "texture": "wood_fence_gate_spruce_left_open",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
@@ -3171,7 +3171,7 @@
       "action_sound_key": "door/close",
       "drop_info": [
         {
-          "key": "fence_gate_spruce",
+          "key": "wood_fence_gate_spruce",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3180,7 +3180,7 @@
       ],
       "use_action": "use_fence_gate"
     },
-    "fence_gate_spruce_right_closed": {
+    "wood_fence_gate_spruce_right_closed": {
       "blast_resistance": 3,
       "hp": 270,
       "sprite_left": 12,
@@ -3188,7 +3188,7 @@
       "background": false,
       "transparent": true,
       "block_required": true,
-      "texture": "fence_gate_spruce_right_closed",
+      "texture": "wood_fence_gate_spruce_right_closed",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
@@ -3196,7 +3196,7 @@
       "action_sound_key": "door/open",
       "drop_info": [
         {
-          "key": "fence_gate_spruce",
+          "key": "wood_fence_gate_spruce",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3206,14 +3206,14 @@
       "left": 12,
       "use_action": "use_fence_gate"
     },
-    "fence_gate_spruce_right_open": {
+    "wood_fence_gate_spruce_right_open": {
       "blast_resistance": 3,
       "hp": 270,
       "collision": false,
       "background": false,
       "transparent": true,
       "block_required": true,
-      "texture": "fence_gate_spruce_right_open",
+      "texture": "wood_fence_gate_spruce_right_open",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
@@ -3221,7 +3221,7 @@
       "action_sound_key": "door/close",
       "drop_info": [
         {
-          "key": "fence_gate_spruce",
+          "key": "wood_fence_gate_spruce",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3230,7 +3230,7 @@
       ],
       "use_action": "use_fence_gate"
     },
-    "fence_birch": {
+    "wood_fence_birch": {
       "blast_resistance": 3,
       "left": 6,
       "right": 6,
@@ -3240,14 +3240,14 @@
       "collision": true,
       "background": false,
       "transparent": true,
-      "texture": "fence_birch",
+      "texture": "wood_fence_birch",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
       "material": "wood",
       "drop_info": [
         {
-          "key": "fence_birch",
+          "key": "wood_fence_birch",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3256,7 +3256,7 @@
       ],
       "update_action": "update_fence"
     },
-    "fence_birch_left": {
+    "wood_fence_birch_left": {
       "blast_resistance": 3,
       "left": 6,
       "right": 6,
@@ -3265,14 +3265,14 @@
       "collision": true,
       "background": false,
       "transparent": true,
-      "texture": "fence_birch_left",
+      "texture": "wood_fence_birch_left",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
       "material": "wood",
       "drop_info": [
         {
-          "key": "fence_birch",
+          "key": "wood_fence_birch",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3281,7 +3281,7 @@
       ],
       "update_action": "update_fence"
     },
-    "fence_birch_right": {
+    "wood_fence_birch_right": {
       "blast_resistance": 3,
       "left": 6,
       "right": 6,
@@ -3290,14 +3290,14 @@
       "collision": true,
       "background": false,
       "transparent": true,
-      "texture": "fence_birch_right",
+      "texture": "wood_fence_birch_right",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
       "material": "wood",
       "drop_info": [
         {
-          "key": "fence_birch",
+          "key": "wood_fence_birch",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3306,7 +3306,7 @@
       ],
       "update_action": "update_fence"
     },
-    "fence_birch_both": {
+    "wood_fence_birch_both": {
       "blast_resistance": 3,
       "left": 6,
       "right": 6,
@@ -3314,14 +3314,14 @@
       "collision": false,
       "background": false,
       "transparent": true,
-      "texture": "fence_birch_both",
+      "texture": "wood_fence_birch_both",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
       "material": "wood",
       "drop_info": [
         {
-          "key": "fence_birch",
+          "key": "wood_fence_birch",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3330,7 +3330,7 @@
       ],
       "update_action": "update_fence"
     },
-    "fence_gate_birch_left_closed": {
+    "wood_fence_gate_birch_left_closed": {
       "blast_resistance": 3,
       "hp": 270,
       "sprite_right": 12,
@@ -3338,7 +3338,7 @@
       "background": false,
       "transparent": true,
       "block_required": true,
-      "texture": "fence_gate_birch_left_closed",
+      "texture": "wood_fence_gate_birch_left_closed",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
@@ -3346,7 +3346,7 @@
       "action_sound_key": "door/open",
       "drop_info": [
         {
-          "key": "fence_gate_birch",
+          "key": "wood_fence_gate_birch",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3356,14 +3356,14 @@
       "right": 12,
       "use_action": "use_fence_gate"
     },
-    "fence_gate_birch_left_open": {
+    "wood_fence_gate_birch_left_open": {
       "blast_resistance": 3,
       "hp": 270,
       "collision": false,
       "background": false,
       "transparent": true,
       "block_required": true,
-      "texture": "fence_gate_birch_left_open",
+      "texture": "wood_fence_gate_birch_left_open",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
@@ -3371,7 +3371,7 @@
       "action_sound_key": "door/close",
       "drop_info": [
         {
-          "key": "fence_gate_birch",
+          "key": "wood_fence_gate_birch",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3380,7 +3380,7 @@
       ],
       "use_action": "use_fence_gate"
     },
-    "fence_gate_birch_right_closed": {
+    "wood_fence_gate_birch_right_closed": {
       "blast_resistance": 3,
       "hp": 270,
       "sprite_left": 12,
@@ -3388,7 +3388,7 @@
       "background": false,
       "transparent": true,
       "block_required": true,
-      "texture": "fence_gate_birch_right_closed",
+      "texture": "wood_fence_gate_birch_right_closed",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
@@ -3396,7 +3396,7 @@
       "action_sound_key": "door/open",
       "drop_info": [
         {
-          "key": "fence_gate_birch",
+          "key": "wood_fence_gate_birch",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3406,14 +3406,14 @@
       "left": 12,
       "use_action": "use_fence_gate"
     },
-    "fence_gate_birch_right_open": {
+    "wood_fence_gate_birch_right_open": {
       "blast_resistance": 3,
       "hp": 270,
       "collision": false,
       "background": false,
       "transparent": true,
       "block_required": true,
-      "texture": "fence_gate_birch_right_open",
+      "texture": "wood_fence_gate_birch_right_open",
       "tool_type": "axe",
       "casts_shadows": false,
       "combustible": true,
@@ -3421,7 +3421,7 @@
       "action_sound_key": "door/close",
       "drop_info": [
         {
-          "key": "fence_gate_birch",
+          "key": "wood_fence_gate_birch",
           "amount": {
             "type": "exact_amount",
             "amount": 1
@@ -3558,15 +3558,15 @@
       "material": "wood",
       "use_action": "carve_pumpkin"
     },
-    "carved_pumpkin": {
+    "pumpkin_carved": {
       "blast_resistance": 1,
       "hp": 90,
-      "texture": "carved_pumpkin",
+      "texture": "pumpkin_carved",
       "tool_level": 0,
       "tool_type": "axe",
       "drop_info": [
         {
-          "key": "carved_pumpkin",
+          "key": "pumpkin_carved",
           "requires_tool": false,
           "amount": {
             "type": "exact_amount",
@@ -3630,7 +3630,7 @@
       "drop_single": false,
       "drop_info": [
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3639,7 +3639,7 @@
           }
         },
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3648,7 +3648,7 @@
           }
         },
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3673,7 +3673,7 @@
       "drop_single": false,
       "drop_info": [
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3682,7 +3682,7 @@
           }
         },
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3691,7 +3691,7 @@
           }
         },
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3716,7 +3716,7 @@
       "drop_single": false,
       "drop_info": [
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3725,7 +3725,7 @@
           }
         },
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3734,7 +3734,7 @@
           }
         },
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3759,7 +3759,7 @@
       "drop_single": false,
       "drop_info": [
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3768,7 +3768,7 @@
           }
         },
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3777,7 +3777,7 @@
           }
         },
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3802,7 +3802,7 @@
       "drop_single": false,
       "drop_info": [
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3811,7 +3811,7 @@
           }
         },
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3820,7 +3820,7 @@
           }
         },
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3845,7 +3845,7 @@
       "drop_single": false,
       "drop_info": [
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3854,7 +3854,7 @@
           }
         },
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3863,7 +3863,7 @@
           }
         },
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3888,7 +3888,7 @@
       "drop_single": false,
       "drop_info": [
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3897,7 +3897,7 @@
           }
         },
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3906,7 +3906,7 @@
           }
         },
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3931,7 +3931,7 @@
       "drop_single": false,
       "drop_info": [
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3940,7 +3940,7 @@
           }
         },
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3949,7 +3949,7 @@
           }
         },
         {
-          "key": "pumpkin_seeds",
+          "key": "seeds_pumpkin",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3974,7 +3974,7 @@
       "drop_single": false,
       "drop_info": [
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3983,7 +3983,7 @@
           }
         },
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -3992,7 +3992,7 @@
           }
         },
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4017,7 +4017,7 @@
       "drop_single": false,
       "drop_info": [
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4026,7 +4026,7 @@
           }
         },
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4035,7 +4035,7 @@
           }
         },
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4060,7 +4060,7 @@
       "drop_single": false,
       "drop_info": [
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4069,7 +4069,7 @@
           }
         },
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4078,7 +4078,7 @@
           }
         },
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4103,7 +4103,7 @@
       "drop_single": false,
       "drop_info": [
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4112,7 +4112,7 @@
           }
         },
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4121,7 +4121,7 @@
           }
         },
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4146,7 +4146,7 @@
       "drop_single": false,
       "drop_info": [
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4155,7 +4155,7 @@
           }
         },
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4164,7 +4164,7 @@
           }
         },
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4189,7 +4189,7 @@
       "drop_single": false,
       "drop_info": [
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4198,7 +4198,7 @@
           }
         },
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4207,7 +4207,7 @@
           }
         },
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4232,7 +4232,7 @@
       "drop_single": false,
       "drop_info": [
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4241,7 +4241,7 @@
           }
         },
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4250,7 +4250,7 @@
           }
         },
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4275,7 +4275,7 @@
       "drop_single": false,
       "drop_info": [
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4284,7 +4284,7 @@
           }
         },
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4293,7 +4293,7 @@
           }
         },
         {
-          "key": "melon_seeds",
+          "key": "seeds_melon",
           "requires_tool": false,
           "amount": {
             "type": "random_chance",
@@ -4339,6 +4339,56 @@
       "combustible": true,
       "material": "grass",
       "drop_info": [{ "key": "tnt" }]
+    },
+    "chest_large_left": {
+      "blast_resistance": 2.5,
+      "hp": 180,
+      "collision": false,
+      "background": true,
+      "transparent": false,
+      "casts_shadows": false,
+      "drop": "chest",
+      "texture": "chest_large_left",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "meta": "chest",
+      "drop_info": [
+        {
+          "key": "chest",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "wood",
+      "action_sound_key": "door/open",
+      "use_action": "chest"
+    },
+    "chest_large_right": {
+      "blast_resistance": 2.5,
+      "hp": 180,
+      "collision": false,
+      "background": true,
+      "transparent": false,
+      "casts_shadows": false,
+      "drop": "chest",
+      "texture": "chest_large_right",
+      "tool_level": 0,
+      "tool_type": "axe",
+      "meta": "chest",
+      "drop_info": [
+        {
+          "key": "chest",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "wood",
+      "action_sound_key": "door/open",
+      "use_action": "chest"
     }
   },
   "items": {
@@ -4348,79 +4398,93 @@
       "texture": "none"
     },
     "stone": {
+      "creative_category": "nature",
       "name": "Stone",
       "type": "block",
       "texture": "stone"
     },
     "grass": {
+      "creative_category": "nature",
       "name": "Grass",
       "type": "block",
       "texture": "grass"
     },
     "dirt": {
+      "creative_category": "nature",
       "name": "Dirt",
       "type": "block",
       "texture": "dirt"
     },
     "cobblestone": {
+      "creative_category": "nature",
       "name": "Cobblestone",
       "type": "block",
       "texture": "cobblestone",
       "smelt_product": "stone"
     },
-    "mossy_cobblestone": {
+    "cobblestone_mossy": {
+      "creative_category": "nature",
       "name": "Mossy Cobblestone",
       "type": "block",
-      "texture": "mossy_cobblestone"
+      "texture": "cobblestone_mossy"
     },
-    "planks_oak": {
+    "wood_planks_oak": {
+      "creative_category": "building",
       "name": "Oak Planks",
       "type": "block",
-      "texture": "planks_oak",
+      "texture": "wood_planks_oak",
       "burning_time": 15000
     },
     "sapling_oak": {
+      "creative_category": "nature",
       "name": "Oak Sapling",
       "type": "block",
       "texture": "sapling_oak",
       "burning_time": 5000
     },
-    "planks_spruce": {
+    "wood_planks_spruce": {
+      "creative_category": "building",
       "name": "Spruce Planks",
       "type": "block",
-      "texture": "planks_spruce",
+      "texture": "wood_planks_spruce",
       "burning_time": 15000
     },
-    "planks_birch": {
+    "wood_planks_birch": {
+      "creative_category": "building",
       "name": "Birch Planks",
       "type": "block",
-      "texture": "planks_birch",
+      "texture": "wood_planks_birch",
       "burning_time": 15000
     },
     "sapling_birch": {
+      "creative_category": "nature",
       "name": "Birch Sapling",
       "type": "block",
       "texture": "sapling_birch",
       "burning_time": 5000
     },
     "crafting_table": {
+      "creative_category": "utilities",
       "name": "Crafting Table",
       "type": "block",
       "texture": "crafting_table",
       "burning_time": 15000
     },
     "furnace": {
+      "creative_category": "utilities",
       "name": "Furnace",
       "type": "block",
       "texture": "furnace_off"
     },
     "chest": {
+      "creative_category": "utilities",
       "name": "Chest",
       "type": "block",
       "texture": "chest",
       "burning_time": 15000
     },
     "torch": {
+      "creative_category": "utilities",
       "name": "Torch",
       "type": "block",
       "texture": "torch",
@@ -4428,120 +4492,141 @@
       "origin_y": 1
     },
     "sapling_spruce": {
+      "creative_category": "nature",
       "name": "Spruce Sapling",
       "type": "block",
       "texture": "sapling_spruce",
       "burning_time": 5000
     },
     "bedrock": {
+      "creative_category": "nature",
       "name": "Bedrock",
       "type": "block",
       "texture": "bedrock"
     },
     "sand": {
+      "creative_category": "nature",
       "name": "Sand",
       "type": "block",
       "texture": "sand",
       "smelt_product": "glass"
     },
     "gravel": {
+      "creative_category": "nature",
       "name": "Gravel",
       "type": "block",
       "texture": "gravel"
     },
-    "gold_ore": {
+    "ore_gold": {
+      "creative_category": "nature",
       "name": "Golden Ore",
       "type": "block",
-      "texture": "gold_ore",
-      "smelt_product": "gold_ingot"
+      "texture": "ore_gold",
+      "smelt_product": "ingot_gold"
     },
-    "iron_ore": {
+    "ore_iron": {
+      "creative_category": "nature",
       "name": "Iron Ore",
       "type": "block",
-      "texture": "iron_ore",
-      "smelt_product": "iron_ingot"
+      "texture": "ore_iron",
+      "smelt_product": "ingot_iron"
     },
-    "coal_ore": {
+    "ore_coal": {
+      "creative_category": "nature",
       "name": "Coal Ore",
       "type": "block",
-      "texture": "coal_ore",
+      "texture": "ore_coal",
       "smelt_product": "coal"
     },
-    "diamond_ore": {
+    "ore_diamond": {
+      "creative_category": "nature",
       "name": "Diamond Ore",
       "type": "block",
-      "texture": "diamond_ore",
+      "texture": "ore_diamond",
       "smelt_product": "diamond"
     },
-    "log_oak": {
+    "wood_log_oak": {
+      "creative_category": "nature",
       "name": "Wood",
       "type": "block",
-      "texture": "log_oak",
+      "texture": "wood_log_oak",
       "burning_time": 15000,
       "smelt_product": "charcoal"
     },
     "leaves_oak": {
+      "creative_category": "nature",
       "name": "Leaves",
       "type": "block",
       "texture": "leaves_oak"
     },
-    "log_spruce": {
+    "wood_log_spruce": {
+      "creative_category": "nature",
       "name": "Spruce",
       "type": "block",
-      "texture": "log_spruce",
+      "texture": "wood_log_spruce",
       "burning_time": 15000,
       "smelt_product": "charcoal"
     },
     "leaves_spruce": {
+      "creative_category": "nature",
       "name": "Spruce Leaves",
       "type": "block",
       "texture": "leaves_spruce"
     },
-    "log_birch": {
+    "wood_log_birch": {
+      "creative_category": "nature",
       "name": "Birch",
       "type": "block",
-      "texture": "log_birch",
+      "texture": "wood_log_birch",
       "burning_time": 15000,
       "smelt_product": "charcoal"
     },
     "leaves_birch": {
+      "creative_category": "nature",
       "name": "Birch Leaves",
       "type": "block",
       "texture": "leaves_birch"
     },
     "glass": {
+      "creative_category": "building",
       "name": "Glass",
       "type": "block",
       "texture": "glass"
     },
-    "lapis_ore": {
+    "ore_lapis": {
+      "creative_category": "nature",
       "name": "Lapis Ore",
       "type": "block",
-      "texture": "lapis_ore",
+      "texture": "ore_lapis",
       "smelt_product": "lapis_lazuli"
     },
-    "lapis_block": {
+    "storage_block_lapis": {
+      "creative_category": "building",
       "name": "Lapis Block",
       "type": "block",
-      "texture": "lapis_block"
+      "texture": "storage_block_lapis"
     },
     "sandstone": {
+      "creative_category": "building",
       "name": "Sandstone",
       "type": "block",
       "texture": "sandstone"
     },
     "web": {
+      "creative_category": "nature",
       "name": "Cobweb",
       "type": "block",
       "texture": "web"
     },
     "tallgrass": {
+      "creative_category": "nature",
       "name": "Tall Grass",
       "type": "block",
       "texture": "tallgrass",
       "origin_x": 0.5
     },
     "deadbush": {
+      "creative_category": "nature",
       "name": "Dead Bush",
       "type": "block",
       "texture": "deadbush",
@@ -4549,272 +4634,317 @@
       "burning_time": 5000
     },
     "bricks": {
+      "creative_category": "building",
       "name": "Bricks",
       "type": "block",
       "texture": "bricks"
     },
     "clay": {
+      "creative_category": "nature",
       "name": "Clay",
       "type": "block",
       "texture": "clay"
     },
-    "dandelion": {
+    "flower_dandelion": {
+      "creative_category": "nature",
       "name": "Dandelion",
       "type": "block",
-      "texture": "dandelion",
+      "texture": "flower_dandelion",
       "origin_x": 0.5
     },
-    "rose": {
+    "flower_rose": {
+      "creative_category": "nature",
       "name": "Rose",
       "type": "block",
-      "texture": "rose",
+      "texture": "flower_rose",
       "origin_x": 0.5
     },
     "mushroom_brown": {
+      "creative_category": "nature",
       "name": "Mushroom",
       "type": "block",
       "texture": "mushroom_brown",
       "origin_x": 0.5
     },
     "mushroom_red": {
+      "creative_category": "nature",
       "name": "Mushroom",
       "type": "block",
       "texture": "mushroom_red",
       "origin_x": 0.5
     },
     "wool_colored_white": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_white",
       "burning_time": 5000
     },
     "wool_colored_orange": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_orange",
       "burning_time": 5000
     },
     "wool_colored_magenta": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_magenta",
       "burning_time": 5000
     },
     "wool_colored_light_blue": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_light_blue",
       "burning_time": 5000
     },
     "wool_colored_yellow": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_yellow",
       "burning_time": 5000
     },
     "wool_colored_lime": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_lime",
       "burning_time": 5000
     },
     "wool_colored_pink": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_pink",
       "burning_time": 5000
     },
     "wool_colored_gray": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_gray",
       "burning_time": 5000
     },
     "wool_colored_light_gray": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_light_gray",
       "burning_time": 5000
     },
     "wool_colored_cyan": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_cyan",
       "burning_time": 5000
     },
     "wool_colored_purple": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_purple",
       "burning_time": 5000
     },
     "wool_colored_blue": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_blue",
       "burning_time": 5000
     },
     "wool_colored_brown": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_brown",
       "burning_time": 5000
     },
     "wool_colored_green": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_green",
       "burning_time": 5000
     },
     "wool_colored_red": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_red",
       "burning_time": 5000
     },
     "wool_colored_black": {
+      "creative_category": "building",
       "name": "Wool",
       "type": "block",
       "texture": "wool_colored_black",
       "burning_time": 5000
     },
-    "gold_block": {
+    "storage_block_gold": {
+      "creative_category": "building",
       "name": "Gold Block",
       "type": "block",
-      "texture": "gold_block"
+      "texture": "storage_block_gold"
     },
-    "iron_block": {
+    "storage_block_iron": {
+      "creative_category": "building",
       "name": "Iron Block",
       "type": "block",
-      "texture": "iron_block"
+      "texture": "storage_block_iron"
     },
-    "raw_gold_block": {
+    "storage_block_raw_gold": {
+      "creative_category": "building",
       "name": "Raw Gold Block",
       "type": "block",
-      "texture": "raw_gold_block"
+      "texture": "storage_block_raw_gold"
     },
-    "raw_iron_block": {
+    "storage_block_raw_iron": {
+      "creative_category": "building",
       "name": "Raw Iron Block",
       "type": "block",
-      "texture": "raw_iron_block"
+      "texture": "storage_block_raw_iron"
     },
-    "coal_block": {
+    "storage_block_coal": {
+      "creative_category": "building",
       "name": "Coal Block",
       "type": "block",
-      "texture": "coal_block",
+      "texture": "storage_block_coal",
       "burning_time": 800000
     },
-    "diamond_block": {
+    "storage_block_diamond": {
+      "creative_category": "building",
       "name": "Diamond Block",
       "type": "block",
-      "texture": "diamond_block"
+      "texture": "storage_block_diamond"
     },
-    "stone_slab": {
+    "slab_stone": {
+      "creative_category": "building",
       "name": "Stone Slab",
       "type": "slab",
-      "texture": "stone_slab",
-      "top_slab_block": "stone_slab_top",
-      "bottom_slab_block": "stone_slab_bottom"
+      "texture": "slab_stone",
+      "top_slab_block": "slab_stone_top",
+      "bottom_slab_block": "slab_stone_bottom"
     },
-    "sandstone_slab": {
+    "slab_sandstone": {
+      "creative_category": "building",
       "name": "Sandstone Slab",
       "type": "slab",
-      "texture": "sandstone_slab",
-      "top_slab_block": "sandstone_slab_top",
-      "bottom_slab_block": "sandstone_slab_bottom"
+      "texture": "slab_sandstone",
+      "top_slab_block": "slab_sandstone_top",
+      "bottom_slab_block": "slab_sandstone_bottom"
     },
-    "oak_slab": {
+    "slab_wood_oak": {
+      "creative_category": "building",
       "name": "Oak Slab",
       "type": "slab",
-      "texture": "oak_slab",
-      "top_slab_block": "oak_slab_top",
-      "bottom_slab_block": "oak_slab_bottom",
+      "texture": "slab_wood_oak",
+      "top_slab_block": "slab_wood_oak_top",
+      "bottom_slab_block": "slab_wood_oak_bottom",
       "burn_time": 7500
     },
-    "spruce_slab": {
+    "slab_wood_spruce": {
+      "creative_category": "building",
       "name": "Spruce Slab",
       "type": "slab",
-      "texture": "spruce_slab",
-      "top_slab_block": "spruce_slab_top",
-      "bottom_slab_block": "spruce_slab_bottom",
+      "texture": "slab_wood_spruce",
+      "top_slab_block": "slab_wood_spruce_top",
+      "bottom_slab_block": "slab_wood_spruce_bottom",
       "burn_time": 7500
     },
-    "birch_slab": {
+    "slab_wood_birch": {
+      "creative_category": "building",
       "name": "Birch Slab",
       "type": "slab",
-      "texture": "birch_slab",
-      "top_slab_block": "birch_slab_top",
-      "bottom_slab_block": "birch_slab_bottom",
+      "texture": "slab_wood_birch",
+      "top_slab_block": "slab_wood_birch_top",
+      "bottom_slab_block": "slab_wood_birch_bottom",
       "burn_time": 7500
     },
-    "cobblestone_slab": {
+    "slab_cobblestone": {
+      "creative_category": "building",
       "name": "Cobblestone Slab",
       "type": "slab",
-      "texture": "cobblestone_slab",
-      "top_slab_block": "cobblestone_slab_top",
-      "bottom_slab_block": "cobblestone_slab_bottom"
+      "texture": "slab_cobblestone",
+      "top_slab_block": "slab_cobblestone_top",
+      "bottom_slab_block": "slab_cobblestone_bottom"
     },
-    "brick_slab": {
+    "slab_brick": {
+      "creative_category": "building",
       "name": "Brick Slab",
       "type": "slab",
-      "texture": "brick_slab",
-      "top_slab_block": "brick_slab_top",
-      "bottom_slab_block": "brick_slab_bottom"
+      "texture": "slab_brick",
+      "top_slab_block": "slab_brick_top",
+      "bottom_slab_block": "slab_brick_bottom"
     },
     "stonebrick": {
+      "creative_category": "building",
       "name": "Stone Brick",
       "type": "block",
       "texture": "stonebrick"
     },
-    "stonebrick_slab": {
+    "slab_stonebrick": {
+      "creative_category": "building",
       "name": "Stone Brick Slab",
       "type": "slab",
-      "texture": "stonebrick_slab",
-      "top_slab_block": "stonebrick_slab_top",
-      "bottom_slab_block": "stonebrick_slab_bottom"
+      "texture": "slab_stonebrick",
+      "top_slab_block": "slab_stonebrick_top",
+      "bottom_slab_block": "slab_stonebrick_bottom"
     },
     "cactus": {
+      "creative_category": "nature",
       "name": "Cactus",
       "type": "block",
       "texture": "cactus",
       "smelt_product": "dye_green"
     },
     "obsidian": {
+      "creative_category": "nature",
       "name": "Obsidian",
       "type": "block",
       "texture": "obsidian"
     },
     "ice": {
+      "creative_category": "nature",
       "name": "Ice",
       "type": "block",
       "texture": "ice"
     },
     "snow_block": {
+      "creative_category": "nature",
       "name": "Snow Block",
       "type": "block",
       "texture": "snow"
     },
-    "trapdoor_wood_open": {
+    "wood_trapdoor_open": {
+      "creative_category": "utilities",
       "name": "Wooden Trapdoor",
       "type": "block",
-      "texture": "trapdoor",
+      "texture": "wood_trapdoor",
       "burning_time": 15000
     },
     "ladder": {
+      "creative_category": "utilities",
       "name": "Ladder",
       "type": "block",
       "texture": "ladder",
       "burning_time": 15000
     },
     "stick": {
+      "creative_category": "materials",
       "name": "Stick",
       "texture": "stick",
       "burning_time": 5000
     },
-    "wood_sword": {
+    "weapon_sword_wood": {
+      "creative_category": "equipment",
       "name": "Wooden Sword",
       "type": "sword",
-      "texture": "wood_sword",
+      "texture": "weapon_sword_wood",
       "origin_x": 0.125,
       "tool_level": 1,
       "max_stack": 1,
@@ -4822,197 +4952,218 @@
       "burning_time": 10000,
       "mob_damage_multiplier": 4
     },
-    "stone_sword": {
+    "weapon_sword_stone": {
+      "creative_category": "equipment",
       "name": "Stone Sword",
       "type": "sword",
-      "texture": "stone_sword",
+      "texture": "weapon_sword_stone",
       "origin_x": 0.125,
       "tool_level": 2,
       "max_stack": 1,
       "durability": 132,
       "mob_damage_multiplier": 5
     },
-    "iron_sword": {
+    "weapon_sword_iron": {
+      "creative_category": "equipment",
       "name": "Iron Sword",
       "type": "sword",
-      "texture": "iron_sword",
+      "texture": "weapon_sword_iron",
       "origin_x": 0.125,
       "tool_level": 3,
       "max_stack": 1,
       "durability": 251,
       "mob_damage_multiplier": 6
     },
-    "diamond_sword": {
+    "weapon_sword_diamond": {
+      "creative_category": "equipment",
       "name": "Diamond Sword",
       "type": "sword",
-      "texture": "diamond_sword",
+      "texture": "weapon_sword_diamond",
       "origin_x": 0.125,
       "tool_level": 4,
       "max_stack": 1,
       "durability": 1562,
       "mob_damage_multiplier": 7
     },
-    "gold_sword": {
+    "weapon_sword_gold": {
+      "creative_category": "equipment",
       "name": "Golden Sword",
       "type": "sword",
-      "texture": "gold_sword",
+      "texture": "weapon_sword_gold",
       "origin_x": 0.125,
       "tool_level": 1,
       "max_stack": 1,
       "durability": 33,
       "mob_damage_multiplier": 4
     },
-    "wood_shovel": {
+    "tool_shovel_wood": {
+      "creative_category": "equipment",
       "name": "Wooden Shovel",
       "type": "shovel",
-      "texture": "wood_shovel",
+      "texture": "tool_shovel_wood",
       "origin_x": 0.125,
       "tool_level": 1,
       "max_stack": 1,
       "durability": 59,
       "burning_time": 10000
     },
-    "stone_shovel": {
+    "tool_shovel_stone": {
+      "creative_category": "equipment",
       "name": "Stone Shovel",
       "type": "shovel",
-      "texture": "stone_shovel",
+      "texture": "tool_shovel_stone",
       "origin_x": 0.125,
       "tool_level": 2,
       "max_stack": 1,
       "durability": 131
     },
-    "iron_shovel": {
+    "tool_shovel_iron": {
+      "creative_category": "equipment",
       "name": "Iron Shovel",
       "type": "shovel",
-      "texture": "iron_shovel",
+      "texture": "tool_shovel_iron",
       "origin_x": 0.125,
       "tool_level": 3,
       "max_stack": 1,
       "durability": 250
     },
-    "diamond_shovel": {
+    "tool_shovel_diamond": {
+      "creative_category": "equipment",
       "name": "Diamond Shovel",
       "type": "shovel",
-      "texture": "diamond_shovel",
+      "texture": "tool_shovel_diamond",
       "origin_x": 0.125,
       "tool_level": 4,
       "max_stack": 1,
       "durability": 1561
     },
-    "gold_shovel": {
+    "tool_shovel_gold": {
+      "creative_category": "equipment",
       "name": "Golden Shovel",
       "type": "shovel",
-      "texture": "gold_shovel",
+      "texture": "tool_shovel_gold",
       "origin_x": 0.125,
       "tool_level": 1,
       "block_damage_multiplier": 6,
       "max_stack": 1,
       "durability": 32
     },
-    "wood_pickaxe": {
+    "tool_pickaxe_wood": {
+      "creative_category": "equipment",
       "name": "Wooden Pickaxe",
       "type": "pickaxe",
-      "texture": "wood_pickaxe",
+      "texture": "tool_pickaxe_wood",
       "origin_x": 0.125,
       "tool_level": 1,
       "max_stack": 1,
       "durability": 59,
       "burning_time": 10000
     },
-    "stone_pickaxe": {
+    "tool_pickaxe_stone": {
+      "creative_category": "equipment",
       "name": "Stone Pickaxe",
       "type": "pickaxe",
-      "texture": "stone_pickaxe",
+      "texture": "tool_pickaxe_stone",
       "origin_x": 0.125,
       "tool_level": 2,
       "max_stack": 1,
       "durability": 131
     },
-    "iron_pickaxe": {
+    "tool_pickaxe_iron": {
+      "creative_category": "equipment",
       "name": "Iron Pickaxe",
       "type": "pickaxe",
-      "texture": "iron_pickaxe",
+      "texture": "tool_pickaxe_iron",
       "origin_x": 0.125,
       "tool_level": 3,
       "max_stack": 1,
       "durability": 251
     },
-    "diamond_pickaxe": {
+    "tool_pickaxe_diamond": {
+      "creative_category": "equipment",
       "name": "Diamond Pickaxe",
       "type": "pickaxe",
-      "texture": "diamond_pickaxe",
+      "texture": "tool_pickaxe_diamond",
       "origin_x": 0.125,
       "tool_level": 4,
       "max_stack": 1,
       "durability": 1562
     },
-    "gold_pickaxe": {
+    "tool_pickaxe_gold": {
+      "creative_category": "equipment",
       "name": "Golden Pickaxe",
       "type": "pickaxe",
-      "texture": "gold_pickaxe",
+      "texture": "tool_pickaxe_gold",
       "origin_x": 0.125,
       "tool_level": 1,
       "block_damage_multiplier": 6,
       "max_stack": 1,
       "durability": 33
     },
-    "wood_axe": {
+    "tool_axe_wood": {
+      "creative_category": "equipment",
       "name": "Wooden Axe",
       "type": "axe",
-      "texture": "wood_axe",
+      "texture": "tool_axe_wood",
       "origin_x": 0.125,
       "tool_level": 1,
       "max_stack": 1,
       "durability": 60,
       "burning_time": 10000
     },
-    "stone_axe": {
+    "tool_axe_stone": {
+      "creative_category": "equipment",
       "name": "Stone Axe",
       "type": "axe",
-      "texture": "stone_axe",
+      "texture": "tool_axe_stone",
       "origin_x": 0.125,
       "tool_level": 2,
       "max_stack": 1,
       "durability": 131
     },
-    "iron_axe": {
+    "tool_axe_iron": {
+      "creative_category": "equipment",
       "name": "Iron Axe",
       "type": "axe",
-      "texture": "iron_axe",
+      "texture": "tool_axe_iron",
       "origin_x": 0.125,
       "tool_level": 3,
       "max_stack": 1,
       "durability": 250
     },
-    "diamond_axe": {
+    "tool_axe_diamond": {
+      "creative_category": "equipment",
       "name": "Diamond Axe",
       "type": "axe",
-      "texture": "diamond_axe",
+      "texture": "tool_axe_diamond",
       "origin_x": 0.125,
       "tool_level": 4,
       "max_stack": 1,
       "durability": 1561
     },
-    "gold_axe": {
+    "tool_axe_gold": {
+      "creative_category": "equipment",
       "name": "Golden Axe",
       "type": "axe",
-      "texture": "gold_axe",
+      "texture": "tool_axe_gold",
       "origin_x": 0.125,
       "tool_level": 1,
       "block_damage_multiplier": 6,
       "max_stack": 1,
       "durability": 32
     },
-    "shears": {
+    "tool_shears": {
+      "creative_category": "equipment",
       "name": "Shears",
       "type": "shears",
-      "texture": "shears",
+      "texture": "tool_shears",
       "tool_level": 1,
       "origin_x": 0.125,
       "max_stack": 1,
       "durability": 238
     },
     "bucket_empty": {
+      "creative_category": "equipment",
       "name": "Empty Bucket",
       "type": "usable",
       "texture": "bucket_empty",
@@ -5020,6 +5171,7 @@
       "action_key": "use_empty_bucket"
     },
     "bucket_water": {
+      "creative_category": "equipment",
       "name": "Water Bucket",
       "type": "usable",
       "texture": "bucket_water",
@@ -5028,6 +5180,7 @@
       "max_stack": 1
     },
     "bucket_lava": {
+      "creative_category": "equipment",
       "name": "Lava Bucket",
       "type": "usable",
       "texture": "bucket_lava",
@@ -5037,6 +5190,7 @@
       "burning_time": 1000000
     },
     "snowball": {
+      "creative_category": "equipment",
       "name": "Snowball",
       "type": "usable",
       "texture": "snowball",
@@ -5044,44 +5198,52 @@
       "max_stack": 16
     },
     "coal": {
+      "creative_category": "materials",
       "name": "Coal",
       "texture": "coal",
       "burning_time": 80000,
       "origin_x": 0.25
     },
     "charcoal": {
+      "creative_category": "materials",
       "name": "Charcoal",
       "texture": "charcoal",
       "burning_time": 80000,
       "origin_x": 0.25
     },
-    "iron_ingot": {
+    "ingot_iron": {
+      "creative_category": "materials",
       "name": "Iron Ingot",
-      "texture": "iron_ingot",
+      "texture": "ingot_iron",
       "origin_x": 0.5
     },
-    "gold_ingot": {
+    "ingot_gold": {
+      "creative_category": "materials",
       "name": "Gold Ingot",
-      "texture": "gold_ingot",
+      "texture": "ingot_gold",
       "origin_x": 0.5
     },
     "diamond": {
+      "creative_category": "materials",
       "name": "Diamond",
       "texture": "diamond",
       "origin_x": 0.5
     },
     "lapis_lazuli": {
+      "creative_category": "materials",
       "name": "Lapis Lazuli",
       "texture": "lapis_lazuli",
       "origin_x": 0.5
     },
     "bed": {
+      "creative_category": "utilities",
       "name": "Bed",
       "type": "usable",
       "texture": "bed",
       "action_key": "use_bed_action"
     },
     "spawn_egg_pig": {
+      "creative_category": "creatures",
       "name": "Pig Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -5091,6 +5253,7 @@
       "origin_x": 0.5
     },
     "porkchop_raw": {
+      "creative_category": "food",
       "name": "Raw Porkchop",
       "type": "food",
       "texture": "porkchop_raw",
@@ -5099,6 +5262,7 @@
       "smelt_product": "porkchop_cooked"
     },
     "porkchop_cooked": {
+      "creative_category": "food",
       "name": "Cooked Porkchop",
       "type": "food",
       "texture": "porkchop_cooked",
@@ -5106,6 +5270,7 @@
       "saturation": 12.8
     },
     "spawn_egg_cow": {
+      "creative_category": "creatures",
       "name": "Cow Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -5115,6 +5280,7 @@
       "origin_x": 0.5
     },
     "beef_raw": {
+      "creative_category": "food",
       "name": "Raw Beef",
       "type": "food",
       "texture": "beef_raw",
@@ -5123,6 +5289,7 @@
       "smelt_product": "beef_cooked"
     },
     "beef_cooked": {
+      "creative_category": "food",
       "name": "Cooked Beef",
       "type": "food",
       "texture": "beef_cooked",
@@ -5130,6 +5297,7 @@
       "saturation": 12.8
     },
     "spawn_egg_zombie": {
+      "creative_category": "creatures",
       "name": "Zombie Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -5139,6 +5307,7 @@
       "origin_x": 0.5
     },
     "rotten_flesh": {
+      "creative_category": "food",
       "name": "Rotten Flesh",
       "type": "food",
       "texture": "rotten_flesh",
@@ -5148,27 +5317,32 @@
       "saturation": 0.8
     },
     "flint": {
+      "creative_category": "materials",
       "name": "Flint",
       "texture": "flint"
     },
-    "flint_and_steel": {
+    "tool_flint_and_steel": {
+      "creative_category": "equipment",
       "name": "Flint and Steel",
       "type": "flint_and_steel",
-      "texture": "flint_and_steel",
+      "texture": "tool_flint_and_steel",
       "origin_x": 0.125,
       "max_stack": 1,
       "durability": 64
     },
     "clay_ball": {
+      "creative_category": "materials",
       "name": "Clay ball",
       "texture": "clay_ball",
       "smelt_product": "brick"
     },
     "brick": {
+      "creative_category": "materials",
       "name": "Brick",
       "texture": "brick"
     },
     "apple": {
+      "creative_category": "food",
       "name": "Apple",
       "type": "food",
       "texture": "apple",
@@ -5177,19 +5351,22 @@
       "heal": 4,
       "saturation": 2.4
     },
-    "door_wood": {
+    "wood_door": {
+      "creative_category": "utilities",
       "name": "Wooden Door",
       "type": "usable",
-      "texture": "door_wood",
+      "texture": "wood_door",
       "action_key": "use_door_wood_item_action",
       "burning_time": 10000
     },
     "bowl": {
+      "creative_category": "materials",
       "name": "Bowl",
       "texture": "bowl",
       "burning_time": 5000
     },
     "mushroom_stew": {
+      "creative_category": "food",
       "name": "Mushroom Stew",
       "type": "food",
       "texture": "mushroom_stew",
@@ -5197,10 +5374,12 @@
       "saturation": 7.2
     },
     "leather": {
+      "creative_category": "materials",
       "name": "Leather",
       "texture": "leather"
     },
     "bucket_milk": {
+      "creative_category": "food",
       "name": "Milk Bucket",
       "type": "usable",
       "texture": "bucket_milk",
@@ -5208,6 +5387,7 @@
       "max_stack": 1
     },
     "spawn_egg_sheep": {
+      "creative_category": "creatures",
       "name": "Sheep Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -5217,6 +5397,7 @@
       "origin_x": 0.5
     },
     "chicken_raw": {
+      "creative_category": "food",
       "name": "Raw Chicken",
       "type": "food",
       "texture": "chicken_raw",
@@ -5225,6 +5406,7 @@
       "smelt_product": "chicken_cooked"
     },
     "chicken_cooked": {
+      "creative_category": "food",
       "name": "Cooked Chicken",
       "type": "food",
       "texture": "chicken_cooked",
@@ -5232,6 +5414,7 @@
       "saturation": 7.2
     },
     "spawn_egg_chicken": {
+      "creative_category": "creatures",
       "name": "Chicken Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -5241,46 +5424,54 @@
       "origin_x": 0.5
     },
     "egg": {
+      "creative_category": "materials",
       "name": "Egg",
       "type": "usable",
       "texture": "egg",
       "action_key": "use_egg_action"
     },
     "feather": {
+      "creative_category": "materials",
       "name": "Feather",
       "texture": "feather"
     },
     "arrow": {
+      "creative_category": "equipment",
       "name": "Arrow",
       "texture": "arrow"
     },
     "string": {
+      "creative_category": "materials",
       "name": "String",
       "texture": "string"
     },
-    "bow": {
+    "weapon_bow": {
+      "creative_category": "equipment",
       "name": "Bow",
       "type": "bow",
-      "texture": "bow",
+      "texture": "weapon_bow",
       "max_stack": 1,
       "durability": 384,
       "state_sprites": [
-        "bow_pulling_0",
-        "bow_pulling_1",
-        "bow_pulling_2"
+        "weapon_bow_pulling_0",
+        "weapon_bow_pulling_1",
+        "weapon_bow_pulling_2"
       ],
       "origin_x": 0.5
     },
     "bone": {
+      "creative_category": "materials",
       "name": "Bone",
       "texture": "bone"
     },
     "gunpowder": {
+      "creative_category": "materials",
       "name": "Gunpowder",
       "type": "normal",
       "texture": "gunpowder"
     },
     "spawn_egg_skeleton": {
+      "creative_category": "creatures",
       "name": "Skeleton Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -5290,76 +5481,94 @@
       "origin_x": 0.5
     },
     "bone_meal": {
+      "creative_category": "food",
       "name": "Bone Meal",
       "type": "usable",
       "texture": "bone_meal",
       "action_key": "use_bone_meal_action"
     },
     "dye_white": {
+      "creative_category": "materials",
       "name": "White Dye",
       "texture": "dye_white"
     },
     "dye_orange": {
+      "creative_category": "materials",
       "name": "Orange Dye",
       "texture": "dye_orange"
     },
     "dye_magenta": {
+      "creative_category": "materials",
       "name": "Magenta Dye",
       "texture": "dye_magenta"
     },
     "dye_light_blue": {
+      "creative_category": "materials",
       "name": "Light Blue Dye",
       "texture": "dye_light_blue"
     },
     "dye_yellow": {
+      "creative_category": "materials",
       "name": "Yellow Dye",
       "texture": "dye_yellow"
     },
     "dye_lime": {
+      "creative_category": "materials",
       "name": "Lime Dye",
       "texture": "dye_lime"
     },
     "dye_pink": {
+      "creative_category": "materials",
       "name": "Pink Dye",
       "texture": "dye_pink"
     },
     "dye_gray": {
+      "creative_category": "materials",
       "name": "Gray Dye",
       "texture": "dye_gray"
     },
     "dye_light_gray": {
+      "creative_category": "materials",
       "name": "Light Gray Dye",
       "texture": "dye_light_gray"
     },
     "dye_cyan": {
+      "creative_category": "materials",
       "name": "Cyan Dye",
       "texture": "dye_cyan"
     },
     "dye_purple": {
+      "creative_category": "materials",
       "name": "Purple Dye",
       "texture": "dye_purple"
     },
     "dye_blue": {
+      "creative_category": "materials",
       "name": "Blue Dye",
       "texture": "dye_blue"
     },
     "dye_brown": {
+      "creative_category": "materials",
       "name": "Brown Dye",
       "texture": "dye_brown"
     },
     "dye_green": {
+      "creative_category": "materials",
       "name": "Green Dye",
       "texture": "dye_green"
     },
     "dye_red": {
+      "creative_category": "materials",
       "name": "Red Dye",
       "texture": "dye_red"
     },
     "dye_black": {
+      "creative_category": "materials",
       "name": "Black Dye",
       "texture": "dye_black"
     },
-    "helmet_leather_white": {
+    "armor_helmet_leather_white": {
+      "creative_category": "equipment",
       "name": "White Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5369,7 +5578,8 @@
       "durability": 55,
       "armor_material": "leather"
     },
-    "chestplate_leather_white": {
+    "armor_chestplate_leather_white": {
+      "creative_category": "equipment",
       "name": "White Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5379,7 +5589,8 @@
       "durability": 80,
       "armor_material": "leather"
     },
-    "leggings_leather_white": {
+    "armor_leggings_leather_white": {
+      "creative_category": "equipment",
       "name": "White Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5389,7 +5600,8 @@
       "durability": 75,
       "armor_material": "leather"
     },
-    "boots_leather_white": {
+    "armor_boots_leather_white": {
+      "creative_category": "equipment",
       "name": "White Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5399,7 +5611,8 @@
       "durability": 65,
       "armor_material": "leather"
     },
-    "helmet_leather_orange": {
+    "armor_helmet_leather_orange": {
+      "creative_category": "equipment",
       "name": "Orange Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5409,7 +5622,8 @@
       "durability": 55,
       "armor_material": "leather"
     },
-    "chestplate_leather_orange": {
+    "armor_chestplate_leather_orange": {
+      "creative_category": "equipment",
       "name": "Orange Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5419,7 +5633,8 @@
       "durability": 80,
       "armor_material": "leather"
     },
-    "leggings_leather_orange": {
+    "armor_leggings_leather_orange": {
+      "creative_category": "equipment",
       "name": "Orange Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5429,7 +5644,8 @@
       "durability": 75,
       "armor_material": "leather"
     },
-    "boots_leather_orange": {
+    "armor_boots_leather_orange": {
+      "creative_category": "equipment",
       "name": "Orange Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5440,7 +5656,8 @@
       "armor_material": "leather"
     },
 
-    "helmet_leather_magenta": {
+    "armor_helmet_leather_magenta": {
+      "creative_category": "equipment",
       "name": "Magenta Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5450,7 +5667,8 @@
       "durability": 55,
       "armor_material": "leather"
     },
-    "chestplate_leather_magenta": {
+    "armor_chestplate_leather_magenta": {
+      "creative_category": "equipment",
       "name": "Magenta Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5460,7 +5678,8 @@
       "durability": 80,
       "armor_material": "leather"
     },
-    "leggings_leather_magenta": {
+    "armor_leggings_leather_magenta": {
+      "creative_category": "equipment",
       "name": "Magenta Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5470,7 +5689,8 @@
       "durability": 75,
       "armor_material": "leather"
     },
-    "boots_leather_magenta": {
+    "armor_boots_leather_magenta": {
+      "creative_category": "equipment",
       "name": "Magenta Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5481,7 +5701,8 @@
       "armor_material": "leather"
     },
 
-    "helmet_leather_light_blue": {
+    "armor_helmet_leather_light_blue": {
+      "creative_category": "equipment",
       "name": "Light Blue Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5491,7 +5712,8 @@
       "durability": 55,
       "armor_material": "leather"
     },
-    "chestplate_leather_light_blue": {
+    "armor_chestplate_leather_light_blue": {
+      "creative_category": "equipment",
       "name": "Light Blue Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5501,7 +5723,8 @@
       "durability": 80,
       "armor_material": "leather"
     },
-    "leggings_leather_light_blue": {
+    "armor_leggings_leather_light_blue": {
+      "creative_category": "equipment",
       "name": "Light Blue Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5511,7 +5734,8 @@
       "durability": 75,
       "armor_material": "leather"
     },
-    "boots_leather_light_blue": {
+    "armor_boots_leather_light_blue": {
+      "creative_category": "equipment",
       "name": "Light Blue Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5522,7 +5746,8 @@
       "armor_material": "leather"
     },
 
-    "helmet_leather_yellow": {
+    "armor_helmet_leather_yellow": {
+      "creative_category": "equipment",
       "name": "Yellow Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5532,7 +5757,8 @@
       "durability": 55,
       "armor_material": "leather"
     },
-    "chestplate_leather_yellow": {
+    "armor_chestplate_leather_yellow": {
+      "creative_category": "equipment",
       "name": "Yellow Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5542,7 +5768,8 @@
       "durability": 80,
       "armor_material": "leather"
     },
-    "leggings_leather_yellow": {
+    "armor_leggings_leather_yellow": {
+      "creative_category": "equipment",
       "name": "Yellow Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5552,7 +5779,8 @@
       "durability": 75,
       "armor_material": "leather"
     },
-    "boots_leather_yellow": {
+    "armor_boots_leather_yellow": {
+      "creative_category": "equipment",
       "name": "Yellow Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5563,7 +5791,8 @@
       "armor_material": "leather"
     },
 
-    "helmet_leather_lime": {
+    "armor_helmet_leather_lime": {
+      "creative_category": "equipment",
       "name": "Lime Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5573,7 +5802,8 @@
       "durability": 55,
       "armor_material": "leather"
     },
-    "chestplate_leather_lime": {
+    "armor_chestplate_leather_lime": {
+      "creative_category": "equipment",
       "name": "Lime Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5583,7 +5813,8 @@
       "durability": 80,
       "armor_material": "leather"
     },
-    "leggings_leather_lime": {
+    "armor_leggings_leather_lime": {
+      "creative_category": "equipment",
       "name": "Lime Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5593,7 +5824,8 @@
       "durability": 75,
       "armor_material": "leather"
     },
-    "boots_leather_lime": {
+    "armor_boots_leather_lime": {
+      "creative_category": "equipment",
       "name": "Lime Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5604,7 +5836,8 @@
       "armor_material": "leather"
     },
 
-    "helmet_leather_pink": {
+    "armor_helmet_leather_pink": {
+      "creative_category": "equipment",
       "name": "Pink Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5614,7 +5847,8 @@
       "durability": 55,
       "armor_material": "leather"
     },
-    "chestplate_leather_pink": {
+    "armor_chestplate_leather_pink": {
+      "creative_category": "equipment",
       "name": "Pink Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5624,7 +5858,8 @@
       "durability": 80,
       "armor_material": "leather"
     },
-    "leggings_leather_pink": {
+    "armor_leggings_leather_pink": {
+      "creative_category": "equipment",
       "name": "Pink Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5634,7 +5869,8 @@
       "durability": 75,
       "armor_material": "leather"
     },
-    "boots_leather_pink": {
+    "armor_boots_leather_pink": {
+      "creative_category": "equipment",
       "name": "Pink Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5645,7 +5881,8 @@
       "armor_material": "leather"
     },
 
-    "helmet_leather_gray": {
+    "armor_helmet_leather_gray": {
+      "creative_category": "equipment",
       "name": "Gray Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5655,7 +5892,8 @@
       "durability": 55,
       "armor_material": "leather"
     },
-    "chestplate_leather_gray": {
+    "armor_chestplate_leather_gray": {
+      "creative_category": "equipment",
       "name": "Gray Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5665,7 +5903,8 @@
       "durability": 80,
       "armor_material": "leather"
     },
-    "leggings_leather_gray": {
+    "armor_leggings_leather_gray": {
+      "creative_category": "equipment",
       "name": "Gray Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5675,7 +5914,8 @@
       "durability": 75,
       "armor_material": "leather"
     },
-    "boots_leather_gray": {
+    "armor_boots_leather_gray": {
+      "creative_category": "equipment",
       "name": "Gray Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5686,7 +5926,8 @@
       "armor_material": "leather"
     },
 
-    "helmet_leather_light_gray": {
+    "armor_helmet_leather_light_gray": {
+      "creative_category": "equipment",
       "name": "Light Gray Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5696,7 +5937,8 @@
       "durability": 55,
       "armor_material": "leather"
     },
-    "chestplate_leather_light_gray": {
+    "armor_chestplate_leather_light_gray": {
+      "creative_category": "equipment",
       "name": "Light Gray Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5706,7 +5948,8 @@
       "durability": 80,
       "armor_material": "leather"
     },
-    "leggings_leather_light_gray": {
+    "armor_leggings_leather_light_gray": {
+      "creative_category": "equipment",
       "name": "Light Gray Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5716,7 +5959,8 @@
       "durability": 75,
       "armor_material": "leather"
     },
-    "boots_leather_light_gray": {
+    "armor_boots_leather_light_gray": {
+      "creative_category": "equipment",
       "name": "Light Gray Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5727,7 +5971,8 @@
       "armor_material": "leather"
     },
 
-    "helmet_leather_cyan": {
+    "armor_helmet_leather_cyan": {
+      "creative_category": "equipment",
       "name": "Cyan Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5737,7 +5982,8 @@
       "durability": 55,
       "armor_material": "leather"
     },
-    "chestplate_leather_cyan": {
+    "armor_chestplate_leather_cyan": {
+      "creative_category": "equipment",
       "name": "Cyan Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5747,7 +5993,8 @@
       "durability": 80,
       "armor_material": "leather"
     },
-    "leggings_leather_cyan": {
+    "armor_leggings_leather_cyan": {
+      "creative_category": "equipment",
       "name": "Cyan Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5757,7 +6004,8 @@
       "durability": 75,
       "armor_material": "leather"
     },
-    "boots_leather_cyan": {
+    "armor_boots_leather_cyan": {
+      "creative_category": "equipment",
       "name": "Cyan Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5768,7 +6016,8 @@
       "armor_material": "leather"
     },
 
-    "helmet_leather_purple": {
+    "armor_helmet_leather_purple": {
+      "creative_category": "equipment",
       "name": "Purple Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5778,7 +6027,8 @@
       "durability": 55,
       "armor_material": "leather"
     },
-    "chestplate_leather_purple": {
+    "armor_chestplate_leather_purple": {
+      "creative_category": "equipment",
       "name": "Purple Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5788,7 +6038,8 @@
       "durability": 80,
       "armor_material": "leather"
     },
-    "leggings_leather_purple": {
+    "armor_leggings_leather_purple": {
+      "creative_category": "equipment",
       "name": "Purple Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5798,7 +6049,8 @@
       "durability": 75,
       "armor_material": "leather"
     },
-    "boots_leather_purple": {
+    "armor_boots_leather_purple": {
+      "creative_category": "equipment",
       "name": "Purple Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5809,7 +6061,8 @@
       "armor_material": "leather"
     },
 
-    "helmet_leather_blue": {
+    "armor_helmet_leather_blue": {
+      "creative_category": "equipment",
       "name": "Blue Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5819,7 +6072,8 @@
       "durability": 55,
       "armor_material": "leather"
     },
-    "chestplate_leather_blue": {
+    "armor_chestplate_leather_blue": {
+      "creative_category": "equipment",
       "name": "Blue Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5829,7 +6083,8 @@
       "durability": 80,
       "armor_material": "leather"
     },
-    "leggings_leather_blue": {
+    "armor_leggings_leather_blue": {
+      "creative_category": "equipment",
       "name": "Blue Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5839,7 +6094,8 @@
       "durability": 75,
       "armor_material": "leather"
     },
-    "boots_leather_blue": {
+    "armor_boots_leather_blue": {
+      "creative_category": "equipment",
       "name": "Blue Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5849,7 +6105,8 @@
       "durability": 65,
       "armor_material": "leather"
     },
-    "helmet_leather_brown": {
+    "armor_helmet_leather_brown": {
+      "creative_category": "equipment",
       "name": "Brown Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5859,7 +6116,8 @@
       "durability": 55,
       "armor_material": "leather"
     },
-    "chestplate_leather_brown": {
+    "armor_chestplate_leather_brown": {
+      "creative_category": "equipment",
       "name": "Brown Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5869,7 +6127,8 @@
       "durability": 80,
       "armor_material": "leather"
     },
-    "leggings_leather_brown": {
+    "armor_leggings_leather_brown": {
+      "creative_category": "equipment",
       "name": "Brown Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5879,7 +6138,8 @@
       "durability": 75,
       "armor_material": "leather"
     },
-    "boots_leather_brown": {
+    "armor_boots_leather_brown": {
+      "creative_category": "equipment",
       "name": "Brown Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5890,7 +6150,8 @@
       "armor_material": "leather"
     },
 
-    "helmet_leather_green": {
+    "armor_helmet_leather_green": {
+      "creative_category": "equipment",
       "name": "Green Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5900,7 +6161,8 @@
       "durability": 55,
       "armor_material": "leather"
     },
-    "chestplate_leather_green": {
+    "armor_chestplate_leather_green": {
+      "creative_category": "equipment",
       "name": "Green Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5910,7 +6172,8 @@
       "durability": 80,
       "armor_material": "leather"
     },
-    "leggings_leather_green": {
+    "armor_leggings_leather_green": {
+      "creative_category": "equipment",
       "name": "Green Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5920,7 +6183,8 @@
       "durability": 75,
       "armor_material": "leather"
     },
-    "boots_leather_green": {
+    "armor_boots_leather_green": {
+      "creative_category": "equipment",
       "name": "Green Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5931,7 +6195,8 @@
       "armor_material": "leather"
     },
 
-    "helmet_leather_red": {
+    "armor_helmet_leather_red": {
+      "creative_category": "equipment",
       "name": "Red Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5941,7 +6206,8 @@
       "durability": 55,
       "armor_material": "leather"
     },
-    "chestplate_leather_red": {
+    "armor_chestplate_leather_red": {
+      "creative_category": "equipment",
       "name": "Red Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5951,7 +6217,8 @@
       "durability": 80,
       "armor_material": "leather"
     },
-    "leggings_leather_red": {
+    "armor_leggings_leather_red": {
+      "creative_category": "equipment",
       "name": "Red Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -5961,7 +6228,8 @@
       "durability": 75,
       "armor_material": "leather"
     },
-    "boots_leather_red": {
+    "armor_boots_leather_red": {
+      "creative_category": "equipment",
       "name": "Red Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -5972,7 +6240,8 @@
       "armor_material": "leather"
     },
 
-    "helmet_leather_black": {
+    "armor_helmet_leather_black": {
+      "creative_category": "equipment",
       "name": "Black Leather Helmet",
       "type": "helmet",
       "texture": "armor_helmet_leather",
@@ -5982,7 +6251,8 @@
       "durability": 55,
       "armor_material": "leather"
     },
-    "chestplate_leather_black": {
+    "armor_chestplate_leather_black": {
+      "creative_category": "equipment",
       "name": "Black Leather Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_leather",
@@ -5992,7 +6262,8 @@
       "durability": 80,
       "armor_material": "leather"
     },
-    "leggings_leather_black": {
+    "armor_leggings_leather_black": {
+      "creative_category": "equipment",
       "name": "Black Leather Leggings",
       "type": "leggings",
       "texture": "armor_leggings_leather",
@@ -6002,7 +6273,8 @@
       "durability": 75,
       "armor_material": "leather"
     },
-    "boots_leather_black": {
+    "armor_boots_leather_black": {
+      "creative_category": "equipment",
       "name": "Black Leather Boots",
       "type": "boots",
       "texture": "armor_boots_leather",
@@ -6012,7 +6284,8 @@
       "durability": 65,
       "armor_material": "leather"
     },
-    "helmet_iron": {
+    "armor_helmet_iron": {
+      "creative_category": "equipment",
       "name": "Iron Helmet",
       "type": "helmet",
       "texture": "armor_helmet_iron",
@@ -6021,7 +6294,8 @@
       "durability": 165,
       "armor_material": "iron"
     },
-    "chestplate_iron": {
+    "armor_chestplate_iron": {
+      "creative_category": "equipment",
       "name": "Iron Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_iron",
@@ -6030,7 +6304,8 @@
       "durability": 240,
       "armor_material": "iron"
     },
-    "leggings_iron": {
+    "armor_leggings_iron": {
+      "creative_category": "equipment",
       "name": "Iron Leggings",
       "type": "leggings",
       "texture": "armor_leggings_iron",
@@ -6039,7 +6314,8 @@
       "durability": 225,
       "armor_material": "iron"
     },
-    "boots_iron": {
+    "armor_boots_iron": {
+      "creative_category": "equipment",
       "name": "Iron Boots",
       "type": "boots",
       "texture": "armor_boots_iron",
@@ -6048,7 +6324,8 @@
       "durability": 195,
       "armor_material": "iron"
     },
-    "helmet_gold": {
+    "armor_helmet_gold": {
+      "creative_category": "equipment",
       "name": "Gold Helmet",
       "type": "helmet",
       "texture": "armor_helmet_gold",
@@ -6057,7 +6334,8 @@
       "durability": 77,
       "armor_material": "gold"
     },
-    "chestplate_gold": {
+    "armor_chestplate_gold": {
+      "creative_category": "equipment",
       "name": "Gold Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_gold",
@@ -6066,7 +6344,8 @@
       "durability": 112,
       "armor_material": "gold"
     },
-    "leggings_gold": {
+    "armor_leggings_gold": {
+      "creative_category": "equipment",
       "name": "Gold Leggings",
       "type": "leggings",
       "texture": "armor_leggings_gold",
@@ -6075,7 +6354,8 @@
       "durability": 105,
       "armor_material": "gold"
     },
-    "boots_gold": {
+    "armor_boots_gold": {
+      "creative_category": "equipment",
       "name": "Gold Boots",
       "type": "boots",
       "texture": "armor_boots_gold",
@@ -6084,7 +6364,8 @@
       "durability": 91,
       "armor_material": "gold"
     },
-    "helmet_diamond": {
+    "armor_helmet_diamond": {
+      "creative_category": "equipment",
       "name": "Diamond Helmet",
       "type": "helmet",
       "texture": "armor_helmet_diamond",
@@ -6093,7 +6374,8 @@
       "durability": 363,
       "armor_material": "diamond"
     },
-    "chestplate_diamond": {
+    "armor_chestplate_diamond": {
+      "creative_category": "equipment",
       "name": "Diamond Chestplate",
       "type": "chestplate",
       "texture": "armor_chestplate_diamond",
@@ -6102,7 +6384,8 @@
       "durability": 528,
       "armor_material": "diamond"
     },
-    "leggings_diamond": {
+    "armor_leggings_diamond": {
+      "creative_category": "equipment",
       "name": "Diamond Leggings",
       "type": "leggings",
       "texture": "armor_leggings_diamond",
@@ -6111,7 +6394,8 @@
       "durability": 495,
       "armor_material": "diamond"
     },
-    "boots_diamond": {
+    "armor_boots_diamond": {
+      "creative_category": "equipment",
       "name": "Diamond Boots",
       "type": "boots",
       "texture": "armor_boots_diamond",
@@ -6120,27 +6404,32 @@
       "durability": 429,
       "armor_material": "diamond"
     },
-    "iron_raw": {
+    "raw_iron": {
+      "creative_category": "materials",
       "name": "Raw Iron",
-      "texture": "iron_raw",
-      "smelt_product": "iron_ingot"
+      "texture": "raw_iron",
+      "smelt_product": "ingot_iron"
     },
-    "gold_raw": {
+    "raw_gold": {
+      "creative_category": "materials",
       "name": "Raw Gold",
-      "texture": "gold_raw",
-      "smelt_product": "gold_ingot"
+      "texture": "raw_gold",
+      "smelt_product": "ingot_gold"
     },
-    "wheat_seeds": {
+    "seeds_wheat": {
+      "creative_category": "food",
       "name": "Wheat Seeds",
       "type": "usable",
-      "texture": "wheat_seeds",
+      "texture": "seeds_wheat",
       "action_key": "use_wheat_seeds_action"
     },
     "wheat": {
+      "creative_category": "food",
       "name": "Wheat",
       "texture": "wheat"
     },
     "carrot": {
+      "creative_category": "food",
       "name": "Carrot",
       "type": "food",
       "texture": "carrot",
@@ -6149,22 +6438,25 @@
       "plant_block": "carrots_stage0"
     },
     "potato": {
+      "creative_category": "food",
       "name": "Potato",
       "type": "food",
       "texture": "potato",
       "heal": 1,
       "saturation": 0.6,
       "plant_block": "potatoes_stage0",
-      "smelt_product": "baked_potato"
+      "smelt_product": "potato_baked"
     },
-    "baked_potato": {
+    "potato_baked": {
+      "creative_category": "food",
       "name": "Baked Potato",
       "type": "food",
-      "texture": "baked_potato",
+      "texture": "potato_baked",
       "heal": 5,
       "saturation": 6.0
     },
     "bread": {
+      "creative_category": "food",
       "name": "Bread",
       "type": "food",
       "texture": "bread",
@@ -6172,121 +6464,137 @@
       "saturation": 6.0
     },
     "hay_block": {
+      "creative_category": "food",
       "name": "Hay Block",
       "type": "block",
       "texture": "hay_block"
     },
     "cake": {
+      "creative_category": "food",
       "name": "Cake",
       "type": "usable",
       "texture": "cake",
       "action_key": "use_cake_action"
     },
-    "wood_hoe": {
+    "tool_hoe_wood": {
+      "creative_category": "equipment",
       "name": "Wooden Hoe",
       "type": "hoe",
-      "texture": "wood_hoe",
+      "texture": "tool_hoe_wood",
       "origin_x": 0.125,
       "tool_level": 1,
       "max_stack": 1,
       "durability": 59,
       "burning_time": 10000
     },
-    "stone_hoe": {
+    "tool_hoe_stone": {
+      "creative_category": "equipment",
       "name": "Stone Hoe",
       "type": "hoe",
-      "texture": "stone_hoe",
+      "texture": "tool_hoe_stone",
       "origin_x": 0.125,
       "tool_level": 2,
       "max_stack": 1,
       "durability": 131
     },
-    "iron_hoe": {
+    "tool_hoe_iron": {
+      "creative_category": "equipment",
       "name": "Iron Hoe",
       "type": "hoe",
-      "texture": "iron_hoe",
+      "texture": "tool_hoe_iron",
       "origin_x": 0.125,
       "tool_level": 3,
       "max_stack": 1,
       "durability": 250
     },
-    "diamond_hoe": {
+    "tool_hoe_diamond": {
+      "creative_category": "equipment",
       "name": "Diamond Hoe",
       "type": "hoe",
-      "texture": "diamond_hoe",
+      "texture": "tool_hoe_diamond",
       "origin_x": 0.125,
       "tool_level": 4,
       "max_stack": 1,
       "durability": 1561
     },
-    "gold_hoe": {
+    "tool_hoe_gold": {
+      "creative_category": "equipment",
       "name": "Golden Hoe",
       "type": "hoe",
-      "texture": "gold_hoe",
+      "texture": "tool_hoe_gold",
       "origin_x": 0.125,
       "tool_level": 1,
       "max_stack": 1,
       "durability": 32
     },
     "sugar_cane": {
+      "creative_category": "food",
       "name": "Sugar Cane",
       "type": "usable",
       "texture": "sugar_cane",
       "action_key": "use_sugar_cane_action"
     },
     "sugar": {
+      "creative_category": "materials",
       "name": "Sugar",
       "texture": "sugar"
     },
-    "fence_oak": {
+    "wood_fence_oak": {
+      "creative_category": "utilities",
       "name": "Oak Fence",
       "type": "usable",
       "action_key": "use_fence_item",
-      "texture": "fence_oak",
+      "texture": "wood_fence_oak",
       "burning_time": 15000
     },
-    "fence_gate_oak": {
+    "wood_fence_gate_oak": {
+      "creative_category": "utilities",
       "name": "Oak Fence Gate",
       "type": "usable",
-      "texture": "fence_gate_oak",
+      "texture": "wood_fence_gate_oak",
       "action_key": "use_fence_gate_item",
       "burning_time": 15000,
       "origin_x": 0.5,
       "origin_y": 1
     },
-    "fence_spruce": {
+    "wood_fence_spruce": {
+      "creative_category": "utilities",
       "name": "Spruce Fence",
       "type": "usable",
       "action_key": "use_fence_item",
-      "texture": "fence_spruce",
+      "texture": "wood_fence_spruce",
       "burning_time": 15000
     },
-    "fence_gate_spruce": {
+    "wood_fence_gate_spruce": {
+      "creative_category": "utilities",
       "name": "Spruce Fence Gate",
       "type": "usable",
-      "texture": "fence_gate_spruce",
+      "texture": "wood_fence_gate_spruce",
       "action_key": "use_fence_gate_item",
       "burning_time": 15000,
       "origin_x": 0.5,
       "origin_y": 1
     },
-    "fence_birch": {
+    "wood_fence_birch": {
+      "creative_category": "utilities",
       "name": "Birch Fence",
       "type": "usable",
       "action_key": "use_fence_item",
-      "texture": "fence_birch",
+      "texture": "wood_fence_birch",
       "burning_time": 15000
     },
-    "fence_gate_birch": {
+    "wood_fence_gate_birch": {
+      "creative_category": "utilities",
       "name": "Birch Fence Gate",
       "type": "usable",
-      "texture": "fence_gate_birch",
+      "texture": "wood_fence_gate_birch",
       "action_key": "use_fence_gate_item",
       "burning_time": 15000,
       "origin_x": 0.5,
       "origin_y": 1
     },
     "spawn_egg_spider": {
+      "creative_category": "creatures",
       "name": "Spider Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -6296,20 +6604,24 @@
       "origin_x": 0.5
     },
     "paper": {
+      "creative_category": "materials",
       "name": "Paper",
       "texture": "paper"
     },
     "book": {
+      "creative_category": "materials",
       "name": "Book",
       "texture": "book"
     },
     "bookshelf": {
+      "creative_category": "utilities",
       "name": "Bookshelf",
       "type": "block",
       "texture": "bookshelf",
       "burning_time": 15000
     },
     "mutton_raw": {
+      "creative_category": "food",
       "name": "Raw Mutton",
       "type": "food",
       "texture": "mutton_raw",
@@ -6318,6 +6630,7 @@
       "smelt_product": "mutton_cooked"
     },
     "mutton_cooked": {
+      "creative_category": "food",
       "name": "Cooked Mutton",
       "type": "food",
       "texture": "mutton_cooked",
@@ -6325,38 +6638,45 @@
       "saturation": 9.6
     },
     "pumpkin": {
+      "creative_category": "food",
       "name": "Pumpkin",
       "type": "block",
       "texture": "pumpkin_side"
     },
-    "carved_pumpkin": {
+    "pumpkin_carved": {
+      "creative_category": "utilities",
       "name": "Carved Pumpkin",
       "type": "block",
-      "texture": "carved_pumpkin"
+      "texture": "pumpkin_carved"
     },
     "jack_o_lantern": {
+      "creative_category": "utilities",
       "name": "Jack o'Lantern",
       "type": "block",
       "texture": "jack_o_lantern"
     },
     "melon": {
+      "creative_category": "food",
       "name": "Melon",
       "type": "block",
       "texture": "melon_side"
     },
-    "pumpkin_seeds": {
+    "seeds_pumpkin": {
+      "creative_category": "food",
       "name": "Pumpkin Seeds",
       "type": "usable",
-      "texture": "pumpkin_seeds",
+      "texture": "seeds_pumpkin",
       "action_key": "use_stem_seeds"
     },
-    "melon_seeds": {
+    "seeds_melon": {
+      "creative_category": "food",
       "name": "Melon Seeds",
       "type": "usable",
-      "texture": "melon_seeds",
+      "texture": "seeds_melon",
       "action_key": "use_stem_seeds"
     },
     "melon_slice": {
+      "creative_category": "food",
       "name": "Melon Slice",
       "type": "food",
       "texture": "melon_slice",
@@ -6364,26 +6684,31 @@
       "saturation": 1.2
     },
     "pumpkin_pie": {
+      "creative_category": "food",
       "name": "Pumpkin Pie",
       "type": "food",
       "texture": "pumpkin_pie",
       "heal": 8,
       "saturation": 4.8
     },
-    "gold_nugget": {
+    "nugget_gold": {
+      "creative_category": "materials",
       "name": "Gold Nugget",
-      "texture": "gold_nugget"
+      "texture": "nugget_gold"
     },
-    "glistering_melon_slice": {
+    "melon_slice_glistering": {
+      "creative_category": "food",
       "name": "Glistering Melon Slice",
-      "texture": "glistering_melon_slice"
+      "texture": "melon_slice_glistering"
     },
     "tnt": {
+      "creative_category": "utilities",
       "name": "TNT",
       "type": "block",
       "texture": "tnt"
     },
     "spawn_egg_villager": {
+      "creative_category": "creatures",
       "name": "Villager Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -6393,6 +6718,7 @@
       "origin_x": 0.5
     },
     "spawn_egg_creeper": {
+      "creative_category": "creatures",
       "name": "Creeper Spawn Egg",
       "type": "usable",
       "texture": "spawn_egg",
@@ -6401,24 +6727,27 @@
       "mob_key": "creeper",
       "origin_x": 0.5
     },
-    "oak_boat": {
+    "boat_oak": {
+      "creative_category": "utilities",
       "name": "Oak Boat",
       "type": "usable",
-      "texture": "oak_boat",
+      "texture": "boat_oak",
       "action_key": "use_boat",
       "max_stack": 1
     },
-    "birch_boat": {
+    "boat_birch": {
+      "creative_category": "utilities",
       "name": "Birch Boat",
       "type": "usable",
-      "texture": "birch_boat",
+      "texture": "boat_birch",
       "action_key": "use_boat",
       "max_stack": 1
     },
-    "spruce_boat": {
+    "boat_spruce": {
+      "creative_category": "utilities",
       "name": "Spruce Boat",
       "type": "usable",
-      "texture": "spruce_boat",
+      "texture": "boat_spruce",
       "action_key": "use_boat",
       "max_stack": 1
     }

@@ -33,7 +33,7 @@ class MonsterRoomGeneratorTest {
                 var roomChests = 0
                 for (roomX in left..right) {
                     assertEquals("cobblestone", fore[roomX][y - 4].params.key)
-                    assertTrue(fore[roomX][y + 1].params.key in setOf("cobblestone", "mossy_cobblestone"))
+                    assertTrue(fore[roomX][y + 1].params.key in setOf("cobblestone", "cobblestone_mossy"))
                     if (back[roomX][y] is Block.Chest) {
                         roomChests++
                         assertTrue(roomX == left + 1 || roomX == right - 1)
@@ -48,7 +48,7 @@ class MonsterRoomGeneratorTest {
         assertEquals(setOf("zombie", "skeleton", "spider"), mobKeys)
         assertEquals(setOf(7, 9), widths)
         assertTrue(chests > 0)
-        val floors = fore.sumOf { column -> column.count { it.params.key == "mossy_cobblestone" } }
+        val floors = fore.sumOf { column -> column.count { it.params.key == "cobblestone_mossy" } }
         assertTrue(floors > 0)
     }
 
@@ -77,7 +77,7 @@ class MonsterRoomGeneratorTest {
         val lootTables = world.backMap.flatMap { column -> column.filterIsInstance<Block.Chest>() }
             .map { it.lootTable }.toSet()
         assertEquals(setOf("mineshaft", "monster_room"), lootTables)
-        assertTrue(world.foreMap.any { column -> column.any { it.params.key == "mossy_cobblestone" } })
+        assertTrue(world.foreMap.any { column -> column.any { it.params.key == "cobblestone_mossy" } })
     }
 
     @Test

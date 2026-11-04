@@ -89,6 +89,13 @@ class TouchCursorInputHandler @Inject constructor(
             return
         }
 
+        // A stationary aiming finger is also used while running. Wait until movement
+        // stops before treating that gesture as a world interaction hold.
+        if (!player.controlVector.isZero) {
+            handleDown()
+            return
+        }
+
         val selectedX = mobController.player.selectedX
         val selectedY = mobController.player.selectedY
 
@@ -285,7 +292,14 @@ class TouchCursorInputHandler @Inject constructor(
                 )
             }
         } else if (action.actionKey is MouseInputActionKey.Dragged && pointer != -1) {
-            handleTouchDown(action)
+            handleDrag(action, restartHold = true)
+        }
+    }
+
+    fun handleDrag(action: MouseInputAction, restartHold: Boolean) {
+        moveCursor(action)
+        if (restartHold) {
+            handleDown()
         }
     }
 

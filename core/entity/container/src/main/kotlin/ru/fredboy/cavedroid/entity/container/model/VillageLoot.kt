@@ -11,10 +11,10 @@ object VillageLoot {
                 0, 1, 2 -> "bread" to random.nextInt(1, 4)
                 3, 4 -> "potato" to random.nextInt(2, 6)
                 5 -> "apple" to random.nextInt(1, 4)
-                6 -> "wheat_seeds" to random.nextInt(2, 6)
-                7 -> "log_oak" to random.nextInt(1, 4)
+                6 -> "seeds_wheat" to random.nextInt(2, 6)
+                7 -> "wood_log_oak" to random.nextInt(1, 4)
                 8 -> "sapling_oak" to random.nextInt(1, 3)
-                else -> "iron_ingot" to random.nextInt(1, 3)
+                else -> "ingot_iron" to random.nextInt(1, 3)
             }
         }
     }

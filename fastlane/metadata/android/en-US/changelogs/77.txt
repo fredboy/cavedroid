@@ -1,0 +1,9 @@
+- New custom asset packs with higher-resolution textures
+- New periodic autosaves during gameplay
+- Touch controls and inventory windows have been redesigned for easier play on mobile
+- You can now apply asset packs without restarting
+- Creative inventory is now organized into categories, and large chests are now available
+- Added gameplay music with shuffle, fades, and support for custom tracks
+- Added ice movement, environmental block growth, and background ore generation
+- Improved movement, touch aiming, cloud/parallax effects, and atmosphere rendering
+- Fixed liquid flow, collision issues, world saving, item drops, and several mobile control bugs

@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ItemDto(
     @SerialName("name") val name: String,
+    @SerialName("creative_category") val creativeCategory: String = "materials",
     @SerialName("type") val type: String = "normal",
     @SerialName("texture") val texture: String,
     @SerialName("origin_x") val originX: Float = 0f,

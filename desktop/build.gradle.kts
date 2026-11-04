@@ -8,8 +8,8 @@ import java.util.Properties
 import kotlin.apply
 
 plugins {
-    kotlin("jvm")
-    construo
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.construo)
 }
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility
@@ -31,8 +31,13 @@ sourceSets {
     main {
         resources {
             srcDirs("build/generated/extraRes")
+            srcDir(rootProject.tasks.named<GenerateBgmIndex>("generateBgmIndex"))
         }
     }
+}
+
+tasks.withType<JavaExec>().configureEach {
+    jvmArgs("--enable-native-access=ALL-UNNAMED")
 }
 
 tasks.register<JavaExec>("run") {
@@ -58,7 +63,12 @@ tasks.register<Jar>("dist") {
     dependsOn(configurations.runtimeClasspath)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
-        attributes["Main-Class"] = desktopLauncherClassName
+        attributes(
+            "Main-Class" to desktopLauncherClassName,
+            "Enable-Native-Access" to "ALL-UNNAMED",
+            // Preserve LWJGL's JDK-specific implementations in the fat JAR.
+            "Multi-Release" to "true",
+        )
     }
     from(
         files(
@@ -93,6 +103,7 @@ tasks.register<Jar>("generateSignedJar") {
 
     archiveBaseName.set("release-signed")
     destinationDirectory.set(layout.buildDirectory.dir("libs"))
+    manifest.from(tasks.named<Jar>("dist").get().manifest)
 
     doLast {
         requireNotNull(keystoreProperties) { "keystore.properties missing" }
@@ -171,37 +182,43 @@ tasks.processResources.apply {
 construo {
     name.set("cavedroid")
     humanName.set(ApplicationInfo.name)
-    version.set(ApplicationInfo.versionName)
     mainClass.set(desktopLauncherClassName)
     outputDir.set(layout.buildDirectory.dir("dist"))
     jarTask.set("generateSignedJar")
+    roast {
+        vmArgs.add("--enable-native-access=ALL-UNNAMED")
+    }
 
     targets {
         create<Target.Linux>("linuxX64") {
             architecture.set(Target.Architecture.X86_64)
-            jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.16%2B8/OpenJDK17U-jdk_x64_linux_hotspot_17.0.16_8.tar.gz")
+            jdkUrl.set("https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.5%2B8/OpenJDK25U-jdk_x64_linux_hotspot_25.0.5_8.tar.gz")
         }
         create<Target.MacOs>("macM1") {
             architecture.set(Target.Architecture.AARCH64)
-            jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.16%2B8/OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.16_8.tar.gz")
+            jdkUrl.set("https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.5%2B8/OpenJDK25U-jdk_aarch64_mac_hotspot_25.0.5_8.tar.gz")
             identifier.set(ApplicationInfo.packageName)
             macIcon.set(project.file("macos/AppIcon.icns"))
         }
         create<Target.Windows>("winX64") {
             architecture.set(Target.Architecture.X86_64)
-            jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.16%2B8/OpenJDK17U-jdk_x64_windows_hotspot_17.0.16_8.zip")
+            jdkUrl.set("https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.5%2B8/OpenJDK25U-jdk_x64_windows_hotspot_25.0.5_8.zip")
             icon.set(project.file("src/main/resources/icons/icon512.png"))
         }
     }
 }
 
 dependencies {
-    useCommonLibs()
-    useGdxModule()
-    useLightingBfs()
+    implementation(project(":core:common"))
+    implementation(project(":core:data:assets"))
+    implementation(libs.bundles.common)
+    implementation(project(":core:gdx"))
+    implementation(project(":core:gameplay:lighting-bfs"))
 
-    implementation(Dependencies.LibGDX.gdx)
-    implementation(Dependencies.LibGDX.Desktop.backend)
-    implementation(Dependencies.LibGDX.Desktop.natives)
-    implementation(Dependencies.LibGDX.Box2d.Natives.desktop)
+    implementation(libs.gdx.core)
+    // Align LWJGL modules and their native classifiers independently of libGDX.
+    implementation(platform(libs.lwjgl.bom))
+    implementation(libs.gdx.backend.desktop)
+    implementation(variantOf(libs.gdx.platform.core) { classifier("natives-desktop") })
+    implementation(variantOf(libs.gdx.platform.box2d) { classifier("natives-desktop") })
 }

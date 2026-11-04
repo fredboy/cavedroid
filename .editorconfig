@@ -14,6 +14,8 @@ ktlint_standard_no-empty-first-line-in-class-body = disabled
 ktlint_standard_property-naming = disabled
 ktlint_standard_backing-property-naming = disabled
 ktlint_standard_function-expression-body = disabled
+ktlint_standard_blank-line-between-when-conditions = disabled
+ktlint_standard_mixed-condition-operators = disabled
 
 [**/generated/**]
 generated_code = true

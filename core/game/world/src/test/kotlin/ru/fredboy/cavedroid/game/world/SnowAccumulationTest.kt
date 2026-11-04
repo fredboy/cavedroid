@@ -40,7 +40,7 @@ class SnowAccumulationTest {
 
     @Test
     fun `snow settles on all full surface materials including ice and leaves`() {
-        for (key in listOf("grass", "dirt", "stone", "planks_oak", "leaves_oak", "ice", "glass", "snow_block")) {
+        for (key in listOf("grass", "dirt", "stone", "wood_planks_oak", "leaves_oak", "ice", "glass", "snow_block")) {
             blocks.clear()
             blocks[0 to 128] = items.getBlockByKey(key)
 

@@ -10,11 +10,12 @@ import ktx.scene2d.label
 import ktx.scene2d.scrollPane
 import ktx.scene2d.table
 import ktx.scene2d.textButton
+import ru.fredboy.cavedroid.common.mvvm.collectViewState
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.onClickWithSound
 
 @Scene2dDsl
 suspend fun Stage.worldConfigMenuView(viewModel: WorldConfigMenuViewModel) = viewModel.also {
-    viewModel.stateFlow.collect { state ->
+    collectViewState(viewModel.stateFlow) { state ->
         when (state) {
             is WorldConfigMenuState.Show -> show(viewModel)
             is WorldConfigMenuState.Generating -> generating(viewModel)
@@ -67,6 +68,7 @@ private fun Stage.show(viewModel: WorldConfigMenuViewModel) {
             row()
 
             scrollPane {
+                name = "worldconfig-content"
                 table {
                     defaults()
                         .width(600f)

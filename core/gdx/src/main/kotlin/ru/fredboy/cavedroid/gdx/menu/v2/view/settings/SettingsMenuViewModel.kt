@@ -12,10 +12,12 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import ru.fredboy.cavedroid.common.api.AdController
+import ru.fredboy.cavedroid.common.api.AssetPackPlatform
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.domain.configuration.model.LightingBackend
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
+import ru.fredboy.cavedroid.gdx.menu.v2.view.assetpacks.AssetPacksNavKey
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModel
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
 
@@ -24,8 +26,16 @@ class SettingsMenuViewModel(
     private val applicationContextRepository: ApplicationContextRepository,
     private val performanceMonitor: PerformanceMonitor,
     private val adController: AdController,
+    private val assetPackPlatform: AssetPackPlatform,
     baseViewModelDependencies: BaseViewModelDependencies,
 ) : BaseViewModel(baseViewModelDependencies) {
+
+    val showAssetPacks get() = assetPackPlatform.isSupported
+
+    fun onAssetPacksClick() {
+        saveSettings()
+        navBackStack.push(AssetPacksNavKey)
+    }
 
     private val showPersonalizedAdsToggle: Boolean
         get() = adController.supportsPersonalizedAdsConsent
@@ -48,6 +58,11 @@ class SettingsMenuViewModel(
     private val _soundFlow = MutableSharedFlow<Boolean>(replay = 0)
     private val soundFlow: Flow<Boolean> = _soundFlow
         .onStart { emit(applicationContextRepository.isSoundEnabled()) }
+        .distinctUntilChanged()
+
+    private val _musicFlow = MutableSharedFlow<Boolean>(replay = 0)
+    private val musicFlow: Flow<Boolean> = _musicFlow
+        .onStart { emit(applicationContextRepository.isMusicEnabled()) }
         .distinctUntilChanged()
 
     private val _smoothLightingFlow = MutableSharedFlow<Boolean>(replay = 0)
@@ -82,6 +97,7 @@ class SettingsMenuViewModel(
         canResetHintsFlow,
         showDebugInfoFlow,
         performanceChanged,
+        musicFlow,
     ) { values ->
         SettingsMenuState(
             performanceAvailable = performanceMonitor.available,
@@ -90,6 +106,7 @@ class SettingsMenuViewModel(
             fullscreen = values[1],
             autoJump = values[2],
             sound = values[3],
+            music = values[9],
             smoothLighting = values[4],
             showPersonalizedAdsToggle = showPersonalizedAdsToggle,
             personalizedAds = values[5],
@@ -119,6 +136,7 @@ class SettingsMenuViewModel(
             fullscreen = applicationContextRepository.isFullscreen(),
             autoJump = applicationContextRepository.isAutoJumpEnabled(),
             sound = applicationContextRepository.isSoundEnabled(),
+            music = applicationContextRepository.isMusicEnabled(),
             smoothLighting = applicationContextRepository.getLightingBackend() == LightingBackend.BFS,
             showPersonalizedAdsToggle = showPersonalizedAdsToggle,
             personalizedAds = applicationContextRepository.getPersonalizedAdsConsent() ?: false,
@@ -152,6 +170,10 @@ class SettingsMenuViewModel(
         viewModelScope.launch { _soundFlow.emit(enabled) }
     }
 
+    fun onMusicClick(enabled: Boolean) {
+        viewModelScope.launch { _musicFlow.emit(enabled) }
+    }
+
     fun onSmoothLightingClick(enabled: Boolean) {
         viewModelScope.launch { _smoothLightingFlow.emit(enabled) }
     }
@@ -164,12 +186,13 @@ class SettingsMenuViewModel(
         viewModelScope.launch { _showDebugInfoFlow.emit(enabled) }
     }
 
-    fun onDoneClick() {
+    private fun saveSettings() {
         stateFlow.value.run {
             applicationContextRepository.setFullscreen(fullscreen)
             applicationContextRepository.setUseDynamicCamera(dynamicCamera)
             applicationContextRepository.setAutoJumpEnabled(autoJump)
             applicationContextRepository.setSoundEnabled(sound)
+            applicationContextRepository.setMusicEnabled(music)
             applicationContextRepository.setLightingBackend(
                 if (smoothLighting) LightingBackend.BFS else LightingBackend.LEGACY,
             )
@@ -179,6 +202,10 @@ class SettingsMenuViewModel(
             }
             applicationContextRepository.preferShowDebug = preferShowDebug
         }
+    }
+
+    fun onDoneClick() {
+        saveSettings()
         navBackStack.pop()
     }
 

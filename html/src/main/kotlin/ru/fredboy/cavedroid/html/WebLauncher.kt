@@ -5,6 +5,7 @@ import com.badlogic.gdx.Files
 import com.github.xpenatan.gdx.teavm.backends.web.WebApplication
 import com.github.xpenatan.gdx.teavm.backends.web.WebApplicationConfiguration
 import com.github.xpenatan.gdx.teavm.backends.web.utils.WebNavigator
+import org.teavm.classlib.PlatformDetector
 import org.teavm.jso.JSBody
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.CloudStatsSync
@@ -67,6 +68,7 @@ object WebLauncher {
             defaultLocaleProvider = { defaultLocale(yandexAvailable) },
             loggingSeverity = Severity.Info,
             isYandexGamesBuild = yandexAvailable,
+            supportsInfiniteWorlds = PlatformDetector.isWebAssemblyGC(),
             softKeyboardObserver = if (isMobileBrowser) {
                 inlineTextInput
             } else {

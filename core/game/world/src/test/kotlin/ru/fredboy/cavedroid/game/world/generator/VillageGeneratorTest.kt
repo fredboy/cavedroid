@@ -53,7 +53,7 @@ class VillageGeneratorTest {
                         assertEquals("cobblestone", fore[x][y + 1].params.key)
                         assertEquals("cobblestone", fore[x + 1][y + 1].params.key)
                     }
-                    "door_wood_bottom_left_closed", "door_wood_bottom_right_closed" -> {
+                    "wood_door_bottom_left_closed", "wood_door_bottom_right_closed" -> {
                         assertEquals(key.replace("bottom", "top"), fore[x][y - 1].params.key)
                         assertEquals("cobblestone", fore[x][y + 1].params.key)
                         assertTrue(fore[x - 1][y].isNone() && fore[x + 1][y].isNone(), "blocked entrance at $x")
@@ -175,13 +175,13 @@ class VillageGeneratorTest {
         fun block(x: Int, y: Int) = chunks.getValue(Math.floorDiv(x, ChunkGenerator.CHUNK_W))
             .foreMap[Math.floorMod(x, ChunkGenerator.CHUNK_W)][y]
 
-        assertEquals("door_wood_bottom_left_closed", block(-4006, 111).params.key)
+        assertEquals("wood_door_bottom_left_closed", block(-4006, 111).params.key)
         var doors = 0
         for (x in -4095..-3842) {
             for (y in 1 until config.height - 1) {
                 val side = when (block(x, y).params.key) {
-                    "door_wood_bottom_left_closed" -> -1
-                    "door_wood_bottom_right_closed" -> 1
+                    "wood_door_bottom_left_closed" -> -1
+                    "wood_door_bottom_right_closed" -> 1
                     else -> continue
                 }
                 doors++

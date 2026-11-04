@@ -191,7 +191,11 @@ class GameScreen @Inject constructor(
         if (firstFrame) performanceMonitor.setGameplay(false)
         performanceMonitor.beginFrame()
         try {
-            proc.update(delta)
+            // Preparing the first view can span a long frame; it is not elapsed simulation time.
+            proc.update(if (firstFrame) 0f else delta)
+            if (!firstFrame && shown && gameComponent?.gameRenderer?.isReady == true) {
+                gameComponent?.gameSaveHelper?.updateAutoSave(delta)
+            }
         } catch (error: Throwable) {
             opening?.fail(error)
             throw error
@@ -242,6 +246,7 @@ class GameScreen @Inject constructor(
     }
 
     override fun hide() {
+        gameComponent?.gameProc?.hide()
         shown = false
     }
 

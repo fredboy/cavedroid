@@ -18,6 +18,10 @@ import ru.fredboy.cavedroid.data.assets.internal.TouchButtonsRepositoryImplTextu
 import ru.fredboy.cavedroid.data.assets.internal.UiSoundAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.WearableTextureAssetsRepositoryImpl
 import ru.fredboy.cavedroid.data.assets.internal.WeatherSoundAssetsRepositoryImpl
+import ru.fredboy.cavedroid.data.assets.pack.AssetPackRepositoryImpl
+import ru.fredboy.cavedroid.data.assets.pack.StackAssetResolver
+import ru.fredboy.cavedroid.domain.assets.pack.AssetPackRepository
+import ru.fredboy.cavedroid.domain.assets.pack.AssetResolver
 import ru.fredboy.cavedroid.domain.assets.repository.BlockActionSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockDamageTextureAssetsRepository
 import ru.fredboy.cavedroid.domain.assets.repository.BlockTextureAssetsRepository
@@ -37,6 +41,10 @@ import ru.fredboy.cavedroid.domain.assets.repository.WeatherSoundAssetsRepositor
 
 @Module
 abstract class DataAssetsModule {
+
+    @Binds abstract fun bindAssetResolver(impl: StackAssetResolver): AssetResolver
+
+    @Binds abstract fun bindAssetPacks(impl: AssetPackRepositoryImpl): AssetPackRepository
 
     @Binds
     internal abstract fun bindBlockDamageAssetsRepository(

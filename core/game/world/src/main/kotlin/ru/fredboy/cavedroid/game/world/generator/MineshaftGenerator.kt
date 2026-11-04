@@ -2,12 +2,12 @@ package ru.fredboy.cavedroid.game.world.generator
 
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
-import kotlin.random.Random
 
 /** Each region's complete plan is seeded independently, then clipped to the requested columns. */
 class MineshaftGenerator(
     private val config: WorldGeneratorConfig,
     private val items: ItemsRepository,
+    private val randoms: GenerationRandom = GenerationRandom(config.seed, MineshaftMiddleware.salt),
 ) {
     fun generate(startX: Int, fore: Array<Array<Block>>, back: Array<Array<Block>>, loopingWidth: Int? = null) {
         val minY = maxOf(config.seaLevel + 12, config.maxSurfaceHeight + 8)
@@ -15,7 +15,7 @@ class MineshaftGenerator(
         if (minY > maxY || fore.isEmpty()) return
         val endX = startX + fore.size - 1
         for (region in Math.floorDiv(startX, REGION_WIDTH)..Math.floorDiv(endX, REGION_WIDTH)) {
-            val random = Random(config.seed xor (region.toLong() * 341873128712L) xor 0x4D494E45L)
+            val random = randoms.region(region)
             if (random.nextInt(4) == 0) continue
             val origin = region * REGION_WIDTH + random.nextInt(12, 33)
             val length = random.nextInt(64, 113)
@@ -33,14 +33,14 @@ class MineshaftGenerator(
 
             fun corridor(left: Int, right: Int, ceiling: Int) {
                 for (x in left..right) {
-                    put(x, ceiling, "planks_oak")
-                    put(x, ceiling + 4, "planks_oak")
+                    put(x, ceiling, "wood_planks_oak")
+                    put(x, ceiling + 4, "wood_planks_oak")
                     for (y in ceiling + 1..ceiling + 3) {
                         put(x, y, "none")
                         put(x, y, "none", background = true)
                     }
                     if ((x - left) % 6 == 0) {
-                        for (y in ceiling + 1..ceiling + 3) put(x, y, "fence_oak", background = true)
+                        for (y in ceiling + 1..ceiling + 3) put(x, y, "wood_fence_oak", background = true)
                         // Keep the spider nest beyond the torch's 13-block light radius.
                         if ((x - left) % 24 == 6 && x <= right - 24) {
                             put(x, ceiling + 2, "torch")

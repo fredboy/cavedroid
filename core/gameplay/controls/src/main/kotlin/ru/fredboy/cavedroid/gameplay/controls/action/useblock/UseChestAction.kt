@@ -3,7 +3,6 @@ package ru.fredboy.cavedroid.gameplay.controls.action.useblock
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.model.Layer
-import ru.fredboy.cavedroid.entity.container.model.Chest
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.window.GameWindowsManager
 import ru.fredboy.cavedroid.gameplay.controls.action.annotation.BindUseBlockAction
@@ -17,11 +16,10 @@ class UseChestAction @Inject constructor(
 ) : IUseBlockAction {
 
     override fun perform(block: Block, x: Int, y: Int): Boolean {
-        // TODO: transform x
-        val chest = (containerController.getContainer(x, y, Layer.FOREGROUND.z) as? Chest)
-            ?: (containerController.getContainer(x, y, Layer.BACKGROUND.z) as? Chest)
+        val pair = containerController.getChestPair(x, y, Layer.FOREGROUND.z)
+            ?: containerController.getChestPair(x, y, Layer.BACKGROUND.z)
             ?: return false
-        gameWindowsManager.openChest(chest)
+        gameWindowsManager.openChest(pair.first, pair.second)
         return true
     }
 
