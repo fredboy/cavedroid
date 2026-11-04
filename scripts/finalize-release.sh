@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Finalize a release via PRs:
-#   0. Run ktlint, core tests, and the Android FOSS debug build before creating PRs.
+#   0. Run ktlint, core tests, the Android FOSS debug build, and desktop shrinking.
 #   1. AI-generate fastlane changelogs (one per supported locale), commit, push release branch.
 #   2. Open PR  release/A.B.C -> master  with auto-merge enabled.
 #   3. Wait for it to merge (manual approval expected on the PR side).
@@ -88,8 +88,8 @@ if ! command -v gh >/dev/null 2>&1; then
   exit 1
 fi
 
-echo ">> Running release checks (ktlint, core tests, Android FOSS debug build)"
-./gradlew ktlintCheck buildSrc:ktlintCheck testCore android:assembleFossDebug
+echo ">> Running release checks (ktlint, core tests, Android FOSS debug build, desktop shrinking)"
+./gradlew ktlintCheck buildSrc:ktlintCheck testCore android:assembleFossDebug desktop:proguard
 
 master_pr_url=$(gh pr list --base master --head "$branch" --state open --json url --jq '.[0].url // empty')
 if [[ -n "$master_pr_url" ]]; then

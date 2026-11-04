@@ -2,7 +2,7 @@ name: Finalize Release
 
 # Manually triggered from the Actions UI (or `gh workflow run`). On the
 # release/A.B.C branch:
-#   0. Runs ktlint, core tests, and the Android FOSS debug build; stops on failure.
+#   0. Runs ktlint, core tests, the Android FOSS debug build, and desktop shrinking.
 #   1. AI-generates plaintext fastlane changelogs for every supported locale (OpenAI).
 #   2. Commits them with [skip ci] and pushes the release branch.
 #   3. Opens a PR release/A.B.C -> master, enables auto-merge.
@@ -74,7 +74,7 @@ jobs:
           {
             echo "### Release v${{ inputs.version }} finalized"
             echo
-            echo "- Ktlint, core tests, and Android FOSS debug build passed"
+            echo "- Ktlint, core tests, Android FOSS debug build, and desktop shrinking passed"
             echo "- Master PR opened and merged (auto-merge)"
             echo "- \`v${{ inputs.version }}\` tagged on the master merge commit"
             echo "- Develop sync PR opened with auto-merge enabled"
