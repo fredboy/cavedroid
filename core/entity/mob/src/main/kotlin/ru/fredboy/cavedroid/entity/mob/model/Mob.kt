@@ -412,7 +412,7 @@ abstract class Mob(
                 controlVector.y = 0f
             }
         } else if (!isFlyMode) {
-            velocity.x = 0f
+            stopHorizontalMovement(mobWorldAdapter, delta)
         }
 
         wrapAroundLoopedWorld(mobWorldAdapter)
@@ -420,6 +420,10 @@ abstract class Mob(
         if (position.y > mobWorldAdapter.height) {
             kill()
         }
+    }
+
+    protected open fun stopHorizontalMovement(mobWorldAdapter: MobWorldAdapter, delta: Float) {
+        velocity.x = 0f
     }
 
     private fun wrapAroundLoopedWorld(mobWorldAdapter: MobWorldAdapter) {
