@@ -24,5 +24,5 @@ jobs:
       run: echo "releaseKeystorePath=mock" > keystore.properties
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew desktop:dist
+    - name: Build and shrink desktop JAR
+      run: ./gradlew desktop:proguard --info
