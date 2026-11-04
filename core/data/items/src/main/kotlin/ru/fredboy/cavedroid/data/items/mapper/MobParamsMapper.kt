@@ -76,6 +76,8 @@ class MobParamsMapper @Inject constructor(
             isBackground = dto.isBackground,
             isHead = dto.isHead,
             isHand = dto.isHand,
+            isLeg = dto.file == "leg" || dto.file.startsWith("leg_"),
+            isBody = dto.file == "body",
             isStatic = dto.isStatic,
             isOverlay = dto.isOverlay,
             offsetX = dto.offsetX.meters,

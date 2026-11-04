@@ -352,7 +352,12 @@ class GameWorld @Inject constructor(
     }
 
     fun destroyForeMap(x: Int, y: Int, shouldDrop: Boolean, destroyedByPlayer: Boolean = false) {
-        placeToForeground(x, y, itemsRepository.fallbackBlock, shouldDrop, destroyedByPlayer)
+        val replacement = if (getForeMap(x, y).params.key == "ice") {
+            itemsRepository.getBlockByKey("water")
+        } else {
+            itemsRepository.fallbackBlock
+        }
+        setForeMap(x, y, replacement, shouldDrop, destroyedByPlayer)
     }
 
     fun destroyBackMap(x: Int, y: Int, shouldDrop: Boolean, destroyedByPlayer: Boolean = false) {

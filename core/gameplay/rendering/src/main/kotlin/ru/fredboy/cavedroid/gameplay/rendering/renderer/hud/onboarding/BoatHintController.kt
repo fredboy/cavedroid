@@ -48,6 +48,18 @@ class BoatHintController @Inject constructor(
         state = null
     }
 
+    fun dismiss() {
+        val current = state?.takeIf { it.awaitingInput } ?: return
+        if (current.step == OnboardingStep.MountBoat) {
+            // Skipping the mount gesture still teaches the dismount gesture next.
+            state = current.copy(step = OnboardingStep.DismountBoat, isLast = true)
+        } else {
+            completed = true
+            applicationContextRepository.setBoatHintShown(true)
+            state = current.copy(awaitingInput = false, cooldownProgress = 0f)
+        }
+    }
+
     fun update(delta: Float) {
         val current = state ?: return
         if (current.awaitingInput) return

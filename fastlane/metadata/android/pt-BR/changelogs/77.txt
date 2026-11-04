@@ -1,0 +1,9 @@
+- Novos packs de recursos com texturas em alta resolução
+- Salvamento automático completo durante a jogatina
+- Controles por toque e janelas do inventário redesenhados para jogar melhor no celular
+- Agora é possível aplicar packs sem reiniciar o app
+- O inventário criativo ganhou categorias, e agora há baús grandes
+- Música do jogo com modo aleatório, transições suaves e faixas personalizadas
+- Novas mecânicas de gelo, crescimento de blocos e minérios abaixo da superfície
+- Melhorias em movimento, mira por toque, nuvens, parallax e atmosfera
+- Correções em fluidos, colisões, salvamento do mundo, drops e vários bugs de controles

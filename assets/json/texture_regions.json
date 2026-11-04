@@ -1,4 +1,7 @@
 {
+  "textures/gui/onboarding_toast.9": {
+    "onboarding_toast": { "x": 1, "y": 1, "w": 24, "h": 24 }
+  },
   "touch_gui": {
     "up": {
       "w": 26,

@@ -20,6 +20,7 @@ class CloudsRenderer @Inject constructor(gameWorld: GameWorld) : IWorldRenderer 
     override val renderLayer = RENDER_LAYER
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
+        cloudField.update(delta)
         spriteBatch.end()
         Gdx.gl.glEnable(GL20.GL_BLEND)
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)

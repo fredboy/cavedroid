@@ -153,11 +153,11 @@ public class GameProc implements Disposable {
         mExplosionController.update(delta);
         mPerformanceMonitor.endStage(PerformanceMetric.ENTITIES_UPDATE, entitiesStart);
         mPerformanceMonitor.endStage(PerformanceMetric.UPDATE_TOTAL, updateStart);
+        mWeatherSoundController.update(delta);
         mGameRenderer.render(delta);
         long otherStart = mPerformanceMonitor.startStage();
         mGameInputProcessor.update(delta);
         mContainerController.update(delta);
-        mWeatherSoundController.update();
         mBackgroundMusicController.update();
         mStatsController.update(delta);
         mOnboardingController.update(delta);
@@ -171,6 +171,7 @@ public class GameProc implements Disposable {
 
     public void onGamePaused() {
         mBackgroundMusicController.pause();
+        mWeatherSoundController.pause();
         mGameWorld.resetPresentation();
         mGameInputProcessor.reset();
         mWorldLogicTimer.stop();
@@ -189,6 +190,7 @@ public class GameProc implements Disposable {
 
     public void hide() {
         mBackgroundMusicController.pause();
+        mWeatherSoundController.pause();
     }
 
     public void respawnPlayer() {

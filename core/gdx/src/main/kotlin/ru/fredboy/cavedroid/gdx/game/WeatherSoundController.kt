@@ -1,14 +1,14 @@
 package ru.fredboy.cavedroid.gdx.game
 
-import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.utils.Disposable
-import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.domain.assets.model.RainSound
 import ru.fredboy.cavedroid.domain.assets.repository.WeatherSoundAssetsRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
+import ru.fredboy.cavedroid.game.world.WeatherLightning
 import javax.inject.Inject
 
 @GameScope
@@ -16,19 +16,17 @@ class WeatherSoundController @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobController: MobController,
     private val weatherSoundAssetsRepository: WeatherSoundAssetsRepository,
-    private val soundPlayer: SoundPlayer,
     private val applicationContextRepository: ApplicationContextRepository,
+    private val lightning: WeatherLightning,
 ) : Disposable {
 
-    private var rainSound: Sound? = null
-    private var rainSoundId: Long = -1L
+    private var rainSound: RainSound? = null
+    private var playing = false
+    private var previousPosition = 0.0
+    private var loopOffset = 0.0
+    private var playbackSeconds = 0.0
 
-    fun update() {
-        if (!applicationContextRepository.isSoundEnabled()) {
-            stopRain()
-            return
-        }
-
+    fun update(delta: Float) {
         val player = mobController.player
         val biomeFactor = gameWorld.biomeProximityFactor(
             centerX = player.position.x,
@@ -38,7 +36,15 @@ class WeatherSoundController @Inject constructor(
         val intensity = gameWorld.weatherIntensity * biomeFactor * depthFactor
 
         if (intensity > 0f) {
-            playRain(intensity)
+            if (applicationContextRepository.isSoundEnabled()) {
+                playRain(intensity)
+            } else {
+                stopRainSound()
+                playbackSeconds += delta.toDouble()
+                // Weather remains visible when sound is muted.
+                loadRain()
+            }
+            lightning.intensity = (rainSound?.thunder?.flashAt(playbackSeconds) ?: 0f) * intensity
         } else {
             stopRain()
         }
@@ -50,18 +56,39 @@ class WeatherSoundController @Inject constructor(
     }
 
     private fun playRain(intensity: Float) {
-        val volume = intensity * MAX_VOLUME
-        val sound = rainSound ?: weatherSoundAssetsRepository.getRainSound()?.also { rainSound = it } ?: return
-        if (rainSoundId == -1L) {
-            rainSoundId = soundPlayer.playLoopSound(sound, volume)
-        } else {
-            sound.setVolume(rainSoundId, volume)
+        val rain = loadRain() ?: return
+        val music = rain.music
+        music.volume = intensity * MAX_VOLUME
+        if (!playing) {
+            music.isLooping = true
+            music.play()
+            playing = true
         }
+        // Use the decoder clock: simulation deltas drift and Android may buffer playback.
+        val position = music.position.toDouble()
+        if (position < previousPosition) loopOffset += rain.thunder?.durationSeconds ?: 0.0
+        previousPosition = position
+        playbackSeconds = loopOffset + position
+    }
+
+    fun pause() {
+        if (playing) rainSound?.music?.pause()
+        playing = false
+    }
+
+    private fun loadRain(): RainSound? = rainSound ?: weatherSoundAssetsRepository.getRainSound()?.also { rainSound = it }
+
+    private fun stopRainSound() {
+        if (playing || previousPosition > 0.0) rainSound?.music?.stop()
+        playing = false
+        previousPosition = 0.0
+        loopOffset = 0.0
     }
 
     private fun stopRain() {
-        rainSound?.takeIf { rainSoundId != -1L }?.let { soundPlayer.stopLoopSound(it, rainSoundId) }
-        rainSoundId = -1L
+        stopRainSound()
+        playbackSeconds = 0.0
+        lightning.intensity = 0f
     }
 
     override fun dispose() {

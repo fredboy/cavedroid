@@ -62,6 +62,8 @@ class TouchWindowItemsTest {
         every { x } returns 10f
         every { y } returns 20f
         every { height } returns 2f
+        every { cursorX } returns 14.25f
+        every { cursorY } returns 17.5f
     }
     private var scrollAmount = 0
     private val handler = TouchWindowInputHandler(
@@ -243,14 +245,14 @@ class TouchWindowItemsTest {
     }
 
     @Test
-    fun `dragging onto Drop throws the stack away from the player in the facing direction`() {
+    fun `dragging onto Drop spawns the stack at the cursor regardless of facing direction`() {
         for (direction in Direction.entries) {
             every { player.direction } returns direction
             inventory.items[9] = InventoryItem(resource, 12)
             event(9, MouseInputActionKey.Screen(false, 0))
             at(layout.drop, MouseInputActionKey.Dragged(0))
             at(layout.drop, MouseInputActionKey.Screen(true, 0))
-            verify { drops.offerItem(10f + 2.5f * direction.basis, 19f, match { it.amount == 12 }, Vector2(50f * direction.basis, -50f)) }
+            verify { drops.offerItem(14.25f, 17.5f, match { it.amount == 12 }, Vector2.Zero) }
             assertTrue(window.selectedItem.isNoneOrNull())
             assertTrue(inventory.items[9].isNoneOrNull())
         }

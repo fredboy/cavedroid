@@ -69,13 +69,13 @@ class GameWindowsManager @Inject constructor(
 
     fun closeWindow() {
         currentWindow?.selectedItem?.let { item ->
-            dropAdapter.dropItems(playerAdapter.x, playerAdapter.y, listOf(item))
+            dropAdapter.dropItems(playerAdapter.cursorX, playerAdapter.cursorY, listOf(item))
             currentWindow?.selectedItem = null
         }
         isDragging = false
         (currentWindow as? AbstractInventoryWindowWithCraftGrid)?.let { window ->
             recipeBookActive = window.recipeBookActive
-            dropAdapter.dropItems(playerAdapter.x, playerAdapter.y, window.craftingItems)
+            dropAdapter.dropItems(playerAdapter.cursorX, playerAdapter.cursorY, window.craftingItems)
         }
 
         currentWindow?.safeCast<CreativeInventoryTabsWindow>()?.selectedTab?.let { tab ->

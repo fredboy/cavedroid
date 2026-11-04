@@ -109,6 +109,24 @@ class OnboardingControllerTest {
     }
 
     @Test
+    fun `taps complete every desktop step and remember completion without gameplay actions`() {
+        setupContext(isTouch = false)
+        setupPlayerState()
+        val controller = newController()
+        val expected = listOf(OnboardingStep.Move, OnboardingStep.Jump, OnboardingStep.Break, OnboardingStep.Place, OnboardingStep.OpenInventory)
+        expected.forEach { step ->
+            assertSame(step, controller.state?.step)
+            controller.dismissVisibleTip()
+            assertEquals(false, controller.state?.awaitingInput)
+            controller.update(0.75f)
+            controller.dismissVisibleTip() // Repeated clicks must not restart the fade.
+            controller.update(0.75f)
+        }
+        assertNull(controller.state)
+        verify(exactly = 1) { applicationContextRepository.setOnboardingShown(true) }
+    }
+
+    @Test
     fun `boat hints appear after basic onboarding has been completed`() {
         setupContext(isTouch = true, isOnboardingShown = true)
         val hint = OnboardingState(OnboardingStep.MountBoat, true, 0f, false)

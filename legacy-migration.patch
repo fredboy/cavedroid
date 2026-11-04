@@ -1,45 +1,24 @@
 diff --git a/android/build.gradle.kts b/android/build.gradle.kts
-index d6d04931..b1ca2c64 100644
+index d171b51b..f672e502 100644
 --- a/android/build.gradle.kts
 +++ b/android/build.gradle.kts
-@@ -60,7 +60,7 @@ android {
- 
-     defaultConfig {
-         applicationId = ApplicationInfo.packageName
--        minSdk = 24
-+        minSdk = 16
-         targetSdk = 36
- 
-         versionCode = ApplicationInfo.versionCode
-@@ -81,6 +81,7 @@ android {
- 
-         create("store") {
+@@ -72,6 +72,7 @@ android {
+     productFlavors {
+         create("foss") {
              dimension = "distribution"
-+            minSdk = 24
++            minSdk = 16
  
-             val bannerAdUnitId = yandexProperties?.get("bannerAdUnitId")?.toString()?.let { "\"$it\"" } ?: "null"
-             val interstitialAdUnitId =
-diff --git a/android/proguard-rules.pro b/android/proguard-rules.pro
-index 6879d376..cca24897 100644
---- a/android/proguard-rules.pro
-+++ b/android/proguard-rules.pro
-@@ -19,6 +19,8 @@
- #   public *;
- #}
- 
-+-dontwarn com.badlogic.gdx.jnigen.**
-+
- -verbose
- 
- -keep class com.badlogic.gdx.** { *; }
+             buildConfigField("String", "BANNER_AD_UNIT_ID", "null")
+             buildConfigField("String", "INTERSTITIAL_AD_UNIT_ID", "null")
 diff --git a/android/src/main/AndroidManifest.xml b/android/src/main/AndroidManifest.xml
-index 28735010..ed2165b0 100644
+index 28735010..7880cf76 100644
 --- a/android/src/main/AndroidManifest.xml
 +++ b/android/src/main/AndroidManifest.xml
-@@ -2,7 +2,10 @@
+@@ -2,7 +2,11 @@
  <manifest xmlns:android="http://schemas.android.com/apk/res/android"
            xmlns:tools="http://schemas.android.com/tools">
  
++    <!-- Kermit Android sources use API 16-compatible Log and JVM synchronization APIs. -->
 +    <uses-sdk tools:overrideLibrary="co.touchlab.kermit,co.touchlab.kermit.core" />
 +
      <application
@@ -47,8 +26,35 @@ index 28735010..ed2165b0 100644
              android:allowBackup="true"
              android:icon="@drawable/ic_launcher"
              android:label="@string/app_name"
+diff --git a/android/src/main/kotlin/ru/fredboy/cavedroid/AndroidAssetPackPlatform.kt b/android/src/main/kotlin/ru/fredboy/cavedroid/AndroidAssetPackPlatform.kt
+index d36ac5fe..83ebd464 100644
+--- a/android/src/main/kotlin/ru/fredboy/cavedroid/AndroidAssetPackPlatform.kt
++++ b/android/src/main/kotlin/ru/fredboy/cavedroid/AndroidAssetPackPlatform.kt
+@@ -2,16 +2,21 @@ package ru.fredboy.cavedroid
+ 
+ import android.app.Activity
+ import android.content.Intent
++import android.os.Build
+ import com.badlogic.gdx.files.FileHandle
+ import ru.fredboy.cavedroid.common.api.AssetPackPlatform
+ import ru.fredboy.cavedroid.data.assets.pack.NativePackArchives
+ import java.io.File
+ 
+ class AndroidAssetPackPlatform(private val activity: Activity) : AssetPackPlatform {
+-    override val isSupported = true
++    override val isSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+     private var pending: ((Result<FileHandle?>) -> Unit)? = null
+ 
+     override fun pickArchive(onResult: (Result<FileHandle?>) -> Unit) {
++        if (!isSupported) {
++            onResult(Result.failure(UnsupportedOperationException("Asset pack import requires Android 4.4 or newer")))
++            return
++        }
+         activity.runOnUiThread {
+             if (pending != null) {
+                 onResult(Result.failure(IllegalStateException("An import is already in progress")))
 diff --git a/android/src/main/kotlin/ru/fredboy/cavedroid/AndroidLauncher.kt b/android/src/main/kotlin/ru/fredboy/cavedroid/AndroidLauncher.kt
-index 774bf062..a4ef6c57 100644
+index 1f461b4e..7c5f5843 100644
 --- a/android/src/main/kotlin/ru/fredboy/cavedroid/AndroidLauncher.kt
 +++ b/android/src/main/kotlin/ru/fredboy/cavedroid/AndroidLauncher.kt
 @@ -26,17 +26,21 @@ import java.util.concurrent.atomic.AtomicBoolean
@@ -79,7 +85,7 @@ index 774bf062..a4ef6c57 100644
          Gdx.app?.postRunnable { performanceMonitor.setRefreshRate(hz) }
      }
  
-@@ -72,7 +76,9 @@ class AndroidLauncher : AndroidApplication() {
+@@ -74,7 +78,9 @@ class AndroidLauncher : AndroidApplication() {
              }
          }
  
@@ -90,7 +96,7 @@ index 774bf062..a4ef6c57 100644
          val softKeyboardObserver = AndroidSoftKeyboardObserver(this)
  
          initialize(
-@@ -140,7 +146,9 @@ class AndroidLauncher : AndroidApplication() {
+@@ -144,7 +150,9 @@ class AndroidLauncher : AndroidApplication() {
      override fun onDestroy() {
          super.onDestroy()
          adController.destroy()
@@ -144,7 +150,7 @@ index 5f8b97a6..22ed3fc4 100644
  
          val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
 diff --git a/android/src/main/kotlin/ru/fredboy/cavedroid/performance/AndroidPerformanceMonitor.kt b/android/src/main/kotlin/ru/fredboy/cavedroid/performance/AndroidPerformanceMonitor.kt
-index 1d86b8d1..782693a9 100644
+index b987323b..3c64fa5c 100644
 --- a/android/src/main/kotlin/ru/fredboy/cavedroid/performance/AndroidPerformanceMonitor.kt
 +++ b/android/src/main/kotlin/ru/fredboy/cavedroid/performance/AndroidPerformanceMonitor.kt
 @@ -1,6 +1,7 @@
@@ -166,7 +172,7 @@ index 1d86b8d1..782693a9 100644
          private val operations = ArrayBlockingQueue<() -> Unit>(128)
          private val drainScheduled = AtomicBoolean()
          private val closing = AtomicBoolean()
-@@ -189,12 +192,14 @@ class AndroidPerformanceMonitor private constructor(
+@@ -186,12 +189,14 @@ class AndroidPerformanceMonitor private constructor(
                  monitor.sample(PerformanceGauge.HEAP_MAX, runtime.maxMemory(), epoch, generation)
                  monitor.sample(PerformanceGauge.HEAP_HEADROOM, runtime.maxMemory() - used, epoch, generation)
                  monitor.sample(PerformanceGauge.NATIVE_HEAP, Debug.getNativeHeapAllocatedSize(), epoch, generation)
@@ -187,29 +193,8 @@ index 1d86b8d1..782693a9 100644
              }
              if (now - lastPss >= 30_000_000_000L) {
                  lastPss = now
-diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
---- a/gradle/libs.versions.toml
-+++ b/gradle/libs.versions.toml
-@@ -6,7 +6,7 @@
- dagger = "2.57"
- firebase = "34.13.0"
- firebaseCrashlyticsPlugin = "3.0.7"
--gdx = "1.13.1"
-+gdx = "1.9.10"
- # The TeaVM backend pulls libGDX 1.14.0 transitively on :html's classpath.
- # Its runtime ABI is forward-compatible with the project's libGDX usage.
- gdxTeaVM = "1.5.6"
-@@ -19,7 +19,7 @@
- ksp = "2.2.10-2.0.2"
- ktlint = "1.6.0"
- ktlintPlugin = "13.0.0"
--libktx = "1.13.1-rc1"
-+libktx = "1.9.10-b6"
- licenseReport = "2.9"
- mockk = "1.13.13"
- proguard = "7.7.0"
 diff --git a/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt b/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt
-index c0a11417..853f4534 100644
+index dee290c8..d25e6b7f 100644
 --- a/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt
 +++ b/core/data/save/src/main/kotlin/ru/fredboy/cavedroid/data/save/repository/SaveDataRepositoryImpl.kt
 @@ -3,8 +3,8 @@ package ru.fredboy.cavedroid.data.save.repository
@@ -231,20 +216,67 @@ index c0a11417..853f4534 100644
                  halfWidth - screenshotHalfSize,
                  halfHeight - screenshotHalfSize,
                  screenshotHalfSize shl 1,
+diff --git a/core/game/world/src/main/kotlin/ru/fredboy/cavedroid/game/world/presentation/WorldPoseHistory.kt b/core/game/world/src/main/kotlin/ru/fredboy/cavedroid/game/world/presentation/WorldPoseHistory.kt
+index 307c654b..4828787c 100644
+--- a/core/game/world/src/main/kotlin/ru/fredboy/cavedroid/game/world/presentation/WorldPoseHistory.kt
++++ b/core/game/world/src/main/kotlin/ru/fredboy/cavedroid/game/world/presentation/WorldPoseHistory.kt
+@@ -27,7 +27,7 @@ internal class WorldPoseHistory {
+             }
+             entry.generation = generation
+             val position = body.position
+-            entry.pose.beforeStep(position.x, position.y, body.linearVelocity.angleDeg())
++            entry.pose.beforeStep(position.x, position.y, body.linearVelocity.angle())
+         }
+         val iterator = entries.iterator()
+         while (iterator.hasNext()) if (iterator.next().value.generation != generation) iterator.remove()
+@@ -51,10 +51,10 @@ internal class WorldPoseHistory {
+                 kotlin.math.abs(PoseHistory.displacement(entry.pose.x, position.x, worldWidth)) > 2.1f ||
+                 kotlin.math.abs(entry.pose.y - position.y) > 2.1f
+             ) {
+-                entry.pose.reset(position.x, position.y, body.linearVelocity.angleDeg())
++                entry.pose.reset(position.x, position.y, body.linearVelocity.angle())
+             }
+             entry.generation = generation
+-            entry.pose.afterStep(position.x, position.y, body.linearVelocity.angleDeg())
++            entry.pose.afterStep(position.x, position.y, body.linearVelocity.angle())
+         }
+     }
+ 
+@@ -67,13 +67,13 @@ internal class WorldPoseHistory {
+     fun sample(body: Body, alpha: Float, worldWidth: Float, out: Vector2): Vector2 {
+         val position = body.position
+         val entry = entry(body)
+-        if (!entry.pose.matches(position.x, position.y, worldWidth)) entry.pose.reset(position.x, position.y, body.linearVelocity.angleDeg())
++        if (!entry.pose.matches(position.x, position.y, worldWidth)) entry.pose.reset(position.x, position.y, body.linearVelocity.angle())
+         return out.set(entry.pose.sampleX(alpha, worldWidth), entry.pose.sampleY(alpha))
+     }
+ 
+     fun heading(body: Body, alpha: Float): Float {
+         val entry = entries[body]
+-        return if (entry == null || entry.owner !== body.userData) body.linearVelocity.angleDeg() else entry.pose.sampleHeading(alpha)
++        return if (entry == null || entry.owner !== body.userData) body.linearVelocity.angle() else entry.pose.sampleHeading(alpha)
+     }
+ 
+     fun clear() {
 diff --git a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/GameInputProcessor.kt b/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/GameInputProcessor.kt
-index 94f2bb39..1a14296e 100644
+index 333b9b51..2bcd5dd3 100644
 --- a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/GameInputProcessor.kt
 +++ b/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/GameInputProcessor.kt
-@@ -126,8 +126,6 @@ class GameInputProcessor @Inject constructor(
+@@ -128,13 +128,6 @@ class GameInputProcessor @Inject constructor(
          )
      }
  
--    override fun touchCancelled(p0: Int, p1: Int, p2: Int, p3: Int): Boolean = false
+-    override fun touchCancelled(p0: Int, p1: Int, p2: Int, p3: Int): Boolean {
+-        mouseInputHandlers.forEach { it.reset() }
+-        pointerToTouchedKey.remove(p2)
+-        dragging = false
+-        return true
+-    }
 -
      override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
          val joystick = gameContextRepository.getJoystick()
          if (applicationContextRepository.isTouch() && joystick.active && joystick.pointer == pointer) {
-@@ -171,13 +169,13 @@ class GameInputProcessor @Inject constructor(
+@@ -193,13 +186,13 @@ class GameInputProcessor @Inject constructor(
  
      override fun mouseMoved(p0: Int, p1: Int): Boolean = false
  
@@ -262,10 +294,10 @@ index 94f2bb39..1a14296e 100644
          return handleMouseAction(action)
      }
 diff --git a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/mouse/MouseCursorInputHandler.kt b/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/mouse/MouseCursorInputHandler.kt
-index e932077c..fd62b055 100644
+index 8a6d2218..d083a679 100644
 --- a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/mouse/MouseCursorInputHandler.kt
 +++ b/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/mouse/MouseCursorInputHandler.kt
-@@ -18,6 +18,7 @@ import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
+@@ -20,6 +20,7 @@ import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
  import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
  import ru.fredboy.cavedroid.gameplay.controls.input.annotation.BindMouseInputHandler
  import javax.inject.Inject
@@ -273,7 +305,7 @@ index e932077c..fd62b055 100644
  
  @GameScope
  @BindMouseInputHandler
-@@ -38,7 +39,7 @@ class MouseCursorInputHandler @Inject constructor(
+@@ -41,7 +42,7 @@ class MouseCursorInputHandler @Inject constructor(
      private fun getPlayerHeadRotation(mouseWorldX: Float, mouseWorldY: Float): Float {
          val h = mouseWorldX - player.position.x
          val v = mouseWorldY - (player.position.y - player.height / 2f + player.width / 2f)
@@ -296,7 +328,7 @@ index 5e9aa5ff..e33739e2 100644
          )
          mobController.player.isPullingBow = false
 diff --git a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/touch/TouchCursorInputHandler.kt b/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/touch/TouchCursorInputHandler.kt
-index 5761501d..3b90eaae 100644
+index a61469e4..e446e0e7 100644
 --- a/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/touch/TouchCursorInputHandler.kt
 +++ b/core/gameplay/controls/src/main/kotlin/ru/fredboy/cavedroid/gameplay/controls/input/handler/touch/TouchCursorInputHandler.kt
 @@ -39,6 +39,7 @@ import ru.fredboy.cavedroid.gameplay.controls.input.annotation.BindMouseInputHan
@@ -307,7 +339,7 @@ index 5761501d..3b90eaae 100644
  
  @GameScope
  @BindMouseInputHandler
-@@ -160,7 +161,7 @@ class TouchCursorInputHandler @Inject constructor(
+@@ -167,7 +168,7 @@ class TouchCursorInputHandler @Inject constructor(
              x = mobController.player.position.x + mobController.player.direction.basis,
              y = mobController.player.position.y - mobController.player.height / 3f,
              velocity = Vector2.X.cpy()
@@ -316,7 +348,7 @@ index 5761501d..3b90eaae 100644
                  .scl(300f * ((mobController.player.bowState.toFloat() + 1f) / 3f)),
          )
          mobController.player.isPullingBow = false
-@@ -339,7 +340,7 @@ class TouchCursorInputHandler @Inject constructor(
+@@ -353,7 +354,7 @@ class TouchCursorInputHandler @Inject constructor(
      private fun getPlayerHeadRotation(mouseWorldX: Float, mouseWorldY: Float): Float {
          val h = mouseWorldX - player.position.x
          val v = mouseWorldY - (player.position.y - player.height / 2f + player.width / 2f)
@@ -326,10 +358,10 @@ index 5761501d..3b90eaae 100644
      }
  
 diff --git a/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/hud/CrosshairRenderer.kt b/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/hud/CrosshairRenderer.kt
-index f9128b44..acb439e6 100644
+index e708e54c..54e02d25 100644
 --- a/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/hud/CrosshairRenderer.kt
 +++ b/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/hud/CrosshairRenderer.kt
-@@ -2,10 +2,10 @@ package ru.fredboy.cavedroid.gameplay.rendering.renderer.hud
+@@ -2,11 +2,11 @@ package ru.fredboy.cavedroid.gameplay.rendering.renderer.hud
  
  import com.badlogic.gdx.Gdx
  import com.badlogic.gdx.graphics.Color
@@ -337,11 +369,12 @@ index f9128b44..acb439e6 100644
  import com.badlogic.gdx.graphics.g2d.SpriteBatch
  import com.badlogic.gdx.graphics.glutils.ShapeRenderer
  import com.badlogic.gdx.math.Rectangle
+ import com.badlogic.gdx.math.Vector2
 +import com.badlogic.gdx.utils.ScreenUtils
  import ru.fredboy.cavedroid.common.di.GameScope
  import ru.fredboy.cavedroid.common.utils.drawSprite
  import ru.fredboy.cavedroid.common.utils.invertColor
-@@ -30,7 +30,7 @@ class CrosshairRenderer @Inject constructor(
+@@ -35,7 +35,7 @@ class CrosshairRenderer @Inject constructor(
          get() = RENDER_LAYER
  
      private fun getTintColor(x: Float, y: Float, viewport: Rectangle): Color {
@@ -350,19 +383,6 @@ index f9128b44..acb439e6 100644
              /* x = */ (x * (Gdx.graphics.width / viewport.width)).toInt(),
              /* y = */ Gdx.graphics.height - (y * (Gdx.graphics.height / viewport.height)).toInt(),
              /* w = */ 1,
-diff --git a/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/world/ProjectilesRenderer.kt b/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/world/ProjectilesRenderer.kt
-index 376d7ec5..e59fe749 100644
---- a/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/world/ProjectilesRenderer.kt
-+++ b/core/gameplay/rendering/src/main/kotlin/ru/fredboy/cavedroid/gameplay/rendering/renderer/world/ProjectilesRenderer.kt
-@@ -48,7 +48,7 @@ class ProjectilesRenderer @Inject constructor(
-                     y = projectileRect.y,
-                     width = projectileRect.width,
-                     height = projectileRect.height,
--                    rotation = projectile.velocity.get().angleDeg() + rotationOffset,
-+                    rotation = projectile.velocity.get().angle() + rotationOffset,
-                     origin = SpriteOrigin.CENTER,
-                 )
-             }
 diff --git a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/about/AboutMenuView.kt b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/about/AboutMenuView.kt
 index 6fcdf3fc..7f794f06 100644
 --- a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/about/AboutMenuView.kt
@@ -376,13 +396,41 @@ index 6fcdf3fc..7f794f06 100644
                  setAlignment(Align.center)
              }.cell(
                  expand = true,
+diff --git a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/assetpacks/AssetPacksView.kt b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/assetpacks/AssetPacksView.kt
+index 28209735..467a86ed 100644
+--- a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/assetpacks/AssetPacksView.kt
++++ b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/assetpacks/AssetPacksView.kt
+@@ -1,13 +1,13 @@
+ package ru.fredboy.cavedroid.gdx.menu.v2.view.assetpacks
+ 
+ import com.badlogic.gdx.scenes.scene2d.Stage
++import com.badlogic.gdx.scenes.scene2d.ui.Image
+ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
+ import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable
+ import com.badlogic.gdx.utils.Align
+ import com.badlogic.gdx.utils.Scaling
+ import ktx.scene2d.Scene2dDsl
+ import ktx.scene2d.actors
+-import ktx.scene2d.image
+ import ktx.scene2d.label
+ import ktx.scene2d.scrollPane
+ import ktx.scene2d.table
+@@ -52,7 +52,7 @@ suspend fun Stage.assetPacksView(viewModel: AssetPacksViewModel) = viewModel.als
+                             ordered.forEach { pack ->
+                                 table {
+                                     viewModel.icon(pack)?.let { icon ->
+-                                        image(icon) { setScaling(Scaling.fit) }.cell(width = 64f, height = 64f, padRight = 12f)
++                                        add(Image(icon).apply { setScaling(Scaling.fit) }).width(64f).height(64f).padRight(12f)
+                                     }
+                                     table {
+                                         defaults().left()
 diff --git a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/attribution/AttributionMenuView.kt b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/attribution/AttributionMenuView.kt
-index de7d4cf9..7c1c530b 100644
+index cea30406..b63edbe1 100644
 --- a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/attribution/AttributionMenuView.kt
 +++ b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/attribution/AttributionMenuView.kt
-@@ -29,7 +29,7 @@ suspend fun Stage.attributionMenuView(viewModel: AttributionMenuViewModel) = vie
- 
+@@ -31,7 +31,7 @@ suspend fun Stage.attributionMenuView(viewModel: AttributionMenuViewModel) = vie
                  scrollPane {
+                     name = "attribution-content"
                      label(attributions) {
 -                        wrap = true
 +                        setWrap(true)
@@ -403,7 +451,7 @@ index 1f7a9e2f..aa716644 100644
                  expand = true,
                  fill = true,
 diff --git a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/editworld/EditWorldMenuView.kt b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/editworld/EditWorldMenuView.kt
-index 1892f129..d1e38388 100644
+index efb8f6ae..6731a07a 100644
 --- a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/editworld/EditWorldMenuView.kt
 +++ b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/editworld/EditWorldMenuView.kt
 @@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent
@@ -435,21 +483,47 @@ index 1892f129..d1e38388 100644
                  }
              }.cell(width = 100f, height = 100f, align = Align.left)
  
+@@ -186,9 +187,7 @@ private fun Stage.renaming(viewModel: EditWorldMenuViewModel, state: EditWorldMe
+ private fun attachRenameListeners(field: TextField, viewModel: EditWorldMenuViewModel) {
+     // Drive the IME from gestures + the observer, matching NewGameMenuView.
+     field.onscreenKeyboard = object : TextField.OnscreenKeyboard {
+-        override fun show(textField: TextField) = Unit
+-
+-        override fun close() = Unit
++        override fun show(visible: Boolean) = Unit
+     }
+ 
+     field.addListener(
+diff --git a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/newgame/NewGameMenuView.kt b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/newgame/NewGameMenuView.kt
+index 556bdc02..f535bce0 100644
+--- a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/newgame/NewGameMenuView.kt
++++ b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/newgame/NewGameMenuView.kt
+@@ -47,9 +47,7 @@ private fun attachFieldListeners(field: TextField, viewModel: NewGameMenuViewMod
+     // focus-driven show/hide would race with the rebuild and re-fire the
+     // observer, causing layout flicker.
+     field.onscreenKeyboard = object : TextField.OnscreenKeyboard {
+-        override fun show(textField: TextField) = Unit
+-
+-        override fun close() = Unit
++        override fun show(visible: Boolean) = Unit
+     }
+ 
+     field.addListener(
 diff --git a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/notice/NoticeMenuView.kt b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/notice/NoticeMenuView.kt
-index 591b1f5b..824c49bf 100644
+index 2a3c82e2..13500932 100644
 --- a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/notice/NoticeMenuView.kt
 +++ b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/notice/NoticeMenuView.kt
-@@ -28,7 +28,7 @@ suspend fun Stage.noticeMenuView(viewModel: NoticeMenuViewModel) = viewModel.als
-                 pad(8f)
+@@ -30,7 +30,7 @@ suspend fun Stage.noticeMenuView(viewModel: NoticeMenuViewModel) = viewModel.als
  
                  scrollPane {
+                     name = "notice-content"
 -                    label(state.notices) { wrap = true }
 +                    label(state.notices) { setWrap(true) }
                  }.cell(
                      expand = true,
                      fill = true,
 diff --git a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/singleplayer/SinglePlayerMenuView.kt b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/singleplayer/SinglePlayerMenuView.kt
-index 20bb4c52..7924661e 100644
+index c63fef38..cc1221d8 100644
 --- a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/singleplayer/SinglePlayerMenuView.kt
 +++ b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/singleplayer/SinglePlayerMenuView.kt
 @@ -2,6 +2,7 @@ package ru.fredboy.cavedroid.gdx.menu.v2.view.singleplayer
@@ -468,7 +542,7 @@ index 20bb4c52..7924661e 100644
  import ktx.scene2d.imageButton
  import ktx.scene2d.label
  import ktx.scene2d.scrollPane
-@@ -268,12 +268,10 @@ private fun <S> KWidget<S>.saveItem(
+@@ -269,12 +269,10 @@ private fun <S> KWidget<S>.saveItem(
          isDisabled = true
  
          saveInfo.screenshot?.let { screenshot ->
@@ -485,15 +559,39 @@ index 20bb4c52..7924661e 100644
      }.cell(
          width = 100f,
 diff --git a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/stats/StatsMenuView.kt b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/stats/StatsMenuView.kt
-index 6a628dea..a14f467f 100644
+index 8b14bc44..c6b592be 100644
 --- a/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/stats/StatsMenuView.kt
 +++ b/core/gdx/src/main/kotlin/ru/fredboy/cavedroid/gdx/menu/v2/view/stats/StatsMenuView.kt
-@@ -28,7 +28,7 @@ suspend fun Stage.statsMenuView(viewModel: StatsMenuViewModel) = viewModel.also
-                 pad(8f)
+@@ -30,7 +30,7 @@ suspend fun Stage.statsMenuView(viewModel: StatsMenuViewModel) = viewModel.also
  
                  scrollPane {
+                     name = "stats-content"
 -                    label(buildContent(viewModel, state)) { wrap = true }
 +                    label(buildContent(viewModel, state)) { setWrap(true) }
                  }.cell(
                      expand = true,
                      fill = true,
+diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+index a1c6a06f..2e8682d2 100644
+--- a/gradle/libs.versions.toml
++++ b/gradle/libs.versions.toml
+@@ -6,8 +6,8 @@ construo = "2.2.3"
+ dagger = "2.60.1"
+ firebase = "35.1.0"
+ firebaseCrashlyticsPlugin = "3.0.8"
+-gdx = "1.14.2"
+-gdxBox2d = "1.14.2"
++gdx = "1.9.10"
++gdxBox2d = "1.9.10"
+ gdxTeaVM = "1.6.2"
+ googleServices = "4.5.0"
+ jaudiotagger = "3.0.1"
+@@ -19,7 +19,7 @@ kotlinxSerialization = "1.12.0"
+ ksp = "2.3.13"
+ ktlint = "1.8.0"
+ ktlintPlugin = "14.2.0"
+-libktx = "1.13.1-rc1"
++libktx = "1.9.10-b6"
+ licenseReport = "3.1.4"
+ lwjgl = "3.4.3"
+ mockk = "1.14.11"

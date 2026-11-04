@@ -10,7 +10,6 @@ import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.items.repository.ItemsRepository
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
-import ru.fredboy.cavedroid.game.world.WaterFreezing
 import javax.inject.Inject
 import kotlin.math.min
 import kotlin.reflect.KClass
@@ -159,18 +158,6 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
             return
         }
 
-        if (block is Block.Water &&
-            WaterFreezing.canFreeze(
-                y,
-                gameWorld.getBiomeAt(x),
-                gameWorld.generatorConfig.maxSurfaceHeight,
-            ) { gameWorld.getForeMap(x, it) }
-        ) {
-            // Keep queued flow updates from overwriting the ice in the same tick.
-            updateMap[x to y] = UpdateCommand(itemsRepository.getBlockByKey("ice"), x, y, 0)
-            return
-        }
-
         if (block is Block.Water && regenerateWaterSource(x, y, block)) {
             return
         }
@@ -216,11 +203,8 @@ class GameWorldFluidsLogicControllerTask @Inject constructor(
         val command: Runnable,
     ) : PriorityMapValue {
 
-        constructor(block: Block, x: Int, y: Int, priority: Int) :
-            this(priority, x, y, Runnable { gameWorld.setForeMap(x, y, block) })
-
         constructor(fluid: Block.Fluid, x: Int, y: Int) : this(
-            // Lower priorities win: ice, reactions, sources, then progressively weaker flows.
+            // Lower priorities win: reactions, sources, then progressively weaker flows.
             priority = REACTION_PRIORITY + 1 + fluid.state,
             x = x,
             y = y,

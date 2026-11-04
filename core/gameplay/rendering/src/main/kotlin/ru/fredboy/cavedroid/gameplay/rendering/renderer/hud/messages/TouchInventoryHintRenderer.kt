@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.TutorialTapTargets
 import ru.fredboy.cavedroid.common.utils.drawMultilineCentered
 import ru.fredboy.cavedroid.common.utils.safeCast
 import ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository
@@ -29,6 +30,7 @@ class TouchInventoryHintRenderer @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val fontTextureAssetsRepository: FontTextureAssetsRepository,
     private val inventoryHintController: InventoryHintController,
+    private val tapTargets: TutorialTapTargets,
     private val getFont: GetFontUseCase,
     private val getStringWidth: GetStringWidthUseCase,
     private val getStringHeight: GetStringHeightUseCase,
@@ -43,6 +45,7 @@ class TouchInventoryHintRenderer @Inject constructor(
     }
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
+        tapTargets.clear("touchInventory")
         if (!isTouch || !inventoryHintController.isVisible) return
         val windowType = gameWindowsManager.currentWindowType
         if (windowType == GameWindowType.NONE || windowType == GameWindowType.CREATIVE_INVENTORY) return
@@ -52,6 +55,7 @@ class TouchInventoryHintRenderer @Inject constructor(
 
         if (!gameWindowsManager.currentWindow?.selectedItem.isNoneOrNull()) return
         inventoryHintController.tick(delta)
+        if (!inventoryHintController.isVisible) return
         val alpha = inventoryHintController.alpha
         if (alpha <= 0f) return
 
@@ -75,6 +79,24 @@ class TouchInventoryHintRenderer @Inject constructor(
         if (line.isNotEmpty()) lines += line
         val lineHeight = getStringHeight(lines.first())
         val blockHeight = lines.size * lineHeight + (lines.size - 1).coerceAtLeast(0) * 2f
+        val window = gameWindowsManager.currentWindow
+        val index = inventoryHintController.hintIndex
+        val footer = Rectangle(
+            bounds.x,
+            bounds.y + (height - TouchWindowLayout.FOOTER_HEIGHT) * scale,
+            (width - TouchWindowLayout.DROP_WIDTH) * scale,
+            TouchWindowLayout.FOOTER_HEIGHT * scale,
+        )
+        tapTargets.register("touchInventory", footer) {
+            if (gameWindowsManager.currentWindow === window && inventoryHintController.isVisible &&
+                inventoryHintController.hintIndex == index && window?.selectedItem.isNoneOrNull()
+            ) {
+                inventoryHintController.dismiss()
+                true
+            } else {
+                false
+            }
+        }
         val oldTransform = Matrix4(spriteBatch.transformMatrix)
         spriteBatch.transformMatrix = Matrix4(oldTransform).translate(bounds.x, bounds.y, 0f).scale(scale, scale, 1f)
         try {

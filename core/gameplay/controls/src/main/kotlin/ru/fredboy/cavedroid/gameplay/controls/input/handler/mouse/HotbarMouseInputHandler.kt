@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
@@ -16,7 +15,6 @@ import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.annotation.BindMouseInputHandler
-import ru.fredboy.cavedroid.gameplay.controls.input.handler.keyboard.DropItemKeyboardInputHandler.Companion.DROP_DISTANCE
 import ru.fredboy.cavedroid.gameplay.controls.input.isInsideHotbar
 import javax.inject.Inject
 
@@ -34,39 +32,44 @@ class HotbarMouseInputHandler @Inject constructor(
 
     private var buttonHoldTask: Timer.Task? = null
 
-    override fun checkConditions(action: MouseInputAction): Boolean = buttonHoldTask?.isScheduled == true ||
-        (
-            (
-                action.actionKey is MouseInputActionKey.Left ||
-                    (
-                        action.actionKey is MouseInputActionKey.Screen &&
-                            (
-                                !gameContextRepository.getJoystick().active ||
-                                    action.actionKey.pointer != gameContextRepository.getJoystick().pointer
-                                )
-                        )
-                ) &&
-                action.isInsideHotbar(gameContextRepository, textureRegions) ||
-                action.actionKey is MouseInputActionKey.Scroll
-            ) &&
-        gameWindowsManager.currentWindowType == GameWindowType.NONE &&
-        (
-            action.actionKey is MouseInputActionKey.Scroll ||
-                !action.actionKey.touchUp ||
-                buttonHoldTask?.isScheduled == true
-            )
+    private var pressedKey: MouseInputActionKey? = null
+    private var holdTriggered = false
+
+    private fun ownsPress(key: MouseInputActionKey): Boolean = when (val pressed = pressedKey) {
+        is MouseInputActionKey.Screen -> key is MouseInputActionKey.Touch && key.pointer == pressed.pointer
+        is MouseInputActionKey.Left ->
+            key is MouseInputActionKey.Left ||
+                (key is MouseInputActionKey.Dragged && key.pointer == 0)
+        else -> false
+    }
+
+    override fun checkConditions(action: MouseInputAction): Boolean {
+        if (gameWindowsManager.currentWindowType != GameWindowType.NONE) return false
+        if (pressedKey != null) return ownsPress(action.actionKey)
+
+        val key = action.actionKey
+        return when (key) {
+            is MouseInputActionKey.Scroll -> true
+            is MouseInputActionKey.Left -> !key.touchUp && action.isInsideHotbar(gameContextRepository, textureRegions)
+            is MouseInputActionKey.Screen ->
+                !key.touchUp &&
+                    (!gameContextRepository.getJoystick().active || key.pointer != gameContextRepository.getJoystick().pointer) &&
+                    action.isInsideHotbar(gameContextRepository, textureRegions)
+            else -> false
+        }
+    }
 
     private fun cancelHold() {
         buttonHoldTask?.cancel()
         buttonHoldTask = null
     }
 
-    private fun createDrop(item: InventoryItem, playerX: Float, playerY: Float, dropAmount: Int) {
+    private fun createDrop(item: InventoryItem, dropAmount: Int) {
+        val player = mobController.player
         dropController.addDrop(
-            x = playerX + DROP_DISTANCE * mobController.player.direction.basis,
-            y = playerY,
+            x = player.cursorX,
+            y = player.cursorY,
             inventoryItem = item.copy().apply { amount = dropAmount },
-            initialForce = Vector2(50f * mobController.player.direction.basis, -50f),
         )
     }
 
@@ -79,20 +82,21 @@ class HotbarMouseInputHandler @Inject constructor(
         ).toInt()
 
     private fun handleHold(action: MouseInputAction) {
-//        buttonHoldTask = null
-//        gameWindowsManager.openInventory()
         val player = mobController.player
         val actionSlot = getActionSlot(action)
         val currentItem = player.inventory.items[actionSlot]
         val dropAmount = if (currentItem.item is Item.Tool || currentItem.item is Item.Armor) currentItem.amount else 1
 
-        createDrop(currentItem, player.position.x, player.position.y, dropAmount)
+        createDrop(currentItem, dropAmount)
         player.inventory.decreaseItemAmount(actionSlot, dropAmount)
     }
 
     private fun handleDown(action: MouseInputAction) {
+        pressedKey = action.actionKey
+        holdTriggered = false
         buttonHoldTask = object : Timer.Task() {
             override fun run() {
+                holdTriggered = true
                 handleHold(action)
             }
         }
@@ -117,31 +121,33 @@ class HotbarMouseInputHandler @Inject constructor(
     }
 
     override fun handle(action: MouseInputAction) {
-        if (buttonHoldTask != null && buttonHoldTask?.isScheduled == true) {
-            cancelHold()
-        }
+        if (pressedKey != null && !ownsPress(action.actionKey)) return
 
-        if (buttonHoldTask != null && buttonHoldTask?.isScheduled != true) {
-            buttonHoldTask = null
+        if (action.actionKey is MouseInputActionKey.Scroll) {
+            handleScroll(action)
             return
         }
 
-        if (action.actionKey !is MouseInputActionKey.Left && action.actionKey !is MouseInputActionKey.Screen) {
-            if (action.actionKey is MouseInputActionKey.Scroll) {
-                handleScroll(action)
+        if (pressedKey == null) {
+            if ((action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
+                !action.actionKey.touchUp
+            ) {
+                handleDown(action)
             }
             return
         }
 
-        if (action.actionKey.touchUp) {
-            handleUp(action)
-        } else {
-            handleDown(action)
-        }
+        val selectSlot = action.actionKey !is MouseInputActionKey.Dragged &&
+            action.actionKey.touchUp && !holdTriggered &&
+            action.isInsideHotbar(gameContextRepository, textureRegions)
+        reset()
+        if (selectSlot) handleUp(action)
     }
 
     override fun reset() {
         cancelHold()
+        pressedKey = null
+        holdTriggered = false
     }
 
     companion object {

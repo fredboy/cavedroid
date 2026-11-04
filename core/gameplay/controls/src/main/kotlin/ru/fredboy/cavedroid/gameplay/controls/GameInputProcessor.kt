@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
+import ru.fredboy.cavedroid.common.utils.TutorialTapTargets
 import ru.fredboy.cavedroid.common.utils.ifFalse
 import ru.fredboy.cavedroid.domain.assets.model.TouchButton
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
@@ -39,11 +40,14 @@ class GameInputProcessor @Inject constructor(
     private val gameWindowsManager: GameWindowsManager,
     private val mobController: MobController,
     private val vehicles: VehicleController,
+    private val tutorialTapTargets: TutorialTapTargets,
 ) : InputProcessor {
 
     init {
         vehicles.onRidingChanged = { resetHeldInput() }
     }
+
+    private val tutorialPointers = mutableSetOf<Int>()
 
     private var windowWasOpen = false
     private var dragging = false
@@ -62,6 +66,11 @@ class GameInputProcessor @Inject constructor(
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val (touchX, touchY) = gameContextRepository.getCameraContext().getViewportCoordinates(screenX, screenY)
+
+        if (pointer in tutorialPointers || tutorialTapTargets.dismissAt(touchX, touchY)) {
+            tutorialPointers.add(pointer)
+            return true
+        }
 
         touchDownX = touchX
         touchDownY = touchY
@@ -88,6 +97,7 @@ class GameInputProcessor @Inject constructor(
     }
 
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+        if (tutorialPointers.remove(pointer)) return true
         val (touchX, touchY) = gameContextRepository.getCameraContext().getViewportCoordinates(screenX, screenY)
 
         val joy = gameContextRepository.getJoystick()
@@ -129,6 +139,7 @@ class GameInputProcessor @Inject constructor(
     }
 
     override fun touchCancelled(p0: Int, p1: Int, p2: Int, p3: Int): Boolean {
+        if (tutorialPointers.remove(p2)) return true
         mouseInputHandlers.forEach { it.reset() }
         pointerToTouchedKey.remove(p2)
         dragging = false
@@ -136,6 +147,7 @@ class GameInputProcessor @Inject constructor(
     }
 
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
+        if (pointer in tutorialPointers) return true
         val joystick = gameContextRepository.getJoystick()
         if (applicationContextRepository.isTouch() && joystick.active && joystick.pointer == pointer) {
             // The joystick owns this gesture, including small drags and crossing touch buttons.
@@ -354,6 +366,7 @@ class GameInputProcessor @Inject constructor(
     }
 
     fun reset() {
+        tutorialPointers.clear()
         resetHeldInput()
         gameWindowsManager.closeWindow()
         windowWasOpen = false

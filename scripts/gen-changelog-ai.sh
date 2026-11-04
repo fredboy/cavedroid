@@ -82,6 +82,7 @@ done
 prompt="You are generating user-facing changelogs for CaveDroid, a 2D Minecraft-inspired indie game. These changelogs ship to the Google Play Store via fastlane, so they must only describe changes that are relevant to mobile (Android) players.
 
 Below is the raw git commit log for the upcoming v${version} release. Drop refactors, internal cleanup, build/CI tweaks, and dependency bumps — keep only what a mobile player would care about (new features, gameplay changes, bug fixes, UI improvements).
+Read the entire commit log before selecting entries. If a feature was introduced in this release, describe its addition once and omit follow-up commits that adjust, polish, tune, or fix that new feature; do not mention those adjustments separately or within the feature's entry. For example, if this release adds background music (BGM), include its addition but ignore a later \"Increase bgm volume\" commit. Keep relevant improvements and fixes to features that existed before this release.
 Omit changes that only affect desktop (Linux/Windows/macOS), the web/browser/TeaVM build, or iOS — if a change is explicitly scoped to one of those platforms and does not also reach Android, leave it out. Cross-platform changes that also reach Android are fine; do not prefix them with a platform name.
 Omit changes that mention store releases, yandex, ads, firebase, telemetry.
 

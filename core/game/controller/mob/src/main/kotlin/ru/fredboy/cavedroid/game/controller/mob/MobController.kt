@@ -19,7 +19,7 @@ import ru.fredboy.cavedroid.entity.mob.abstraction.MobWorldAdapter
 import ru.fredboy.cavedroid.entity.mob.abstraction.ProjectileAdapter
 import ru.fredboy.cavedroid.entity.mob.model.Mob
 import ru.fredboy.cavedroid.entity.mob.model.Player
-import ru.fredboy.cavedroid.game.controller.mob.impl.PlayerAdapterImpl_Factory
+import ru.fredboy.cavedroid.game.controller.mob.impl.PlayerAdapterImpl
 import java.util.LinkedList
 import javax.inject.Inject
 
@@ -42,7 +42,7 @@ class MobController @Inject constructor(
 ) : Disposable {
 
     // TODO: Do proper DI
-    private val playerAdapter = PlayerAdapterImpl_Factory.newInstance(this)
+    private val playerAdapter = PlayerAdapterImpl(this)
 
     private val _mobs = LinkedList<Mob>()
 

@@ -42,7 +42,7 @@ class LightingOverlayRenderer(
         val visible: Rectangle = gameContextRepository.getCameraContext().visibleWorld
         val padding = 1
         val minX = floor(visible.x).toInt() - padding
-        val minY = max(0, floor(visible.y).toInt() - padding)
+        val minY = floor(visible.y).toInt() - padding
         val maxX = ceil(visible.x + visible.width).toInt() + padding
         val maxY = floor(visible.y + visible.height).toInt() + padding
         val clampedMaxY = maxY.coerceAtMost(gameWorld.height - 1)
@@ -55,7 +55,8 @@ class LightingOverlayRenderer(
         val raw = ensureRawBuffer(w * h)
 
         for (j in 0 until h) {
-            val worldY = minY + j
+            // Extend the top edge lighting above the world so the overlay has no visible border.
+            val worldY = (minY + j).coerceAtLeast(0)
             for (i in 0 until w) {
                 raw[i + j * w] = computeCellBrightness(minX + i, worldY, sunBrightness)
             }
@@ -98,8 +99,6 @@ class LightingOverlayRenderer(
     }
 
     private fun computeCellBrightness(worldX: Int, worldY: Int, sunBrightness: Float): Float {
-        if (worldY < 0 || worldY >= gameWorld.height) return 1f
-
         val selfOpaque = grid.isOpaqueAt(worldX, worldY)
         val selfEffective = grid.effective(worldX, worldY, sunBrightness)
 

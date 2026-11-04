@@ -183,8 +183,7 @@ class TouchWindowInputHandler @Inject constructor(
                         val trash = window is CreativeInventoryTabsWindow && window.selectedTab.isInventory
                         if (!trash) {
                             window.selectedItem?.takeUnless { it.isNoneOrNull() }?.let {
-                                val direction = player.direction.basis
-                                drops.offerItem(player.x + DROP_DISTANCE * direction, player.y - player.height / 2, it, Vector2(50f * direction, -50f))
+                                drops.offerItem(player.cursorX, player.cursorY, it, Vector2.Zero)
                             }
                         }
                         window.selectedItem = null
@@ -265,6 +264,5 @@ class TouchWindowInputHandler @Inject constructor(
 
     companion object {
         private const val CATALOG_HOLD_SECONDS = .35f
-        private const val DROP_DISTANCE = 2.5f
     }
 }

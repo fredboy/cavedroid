@@ -21,6 +21,20 @@ class BoatHintControllerTest {
     private val hints = BoatHintController(context)
 
     @Test
+    fun `tapping mount shows dismount next and tapping dismount remembers completion`() {
+        hints.notifyPlacedAfloat("boat")
+        hints.dismiss()
+        assertSame(OnboardingStep.DismountBoat, hints.state?.step)
+        assertFalse(completed)
+        hints.dismiss()
+        hints.update(1.5f)
+        assertNull(hints.state)
+        assertTrue(completed)
+        hints.notifyMounted("boat")
+        assertNull(hints.state)
+    }
+
+    @Test
     fun `no boat hint is shown before placement or mounting`() {
         hints.update(60f)
         assertNull(hints.state)

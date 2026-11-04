@@ -88,6 +88,7 @@ fi
 prompt="You are writing GitHub Release notes for CaveDroid, a 2D Minecraft-inspired indie game (Android, desktop, web).
 
 Below is the raw git commit log for release ${tag} (previous tag: ${prev_tag:-(none)}). Drop refactors, internal cleanup, build/CI tweaks, and dependency bumps — keep only what a player would care about (new features, gameplay changes, bug fixes, UI improvements).
+Read the entire commit log before selecting entries. If a feature was introduced in this release, describe its addition once and omit follow-up commits that adjust, polish, tune, or fix that new feature; do not mention those adjustments separately or within the feature's entry. For example, if this release adds background music (BGM), include its addition but ignore a later \"Increase bgm volume\" commit. Keep relevant improvements and fixes to features that existed before this release.
 
 Output English-only markdown. Group items by category (New Features / Improvements / Fixes — omit empty groups) using #### subheaders, with markdown bullet lists under each. Do not include any top-level (##) language section heading.
 
