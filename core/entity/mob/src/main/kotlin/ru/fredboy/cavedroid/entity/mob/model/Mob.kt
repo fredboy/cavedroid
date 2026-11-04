@@ -423,7 +423,7 @@ abstract class Mob(
         // Box2D leaves a small gap between the feet and the supporting block.
         val groundY = (position.y + height / 2f + ICE_GROUND_PROBE_DISTANCE).floorToInt()
         val onIce = footContactCounter > 0 && !canClimb && !canSwim &&
-                mobWorldAdapter.getForegroundBlock(mapX, groundY).params.key == "ice"
+            mobWorldAdapter.getForegroundBlock(mapX, groundY).params.key == "ice"
 
         velocity.x = if (onIce) {
             val remainingSpeed = abs(velocity.x) - ICE_DECELERATION * delta

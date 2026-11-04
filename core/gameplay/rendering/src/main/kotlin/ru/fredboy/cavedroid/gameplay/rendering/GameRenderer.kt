@@ -280,12 +280,12 @@ class GameRenderer @Inject constructor(
             performanceMonitor.endStage(PerformanceMetric.RENDER_CACHE_PREPARE, cacheStart)
             performanceMonitor.incrementGauge(
                 ru.fredboy.cavedroid.common.performance.PerformanceGauge.CACHE_UPDATES,
-                terrainCache.updates
+                terrainCache.updates,
             )
             terrainCache.trim(ru.fredboy.cavedroid.gameplay.rendering.utils.RenderChunkWindow(viewport).capacity * terrainRenderers.sumOf { it.cacheLayerCount } + 1)
             isReady = terrainRenderers.all { it.cacheReady(viewport) } && lightingSystem.prepareView(
                 viewport,
-                finish = delta == 0f
+                finish = delta == 0f,
             )
 
             spriter.projectionMatrix = camera.combined

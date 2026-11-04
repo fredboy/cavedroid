@@ -14,15 +14,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: set up JDK 25
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v6
       with:
         java-version: '25'
         distribution: 'temurin'
+        java-package: 'jdk+jmods'
         cache: gradle
 
     - name: mock keystore.properties
       run: echo "releaseKeystorePath=mock" > keystore.properties
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew desktop:dist
+    - name: Build and shrink desktop JAR
+      run: ./gradlew desktop:proguard --info
