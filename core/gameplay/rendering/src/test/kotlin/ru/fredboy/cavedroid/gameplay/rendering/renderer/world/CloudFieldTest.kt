@@ -16,16 +16,54 @@ class CloudFieldTest {
     }
 
     @Test
-    fun `each altitude band keeps clouds in view throughout long horizontal travel`() {
+    fun `cloud field stays visible throughout long horizontal travel and wind drift`() {
         for (seed in 0L..15L) {
             val field = CloudField(seed, 128)
             for (cameraX in -8192..8192 step 17) {
+                field.update(60f)
                 val viewport = Rectangle(cameraX.toFloat(), 64f, 16f, 64f)
-                val bands = visible(field, viewport).map { (cloud, _) -> ((cloud.y + 9.5f) / 2f).toInt() }.toSet()
-                assertEquals((0..7).toSet(), bands, "seed=$seed, x=$cameraX")
+                val clouds = visible(field, viewport)
+                assertFalse(clouds.isEmpty(), "seed=$seed, x=$cameraX")
+                assertTrue(clouds.all { (_, bounds) -> bounds.overlaps(viewport) })
             }
         }
     }
+
+    @Test
+    fun `smaller clouds scroll slower when the camera moves`() {
+        val field = CloudField(42L, 128)
+        val before = visible(field, Rectangle(0f, 64f, 64f, 64f)).toMap()
+        val after = visible(field, Rectangle(1f, 64f, 64f, 64f)).toMap()
+        val shifts = field.clouds.sortedBy { it.width }.map { cloud ->
+            val screenShift = wrappedShift(before.getValue(cloud).x, after.getValue(cloud).x - 1f)
+            assertTrue(screenShift < 0f && screenShift >= -0.201f)
+            screenShift
+        }
+        assertTrue(shifts.first() > shifts.last())
+        assertTrue(shifts.zipWithNext().all { (smaller, larger) -> smaller >= larger - 0.0001f })
+    }
+
+    @Test
+    fun `wind moves clouds with a stationary camera and is independent of frame rate`() {
+        val field = CloudField(42L, 128)
+        val steppedField = CloudField(42L, 128)
+        val viewport = Rectangle(0f, 64f, 64f, 64f)
+        val before = visible(field, viewport).toMap()
+        field.update(1f)
+        repeat(60) { steppedField.update(1f / 60f) }
+        val after = visible(field, viewport).toMap()
+        val stepped = visible(steppedField, viewport).toMap()
+        val shifts = field.clouds.sortedBy { it.width }.map { cloud ->
+            assertEquals(after.getValue(cloud).x, stepped.getValue(cloud).x, 0.0001f)
+            val shift = wrappedShift(before.getValue(cloud).x, after.getValue(cloud).x)
+            assertTrue(shift > 0f && shift <= 0.101f)
+            shift
+        }
+        assertTrue(shifts.first() < shifts.last())
+        assertTrue(shifts.zipWithNext().all { (smaller, larger) -> smaller <= larger + 0.0001f })
+    }
+
+    private fun wrappedShift(before: Float, after: Float): Float = (after - before + 96f) % 64f - 32f
 
     @Test
     fun `clouds scroll vertically slower than the landscape across zoom levels and the sea level clamp`() {
