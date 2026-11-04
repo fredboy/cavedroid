@@ -22,7 +22,6 @@ class GameWorldFluidsLogicControllerTaskTest {
     private val items = mockk<ItemsRepository>()
     private val params = mockk<CommonBlockParams>(relaxed = true)
     private val air = Block.None(params)
-    private val ice = Block.Normal(params)
     private val stone = Block.Normal(
         mockk<CommonBlockParams>(relaxed = true) {
             every { hasCollision } returns true
@@ -49,7 +48,6 @@ class GameWorldFluidsLogicControllerTaskTest {
         }
         every { items.getBlocksByType(Block.Water::class.java) } returns waters
         every { items.getBlocksByType(Block.Lava::class.java) } returns lavas
-        every { items.getBlockByKey("ice") } returns ice
         every { items.getBlockByKey("stone") } returns stone
         every { items.getBlockByKey("cobblestone") } returns cobblestone
         every { items.getBlockByKey("obsidian") } returns obsidian
@@ -64,13 +62,13 @@ class GameWorldFluidsLogicControllerTaskTest {
     }
 
     @Test
-    fun `fluid ticks freeze only the upper source layer at negative world coordinates`() {
+    fun `fluid ticks leave exposed winter sources liquid until a growth tick freezes them`() {
         blocks[-5 to 128] = waters[0]
         blocks[-5 to 129] = waters[0]
 
         repeat(2) { task.exec() }
 
-        assertEquals(ice, blocks[-5 to 128])
+        assertEquals(waters[0], blocks[-5 to 128])
         assertEquals(waters[0], blocks[-5 to 129])
     }
 
@@ -85,14 +83,14 @@ class GameWorldFluidsLogicControllerTaskTest {
     }
 
     @Test
-    fun `fluid ticks use the biome of each water column`() {
+    fun `fluid ticks leave sources liquid in both winter and plains`() {
         every { world.getBiomeAt(-4) } returns Biome.PLAINS
         blocks[-5 to 128] = waters[0]
         blocks[-4 to 128] = waters[0]
 
         task.exec()
 
-        assertEquals(ice, blocks[-5 to 128])
+        assertEquals(waters[0], blocks[-5 to 128])
         assertEquals(waters[0], blocks[-4 to 128])
     }
 
