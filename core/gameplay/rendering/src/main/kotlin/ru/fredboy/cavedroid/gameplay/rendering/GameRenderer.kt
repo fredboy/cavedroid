@@ -42,7 +42,6 @@ import kotlin.math.exp
 class GameRenderer @Inject constructor(
     private val terrainCache: TerrainRenderCache,
     private val poses: PresentationPoses,
-    private val fontAssets: ru.fredboy.cavedroid.domain.assets.repository.FontTextureAssetsRepository,
     private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     private val applicationContextRepository: ApplicationContextRepository,
     private val gameContextRepository: GameContextRepository,
@@ -279,9 +278,15 @@ class GameRenderer @Inject constructor(
             val cacheStart = performanceMonitor.startStage()
             terrainCache.prepare(finish = delta == 0f)
             performanceMonitor.endStage(PerformanceMetric.RENDER_CACHE_PREPARE, cacheStart)
-            performanceMonitor.incrementGauge(ru.fredboy.cavedroid.common.performance.PerformanceGauge.CACHE_UPDATES, terrainCache.updates)
+            performanceMonitor.incrementGauge(
+                ru.fredboy.cavedroid.common.performance.PerformanceGauge.CACHE_UPDATES,
+                terrainCache.updates
+            )
             terrainCache.trim(ru.fredboy.cavedroid.gameplay.rendering.utils.RenderChunkWindow(viewport).capacity * terrainRenderers.sumOf { it.cacheLayerCount } + 1)
-            isReady = terrainRenderers.all { it.cacheReady(viewport) } && lightingSystem.prepareView(viewport, finish = delta == 0f)
+            isReady = terrainRenderers.all { it.cacheReady(viewport) } && lightingSystem.prepareView(
+                viewport,
+                finish = delta == 0f
+            )
 
             spriter.projectionMatrix = camera.combined
             shaper.projectionMatrix = camera.combined
