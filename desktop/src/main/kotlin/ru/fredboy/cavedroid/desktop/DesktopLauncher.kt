@@ -6,7 +6,9 @@ import com.badlogic.gdx.Files
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 import kotlinx.coroutines.Dispatchers
+import org.lwjgl.glfw.GLFW
 import org.lwjgl.system.Configuration
+import org.lwjgl.system.Platform
 import ru.fredboy.cavedroid.common.CaveDroidConstants.PreferenceKeys
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainDispatcher
@@ -26,6 +28,8 @@ internal object DesktopLauncher {
         if (Runtime.version().feature() >= 25) {
             Configuration.MEMORY_BACKEND.set(Configuration.MEMORY_BACKEND.get() ?: "ffm")
         }
+
+        configureGlfwPlatform()
 
         val config = Lwjgl3ApplicationConfiguration()
 
@@ -89,6 +93,24 @@ internal object DesktopLauncher {
             startRepl(caveGame)
         }
         Lwjgl3Application(SaveSizePrefsGameDecorator(caveGame), config)
+    }
+
+    private fun configureGlfwPlatform() {
+        if (Platform.get() != Platform.LINUX) return
+
+        val isGnome = System.getenv("XDG_CURRENT_DESKTOP")
+            ?.split(':')
+            ?.any { it.equals("GNOME", ignoreCase = true) } == true
+        val isWayland = System.getenv("XDG_SESSION_TYPE").equals("wayland", ignoreCase = true) &&
+                !System.getenv("WAYLAND_DISPLAY").isNullOrBlank()
+        val hasXWayland = !System.getenv("DISPLAY").isNullOrBlank()
+
+        // libdecor's GTK plugin requires the original native thread, but Java main runs on another.
+        // On GNOME, use XWayland so the compositor provides native window decorations instead.
+        if (isGnome && isWayland && hasXWayland && GLFW.glfwPlatformSupported(GLFW.GLFW_PLATFORM_X11)) {
+            GLFW.glfwInitHint(GLFW.GLFW_PLATFORM, GLFW.GLFW_PLATFORM_X11)
+            logger.i { "Using XWayland for GNOME window decorations" }
+        }
     }
 
     private fun startRepl(caveGame: CaveDroidApplication) {
