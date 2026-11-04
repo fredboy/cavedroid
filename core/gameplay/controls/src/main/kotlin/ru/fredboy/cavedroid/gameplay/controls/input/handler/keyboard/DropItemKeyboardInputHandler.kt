@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.keyboard
 
-import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.items.model.inventory.InventoryItem
 import ru.fredboy.cavedroid.domain.items.model.item.isNone
@@ -27,12 +26,11 @@ class DropItemKeyboardInputHandler @Inject constructor(
         gameWindowsManager.currentWindowType == GameWindowType.NONE &&
         !playerAdapter.activeItem.item.isNone()
 
-    private fun createDrop(item: InventoryItem, playerX: Float, playerY: Float, dropAmount: Int) {
+    private fun createDrop(item: InventoryItem, dropAmount: Int) {
         dropController.addDrop(
-            x = playerX + DROP_DISTANCE * playerAdapter.direction.basis,
-            y = playerY,
+            x = playerAdapter.cursorX,
+            y = playerAdapter.cursorY,
             inventoryItem = item.copy().apply { amount = dropAmount },
-            initialForce = Vector2(50f * playerAdapter.direction.basis, -50f),
         )
     }
 
@@ -42,8 +40,6 @@ class DropItemKeyboardInputHandler @Inject constructor(
 
         createDrop(
             item = currentItem,
-            playerX = playerAdapter.x,
-            playerY = playerAdapter.y - playerAdapter.height / 2,
             dropAmount = dropAmount,
         )
         playerAdapter.decreaseCurrentItemCount(dropAmount)
@@ -51,9 +47,5 @@ class DropItemKeyboardInputHandler @Inject constructor(
 
     override fun reset() {
         // no-op
-    }
-
-    companion object {
-        const val DROP_DISTANCE = 1.25f
     }
 }

@@ -1,6 +1,5 @@
 package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
@@ -16,7 +15,6 @@ import ru.fredboy.cavedroid.gameplay.controls.input.IMouseInputHandler
 import ru.fredboy.cavedroid.gameplay.controls.input.action.MouseInputAction
 import ru.fredboy.cavedroid.gameplay.controls.input.action.keys.MouseInputActionKey
 import ru.fredboy.cavedroid.gameplay.controls.input.annotation.BindMouseInputHandler
-import ru.fredboy.cavedroid.gameplay.controls.input.handler.keyboard.DropItemKeyboardInputHandler.Companion.DROP_DISTANCE
 import ru.fredboy.cavedroid.gameplay.controls.input.isInsideHotbar
 import javax.inject.Inject
 
@@ -61,12 +59,12 @@ class HotbarMouseInputHandler @Inject constructor(
         buttonHoldTask = null
     }
 
-    private fun createDrop(item: InventoryItem, playerX: Float, playerY: Float, dropAmount: Int) {
+    private fun createDrop(item: InventoryItem, dropAmount: Int) {
+        val player = mobController.player
         dropController.addDrop(
-            x = playerX + DROP_DISTANCE * mobController.player.direction.basis,
-            y = playerY,
+            x = player.cursorX,
+            y = player.cursorY,
             inventoryItem = item.copy().apply { amount = dropAmount },
-            initialForce = Vector2(50f * mobController.player.direction.basis, -50f),
         )
     }
 
@@ -86,7 +84,7 @@ class HotbarMouseInputHandler @Inject constructor(
         val currentItem = player.inventory.items[actionSlot]
         val dropAmount = if (currentItem.item is Item.Tool || currentItem.item is Item.Armor) currentItem.amount else 1
 
-        createDrop(currentItem, player.position.x, player.position.y, dropAmount)
+        createDrop(currentItem, dropAmount)
         player.inventory.decreaseItemAmount(actionSlot, dropAmount)
     }
 

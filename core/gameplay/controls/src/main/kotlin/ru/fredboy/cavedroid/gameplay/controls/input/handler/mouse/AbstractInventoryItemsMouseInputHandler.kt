@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gameplay.controls.input.handler.mouse
 import co.touchlab.kermit.Logger
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Timer
 import ru.fredboy.cavedroid.common.api.InventoryHintEvents
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
@@ -220,7 +221,7 @@ abstract class AbstractInventoryItemsMouseInputHandler(
 
         val selectedItem = window.selectedItem?.takeIf { !it.isNoneOrNull() } ?: return
 
-        dropQueue.offerItem(playerAdapter.x, playerAdapter.y, selectedItem)
+        dropQueue.offerItem(playerAdapter.cursorX, playerAdapter.cursorY, selectedItem, Vector2.Zero)
         window.selectedItem = null
     }
 
