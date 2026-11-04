@@ -28,7 +28,6 @@ import ru.fredboy.cavedroid.entity.mob.impl.PlayerMobBehavior
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.sign
 
 class Player(
     private val getFallbackItem: GetFallbackItemUseCase,
@@ -91,20 +90,6 @@ class Player(
 
     override val effectiveSpeedMultiplier: Float
         get() = if (isSprinting) SPRINT_SPEED_MULTIPLIER else 1f
-
-    override fun stopHorizontalMovement(mobWorldAdapter: MobWorldAdapter, delta: Float) {
-        // Box2D leaves a small gap between the feet and the supporting block.
-        val groundY = (position.y + height / 2f + ICE_GROUND_PROBE_DISTANCE).floorToInt()
-        val onIce = footContactCounter > 0 && !canClimb && !canSwim &&
-                mobWorldAdapter.getForegroundBlock(mapX, groundY).params.key == "ice"
-
-        velocity.x = if (onIce) {
-            val remainingSpeed = abs(velocity.x) - ICE_DECELERATION * delta
-            if (remainingSpeed > 0f) sign(velocity.x) * remainingSpeed else 0f
-        } else {
-            0f
-        }
-    }
 
     var foodLevel: Int = MAX_FOOD_LEVEL
     var saturationLevel: Float = INITIAL_SATURATION
@@ -618,9 +603,6 @@ class Player(
     }
 
     companion object {
-        private const val ICE_DECELERATION = 2f
-        private const val ICE_GROUND_PROBE_DISTANCE = 0.05f
-
         const val HOTBAR_SIZE = 9
         const val INVENTORY_SIZE = 36
 
