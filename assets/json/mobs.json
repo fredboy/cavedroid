@@ -294,7 +294,7 @@
       {
         "file": "leg",
         "offset_x": 2,
-        "offset_y": 20,
+        "offset_y": 18,
         "is_background": true,
         "is_static": false
       },
@@ -314,7 +314,7 @@
       {
         "file": "leg",
         "offset_x": 2,
-        "offset_y": 20,
+        "offset_y": 18,
         "is_background": false,
         "is_static": false
       },
@@ -353,7 +353,7 @@
       {
         "file": "leg",
         "offset_x": 9,
-        "offset_y": 12,
+        "offset_y": 10,
         "is_background": true,
         "is_head": false,
         "is_hand": false,
@@ -362,7 +362,7 @@
       {
         "file": "leg",
         "offset_x": 21,
-        "offset_y": 12,
+        "offset_y": 10,
         "is_background": true,
         "is_head": false,
         "is_hand": false,
@@ -378,7 +378,7 @@
       {
         "file": "leg",
         "offset_x": 9,
-        "offset_y": 12,
+        "offset_y": 10,
         "is_background": false,
         "is_head": false,
         "is_hand": false,
@@ -387,7 +387,7 @@
       {
         "file": "leg",
         "offset_x": 21,
-        "offset_y": 12,
+        "offset_y": 10,
         "is_background": false,
         "is_head": false,
         "is_hand": false,
@@ -499,7 +499,7 @@
       {
         "file": "leg",
         "offset_x": 6,
-        "offset_y": 10,
+        "offset_y": 8,
         "is_background": true,
         "is_head": false,
         "is_hand": false,
@@ -508,7 +508,7 @@
       {
         "file": "leg_fur",
         "offset_x": 6,
-        "offset_y": 10,
+        "offset_y": 8,
         "is_background": true,
         "is_head": false,
         "is_hand": false,
@@ -518,7 +518,7 @@
       {
         "file": "leg",
         "offset_x": 18,
-        "offset_y": 10,
+        "offset_y": 8,
         "is_background": true,
         "is_head": false,
         "is_hand": false,
@@ -527,7 +527,7 @@
       {
         "file": "leg_fur",
         "offset_x": 18,
-        "offset_y": 10,
+        "offset_y": 8,
         "is_background": true,
         "is_head": false,
         "is_hand": false,
@@ -572,7 +572,7 @@
       {
         "file": "leg",
         "offset_x": 6,
-        "offset_y": 10,
+        "offset_y": 8,
         "is_background": false,
         "is_head": false,
         "is_hand": false,
@@ -581,7 +581,7 @@
       {
         "file": "leg_fur",
         "offset_x": 6,
-        "offset_y": 10,
+        "offset_y": 8,
         "is_background": false,
         "is_head": false,
         "is_hand": false,
@@ -591,7 +591,7 @@
       {
         "file": "leg",
         "offset_x": 18,
-        "offset_y": 10,
+        "offset_y": 8,
         "is_background": false,
         "is_head": false,
         "is_hand": false,
@@ -600,7 +600,7 @@
       {
         "file": "leg_fur",
         "offset_x": 18,
-        "offset_y": 10,
+        "offset_y": 8,
         "is_background": false,
         "is_head": false,
         "is_hand": false,
@@ -727,7 +727,7 @@
       {
         "file": "leg",
         "offset_x": 2,
-        "offset_y": 20,
+        "offset_y": 18,
         "is_background": true,
         "is_static": false
       },
@@ -747,7 +747,7 @@
       {
         "file": "leg",
         "offset_x": 2,
-        "offset_y": 20,
+        "offset_y": 18,
         "is_background": false,
         "is_static": false
       },
