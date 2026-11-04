@@ -2,6 +2,7 @@ name: Finalize Release
 
 # Manually triggered from the Actions UI (or `gh workflow run`). On the
 # release/A.B.C branch:
+#   0. Runs ktlint, core tests, and the Android FOSS debug build; stops on failure.
 #   1. AI-generates plaintext fastlane changelogs for every supported locale (OpenAI).
 #   2. Commits them with [skip ci] and pushes the release branch.
 #   3. Opens a PR release/A.B.C -> master, enables auto-merge.
@@ -47,18 +48,25 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: gradle
+
       - name: Configure git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Run finalize-release
+      - name: Run checks and finalize release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          chmod +x scripts/*.sh
+          chmod +x gradlew scripts/*.sh
           ./scripts/finalize-release.sh "${{ inputs.version }}" --skip-clean-check
 
       - name: Summary
@@ -66,6 +74,7 @@ jobs:
           {
             echo "### Release v${{ inputs.version }} finalized"
             echo
+            echo "- Ktlint, core tests, and Android FOSS debug build passed"
             echo "- Master PR opened and merged (auto-merge)"
             echo "- \`v${{ inputs.version }}\` tagged on the master merge commit"
             echo "- Develop sync PR opened with auto-merge enabled"
