@@ -36,7 +36,7 @@ import javax.inject.Inject
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
-import kotlin.math.min
+import kotlin.math.exp
 
 @GameScope
 class GameRenderer @Inject constructor(
@@ -100,6 +100,7 @@ class GameRenderer @Inject constructor(
     private val skyRightColor = Color()
     private val playerPosition = Vector2()
     private val aimPosition = Vector2()
+    private val cameraTargetPosition = Vector3()
 
     init {
         Gdx.gl.glClearColor(0f, .6f, .6f, 1f)
@@ -114,26 +115,16 @@ class GameRenderer @Inject constructor(
         updateStaticCameraPosition(playerPosition.x, playerPosition.y)
     }
 
-    private fun updateDynamicCameraPosition(delta: Float) {
-        poses.playerPosition(playerPosition)
+    private fun updateDynamicCameraTarget() {
         poses.aimPosition(
             out = aimPosition,
             mouseWorldX = camera.position.x + camera.viewportWidth * (Gdx.input.x.toFloat() / Gdx.graphics.width - 0.5f),
             mouseWorldY = camera.position.y + camera.viewportHeight * (Gdx.input.y.toFloat() / Gdx.graphics.height - 0.5f),
         )
-        val cameraTargetPosition = Vector3().apply {
+        cameraTargetPosition.apply {
             x = playerPosition.x / 2f + aimPosition.x / 2f
             y = playerPosition.y / 2f + aimPosition.y / 2f
         }
-
-        val moveVector = cameraTargetPosition.sub(camera.position)
-
-        if (!moveVector.isZero(0.05f)) {
-            val l = moveVector.len()
-            moveVector.nor().scl(min(l, 30f * delta))
-        }
-
-        camera.position.add(moveVector)
     }
 
     private fun wrapCameraToPlayerSeam() {
@@ -143,21 +134,24 @@ class GameRenderer @Inject constructor(
         }
 
         val worldWidth = gameWorld.width.toFloat()
-        val cameraToPlayer = player.x - camera.position.x
+        val cameraToPlayer = playerPosition.x - camera.position.x
         if (cameraToPlayer > worldWidth / 2f) {
-            camera.position.add(Vector3(worldWidth, 0f, 0f))
+            camera.position.x += worldWidth
         } else if (cameraToPlayer < -worldWidth / 2f) {
-            camera.position.sub(Vector3(worldWidth, 0f, 0f))
+            camera.position.x -= worldWidth
         }
     }
 
     private fun updateCameraPosition(delta: Float) {
+        poses.playerPosition(playerPosition)
         wrapCameraToPlayerSeam()
+        cameraTargetPosition.set(playerPosition.x, playerPosition.y, 0f)
         if (applicationContextRepository.useDynamicCamera()) {
-            updateDynamicCameraPosition(delta)
-        } else {
-            updateStaticCameraPositionToPlayer()
+            updateDynamicCameraTarget()
         }
+        // Exponential lerp keeps the follow response consistent across frame rates.
+        val alpha = 1f - exp(-CAMERA_FOLLOW_SPEED * delta.coerceAtLeast(0f))
+        camera.position.lerp(cameraTargetPosition, alpha)
         updateCameraContext()
         camera.update()
     }
@@ -308,7 +302,7 @@ class GameRenderer @Inject constructor(
             performanceMonitor.measure(PerformanceMetric.RENDER_WORLD) {
                 worldRenderers.forEach { renderer ->
                     val metric = when (renderer) {
-                        is ru.fredboy.cavedroid.gameplay.rendering.renderer.world.BlocksRenderer -> PerformanceMetric.RENDER_BLOCKS
+                        is BlocksRenderer -> PerformanceMetric.RENDER_BLOCKS
                         is ru.fredboy.cavedroid.gameplay.rendering.renderer.world.DropsRenderer -> PerformanceMetric.RENDER_DROPS
                         is ru.fredboy.cavedroid.gameplay.rendering.renderer.world.ProjectilesRenderer -> PerformanceMetric.RENDER_PROJECTILES
                         else -> null
@@ -369,6 +363,7 @@ class GameRenderer @Inject constructor(
         private const val RAIN_SKY_DARKENING = 0.3f
         private const val WEATHER_SKY_FADE_BLOCKS = 16f
 
-        private const val CAMERA_DELTA = 1f / 60f
+        // About 95% of the way to a stationary target in 0.25 seconds.
+        private const val CAMERA_FOLLOW_SPEED = 12f
     }
 }
