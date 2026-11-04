@@ -102,7 +102,7 @@ internal object DesktopLauncher {
             ?.split(':')
             ?.any { it.equals("GNOME", ignoreCase = true) } == true
         val isWayland = System.getenv("XDG_SESSION_TYPE").equals("wayland", ignoreCase = true) &&
-                !System.getenv("WAYLAND_DISPLAY").isNullOrBlank()
+            !System.getenv("WAYLAND_DISPLAY").isNullOrBlank()
         val hasXWayland = !System.getenv("DISPLAY").isNullOrBlank()
 
         // libdecor's GTK plugin requires the original native thread, but Java main runs on another.
