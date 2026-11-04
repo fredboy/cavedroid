@@ -41,6 +41,12 @@ owns them unless they are shared by multiple features.
 - Bump versions with `scripts/up-version.sh <version>` so both version
   definitions stay synchronized.
 
+## Commit messages
+
+Keep commit messages concise and start with a capitalized imperative verb such as
+Fix, Add, Change, or Remove. Describe only the change; omit reasons, file lists,
+Markdown formatting, and punctuation.
+
 ## Verification
 
 Choose checks appropriate to the affected modules and behavior:
