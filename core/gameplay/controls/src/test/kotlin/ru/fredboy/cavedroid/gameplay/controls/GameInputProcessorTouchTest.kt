@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ru.fredboy.cavedroid.common.model.Joystick
+import ru.fredboy.cavedroid.common.utils.TutorialTapTargets
 import ru.fredboy.cavedroid.domain.assets.model.TouchButton
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTextureRegionByNameUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetTouchButtonsUseCase
@@ -62,7 +63,7 @@ class GameInputProcessorTouchTest {
     private val touchWindow = mockk<TouchWindowInputHandler>(relaxed = true)
     private val input = GameInputProcessor(
         application, context, buttons, mockk(), MouseInputActionMapper(application), KeyboardInputActionMapper(application),
-        setOf(JoystickInputHandler(application, context, mobs, vehicles, windows, textures), cursor, hotbar, touchWindow), emptySet(), windows, mobs, vehicles,
+        setOf(JoystickInputHandler(application, context, mobs, vehicles, windows, textures), cursor, hotbar, touchWindow), emptySet(), windows, mobs, vehicles, TutorialTapTargets(),
     )
 
     @BeforeEach

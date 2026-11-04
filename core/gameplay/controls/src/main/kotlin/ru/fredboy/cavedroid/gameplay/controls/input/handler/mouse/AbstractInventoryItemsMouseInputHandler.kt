@@ -157,8 +157,13 @@ abstract class AbstractInventoryItemsMouseInputHandler(
         } else if (action.actionKey is MouseInputActionKey.Left) {
             window.onLeftCLick(items, itemsRepository, index)
         } else {
+            val wasHoldingItem = !window.selectedItem.isNoneOrNull()
             window.onRightClick(items, itemsRepository, index)
-            inventoryHintEvents.notifyItemPlacedByOne()
+            if (wasHoldingItem) {
+                inventoryHintEvents.notifyItemPlacedByOne()
+            } else if (!window.selectedItem.isNoneOrNull()) {
+                inventoryHintEvents.notifyItemHeld()
+            }
         }
         inventoryHintEvents.notifyItemMoved()
     }
