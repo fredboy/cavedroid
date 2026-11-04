@@ -12,6 +12,10 @@
 -keep class org.lwjgl.** { *; }
 -dontwarn org.lwjgl.**
 
+# KTX 1.13's unused label text accessors reference libGDX's removed StringBuilder.
+# WidgetsKt is not used by the game and is removed during shrinking.
+-dontwarn ktx.actors.WidgetsKt
+
 # Keep `Companion` object fields of serializable classes.
 # This avoids serializer lookup through `getDeclaredClasses` as done for named companion objects.
 -if @kotlinx.serialization.Serializable class **
