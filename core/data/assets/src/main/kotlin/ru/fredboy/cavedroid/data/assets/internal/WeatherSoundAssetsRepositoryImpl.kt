@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.data.assets.internal
 
 import co.touchlab.kermit.Logger
+import com.badlogic.gdx.Gdx
 import ru.fredboy.cavedroid.domain.assets.model.RainSound
 import ru.fredboy.cavedroid.domain.assets.repository.WeatherSoundAssetsRepository
 import javax.inject.Inject
@@ -30,7 +31,8 @@ internal class WeatherSoundAssetsRepositoryImpl @Inject constructor() : WeatherS
                     val thunder = runCatching {
                         ThunderDetector.analyze(assetResolver.resolve(file.path()).read())
                     }.onFailure { logger.w(it) { "Cannot detect thunder in ${file.path()}" } }.getOrNull()
-                    add(RainSound(loadSound(file), thunder))
+                    // Rain tracks exceed Android SoundPool's decoded sample limit.
+                    add(RainSound(Gdx.audio.newMusic(assetResolver.resolve(file.path())), thunder))
                 }
             }
         }
@@ -41,6 +43,7 @@ internal class WeatherSoundAssetsRepositoryImpl @Inject constructor() : WeatherS
     }
 
     override fun dispose() {
+        rainSounds.forEach { it.music.dispose() }
         super.dispose()
         rainSounds = emptyList()
     }

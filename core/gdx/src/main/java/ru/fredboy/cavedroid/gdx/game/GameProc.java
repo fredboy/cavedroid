@@ -171,6 +171,7 @@ public class GameProc implements Disposable {
 
     public void onGamePaused() {
         mBackgroundMusicController.pause();
+        mWeatherSoundController.pause();
         mGameWorld.resetPresentation();
         mGameInputProcessor.reset();
         mWorldLogicTimer.stop();
@@ -189,6 +190,7 @@ public class GameProc implements Disposable {
 
     public void hide() {
         mBackgroundMusicController.pause();
+        mWeatherSoundController.pause();
     }
 
     public void respawnPlayer() {

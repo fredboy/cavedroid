@@ -1,8 +1,8 @@
 package ru.fredboy.cavedroid.domain.assets.model
 
-import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.audio.Music
 
-data class RainSound(val sound: Sound, val thunder: ThunderTimeline?)
+data class RainSound(val music: Music, val thunder: ThunderTimeline?)
 
 data class ThunderTimeline(val durationSeconds: Double, val onsetsSeconds: List<Double>) {
     fun flashAt(positionSeconds: Double): Float {

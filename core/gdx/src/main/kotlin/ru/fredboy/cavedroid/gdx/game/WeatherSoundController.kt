@@ -1,7 +1,6 @@
 package ru.fredboy.cavedroid.gdx.game
 
 import com.badlogic.gdx.utils.Disposable
-import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.assets.model.RainSound
 import ru.fredboy.cavedroid.domain.assets.repository.WeatherSoundAssetsRepository
@@ -17,13 +16,14 @@ class WeatherSoundController @Inject constructor(
     private val gameWorld: GameWorld,
     private val mobController: MobController,
     private val weatherSoundAssetsRepository: WeatherSoundAssetsRepository,
-    private val soundPlayer: SoundPlayer,
     private val applicationContextRepository: ApplicationContextRepository,
     private val lightning: WeatherLightning,
 ) : Disposable {
 
     private var rainSound: RainSound? = null
-    private var rainSoundId: Long = -1L
+    private var playing = false
+    private var previousPosition = 0.0
+    private var loopOffset = 0.0
     private var playbackSeconds = 0.0
 
     fun update(delta: Float) {
@@ -36,11 +36,11 @@ class WeatherSoundController @Inject constructor(
         val intensity = gameWorld.weatherIntensity * biomeFactor * depthFactor
 
         if (intensity > 0f) {
-            playbackSeconds += delta.toDouble()
             if (applicationContextRepository.isSoundEnabled()) {
                 playRain(intensity)
             } else {
                 stopRainSound()
+                playbackSeconds += delta.toDouble()
                 // Weather remains visible when sound is muted.
                 loadRain()
             }
@@ -56,22 +56,33 @@ class WeatherSoundController @Inject constructor(
     }
 
     private fun playRain(intensity: Float) {
-        val volume = intensity * MAX_VOLUME
-        val sound = loadRain()?.sound ?: return
-        if (rainSoundId == -1L) {
-            rainSoundId = soundPlayer.playLoopSound(sound, volume)
-            // Each new loop starts at sample zero, including after unmuting.
-            playbackSeconds = 0.0
-        } else {
-            sound.setVolume(rainSoundId, volume)
+        val rain = loadRain() ?: return
+        val music = rain.music
+        music.volume = intensity * MAX_VOLUME
+        if (!playing) {
+            music.isLooping = true
+            music.play()
+            playing = true
         }
+        // Use the decoder clock: simulation deltas drift and Android may buffer playback.
+        val position = music.position.toDouble()
+        if (position < previousPosition) loopOffset += rain.thunder?.durationSeconds ?: 0.0
+        previousPosition = position
+        playbackSeconds = loopOffset + position
+    }
+
+    fun pause() {
+        if (playing) rainSound?.music?.pause()
+        playing = false
     }
 
     private fun loadRain(): RainSound? = rainSound ?: weatherSoundAssetsRepository.getRainSound()?.also { rainSound = it }
 
     private fun stopRainSound() {
-        rainSound?.sound?.takeIf { rainSoundId != -1L }?.let { soundPlayer.stopLoopSound(it, rainSoundId) }
-        rainSoundId = -1L
+        if (playing || previousPosition > 0.0) rainSound?.music?.stop()
+        playing = false
+        previousPosition = 0.0
+        loopOffset = 0.0
     }
 
     private fun stopRain() {
