@@ -16,6 +16,7 @@ import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.data.assets.di.DataAssetsModule
 import ru.fredboy.cavedroid.data.assets.music.BackgroundMusicAssets
+import ru.fredboy.cavedroid.data.assets.pack.GameWindowSkin
 import ru.fredboy.cavedroid.data.configuration.di.ApplicationContextModule
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
 import ru.fredboy.cavedroid.data.items.di.DataItemsModule
@@ -135,6 +136,8 @@ interface ApplicationComponent {
     val weatherSoundAssetsRepository: WeatherSoundAssetsRepository
 
     val menuSkin: Skin
+
+    val gameWindowSkin: GameWindowSkin
 
     val adController: AdController
 

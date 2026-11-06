@@ -211,6 +211,7 @@ class CaveDroidApplication(
         openedScreens.forEach(Screen::dispose)
         openedScreens.clear()
         applicationComponent.menuSkin.dispose()
+        applicationComponent.gameWindowSkin.dispose()
         applicationComponent.disposeAssets()
     }
 
@@ -278,6 +279,7 @@ class CaveDroidApplication(
         // The new screens no longer reference old textures or definitions.
         val releases = previousScreens.map { oldScreen -> { oldScreen.dispose() } } + listOf<() -> Unit>(
             { previous.menuSkin.dispose() },
+            { previous.gameWindowSkin.dispose() },
             { previous.disposeAssets() },
             { previous.assetTextureLoader.disposeAll() },
             { applicationComponent.assetPackRepository.cleanupRemoved() },

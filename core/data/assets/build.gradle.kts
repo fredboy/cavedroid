@@ -26,3 +26,10 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+
+tasks.processTestResources {
+    from(rootProject.file("assets/skin")) {
+        into("skin")
+        include("*.json", "*.atlas", "*.png", "font/*.fnt", "font/*.png")
+    }
+}

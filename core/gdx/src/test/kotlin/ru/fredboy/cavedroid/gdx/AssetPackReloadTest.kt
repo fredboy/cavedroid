@@ -22,7 +22,7 @@ class AssetPackReloadTest {
     }
 
     @Test
-    fun `candidate validates definitions assets and skin before activation without disposing current resources`() {
+    fun `candidate validates definitions assets and both skins before activation without disposing current resources`() {
         var active = current
 
         reloadAssetPacks(current, listOf("new"), { candidate }) { active = it }
@@ -37,6 +37,7 @@ class AssetPackReloadTest {
             candidate.itemsRepository.getAllItems()
             candidate.mobParamsRepository.getAllParams()
             candidate.menuSkin
+            candidate.gameWindowSkin
         }
         verify(exactly = 0) { current.disposeAssets.invoke() }
         verify(exactly = 0) { candidate.disposeAssets.invoke() }
@@ -61,15 +62,35 @@ class AssetPackReloadTest {
     }
 
     @Test
-    fun `failed world activation releases candidate skin and rolls back selection`() {
+    fun `failed world activation releases both candidate skins and rolls back selection`() {
         assertThrows(IllegalStateException::class.java) {
             reloadAssetPacks(current, listOf("new"), { candidate }) { error("Cannot load world") }
         }
 
         assertEquals(listOf("previous"), selection)
         verify { candidate.menuSkin.dispose() }
+        verify { candidate.gameWindowSkin.dispose() }
         verify { candidate.disposeAssets.invoke() }
         verify { candidate.assetTextureLoader.disposeAll() }
+    }
+
+    @Test
+    fun `invalid game window skin releases menu skin without activating the candidate`() {
+        val failure = IllegalArgumentException("Invalid game window skin")
+        every { candidate.gameWindowSkin } throws failure
+        var activated = false
+
+        val thrown = assertThrows(IllegalArgumentException::class.java) {
+            reloadAssetPacks(current, listOf("broken-skin"), { candidate }) { activated = true }
+        }
+
+        assertSame(failure, thrown)
+        assertFalse(activated)
+        assertEquals(listOf("previous"), selection)
+        verify(exactly = 1) { candidate.menuSkin.dispose() }
+        verify { candidate.disposeAssets.invoke() }
+        verify { candidate.assetTextureLoader.disposeAll() }
+        verify(exactly = 0) { current.disposeAssets.invoke() }
     }
 
     @Test

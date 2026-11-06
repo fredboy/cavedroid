@@ -10,17 +10,21 @@ import com.badlogic.gdx.utils.JsonValue
 import ru.fredboy.cavedroid.domain.assets.pack.AssetResolver
 import ru.fredboy.cavedroid.domain.assets.pack.AssetTextureLoader
 
-class PackSkin(private val resolver: AssetResolver, private val textures: AssetTextureLoader) : Skin() {
+open class PackSkin(
+    private val resolver: AssetResolver,
+    private val textures: AssetTextureLoader,
+    basePath: String = "skin/skin",
+) : Skin() {
     init {
         try {
-            val atlasFile = resolver.handle("skin/skin.atlas")
+            val atlasFile = resolver.handle("$basePath.atlas")
             val data = TextureAtlas.TextureAtlasData(atlasFile, atlasFile.parent(), false)
             data.pages.forEach { page -> page.texture = textures.load(page.textureFile.path()) }
             val atlas = TextureAtlas(data)
             // The no-arg Skin constructor has no atlas to dispose; register page textures explicitly.
             addRegions(atlas)
             atlas.textures.forEachIndexed { index, texture -> add("pack-page-$index", texture, Texture::class.java) }
-            load(resolver.handle("skin/skin.json"))
+            load(resolver.handle("$basePath.json"))
         } catch (exception: Exception) {
             dispose()
             throw exception

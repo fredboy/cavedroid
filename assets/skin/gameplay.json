@@ -1,0 +1,75 @@
+{
+  "com.badlogic.gdx.graphics.g2d.BitmapFont": {
+    "window-font": { "file": "font/lanapixel.fnt", "scaledSize": 9, "markupEnabled": false, "flip": false },
+    "window-title-font": { "file": "font/lanapixel.fnt", "scaledSize": 12, "markupEnabled": false, "flip": false },
+    "touch-font": { "file": "font/lanapixel.fnt", "scaledSize": 14, "markupEnabled": false, "flip": false },
+    "touch-title-font": { "file": "font/lanapixel.fnt", "scaledSize": 16, "markupEnabled": false, "flip": false }
+  },
+  "com.badlogic.gdx.graphics.Color": {
+    "text": { "r": 0.933, "g": 0.918, "b": 0.886, "a": 1 },
+    "muted": { "r": 0.741, "g": 0.718, "b": 0.671, "a": 1 },
+    "disabled": { "r": 0.49, "g": 0.475, "b": 0.447, "a": 1 },
+    "gold": { "r": 0.906, "g": 0.78, "b": 0.478, "a": 1 }
+  },
+  "com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable": {
+    "touch-button": { "patch": "button", "minWidth": 44, "minHeight": 44 },
+    "touch-button-hover": { "patch": "button-hover", "minWidth": 44, "minHeight": 44 },
+    "touch-button-down": { "patch": "button-down", "minWidth": 44, "minHeight": 44 },
+    "touch-button-disabled": { "patch": "button-disabled", "minWidth": 44, "minHeight": 44 },
+    "touch-primary": { "patch": "primary", "minWidth": 44, "minHeight": 44 },
+    "touch-primary-hover": { "patch": "primary-hover", "minWidth": 44, "minHeight": 44 },
+    "touch-primary-down": { "patch": "primary-down", "minWidth": 44, "minHeight": 44 },
+    "touch-field": { "patch": "field", "minWidth": 44, "minHeight": 44 },
+    "touch-field-focused": { "patch": "field-focused", "minWidth": 44, "minHeight": 44 },
+    "touch-field-disabled": { "patch": "field-disabled", "minWidth": 44, "minHeight": 44 },
+    "touch-destination": { "patch": "destination", "minWidth": 44, "minHeight": 44 },
+    "touch-destination-hover": { "patch": "destination-hover", "minWidth": 44, "minHeight": 44 },
+    "touch-destination-selected": { "patch": "destination-selected", "minWidth": 44, "minHeight": 44 },
+    "touch-destination-selected-hover": { "patch": "destination-selected-hover", "minWidth": 44, "minHeight": 44 }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
+    "default": { "font": "window-font", "fontColor": "text" },
+    "muted": { "parent": "default", "fontColor": "muted" },
+    "title": { "font": "window-title-font", "fontColor": "text" },
+    "touch": { "font": "touch-font", "fontColor": "text" },
+    "touch-muted": { "parent": "touch", "fontColor": "muted" },
+    "touch-title": { "font": "touch-title-font", "fontColor": "text" }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle": {
+    "default": { "up": "button", "over": "button-hover", "down": "button-down", "focused": "button-hover", "disabled": "button-disabled" },
+    "destination": { "up": "destination", "over": "destination-hover", "down": "destination-selected", "checked": "destination-selected", "checkedOver": "destination-selected-hover", "focused": "destination-hover", "disabled": "button-disabled" },
+    "destination-touch": { "up": "touch-destination", "over": "touch-destination-hover", "down": "touch-destination-selected", "checked": "touch-destination-selected", "checkedOver": "touch-destination-selected-hover", "focused": "touch-destination-hover", "disabled": "touch-button-disabled" }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
+    "default": { "font": "window-font", "fontColor": "text", "disabledFontColor": "disabled", "up": "button", "over": "button-hover", "down": "button-down", "focused": "button-hover", "disabled": "button-disabled" },
+    "teleport": { "parent": "default", "up": "primary", "over": "primary-hover", "down": "primary-down", "focused": "primary-hover" },
+    "touch": { "parent": "default", "font": "touch-font", "up": "touch-button", "over": "touch-button-hover", "down": "touch-button-down", "focused": "touch-button-hover", "disabled": "touch-button-disabled" },
+    "teleport-touch": { "parent": "touch", "up": "touch-primary", "over": "touch-primary-hover", "down": "touch-primary-down", "focused": "touch-primary-hover" }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle": {
+    "close": { "up": "button", "over": "button-hover", "down": "button-down", "focused": "button-hover", "disabled": "button-disabled", "imageUp": "close", "imageDisabled": "close-disabled" },
+    "previous": { "parent": "close", "imageUp": "previous", "imageDisabled": "previous-disabled" },
+    "next": { "parent": "close", "imageUp": "next", "imageDisabled": "next-disabled" },
+    "close-touch": { "parent": "close", "up": "touch-button", "over": "touch-button-hover", "down": "touch-button-down", "focused": "touch-button-hover", "disabled": "touch-button-disabled" },
+    "previous-touch": { "parent": "close-touch", "imageUp": "previous", "imageDisabled": "previous-disabled" },
+    "next-touch": { "parent": "close-touch", "imageUp": "next", "imageDisabled": "next-disabled" }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
+    "default": { "font": "window-font", "fontColor": "text", "disabledFontColor": "disabled", "messageFontColor": "muted", "background": "field", "focusedBackground": "field-focused", "disabledBackground": "field-disabled", "cursor": "cursor", "selection": "selection" },
+    "touch": { "parent": "default", "font": "touch-font", "background": "touch-field", "focusedBackground": "touch-field-focused", "disabledBackground": "touch-field-disabled" }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle": {
+    "default": { "background": "panel", "vScroll": "scroll-track", "vScrollKnob": "scroll-knob", "hScroll": "scroll-track", "hScrollKnob": "scroll-knob" },
+    "touch": { "parent": "default" }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle": {
+    "default": { "titleFont": "window-title-font", "titleFontColor": "text", "background": "window-frame", "stageBackground": "dim" },
+    "touch": { "parent": "default", "titleFont": "touch-title-font" }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle": {
+    "default-horizontal": { "background": "progress-track", "knobBefore": "progress-fill" }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle": {
+    "default": { "label": "default", "background": "panel", "wrapWidth": 180 }
+  }
+}
