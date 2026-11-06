@@ -61,6 +61,9 @@ class GameWorld @Inject constructor(
     var totalGameTimeSec = currentGameTime
     var lastSpawnGameTime = 0f
 
+    // Independent of the player's bed respawn; restored before the mob controller is created.
+    var worldSpawn: Vector2? = null
+
     var currentStreakStartDayIndex = 0
 
     var moonPhase = 0

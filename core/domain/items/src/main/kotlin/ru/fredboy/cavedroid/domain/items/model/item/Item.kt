@@ -94,6 +94,25 @@ sealed interface Item {
         override val sprite: Sprite,
     ) : Item
 
+    class Instrument(
+        override val params: CommonItemParams,
+        val kind: Kind,
+        val stateSprites: List<Sprite>,
+    ) : Item {
+        enum class Kind { CLOCK, COMPASS }
+
+        init {
+            require(stateSprites.isNotEmpty())
+        }
+
+        var frame: Int = 0
+            set(value) {
+                field = value.mod(stateSprites.size)
+            }
+
+        override val sprite: Sprite get() = stateSprites[frame]
+    }
+
     data class None(
         override val params: CommonItemParams,
     ) : Item {

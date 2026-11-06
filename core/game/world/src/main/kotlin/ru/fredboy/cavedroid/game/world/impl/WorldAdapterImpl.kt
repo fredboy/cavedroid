@@ -74,6 +74,11 @@ internal class WorldAdapterImpl @Inject constructor(
     }
 
     override fun findSpawnPoint(): Vector2 {
+        gameWorld.worldSpawn?.let { return it.cpy() }
+        return calculateWorldSpawn().also { gameWorld.worldSpawn = it.cpy() }
+    }
+
+    private fun calculateWorldSpawn(): Vector2 {
         val charParams = mobParamsRepository.getMobParamsByKey("char")
 
         if (gameWorld.isInfinite) {

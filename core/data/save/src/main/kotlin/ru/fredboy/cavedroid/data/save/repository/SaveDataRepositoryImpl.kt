@@ -286,6 +286,8 @@ internal class SaveDataRepositoryImpl @Inject constructor(
                 worldType = WorldType.INFINITE,
                 seed = meta.seed,
                 villagesEnabled = meta.villagesEnabled,
+                worldSpawnX = meta.worldSpawnX,
+                worldSpawnY = meta.worldSpawnY,
             )
         }
 
@@ -325,6 +327,8 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             worldType = WorldType.LOOPING,
             seed = meta.seed,
             villagesEnabled = meta.villagesEnabled,
+            worldSpawnX = meta.worldSpawnX,
+            worldSpawnY = meta.worldSpawnY,
         )
     }
 
@@ -379,6 +383,8 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             seed = seed,
             worldType = if (gameWorld.isInfinite) WorldType.INFINITE.ordinal else WorldType.LOOPING.ordinal,
             villagesEnabled = gameWorld.generatorConfig.villagesEnabled,
+            worldSpawnX = gameWorld.worldSpawn?.x,
+            worldSpawnY = gameWorld.worldSpawn?.y,
         )
 
         return worldSaveDataDto

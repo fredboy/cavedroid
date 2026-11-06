@@ -20,6 +20,8 @@ data class GameMapSaveData(
     val worldType: WorldType = WorldType.LOOPING,
     val seed: Long? = null,
     val villagesEnabled: Boolean = false,
+    val worldSpawnX: Float? = null,
+    val worldSpawnY: Float? = null,
 ) {
 
     override fun equals(other: Any?): Boolean {
@@ -30,6 +32,7 @@ data class GameMapSaveData(
 
         if (gameTime != other.gameTime) return false
         if (moonPhase != other.moonPhase) return false
+        if (worldSpawnX != other.worldSpawnX || worldSpawnY != other.worldSpawnY) return false
         if (!foreMap.contentDeepEquals(other.foreMap)) return false
         if (!backMap.contentDeepEquals(other.backMap)) return false
         if (!biomes.contentEquals(other.biomes)) return false
@@ -40,6 +43,8 @@ data class GameMapSaveData(
     override fun hashCode(): Int {
         var result = gameTime.hashCode()
         result = 31 * result + moonPhase.hashCode()
+        result = 31 * result + (worldSpawnX?.hashCode() ?: 0)
+        result = 31 * result + (worldSpawnY?.hashCode() ?: 0)
         result = 31 * result + (foreMap?.contentDeepHashCode() ?: 0)
         result = 31 * result + (backMap?.contentDeepHashCode() ?: 0)
         result = 31 * result + (biomes?.contentHashCode() ?: 0)

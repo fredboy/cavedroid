@@ -4030,5 +4030,43 @@
         "count": 1
       }
     ]
+  },
+  "clock": {
+    "recipes": [
+      {
+        "input": [
+          null,
+          "ingot_gold",
+          null,
+          "ingot_gold",
+          "redstone",
+          "ingot_gold",
+          null,
+          "ingot_gold",
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "compass": {
+    "recipes": [
+      {
+        "input": [
+          null,
+          "ingot_iron",
+          null,
+          "ingot_iron",
+          "redstone",
+          "ingot_iron",
+          null,
+          "ingot_iron",
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   }
 }

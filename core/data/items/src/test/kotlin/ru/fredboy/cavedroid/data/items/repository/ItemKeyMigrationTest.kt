@@ -69,6 +69,18 @@ class ItemKeyMigrationTest {
         val bundle = I18NBundle.createBundle(resource("i18n/CaveDroid_Items_en.properties").sibling("CaveDroid_Items"), java.util.Locale.ENGLISH)
         val fonts = mockk<FontTextureAssetsRepository> { every { getItemLocalizationBundle() } returns bundle }
         val repository = ItemsRepositoryImpl(resolver, ItemMapper(items, fonts, mockk()), BlockMapper(blocks, DropInfoMapper()))
+        for ((key, metal, frames) in listOf(Triple("clock", "gold", 64), Triple("compass", "iron", 32))) {
+            val instrument = repository.getItemByKey(key) as Item.Instrument
+            assertEquals(frames, instrument.stateSprites.size)
+            assertEquals(64, instrument.params.maxStack)
+            instrument.frame = frames - 1
+            assertSame(instrument.stateSprites.last(), instrument.sprite)
+            val ingot = "ingot_$metal"
+            val recipe = listOf("none", ingot, "none", ingot, "redstone", ingot, "none", ingot, "none")
+            val result = repository.getCraftingResult(recipe.map { repository.getItemByKey(it).toInventoryItem() })
+            assertSame(instrument, result.item)
+            assertEquals(1, result.amount)
+        }
         val definitions = json("json/game_items.json")
         val itemKeys = definitions.getValue("items").jsonObject.keys
         assertEquals(itemKeys, repository.getAllItems().map { it.params.key }.toSet())

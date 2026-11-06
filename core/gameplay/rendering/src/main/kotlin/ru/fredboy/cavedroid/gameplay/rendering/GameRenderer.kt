@@ -26,6 +26,7 @@ import ru.fredboy.cavedroid.game.world.lighting.LightingSystem
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.IHudRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.world.BlocksRenderer
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.world.IWorldRenderer
+import ru.fredboy.cavedroid.gameplay.rendering.utils.InstrumentPresentation
 import ru.fredboy.cavedroid.gameplay.rendering.utils.PresentationPoses
 import ru.fredboy.cavedroid.gameplay.rendering.utils.TerrainRenderCache
 import javax.inject.Inject
@@ -36,6 +37,7 @@ import kotlin.math.exp
 
 @GameScope
 class GameRenderer @Inject constructor(
+    private val instruments: InstrumentPresentation,
     private val terrainCache: TerrainRenderCache,
     private val poses: PresentationPoses,
     private val applicationContextRepository: ApplicationContextRepository,
@@ -264,6 +266,7 @@ class GameRenderer @Inject constructor(
     }
 
     fun render(delta: Float) {
+        instruments.update(delta)
         poses.snapshot = delta == 0f
         updateCameraPosition(delta)
 

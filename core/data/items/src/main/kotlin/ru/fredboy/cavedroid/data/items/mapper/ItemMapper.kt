@@ -27,6 +27,12 @@ class ItemMapper @Inject constructor(
         val params = mapCommonParams(key, dto)
 
         return when (dto.type) {
+            "clock", "compass" -> Item.Instrument(
+                params = params,
+                kind = if (dto.type == "clock") Item.Instrument.Kind.CLOCK else Item.Instrument.Kind.COMPASS,
+                stateSprites = requireNotNull(loadStateSprites(dto)),
+            )
+
             "normal" -> Item.Normal(
                 params = params,
                 sprite = requireNotNull(loadSprite(dto)),

@@ -355,6 +355,11 @@ object GameModule {
                 mapData.weatherTimer?.let { this.weatherTimer = it }
                 mapData.weatherIntensity?.let { this.weatherIntensity = it }
                 this.currentStreakStartDayIndex = mapData.currentStreakStartDayIndex
+                val spawnX = mapData.worldSpawnX
+                val spawnY = mapData.worldSpawnY
+                if (spawnX != null && spawnY != null) {
+                    this.worldSpawn = com.badlogic.gdx.math.Vector2(spawnX, spawnY)
+                }
             }
         }
     }

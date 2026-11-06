@@ -350,5 +350,7 @@ sealed class SaveDataDto {
         val worldType: Int? = null,
         // Absent in older saves: keep their streamed terrain generation unchanged.
         val villagesEnabled: Boolean = false,
+        val worldSpawnX: Float? = null,
+        val worldSpawnY: Float? = null,
     ) : SaveDataDto()
 }
