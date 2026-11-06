@@ -123,7 +123,7 @@ class BackgroundMusicController @Inject constructor(
 
     companion object {
         private val logger = Logger.withTag("BackgroundMusicController")
-        private const val VOLUME = 0.3f
+        private const val VOLUME = 0.6f
         private const val FADE_DURATION_SEC = 3f
     }
 }
