@@ -4389,6 +4389,68 @@
       "material": "wood",
       "action_sound_key": "door/open",
       "use_action": "chest"
+    },
+    "ore_redstone": {
+      "blast_resistance": 6,
+      "hp": 900,
+      "texture": "ore_redstone",
+      "tool_level": 3,
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "redstone",
+          "amount": {
+            "type": "random_range",
+            "min": 4,
+            "max": 5,
+            "chance": 1
+          }
+        }
+      ],
+      "material": "stone"
+    },
+    "storage_block_redstone": {
+      "blast_resistance": 6,
+      "hp": 1500,
+      "texture": "storage_block_redstone",
+      "tool_level": 1,
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "storage_block_redstone",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "stone"
+    },
+    "redstone_torch": {
+      "blast_resistance": 0,
+      "hp": 1,
+      "collision": false,
+      "background": true,
+      "transparent": true,
+      "block_required": true,
+      "allow_attach_to_neighbour": true,
+      "drop": "redstone_torch",
+      "drop_count": 1,
+      "texture": "redstone_torch",
+      "casts_shadows": false,
+      "light_info": {
+        "light_distance": 7
+      },
+      "drop_info": [
+        {
+          "key": "redstone_torch",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "wood"
     }
   },
   "items": {
@@ -6750,6 +6812,33 @@
       "texture": "boat_spruce",
       "action_key": "use_boat",
       "max_stack": 1
+    },
+    "ore_redstone": {
+      "creative_category": "nature",
+      "name": "Redstone Ore",
+      "type": "block",
+      "texture": "ore_redstone",
+      "smelt_product": "redstone"
+    },
+    "storage_block_redstone": {
+      "creative_category": "building",
+      "name": "Redstone Block",
+      "type": "block",
+      "texture": "storage_block_redstone"
+    },
+    "redstone": {
+      "creative_category": "materials",
+      "name": "Redstone Dust",
+      "texture": "redstone",
+      "origin_x": 0.5
+    },
+    "redstone_torch": {
+      "creative_category": "utilities",
+      "name": "Redstone Torch",
+      "type": "block",
+      "texture": "redstone_torch",
+      "origin_x": 0.5,
+      "origin_y": 1
     }
   }
 }

@@ -73,7 +73,14 @@ class WorldGenerationPipeline(middleware: List<WorldGenerationMiddleware>) {
 
     companion object {
         fun full(): WorldGenerationPipeline = WorldGenerationPipeline(
-            listOf(BackgroundOreMiddleware, MineshaftMiddleware, MonsterRoomMiddleware, VillageMiddleware, SurfaceFreezingMiddleware),
+            listOf(
+                RedstoneOreMiddleware,
+                BackgroundOreMiddleware,
+                MineshaftMiddleware,
+                MonsterRoomMiddleware,
+                VillageMiddleware,
+                SurfaceFreezingMiddleware,
+            ),
         )
 
         fun basic(): WorldGenerationPipeline = WorldGenerationPipeline(listOf(SurfaceFreezingMiddleware))

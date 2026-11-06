@@ -8,7 +8,7 @@ class BackgroundOreMiddlewareTest {
     private val items = GeneratorTestItems()
     private val config = WorldGeneratorConfig.getDefault(width = 256, seed = 123456789L)
     private val previousPipeline = WorldGenerationPipeline(
-        listOf(MineshaftMiddleware, MonsterRoomMiddleware, VillageMiddleware, SurfaceFreezingMiddleware),
+        listOf(RedstoneOreMiddleware, MineshaftMiddleware, MonsterRoomMiddleware, VillageMiddleware, SurfaceFreezingMiddleware),
     )
 
     private fun stoneContext(start: Int, width: Int, loopingWidth: Int? = null) = WorldGenerationContext(

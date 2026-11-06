@@ -3973,5 +3973,62 @@
       "shapeless": false,
       "count": 1
     }]
+  },
+  "storage_block_redstone": {
+    "recipes": [
+      {
+        "input": [
+          "redstone",
+          "redstone",
+          "redstone",
+          "redstone",
+          "redstone",
+          "redstone",
+          "redstone",
+          "redstone",
+          "redstone"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
+  },
+  "redstone": {
+    "recipes": [
+      {
+        "input": [
+          "storage_block_redstone",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": true,
+        "count": 9
+      }
+    ]
+  },
+  "redstone_torch": {
+    "recipes": [
+      {
+        "input": [
+          "redstone",
+          null,
+          null,
+          "stick",
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   }
 }
