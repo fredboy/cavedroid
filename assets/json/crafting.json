@@ -4068,5 +4068,24 @@
         "count": 1
       }
     ]
+  },
+  "waystone": {
+    "recipes": [
+      {
+        "input": [
+          "ingot_gold",
+          "lapis_lazuli",
+          "ingot_gold",
+          "obsidian",
+          "diamond",
+          "obsidian",
+          "ingot_gold",
+          "redstone",
+          "ingot_gold"
+        ],
+        "shapeless": false,
+        "count": 1
+      }
+    ]
   }
 }

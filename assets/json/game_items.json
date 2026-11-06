@@ -4451,6 +4451,23 @@
         }
       ],
       "material": "wood"
+    },
+    "waystone": {
+      "blast_resistance": 1200,
+      "hp": 15000,
+      "texture": "waystone",
+      "tool_level": 4,
+      "tool_type": "pickaxe",
+      "drop_info": [
+        {
+          "key": "waystone",
+          "amount": {
+            "type": "exact_amount",
+            "amount": 1
+          }
+        }
+      ],
+      "material": "stone"
     }
   },
   "items": {
@@ -6953,6 +6970,12 @@
         "compass_30",
         "compass_31"
       ]
+    },
+    "waystone": {
+      "creative_category": "utilities",
+      "name": "Waystone",
+      "type": "block",
+      "texture": "waystone"
     }
   }
 }
