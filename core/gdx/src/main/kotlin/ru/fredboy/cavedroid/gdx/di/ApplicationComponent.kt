@@ -13,7 +13,6 @@ import ru.fredboy.cavedroid.common.api.SaveTransferController
 import ru.fredboy.cavedroid.common.api.SoftKeyboardObserver
 import ru.fredboy.cavedroid.common.api.SoundPlayer
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
-import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.common.utils.TooltipManager
 import ru.fredboy.cavedroid.data.assets.di.DataAssetsModule
 import ru.fredboy.cavedroid.data.assets.music.BackgroundMusicAssets
@@ -147,8 +146,6 @@ interface ApplicationComponent {
 
     val lightingSystemFactory: LightingSystemFactory
 
-    val performanceMonitor: PerformanceMonitor
-
     val appDispatchers: AppDispatchers
 
     @Component.Builder
@@ -183,9 +180,6 @@ interface ApplicationComponent {
 
         @BindsInstance
         fun appDispatchers(dispatchers: AppDispatchers): Builder
-
-        @BindsInstance
-        fun performanceMonitor(monitor: PerformanceMonitor): Builder
 
         @BindsInstance
         fun assetPackPlatform(platform: AssetPackPlatform): Builder

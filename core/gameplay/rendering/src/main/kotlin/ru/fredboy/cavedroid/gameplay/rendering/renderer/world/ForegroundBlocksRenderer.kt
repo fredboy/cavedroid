@@ -4,8 +4,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
-import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.common.utils.forEachBlockInArea
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageFrameCountUseCase
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageSpriteUseCase
@@ -25,7 +23,6 @@ import javax.inject.Inject
 @BindWorldRenderer
 class ForegroundBlocksRenderer @Inject constructor(
     private val cache: TerrainRenderCache,
-    performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     gameWorld: GameWorld,
     mobController: MobController,
     containerController: ContainerController,
@@ -34,7 +31,6 @@ class ForegroundBlocksRenderer @Inject constructor(
     itemsRepository: ItemsRepository,
     fireController: FireController,
 ) : BlocksRenderer(
-    performanceMonitor = performanceMonitor,
     gameWorld = gameWorld,
     mobsController = mobController,
     containerController = containerController,

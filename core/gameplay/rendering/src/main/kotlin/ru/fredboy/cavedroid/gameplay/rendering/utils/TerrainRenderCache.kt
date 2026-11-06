@@ -21,11 +21,8 @@ class TerrainRenderCache @Inject constructor() : Disposable {
     internal fun schedule(work: BudgetedWorkQueue.Work) = queue.add(work)
     internal fun cancel(work: BudgetedWorkQueue.Work) = queue.remove(work)
 
-    var updates = 0L
-        private set
-
     fun prepare(finish: Boolean) {
-        updates = queue.run(if (finish) Long.MAX_VALUE else 2_000_000L)
+        queue.run(if (finish) Long.MAX_VALUE else 2_000_000L)
     }
 
     internal fun acquire(): FrameBuffer = free.removeFirstOrNull() ?: FrameBuffer(

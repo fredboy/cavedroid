@@ -13,10 +13,6 @@ import kotlinx.serialization.protobuf.ProtoBuf
 import ru.fredboy.cavedroid.common.CaveDroidConstants.MAX_SAVES_COUNT
 import ru.fredboy.cavedroid.common.model.GameMode
 import ru.fredboy.cavedroid.common.model.WorldType
-import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
-import ru.fredboy.cavedroid.common.performance.PerformanceMetric
-import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
-import ru.fredboy.cavedroid.common.performance.measure
 import ru.fredboy.cavedroid.common.utils.DateFormatter
 import ru.fredboy.cavedroid.data.save.mapper.ContainerControllerMapper
 import ru.fredboy.cavedroid.data.save.mapper.DropControllerMapper
@@ -76,7 +72,6 @@ import javax.inject.Inject
 
 @OptIn(ExperimentalSerializationApi::class)
 internal class SaveDataRepositoryImpl @Inject constructor(
-    private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     private val itemsRepository: ItemsRepository,
     private val dropControllerMapper: DropControllerMapper,
     private val containerControllerMapper: ContainerControllerMapper,
@@ -95,26 +90,6 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         get() = applicationContextRepository.getGameDirectoryFileType()
 
     private fun file(path: String): FileHandle {
-        val handle = rawFile(path)
-        if (performanceMonitor.mode == ru.fredboy.cavedroid.common.performance.PerformanceMode.OFF) return handle
-        return object : FileHandle(handle.file(), handle.type()) {
-            override fun write(append: Boolean): java.io.OutputStream {
-                val stream = handle.write(append)
-                return object : java.io.FilterOutputStream(stream) {
-                    override fun write(value: Int) {
-                        out.write(value)
-                        performanceMonitor.writtenBytes(1)
-                    }
-                    override fun write(bytes: ByteArray, offset: Int, length: Int) {
-                        out.write(bytes, offset, length)
-                        performanceMonitor.writtenBytes(length.toLong())
-                    }
-                }
-            }
-        }
-    }
-
-    private fun rawFile(path: String): FileHandle {
         // Absolute paths must keep the leading '/' so libGDX wraps them in an
         // absolute File. Local/Internal paths are relative to the platform's
         // base dir and the leading slash would either be rejected (web) or
@@ -583,30 +558,28 @@ internal class SaveDataRepositoryImpl @Inject constructor(
     }
 
     private fun takeScreenshot(savesPath: String) {
-        return performanceMonitor.currentSession().measure(PerformanceMetric.SAVE_SCREENSHOT) {
-            val screenshotHalfSize = 128
-            val halfWidth = Gdx.graphics.width / 2
-            val halfHeight = Gdx.graphics.height / 2
+        val screenshotHalfSize = 128
+        val halfWidth = Gdx.graphics.width / 2
+        val halfHeight = Gdx.graphics.height / 2
 
-            if (halfWidth < screenshotHalfSize || halfHeight < screenshotHalfSize) {
-                return
-            }
-
-            val pixmap = Pixmap.createFromFrameBuffer(
-                halfWidth - screenshotHalfSize,
-                halfHeight - screenshotHalfSize,
-                screenshotHalfSize shl 1,
-                screenshotHalfSize shl 1,
-            )
-
-            val size = screenshotHalfSize * screenshotHalfSize * 16
-            for (i in 3 until size step 4) {
-                pixmap.pixels.put(i, 255.toByte())
-            }
-
-            PixmapIO.writePNG(file("$savesPath/$SCREENSHOT_FILE"), pixmap, Deflater.DEFAULT_COMPRESSION, true)
-            pixmap.dispose()
+        if (halfWidth < screenshotHalfSize || halfHeight < screenshotHalfSize) {
+            return
         }
+
+        val pixmap = Pixmap.createFromFrameBuffer(
+            halfWidth - screenshotHalfSize,
+            halfHeight - screenshotHalfSize,
+            screenshotHalfSize shl 1,
+            screenshotHalfSize shl 1,
+        )
+
+        val size = screenshotHalfSize * screenshotHalfSize * 16
+        for (i in 3 until size step 4) {
+            pixmap.pixels.put(i, 255.toByte())
+        }
+
+        PixmapIO.writePNG(file("$savesPath/$SCREENSHOT_FILE"), pixmap, Deflater.DEFAULT_COMPRESSION, true)
+        pixmap.dispose()
     }
 
     override fun getActualSaveDirName(
@@ -644,72 +617,64 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         tntEntries: List<TntEntry>,
         vehicles: List<VehicleState>,
     ) {
-        return performanceMonitor.currentSession().measure(PerformanceMetric.SAVE_WRITE) {
-            val savesPath = getSavePath(gameDataFolder, saveGameDirectory)
+        val savesPath = getSavePath(gameDataFolder, saveGameDirectory)
 
-            val dropFile = file("$savesPath/$DROP_FILE")
-            val mobsFile = file("$savesPath/$MOBS_FILE")
-            val containersFile = file("$savesPath/$CONTAINERS_FILE")
-            val projectilesFile = file("$savesPath/$PROJECTILES_FILE")
-            val growBlocksFile = file("$savesPath/$GROW_BLOCKS_FILE")
-            val fireFile = file("$savesPath/$FIRE_FILE")
+        val dropFile = file("$savesPath/$DROP_FILE")
+        val mobsFile = file("$savesPath/$MOBS_FILE")
+        val containersFile = file("$savesPath/$CONTAINERS_FILE")
+        val projectilesFile = file("$savesPath/$PROJECTILES_FILE")
+        val growBlocksFile = file("$savesPath/$GROW_BLOCKS_FILE")
+        val fireFile = file("$savesPath/$FIRE_FILE")
 
-            val isInfinite = gameWorld.isInfinite
+        val isInfinite = gameWorld.isInfinite
 
-            // For infinite worlds the player stays global while mobs/drops/containers are persisted per
-            // chunk (flushed by the controllers before this call), so the global files carry player-only /
-            // empty payloads to avoid double-loading streamed entities.
-            lateinit var mobsBytes: ByteArray
-            lateinit var dropBytes: ByteArray
-            lateinit var containersBytes: ByteArray
-            lateinit var projectilesBytes: ByteArray
-            performanceMonitor.currentSession().measure(PerformanceMetric.SAVE_SERIALIZE) {
-                mobsBytes = ProtoBuf.encodeToByteArray(
-                    if (isInfinite) {
-                        mobControllerMapper.mapPlayerOnlySaveData(mobController)
-                    } else {
-                        mobControllerMapper.mapSaveData(mobController)
-                    },
-                )
-                dropBytes = ProtoBuf.encodeToByteArray(
-                    if (isInfinite) dropControllerMapper.mapEmptySaveData() else dropControllerMapper.mapSaveData(dropController),
-                )
-                containersBytes = ProtoBuf.encodeToByteArray(
-                    if (isInfinite) {
-                        containerControllerMapper.mapEmptySaveData()
-                    } else {
-                        containerControllerMapper.mapSaveData(containerController)
-                    },
-                )
-                projectilesBytes = ProtoBuf.encodeToByteArray(projectileControllerMapper.mapSaveData(projectileController))
-            }
-
-            dropFile.writeBytes(dropBytes, false)
-            mobsFile.writeBytes(mobsBytes, false)
-            containersFile.writeBytes(containersBytes, false)
-            projectilesFile.writeBytes(projectilesBytes, false)
-            file("$savesPath/$TNT_FILE").writeBytes(ProtoBuf.encodeToByteArray(tntMapper.mapSaveData(tntEntries)), false)
-
-            // Grow-blocks and fire are also persisted per chunk for infinite worlds.
-            if (!isInfinite) {
-                file("$savesPath/vehicles.dat").writeBytes(ProtoBuf.encodeToByteArray(SaveDataDto.VehiclesSaveDataDto(vehicles = vehicles.map { it.toSaveData() })), false)
-                growBlocksFile.writeBytes(ProtoBuf.encodeToByteArray(growBlocksMapper.mapSaveData(growBlockEntries)), false)
-                GZIPOutputStream(fireFile.write(false)).use {
-                    it.write(ProtoBuf.encodeToByteArray(fireControllerMapper.mapSaveData(fireEntries)))
-                }
-            }
-
+        // For infinite worlds the player stays global while mobs/drops/containers are persisted per
+        // chunk (flushed by the controllers before this call), so the global files carry player-only /
+        // empty payloads to avoid double-loading streamed entities.
+        val mobsBytes = ProtoBuf.encodeToByteArray(
             if (isInfinite) {
-                // Terrain is persisted per chunk; flush whatever is resident and dirty.
-                gameWorld.flushDirtyChunks()
+                mobControllerMapper.mapPlayerOnlySaveData(mobController)
             } else {
-                saveMap(gameWorld, savesPath)
+                mobControllerMapper.mapSaveData(mobController)
+            },
+        )
+        val dropBytes = ProtoBuf.encodeToByteArray(
+            if (isInfinite) dropControllerMapper.mapEmptySaveData() else dropControllerMapper.mapSaveData(dropController),
+        )
+        val containersBytes = ProtoBuf.encodeToByteArray(
+            if (isInfinite) {
+                containerControllerMapper.mapEmptySaveData()
+            } else {
+                containerControllerMapper.mapSaveData(containerController)
+            },
+        )
+        val projectilesBytes = ProtoBuf.encodeToByteArray(projectileControllerMapper.mapSaveData(projectileController))
+
+        dropFile.writeBytes(dropBytes, false)
+        mobsFile.writeBytes(mobsBytes, false)
+        containersFile.writeBytes(containersBytes, false)
+        projectilesFile.writeBytes(projectilesBytes, false)
+        file("$savesPath/$TNT_FILE").writeBytes(ProtoBuf.encodeToByteArray(tntMapper.mapSaveData(tntEntries)), false)
+
+        // Grow-blocks and fire are also persisted per chunk for infinite worlds.
+        if (!isInfinite) {
+            file("$savesPath/vehicles.dat").writeBytes(ProtoBuf.encodeToByteArray(SaveDataDto.VehiclesSaveDataDto(vehicles = vehicles.map { it.toSaveData() })), false)
+            growBlocksFile.writeBytes(ProtoBuf.encodeToByteArray(growBlocksMapper.mapSaveData(growBlockEntries)), false)
+            GZIPOutputStream(fireFile.write(false)).use {
+                it.write(ProtoBuf.encodeToByteArray(fireControllerMapper.mapSaveData(fireEntries)))
             }
-
-            saveMapData(gameWorld, savesPath, worldName, mobController.player.gameMode)
-
-            takeScreenshot(savesPath)
         }
+
+        if (isInfinite) {
+            // Terrain is persisted per chunk; flush whatever is resident and dirty.
+            gameWorld.flushDirtyChunks()
+        } else {
+            saveMap(gameWorld, savesPath)
+        }
+
+        saveMapData(gameWorld, savesPath, worldName, mobController.player.gameMode)
+
+        takeScreenshot(savesPath)
     }
 
     override fun loadGrowBlockEntries(
@@ -761,10 +726,8 @@ internal class SaveDataRepositoryImpl @Inject constructor(
         gameDataFolder: String,
         saveGameDirectory: String,
     ): GameMapSaveData {
-        return performanceMonitor.currentSession().measure(PerformanceMetric.CHUNK_READ) {
-            val savesPath = getSavePath(gameDataFolder, saveGameDirectory)
-            return internalLoadMap(savesPath)
-        }
+        val savesPath = getSavePath(gameDataFolder, saveGameDirectory)
+        return internalLoadMap(savesPath)
     }
 
     override fun loadContainerController(

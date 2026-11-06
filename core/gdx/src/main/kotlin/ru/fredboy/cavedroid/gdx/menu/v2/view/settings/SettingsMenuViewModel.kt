@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 import ru.fredboy.cavedroid.common.api.AdController
 import ru.fredboy.cavedroid.common.api.AssetPackPlatform
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
-import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.domain.configuration.model.LightingBackend
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.view.assetpacks.AssetPacksNavKey
@@ -24,7 +23,6 @@ import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
 class SettingsMenuViewModel(
     private val navBackStack: NavBackStack,
     private val applicationContextRepository: ApplicationContextRepository,
-    private val performanceMonitor: PerformanceMonitor,
     private val adController: AdController,
     private val assetPackPlatform: AssetPackPlatform,
     baseViewModelDependencies: BaseViewModelDependencies,
@@ -85,8 +83,6 @@ class SettingsMenuViewModel(
         .onStart { emit(applicationContextRepository.preferShowDebug) }
         .distinctUntilChanged()
 
-    private val performanceChanged = kotlinx.coroutines.flow.MutableStateFlow(false)
-
     val stateFlow: StateFlow<SettingsMenuState> = combine(
         dynamicCameraFlow,
         fullscreenFlow,
@@ -96,17 +92,14 @@ class SettingsMenuViewModel(
         personalizedAdsFlow,
         canResetHintsFlow,
         showDebugInfoFlow,
-        performanceChanged,
         musicFlow,
     ) { values ->
         SettingsMenuState(
-            performanceAvailable = performanceMonitor.available,
-            performanceMode = performanceMonitor.mode,
             dynamicCamera = values[0],
             fullscreen = values[1],
             autoJump = values[2],
             sound = values[3],
-            music = values[9],
+            music = values[8],
             smoothLighting = values[4],
             showPersonalizedAdsToggle = showPersonalizedAdsToggle,
             personalizedAds = values[5],
@@ -130,8 +123,6 @@ class SettingsMenuViewModel(
 
     private fun createState(): SettingsMenuState {
         return SettingsMenuState(
-            performanceAvailable = performanceMonitor.available,
-            performanceMode = performanceMonitor.mode,
             dynamicCamera = applicationContextRepository.useDynamicCamera(),
             fullscreen = applicationContextRepository.isFullscreen(),
             autoJump = applicationContextRepository.isAutoJumpEnabled(),
@@ -146,12 +137,6 @@ class SettingsMenuViewModel(
             showDebugSetting = applicationContextRepository.isDebug(),
             preferShowDebug = applicationContextRepository.preferShowDebug,
         )
-    }
-
-    fun onPerformanceClick() {
-        val next = performanceMonitor.mode.next(performanceMonitor.supportsLocal, performanceMonitor.supportsFirebase)
-        performanceMonitor.setMode(next)
-        performanceChanged.value = !performanceChanged.value
     }
 
     fun onDynamicCameraClick(useDynamicCamera: Boolean) {

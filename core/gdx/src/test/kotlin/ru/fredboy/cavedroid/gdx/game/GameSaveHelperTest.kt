@@ -4,7 +4,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
-import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
 import ru.fredboy.cavedroid.data.save.streaming.ChunkEntityStreamer
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.game.controller.stats.StatsController
@@ -32,7 +31,6 @@ class GameSaveHelperTest {
         explosionController = mockk(relaxed = true),
         chunkEntityStreamer = streamer,
         vehicles = mockk(relaxed = true),
-        performanceMonitor = NoOpPerformanceMonitor,
     )
 
     @Test

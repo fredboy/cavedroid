@@ -2,9 +2,6 @@ package ru.fredboy.cavedroid.gdx.game
 
 import co.touchlab.kermit.Logger
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
-import ru.fredboy.cavedroid.common.performance.PerformanceOperation
-import ru.fredboy.cavedroid.common.performance.PerformanceTrigger
 import ru.fredboy.cavedroid.data.save.streaming.ChunkEntityStreamer
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
@@ -38,7 +35,6 @@ class GameSaveHelper @Inject constructor(
     private val explosionController: ExplosionController,
     private val chunkEntityStreamer: ChunkEntityStreamer,
     private val vehicles: VehicleController,
-    private val performanceMonitor: PerformanceMonitor,
 ) {
 
     private var secondsSinceLastSave = 0f
@@ -50,14 +46,10 @@ class GameSaveHelper @Inject constructor(
 
         // A failed save is retried at the next interval, rather than on every frame.
         secondsSinceLastSave = 0f
-        val save = performanceMonitor.beginOperation(PerformanceOperation.WORLD_SAVE, PerformanceTrigger.AUTOMATIC)
         try {
             saveGame(overwrite = true)
         } catch (error: Exception) {
-            save?.fail(error)
             logger.e(error) { "Automatic save failed" }
-        } finally {
-            save?.finish()
         }
     }
 

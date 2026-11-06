@@ -7,7 +7,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
-import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
 import ru.fredboy.cavedroid.game.controller.mob.MobController
 import ru.fredboy.cavedroid.game.world.GameWorld
 import ru.fredboy.cavedroid.gameplay.controls.GameInputProcessor
@@ -27,7 +26,6 @@ class GameProcTest {
             val renderer = mockk<GameRenderer>(relaxed = true)
             val input = mockk<GameInputProcessor>(relaxed = true)
             val proc = GameProc(
-                NoOpPerformanceMonitor,
                 mockk(relaxed = true),
                 world,
                 mobs,

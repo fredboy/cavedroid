@@ -31,11 +31,6 @@ import ru.fredboy.cavedroid.common.api.SoftKeyboardObserver
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainThread
 import ru.fredboy.cavedroid.common.model.StartGameConfig
-import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
-import ru.fredboy.cavedroid.common.performance.PerformanceContext
-import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
-import ru.fredboy.cavedroid.common.performance.PerformanceOperation
-import ru.fredboy.cavedroid.common.performance.operation
 import ru.fredboy.cavedroid.common.utils.DEFAULT_VIEWPORT_WIDTH
 import ru.fredboy.cavedroid.common.utils.ratio
 import ru.fredboy.cavedroid.data.configuration.model.ApplicationContext
@@ -59,7 +54,6 @@ class CaveDroidApplication(
     private val preferencesStore: PreferencesStore,
     private val lightingSystemFactory: LightingSystemFactory,
     private val dispatchers: AppDispatchers,
-    private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     private val adController: AdController = NoOpAdController(),
     private val cloudStatsSync: CloudStatsSync = NoOpCloudStatsSync(),
     private val inlineTextInput: InlineTextInput = NoOpInlineTextInput,
@@ -107,7 +101,6 @@ class CaveDroidApplication(
     }
 
     private fun buildComponent(stats: StatsRepository? = null): ApplicationComponent = DaggerApplicationComponent.builder()
-        .performanceMonitor(performanceMonitor)
         .cloudStatsSync(cloudStatsSync)
         .applicationContext(context)
         .applicationController(applicationControllerOverride ?: this)
@@ -123,106 +116,90 @@ class CaveDroidApplication(
         .build()
 
     override fun create() {
-        return performanceMonitor.operation(PerformanceOperation.APP_INIT) {
-            logger.v { "create()" }
+        logger.v { "create()" }
 
-            GdxMainThread.init()
-            val width = DEFAULT_VIEWPORT_WIDTH
-            val height = width / Gdx.graphics.ratio
+        GdxMainThread.init()
+        val width = DEFAULT_VIEWPORT_WIDTH
+        val height = width / Gdx.graphics.ratio
 
-            val isFullscreen = preferencesStore.getPreference(PreferenceKeys.FULLSCREEN).toBoolean()
-            initFullscreenMode(isFullscreen)
+        val isFullscreen = preferencesStore.getPreference(PreferenceKeys.FULLSCREEN).toBoolean()
+        initFullscreenMode(isFullscreen)
 
-            val personalizedAdsConsent = preferencesStore.getPreference(PreferenceKeys.PERSONALIZED_ADS_CONSENT)
-                ?.toBooleanStrictOrNull()
+        val personalizedAdsConsent = preferencesStore.getPreference(PreferenceKeys.PERSONALIZED_ADS_CONSENT)
+            ?.toBooleanStrictOrNull()
 
-            context = ApplicationContext(
-                isDebug = isDebug,
-                isTouch = isTouchScreen,
-                gameDirectory = gameDataDirectoryPath,
-                gameDirectoryFileType = gameDataFileType,
-                width = width,
-                height = height,
-                isFullscreen = isFullscreen,
-                useDynamicCamera = preferencesStore.getPreference(PreferenceKeys.DYNAMIC_CAMERA)
-                    ?.toBooleanStrictOrNull() ?: isTouchScreen,
-                isAutoJumpEnabled = preferencesStore.getPreference(PreferenceKeys.AUTO_JUMP)
-                    ?.toBooleanStrictOrNull() ?: true,
-                locale = preferencesStore.getPreference(PreferenceKeys.LOCALE)
-                    ?.let(::Locale) ?: defaultLocaleProvider()
-                    ?.let { deviceLocale ->
-                        SUPPORTED_LOCALES.firstOrNull { it.language == deviceLocale.language }
-                    } ?: Locale.ENGLISH,
-                musicEnabled = preferencesStore.getPreference(PreferenceKeys.MUSIC_ENABLED)
-                    ?.toBooleanStrictOrNull() ?: true,
-                soundEnabled = preferencesStore.getPreference(PreferenceKeys.SOUND_ENABLED)
-                    ?.toBooleanStrictOrNull() ?: true,
-                isOnboardingShown = preferencesStore.getPreference(PreferenceKeys.ONBOARDING_SHOWN)
-                    ?.toBooleanStrictOrNull() ?: false,
-                isInventoryHintShown = preferencesStore.getPreference(PreferenceKeys.INVENTORY_HINT_SHOWN)
-                    ?.toBooleanStrictOrNull() ?: false,
-                isBoatHintShown = preferencesStore.getPreference(PreferenceKeys.BOAT_HINT_SHOWN)
-                    ?.toBooleanStrictOrNull() ?: false,
-                personalizedAdsConsent = personalizedAdsConsent,
-                lightingBackend = LightingBackend.fromName(
-                    preferencesStore.getPreference(PreferenceKeys.LIGHTING_BACKEND),
-                ),
-                isYandexGamesBuild = isYandexGamesBuild,
-                supportsInfiniteWorlds = supportsInfiniteWorlds,
-                preferShowDebug = preferencesStore.getPreference(PreferenceKeys.PREFER_SHOW_DEBUG_KEY)
-                    ?.toBooleanStrictOrNull() ?: false,
-            )
+        context = ApplicationContext(
+            isDebug = isDebug,
+            isTouch = isTouchScreen,
+            gameDirectory = gameDataDirectoryPath,
+            gameDirectoryFileType = gameDataFileType,
+            width = width,
+            height = height,
+            isFullscreen = isFullscreen,
+            useDynamicCamera = preferencesStore.getPreference(PreferenceKeys.DYNAMIC_CAMERA)
+                ?.toBooleanStrictOrNull() ?: isTouchScreen,
+            isAutoJumpEnabled = preferencesStore.getPreference(PreferenceKeys.AUTO_JUMP)
+                ?.toBooleanStrictOrNull() ?: true,
+            locale = preferencesStore.getPreference(PreferenceKeys.LOCALE)
+                ?.let(::Locale) ?: defaultLocaleProvider()
+                ?.let { deviceLocale ->
+                    SUPPORTED_LOCALES.firstOrNull { it.language == deviceLocale.language }
+                } ?: Locale.ENGLISH,
+            musicEnabled = preferencesStore.getPreference(PreferenceKeys.MUSIC_ENABLED)
+                ?.toBooleanStrictOrNull() ?: true,
+            soundEnabled = preferencesStore.getPreference(PreferenceKeys.SOUND_ENABLED)
+                ?.toBooleanStrictOrNull() ?: true,
+            isOnboardingShown = preferencesStore.getPreference(PreferenceKeys.ONBOARDING_SHOWN)
+                ?.toBooleanStrictOrNull() ?: false,
+            isInventoryHintShown = preferencesStore.getPreference(PreferenceKeys.INVENTORY_HINT_SHOWN)
+                ?.toBooleanStrictOrNull() ?: false,
+            isBoatHintShown = preferencesStore.getPreference(PreferenceKeys.BOAT_HINT_SHOWN)
+                ?.toBooleanStrictOrNull() ?: false,
+            personalizedAdsConsent = personalizedAdsConsent,
+            lightingBackend = LightingBackend.fromName(
+                preferencesStore.getPreference(PreferenceKeys.LIGHTING_BACKEND),
+            ),
+            isYandexGamesBuild = isYandexGamesBuild,
+            supportsInfiniteWorlds = supportsInfiniteWorlds,
+            preferShowDebug = preferencesStore.getPreference(PreferenceKeys.PREFER_SHOW_DEBUG_KEY)
+                ?.toBooleanStrictOrNull() ?: false,
+        )
 
-            applicationComponent = buildComponent()
+        applicationComponent = buildComponent()
 
-            if (personalizedAdsConsent != null) {
-                adController.setPersonalizedAdsEnabled(personalizedAdsConsent)
-            }
-
-            if (gameDataFileType == Files.FileType.Absolute) {
-                Gdx.files.absolute(gameDataDirectoryPath).mkdirs()
-            }
-            if (performanceMonitor.available) {
-                performanceMonitor.setContext(
-                    PerformanceContext(
-                        lighting = applicationComponent.applicationContextRepository.getLightingBackend().name.lowercase(),
-                        surfaceWidth = Gdx.graphics.width,
-                        surfaceHeight = Gdx.graphics.height,
-                        viewportWidth = width.toInt(),
-                        viewportHeight = height.toInt(),
-                        debugOverlay = applicationComponent.applicationContextRepository.preferShowDebug,
-                        gpuVendor = Gdx.gl.glGetString(com.badlogic.gdx.graphics.GL20.GL_VENDOR)?.take(100),
-                        gpuRenderer = Gdx.gl.glGetString(com.badlogic.gdx.graphics.GL20.GL_RENDERER)?.take(100),
-                    ),
-                )
-            }
-            try {
-                initializeAssetResources(applicationComponent)
-            } catch (exception: Exception) {
-                if (!applicationComponent.assetResolver.hasOverrides) throw exception
-                logger.e(exception) { "Asset packs failed; restoring bundled assets" }
-                applicationComponent.assetPackRepository.disableAfterFailure(exception.message ?: "Asset pack load failed")
-                runCatching { applicationComponent.disposeAssets() }
-                applicationComponent.assetTextureLoader.disposeAll()
-                applicationComponent = buildComponent()
-                initializeAssetResources(applicationComponent)
-            }
-
-            applicationComponent.assetPackRepository.cleanupRemoved()
-
-            applicationScope.launch {
-                applicationComponent.statsRepository.load()
-                val remote = runCatching { cloudStatsSync.loadStats() }
-                    .onFailure { logger.w(it) { "Cloud stats load failed" } }
-                    .getOrNull()
-                if (remote != null) {
-                    applicationComponent.statsRepository.mergeFromCloud(remote)
-                    applicationComponent.statsRepository.save()
-                }
-            }
-
-            setScreen(applicationComponent.menuScreen)
+        if (personalizedAdsConsent != null) {
+            adController.setPersonalizedAdsEnabled(personalizedAdsConsent)
         }
+
+        if (gameDataFileType == Files.FileType.Absolute) {
+            Gdx.files.absolute(gameDataDirectoryPath).mkdirs()
+        }
+        try {
+            initializeAssetResources(applicationComponent)
+        } catch (exception: Exception) {
+            if (!applicationComponent.assetResolver.hasOverrides) throw exception
+            logger.e(exception) { "Asset packs failed; restoring bundled assets" }
+            applicationComponent.assetPackRepository.disableAfterFailure(exception.message ?: "Asset pack load failed")
+            runCatching { applicationComponent.disposeAssets() }
+            applicationComponent.assetTextureLoader.disposeAll()
+            applicationComponent = buildComponent()
+            initializeAssetResources(applicationComponent)
+        }
+
+        applicationComponent.assetPackRepository.cleanupRemoved()
+
+        applicationScope.launch {
+            applicationComponent.statsRepository.load()
+            val remote = runCatching { cloudStatsSync.loadStats() }
+                .onFailure { logger.w(it) { "Cloud stats load failed" } }
+                .getOrNull()
+            if (remote != null) {
+                applicationComponent.statsRepository.mergeFromCloud(remote)
+                applicationComponent.statsRepository.save()
+            }
+        }
+
+        setScreen(applicationComponent.menuScreen)
     }
 
     override fun dispose() {
@@ -235,25 +212,16 @@ class CaveDroidApplication(
         openedScreens.clear()
         applicationComponent.menuSkin.dispose()
         applicationComponent.disposeAssets()
-        performanceMonitor.close()
-    }
-
-    override fun pause() {
-        performanceMonitor.setForeground(false)
-        super.pause()
     }
 
     override fun resume() {
         // Another Android Activity may have registered its render thread while this one was paused.
         GdxMainThread.init()
-        performanceMonitor.setForeground(true)
         super.resume()
     }
 
     override fun quitGame() {
-        performanceMonitor.setGameplay(false)
         applicationComponent.gameScreen.saveGame()
-        performanceMonitor.setGameplay(false)
         adController.showInterstitial {
             Gdx.app.postRunnable {
                 applicationComponent.gameScreen.dispose()
@@ -428,14 +396,8 @@ class CaveDroidApplication(
             openedScreens.add(screen)
         }
 
-        performanceMonitor.setGameplay(false)
-        try {
-            screen?.show()
-            screen?.resize(Gdx.graphics.width, Gdx.graphics.height)
-        } catch (e: Exception) {
-            (screen as? GameScreen)?.failOpening(e)
-            throw e
-        }
+        screen?.show()
+        screen?.resize(Gdx.graphics.width, Gdx.graphics.height)
 
         if (screen is GameScreen) {
             applicationComponent.soundPlayer.resumeAll()
@@ -445,7 +407,6 @@ class CaveDroidApplication(
 
         this.screen?.hide()
         this.screen = screen
-        performanceMonitor.setGameplay(screen is GameScreen && !screen.awaitingFirstFrame)
     }
 
     fun getPreferencesStore() = preferencesStore

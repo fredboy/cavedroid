@@ -10,10 +10,6 @@ import kotlinx.coroutines.cancel
 import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.coroutines.GdxMainThread
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
-import ru.fredboy.cavedroid.common.performance.PerformanceMetric
-import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
-import ru.fredboy.cavedroid.common.performance.measure
 import ru.fredboy.cavedroid.common.utils.effectiveMirrorBand
 import ru.fredboy.cavedroid.common.utils.floorDiv
 import ru.fredboy.cavedroid.common.utils.floorToInt
@@ -31,7 +27,6 @@ import kotlin.experimental.or
 
 @GameScope
 class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
-    private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     private val itemsRepository: ItemsRepository,
     private val appDispatchers: AppDispatchers,
     private val gameContextRepository: GameContextRepository,
@@ -41,10 +36,9 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
     private val coroutineScope = CoroutineScope(Job() + appDispatchers.main)
     private val mirrorBodies = mutableMapOf<Triple<Int, Int, Int>, Body>()
     private val synchronousMesher by lazy { ChunkCollisionMesher(itemsRepository.fallbackBlock) }
-    private val streamingStep = StreamingPhysicsStep(performanceMonitor)
+    private val streamingStep = StreamingPhysicsStep()
     private val preparation by lazy {
         ChunkBodyPreparation(
-            performanceMonitor = performanceMonitor,
             scope = coroutineScope,
             background = appDispatchers.background,
             sectionCount = (gameWorld.height + CHUNK_SIZE - 1) / CHUNK_SIZE,
@@ -93,7 +87,7 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
 
     override fun step(delta: Float, velocityIterations: Int, positionIterations: Int) {
         if (!gameWorld.isInfinite) {
-            performanceMonitor.measure(PerformanceMetric.BOX2D) { super.step(delta, velocityIterations, positionIterations) }
+            super.step(delta, velocityIterations, positionIterations)
             return
         }
         streamingStep.step(world, delta, velocityIterations, positionIterations) { chunkX ->
@@ -144,11 +138,9 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
     }
 
     private fun install(x: Int, y: Int, prepared: CollisionSection) {
-        return performanceMonitor.measure(PerformanceMetric.COLLISION_INSTALL) {
-            val body = createBody(x, y, 0, prepared)
-            // Keep the old body until its replacement is complete; never lose track of a newer body.
-            _bodies.put(x to y, body)?.let(world::destroyBody)
-        }
+        val body = createBody(x, y, 0, prepared)
+        // Keep the old body until its replacement is complete; never lose track of a newer body.
+        _bodies.put(x to y, body)?.let(world::destroyBody)
     }
 
     private fun createBody(x: Int, y: Int, xOffset: Int, prepared: CollisionSection): Body {

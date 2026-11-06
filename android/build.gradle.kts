@@ -274,7 +274,6 @@ dependencies {
 
     "storeImplementation"(platform(libs.firebase.bom))
     "storeImplementation"(libs.firebase.crashlytics)
-    "storeImplementation"(libs.firebase.performance)
 //    "storeImplementation"(libs.yandex.mobileads)
 
     natives(variantOf(libs.gdx.platform.core) { classifier("natives-armeabi-v7a") })

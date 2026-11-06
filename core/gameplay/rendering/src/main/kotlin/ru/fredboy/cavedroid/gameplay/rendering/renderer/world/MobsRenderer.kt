@@ -5,10 +5,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import ru.fredboy.cavedroid.common.di.GameScope
-import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
-import ru.fredboy.cavedroid.common.performance.PerformanceGauge
-import ru.fredboy.cavedroid.common.performance.PerformanceMetric
-import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.common.utils.cycledInsideWorld
 import ru.fredboy.cavedroid.common.utils.meters
 import ru.fredboy.cavedroid.domain.items.model.block.Block
@@ -24,7 +20,6 @@ import javax.inject.Inject
 @BindWorldRenderer
 class MobsRenderer @Inject constructor(
     private val poses: PresentationPoses,
-    private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     private val mobController: MobController,
     private val gameWorld: GameWorld,
     private val itemsRepository: ItemsRepository,
@@ -33,14 +28,12 @@ class MobsRenderer @Inject constructor(
 
     override val renderLayer get() = RENDER_LAYER
 
-    private var drawnMobs = 0L
     private val playerPosition = Vector2()
 
     private val fireBlock: Block.Fire? by lazy { itemsRepository.getBlockByKey(FIRE_BLOCK_KEY) as? Block.Fire }
 
     private fun drawMob(spriteBatch: SpriteBatch, viewport: Rectangle, mob: Mob, delta: Float) {
         poses.bounds(mob.body, mob.hitbox).cycledInsideWorld(viewport, gameWorld.width.toFloat())?.let { mobRect ->
-            drawnMobs++
             mob.draw(spriteBatch, mobRect.x, mobRect.y, delta)
             if (mob.isOnFire) {
                 drawFireOverlay(spriteBatch, mobRect.x, mobRect.y, mob)
@@ -65,8 +58,6 @@ class MobsRenderer @Inject constructor(
     }
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
-        drawnMobs = 1
-        val playerStart = performanceMonitor.startStage()
         boats.draw(spriteBatch, viewport, front = false)
         val player = mobController.player
         poses.playerPosition(playerPosition)
@@ -89,14 +80,9 @@ class MobsRenderer @Inject constructor(
             )
         }
 
-        performanceMonitor.endStage(PerformanceMetric.RENDER_PLAYER, playerStart)
-        val mobsStart = performanceMonitor.startStage()
         mobController.mobs.forEach { mob ->
             drawMob(spriteBatch, viewport, mob, delta)
         }
-        performanceMonitor.endStage(PerformanceMetric.RENDER_MOBS, mobsStart)
-        performanceMonitor.incrementGauge(PerformanceGauge.ACTIVE_ENTITIES, mobController.mobs.size.toLong() + 1)
-        performanceMonitor.incrementGauge(PerformanceGauge.DRAWN_ENTITIES, drawnMobs)
     }
 
     companion object {

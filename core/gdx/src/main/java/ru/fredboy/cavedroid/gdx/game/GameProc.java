@@ -26,16 +26,10 @@ import ru.fredboy.cavedroid.gameplay.rendering.GameRenderer;
 import ru.fredboy.cavedroid.gameplay.rendering.renderer.hud.onboarding.OnboardingController;
 
 import javax.inject.Inject;
-import ru.fredboy.cavedroid.common.performance.PerformanceMonitor;
-import ru.fredboy.cavedroid.common.performance.PerformanceMetric;
-import ru.fredboy.cavedroid.common.performance.PerformanceOperation;
-import ru.fredboy.cavedroid.common.performance.PerformanceTrigger;
-import ru.fredboy.cavedroid.common.performance.PerformanceSpan;
 
 @GameScope
 public class GameProc implements Disposable {
 
-    private final PerformanceMonitor mPerformanceMonitor;
     private final GameRenderer mGameRenderer;
     private final MobController mMobsController;
     private final DropController mDropController;
@@ -59,7 +53,7 @@ public class GameProc implements Disposable {
     private final Timer mWorldLogicTimer = new Timer();
 
     @Inject
-    public GameProc(PerformanceMonitor performanceMonitor, GameContextRepository gameContextRepository,
+    public GameProc(GameContextRepository gameContextRepository,
                     GameWorld gameWorld,
                     MobController mobsController,
                     DropController dropController,
@@ -80,7 +74,6 @@ public class GameProc implements Disposable {
                     ExplosionController explosionController,
                     BackgroundMusicController backgroundMusicController
     ) {
-        mPerformanceMonitor = performanceMonitor;
         mGameRenderer = gameRenderer;
         mMobsController = mobsController;
         mDropController = dropController;
@@ -119,16 +112,7 @@ public class GameProc implements Disposable {
         if (!gameContextRepository.isLoadGame() ||
                 mGameWorld.getTotalGameTimeSec() - mGameWorld.getLastSpawnGameTime()
                         > GameWorldMobSpawnControllerTask.SPAWN_INTERVAL_SEC) {
-            PerformanceSpan spawn = performanceMonitor.beginOperation(
-                    PerformanceOperation.STARTUP_SPAWN, PerformanceTrigger.INITIAL, null);
-            try {
-                gameWorldMobSpawnControllerTask.exec();
-            } catch (Throwable error) {
-                if (spawn != null) spawn.fail(error);
-                throw error;
-            } finally {
-                if (spawn != null) spawn.finish(spawn.getResult());
-            }
+            gameWorldMobSpawnControllerTask.exec();
         }
 
         mGameRenderer.resetCameraToPlayer();
@@ -144,25 +128,18 @@ public class GameProc implements Disposable {
     public void update(float delta) {
         // Terrain images and lighting rebuild across frames while simulation keeps running.
         // Missing collision terrain is guarded independently by the physics streaming step.
-        long updateStart = mPerformanceMonitor.startStage();
         mGameWorld.update(delta);
-        long entitiesStart = mPerformanceMonitor.startStage();
         mMobsController.update(delta);
         mDropController.update(delta);
         mProjectileController.update(delta);
         mExplosionController.update(delta);
-        mPerformanceMonitor.endStage(PerformanceMetric.ENTITIES_UPDATE, entitiesStart);
-        mPerformanceMonitor.endStage(PerformanceMetric.UPDATE_TOTAL, updateStart);
         mWeatherSoundController.update(delta);
         mGameRenderer.render(delta);
-        long otherStart = mPerformanceMonitor.startStage();
         mGameInputProcessor.update(delta);
         mContainerController.update(delta);
         mBackgroundMusicController.update();
         mStatsController.update(delta);
         mOnboardingController.update(delta);
-        mPerformanceMonitor.endStage(PerformanceMetric.OTHER_UPDATE, otherStart);
-        mPerformanceMonitor.endStage(PerformanceMetric.UPDATE_TOTAL, otherStart);
     }
 
     public void onResize() {

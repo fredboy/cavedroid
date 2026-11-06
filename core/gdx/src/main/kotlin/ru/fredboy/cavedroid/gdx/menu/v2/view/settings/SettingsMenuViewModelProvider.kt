@@ -5,7 +5,6 @@ import ru.fredboy.cavedroid.common.api.AssetPackPlatform
 import ru.fredboy.cavedroid.common.di.MenuScope
 import ru.fredboy.cavedroid.common.mvvm.NavBackStack
 import ru.fredboy.cavedroid.common.mvvm.ViewModelProvider
-import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.gdx.menu.v2.di.BindViewModelProvider
 import ru.fredboy.cavedroid.gdx.menu.v2.view.common.BaseViewModelDependencies
@@ -16,7 +15,6 @@ import kotlin.reflect.KClass
 @BindViewModelProvider
 class SettingsMenuViewModelProvider @Inject constructor(
     private val applicationContextRepository: ApplicationContextRepository,
-    private val performanceMonitor: PerformanceMonitor,
     private val adController: AdController,
     private val assetPackPlatform: AssetPackPlatform,
     private val baseViewModelDependencies: BaseViewModelDependencies,
@@ -31,7 +29,6 @@ class SettingsMenuViewModelProvider @Inject constructor(
             applicationContextRepository = applicationContextRepository,
             adController = adController,
             assetPackPlatform = assetPackPlatform,
-            performanceMonitor = performanceMonitor,
             baseViewModelDependencies = baseViewModelDependencies,
         )
     }

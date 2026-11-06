@@ -10,10 +10,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectSet
-import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
-import ru.fredboy.cavedroid.common.performance.PerformanceMetric
-import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
-import ru.fredboy.cavedroid.common.performance.measure
 import ru.fredboy.cavedroid.common.utils.floorDiv
 import ru.fredboy.cavedroid.common.utils.floorToInt
 import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
@@ -24,7 +20,7 @@ import kotlin.math.max
  * Missing terrain pauses only the affected bodies. Their velocity and active state are restored
  * afterwards, allowing the next step to retry without generating terrain outside the streaming window.
  */
-internal class StreamingPhysicsStep(private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor) {
+internal class StreamingPhysicsStep {
     private val bodies = Array<Body>()
     private val actors = Array<Body>()
     private val suspended = Array<Body>()
@@ -65,7 +61,7 @@ internal class StreamingPhysicsStep(private val performanceMonitor: PerformanceM
                     }
                 }
             } while (actors.notEmpty())
-            performanceMonitor.measure(PerformanceMetric.BOX2D) { world.step(delta, velocityIterations, positionIterations) }
+            world.step(delta, velocityIterations, positionIterations)
         } finally {
             for (body in suspended) body.isActive = true
             suspended.clear()

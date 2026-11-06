@@ -7,9 +7,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import ru.fredboy.cavedroid.common.model.SpriteOrigin
-import ru.fredboy.cavedroid.common.performance.NoOpPerformanceMonitor
-import ru.fredboy.cavedroid.common.performance.PerformanceGauge
-import ru.fredboy.cavedroid.common.performance.PerformanceMonitor
 import ru.fredboy.cavedroid.common.utils.drawSprite
 import ru.fredboy.cavedroid.common.utils.safeCast
 import ru.fredboy.cavedroid.domain.assets.usecase.GetBlockDamageFrameCountUseCase
@@ -27,7 +24,6 @@ import ru.fredboy.cavedroid.gameplay.rendering.utils.RenderChunkWindow
 import ru.fredboy.cavedroid.gameplay.rendering.utils.RenderingTool
 
 abstract class BlocksRenderer(
-    private val performanceMonitor: PerformanceMonitor = NoOpPerformanceMonitor,
     protected val gameWorld: GameWorld,
     protected val mobsController: MobController,
     protected val containerController: ContainerController,
@@ -282,14 +278,11 @@ abstract class BlocksRenderer(
         val maxX = window.maxX
         val minY = window.minY
         val maxY = window.maxY
-        var visible = 0L
         for (x in minX..maxX) {
             for (y in minY..maxY) {
                 chunks[x to y]?.render(spriteBatch)
-                visible++
             }
         }
-        performanceMonitor.incrementGauge(PerformanceGauge.RENDER_CHUNKS, visible)
         drawBlockDamage(spriteBatch)
     }
 
