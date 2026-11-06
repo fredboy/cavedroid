@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.CsvSource
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.save.PreparedSave
 import ru.fredboy.cavedroid.domain.save.model.ChunkEntitiesSaveData
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
@@ -147,6 +148,32 @@ class ChunkEntityStreamerTest {
         assertEquals(listOf(listOf(savedMob, queued)), snapshots)
         verify(exactly = 0) { queued.dispose() }
         verify(exactly = 1) { drops.flushPendingSpawns(any()) }
+    }
+
+    @Test
+    fun `autosave prepares restored and pending entities without persisting or evicting`() {
+        load()
+        val queued = mob()
+        every { mobController.flushPendingSpawns(any()) } answers {
+            mobs.add(queued)
+            Unit
+        }
+        val prepared = mockk<PreparedSave>(relaxed = true)
+        every { saves.prepareSaveChunkEntities(any(), any(), 2, any(), any(), any(), any(), true) } returns prepared
+        val result = streamer.prepareAll()
+        assertEquals(listOf(prepared), result)
+        verifyOrder {
+            saves.loadChunkEntities(any(), any(), 2, any(), any())
+            mobController.flushPendingSpawns(any())
+            drops.flushPendingSpawns(any())
+            saves.prepareSaveChunkEntities(any(), any(), 2, listOf(savedMob, queued), any(), any(), any(), true)
+        }
+        verify(exactly = 0) {
+            prepared.write()
+            queued.dispose()
+        }
+        assertEquals(listOf(savedMob, queued), mobs)
+        result.forEach { it.finish() }
     }
 
     @ParameterizedTest

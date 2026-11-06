@@ -1,6 +1,7 @@
 package ru.fredboy.cavedroid.domain.save.repository
 
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.save.PreparedSave
 import ru.fredboy.cavedroid.domain.save.model.ChunkEntitiesSaveData
 import ru.fredboy.cavedroid.domain.save.model.ChunkSaveData
 import ru.fredboy.cavedroid.domain.save.model.FireEntry
@@ -9,6 +10,7 @@ import ru.fredboy.cavedroid.domain.save.model.GameSaveDetails
 import ru.fredboy.cavedroid.domain.save.model.GameSaveInfo
 import ru.fredboy.cavedroid.domain.save.model.GrowBlockEntry
 import ru.fredboy.cavedroid.domain.save.model.TntEntry
+import ru.fredboy.cavedroid.domain.save.persist
 import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
@@ -55,7 +57,22 @@ interface SaveDataRepository {
         fireEntries: List<FireEntry>,
         tntEntries: List<TntEntry> = emptyList(),
         vehicles: List<VehicleState> = emptyList(),
-    )
+    ) = prepareSave(gameDataFolder, saveGameDirectory, worldName, dropController, mobController, containerController, gameWorld, projectileController, growBlockEntries, fireEntries, tntEntries, vehicles).persist()
+
+    fun prepareSave(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        worldName: String,
+        dropController: DropController,
+        mobController: MobController,
+        containerController: ContainerController,
+        gameWorld: GameWorld,
+        projectileController: ProjectileController,
+        growBlockEntries: List<GrowBlockEntry>,
+        fireEntries: List<FireEntry>,
+        tntEntries: List<TntEntry> = emptyList(),
+        vehicles: List<VehicleState> = emptyList(),
+    ): PreparedSave
 
     fun loadGrowBlockEntries(
         gameDataFolder: String,
@@ -84,7 +101,16 @@ interface SaveDataRepository {
         foreMap: Array<Array<Block>>,
         backMap: Array<Array<Block>>,
         biomes: Array<Biome>,
-    )
+    ) = prepareSaveInfiniteChunk(gameDataFolder, saveGameDirectory, chunkX, foreMap, backMap, biomes).persist()
+
+    fun prepareSaveInfiniteChunk(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+        foreMap: Array<Array<Block>>,
+        backMap: Array<Array<Block>>,
+        biomes: Array<Biome>,
+    ): PreparedSave
 
     /** Loads a previously-persisted infinite-world chunk, or null if it was never modified/saved. */
     fun loadInfiniteChunk(
@@ -103,7 +129,18 @@ interface SaveDataRepository {
         containers: Map<ContainerCoordinates, Container>,
         vehicles: List<VehicleState> = emptyList(),
         villageResidentsInitialized: Boolean = false,
-    )
+    ) = prepareSaveChunkEntities(gameDataFolder, saveGameDirectory, chunkX, mobs, drops, containers, vehicles, villageResidentsInitialized).persist()
+
+    fun prepareSaveChunkEntities(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+        mobs: List<Mob>,
+        drops: List<Drop>,
+        containers: Map<ContainerCoordinates, Container>,
+        vehicles: List<VehicleState> = emptyList(),
+        villageResidentsInitialized: Boolean = false,
+    ): PreparedSave
 
     /** Loads and reconstructs the entities of one infinite-world chunk, or null if none were saved. */
     fun loadChunkEntities(
@@ -120,7 +157,14 @@ interface SaveDataRepository {
         saveGameDirectory: String,
         chunkX: Int,
         entries: List<FireEntry>,
-    )
+    ) = prepareSaveChunkFire(gameDataFolder, saveGameDirectory, chunkX, entries).persist()
+
+    fun prepareSaveChunkFire(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+        entries: List<FireEntry>,
+    ): PreparedSave
 
     fun loadChunkFire(
         gameDataFolder: String,
@@ -134,7 +178,14 @@ interface SaveDataRepository {
         saveGameDirectory: String,
         chunkX: Int,
         entries: List<GrowBlockEntry>,
-    )
+    ) = prepareSaveChunkGrowBlocks(gameDataFolder, saveGameDirectory, chunkX, entries).persist()
+
+    fun prepareSaveChunkGrowBlocks(
+        gameDataFolder: String,
+        saveGameDirectory: String,
+        chunkX: Int,
+        entries: List<GrowBlockEntry>,
+    ): PreparedSave
 
     fun loadChunkGrowBlocks(
         gameDataFolder: String,

@@ -38,6 +38,7 @@ class InfiniteBlockStore(
     private val appDispatchers: AppDispatchers,
     private val chunkLoader: (chunkX: Int) -> Chunk? = { null },
     private val chunkPersister: (Chunk) -> Unit = { },
+    private val chunkSavePreparer: ((Chunk) -> (() -> Unit))? = null,
 ) : WorldBlockStore {
 
     private val coroutineScope = CoroutineScope(SupervisorJob() + appDispatchers.main)
@@ -159,19 +160,39 @@ class InfiniteBlockStore(
         chunks.keys.toList().forEach(action)
     }
 
-    override fun flushDirtyChunks() {
+    override fun prepareDirtyChunks(): PreparedChunkFlush {
         for (chunk in chunks.values) {
             if (chunk.dirty) {
-                val save = snapshotSave(chunk)
-                persist(save)
+                snapshotSave(chunk)
                 chunk.dirty = false
-                pendingSaves.remove(chunk.chunkX)
             }
         }
-        // Evicted terrain may still be queued for I/O when a full save or disposal occurs.
-        for (save in pendingSaves.values.toList()) {
-            persist(save)
-            pendingSaves.remove(save.chunk.chunkX)
+        val saves = pendingSaves.values.toList()
+        return object : PreparedChunkFlush {
+            private var finished = false
+
+            override fun write() {
+                saves.forEach(::persist)
+            }
+
+            override fun finish() {
+                if (finished) return
+                finished = true
+                for (save in saves) {
+                    if (pendingSaves[save.chunk.chunkX] === save && synchronized(storageLock) { save.version <= save.sequence.persistedVersion }) {
+                        pendingSaves.remove(save.chunk.chunkX)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun flushDirtyChunks() {
+        val prepared = prepareDirtyChunks()
+        try {
+            prepared.write()
+        } finally {
+            prepared.finish()
         }
     }
 
@@ -246,7 +267,9 @@ class InfiniteBlockStore(
 
     private fun snapshotSave(chunk: Chunk): PendingSave {
         val sequence = pendingSaves[chunk.chunkX]?.sequence ?: SaveSequence()
-        return PendingSave(copyChunk(chunk), sequence, ++sequence.nextVersion).also {
+        val snapshot = copyChunk(chunk)
+        val write = chunkSavePreparer?.invoke(snapshot) ?: { chunkPersister(snapshot) }
+        return PendingSave(snapshot, sequence, ++sequence.nextVersion, write).also {
             pendingSaves[chunk.chunkX] = it
         }
     }
@@ -255,7 +278,7 @@ class InfiniteBlockStore(
         synchronized(storageLock) {
             // A delayed eviction write must never overwrite a newer full-save/disposal snapshot.
             if (save.version <= save.sequence.persistedVersion) return
-            chunkPersister(save.chunk)
+            save.write()
             save.sequence.persistedVersion = save.version
         }
     }
@@ -281,7 +304,7 @@ class InfiniteBlockStore(
         var persistedVersion = 0L // Protected by storageLock.
     }
 
-    private class PendingSave(val chunk: Chunk, val sequence: SaveSequence, val version: Long)
+    private class PendingSave(val chunk: Chunk, val sequence: SaveSequence, val version: Long, val write: () -> Unit)
 
     companion object {
         private const val TAG = "InfiniteBlockStore"

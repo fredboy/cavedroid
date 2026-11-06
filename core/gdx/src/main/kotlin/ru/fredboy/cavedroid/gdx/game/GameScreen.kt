@@ -70,6 +70,7 @@ class GameScreen @Inject constructor(
 
     private fun resetGameComponent() {
         if (gameComponent == null) return
+        gameComponent?.gameSaveHelper?.dispose()
         try {
             gameComponent?.deathScreen?.dispose()
             gameComponent?.gameProc?.dispose()
@@ -154,6 +155,7 @@ class GameScreen @Inject constructor(
     }
 
     override fun pause() {
+        gameComponent?.gameSaveHelper?.drain()
         gameComponent?.gameProc?.onGamePaused()
     }
 
@@ -162,6 +164,7 @@ class GameScreen @Inject constructor(
     }
 
     override fun hide() {
+        gameComponent?.gameSaveHelper?.drain()
         gameComponent?.gameProc?.hide()
         shown = false
     }

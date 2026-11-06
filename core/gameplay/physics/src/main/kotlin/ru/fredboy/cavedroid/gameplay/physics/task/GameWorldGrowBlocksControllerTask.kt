@@ -3,6 +3,7 @@ package ru.fredboy.cavedroid.gameplay.physics.task
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
+import ru.fredboy.cavedroid.domain.save.PreparedSave
 import ru.fredboy.cavedroid.domain.save.model.GrowBlockEntry
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.domain.world.listener.OnBlockDestroyedListener
@@ -95,6 +96,26 @@ class GameWorldGrowBlocksControllerTask(
             return
         }
         gameWorld.forEachLoadedChunk { chunkX -> saveChunkGrowBlocks(chunkX, snapshotChunk(chunkX)) }
+    }
+
+    fun prepareChunks(): List<PreparedSave> {
+        val saves = mutableListOf<PreparedSave>()
+        try {
+            if (gameWorld.isInfinite) {
+                gameWorld.forEachLoadedChunk { chunkX ->
+                    saves += saveDataRepository.prepareSaveChunkGrowBlocks(
+                        gameDataFolder = applicationContextRepository.getGameDirectory(),
+                        saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
+                        chunkX = chunkX,
+                        entries = snapshotChunk(chunkX),
+                    )
+                }
+            }
+            return saves
+        } catch (error: Throwable) {
+            saves.forEach { it.finish() }
+            throw error
+        }
     }
 
     private fun restore(entries: List<GrowBlockEntry>) {

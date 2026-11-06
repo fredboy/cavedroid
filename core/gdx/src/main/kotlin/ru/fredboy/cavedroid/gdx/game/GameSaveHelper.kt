@@ -1,11 +1,20 @@
 package ru.fredboy.cavedroid.gdx.game
 
 import co.touchlab.kermit.Logger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.runBlocking
+import ru.fredboy.cavedroid.common.coroutines.AppDispatchers
 import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.data.save.streaming.ChunkEntityStreamer
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
+import ru.fredboy.cavedroid.domain.save.PreparedSave
 import ru.fredboy.cavedroid.domain.save.model.FireEntry
+import ru.fredboy.cavedroid.domain.save.persist
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.game.controller.container.ContainerController
 import ru.fredboy.cavedroid.game.controller.drop.DropController
@@ -35,25 +44,89 @@ class GameSaveHelper @Inject constructor(
     private val explosionController: ExplosionController,
     private val chunkEntityStreamer: ChunkEntityStreamer,
     private val vehicles: VehicleController,
+    private val dispatchers: AppDispatchers,
 ) {
 
     private var secondsSinceLastSave = 0f
+    private val scope = CoroutineScope(SupervisorJob() + dispatchers.io)
+    private var pending: PendingSave? = null
+    private var disposed = false
 
-    // Called on the render thread after updating the world, only during active gameplay.
     fun updateAutoSave(delta: Float) {
+        if (disposed) return
+        val active = pending
+        if (active != null) {
+            if (active.result.isCompleted) drain()
+            return
+        }
         secondsSinceLastSave += delta
         if (secondsSinceLastSave < AUTO_SAVE_INTERVAL_SEC) return
-
-        // A failed save is retried at the next interval, rather than on every frame.
         secondsSinceLastSave = 0f
         try {
-            saveGame(overwrite = true)
-        } catch (error: Exception) {
+            val prepared = prepareGame(overwrite = true)
+            if (dispatchers.io === dispatchers.main) {
+                prepared.persist()
+                statsController.onSaveCheckpoint()
+            } else {
+                pending = PendingSave(prepared, scope.async { runCatching { prepared.write() } })
+            }
+        } catch (error: Throwable) {
             logger.e(error) { "Automatic save failed" }
         }
     }
 
+    fun drain() {
+        val active = pending ?: return
+        val result = runBlocking { active.result.await() }
+        pending = null
+        try {
+            active.prepared.finish()
+            result.fold(
+                onSuccess = { statsController.onSaveCheckpoint() },
+                onFailure = { error -> logger.e(error) { "Automatic save failed" } },
+            )
+        } finally {
+            secondsSinceLastSave = 0f
+        }
+    }
+
+    fun dispose() {
+        drain()
+        disposed = true
+        scope.cancel()
+    }
+
     fun saveGame(overwrite: Boolean) {
+        drain()
+        prepareGame(overwrite).persist()
+        statsController.onSaveCheckpoint()
+        secondsSinceLastSave = 0f
+    }
+
+    private fun prepareGame(overwrite: Boolean): PreparedSave {
+        val saves = mutableListOf<PreparedSave>()
+        try {
+            prepareGame(overwrite, saves)
+            return object : PreparedSave {
+                private var finished = false
+
+                override fun write() {
+                    saves.forEach { it.write() }
+                }
+
+                override fun finish() {
+                    if (finished) return
+                    finished = true
+                    saves.forEach { it.finish() }
+                }
+            }
+        } catch (error: Throwable) {
+            saves.forEach { it.finish() }
+            throw error
+        }
+    }
+
+    private fun prepareGame(overwrite: Boolean, saves: MutableList<PreparedSave>) {
         val actualSaveDir = saveDataRepository.getActualSaveDirName(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
             saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
@@ -64,15 +137,13 @@ class GameSaveHelper @Inject constructor(
 
         val isInfinite = gameWorld.isInfinite
 
-        // Infinite worlds persist entities/fire/grow-blocks per resident chunk; the global payloads
-        // passed below are then left empty so nothing is double-counted on load.
         if (isInfinite) {
-            chunkEntityStreamer.flushAll()
-            fireController.flushChunks()
-            growBlocksControllerTask.flushChunks()
+            saves += chunkEntityStreamer.prepareAll()
+            saves += fireController.prepareChunks()
+            saves += growBlocksControllerTask.prepareChunks()
         }
 
-        saveDataRepository.save(
+        saves += saveDataRepository.prepareSave(
             gameDataFolder = applicationContextRepository.getGameDirectory(),
             saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
             worldName = gameContextRepository.getWorldName(),
@@ -92,10 +163,9 @@ class GameSaveHelper @Inject constructor(
                 }
             },
         )
-
-        statsController.onSaveCheckpoint()
-        secondsSinceLastSave = 0f
     }
+
+    private class PendingSave(val prepared: PreparedSave, val result: Deferred<Result<Unit>>)
 
     companion object {
         private const val AUTO_SAVE_INTERVAL_SEC = 60f

@@ -154,6 +154,61 @@ class InfiniteBlockStoreTest {
         fixture.close()
     }
 
+    @Test
+    fun `prepared terrain captures columns while later edits stay dirty`() = runTest {
+        val fixture = Fixture(this)
+        val first = mockk<Block>()
+        val second = mockk<Block>()
+        fixture.store.setBlock(0, 0, Layer.FOREGROUND, first)
+        val prepared = fixture.store.prepareDirtyChunks()
+        fixture.store.setBlock(0, 0, Layer.FOREGROUND, second)
+        prepared.write()
+        prepared.finish()
+        assertSame(first, fixture.saved.single().fore[0][0])
+        fixture.store.flushDirtyChunks()
+        assertSame(second, fixture.saved.last().fore[0][0])
+        fixture.close()
+    }
+
+    @Test
+    fun `old prepared flush cannot overwrite a newer save or clear its pending snapshot`() = runTest {
+        val fixture = Fixture(this)
+        val first = mockk<Block>()
+        val second = mockk<Block>()
+        fixture.store.setBlock(-96, 0, Layer.FOREGROUND, first)
+        val old = fixture.store.prepareDirtyChunks()
+        fixture.store.setBlock(-96, 0, Layer.FOREGROUND, second)
+        val newer = fixture.store.prepareDirtyChunks()
+        old.write()
+        old.finish()
+        fixture.move(3)
+        fixture.move(-6)
+        assertSame(second, fixture.store.getBlock(-96, 0, Layer.FOREGROUND))
+        newer.write()
+        newer.finish()
+        old.write()
+        assertSame(second, fixture.saved.last().fore[0][0])
+        fixture.close()
+    }
+
+    @Test
+    fun `failed prepared flush remains retryable and supplies reload before persistence`() = runTest {
+        val fixture = Fixture(this)
+        val edited = mockk<Block>()
+        fixture.store.setBlock(-96, 0, Layer.FOREGROUND, edited)
+        val prepared = fixture.store.prepareDirtyChunks()
+        fixture.failSave = true
+        org.junit.jupiter.api.assertThrows<IllegalStateException> { prepared.write() }
+        prepared.finish()
+        fixture.move(3)
+        fixture.move(-6)
+        assertSame(edited, fixture.store.getBlock(-96, 0, Layer.FOREGROUND))
+        fixture.failSave = false
+        fixture.store.flushDirtyChunks()
+        assertSame(edited, fixture.saved.last().fore[0][0])
+        fixture.close()
+    }
+
     private class Fixture(private val scope: TestScope) {
         val worker = TestCoroutineScheduler()
         val io = TestCoroutineScheduler()
