@@ -19,7 +19,9 @@ import ru.fredboy.cavedroid.gdx.game.CommandExecutor
 import ru.fredboy.cavedroid.gdx.game.DeathScreen
 import ru.fredboy.cavedroid.gdx.game.GameProc
 import ru.fredboy.cavedroid.gdx.game.GameSaveHelper
+import ru.fredboy.cavedroid.gdx.game.window.GameWindowHost
 import ru.fredboy.cavedroid.generated.module.DropContactHandlerModule
+import ru.fredboy.cavedroid.generated.module.GameWindowFactoriesModule
 import ru.fredboy.cavedroid.generated.module.GrowBlockActionsModule
 import ru.fredboy.cavedroid.generated.module.HudRenderModule
 import ru.fredboy.cavedroid.generated.module.KeyboardInputHandlersModule
@@ -59,11 +61,14 @@ import ru.fredboy.cavedroid.generated.module.WorldRenderModule
         ProjectileContactHandlerModule::class,
         ProjectileControllerModule::class,
         OnboardingModule::class,
+        GameWindowFactoriesModule::class,
     ],
 )
 interface GameComponent {
 
     val gameProc: GameProc
+
+    val gameWindowHost: GameWindowHost
 
     val chunkEntityStreamer: ChunkEntityStreamer
 

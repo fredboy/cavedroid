@@ -39,7 +39,7 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
     private val creativeTabsTabTexture get() = requireNotNull(textureRegions["creative_tab_selected"])
 
     override fun checkConditions(action: MouseInputAction): Boolean {
-        return gameWindowsManager.currentWindowType != GameWindowType.NONE &&
+        return gameWindowsManager.currentWindow != null &&
             (action.actionKey is MouseInputActionKey.Left || action.actionKey is MouseInputActionKey.Screen) &&
             !gameWindowsManager.isDragging &&
             !getWindowRect(gameContextRepository.getCameraContext().viewport).contains(
@@ -86,7 +86,7 @@ class CloseGameWindowMouseInputHandler @Inject constructor(
         GameWindowType.CHEST -> chestInventoryTexture
         GameWindowType.CREATIVE_INVENTORY_TABS -> creativeTabsWindowTexture
 
-        GameWindowType.NONE -> throw UnsupportedOperationException("Cant close window ${window.name}")
+        GameWindowType.NONE, GameWindowType.SCENE2D -> throw UnsupportedOperationException("Cant close inventory window ${window.name}")
     }
 
     override fun handle(action: MouseInputAction) {

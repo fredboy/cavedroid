@@ -34,6 +34,12 @@ owns them unless they are shared by multiple features.
 - Match dependency lifetimes to their owning scope: application (`@Singleton`),
   menu (`@MenuScope`), or game session (`@GameScope`).
 - Keep platform/capability checks for menu UI in view models.
+- New in-game Scene2D windows use actor-free `GameWindowModel` state in
+  `core/game/window/` and views/factories in `core/gdx/.../game/window/`.
+  Register factories with `@BindGameWindow`; keep feature entry points outside
+  the shared host. `GameWindowHost` owns the Stage, modal input routing, focus,
+  resize, and disposal. Legacy inventory windows coexist through
+  `GameWindowsManager` while they migrate.
 - Use Kermit with `Logger.withTag(...)` for logging.
 - Edit shared assets in `assets/`. `desktop/src/main/resources` and
   `android/src/main/assets` are symlinks there; preserve them.

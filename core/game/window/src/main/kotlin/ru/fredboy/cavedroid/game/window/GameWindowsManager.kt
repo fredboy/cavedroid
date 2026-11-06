@@ -29,13 +29,31 @@ class GameWindowsManager @Inject constructor(
     var creativeScrollAmount = 0
     var isDragging = false
 
-    var currentWindow: AbstractInventoryWindow? = null
+    private var inventoryWindow: AbstractInventoryWindow? = null
+
+    // Compatibility access for inventory handlers while windows migrate to Scene2D.
+    var currentWindow: AbstractInventoryWindow?
+        get() = inventoryWindow
+        set(value) {
+            if (inventoryWindow === value && currentSceneWindow == null) return
+            closeWindow()
+            inventoryWindow = value
+        }
+
+    var currentSceneWindow: GameWindowModel? = null
+        private set
 
     val currentWindowType: GameWindowType
-        get() = currentWindow?.type ?: GameWindowType.NONE
+        get() = if (currentSceneWindow != null) GameWindowType.SCENE2D else currentWindow?.type ?: GameWindowType.NONE
 
     private var lastOpenCreativeTab: CreativeInventoryTabsWindow.Tab? = null
     private var recipeBookActive = false
+
+    fun openWindow(model: GameWindowModel) {
+        if (currentSceneWindow === model) return
+        closeWindow()
+        currentSceneWindow = model
+    }
 
     fun openSurvivalInventory() {
         currentWindow = SurvivalInventoryWindow(itemsRepository).apply {
@@ -82,7 +100,10 @@ class GameWindowsManager @Inject constructor(
             lastOpenCreativeTab = tab
         }
 
-        currentWindow = null
+        inventoryWindow = null
+        val sceneWindow = currentSceneWindow
+        currentSceneWindow = null
+        sceneWindow?.onClose()
         tooltipManager.showMouseTooltip("")
     }
 }

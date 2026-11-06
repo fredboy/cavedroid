@@ -72,6 +72,7 @@ class GameScreen @Inject constructor(
         if (gameComponent == null) return
         gameComponent?.gameSaveHelper?.dispose()
         try {
+            gameComponent?.gameWindowHost?.dispose()
             gameComponent?.deathScreen?.dispose()
             gameComponent?.gameProc?.dispose()
         } catch (e: Exception) {
@@ -119,6 +120,7 @@ class GameScreen @Inject constructor(
             "GameScreen#show: gameComponent was not set before show"
         }
         gameComponent.gameProc.show()
+        Gdx.input.inputProcessor = gameComponent.gameWindowHost.inputProcessor
         gameComponent.gameRenderer.render(0f)
     }
 
@@ -130,6 +132,7 @@ class GameScreen @Inject constructor(
         try {
             // Preparing the first view can span a long frame; it is not elapsed simulation time.
             proc.update(if (firstFrame) 0f else delta)
+            gameComponent?.gameWindowHost?.render(if (firstFrame) 0f else delta)
             if (!firstFrame && shown && gameComponent?.gameRenderer?.isReady == true) {
                 gameComponent?.gameSaveHelper?.updateAutoSave(delta)
             }
@@ -152,11 +155,13 @@ class GameScreen @Inject constructor(
         }
 
         gameComponent?.gameProc?.onResize()
+        gameComponent?.gameWindowHost?.resize(width, height)
     }
 
     override fun pause() {
         gameComponent?.gameSaveHelper?.drain()
         gameComponent?.gameProc?.onGamePaused()
+        gameComponent?.gameWindowHost?.hide()
     }
 
     override fun resume() {
@@ -165,6 +170,7 @@ class GameScreen @Inject constructor(
 
     override fun hide() {
         gameComponent?.gameSaveHelper?.drain()
+        gameComponent?.gameWindowHost?.hide()
         gameComponent?.gameProc?.hide()
         shown = false
     }

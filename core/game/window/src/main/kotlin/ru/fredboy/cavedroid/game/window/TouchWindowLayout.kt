@@ -21,7 +21,7 @@ class TouchWindowLayout(width: Float, height: Float, window: AbstractInventoryWi
         GameWindowType.FURNACE -> "furnace"
         GameWindowType.CREATIVE_INVENTORY -> "creative"
         GameWindowType.CREATIVE_INVENTORY_TABS -> if ((window as CreativeInventoryTabsWindow).selectedTab.isInventory) "creative_inventory" else "creative_items"
-        GameWindowType.NONE -> error("No touch window is open")
+        GameWindowType.NONE, GameWindowType.SCENE2D -> error("No inventory touch window is open")
     } + if ((window as? AbstractInventoryWindowWithCraftGrid)?.recipeBookActive == true) "_recipes" else ""
 
     private val geometry = TouchWindowGeometry.layouts.getValue(background)

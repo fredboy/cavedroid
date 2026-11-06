@@ -36,6 +36,8 @@ class WindowsRenderer @Inject constructor(
     override val renderLayer get() = RENDER_LAYER
 
     override fun draw(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, viewport: Rectangle, delta: Float) {
+        // Scene2D owns its modal background and draws after the HUD batch has ended.
+        if (gameWindowsManager.currentWindowType == GameWindowType.SCENE2D) return
         // dim background
         if (gameWindowsManager.currentWindowType != GameWindowType.NONE) {
             spriteBatch.end()

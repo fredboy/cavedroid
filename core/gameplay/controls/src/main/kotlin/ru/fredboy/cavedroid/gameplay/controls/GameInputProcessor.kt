@@ -226,6 +226,12 @@ class GameInputProcessor @Inject constructor(
         val windowOpen = gameWindowsManager.currentWindowType != GameWindowType.NONE
         if (windowOpen != windowWasOpen) resetHeldInput()
         windowWasOpen = windowOpen
+        if (windowOpen) {
+            gameContextRepository.getJoystick().deactivate()
+            mobController.player.controlVector.setZero()
+            mobController.player.stopHitting()
+            if (gameWindowsManager.currentWindowType == GameWindowType.SCENE2D) return
+        }
         handleMousePosition()
 
         gameContextRepository.getJoystick()
@@ -370,6 +376,15 @@ class GameInputProcessor @Inject constructor(
         resetHeldInput()
         gameWindowsManager.closeWindow()
         windowWasOpen = false
+    }
+
+    /** Clear input on both sides of a modal transition, including presses whose release was captured by the UI. */
+    fun suspendForWindow() {
+        resetHeldInput()
+        gameContextRepository.getJoystick().deactivate()
+        mobController.player.controlVector.setZero()
+        mobController.player.stopHitting()
+        windowWasOpen = gameWindowsManager.currentWindowType != GameWindowType.NONE
     }
 
     private fun resetHeldInput() {
