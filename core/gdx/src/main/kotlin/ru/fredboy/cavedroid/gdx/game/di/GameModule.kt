@@ -323,8 +323,8 @@ object GameModule {
                         chunkX = chunkX,
                     )?.let { data -> Chunk(chunkX, data.foreMap, data.backMap, data.biomes) }
                 },
-                chunkPersister = { chunk ->
-                    saveDataRepository.saveInfiniteChunk(
+                chunkSavePreparer = { chunk ->
+                    val prepared = saveDataRepository.prepareSaveInfiniteChunk(
                         gameDataFolder = gameDataFolder,
                         saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
                         chunkX = chunk.chunkX,
@@ -332,6 +332,8 @@ object GameModule {
                         backMap = chunk.back,
                         biomes = chunk.biomes,
                     )
+                    val write: () -> Unit = { prepared.write() }
+                    write
                 },
             )
         }

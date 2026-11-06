@@ -164,6 +164,8 @@ class GameWorld @Inject constructor(
     /** Persists resident chunks with unsaved edits (infinite worlds only). */
     fun flushDirtyChunks() = blockStore.flushDirtyChunks()
 
+    fun prepareDirtyChunks() = blockStore.prepareDirtyChunks()
+
     fun getBiomeAt(x: Int): Biome = blockStore.getBiomeAt(x)
 
     fun biomeProximityFactor(

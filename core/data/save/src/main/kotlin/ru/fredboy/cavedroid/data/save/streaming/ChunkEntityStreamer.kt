@@ -5,6 +5,7 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.save.PreparedSave
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
@@ -160,7 +161,18 @@ class ChunkEntityStreamer @Inject constructor(
         gameWorld.forEachLoadedChunk { chunkX -> persistChunk(chunkX, evict = false) }
     }
 
-    private fun persistChunk(chunkX: Int, evict: Boolean) {
+    fun prepareAll(): List<PreparedSave> {
+        val saves = mutableListOf<PreparedSave>()
+        try {
+            if (gameWorld.isInfinite) gameWorld.forEachLoadedChunk { persistChunk(it, evict = false, prepared = saves) }
+            return saves
+        } catch (error: Throwable) {
+            saves.forEach { it.finish() }
+            throw error
+        }
+    }
+
+    private fun persistChunk(chunkX: Int, evict: Boolean, prepared: MutableList<PreparedSave>? = null) {
         // Saving can precede collision preparation. Read the old snapshot before replacing it,
         // including when an entity has wandered into a chunk that is still being prepared.
         // Restoration and eviction run on the main thread, with no physics step between them.
@@ -172,16 +184,29 @@ class ChunkEntityStreamer @Inject constructor(
         val drops = dropController.getAllDrop().filter { chunkOf(it.position.x) == chunkX }
         val containers = containerController.containerMap.filterKeys { chunkOfInt(it.x) == chunkX }
 
-        saveDataRepository.saveChunkEntities(
-            gameDataFolder = applicationContextRepository.getGameDirectory(),
-            saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
-            chunkX = chunkX,
-            mobs = mobs,
-            drops = drops,
-            containers = containers,
-            vehicles = boats.map { it.snapshot() },
-            villageResidentsInitialized = true,
-        )
+        if (prepared == null) {
+            saveDataRepository.saveChunkEntities(
+                gameDataFolder = applicationContextRepository.getGameDirectory(),
+                saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
+                chunkX = chunkX,
+                mobs = mobs,
+                drops = drops,
+                containers = containers,
+                vehicles = boats.map { it.snapshot() },
+                villageResidentsInitialized = true,
+            )
+        } else {
+            prepared += saveDataRepository.prepareSaveChunkEntities(
+                gameDataFolder = applicationContextRepository.getGameDirectory(),
+                saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
+                chunkX = chunkX,
+                mobs = mobs,
+                drops = drops,
+                containers = containers,
+                vehicles = boats.map { it.snapshot() },
+                villageResidentsInitialized = true,
+            )
+        }
 
         if (!evict) {
             return

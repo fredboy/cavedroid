@@ -51,6 +51,7 @@ dependencies {
     testRuntimeOnly(libs.junit.engine)
     testRuntimeOnly(libs.junit.launcher)
     testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
 
 tasks.test {

@@ -5,6 +5,7 @@ import ru.fredboy.cavedroid.common.di.GameScope
 import ru.fredboy.cavedroid.domain.configuration.repository.ApplicationContextRepository
 import ru.fredboy.cavedroid.domain.configuration.repository.GameContextRepository
 import ru.fredboy.cavedroid.domain.items.model.block.Block
+import ru.fredboy.cavedroid.domain.save.PreparedSave
 import ru.fredboy.cavedroid.domain.save.model.FireEntry
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.domain.world.lighting.LightHandle
@@ -144,6 +145,26 @@ class FireController @Inject constructor(
             return
         }
         gameWorld.forEachLoadedChunk { chunkX -> saveChunkFire(chunkX, chunkFireEntries(chunkX)) }
+    }
+
+    fun prepareChunks(): List<PreparedSave> {
+        val saves = mutableListOf<PreparedSave>()
+        try {
+            if (gameWorld.isInfinite) {
+                gameWorld.forEachLoadedChunk { chunkX ->
+                    saves += saveDataRepository.prepareSaveChunkFire(
+                        gameDataFolder = applicationContextRepository.getGameDirectory(),
+                        saveGameDirectory = gameContextRepository.getSaveGameDirectory(),
+                        chunkX = chunkX,
+                        entries = chunkFireEntries(chunkX),
+                    )
+                }
+            }
+            return saves
+        } catch (error: Throwable) {
+            saves.forEach { it.finish() }
+            throw error
+        }
     }
 
     private fun chunkFireEntries(chunkX: Int): List<FireEntry> = fires.values

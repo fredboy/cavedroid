@@ -93,4 +93,8 @@ interface WorldBlockStore : Disposable {
 
     /** Persists every resident chunk that has unsaved edits. No-op for finite worlds. */
     fun flushDirtyChunks() = Unit
+
+    fun prepareDirtyChunks(): PreparedChunkFlush = object : PreparedChunkFlush {
+        override fun write() {}
+    }
 }
