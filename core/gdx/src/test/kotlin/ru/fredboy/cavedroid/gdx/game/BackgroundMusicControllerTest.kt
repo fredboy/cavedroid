@@ -67,16 +67,16 @@ class BackgroundMusicControllerTest {
         val music = loaded.single()
         every { music.position } returns 1.5f
         controller.update()
-        verify { music.volume = 0.15f }
+        verify { music.volume = 0.3f }
         every { music.position } returns 3f
         controller.update()
-        verify { music.volume = 0.3f }
+        verify { music.volume = 0.6f }
         every { music.position } returns 30f
         controller.update()
-        verify(exactly = 2) { music.volume = 0.3f }
+        verify(exactly = 2) { music.volume = 0.6f }
         every { music.position } returns 58.5f
         controller.update()
-        verify(exactly = 2) { music.volume = 0.15f }
+        verify(exactly = 2) { music.volume = 0.3f }
         every { music.position } returns 60f
         controller.update()
         verify(exactly = 3) { music.volume = 0f }
@@ -91,9 +91,9 @@ class BackgroundMusicControllerTest {
         controller.update()
         controller.pause()
         repeat(10) { controller.update() }
-        verify(exactly = 1) { music.volume = 0.15f }
+        verify(exactly = 1) { music.volume = 0.3f }
         controller.resume()
-        verify(exactly = 2) { music.volume = 0.15f }
+        verify(exactly = 2) { music.volume = 0.3f }
         verify(exactly = 1) { audio.newMusic(any()) }
     }
 
