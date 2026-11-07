@@ -81,6 +81,8 @@ class GameWindowHost internal constructor(
         synchronize()
         val active = view ?: return
         active.update(delta)
+        synchronize()
+        if (view == null) return
         stage.act(delta)
         stage.viewport.apply()
         stage.draw()

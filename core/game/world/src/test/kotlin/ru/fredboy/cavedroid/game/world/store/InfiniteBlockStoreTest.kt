@@ -27,6 +27,21 @@ import ru.fredboy.cavedroid.game.world.generator.WorldGeneratorConfig
 class InfiniteBlockStoreTest {
 
     @Test
+    fun `remote arrival validation loads terrain synchronously without moving the view or evicting departure chunks`() = runTest {
+        val fixture = Fixture(this)
+        val originalView = Rectangle(fixture.visible)
+        fixture.store.ensureColumnsLoaded(-100003, -99997)
+        assertTrue(fixture.store.isChunkLoaded(-100000))
+        assertTrue(fixture.store.isChunkLoaded(0))
+        assertEquals(originalView, fixture.visible)
+        assertTrue(fixture.unloaded.isEmpty())
+        val count = fixture.loaded.size
+        fixture.store.ensureColumnsLoaded(-100003, -99997)
+        assertEquals(count, fixture.loaded.size)
+        fixture.close()
+    }
+
+    @Test
     fun `occupied columns survive camera movement and evict after release`() = runTest {
         val fixture = Fixture(this)
         fixture.store.retainColumns(setOf(-6))

@@ -109,6 +109,16 @@ class InfiniteBlockStore(
         return chunks[chunkIndex(x)]?.biomes?.get(localX(x)) ?: generator.biomeAt(x)
     }
 
+    override fun ensureColumnsLoaded(firstX: Int, lastX: Int) {
+        require(firstX <= lastX)
+        for (cx in chunkIndex(firstX)..chunkIndex(lastX)) {
+            if (cx in chunks) continue
+            loads.remove(cx)?.job?.cancel()
+            val chunk = pendingSaves[cx]?.chunk?.let(::copyChunk) ?: loadOrGenerate(cx)
+            publish(chunk)
+        }
+    }
+
     private var retainedColumns = emptySet<Int>()
     private var retentionChanged = false
 

@@ -16,6 +16,7 @@ import ru.fredboy.cavedroid.domain.world.listener.OnBlockPlacedListener
 import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.domain.world.model.Weather
+import ru.fredboy.cavedroid.domain.world.waystone.Waystone
 import ru.fredboy.cavedroid.game.world.abstraction.ChunkBodiesReadyListener
 import ru.fredboy.cavedroid.game.world.abstraction.GameWorldSolidBlockBodiesManager
 import ru.fredboy.cavedroid.game.world.generator.ChunkGenerator
@@ -63,6 +64,24 @@ class GameWorld @Inject constructor(
 
     // Independent of the player's bed respawn; restored before the mob controller is created.
     var worldSpawn: Vector2? = null
+
+    /** Activated destinations, including unloaded chunks. Immutable entries are safe to snapshot for saving. */
+    var waystones: List<Waystone> = emptyList()
+
+    var teleportRevision = 0
+        private set
+
+    fun onPlayerTeleported() {
+        resetPresentation()
+        teleportRevision++
+    }
+
+    fun ensureTerrainLoaded(firstX: Int, lastX: Int) = blockStore.ensureColumnsLoaded(firstX, lastX)
+
+    fun prepareArrival(firstX: Int, lastX: Int) {
+        ensureTerrainLoaded(firstX, lastX)
+        gameWorldSolidBlockBodiesManager.prepareArea(firstX, lastX)
+    }
 
     var currentStreakStartDayIndex = 0
 

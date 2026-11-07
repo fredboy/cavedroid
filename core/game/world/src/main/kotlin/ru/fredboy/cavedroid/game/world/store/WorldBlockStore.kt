@@ -80,6 +80,9 @@ interface WorldBlockStore : Disposable {
      */
     fun update() = Unit
 
+    /** Make a remote area readable before validating a teleport, without moving the camera or evicting the source. */
+    fun ensureColumnsLoaded(firstX: Int, lastX: Int) = Unit
+
     /** Keep occupied actors resident even while the camera is moving. */
     fun retainColumns(columns: Set<Int>) = Unit
 

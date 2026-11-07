@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
+import kotlin.math.ceil
 
 private fun Rectangle.shifted(shift: Float) = Rectangle(x + shift, y, width, height)
 
@@ -36,10 +36,11 @@ fun forEachBlockInArea(
     area: Rectangle,
     func: (x: Int, y: Int) -> Unit,
 ) {
-    val startMapX = MathUtils.floor(area.x)
-    val endMapX = MathUtils.ceil(area.x + area.width)
-    val startMapY = MathUtils.floor(area.y)
-    val endMapY = MathUtils.ceil(area.y + area.height)
+    // libGDX's fast floor is inaccurate below -16384, which infinite worlds can reach.
+    val startMapX = area.x.floorToInt()
+    val endMapX = ceil(area.x + area.width).toInt()
+    val startMapY = area.y.floorToInt()
+    val endMapY = ceil(area.y + area.height).toInt()
 
     for (x in startMapX..endMapX) {
         for (y in startMapY..endMapY) {

@@ -331,6 +331,9 @@ sealed class SaveDataDto {
     ) : SaveDataDto()
 
     @Serializable
+    data class WaystoneSaveDataDto(val x: Int, val y: Int, val layer: Int, val name: String)
+
+    @Serializable
     data class WorldSaveDataDto(
         override val version: Int,
         val name: String,
@@ -352,5 +355,6 @@ sealed class SaveDataDto {
         val villagesEnabled: Boolean = false,
         val worldSpawnX: Float? = null,
         val worldSpawnY: Float? = null,
+        val waystones: List<WaystoneSaveDataDto> = emptyList(),
     ) : SaveDataDto()
 }

@@ -4,6 +4,7 @@ import ru.fredboy.cavedroid.common.model.WorldType
 import ru.fredboy.cavedroid.domain.items.model.block.Block
 import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.domain.world.model.Weather
+import ru.fredboy.cavedroid.domain.world.waystone.Waystone
 
 data class GameMapSaveData(
     val foreMap: Array<Array<Block>>?,
@@ -22,6 +23,7 @@ data class GameMapSaveData(
     val villagesEnabled: Boolean = false,
     val worldSpawnX: Float? = null,
     val worldSpawnY: Float? = null,
+    val waystones: List<Waystone> = emptyList(),
 ) {
 
     override fun equals(other: Any?): Boolean {
@@ -33,6 +35,7 @@ data class GameMapSaveData(
         if (gameTime != other.gameTime) return false
         if (moonPhase != other.moonPhase) return false
         if (worldSpawnX != other.worldSpawnX || worldSpawnY != other.worldSpawnY) return false
+        if (waystones != other.waystones) return false
         if (!foreMap.contentDeepEquals(other.foreMap)) return false
         if (!backMap.contentDeepEquals(other.backMap)) return false
         if (!biomes.contentEquals(other.biomes)) return false
@@ -45,6 +48,7 @@ data class GameMapSaveData(
         result = 31 * result + moonPhase.hashCode()
         result = 31 * result + (worldSpawnX?.hashCode() ?: 0)
         result = 31 * result + (worldSpawnY?.hashCode() ?: 0)
+        result = 31 * result + waystones.hashCode()
         result = 31 * result + (foreMap?.contentDeepHashCode() ?: 0)
         result = 31 * result + (backMap?.contentDeepHashCode() ?: 0)
         result = 31 * result + (biomes?.contentHashCode() ?: 0)

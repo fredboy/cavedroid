@@ -49,17 +49,18 @@ class TouchInventoryHintRenderer @Inject constructor(
         if (!isTouch || !inventoryHintController.isVisible) return
         val windowType = gameWindowsManager.currentWindowType
         if (windowType == GameWindowType.NONE || windowType == GameWindowType.CREATIVE_INVENTORY) return
-        if (gameWindowsManager.currentWindow?.safeCast<CreativeInventoryTabsWindow>()?.selectedTab?.isInventory == false) {
+        val window = gameWindowsManager.currentWindow ?: return
+        if (window.safeCast<CreativeInventoryTabsWindow>()?.selectedTab?.isInventory == false) {
             return
         }
 
-        if (!gameWindowsManager.currentWindow?.selectedItem.isNoneOrNull()) return
+        if (!window.selectedItem.isNoneOrNull()) return
         inventoryHintController.tick(delta)
         if (!inventoryHintController.isVisible) return
         val alpha = inventoryHintController.alpha
         if (alpha <= 0f) return
 
-        val layout = TouchWindowLayout(viewport.width, viewport.height, requireNotNull(gameWindowsManager.currentWindow))
+        val layout = TouchWindowLayout(viewport.width, viewport.height, window)
         val bounds = layout.bounds
         val scale = bounds.width / TouchWindowLayout.WIDTH
         val width = TouchWindowLayout.WIDTH
@@ -79,7 +80,6 @@ class TouchInventoryHintRenderer @Inject constructor(
         if (line.isNotEmpty()) lines += line
         val lineHeight = getStringHeight(lines.first())
         val blockHeight = lines.size * lineHeight + (lines.size - 1).coerceAtLeast(0) * 2f
-        val window = gameWindowsManager.currentWindow
         val index = inventoryHintController.hintIndex
         val footer = Rectangle(
             bounds.x,
@@ -89,7 +89,7 @@ class TouchInventoryHintRenderer @Inject constructor(
         )
         tapTargets.register("touchInventory", footer) {
             if (gameWindowsManager.currentWindow === window && inventoryHintController.isVisible &&
-                inventoryHintController.hintIndex == index && window?.selectedItem.isNoneOrNull()
+                inventoryHintController.hintIndex == index && window.selectedItem.isNoneOrNull()
             ) {
                 inventoryHintController.dismiss()
                 true

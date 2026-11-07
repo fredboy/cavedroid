@@ -41,6 +41,7 @@ dependencies {
     implementation(project(":core:game:controller:projectile"))
     implementation(project(":core:game:controller:vehicle"))
     implementation(project(":core:game:controller:stats"))
+    implementation(project(":core:game:controller:waystone"))
     implementation(project(":core:game:window"))
     implementation(project(":core:game:world"))
     implementation(project(":core:gameplay:controls"))

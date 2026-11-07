@@ -371,6 +371,26 @@ abstract class Mob(
         pendingBodyTransform = vector
     }
 
+    /** Relocate between physics steps, discarding velocity and contacts from the departure area. */
+    protected fun relocate(x: Float, y: Float) {
+        check(!body.world.isLocked)
+        pendingBodyTransform = null
+        body.isActive = false
+        body.setTransform(x, y, 0f)
+        body.setLinearVelocity(0f, 0f)
+        body.linearDamping = 0f
+        body.gravityScale = if (isFlyMode) 0f else 1f
+        controlVector.setZero()
+        footContactCounter = 0
+        autojumpCounters.fill(0)
+        knockbackRemainingSec = 0f
+        canClimb = false
+        canSwim = false
+        climb = false
+        descend = false
+        body.isActive = true
+    }
+
     fun update(
         mobWorldAdapter: MobWorldAdapter,
         playerAdapter: PlayerAdapter,

@@ -11,6 +11,7 @@ import ru.fredboy.cavedroid.game.controller.container.di.ControllerContainerModu
 import ru.fredboy.cavedroid.game.controller.drop.di.ControllerDropModule
 import ru.fredboy.cavedroid.game.controller.mob.di.MobControllerModule
 import ru.fredboy.cavedroid.game.controller.projectile.di.ProjectileControllerModule
+import ru.fredboy.cavedroid.game.controller.waystone.WaystoneModule
 import ru.fredboy.cavedroid.game.world.di.GameWorldModule
 import ru.fredboy.cavedroid.gameplay.physics.di.PhysicsModule
 import ru.fredboy.cavedroid.gameplay.rendering.GameRenderer
@@ -40,6 +41,7 @@ import ru.fredboy.cavedroid.generated.module.WorldRenderModule
     dependencies = [ApplicationComponent::class],
     modules = [
         GameModule::class,
+        WaystoneModule::class,
         UseItemActionsModule::class,
         UpdateBlockActionsModule::class,
         GrowBlockActionsModule::class,

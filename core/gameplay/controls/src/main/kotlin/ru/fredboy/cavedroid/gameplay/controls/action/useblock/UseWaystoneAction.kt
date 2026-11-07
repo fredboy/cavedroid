@@ -10,7 +10,6 @@ import javax.inject.Inject
 @BindUseBlockAction(stringKey = "waystone")
 class UseWaystoneAction @Inject constructor(private val waystones: WaystoneWindowController) : IUseBlockAction {
     override fun perform(block: Block, x: Int, y: Int): Boolean {
-        waystones.open(x, y)
-        return true
+        return waystones.open(x, y)
     }
 }

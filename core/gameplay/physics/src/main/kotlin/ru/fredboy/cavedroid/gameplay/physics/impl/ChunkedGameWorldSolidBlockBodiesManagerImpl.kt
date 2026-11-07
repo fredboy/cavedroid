@@ -85,6 +85,13 @@ class ChunkedGameWorldSolidBlockBodiesManagerImpl @Inject constructor(
         for (chunkX in first..last) preparation.finish(chunkX)
     }
 
+    override fun prepareArea(firstX: Int, lastX: Int) {
+        if (!gameWorld.isInfinite) return
+        for (chunkX in (firstX floorDiv ChunkGenerator.CHUNK_W)..(lastX floorDiv ChunkGenerator.CHUNK_W)) {
+            preparation.finish(chunkX)
+        }
+    }
+
     override fun step(delta: Float, velocityIterations: Int, positionIterations: Int) {
         if (!gameWorld.isInfinite) {
             super.step(delta, velocityIterations, positionIterations)

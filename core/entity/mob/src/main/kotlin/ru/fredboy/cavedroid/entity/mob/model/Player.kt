@@ -391,6 +391,20 @@ class Player(
         sight = mobWorldAdapter.createPlayerSightLight(body, position.x, position.y)
     }
 
+    fun teleportTo(x: Float, y: Float) {
+        onDetachVehicle?.invoke()
+        stopHitting()
+        isPullingBow = false
+        isSprinting = false
+        tryClimb = false
+        relocate(x, y)
+        cursorX = x
+        cursorY = y
+        aimX = x
+        aimY = y
+        updateSight()
+    }
+
     fun updateSight() {
         sight?.setPosition(position.x, position.y)
     }

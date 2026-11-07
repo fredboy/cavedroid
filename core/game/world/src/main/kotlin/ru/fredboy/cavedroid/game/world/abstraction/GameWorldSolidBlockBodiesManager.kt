@@ -32,6 +32,9 @@ abstract class GameWorldSolidBlockBodiesManager :
     /** Finish collision preparation needed by the current view before advancing Box2D. */
     open fun prepareForStep() = Unit
 
+    /** Complete collision geometry around an arrival before the player's body is relocated. */
+    open fun prepareArea(firstX: Int, lastX: Int) = Unit
+
     /** Advance physics only after terrain needed by moving bodies is ready. */
     open fun step(delta: Float, velocityIterations: Int, positionIterations: Int) {
         world.step(delta, velocityIterations, positionIterations)

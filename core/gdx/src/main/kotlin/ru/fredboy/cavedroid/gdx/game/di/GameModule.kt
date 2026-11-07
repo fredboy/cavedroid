@@ -360,6 +360,7 @@ object GameModule {
                 if (spawnX != null && spawnY != null) {
                     this.worldSpawn = com.badlogic.gdx.math.Vector2(spawnX, spawnY)
                 }
+                waystones = it.waystones.filter { stone -> stone.y in 0 until height }.distinctBy { stone -> stone.id }
             }
         }
     }

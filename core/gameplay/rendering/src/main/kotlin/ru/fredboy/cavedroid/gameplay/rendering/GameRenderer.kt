@@ -95,6 +95,7 @@ class GameRenderer @Inject constructor(
     private val skyLeftColor = Color()
     private val skyRightColor = Color()
     private val playerPosition = Vector2()
+    private var lastTeleportRevision = gameWorld.teleportRevision
     private val aimPosition = Vector2()
     private val cameraTargetPosition = Vector3()
 
@@ -266,6 +267,10 @@ class GameRenderer @Inject constructor(
     }
 
     fun render(delta: Float) {
+        if (lastTeleportRevision != gameWorld.teleportRevision) {
+            lastTeleportRevision = gameWorld.teleportRevision
+            resetCameraToPlayer()
+        }
         instruments.update(delta)
         poses.snapshot = delta == 0f
         updateCameraPosition(delta)

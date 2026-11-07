@@ -51,6 +51,7 @@ import ru.fredboy.cavedroid.domain.save.model.TntEntry
 import ru.fredboy.cavedroid.domain.save.persist
 import ru.fredboy.cavedroid.domain.world.model.Biome
 import ru.fredboy.cavedroid.domain.world.model.Layer
+import ru.fredboy.cavedroid.domain.world.waystone.Waystone
 import ru.fredboy.cavedroid.entity.container.model.Chest
 import ru.fredboy.cavedroid.entity.container.model.ContainerCoordinates
 import ru.fredboy.cavedroid.entity.mob.model.Direction
@@ -143,6 +144,7 @@ class PreparedSaveTest {
             every { this@mockk.biomes } returns biomes
             every { generatorConfig } returns WorldGeneratorConfig.getDefault()
             every { currentGameTime } returns 42f
+            every { waystones } returns listOf(Waystone(-1000, 64, Layer.BACKGROUND, "Home"))
         }
         val inventory = Inventory(1, empty).apply { items[0] = diamond.toInventoryItem(3) }
         val playerPosition = Vector2(4f, 5f)
@@ -191,12 +193,14 @@ class PreparedSaveTest {
         vehicles.clear()
         tnt.clear()
         every { world.currentGameTime } returns 99f
+        every { world.waystones } returns emptyList()
         prepared.persist()
         val loaded = repository.loadMap(directory.path, "world")
         assertSame(stone, loaded.foreMap!![0][0])
         assertSame(air, loaded.backMap!![0][0])
         assertEquals(Biome.PLAINS, loaded.biomes!![0])
         assertEquals(42f, loaded.gameTime)
+        assertEquals(listOf(Waystone(-1000, 64, Layer.BACKGROUND, "Home")), loaded.waystones)
         val savedMobs = decode<SaveDataDto.MobControllerSaveDataDto>("mobs.dat")
         assertEquals(4f, savedMobs.player.x)
         assertEquals(3, savedMobs.player.inventory.items.single().amount)

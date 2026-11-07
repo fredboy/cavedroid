@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
@@ -19,6 +20,7 @@ import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.I18NBundle
 import ru.fredboy.cavedroid.common.api.InlineTextInput
 import ru.fredboy.cavedroid.common.api.SoftKeyboardObserver
+import ru.fredboy.cavedroid.domain.world.waystone.WaystoneTravelResult
 import ru.fredboy.cavedroid.game.window.waystone.WaystoneDestination
 import ru.fredboy.cavedroid.game.window.waystone.WaystoneWindowModel
 import ru.fredboy.cavedroid.gdx.game.window.Scene2dGameWindow
@@ -49,10 +51,12 @@ class WaystoneWindowView(
     private var keyboardVisible = false
     private var scroll: ScrollPane? = null
     private var revealSelection = false
+    private var chargeBar: ProgressBar? = null
 
     init {
         window.addListener(object : InputListener() {
             override fun keyDown(event: InputEvent, keycode: Int): Boolean {
+                if (model.isCharging || model.failure != null) return false
                 if (renaming) {
                     if (keycode == Input.Keys.ENTER) {
                         saveRename()
@@ -64,7 +68,6 @@ class WaystoneWindowView(
                     Input.Keys.ENTER -> {
                         if (model.canTravel) {
                             model.teleport()
-                            close()
                         }
                     }
                     Input.Keys.UP, Input.Keys.DOWN -> {
@@ -96,6 +99,41 @@ class WaystoneWindowView(
         field = null
         error = null
         displayedRevision = model.revision
+        chargeBar = null
+        if (model.isCharging) {
+            val destination = model.selected
+            content.add(label(strings.format("waystone_charging", destination?.name.orEmpty()))).growX().pad(8f)
+            content.row()
+            chargeBar = ProgressBar(0f, 1f, .001f, false, skin).apply { value = model.chargeProgress }
+            content.add(chargeBar).growX().pad(8f)
+            content.row()
+            content.add(
+                button(text("cancel")) {
+                    model.cancelCharge()
+                    buildBrowser()
+                },
+            ).growX()
+                .height(if (touch) 44f else 24f).pad(8f)
+            return
+        }
+        model.failure?.let { failure ->
+            content.add(
+                Label(failureText(failure), skin, labelStyle).apply {
+                    setWrap(true)
+                    setAlignment(Align.center)
+                },
+            )
+                .width(if (touch) 590f else 250f).growY().pad(8f)
+            content.row()
+            content.add(
+                button(text("done")) {
+                    model.dismissFailure()
+                    buildBrowser()
+                },
+            ).growX()
+                .height(if (touch) 44f else 24f).pad(8f)
+            return
+        }
         val source = Table()
         source.add(Image(icon)).size(if (touch) 32f else 16f).padRight(8f)
         val name = Table()
@@ -161,7 +199,7 @@ class WaystoneWindowView(
                 details.row()
                 details.add(label(coordinates(selected))).growX().left().padBottom(12f)
                 details.row()
-                val distance = abs(selected.x.toLong() - model.source.x.toLong()).toString()
+                val distance = (selected.distance ?: abs(selected.x.toLong() - model.source.x.toLong())).toString()
                 details.add(label(strings.format("waystone_distance", distance), mutedStyle)).growX().left()
             }
             content.add(details).growY().width(242f).pad(0f, 6f, 4f, 6f)
@@ -196,7 +234,6 @@ class WaystoneWindowView(
             onChange {
                 if (model.canTravel) {
                     model.teleport()
-                    close()
                 }
             }
         }
@@ -277,7 +314,7 @@ class WaystoneWindowView(
     private fun saveRename() {
         val value = field?.text ?: return
         if (!model.rename(value)) {
-            error?.setText(text("waystone_name_invalid"))
+            error?.setText(model.failure?.let(::failureText) ?: text("waystone_name_invalid"))
             return
         }
         cancelRename()
@@ -292,12 +329,30 @@ class WaystoneWindowView(
     }
 
     override fun onBack(): Boolean {
-        if (!renaming) return false
-        cancelRename()
-        return true
+        if (renaming) {
+            cancelRename()
+            return true
+        }
+        if (model.isCharging) {
+            model.cancelCharge()
+            buildBrowser()
+            return true
+        }
+        if (model.failure != null) {
+            model.dismissFailure()
+            buildBrowser()
+            return true
+        }
+        return false
     }
 
     override fun update(delta: Float) {
+        model.update(delta)
+        if (model.completed) {
+            close()
+            return
+        }
+        chargeBar?.value = model.chargeProgress
         if (renaming) {
             val visible = touch && keyboard.isVisible.value
             if (keyboardVisible != visible) {
@@ -315,6 +370,16 @@ class WaystoneWindowView(
         disposed = true
         field = null
     }
+
+    private fun failureText(result: WaystoneTravelResult): String = text(
+        when (result) {
+            WaystoneTravelResult.SOURCE_UNAVAILABLE -> "waystone_source_unavailable"
+            WaystoneTravelResult.DESTINATION_UNAVAILABLE -> "waystone_destination_unavailable"
+            WaystoneTravelResult.DESTINATION_BLOCKED -> "waystone_destination_blocked"
+            WaystoneTravelResult.INTERRUPTED -> "waystone_interrupted"
+            WaystoneTravelResult.SUCCESS -> "done"
+        },
+    )
 
     companion object {
         private const val PAGE_SIZE = 3

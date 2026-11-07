@@ -40,7 +40,9 @@ import ru.fredboy.cavedroid.domain.save.model.GrowBlockEntry
 import ru.fredboy.cavedroid.domain.save.model.TntEntry
 import ru.fredboy.cavedroid.domain.save.repository.SaveDataRepository
 import ru.fredboy.cavedroid.domain.world.model.Biome
+import ru.fredboy.cavedroid.domain.world.model.Layer
 import ru.fredboy.cavedroid.domain.world.model.Weather
+import ru.fredboy.cavedroid.domain.world.waystone.Waystone
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerFactory
 import ru.fredboy.cavedroid.entity.container.abstraction.ContainerWorldAdapter
 import ru.fredboy.cavedroid.entity.container.abstraction.MobSpawnerAdapter
@@ -288,6 +290,9 @@ internal class SaveDataRepositoryImpl @Inject constructor(
                 villagesEnabled = meta.villagesEnabled,
                 worldSpawnX = meta.worldSpawnX,
                 worldSpawnY = meta.worldSpawnY,
+                waystones = meta.waystones.mapNotNull { dto ->
+                    Layer.entries.getOrNull(dto.layer)?.let { Waystone(dto.x, dto.y, it, dto.name) }
+                },
             )
         }
 
@@ -329,6 +334,9 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             villagesEnabled = meta.villagesEnabled,
             worldSpawnX = meta.worldSpawnX,
             worldSpawnY = meta.worldSpawnY,
+            waystones = meta.waystones.mapNotNull { dto ->
+                Layer.entries.getOrNull(dto.layer)?.let { Waystone(dto.x, dto.y, it, dto.name) }
+            },
         )
     }
 
@@ -385,6 +393,7 @@ internal class SaveDataRepositoryImpl @Inject constructor(
             villagesEnabled = gameWorld.generatorConfig.villagesEnabled,
             worldSpawnX = gameWorld.worldSpawn?.x,
             worldSpawnY = gameWorld.worldSpawn?.y,
+            waystones = gameWorld.waystones.map { SaveDataDto.WaystoneSaveDataDto(it.x, it.y, it.layer.z, it.name) },
         )
 
         return worldSaveDataDto
