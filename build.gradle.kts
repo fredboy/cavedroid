@@ -26,8 +26,7 @@ buildscript {
     }
 
     dependencies {
-        // RoboVM's legacy plugin and ProGuard's task types require the buildscript classpath.
-        classpath(libs.robovm.gradle)
+        // ProGuard's task types require the buildscript classpath.
         classpath(libs.proguard.gradle)
     }
 }

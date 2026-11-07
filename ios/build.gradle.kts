@@ -1,11 +1,25 @@
 import com.android.build.gradle.internal.tasks.factory.dependsOn
+import org.robovm.gradle.RoboVMPluginExtension
 import java.nio.file.Files
 import java.nio.file.StandardOpenOption
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        // RoboVM bundles unsigned Bouncy Castle classes. Keep them off the root classpath
+        // so they cannot conflict with AGP's signed classes during Android keystore creation.
+        classpath(libs.robovm.gradle)
+    }
+}
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
-    id("robovm")
 }
+
+apply(plugin = "robovm")
 
 java.sourceCompatibility = ApplicationInfo.sourceCompatibility
 java.targetCompatibility = ApplicationInfo.sourceCompatibility
@@ -135,6 +149,6 @@ tasks.assemble.apply {
     dependsOn("generateAttributionIndex")
 }
 
-robovm {
+configure<RoboVMPluginExtension> {
     isIosSkipSigning = false
 }
