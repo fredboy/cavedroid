@@ -1,0 +1,5 @@
+- Added redstone-related items, recipes, and world generation
+- Added animated clock and compass
+- Autosaves now happen off the render thread for smoother play
+- Improved background music volume
+- Restored standard Android APK filenames and updated the first store screenshot/caption fonts

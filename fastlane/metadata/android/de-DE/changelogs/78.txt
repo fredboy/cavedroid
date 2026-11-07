@@ -1,0 +1,5 @@
+- Redstone-Gegenstände, Rezepte und Weltgenerierung hinzugefügt
+- Uhr und Kompass sind jetzt animiert
+- Speicherstände werden jetzt außerhalb des Render-Threads gesichert für flüssigeres Spielen
+- Lautstärke der Hintergrundmusik angepasst
+- Standard-APK-Namen für Android wiederhergestellt und erstes Store-Bild/Caption-Schriftarten aktualisiert

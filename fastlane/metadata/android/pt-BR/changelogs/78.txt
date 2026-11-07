@@ -1,0 +1,5 @@
+- Adicionados itens de redstone, receitas e geração no mundo
+- Relógio e bússola agora têm animação
+- Os salvamentos automáticos agora rodam fora da thread de renderização para ficar mais suave
+- Volume da música de fundo ajustado
+- Nomes padrão dos APKs de Android restaurados e a primeira captura/legenda da loja foi обновada

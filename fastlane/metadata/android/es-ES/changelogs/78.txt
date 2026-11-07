@@ -1,0 +1,5 @@
+- Añadidos objetos de redstone, recetas y generación en el mundo
+- Reloj y brújula ahora tienen animación
+- Las partidas se guardan fuera del hilo de renderizado para una experiencia más fluida
+- Ajustado el volumen de la música de fondo
+- Recuperados los nombres estándar de los APK de Android y actualizada la primera captura/texto de la tienda
